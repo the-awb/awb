@@ -1,0 +1,39 @@
+{
+  "name": "@awb/lissajous-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "prepack": "npm run build",
+    "test": "node test/lissajous-core.mjs && node test/lissajous-render-object.mjs && node test/scene-core.mjs && node test/package-boundary.mjs",
+    "test:browser": "npm run build && node test/browser-distribution.mjs"
+  },
+  "browser": "./dist/lissajous-engine.browser.js",
+  "unpkg": "./dist/lissajous-engine.global.js",
+  "jsdelivr": "./dist/lissajous-engine.global.js",
+  "exports": {
+    "./browser": "./dist/lissajous-engine.browser.js",
+    "./core": "./dist/core.js",
+    "./r3f": "./dist/r3f.js",
+    "./vanilla": "./dist/vanilla.js"
+  },
+  "peerDependencies": {
+    "@react-three/fiber": "^8.15.16",
+    "react": "^18.2.0",
+    "three": "^0.185.1"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  }
+}

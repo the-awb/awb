@@ -1,0 +1,13 @@
+{
+  "name": "@awb/render-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "test": "node test/render-pipeline.mjs"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  }
+}
