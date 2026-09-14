@@ -1,5 +1,8 @@
 # @awb/score
 
+Canonical source lives in the `~/awb` workspace. Applications consume a built private artifact;
+they do not keep an editable copy of this package.
+
 Private workspace package: the score format and the seven editing verbs.
 
 - `@awb/score` — pure, dependency-free. No React, no three, no SuperCollider, no DOM.

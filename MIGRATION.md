@@ -1,25 +1,62 @@
-# Initial package migration
+# Canonical package migration
 
-## Imported 14 September 2026
+## Ownership
 
-| Package | Source repository | Source revision | State |
+`~/awb` is the canonical source repository for the shared `@awb/*` modules. Application studios
+are consumers. They may retain a packed release artifact, but not a second editable source tree.
+
+| Package | Imported from | Provenance | Canonical state |
 |---|---|---|---|
-| `@awb/score` | `field_modelling/packages/score` | `88e56ef` package introduction; copied from workspace at `8343cca` | Canonical source moves here after consumer cutover |
-| `@awb/lissajous-engine` | `lissajous-viz/packages/lissajous-engine` | `85a349a` | Canonical source moves here after consumer cutover |
-| `@awb/render-pipeline` | `lissajous-viz/packages/render-pipeline` | `85a349a` | Canonical source moves here after consumer cutover |
+| `@awb/score` | `field_modelling/packages/score` | introduced at `88e56ef`; workspace source at `8343cca` | owned here; `field_modelling` consumes a packed artifact |
+| `@awb/sc-wasm` | `field_modelling/packages/sc-wasm` | extraction `2d6b50f` / `2c2be66` | owned here; `field_modelling` consumes a packed artifact |
+| `@awb/instruments` | `field_modelling/packages/instruments` | extraction `aab2cef` | owned here; `field_modelling` consumes a packed artifact |
+| `@awb/field-engine` | `field_modelling/packages/field-engine` | extraction `aab2cef` | owned here; `field_modelling` consumes a packed artifact |
+| `@awb/lissajous-engine` | `lissajous-viz/packages/lissajous-engine` | extraction and distribution at `85a349a` | owned here; `lissajous-viz` consumes a packed artifact |
+| `@awb/render-pipeline` | `lissajous-viz/packages/render-pipeline` | portable-pipeline source at `85a349a` | owned here; `lissajous-viz` consumes a packed artifact |
 
-The first commit copies source and package-level verification without deleting either origin copy.
-That is a deliberate two-phase migration, not permission for permanent forks:
+The source comparisons were clean at cutover on 15 September 2026. Package-level tests moved with
+the source. Application-owned browser, audio, rendering and lifecycle harnesses remain in their
+application repositories and were rerun against the packed artifacts.
 
-1. Make this workspace build and test independently.
-2. Choose a pinned cross-repository distribution mechanism.
-3. Point each existing application at AWB artifacts and run its integration/browser gates.
-4. Delete the origin package copy only after that consumer is green.
+## Distribution boundary
 
-`@awb/sc-wasm` is excluded because its extraction is actively in progress in `field_modelling`.
-`@awb/field-engine` does not exist yet. Import each only from a clean, committed extraction rather
-than copying a working tree mid-refactor.
+Every package is private and exports built files from `dist/`. Run:
 
-Application-owned checks remain with their applications. In particular, exact R3F/vanilla pixel
-parity, decoded WebCodecs frame content, the production export UI, SuperCollider lifecycle and
-field-renderer behavior are integration gates, not package-unit tests.
+```sh
+npm run verify
+npm run pack:packages
+```
+
+The second command rebuilds all packages and writes six tarballs to ignored `artifacts/`. A
+consumer copies the required tarball into its own `vendor/awb/` directory and depends on that file,
+for example:
+
+```json
+"@awb/field-engine": "file:../vendor/awb/awb-field-engine-0.1.0.tgz"
+```
+
+The relative path is from the consuming package's `package.json`. The tarball is committed by the
+consumer; `package-lock.json` records its integrity. This is deliberately less convenient than a
+live `file:../../awb/packages/...` dependency: the latter points at a working tree and allows an
+uncommitted canonical edit to ship from another repository without review or provenance.
+
+Updating a consumer is an explicit release action:
+
+1. Commit and verify the canonical package change here.
+2. Run `npm run pack:packages`.
+3. Replace the consumer's tarball, run `npm install` from its root, and commit the tarball plus
+   lockfile together.
+4. Run that application's own integration and browser gates before accepting the update.
+
+The tarball filename contains the package version, so a changed package must receive a changed
+version before distribution. A registry can replace the vendored-artifact transport later without
+changing package ownership or public APIs.
+
+## Deliberate exclusions
+
+Application assets and policy do not move here merely because a package uses them. In particular:
+
+- `scsynth.wasm`, `sclang.wasm` and their `.data` files remain host-served assets;
+- field and Lissajous scene shells, cameras, controls and UI remain application-owned;
+- browser/audio behavior is verified in the applications, not inferred from package unit tests;
+- `body-acoustic-model` remains an independent repository and is not an AWB workspace package.

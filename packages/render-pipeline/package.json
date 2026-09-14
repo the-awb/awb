@@ -4,10 +4,16 @@
   "private": true,
   "type": "module",
   "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
+    "build": "node ../../tools/build-esm-package.mjs index=src/index.js",
+    "prepack": "npm run build",
     "test": "node test/render-pipeline.mjs"
   },
   "exports": {
-    ".": "./src/index.js"
+    ".": "./dist/index.js"
   }
 }

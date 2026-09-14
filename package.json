@@ -11,10 +11,11 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace @awb/lissajous-engine",
+    "build": "npm run build --workspaces --if-present",
     "test": "npm test --workspaces --if-present",
     "test:browser": "npm run test:browser --workspace @awb/lissajous-engine",
-    "verify": "npm run build && npm test"
+    "verify": "npm run build && npm test && node tools/verify-package-distribution.mjs",
+    "pack:packages": "node tools/pack-packages.mjs"
   },
   "devDependencies": {
     "@react-three/fiber": "^8.15.16",

@@ -1,0 +1,28 @@
+{
+  "name": "@awb/sc-wasm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    "./core": "./dist/core.js",
+    "./react": "./dist/react.js"
+  },
+  "scripts": {
+    "build": "node ../../tools/build-esm-package.mjs core=src/core/index.js react=src/react/index.js",
+    "prepack": "npm run build",
+    "test": "node test/core.mjs"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}

@@ -5,6 +5,9 @@ Shared, application-independent foundations for the Acoustic Workbench.
 ```text
 packages/
   score/                absolute-time, payload-blind score editing and renderer contracts
+  sc-wasm/              browser scsynth lifecycle, audio tap and sclang bridge
+  instruments/          serialisable AWB instrument vocabulary and control semantics
+  field-engine/         renderer-neutral analytic field projection and propagation
   lissajous-engine/     React-free visual core with R3F, vanilla and browser adapters
   render-pipeline/      provider-neutral resolved jobs and indexed render scheduling
 apps/                   future shared AWB applications; intentionally empty today
@@ -20,10 +23,16 @@ their own repositories until a shared application proves it can replace their wo
 npm install
 npm run verify
 npm run test:browser   # optional Playwright static-distribution check
+npm run pack:packages  # writes private, consumer-ready tarballs to artifacts/
 ```
 
-Node 22 is pinned in `.nvmrc`. Packages remain private and distributable with `npm pack`; publishing
-to a registry is a later decision. Do not make cross-repository consumers depend directly on an
-uncommitted `src/` tree. Use a packed artifact or a future private registry release.
+Node 22 is pinned in `.nvmrc`. This repository is the canonical source for every `@awb/*` package
+listed above. Package exports point at built `dist/` files; `files` limits tarballs to those files
+and the package README. Packages remain private and distributable with `npm pack`; publishing to a
+registry is a later decision.
+
+Cross-repository consumers vendor the exact tarball they use and commit npm's integrity record.
+They must not depend on this repository's working `src/` tree. That boundary prevents an
+uncommitted change here from silently entering a build elsewhere.
 
 See [MIGRATION.md](./MIGRATION.md) for provenance and the transition boundary.

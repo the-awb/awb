@@ -1,5 +1,8 @@
 # `@awb/render-pipeline`
 
+Canonical source lives in the `~/awb` workspace. Applications consume a built private artifact;
+they do not keep an editable copy of this package.
+
 Provider-neutral deterministic frame scheduling for AWB visual producers.
 
 This package begins at a **resolved** render job. An upstream score/container resolver must already

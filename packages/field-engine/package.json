@@ -1,0 +1,22 @@
+{
+  "name": "@awb/field-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "node ../../tools/build-esm-package.mjs index=src/index.js",
+    "prepack": "npm run build",
+    "test": "node test/core.mjs"
+  },
+  "dependencies": {
+    "@awb/instruments": "0.1.0"
+  }
+}

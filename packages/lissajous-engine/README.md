@@ -1,5 +1,8 @@
 # @awb/lissajous-engine
 
+Canonical source lives in the `~/awb` workspace. Applications consume a built private artifact;
+they do not keep an editable copy of this package.
+
 Workspace package for the portable Lissajous renderer.
 
 - `@awb/lissajous-engine/core` — React-free state, automation, sample and Three.js rendering code.
