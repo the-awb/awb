@@ -23,8 +23,10 @@ The cutover is recorded by these commits:
 
 | Repository | Commit | Boundary established |
 |---|---|---|
-| `awb` | `8ce0ac9` | canonical source, builds, tests and packing for all six packages |
+| `awb` | `8ce0ac9` | canonical source, builds, tests and packing for the original six packages |
+| `awb` | `d31bbc5` | canonical `sc-console` evaluator, lifecycle and editor machinery |
 | `field_modelling` | `e3c5ea2` | packed `score`, `sc-wasm`, `instruments` and `field-engine` consumer; editable copies removed |
+| `field_modelling` | `c1f7a27` | packed `sc-console` consumer; local evaluator, lifecycle and editor copies removed |
 | `lissajous-viz` | `ba08d7d` | packed `lissajous-engine` and `render-pipeline` consumer; editable copies removed |
 
 ## Distribution boundary
@@ -36,7 +38,7 @@ npm run verify
 npm run pack:packages
 ```
 
-The second command rebuilds all packages and writes six tarballs to ignored `artifacts/`. A
+The second command rebuilds all packages and writes seven tarballs to ignored `artifacts/`. A
 consumer copies the required tarball into its own `vendor/awb/` directory and depends on that file,
 for example:
 
