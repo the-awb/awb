@@ -3,6 +3,7 @@ import {
   commonGroup, duration, group, makeEvent, nudge, rippleFrom, setGap, sortScore, stretch, ungroup
 } from '@awb/score';
 import { projectSynthLifecycleLanes } from '../engine/synthLifecycleLanes.js';
+import { formatTimelineTime, timelineTicks } from '../engine/timelineScale.js';
 
 const LEFT = 92;
 const MIN_ZOOM = 1;
@@ -17,11 +18,6 @@ function retainLaneOrder( orderRef, names ) {
   return orderRef.current;
 }
 
-const fmt = ( seconds ) => {
-  const minutes = Math.floor( seconds / 60 );
-  return `${ minutes }:${ String( Math.round( seconds % 60 ) ).padStart( 2, '0' ) }`;
-};
-
 export default function ScoreTimeline( { session, dispatch } ) {
   const [ layout, setLayout ] = useState( 'structure' );
   const [ step, setStep ] = useState( 1 );
@@ -33,9 +29,11 @@ export default function ScoreTimeline( { session, dispatch } ) {
   const [ expandedSynths, setExpandedSynths ] = useState( new Set() );
   const [ drag, setDrag ] = useState( null );
   const [ envelopeDrag, setEnvelopeDrag ] = useState( null );
+  const [ durationDrag, setDurationDrag ] = useState( null );
   const scrollRef = useRef( null );
   const dragRef = useRef( null );
   const removeDragListenersRef = useRef( () => {} );
+  const removeHandleListenersRef = useRef( () => {} );
   const scoreIDRef = useRef( null );
   const structureOrderRef = useRef( [] );
   const synthOrderRef = useRef( [] );
@@ -66,6 +64,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
   ), 0 );
   const total = Math.max( 30, duration( visibleEntries ) + 12, lifecycleEnd + 12, session.playhead + 12 );
   const width = LEFT + total * pxPerSecond + 40;
+  const ruler = timelineTicks( total, pxPerSecond );
   const sharedGroup = commonGroup( entries, selected );
 
   const placePlayhead = ( event ) => {
@@ -126,7 +125,10 @@ export default function ScoreTimeline( { session, dispatch } ) {
       removeDragListenersRef.current = () => {};
     };
   };
-  useEffect( () => () => removeDragListenersRef.current(), [] );
+  useEffect( () => () => {
+    removeDragListenersRef.current();
+    removeHandleListenersRef.current();
+  }, [] );
   const dragProps = ( entryID ) => ( {
     onPointerDown: ( event ) => beginDrag( event, entryID ),
     onDragStart: ( event ) => event.preventDefault()
@@ -137,6 +139,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
     event.preventDefault();
     event.stopPropagation();
     dispatch( { type: 'SET_SELECTED', ids: [ lane.id ] } );
+    removeHandleListenersRef.current();
     const initial = lane.envelope[ edge ];
     const startX = event.clientX;
     const move = ( pointerEvent ) => {
@@ -145,9 +148,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
     };
     const end = ( pointerEvent ) => {
       const value = Math.max( 0, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 100 ) / 100 );
-      window.removeEventListener( 'pointermove', move );
-      window.removeEventListener( 'pointerup', end );
-      window.removeEventListener( 'pointercancel', end );
+      removeHandleListenersRef.current();
       setEnvelopeDrag( null );
       apply( entries.map( ( entry ) => entry.id === lane.id
         ? { ...entry, event: { ...entry.event, [ control ]: value } }
@@ -157,6 +158,56 @@ export default function ScoreTimeline( { session, dispatch } ) {
     window.addEventListener( 'pointermove', move );
     window.addEventListener( 'pointerup', end );
     window.addEventListener( 'pointercancel', end );
+    removeHandleListenersRef.current = () => {
+      window.removeEventListener( 'pointermove', move );
+      window.removeEventListener( 'pointerup', end );
+      window.removeEventListener( 'pointercancel', end );
+      removeHandleListenersRef.current = () => {};
+    };
+  };
+  const beginDurationDrag = ( event, lane ) => {
+    if ( event.button !== 0 || !lane.gateMarker ) return;
+    event.preventDefault();
+    event.stopPropagation();
+    removeHandleListenersRef.current();
+    const initial = lane.gateReleaseTime;
+    const startX = event.clientX;
+    const move = ( pointerEvent ) => {
+      const time = Math.max( lane.startTime, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 1000 ) / 1000 );
+      setDurationDrag( { laneID: lane.id, time } );
+    };
+    const end = ( pointerEvent ) => {
+      const time = Math.max( lane.startTime, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 1000 ) / 1000 );
+      const marker = lane.gateMarker;
+      removeHandleListenersRef.current();
+      setDurationDrag( null );
+      if ( marker.synthetic ) {
+        apply( entries.map( ( entry ) => {
+          if ( entry.id !== lane.id ) return entry;
+          const sustain = time - lane.startTime;
+          if ( entry.event.sustain !== undefined ) {
+            return { ...entry, event: { ...entry.event, sustain } };
+          }
+          const legato = Number( entry.event.legato ?? 0.8 );
+          return Number.isFinite( legato ) && legato > 0
+            ? { ...entry, event: { ...entry.event, dur: sustain / legato } }
+            : { ...entry, event: { ...entry.event, sustain } };
+        } ) );
+        dispatch( { type: 'SET_SELECTED', ids: [ lane.id ] } );
+      } else {
+        apply( entries.map( ( entry ) => entry.id === marker.entry.id ? { ...entry, time } : entry ) );
+        dispatch( { type: 'SET_SELECTED', ids: [ marker.entry.id ] } );
+      }
+    };
+    window.addEventListener( 'pointermove', move );
+    window.addEventListener( 'pointerup', end );
+    window.addEventListener( 'pointercancel', end );
+    removeHandleListenersRef.current = () => {
+      window.removeEventListener( 'pointermove', move );
+      window.removeEventListener( 'pointerup', end );
+      window.removeEventListener( 'pointercancel', end );
+      removeHandleListenersRef.current = () => {};
+    };
   };
   const changeZoom = ( requested ) => {
     const next = Math.max( MIN_ZOOM, Math.min( MAX_ZOOM, requested ) );
@@ -193,7 +244,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
     <section className="scoreView">
       <div className="scoreToolbars">
         <div className="scoreToolbar">
-          <span className="timeReadout">{ fmt( session.playhead ) }</span>
+          <span className="timeReadout">{ formatTimelineTime( session.playhead, 0.001 ) }</span>
           <div className="layoutSwitch" aria-label="Timeline layout">
             <button className={ layout === 'structure' ? 'active' : '' }
               onClick={ () => setLayout( 'structure' ) }>Structure</button>
@@ -247,9 +298,9 @@ export default function ScoreTimeline( { session, dispatch } ) {
       <div className="timelineScroll" ref={ scrollRef }>
         <div className="timeline" style={ { width } }>
           <div className="ruler">
-            { Array.from( { length: Math.floor( total / 5 ) + 1 }, ( _, index ) => index * 5 ).map( ( time ) => (
+            { ruler.values.map( ( time ) => (
               <button key={ time } className="tick" style={ { left: LEFT + time * pxPerSecond } }
-                onClick={ () => dispatch( { type: 'SET_PLAYHEAD', time } ) }>{ fmt( time ) }</button>
+                onClick={ () => dispatch( { type: 'SET_PLAYHEAD', time } ) }>{ formatTimelineTime( time, ruler.step ) }</button>
             ) ) }
           </div>
           { layout === 'structure'
@@ -274,10 +325,11 @@ export default function ScoreTimeline( { session, dispatch } ) {
                 ? envelopeDrag.value : lane.envelope?.attack ?? 0;
               const shownRelease = envelopeDrag?.laneID === lane.id && envelopeDrag.edge === 'release'
                 ? envelopeDrag.value : lane.envelope?.release ?? 0;
-              const envelopeEnd = lane.gateReleaseTime === null ? endTime : lane.gateReleaseTime + shownRelease;
+              const shownGate = durationDrag?.laneID === lane.id ? durationDrag.time : lane.gateReleaseTime;
+              const envelopeEnd = shownGate === null ? endTime : shownGate + shownRelease;
               const shownEnd = lane.freeTime === null ? envelopeEnd : Math.min( envelopeEnd, lane.freeTime );
               const attackEnd = Math.min( shownEnd, lane.startTime + shownAttack );
-              const releaseStart = lane.gateReleaseTime === null ? shownEnd : Math.min( shownEnd, lane.gateReleaseTime );
+              const releaseStart = shownGate === null ? shownEnd : Math.min( shownEnd, shownGate );
               const triggers = lane.events.filter( ( marker ) => marker.role !== 'create' );
               return (
                 <div key={ lane.id } className={ `lane synthLane${ expanded ? ' expanded' : '' }` } onClick={ placePlayhead }>
@@ -295,9 +347,14 @@ export default function ScoreTimeline( { session, dispatch } ) {
                       left: LEFT + lane.startTime * pxPerSecond,
                       width: Math.max( 12, ( shownEnd - lane.startTime ) * pxPerSecond )
                     } }
-                    title={ `${ lane.id } · ${ lane.startTime }s to ${ lane.endTime ?? 'open' } · gate ${ lane.gateReleaseTime ?? 'open' } · drag to move create` }
+                    title={ `${ lane.id } · ${ lane.startTime }s to ${ lane.endTime ?? 'open' } · gate ${ shownGate ?? 'open' } · drag to move create` }
                     { ...dragProps( lane.id ) }
                   >{ lane.definition }{ lane.expansionCount > 1 ? ` ×${ lane.expansionCount }` : '' }</button> }
+                  { !unassigned && shownGate !== null && <button className="durationHandle"
+                    aria-label={ `Adjust ${ lane.id } duration` }
+                    style={ { left: LEFT + shownGate * pxPerSecond } }
+                    title="Drag the gate boundary to adjust note duration"
+                    onPointerDown={ ( pointerEvent ) => beginDurationDrag( pointerEvent, lane ) } /> }
                   { !unassigned && lane.envelope && <div className="synthEnvelope" style={ {
                     left: LEFT + lane.startTime * pxPerSecond,
                     width: Math.max( 12, ( shownEnd - lane.startTime ) * pxPerSecond )
@@ -308,7 +365,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
                     { lane.envelope.attackControl && <button className="envelopeHandle attack" aria-label={ `Adjust ${ lane.id } attack` }
                       style={ { left: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ) } }
                       onPointerDown={ ( pointerEvent ) => beginEnvelopeDrag( pointerEvent, lane, 'attack' ) } /> }
-                    { lane.envelope.releaseControl && lane.gateReleaseTime !== null && <button className="envelopeHandle release" aria-label={ `Adjust ${ lane.id } release` }
+                    { lane.envelope.releaseControl && shownGate !== null && <button className="envelopeHandle release" aria-label={ `Adjust ${ lane.id } release` }
                       style={ { left: Math.max( 0, ( shownEnd - lane.startTime ) * pxPerSecond ) } }
                       onPointerDown={ ( pointerEvent ) => beginEnvelopeDrag( pointerEvent, lane, 'release' ) } /> }
                   </div> }

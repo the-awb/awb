@@ -118,7 +118,7 @@ export function projectSynthLifecycleLanes( score ) {
       ? releaseMarker.time : null;
     const envelopeSpec = lane.instrument?.descriptor.amplitudeEnvelope ?? null;
     return {
-      ...lane, events, startTime, endTime, gateReleaseTime, freeTime,
+      ...lane, events, startTime, endTime, gateReleaseTime, gateMarker: releaseMarker ?? null, freeTime,
       envelope: initialEnvelope && {
         attack: initialEnvelope.attack,
         release: releaseEnvelope?.release ?? initialEnvelope.release,

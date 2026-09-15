@@ -129,7 +129,25 @@ try {
   if ( await page.locator( '.titleInput' ).inputValue() !== 'Sonic Attunement 01' ) failures.push( 'bundled demo metadata did not load' );
   await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).click();
   if ( await page.locator( '.synthEnvelope' ).count() !== 11 ) failures.push( 'real demo did not render one envelope strip per synth row' );
+  await page.getByRole( 'button', { name: 'Fit timeline', exact: true } ).click();
+  const tickPositions = await page.locator( '.tick' ).evaluateAll( ( ticks ) =>
+    ticks.map( ( tick ) => tick.getBoundingClientRect().x ) );
+  const closestTicks = Math.min( ...tickPositions.slice( 1 ).map( ( position, index ) => position - tickPositions[ index ] ) );
+  if ( closestTicks < 68 ) failures.push( `adaptive ruler labels are only ${ closestTicks }px apart` );
   await page.locator( '.synthBar' ).first().click();
+  const durationHandle = page.getByRole( 'button', { name: 'Adjust rinse-01 duration', exact: true } );
+  await durationHandle.scrollIntoViewIfNeeded();
+  const durationHandleBox = await durationHandle.boundingBox();
+  if ( !durationHandleBox ) failures.push( 'could not locate duration handle' );
+  else {
+    await page.mouse.move( durationHandleBox.x + 2, durationHandleBox.y + 2 );
+    await page.mouse.down();
+    await page.mouse.move( durationHandleBox.x + 36, durationHandleBox.y + 2, { steps: 4 } );
+    await page.mouse.up();
+    if ( Number( await page.getByLabel( 'Payload dur', { exact: true } ).inputValue() ) <= 300 ) {
+      failures.push( 'duration handle did not update canonical dur through legato' );
+    }
+  }
   const releaseHandle = page.getByRole( 'button', { name: 'Adjust rinse-01 release', exact: true } );
   await releaseHandle.scrollIntoViewIfNeeded();
   const releaseHandleBox = await releaseHandle.boundingBox();
@@ -151,4 +169,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 27/27 pass' );
+console.log( 'score-studio-browser: 31/31 pass' );

@@ -34,6 +34,8 @@ const envelopeLane = projectSynthLifecycleLanes( [
   makeEvent( 20, { type: 'set', target: 'env', releaseT: 7 }, { id: 'env-set' } )
 ] )[ 0 ];
 assert.equal( envelopeLane.gateReleaseTime, 26, 'dur times legato is the gate-release boundary' );
+assert.equal( envelopeLane.gateMarker.role, 'auto-release' );
+assert.equal( envelopeLane.gateMarker.synthetic, true );
 assert.equal( envelopeLane.endTime, 33, 'bar includes the release tail using controls effective at release' );
 assert.deepEqual( envelopeLane.envelope, {
   attack: 3, release: 7, attackControl: 'attackT', releaseControl: 'releaseT', derived: false
@@ -46,4 +48,4 @@ assert.equal( coupledLane.gateReleaseTime, 16 );
 assert.equal( coupledLane.endTime, 20, 'coupled SynthDef release uses derived sustain times ampEnvRatio' );
 assert.equal( coupledLane.envelope.derived, true );
 
-console.log( 'synth-lifecycle-lanes: 21/21 pass' );
+console.log( 'synth-lifecycle-lanes: 23/23 pass' );

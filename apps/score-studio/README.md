@@ -53,6 +53,16 @@ both sides derive from `sustain * ampEnvRatio`, so those controls are edited in 
 rather than presenting independent handles the SynthDef does not actually have. This is a duration
 model, not sampled envelope curvature; shaped envelope editing remains later work.
 
+The handle on the main bar marks the gate boundary rather than the end of the release tail. For a
+derived auto-release it edits authored `sustain`, or `dur` through the current `legato` when
+`sustain` is absent. When an explicit `release` entry owns the boundary, the same handle moves that
+entry instead. This keeps note duration, envelope release and final node completion visibly
+separate.
+
+Ruler intervals adapt to zoom using 1/2/5 steps with a minimum label spacing. A fitted fourteen-
+minute score therefore uses minute-scale labels instead of drawing five-second text on top of
+itself; close zoom progressively exposes seconds and fractional seconds.
+
 A frequency-lane view is a later projection over the same score, not a new score format. Its
 vertical axis may be continuous Hz or an explicit just-intonation lattice. The JI form must carry
 an explicit reference frequency and allowed ratios; the editor must not infer a tonic or collapse
