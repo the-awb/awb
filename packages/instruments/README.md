@@ -5,9 +5,10 @@ It is not a universal SuperCollider model and it does not own a live sclang or s
 Cross-repository consumers use its built private artifact rather than copying this source.
 
 The catalog records stable instrument and SynthDef identity plus authored control meaning: initial
-values, units, useful bounds, primary frequency, continuous gain, and which controls represent
-frequencies or frequency offsets. Compiled SynthDef manifests remain authoritative for which raw
-controls actually exist.
+values, units, useful bounds, primary frequency, continuous gain, amplitude-envelope duration
+semantics, and which controls represent frequencies or frequency offsets. Envelope descriptors
+record the controls the SynthDef really uses; they do not infer a generic envelope from score
+`dur`. Compiled SynthDef manifests remain authoritative for which raw controls actually exist.
 
 The catalog is plain JSON-compatible data. That matters because a JavaScript object containing
 functions cannot be the contract with awbCollider. JavaScript helpers materialise editor fields and

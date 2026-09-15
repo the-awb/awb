@@ -32,8 +32,10 @@ desktop bridge.
 ## Timeline views and editing
 
 The synth lifecycle view is a projection of the canonical entries, not another score model. Each
-authored `note` is one stable row and one bar. The bar's left edge is its create time and its right
-edge is the earliest explicit `release`/`free` or derived sustain boundary. `set`, `release` and
+authored `note` is one stable row and one bar. The bar's left edge is its create time. A release
+boundary marks when the gate closes; the right edge includes the SynthDef's amplitude-envelope
+release tail and therefore marks predicted node completion. An explicit `free` still ends it
+immediately. `set`, `release` and
 `free` entries appear as compact ticks; disclosing the row reveals labelled authored boundaries
 that can be selected and dragged. A derived auto-release is shown, but cannot be dragged because
 there is no separate canonical entry to edit.
@@ -43,6 +45,13 @@ disclosed boundary changes the canonical control entry shared by every affected 
 multi-selection moves rigidly. Row order is view state and remains stable while and after times are
 changed. Zoom preserves the visible time around the viewport centre, while Fit shows the complete
 working duration.
+
+A thin strip below each synth bar shows coarse attack, gate-open and release lengths. For
+SynthDefs with independent `attackT` and `releaseT` controls, dragging its handles writes those
+values back to the canonical note event. `resonantBassEnv2` is deliberately shown as coupled:
+both sides derive from `sustain * ampEnvRatio`, so those controls are edited in the inspector
+rather than presenting independent handles the SynthDef does not actually have. This is a duration
+model, not sampled envelope curvature; shaped envelope editing remains later work.
 
 A frequency-lane view is a later projection over the same score, not a new score format. Its
 vertical axis may be continuous Hz or an explicit just-intonation lattice. The JI form must carry
@@ -71,6 +80,13 @@ The file boundary also recognises the narrow pre-schema AWB shape `{ scoreID, re
 used by the original real-score example. It adds required schema/default metadata, marks the result
 unsaved, and requires an explicit Save to replace or create a canonical `awb.score/1` document.
 Other invalid documents remain errors rather than being guessed into shape.
+
+Plain SuperCollider source import is not implemented in Score Studio. The desktop connector can
+normalize an already-evaluated collection of supported score entries and can generate the paired
+`.score.scd` projection, but neither side currently performs the inverse projection. In
+particular, the browser must not parse or execute arbitrary `.scd`. A future compatibility import
+should run in desktop sclang, accept only connector-generated `PScoreTimelinePlayer` or explicitly
+supported literal shapes, and return canonical data for review before the editor adopts it.
 
 ## Standalone execution
 

@@ -1,4 +1,5 @@
 import { assertScoreDocument, checkScore, defineRenderer, describeCheck, sortScore } from '@awb/score';
+import { instrumentControls, instrumentType, typeForSynthDef } from '@awb/instruments';
 import { expandScEventParams, scoreEventSustain } from './scEventSemantics.js';
 
 const HANDLES = Object.freeze( {
@@ -19,6 +20,17 @@ function freezeState( state ) {
 
 function controlArgs( params ) {
   return Object.entries( params ).flatMap( ( [ key, value ] ) => [ key, value ] );
+}
+
+function noteParams( event, definition, duration ) {
+  const instrument = typeForSynthDef( definition ) ?? ( instrumentType( definition )
+    ? { key: definition }
+    : null );
+  const synthControls = instrument ? instrumentControls( instrument.key ).map( ( control ) => control.name ) : [];
+  const adapted = synthControls.includes( 'sustain' ) && event.sustain === undefined && duration !== null
+    ? { ...event, sustain: duration }
+    : event;
+  return expandScEventParams( adapted, { includeReserved: synthControls } );
 }
 
 export function createStandaloneScoreExecutor( {
@@ -92,7 +104,7 @@ export function createStandaloneScoreExecutor( {
       const duration = scoreEventSustain( event );
       if ( duration !== null && duration < 0 ) throw new Error( `Standalone note ${ entry.id } has a negative sustain.` );
       const created = [];
-      for ( const params of expandScEventParams( event ) ) {
+      for ( const params of noteParams( event, definition, duration ) ) {
         const nodeID = nextNodeID++;
         sendOsc( '/s_new', [ definition, nodeID, addAction, group, ...controlArgs( params ) ] );
         const node = {

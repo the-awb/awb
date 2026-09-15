@@ -7,6 +7,7 @@ import {
   instrumentDefaultParams,
   instrumentFields,
   instrumentFrequencyControls,
+  instrumentEnvelopeLengths,
   instrumentMainFrequency,
   instrumentType,
   typeForSynthDef
@@ -44,11 +45,14 @@ check( 'static and speaker-dependent defaults materialise' );
 
 assert.deepEqual(
   instrumentFields( 'basic', speakers ).map( ( field ) => [ field.path[ 0 ], field.label ] ),
-  [ [ 'freqL', 'Left freq' ], [ 'ampL', 'Left amp' ], [ 'freqR', 'Right freq' ], [ 'ampR', 'Right amp' ] ]
+  [
+    [ 'attackT', 'Attack' ], [ 'releaseT', 'Release' ],
+    [ 'freqL', 'Left freq' ], [ 'ampL', 'Left amp' ], [ 'freqR', 'Right freq' ], [ 'ampR', 'Right amp' ]
+  ]
 );
 assert.deepEqual(
   instrumentFields( 'substrate2' ).map( ( field ) => field.path[ 0 ] ),
-  [ 'freq', 'beat', 'slowBeat', 'slowBeatBlend', 'beatBlend', 'freqQ', 'movement' ]
+  [ 'freq', 'beat', 'slowBeat', 'slowBeatBlend', 'beatBlend', 'freqQ', 'movement', 'attackT', 'releaseT' ]
 );
 assert.deepEqual( instrumentBooleanFields( 'substrate2' ).map( ( field ) => field.path[ 0 ] ), [ 'flip' ] );
 check( 'numeric and boolean editor metadata materialises without UI code' );
@@ -63,6 +67,15 @@ check( 'frequency roles distinguish scalable values from ratios' );
 assert.equal( instrumentMainFrequency( 'basic', { freqL: 44 }, speakers ), 44 );
 assert.equal( instrumentMainFrequency( 'resobass2', { freq: 52 } ), 52 );
 check( 'primary frequency is descriptor-driven' );
+
+assert.deepEqual( instrumentEnvelopeLengths( 'substrate', { attackT: 20, releaseT: 24 } ), {
+  attack: 20, release: 24
+} );
+assert.deepEqual( instrumentEnvelopeLengths( 'resobass2', { sustain: 160 } ), {
+  attack: 80, release: 80
+} );
+assert.equal( instrumentEnvelopeLengths( 'missing' ), null );
+check( 'amplitude-envelope lengths follow declared SynthDef controls' );
 
 assert.deepEqual( typeForSynthDef( 'resonantBassEnv2' ), {
   key: 'resobass2', descriptor: INSTRUMENT_CATALOG.resobass2

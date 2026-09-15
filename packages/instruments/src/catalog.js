@@ -6,6 +6,8 @@ const numberEditor = ( label, min, max, step, decimals, unit = '' ) => (
   { kind: 'number', label, min, max, step, decimals, unit }
 );
 
+const envelopeTimeEditor = ( label ) => numberEditor( label, 0, 3600, 0.1, 2, ' s' );
+
 const RAW_CATALOG = {
   basic: {
     key: 'basic',
@@ -13,8 +15,15 @@ const RAW_CATALOG = {
     synthDef: 'fieldBasic',
     gainControl: 'amp',
     primaryFrequency: { kind: 'speakerControl', prefix: 'freq', speakerIndex: 0 },
+    amplitudeEnvelope: {
+      kind: 'asr',
+      attack: { kind: 'control', name: 'attackT', default: 2 },
+      release: { kind: 'control', name: 'releaseT', default: 4 }
+    },
     controls: {
-      amp: { role: 'continuousGain' }
+      amp: { role: 'continuousGain' },
+      attackT: { role: 'envelopeAttack', synthDefault: 2, editor: envelopeTimeEditor( 'Attack' ) },
+      releaseT: { role: 'envelopeRelease', synthDefault: 4, editor: envelopeTimeEditor( 'Release' ) }
     },
     speakerControls: [
       {
@@ -35,6 +44,11 @@ const RAW_CATALOG = {
     synthDef: 'substrate',
     gainControl: 'amp',
     primaryFrequency: { kind: 'control', name: 'freqA' },
+    amplitudeEnvelope: {
+      kind: 'asr',
+      attack: { kind: 'control', name: 'attackT', default: 12 },
+      release: { kind: 'control', name: 'releaseT', default: 12 }
+    },
     controls: {
       freqA: { role: 'frequency', scalesWithTime: true, initial: 60, editor: numberEditor( 'Freq', 20, 25000, 0.1, 1, ' Hz' ) },
       beat: { role: 'frequencyOffset', scalesWithTime: true, initial: 4, editor: numberEditor( 'Beat', -20, 20, 0.05, 2, ' Hz' ) },
@@ -42,7 +56,9 @@ const RAW_CATALOG = {
       movement: { role: 'movementDepth', initial: 0, editor: numberEditor( 'Movement', 0, 2, 0.01, 2 ) },
       tremF: { role: 'frequency', scalesWithTime: true },
       difF: { role: 'frequencyOffset', scalesWithTime: true },
-      amp: { role: 'continuousGain' }
+      amp: { role: 'continuousGain' },
+      attackT: { role: 'envelopeAttack', synthDefault: 12, editor: envelopeTimeEditor( 'Attack' ) },
+      releaseT: { role: 'envelopeRelease', synthDefault: 12, editor: envelopeTimeEditor( 'Release' ) }
     }
   },
 
@@ -52,6 +68,11 @@ const RAW_CATALOG = {
     synthDef: 'substrate2',
     gainControl: 'amp',
     primaryFrequency: { kind: 'control', name: 'freq' },
+    amplitudeEnvelope: {
+      kind: 'asr',
+      attack: { kind: 'control', name: 'attackT', default: 30 },
+      release: { kind: 'control', name: 'releaseT', default: 30 }
+    },
     editorOrder: [ 'freq', 'beat', 'slowBeat', 'slowBeatBlend', 'beatBlend', 'freqQ', 'movement' ],
     frequencyOrder: [ 'freq', 'beat', 'slowBeat', 'freqQ', 'tremF', 'difF' ],
     controls: {
@@ -65,7 +86,9 @@ const RAW_CATALOG = {
       movement: { role: 'movementDepth', initial: 0, editor: numberEditor( 'Movement', 0, 2, 0.01, 2 ) },
       tremF: { role: 'frequency', scalesWithTime: true },
       difF: { role: 'frequencyOffset', scalesWithTime: true },
-      amp: { role: 'continuousGain' }
+      amp: { role: 'continuousGain' },
+      attackT: { role: 'envelopeAttack', synthDefault: 30, editor: envelopeTimeEditor( 'Attack' ) },
+      releaseT: { role: 'envelopeRelease', synthDefault: 30, editor: envelopeTimeEditor( 'Release' ) }
     }
   },
 
@@ -75,6 +98,11 @@ const RAW_CATALOG = {
     synthDef: 'resonantBassEnv2',
     gainControl: 'amp',
     primaryFrequency: { kind: 'control', name: 'freq' },
+    amplitudeEnvelope: {
+      kind: 'asr',
+      attack: { kind: 'product', names: [ 'sustain', 'ampEnvRatio' ], defaults: [ 5, 0.5 ] },
+      release: { kind: 'product', names: [ 'sustain', 'ampEnvRatio' ], defaults: [ 5, 0.5 ] }
+    },
     note: 'Sideband synthesis not implemented yet -- this instrument currently contributes no sound to the field.',
     controls: {
       freq: { role: 'frequency', scalesWithTime: true, initial: 50, editor: numberEditor( 'Freq', 20, 25000, 0.1, 1, ' Hz' ) },
@@ -82,7 +110,10 @@ const RAW_CATALOG = {
       phaseMod: { role: 'phaseDepth', initial: 1.8, editor: numberEditor( 'Phase mod', 0, 5, 0.01, 2 ) },
       beat: { role: 'frequencyOffset', scalesWithTime: true, initial: 0.5, editor: numberEditor( 'Beat', -20, 20, 0.05, 2, ' Hz' ) },
       modFreqRatio: { role: 'frequencyRatio', initial: 1, editor: numberEditor( 'Mod freq ratio', 0.1, 8, 0.01, 2, '×' ) },
-      amp: { role: 'continuousGain' }
+      amp: { role: 'continuousGain' },
+      dur: { role: 'synthEnvelopeDuration', synthDefault: 10 },
+      sustain: { role: 'envelopeBasis', synthDefault: 5, editor: envelopeTimeEditor( 'Envelope sustain basis' ) },
+      ampEnvRatio: { role: 'envelopeRatio', synthDefault: 0.5, editor: numberEditor( 'Attack/release ratio', 0, 4, 0.01, 2, '×' ) }
     }
   }
 };
@@ -184,6 +215,28 @@ export function instrumentMainFrequency( key, params, speakers = [] ) {
     ? `${ primary.prefix }${ speakers[ primary.speakerIndex ]?.id ?? '' }`
     : primary.name;
   return params[ name ] ?? 0;
+}
+
+function envelopeSegmentLength( segment, params ) {
+  if ( !segment ) return null;
+  if ( segment.kind === 'control' ) {
+    const value = Number( params[ segment.name ] ?? segment.default );
+    return Number.isFinite( value ) && value >= 0 ? value : null;
+  }
+  if ( segment.kind === 'product' ) {
+    const values = segment.names.map( ( name, index ) => Number( params[ name ] ?? segment.defaults[ index ] ) );
+    const value = values.reduce( ( product, item ) => product * item, 1 );
+    return values.every( ( item ) => Number.isFinite( item ) && item >= 0 ) ? value : null;
+  }
+  return null;
+}
+
+export function instrumentEnvelopeLengths( key, params = {} ) {
+  const envelope = instrumentType( key )?.amplitudeEnvelope;
+  if ( !envelope ) return null;
+  const attack = envelopeSegmentLength( envelope.attack, params );
+  const release = envelopeSegmentLength( envelope.release, params );
+  return attack === null || release === null ? null : Object.freeze( { attack, release } );
 }
 
 const TYPE_BY_SYNTH_DEF = new Map(

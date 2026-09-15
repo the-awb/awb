@@ -9,6 +9,7 @@ export {
   instrumentFields,
   instrumentBooleanFields,
   instrumentFrequencyControls,
+  instrumentEnvelopeLengths,
   instrumentMainFrequency,
   typeForSynthDef
 } from './catalog.js';

@@ -11,8 +11,10 @@ function scalar( value, key ) {
   throw new Error( `Standalone event control ${ key } must be a finite number, string or boolean.` );
 }
 
-export function expandScEventParams( event ) {
-  const controls = Object.entries( event ).filter( ( [ key, value ] ) => !RESERVED.has( key ) && value !== undefined );
+export function expandScEventParams( event, { includeReserved = [] } = {} ) {
+  const allowedReserved = new Set( includeReserved );
+  const controls = Object.entries( event ).filter( ( [ key, value ] ) =>
+    ( !RESERVED.has( key ) || allowedReserved.has( key ) ) && value !== undefined );
   const arrayLengths = controls.map( ( [ , value ] ) => Array.isArray( value ) ? value.length : 1 );
   if ( arrayLengths.some( ( length ) => length === 0 ) ) throw new Error( 'Standalone event control arrays cannot be empty.' );
   const count = Math.max( 1, ...arrayLengths );

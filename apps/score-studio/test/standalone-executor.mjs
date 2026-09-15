@@ -88,10 +88,25 @@ advance( 0 );
 assert.equal( sent.slice( beforeSeekPlay ).some( ( message ) => message.address === '/s_new' ), false,
   'event-boundary seek does not reconstruct a note that began earlier' );
 
+executor.load( createScoreDocument( {
+  scoreID: 'synth-event-overlap', entries: [
+    makeEvent( 0, { type: 'note', def: 'resonantBassEnv2', dur: 10, ampEnvRatio: 0.25 }, { id: 'rb1' } )
+  ]
+} ) );
+const beforeResobass = sent.length;
+executor.play();
+advance( 0 );
+const resobassArgs = sent.slice( beforeResobass ).find( ( message ) => message.address === '/s_new' ).args;
+assert.equal( resobassArgs[ resobassArgs.indexOf( 'dur' ) + 1 ], 10,
+  'event dur is forwarded when the known SynthDef also declares dur' );
+assert.equal( resobassArgs[ resobassArgs.indexOf( 'sustain' ) + 1 ], 8,
+  'derived event sustain is forwarded when the known SynthDef uses it as an envelope control' );
+executor.stop();
+
 assert.throws( () => executor.load( createScoreDocument( {
   scoreID: 'unsupported', entries: [ makeEvent( 0, { type: 'visual' } ) ]
 } ) ), /unhandled|unsupported/i );
 executor.dispose();
 assert.equal( oscListeners.size, 0 );
 
-console.log( 'standalone-executor: 19/19 pass' );
+console.log( 'standalone-executor: 21/21 pass' );

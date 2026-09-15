@@ -127,6 +127,22 @@ try {
   await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
   if ( await page.locator( '.scoreEvent' ).count() !== 11 ) failures.push( 'bundled real demo did not open as a canonical score' );
   if ( await page.locator( '.titleInput' ).inputValue() !== 'Sonic Attunement 01' ) failures.push( 'bundled demo metadata did not load' );
+  await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).click();
+  if ( await page.locator( '.synthEnvelope' ).count() !== 11 ) failures.push( 'real demo did not render one envelope strip per synth row' );
+  await page.locator( '.synthBar' ).first().click();
+  const releaseHandle = page.getByRole( 'button', { name: 'Adjust rinse-01 release', exact: true } );
+  await releaseHandle.scrollIntoViewIfNeeded();
+  const releaseHandleBox = await releaseHandle.boundingBox();
+  if ( !releaseHandleBox ) failures.push( 'could not locate release envelope handle' );
+  else {
+    await page.mouse.move( releaseHandleBox.x + 2, releaseHandleBox.y + 2 );
+    await page.mouse.down();
+    await page.mouse.move( releaseHandleBox.x + 38, releaseHandleBox.y + 2, { steps: 4 } );
+    await page.mouse.up();
+    if ( Number( await page.getByLabel( 'Payload releaseT', { exact: true } ).inputValue() ) <= 24 ) {
+      failures.push( 'release envelope handle did not update the canonical SynthDef control' );
+    }
+  }
 } finally {
   await browser.close();
 }
@@ -135,4 +151,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 24/24 pass' );
+console.log( 'score-studio-browser: 27/27 pass' );

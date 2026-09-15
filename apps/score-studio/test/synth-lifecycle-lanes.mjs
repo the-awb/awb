@@ -22,10 +22,28 @@ assert.equal( lanes[ 0 ].events.at( -1 ).time, 8, 'implicit release uses dur tim
 assert.equal( lanes[ 0 ].events.at( -1 ).synthetic, true );
 assert.equal( lanes[ 0 ].startTime, 0 );
 assert.equal( lanes[ 0 ].endTime, 2, 'the first explicit release closes the displayed synth bar' );
+assert.equal( lanes[ 0 ].freeTime, 3 );
 assert.equal( lanes[ 1 ].id, 'n2' );
 assert.equal( lanes[ 1 ].expansionCount, 3, 'runtime expansion stays a badge on one authored lane' );
 assert.deepEqual( lanes[ 1 ].events.map( ( event ) => event.entry.id ), [ 'n2', 'r1', 's2' ] );
 assert.equal( lanes[ 2 ].id, '__unassigned__' );
 assert.deepEqual( lanes[ 2 ].events.map( ( event ) => event.entry.id ), [ 's3', 'v1' ] );
 
-console.log( 'synth-lifecycle-lanes: 14/14 pass' );
+const envelopeLane = projectSynthLifecycleLanes( [
+  makeEvent( 10, { type: 'note', def: 'substrate', dur: 20, attackT: 3, releaseT: 5 }, { id: 'env' } ),
+  makeEvent( 20, { type: 'set', target: 'env', releaseT: 7 }, { id: 'env-set' } )
+] )[ 0 ];
+assert.equal( envelopeLane.gateReleaseTime, 26, 'dur times legato is the gate-release boundary' );
+assert.equal( envelopeLane.endTime, 33, 'bar includes the release tail using controls effective at release' );
+assert.deepEqual( envelopeLane.envelope, {
+  attack: 3, release: 7, attackControl: 'attackT', releaseControl: 'releaseT', derived: false
+} );
+
+const coupledLane = projectSynthLifecycleLanes( [
+  makeEvent( 0, { type: 'note', def: 'resonantBassEnv2', dur: 20, ampEnvRatio: 0.25 }, { id: 'coupled' } )
+] )[ 0 ];
+assert.equal( coupledLane.gateReleaseTime, 16 );
+assert.equal( coupledLane.endTime, 20, 'coupled SynthDef release uses derived sustain times ampEnvRatio' );
+assert.equal( coupledLane.envelope.derived, true );
+
+console.log( 'synth-lifecycle-lanes: 21/21 pass' );
