@@ -6,7 +6,8 @@ import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import {
-  openScoreFile, readScoreFile, saveProjectionFile, saveScoreFile, storeRecoveryDraft
+  listScoreDirectory, loadBundledScore, openScoreDirectory, openScoreFile, readScoreFile,
+  readScoreHandle, saveProjectionFile, saveScoreFile, storeRecoveryDraft
 } from './engine/scoreFiles.js';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { HostedScoreClient } from './engine/HostedScoreClient.js';
@@ -27,6 +28,7 @@ export default function App() {
   const [ endpoint, setEndpoint ] = useState( import.meta.env.VITE_HOSTED_ENDPOINT ?? '' );
   const [ hostedMessage, setHostedMessage ] = useState( '' );
   const [ standaloneMessage, setStandaloneMessage ] = useState( '' );
+  const [ scoreFolder, setScoreFolder ] = useState( { handle: null, name: '', files: [], message: '' } );
   const inputRef = useRef( null );
   const sc = useSuperCollider( { importScsynth } );
   const sclang = useScLang( sc, { importSclang, locateFile: locateSclangFile, exposeDevGlobals: import.meta.env.DEV } );
@@ -154,16 +156,26 @@ export default function App() {
       handle: result.handle ?? null,
       name: result.name,
       hash: result.hash,
-      savedRevision: result.document.revision,
+      savedRevision: result.migrated ? null : result.document.revision,
       projectionHandle: null,
       projectionText: null,
       pendingIdentity: null,
       projectionStatus: 'not loaded',
-      message: `Opened ${ result.name }`
+      message: result.migrated
+        ? `Imported ${ result.name } as awb.score/1. Save to persist the canonical document.`
+        : `Opened ${ result.name }`
     } );
   }
 
+  function canDiscard() {
+    const untouchedWelcomeScore = file.name === null
+      && session.document.scoreID === 'untitled-score'
+      && session.document.revision === 0;
+    return !dirty || untouchedWelcomeScore || window.confirm( 'Discard the current unsaved revision?' );
+  }
+
   async function openDocument() {
+    if ( !canDiscard() ) return;
     try {
       const result = await openScoreFile();
       if ( result ) await acceptOpen( result );
@@ -176,9 +188,52 @@ export default function App() {
   async function onFallbackFile( event ) {
     const picked = event.target.files?.[ 0 ];
     event.target.value = '';
-    if ( !picked ) return;
+    if ( !picked || !canDiscard() ) return;
     try { await acceptOpen( await readScoreFile( picked ) ); }
     catch ( error ) { setFile( ( current ) => ( { ...current, message: error.message } ) ); }
+  }
+
+  async function chooseScoreFolder() {
+    try {
+      const result = await openScoreDirectory();
+      if ( !result ) {
+        setScoreFolder( ( current ) => ( { ...current, message: 'Folder browsing requires Chromium; use Open… in this browser.' } ) );
+        return;
+      }
+      setScoreFolder( { ...result, message: result.files.length ? '' : 'No .score.json files in this folder.' } );
+    } catch ( error ) {
+      if ( error.name !== 'AbortError' ) setScoreFolder( ( current ) => ( { ...current, message: error.message } ) );
+    }
+  }
+
+  async function refreshScoreFolder() {
+    if ( !scoreFolder.handle ) return;
+    try {
+      const files = await listScoreDirectory( scoreFolder.handle );
+      setScoreFolder( ( current ) => ( {
+        ...current, files, message: files.length ? '' : 'No .score.json files in this folder.'
+      } ) );
+    } catch ( error ) {
+      setScoreFolder( ( current ) => ( { ...current, message: error.message } ) );
+    }
+  }
+
+  async function openFolderScore( item ) {
+    if ( !canDiscard() ) return;
+    try { await acceptOpen( await readScoreHandle( item.handle ) ); }
+    catch ( error ) { setScoreFolder( ( current ) => ( { ...current, message: error.message } ) ); }
+  }
+
+  async function openDemoScore() {
+    if ( !canDiscard() ) return;
+    try {
+      const result = await loadBundledScore(
+        '/examples/sonic-attunement-01.score.json', 'sonic-attunement-01.score.json'
+      );
+      await acceptOpen( result );
+    } catch ( error ) {
+      setFile( ( current ) => ( { ...current, message: error.message } ) );
+    }
   }
 
   async function saveDocument( saveAs = false ) {
@@ -271,7 +326,7 @@ export default function App() {
   }
 
   function newDocument() {
-    if ( dirty && !window.confirm( 'Discard the current unsaved revision?' ) ) return;
+    if ( !canDiscard() ) return;
     dispatch( { type: 'LOAD_DOCUMENT', document: seedDocument( freshID() ) } );
     setFile( {
       handle: null, name: null, hash: null, savedRevision: null,
@@ -309,10 +364,20 @@ export default function App() {
         <div className="fileButtons">
           <button onClick={ newDocument }>New</button>
           <button onClick={ openDocument }>Open…</button>
+          <button onClick={ openDemoScore }>Demo score</button>
+          <button onClick={ chooseScoreFolder }>Open folder…</button>
           <button onClick={ () => saveDocument( false ) }>Save</button>
           <button onClick={ () => saveDocument( true ) }>Save as…</button>
           { file.pendingIdentity && <button disabled={ !connected } onClick={ retryProjection }>Retry SC export</button> }
         </div>
+        { scoreFolder.handle && <div className="scoreFolder">
+          <div className="scoreFolderHeader"><strong>{ scoreFolder.name }</strong>
+            <button onClick={ refreshScoreFolder }>Refresh</button></div>
+          { scoreFolder.files.map( ( item ) => <button key={ item.name }
+            className={ file.name === item.name ? 'active' : '' }
+            onClick={ () => openFolderScore( item ) }>{ item.name }</button> ) }
+        </div> }
+        { scoreFolder.message && <p className="fileMessage">{ scoreFolder.message }</p> }
         <input ref={ inputRef } hidden type="file" accept=".json,.score.json,application/json" onChange={ onFallbackFile } />
         <dl className="identity">
           <dt>File</dt><dd>{ file.name ?? 'not saved' }</dd>

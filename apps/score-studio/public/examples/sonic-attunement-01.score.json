@@ -1,0 +1,83 @@
+{
+  "schema": "awb.score/1",
+  "scoreID": "sonic-attunement-01",
+  "revision": 1,
+  "meta": {
+    "description": "Eleven-event browser demo projected from the early Sonic Attunement 01 Pseq.",
+    "source": "awbCollider/examples/score-projects/sonic-attunement-01/attunement-01.score.json",
+    "sourceCommit": "ca32ac7",
+    "tags": [
+      "demo",
+      "sonic-attunement"
+    ],
+    "title": "Sonic Attunement 01"
+  },
+  "entries": [
+    {
+      "id": "rinse-01",
+      "time": 0,
+      "path": ["rinse"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": 144, "amp": 0.8, "beat": 0.2, "dur": 300, "attackT": 20, "releaseT": 24 }
+    },
+    {
+      "id": "rinse-02",
+      "time": 50,
+      "path": ["rinse"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": 72, "freqQ": 0.05, "amp": 0.7, "beat": 0.125, "dur": 250, "attackT": 30, "releaseT": 24 }
+    },
+    {
+      "id": "rinse-03",
+      "time": 120,
+      "path": ["rinse"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": 148, "amp": 0.5, "beat": 0.1, "dur": 180, "releaseT": 24 }
+    },
+    {
+      "id": "rinse-04",
+      "time": 170,
+      "path": ["rinse"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": [288, 296], "freqQ": 0.05, "amp": 0.5, "beat": 0.25, "dur": 120, "attackT": 30, "releaseT": 24 }
+    },
+    {
+      "id": "rinse-05",
+      "time": 215,
+      "path": ["rinse"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": [432, 720], "freqQ": 0.05, "amp": 0.3, "beat": 6, "dur": 105, "releaseT": 30, "beatEnvARatio": 1.5 }
+    },
+    {
+      "id": "defrag-01",
+      "time": 328,
+      "path": ["defrag"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": [120, 144], "freqQ": 0.05, "amp": 0.8, "beat": 0.25, "dur": 120, "attackT": 20, "releaseT": 30 }
+    },
+    {
+      "id": "defrag-02",
+      "time": 428,
+      "path": ["defrag"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": [63, 99], "freqQ": 0.05, "amp": 0.8, "beat": 0.25, "dur": 180, "attackT": 20, "releaseT": 30 }
+    },
+    {
+      "id": "cohere-01",
+      "time": 578,
+      "path": ["cohere"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": 720, "freqQ": 0.05, "amp": 0.6, "beat": 0.3333333333333333, "dur": 120, "attackT": 30, "releaseT": 30 }
+    },
+    {
+      "id": "recast-01",
+      "time": 678,
+      "path": ["recast"],
+      "event": { "type": "note", "def": "resonantBassEnv2", "args": [], "freq": 36, "freqQ": 0.05, "amp": 1.1, "beat": 0.3333333333333333, "dur": 200, "attackT": 30, "releaseT": 24 }
+    },
+    {
+      "id": "recast-02",
+      "time": 728,
+      "path": ["recast"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": [576, 720, 864, 1008], "freqQ": 0.05, "amp": 0.25, "beat": 6, "dur": 100, "beatEnvARatio": 1.5, "attackT": 40, "releaseT": 30 }
+    },
+    {
+      "id": "recast-03",
+      "time": 773,
+      "path": ["recast"],
+      "event": { "type": "note", "def": "substrate", "args": [], "freqA": [720, 864, 1008, 1152], "freqQ": 0.05, "amp": 0.25, "beat": 5, "dur": 100, "beatEnvARatio": 1.5, "attackT": 40, "releaseT": 30 }
+    }
+  ]
+}

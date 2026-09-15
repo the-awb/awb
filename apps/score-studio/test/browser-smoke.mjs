@@ -122,6 +122,11 @@ try {
   if ( !( await page.getByText( 'No projection received yet.', { exact: false } ).isVisible() ) ) {
     failures.push( 'working-document boundary did not render' );
   }
+  page.once( 'dialog', ( dialog ) => dialog.accept() );
+  await page.getByRole( 'button', { name: 'Demo score', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
+  if ( await page.locator( '.scoreEvent' ).count() !== 11 ) failures.push( 'bundled real demo did not open as a canonical score' );
+  if ( await page.locator( '.titleInput' ).inputValue() !== 'Sonic Attunement 01' ) failures.push( 'bundled demo metadata did not load' );
 } finally {
   await browser.close();
 }
@@ -130,4 +135,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 22/22 pass' );
+console.log( 'score-studio-browser: 24/24 pass' );

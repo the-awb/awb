@@ -2,13 +2,8 @@
 import path from 'node:path';
 import os from 'node:os';
 import { existsSync, readdirSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
-import { createScoreDocument, serializeScoreDocument } from '@awb/score';
 
 const url = process.env.VERIFY_URL || 'http://localhost:5201';
-const colliderRoot = process.env.AWB_COLLIDER_ROOT
-  ?? '/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider';
-const scorePath = path.join( colliderRoot, 'examples/score-projects/sonic-attunement-01/attunement-01.score.json' );
 
 async function findPlaywright() {
   const local = path.resolve( 'node_modules/playwright/index.mjs' );
@@ -21,11 +16,6 @@ async function findPlaywright() {
   throw new Error( 'Playwright not found; run `npx playwright@latest install chromium` once.' );
 }
 
-const raw = JSON.parse( await readFile( scorePath, 'utf8' ) );
-const documentText = serializeScoreDocument( createScoreDocument( {
-  ...raw,
-  meta: { title: 'Sonic Attunement 01', description: 'Real standalone browser fixture.', tags: [ 'integration-fixture' ] }
-} ) );
 const { chromium } = await import( await findPlaywright() );
 const browser = await chromium.launch();
 const page = await browser.newPage( { viewport: { width: 1440, height: 900 } } );
@@ -37,10 +27,8 @@ try {
   await page.goto( url, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'AWB', { exact: true } ).waitFor();
   passed += 1;
-  await page.locator( 'input[type=file]' ).setInputFiles( {
-    name: 'attunement-01.score.json', mimeType: 'application/json', buffer: Buffer.from( documentText )
-  } );
-  await page.getByText( 'Opened attunement-01.score.json', { exact: true } ).waitFor();
+  await page.getByRole( 'button', { name: 'Demo score', exact: true } ).click();
+  await page.getByText( 'Opened sonic-attunement-01.score.json', { exact: true } ).waitFor();
   if ( await page.locator( '.scoreEvent' ).count() !== 11 ) throw new Error( 'browser did not load all eleven events' );
   passed += 1;
 
@@ -70,7 +58,7 @@ try {
   passed += 1;
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 1;
-  console.log( `standalone-real-browser: ${ passed }/8 pass (11 events, four final realizations, stopped immediately)` );
+  console.log( `standalone-real-browser: ${ passed }/8 pass (bundled demo, four final realizations, stopped immediately)` );
 } catch ( error ) {
   console.error( `standalone-real-browser: FAIL after ${ passed }/8: ${ error.message }` );
   process.exitCode = 1;

@@ -13,6 +13,7 @@ Current first slice:
 - direct timeline dragging of authored entries and disclosed synth control boundaries;
 - direct time, path and typed/raw payload editing with revision-safe undo/redo;
 - guarded File System Access saves, with JSON download fallback and local recovery drafts;
+- a bundled eleven-event Sonic Attunement demo plus a session-local folder browser for `.score.json` files;
 - an editor-owned pair-save coordinator: canonical JSON first, identity-bound SC projection second,
   with recoverable partial success;
 - explicit hosted/standalone mode surfaces;
@@ -53,6 +54,23 @@ numeric or boolean controls declared by `@awb/instruments`. They edit the same d
 raw JSON area and enter the canonical document together on Apply. Arrays, envelopes and nested
 objects remain raw JSON until their semantics justify a dedicated editor. This UI belongs in Score
 Studio; payload-blind `@awb/score` remains unchanged.
+
+## Score files and demo
+
+**Demo score** opens a bundled canonical snapshot of the real eleven-event, fourteen-minute Sonic
+Attunement 01 score. Its source and pinned awbCollider commit are recorded under
+`public/examples/`; it is ready to play without navigating to another repository.
+
+**Open folder…** asks for a local directory and lists its top-level `.score.json` files in the
+sidebar. Opening one retains its file handle, so ordinary Save writes back through the existing
+external-change guard. The directory handle is intentionally session-local for this first slice;
+persisting filesystem permission in IndexedDB is later work. Chromium supports directory access;
+other browsers keep the ordinary Open file fallback.
+
+The file boundary also recognises the narrow pre-schema AWB shape `{ scoreID, revision, entries }`
+used by the original real-score example. It adds required schema/default metadata, marks the result
+unsaved, and requires an explicit Save to replace or create a canonical `awb.score/1` document.
+Other invalid documents remain errors rather than being guessed into shape.
 
 ## Standalone execution
 
