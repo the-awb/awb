@@ -8,6 +8,7 @@ const EMPTY_STATE = Object.freeze( {
 const numericString = /^[-+]?(?:\d+\.?\d*|\.\d+)$/;
 const nowSeconds = () => performance.now() / 1000;
 const requestID = ( prefix ) => `${ prefix }-${ crypto.randomUUID() }`;
+const normalizeHash = ( hash ) => `${ hash }`.replace( /^sha256:/, '' );
 
 function assertJsonlibSafe( value, path ) {
   if ( typeof value === 'string' && numericString.test( value ) ) {
@@ -37,11 +38,14 @@ export class HostedProtocolError extends Error {
 export class HostedScoreClient {
   constructor( {
     clientID = `score-web-${ crypto.randomUUID() }`, WebSocketImpl = globalThis.WebSocket,
-    requestTimeoutMs = 1500
+    requestTimeoutMs = 1500, maxProjectionCharacters = 4 * 1024 * 1024,
+    maxProjectionChunks = 4096
   } = {} ) {
     this.clientID = clientID;
     this.WebSocketImpl = WebSocketImpl;
     this.requestTimeoutMs = requestTimeoutMs;
+    this.maxProjectionCharacters = maxProjectionCharacters;
+    this.maxProjectionChunks = maxProjectionChunks;
     this.state = EMPTY_STATE;
     this.listeners = new Set();
     this.pending = new Map();
@@ -146,15 +150,27 @@ export class HostedScoreClient {
       const result = resultFromArgs( args );
       const pending = this.pending.get( result.requestID );
       if ( pending ) {
-        clearTimeout( pending.timer );
-        this.pending.delete( result.requestID );
-        if ( result.ok ) pending.resolve( result );
-        else pending.reject( new HostedProtocolError( result ) );
+        if ( result.ok && pending.projection ) {
+          pending.result = result;
+          this.maybeResolveProjection( result.requestID );
+        } else {
+          clearTimeout( pending.timer );
+          this.pending.delete( result.requestID );
+          if ( result.ok ) pending.resolve( result );
+          else pending.reject( new HostedProtocolError( result ) );
+        }
       }
+    } else if ( address === '/awb/timeline/projection/begin' && args[ 0 ] === this.clientID ) {
+      this.receiveProjectionBegin( args );
+    } else if ( address === '/awb/timeline/projection/chunk' && args[ 0 ] === this.clientID ) {
+      this.receiveProjectionChunk( args );
+    } else if ( address === '/awb/timeline/projection/end' && args[ 0 ] === this.clientID ) {
+      this.receiveProjectionEnd( args );
     } else if ( address === '/awb/timeline/transport' && args[ 0 ] === this.clientID ) {
       const transport = Object.freeze( {
         scoreID: args[ 1 ], revision: args[ 2 ], runID: args[ 3 ], state: args[ 4 ],
-        scorePosition: args[ 5 ], hostMonotonicTime: args[ 6 ], rate: args[ 7 ], currentIndex: args[ 8 ]
+        scorePosition: args[ 5 ], hostMonotonicTime: args[ 6 ], rate: args[ 7 ], currentIndex: args[ 8 ],
+        clockClass: args[ 9 ] ?? null, scheduledStartHostTime: args[ 10 ] ?? -1
       } );
       this.publish( { scoreID: transport.scoreID, remoteRevision: transport.revision, transport } );
     } else if ( address === '/awb/timeline/realization' && args[ 0 ] === this.clientID ) {
@@ -176,7 +192,105 @@ export class HostedScoreClient {
     }
   }
 
-  request( address, args, id, retries = 1 ) {
+  rejectProjection( id, message ) {
+    const pending = this.pending.get( id );
+    if ( !pending ) return;
+    clearTimeout( pending.timer );
+    this.pending.delete( id );
+    pending.reject( new Error( `Invalid projection response: ${ message }` ) );
+  }
+
+  receiveProjectionBegin( args ) {
+    const id = args[ 1 ];
+    const pending = this.pending.get( id );
+    if ( !pending?.projection ) return;
+    const begin = {
+      scoreID: args[ 2 ], revision: args[ 3 ], contentHash: args[ 4 ], kind: args[ 5 ],
+      chunkCount: args[ 6 ], characterCount: args[ 7 ]
+    };
+    const expected = pending.projection.expected;
+    if ( begin.scoreID !== expected.scoreID || begin.revision !== expected.revision
+      || normalizeHash( begin.contentHash ) !== normalizeHash( expected.contentHash )
+      || begin.kind !== expected.kind || !Number.isInteger( begin.chunkCount ) || begin.chunkCount < 1
+      || begin.chunkCount > this.maxProjectionChunks
+      || !Number.isInteger( begin.characterCount ) || begin.characterCount < 0
+      || begin.characterCount > this.maxProjectionCharacters ) {
+      this.rejectProjection( id, 'begin identity or bounds do not match the request' );
+      return;
+    }
+    const previous = pending.projection.begin;
+    if ( previous && JSON.stringify( previous ) !== JSON.stringify( begin ) ) {
+      this.rejectProjection( id, 'repeated begin metadata changed' );
+      return;
+    }
+    pending.projection.begin = begin;
+    this.maybeResolveProjection( id );
+  }
+
+  receiveProjectionChunk( args ) {
+    const id = args[ 1 ];
+    const pending = this.pending.get( id );
+    if ( !pending?.projection ) return;
+    const index = args[ 2 ];
+    const value = args[ 3 ];
+    if ( !Number.isInteger( index ) || index < 0 || typeof value !== 'string'
+      || new TextEncoder().encode( value ).length > 2048 ) {
+      this.rejectProjection( id, 'chunk index or text is invalid' );
+      return;
+    }
+    const previous = pending.projection.chunks.get( index );
+    if ( previous !== undefined && previous !== value ) {
+      this.rejectProjection( id, `repeated chunk ${ index } changed` );
+      return;
+    }
+    pending.projection.chunks.set( index, value );
+    this.maybeResolveProjection( id );
+  }
+
+  receiveProjectionEnd( args ) {
+    const id = args[ 1 ];
+    const pending = this.pending.get( id );
+    if ( !pending?.projection ) return;
+    pending.projection.end = {
+      scoreID: args[ 2 ], revision: args[ 3 ], contentHash: args[ 4 ], kind: args[ 5 ], chunkCount: args[ 6 ]
+    };
+    this.maybeResolveProjection( id );
+  }
+
+  maybeResolveProjection( id ) {
+    const pending = this.pending.get( id );
+    const projection = pending?.projection;
+    if ( !projection?.begin || !projection.end || !pending.result ) return;
+    const { begin, end } = projection;
+    if ( end.scoreID !== begin.scoreID || end.revision !== begin.revision
+      || normalizeHash( end.contentHash ) !== normalizeHash( begin.contentHash )
+      || end.kind !== begin.kind || end.chunkCount !== begin.chunkCount ) {
+      this.rejectProjection( id, 'end metadata does not match begin' );
+      return;
+    }
+    const chunks = [];
+    for ( let index = 0; index < begin.chunkCount; index += 1 ) {
+      if ( !projection.chunks.has( index ) ) return;
+      chunks.push( projection.chunks.get( index ) );
+    }
+    if ( projection.chunks.size !== begin.chunkCount ) {
+      this.rejectProjection( id, 'received an out-of-range chunk' );
+      return;
+    }
+    const text = chunks.join( '' );
+    if ( [ ...text ].length !== begin.characterCount ) {
+      this.rejectProjection( id, 'concatenated character count does not match begin' );
+      return;
+    }
+    clearTimeout( pending.timer );
+    this.pending.delete( id );
+    pending.resolve( Object.freeze( {
+      scoreID: begin.scoreID, revision: begin.revision, contentHash: begin.contentHash,
+      kind: begin.kind, text
+    } ) );
+  }
+
+  request( address, args, id, retries = 1, projection = null ) {
     return new Promise( ( resolve, reject ) => {
       let attempts = 0;
       const transmit = () => {
@@ -192,7 +306,7 @@ export class HostedScoreClient {
           }
         }, this.requestTimeoutMs );
       };
-      this.pending.set( id, { resolve, reject, timer: null } );
+      this.pending.set( id, { resolve, reject, timer: null, projection, result: null } );
       transmit();
     } );
   }
@@ -242,6 +356,21 @@ export class HostedScoreClient {
     return this.request( '/awb/timeline/command', [
       this.clientID, id, document.scoreID, document.revision, command, argument
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
+  }
+
+  requestProjection( { scoreID, revision, contentHash, kind = 'timeline' } ) {
+    const id = requestID( 'projection' );
+    const wireHash = `sha256:${ normalizeHash( contentHash ) }`;
+    const projection = {
+      expected: { scoreID, revision, contentHash: wireHash, kind },
+      begin: null, end: null, chunks: new Map()
+    };
+    return this.request( '/awb/timeline/projection/request', [
+      this.clientID, id, scoreID, revision, wireHash, kind
+    ], id, 1, projection ).catch( ( error ) => {
+      this.publish( { error: error.message } );
+      throw error;
+    } );
   }
 
   ping() {

@@ -59,10 +59,10 @@ Canonical protocol evidence remains separate:
 - `packages/score/fixtures/connector-v1/score.json` — complete host-neutral score document;
 - `packages/score/fixtures/connector-v1/sc-normalized.json` — expected desktop projection;
 - `packages/score/fixtures/connector-v1/osc-transcript.json` — frozen protocol-v1 exchange;
-- `test/hosted-transport.mjs` — WebSocket, UDP, snapshot recovery, idempotent retry, transport and
-  realization integration test.
+- `test/hosted-transport.mjs` — WebSocket, UDP, snapshot recovery, idempotent retry, transport,
+  realization and incomplete-projection replay integration test.
 - `test/hosted-real-sclang.mjs` — the same hosted client and sidecar against the real desktop
-  bridge, loading all eleven `sonic-attunement-01` events and seeking to 773 seconds without
-  starting playback.
+  bridge, loading all eleven `sonic-attunement-01` events, receiving its bounded generated SC
+  projection and seeking to 773 seconds without starting playback.
 - `test/hosted-real-browser.mjs` — the complete Chromium editor → WebSocket sidecar → UDP →
-  desktop sclang path over the same real score and seek.
+  desktop sclang path over the same real score, paired JSON/SC download and seek.

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import dgram from 'node:dgram';
 import { readFile } from 'node:fs/promises';
 import { WebSocket } from 'ws';
-import { parseScoreDocument } from '@awb/score';
+import { hashScoreDocument, parseScoreDocument } from '@awb/score';
 import { createHostedBridge } from '../server/hosted-bridge.mjs';
 import { decodeOscMessage, encodeOscMessage } from '../server/osc-codec.mjs';
 import { HostedScoreClient } from '../src/engine/HostedScoreClient.js';
@@ -17,6 +17,7 @@ const oscPort = osc.address().port;
 const received = [];
 let endCount = 0;
 let droppedStateID = null;
+let projectionRequests = 0;
 
 function reply( rinfo, address, args ) {
   osc.send( encodeOscMessage( address, args ), rinfo.port, rinfo.address );
@@ -59,6 +60,18 @@ osc.on( 'message', ( packet, rinfo ) => {
       reply( rinfo, '/awb/timeline/transport', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'playing', 0, hostTime, 1, 0 ] );
       reply( rinfo, '/awb/timeline/realization', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'n1', 'realization-1', 'started', 0, 0, 2, 1001, 1002 ] );
     }
+  } else if ( message.address === '/awb/timeline/projection/request' ) {
+    projectionRequests += 1;
+    const text = '// α projection\n';
+    reply( rinfo, '/awb/timeline/projection/begin', [
+      args[ 0 ], args[ 1 ], args[ 2 ], args[ 3 ], args[ 4 ], args[ 5 ], 2, [ ...text ].length
+    ] );
+    reply( rinfo, '/awb/timeline/projection/chunk', [ args[ 0 ], args[ 1 ], 0, '// α ' ] );
+    if ( projectionRequests > 1 ) reply( rinfo, '/awb/timeline/projection/chunk', [ args[ 0 ], args[ 1 ], 1, 'projection\n' ] );
+    reply( rinfo, '/awb/timeline/projection/end', [
+      args[ 0 ], args[ 1 ], args[ 2 ], args[ 3 ], args[ 4 ], args[ 5 ], 2
+    ] );
+    result( rinfo, args, true, 'projection', fixture.scoreID, fixture.revision, 'generated', '2' );
   }
 } );
 
@@ -92,6 +105,16 @@ try {
   assert.equal( stateMessages.length, 2, 'a timed-out request is retried' );
   assert.equal( stateMessages[ 0 ].args[ 1 ], stateMessages[ 1 ].args[ 1 ], 'retry retains its idempotency key' );
 
+  const projection = await client.requestProjection( {
+    scoreID: fixture.scoreID, revision: fixture.revision,
+    contentHash: await hashScoreDocument( fixture ), kind: 'timeline'
+  } );
+  assert.equal( projection.text, '// α projection\n' );
+  assert.equal( projection.kind, 'timeline' );
+  assert.equal( projectionRequests, 2, 'an incomplete projection retries with the same request ID' );
+  const projectionMessages = received.filter( ( message ) => message.address === '/awb/timeline/projection/request' );
+  assert.equal( projectionMessages[ 0 ].args[ 1 ], projectionMessages[ 1 ].args[ 1 ] );
+
   await waitFor( () => client.getState().clockOffset !== null );
   assert.ok( client.estimateScorePosition() >= 0 );
 
@@ -99,7 +122,7 @@ try {
   const closeCode = await new Promise( ( resolve ) => untrusted.addEventListener( 'close', ( event ) => resolve( event.code ) ) );
   assert.equal( closeCode, 1008, 'bridge rejects clients without its session token' );
 
-  console.log( 'hosted-transport: 13/13 pass' );
+  console.log( 'hosted-transport: 17/17 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

@@ -94,8 +94,13 @@ try {
   const { chromium } = await import( await findPlaywright() );
   browser = await chromium.launch();
   const page = await browser.newPage( { viewport: { width: 1440, height: 900 } } );
+  await page.addInitScript( () => {
+    Object.defineProperty( window, 'showSaveFilePicker', { value: undefined, configurable: true } );
+  } );
   const errors = [];
+  const downloads = [];
   page.on( 'pageerror', ( error ) => errors.push( error.message ) );
+  page.on( 'download', ( download ) => downloads.push( download.suggestedFilename() ) );
   await page.goto( `http://127.0.0.1:${ vitePort }`, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'AWB', { exact: true } ).waitFor();
   passed += 1;
@@ -114,6 +119,20 @@ try {
   await page.getByText( 'Revision 1 installed atomically.', { exact: true } ).waitFor();
   passed += 1;
 
+  await page.getByRole( 'button', { name: 'Save', exact: true } ).click();
+  await page.getByText( 'Canonical JSON and generated SC projection saved.', { exact: true } ).waitFor();
+  await waitFor( () => downloads.length === 2, 5000 );
+  if ( !downloads.some( ( name ) => name.endsWith( '.score.json' ) )
+    || !downloads.some( ( name ) => name.endsWith( '.score.scd' ) ) ) {
+    throw new Error( `paired save produced wrong downloads: ${ downloads.join( ', ' ) }` );
+  }
+  passed += 2;
+  await page.getByRole( 'button', { name: 'Console', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'Working document', exact: true } ).click();
+  await page.getByText( 'AWB GENERATED SCORE PROJECTION', { exact: false } ).waitFor();
+  await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
+  passed += 2;
+
   await page.locator( '.timelineScroll' ).evaluate( ( scroll, time ) => {
     scroll.scrollLeft = time * 22;
     const lane = scroll.querySelector( '.lane' );
@@ -129,9 +148,9 @@ try {
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 1;
 
-  console.log( `hosted-real-browser: ${ passed }/9 pass (11 events, final onset 773s, no playback)` );
+  console.log( `hosted-real-browser: ${ passed }/13 pass (11 events, paired JSON/SC save, final onset 773s, no playback)` );
 } catch ( error ) {
-  console.error( `hosted-real-browser: FAIL after ${ passed }/9: ${ error.message }` );
+  console.error( `hosted-real-browser: FAIL after ${ passed }/13: ${ error.message }` );
   console.error( scOutput.slice( -8000 ) );
   process.exitCode = 1;
 } finally {

@@ -5,11 +5,14 @@ import { sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
-import { openScoreFile, readScoreFile, saveScoreFile, storeRecoveryDraft } from './engine/scoreFiles.js';
+import {
+  openScoreFile, readScoreFile, saveProjectionFile, saveScoreFile, storeRecoveryDraft
+} from './engine/scoreFiles.js';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { HostedScoreClient } from './engine/HostedScoreClient.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
 import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
+import { retryScoreProjection, saveScorePair } from './engine/scorePairSave.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
@@ -18,6 +21,7 @@ export default function App() {
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
   const [ file, setFile ] = useState( {
     handle: null, name: null, hash: null, savedRevision: null,
+    projectionHandle: null, projectionText: null, pendingIdentity: null,
     projectionStatus: 'not generated', message: ''
   } );
   const [ endpoint, setEndpoint ] = useState( import.meta.env.VITE_HOSTED_ENDPOINT ?? '' );
@@ -151,6 +155,9 @@ export default function App() {
       name: result.name,
       hash: result.hash,
       savedRevision: result.document.revision,
+      projectionHandle: null,
+      projectionText: null,
+      pendingIdentity: null,
       projectionStatus: 'not loaded',
       message: `Opened ${ result.name }`
     } );
@@ -176,16 +183,45 @@ export default function App() {
 
   async function saveDocument( saveAs = false ) {
     try {
-      const result = await saveScoreFile( session.document, {
-        handle: file.handle,
-        expectedHash: file.hash,
-        saveAs
-      } );
+      if ( session.mode === MODES.HOSTED && connected ) {
+        const result = await saveScorePair( {
+          document: session.document,
+          saveCanonical: () => saveScoreFile( session.document, {
+            handle: file.handle, expectedHash: file.hash, saveAs
+          } ),
+          requestProjection: requestHostedProjection,
+          saveProjection: ( text, identity ) => saveProjectionFile( text, {
+            scoreID: identity.scoreID,
+            handle: file.projectionHandle,
+            expectedText: file.projectionText,
+            saveAs
+          } )
+        } );
+        setFile( ( current ) => ( {
+          ...current,
+          handle: result.canonical.handle,
+          name: result.canonical.handle?.name ?? `${ session.document.scoreID }.score.json`,
+          hash: result.canonical.hash,
+          savedRevision: session.document.revision,
+          projectionHandle: result.projectionResult?.handle ?? current.projectionHandle,
+          projectionText: result.projection?.text ?? current.projectionText,
+          pendingIdentity: result.status === 'partial' ? result.identity : null,
+          projectionStatus: result.status === 'complete' ? 'saved' : 'canonical saved; SC export pending',
+          message: result.status === 'complete'
+            ? 'Canonical JSON and generated SC projection saved.'
+            : result.projectionError
+        } ) );
+        return;
+      }
+      const result = await saveScoreFile( session.document, { handle: file.handle, expectedHash: file.hash, saveAs } );
       setFile( {
         handle: result.handle,
         name: result.handle?.name ?? `${ session.document.scoreID }.score.json`,
         hash: result.hash,
         savedRevision: session.document.revision,
+        projectionHandle: file.projectionHandle,
+        projectionText: file.projectionText,
+        pendingIdentity: null,
         projectionStatus: 'pending desktop export',
         message: result.downloaded
           ? 'Canonical JSON downloaded. This browser cannot retain a writable file handle.'
@@ -196,11 +232,50 @@ export default function App() {
     }
   }
 
+  async function requestHostedProjection( identity ) {
+    if ( !connected ) throw new Error( 'Connect to the hosted bridge before requesting an SC projection.' );
+    if ( hosted.scoreID !== session.document.scoreID || hosted.remoteRevision !== session.document.revision ) {
+      const expectedRevision = hosted.scoreID === session.document.scoreID
+        && Number.isInteger( hosted.remoteRevision ) ? hosted.remoteRevision : -1;
+      await hostedClient.loadDocument( session.document, { expectedRevision } );
+    }
+    const projection = await hostedClient.requestProjection( identity );
+    dispatch( { type: 'SET_WORKING_DOCUMENT', text: projection.text } );
+    return projection;
+  }
+
+  async function retryProjection() {
+    if ( !file.pendingIdentity ) return;
+    try {
+      const result = await retryScoreProjection( {
+        document: session.document,
+        identity: file.pendingIdentity,
+        requestProjection: requestHostedProjection,
+        saveProjection: ( text, identity ) => saveProjectionFile( text, {
+          scoreID: identity.scoreID,
+          handle: file.projectionHandle,
+          expectedText: file.projectionText
+        } )
+      } );
+      setFile( ( current ) => ( {
+        ...current,
+        projectionHandle: result.projectionResult.handle,
+        projectionText: result.projection.text,
+        pendingIdentity: null,
+        projectionStatus: 'saved',
+        message: 'Generated SC projection saved.'
+      } ) );
+    } catch ( error ) {
+      if ( error.name !== 'AbortError' ) setFile( ( current ) => ( { ...current, message: error.message } ) );
+    }
+  }
+
   function newDocument() {
     if ( dirty && !window.confirm( 'Discard the current unsaved revision?' ) ) return;
     dispatch( { type: 'LOAD_DOCUMENT', document: seedDocument( freshID() ) } );
     setFile( {
       handle: null, name: null, hash: null, savedRevision: null,
+      projectionHandle: null, projectionText: null, pendingIdentity: null,
       projectionStatus: 'not generated', message: 'New unsaved score'
     } );
   }
@@ -236,6 +311,7 @@ export default function App() {
           <button onClick={ openDocument }>Open…</button>
           <button onClick={ () => saveDocument( false ) }>Save</button>
           <button onClick={ () => saveDocument( true ) }>Save as…</button>
+          { file.pendingIdentity && <button disabled={ !connected } onClick={ retryProjection }>Retry SC export</button> }
         </div>
         <input ref={ inputRef } hidden type="file" accept=".json,.score.json,application/json" onChange={ onFallbackFile } />
         <dl className="identity">

@@ -76,10 +76,10 @@ owns authored instrument implementations.
 
 ## Hosted save ownership
 
-`src/engine/scorePairSave.js` fixes the order and failure semantics before the desktop protocol is
-extended. The editor writes canonical JSON first. Only after that succeeds does it call a
-transport-neutral projection provider with `scoreID`, `revision`, canonical `contentHash` and
-projection kind. Returned SC text is rejected unless all three source-identity fields match.
+`src/engine/scorePairSave.js` fixes the order and failure semantics. The editor writes canonical
+JSON first. Only after that succeeds does it call the desktop through the bounded
+`/awb/timeline/projection/...` exchange, supplying `scoreID`, `revision`, canonical `contentHash`
+and projection kind. Returned SC text is rejected unless all three source-identity fields match.
 
 The editor then writes or downloads the `.score.scd` projection. If generation or the second write
 fails, the result is explicitly `partial`: canonical data remains safely saved and the exact
@@ -88,8 +88,9 @@ write failure requests no projection at all.
 
 Desktop `ScoreSclangConnector.savePair` is useful for desktop-owned files, but it should not be
 exposed wholesale to this editor: sending canonical paths to sclang would make the execution host
-a persistence authority. The hosted protocol still needs a bounded projection-text response that
-implements the browser's `requestProjection(identity)` interface.
+a persistence authority. Score Studio instead implements `requestProjection(identity)` over the
+protocol added in awbCollider `f56a4d5`. Missing text chunks keep the request pending and cause an
+idempotent retry; the bridge then replays the same cached begin/chunks/end/result response.
 
 The matched PR #7440 wasm assets are app-owned under `public/scsynth` and `public/sclang`; the
 reusable lifecycle and console machinery remains in `@awb/sc-wasm` and `@awb/sc-console`.
@@ -117,12 +118,14 @@ token-bearing endpoint into the Hosted runtime panel.
 `test:hosted-real` temporarily derives a test language configuration from the user's live config,
 removing only the exact `classes WIP` exclusion without modifying the live file. It starts the real
 desktop bridge fixture, sends the eleven-event `sonic-attunement-01` document through the same
-Score Studio client and WebSocket sidecar, seeks to its 773-second final onset, and exits without
-playing the fourteen-minute work.
+Score Studio client and WebSocket sidecar, validates a bounded generated `PScoreTimelinePlayer`
+projection, seeks to its 773-second final onset, and exits without playing the fourteen-minute work.
 
 `test:hosted-browser-real` adds the actual Chromium editor surface to that path: it opens the real
 document through the file-input fallback, verifies eleven timeline entries, connects, installs the
-revision and drives the UI playhead/seek to 773 seconds. It likewise never presses Play.
+revision, downloads canonical JSON plus the identity-matched generated SC projection, displays that
+projection as the working document, and drives the UI playhead/seek to 773 seconds. It likewise
+never presses Play.
 
 Each WebSocket connection receives its own UDP reply socket. Frames are exactly
 `{ "address": "/awb/timeline/...", "args": [...] }`; other OSC namespaces, non-scalar arguments,

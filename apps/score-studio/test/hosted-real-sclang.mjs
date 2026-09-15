@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { WebSocket } from 'ws';
-import { createScoreDocument } from '@awb/score';
+import { createScoreDocument, hashScoreDocument } from '@awb/score';
 import { createHostedBridge } from '../server/hosted-bridge.mjs';
 import { HostedScoreClient } from '../src/engine/HostedScoreClient.js';
 
@@ -75,6 +75,20 @@ try {
   }
   passed += 2;
 
+  const projection = await client.requestProjection( {
+    scoreID: document.scoreID,
+    revision: document.revision,
+    contentHash: await hashScoreDocument( document ),
+    kind: 'timeline'
+  } );
+  if ( !projection.text.includes( 'AWB GENERATED SCORE PROJECTION' ) ) {
+    throw new Error( 'desktop returned text without the generated-projection marker' );
+  }
+  if ( !projection.text.includes( 'PScoreTimelinePlayer' ) ) {
+    throw new Error( 'desktop timeline projection does not construct a connected PScoreTimelinePlayer' );
+  }
+  passed += 3;
+
   await client.command( document, 'seek', 773 );
   await waitFor( () => {
     const transport = client.getState().transport;
@@ -93,9 +107,9 @@ try {
   const exitCode = await new Promise( ( resolve ) => child.once( 'exit', resolve ) );
   if ( exitCode !== 0 ) throw new Error( `sclang fixture exited ${ exitCode }` );
   passed += 1;
-  console.log( `hosted-real-sclang: ${ passed }/8 pass (11 events, final onset 773s, no playback)` );
+  console.log( `hosted-real-sclang: ${ passed }/11 pass (11 events, bounded SC projection, final onset 773s, no playback)` );
 } catch ( error ) {
-  console.error( `hosted-real-sclang: FAIL after ${ passed }/8: ${ error.message }` );
+  console.error( `hosted-real-sclang: FAIL after ${ passed }/11: ${ error.message }` );
   console.error( output.slice( -8000 ) );
   process.exitCode = 1;
 } finally {
