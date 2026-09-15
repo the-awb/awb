@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
 import { hashScoreDocument, parseScoreDocument } from '@awb/score';
@@ -6,6 +6,7 @@ import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import { openScoreFile, readScoreFile, saveScoreFile, storeRecoveryDraft } from './engine/scoreFiles.js';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
+import { HostedScoreClient } from './engine/HostedScoreClient.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
@@ -13,10 +14,13 @@ const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
 export default function App() {
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
   const [ file, setFile ] = useState( { handle: null, name: null, hash: null, savedRevision: null, message: '' } );
-  const [ endpoint, setEndpoint ] = useState( '' );
+  const [ endpoint, setEndpoint ] = useState( import.meta.env.VITE_HOSTED_ENDPOINT ?? '' );
+  const [ hostedMessage, setHostedMessage ] = useState( '' );
   const inputRef = useRef( null );
   const sc = useSuperCollider( { importScsynth } );
   const sclang = useScLang( sc, { importSclang, locateFile: locateSclangFile, exposeDevGlobals: import.meta.env.DEV } );
+  const hostedClient = useMemo( () => new HostedScoreClient(), [] );
+  const hosted = useSyncExternalStore( hostedClient.subscribe, hostedClient.getState, hostedClient.getState );
   const dirty = file.savedRevision !== session.document.revision;
   const selectedEntry = useMemo(
     () => session.document.entries.find( ( entry ) => entry.id === session.selected[ 0 ] ) ?? null,
@@ -26,6 +30,33 @@ export default function App() {
   useEffect( () => {
     try { storeRecoveryDraft( session.document ); } catch { /* local recovery is optional */ }
   }, [ session.document ] );
+
+  useEffect( () => () => hostedClient.disconnect(), [ hostedClient ] );
+
+  useEffect( () => {
+    if ( session.mode !== MODES.HOSTED || !hosted.transport ) return undefined;
+    dispatch( { type: 'SET_PLAYHEAD', time: hostedClient.estimateScorePosition() } );
+    if ( hosted.transport.state !== 'playing' ) return undefined;
+    const timer = setInterval( () => {
+      dispatch( { type: 'SET_PLAYHEAD', time: hostedClient.estimateScorePosition() } );
+    }, 50 );
+    return () => clearInterval( timer );
+  }, [ hosted.transport, hosted.clockOffset, hostedClient, session.mode ] );
+
+  async function hostedAction( action, success ) {
+    setHostedMessage( '' );
+    try {
+      await action();
+      if ( success ) setHostedMessage( success );
+    } catch ( error ) {
+      setHostedMessage( error.message );
+    }
+  }
+
+  const connected = hosted.status === 'connected';
+  const loadedRevision = connected
+    && hosted.scoreID === session.document.scoreID
+    && hosted.remoteRevision === session.document.revision;
 
   async function acceptOpen( result ) {
     dispatch( { type: 'LOAD_DOCUMENT', document: result.document } );
@@ -150,8 +181,18 @@ export default function App() {
             <>
               <label>WebSocket endpoint<input value={ endpoint } placeholder="Waiting for the frozen host endpoint"
                 onChange={ ( event ) => setEndpoint( event.target.value ) } /></label>
-              <button disabled>Connect</button>
-              <p className="boundaryNote">The desktop bridge owns scheduling and transport. This client will consume the frozen OSC transcript; it does not generate SC code.</p>
+              <div className="runtimeButtons hostedConnection">
+                <button disabled={ !endpoint || hosted.status === 'connecting' || connected }
+                  onClick={ () => hostedAction( () => hostedClient.connect( endpoint ), 'Connected to desktop sclang.' ) }>Connect</button>
+                <button disabled={ !connected } onClick={ () => hostedClient.disconnect() }>Disconnect</button>
+                <button disabled={ !connected } onClick={ () => hostedAction( () => hostedClient.loadDocument( session.document, {
+                  expectedRevision: hosted.scoreID === session.document.scoreID && Number.isInteger( hosted.remoteRevision )
+                    ? hosted.remoteRevision : -1
+                } ), `Revision ${ session.document.revision } installed atomically.` ) }>Load revision</button>
+              </div>
+              <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
+              { ( hostedMessage || hosted.error ) && <p className={ hosted.error ? 'error' : 'fileMessage' }>{ hostedMessage || hosted.error }</p> }
+              <p className="boundaryNote">The local WebSocket sidecar forwards only `/awb/timeline/...` OSC. Desktop sclang remains the scheduling and transport authority.</p>
             </>
           ) : (
             <>
@@ -170,10 +211,38 @@ export default function App() {
 
         <section className="transport">
           <h2>Transport</h2>
-          <div className="runtimeButtons"><button disabled>Play</button><button disabled>Pause</button><button disabled>Stop</button></div>
+          { session.mode === MODES.HOSTED ? (
+            <div className="runtimeButtons">
+              <button disabled={ !loadedRevision || hosted.transport?.state === 'playing' }
+                onClick={ () => hostedAction( () => hostedClient.command( session.document,
+                  hosted.transport?.state === 'paused' ? 'resume' : 'play' ) ) }>{ hosted.transport?.state === 'paused' ? 'Resume' : 'Play' }</button>
+              <button disabled={ !loadedRevision || hosted.transport?.state !== 'playing' }
+                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'pause' ) ) }>Pause</button>
+              <button disabled={ !loadedRevision }
+                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'stop' ) ) }>Stop</button>
+              <button disabled={ !loadedRevision }
+                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'seek', session.playhead ) ) }>Seek here</button>
+              <button disabled={ !connected }
+                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'state' ) ) }>State</button>
+              <button disabled={ !loadedRevision }
+                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'openDocument' ) ) }>Open SC document</button>
+            </div>
+          ) : <div className="runtimeButtons"><button disabled>Play</button><button disabled>Pause</button><button disabled>Stop</button></div> }
           <p className="timeLarge">{ session.playhead.toFixed( 3 ) } s</p>
-          <p className="boundaryNote">Controls stay disabled until their selected executor is connected.</p>
+          <p className="boundaryNote">{ session.mode === MODES.HOSTED && hosted.transport
+            ? `${ hosted.transport.state } · run ${ hosted.transport.runID || '—' } · host-clock anchor`
+            : 'Controls stay disabled until their selected executor is connected.' }</p>
         </section>
+
+        { session.mode === MODES.HOSTED && <section className="realizations">
+          <h2>Realizations</h2>
+          { hosted.realizations.length ? [ ...hosted.realizations ].reverse().slice( 0, 8 ).map( ( realization ) => (
+            <div className="realization" key={ realization.realizationID }>
+              <strong>{ realization.entryID }</strong><span>{ realization.state }</span>
+              <small>{ realization.nodeIDs.length ? `nodes ${ realization.nodeIDs.join( ', ' ) }` : 'no server nodes' }</small>
+            </div>
+          ) ) : <p className="emptyCopy">No runtime realizations reported.</p> }
+        </section> }
 
         <section className="eventInspector">
           <h2>Event</h2>

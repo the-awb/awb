@@ -68,9 +68,9 @@ agree on exactly what was loaded.
 
 Canonical JSON uses recursively sorted object keys, two-space indentation and one trailing LF.
 Array order is retained: same-time entry order is semantic. The shared connector fixture is in
-`fixtures/connector-v1/`; its manifest pins the canonical hash and expected SC normalization. Its
-OSC transcript is deliberately unset until both runtime implementations freeze that vocabulary
-together.
+`fixtures/connector-v1/`; its manifest pins the canonical hash, expected SC normalization and the
+version-1 OSC transcript. The fixture uses the desktop runtime's safe two-note material while
+retaining the complete `awb.score/1` document envelope owned by this package.
 
 ## Five behaviours that are decisions, not details
 

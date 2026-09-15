@@ -26,7 +26,7 @@ page.on( 'pageerror', ( error ) => failures.push( error.message ) );
 
 try {
   await page.goto( url, { waitUntil: 'domcontentloaded' } );
-  await page.getByText( 'AWB' ).waitFor();
+  await page.getByText( 'AWB', { exact: true } ).waitFor();
   if ( await page.locator( '.scoreEvent' ).count() !== 3 ) failures.push( 'expected three seeded score events' );
 
   await page.locator( '.scoreEvent' ).first().click();

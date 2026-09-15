@@ -1,0 +1,81 @@
+{
+  "schema": "awb.timeline-osc-transcript/1",
+  "clientID": "score-browser-fixture",
+  "frames": [
+    {
+      "direction": "to-host",
+      "address": "/awb/timeline/hello",
+      "args": ["score-browser-fixture", 57130]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/connected",
+      "args": ["score-browser-fixture", 1]
+    },
+    {
+      "direction": "to-host",
+      "address": "/awb/timeline/snapshot/begin",
+      "args": ["score-browser-fixture", "request-begin-1", "snapshot-1", "score-pipeline-v1", 1, -1, 2, "sha256:907965870939803df685cdf7bc183fd63a98ed7c9f75ead3eb9ba3eb31bb95b5"]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/result",
+      "args": ["score-browser-fixture", "request-begin-1", 1, "snapshotBegin", "score-pipeline-v1", 1, "accepted", "snapshot-1"]
+    },
+    {
+      "direction": "to-host",
+      "address": "/awb/timeline/snapshot/chunk",
+      "args": ["score-browser-fixture", "request-chunk-1", "snapshot-1", 0, "{\"event\":{\"amp\":0,\"def\":\"default\",\"dur\":0.4,\"freq\":220,\"type\":\"note\"},\"id\":\"opening-a\",\"path\":[\"opening\",\"drone\"],\"time\":0}", "{\"event\":{\"amp\":0,\"def\":\"default\",\"dur\":0.4,\"freq\":330,\"type\":\"note\"},\"id\":\"opening-b\",\"path\":[\"opening\",\"drone\"],\"time\":0.5}"]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/result",
+      "args": ["score-browser-fixture", "request-chunk-1", 1, "snapshotChunk", "score-pipeline-v1", 1, "accepted", "0"]
+    },
+    {
+      "direction": "to-host",
+      "address": "/awb/timeline/snapshot/end",
+      "args": ["score-browser-fixture", "request-end-1", "snapshot-1", 1]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/result",
+      "args": ["score-browser-fixture", "request-end-1", 1, "snapshotEnd", "score-pipeline-v1", 1, "installed", "sha256:907965870939803df685cdf7bc183fd63a98ed7c9f75ead3eb9ba3eb31bb95b5"]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/transport",
+      "args": ["score-browser-fixture", "score-pipeline-v1", 1, "", "stopped", 0, 100, 0, 0]
+    },
+    {
+      "direction": "to-host",
+      "address": "/awb/timeline/command",
+      "args": ["score-browser-fixture", "request-play-1", "score-pipeline-v1", 1, "play", 0]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/result",
+      "args": ["score-browser-fixture", "request-play-1", 1, "play", "score-pipeline-v1", 1, "applied", ""]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/transport",
+      "args": ["score-browser-fixture", "score-pipeline-v1", 1, "run-1", "playing", 0, 101, 1, 0]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/realization",
+      "args": ["score-browser-fixture", "score-pipeline-v1", 1, "run-1", "opening-a", "realization-1", "scheduled", 0, 0, 0]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/realization",
+      "args": ["score-browser-fixture", "score-pipeline-v1", 1, "run-1", "opening-a", "realization-1", "started", 0, 0, 1, 1001]
+    },
+    {
+      "direction": "from-host",
+      "address": "/awb/timeline/realization",
+      "args": ["score-browser-fixture", "score-pipeline-v1", 1, "run-1", "opening-a", "realization-1", "ended", 0, 0, 1, 1001]
+    }
+  ]
+}

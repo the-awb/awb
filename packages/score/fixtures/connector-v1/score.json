@@ -2,12 +2,13 @@
   "entries": [
     {
       "event": {
-        "def": "substrate",
-        "dur": 8,
-        "freqA": 36,
+        "amp": 0,
+        "def": "default",
+        "dur": 0.4,
+        "freq": 220,
         "type": "note"
       },
-      "id": "n1",
+      "id": "opening-a",
       "path": [
         "opening",
         "drone"
@@ -16,37 +17,28 @@
     },
     {
       "event": {
-        "freqA": 40,
-        "target": "n1",
-        "type": "set"
+        "amp": 0,
+        "def": "default",
+        "dur": 0.4,
+        "freq": 330,
+        "type": "note"
       },
-      "id": "n2",
+      "id": "opening-b",
       "path": [
         "opening",
         "drone"
       ],
-      "time": 4
-    },
-    {
-      "event": {
-        "target": "n1",
-        "type": "release"
-      },
-      "id": "n3",
-      "path": [
-        "closing"
-      ],
-      "time": 12
+      "time": 0.5
     }
   ],
   "meta": {
-    "description": "Finite score shared by the browser and desktop connector tests.",
+    "description": "Finite score shared by the browser and desktop hosted-transport tests.",
     "tags": [
       "fixture"
     ],
-    "title": "Connector fixture v1"
+    "title": "Score pipeline fixture v1"
   },
-  "revision": 0,
+  "revision": 1,
   "schema": "awb.score/1",
-  "scoreID": "connector-fixture-v1"
+  "scoreID": "score-pipeline-v1"
 }

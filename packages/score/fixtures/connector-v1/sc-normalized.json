@@ -1,12 +1,13 @@
 [
   {
     "event": {
-      "dur": 8,
-      "freqA": 36,
-      "instrument": "substrate",
+      "amp": 0,
+      "dur": 0.4,
+      "freq": 220,
+      "instrument": "default",
       "type": "note"
     },
-    "id": "n1",
+    "id": "opening-a",
     "path": [
       "opening",
       "drone"
@@ -15,26 +16,17 @@
   },
   {
     "event": {
-      "freqA": 40,
-      "target": "n1",
-      "type": "set"
+      "amp": 0,
+      "dur": 0.4,
+      "freq": 330,
+      "instrument": "default",
+      "type": "note"
     },
-    "id": "n2",
+    "id": "opening-b",
     "path": [
       "opening",
       "drone"
     ],
-    "time": 4
-  },
-  {
-    "event": {
-      "target": "n1",
-      "type": "release"
-    },
-    "id": "n3",
-    "path": [
-      "closing"
-    ],
-    "time": 12
+    "time": 0.5
   }
 ]

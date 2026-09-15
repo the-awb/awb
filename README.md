@@ -39,3 +39,5 @@ They must not depend on this repository's working `src/` tree. That boundary pre
 uncommitted change here from silently entering a build elsewhere.
 
 See [MIGRATION.md](./MIGRATION.md) for provenance and the transition boundary.
+The current OSC/WebSocket inventory and extraction boundary are recorded in
+[`apps/score-studio/server/README.md`](./apps/score-studio/server/README.md).

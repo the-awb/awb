@@ -12,13 +12,15 @@ import {
 
 const fixtureUrl = new URL( '../fixtures/connector-v1/score.json', import.meta.url );
 const manifestUrl = new URL( '../fixtures/connector-v1/manifest.json', import.meta.url );
+const transcriptUrl = new URL( '../fixtures/connector-v1/osc-transcript.json', import.meta.url );
 const source = await readFile( fixtureUrl, 'utf8' );
 const manifest = JSON.parse( await readFile( manifestUrl, 'utf8' ) );
+const transcript = JSON.parse( await readFile( transcriptUrl, 'utf8' ) );
 const document = parseScoreDocument( source );
 
 assert.equal( document.schema, SCORE_SCHEMA );
-assert.equal( document.scoreID, 'connector-fixture-v1' );
-assert.equal( document.entries.length, 3 );
+assert.equal( document.scoreID, 'score-pipeline-v1' );
+assert.equal( document.entries.length, 2 );
 assert.equal( serializeScoreDocument( document ), source, 'fixture uses canonical bytes' );
 
 const hash = await hashScoreDocument( document );
@@ -27,12 +29,17 @@ assert.equal( hash, manifest.canonicalScoreSha256, 'fixture hash is pinned for b
 assert.equal( await hashScoreDocument( parseScoreDocument( source ) ), hash );
 assert.equal( Object.isFrozen( document ), true );
 assert.equal( Object.isFrozen( document.entries[0].event ), true );
+assert.equal( transcript.schema, 'awb.timeline-osc-transcript/1' );
+const transcriptBegin = transcript.frames.find( ( frame ) => frame.address === '/awb/timeline/snapshot/begin' );
+assert.equal( transcriptBegin.args[ 7 ], `sha256:${ hash }` );
+const transcriptChunk = transcript.frames.find( ( frame ) => frame.address === '/awb/timeline/snapshot/chunk' );
+assert.deepEqual( transcriptChunk.args.slice( 4 ).map( JSON.parse ), document.entries );
 
 const revised = reviseScoreDocument( document, document.entries.map( ( entry ) => (
-  entry.id === 'n2' ? { ...entry, time: 5 } : entry
+  entry.id === 'opening-b' ? { ...entry, time: 5 } : entry
 ) ) );
-assert.equal( revised.revision, 1 );
-assert.equal( document.revision, 0, 'revision is immutable' );
+assert.equal( revised.revision, 2 );
+assert.equal( document.revision, 1, 'revision is immutable' );
 assert.equal( revised.entries[1].time, 5 );
 
 const sameTime = createScoreDocument( {
@@ -60,4 +67,4 @@ assert.ok( invalid.errors.some( ( error ) => error.includes( 'non-negative finit
 assert.ok( invalid.errors.some( ( error ) => error.includes( 'array of strings' ) ) );
 assert.ok( invalid.errors.some( ( error ) => error.includes( 'undefined' ) ) );
 
-console.log( `score-document: 19/19 pass (${ hash })` );
+console.log( `score-document: 21/21 pass (${ hash })` );
