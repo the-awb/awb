@@ -18,6 +18,14 @@ The source comparisons were clean at cutover on 15 September 2026. Package-level
 the source. Application-owned browser, audio, rendering and lifecycle harnesses remain in their
 application repositories and were rerun against the packed artifacts.
 
+The cutover is recorded by these commits:
+
+| Repository | Commit | Boundary established |
+|---|---|---|
+| `awb` | `8ce0ac9` | canonical source, builds, tests and packing for all six packages |
+| `field_modelling` | `e3c5ea2` | packed `score`, `sc-wasm`, `instruments` and `field-engine` consumer; editable copies removed |
+| `lissajous-viz` | `ba08d7d` | packed `lissajous-engine` and `render-pipeline` consumer; editable copies removed |
+
 ## Distribution boundary
 
 Every package is private and exports built files from `dist/`. Run:
