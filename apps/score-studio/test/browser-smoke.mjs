@@ -22,6 +22,9 @@ const { chromium } = await import( playwright );
 const browser = await chromium.launch();
 const page = await browser.newPage( { viewport: { width: 1440, height: 900 } } );
 const failures = [];
+await page.addInitScript( () => {
+  Object.defineProperty( window, 'showSaveFilePicker', { value: undefined, configurable: true } );
+} );
 page.on( 'pageerror', ( error ) => failures.push( error.message ) );
 
 try {
@@ -115,13 +118,24 @@ try {
     failures.push( 'standalone runtime controls did not appear' );
   }
 
+  const projectionDownload = page.waitForEvent( 'download' );
+  await page.getByRole( 'button', { name: 'Generate SC document', exact: true } ).click();
+  const projection = await projectionDownload;
+  if ( projection.suggestedFilename() !== 'untitled-score.score.scd' ) {
+    failures.push( `local SC projection used wrong filename: ${ projection.suggestedFilename() }` );
+  }
+  if ( !( await page.getByText( 'AWB GENERATED SCORE PROJECTION', { exact: false } ).isVisible() ) ) {
+    failures.push( 'standalone generation did not open the local SC working document' );
+  }
+
   await page.getByRole( 'button', { name: 'Console', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'Scratch console', exact: true } ).click();
   await page.locator( '.cm-editor' ).waitFor();
   await page.locator( '.consoleWorkspace' ).getByRole( 'button', { name: 'Attach sclang', exact: true } ).click();
   await page.getByText( 'Ctrl-enter evaluates a line', { exact: false } ).waitFor( { timeout: 90000 } );
   await page.getByRole( 'button', { name: 'Working document', exact: true } ).click();
-  if ( !( await page.getByText( 'No projection received yet.', { exact: false } ).isVisible() ) ) {
-    failures.push( 'working-document boundary did not render' );
+  if ( !( await page.getByText( 'AWB GENERATED SCORE PROJECTION', { exact: false } ).isVisible() ) ) {
+    failures.push( 'local SC working document disappeared after attaching browser sclang' );
   }
   page.once( 'dialog', ( dialog ) => dialog.accept() );
   await page.getByRole( 'button', { name: 'Demo score', exact: true } ).click();
@@ -182,4 +196,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 35/35 pass' );
+console.log( 'score-studio-browser: 37/37 pass' );

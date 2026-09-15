@@ -42,7 +42,7 @@ export default function ConsoleWorkspace( { sc, sclang, workingDocument, mode } 
             <strong>Generated .score.scd</strong>
             <span>Read-only projection; never the canonical document.</span>
           </div>
-          <pre>{ workingDocument || 'No projection received yet. The desktop agent owns SC document generation.' }</pre>
+          <pre>{ workingDocument || 'No projection generated yet. Generate locally, or connect a desktop host for its validated projection.' }</pre>
         </div>
       ) }
     </section>

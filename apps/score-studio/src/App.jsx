@@ -13,6 +13,7 @@ import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets
 import { HostedScoreClient } from './engine/HostedScoreClient.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
 import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
+import { generateLocalScProjection } from './engine/localScProjection.js';
 import { retryScoreProjection, saveScorePair, validateProjection } from './engine/scorePairSave.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
@@ -355,9 +356,30 @@ export default function App() {
     return projection;
   }
 
-  async function generateHostedDocument() {
+  async function generateScDocument() {
     setHostedMessage( '' );
     try {
+      if ( session.mode !== MODES.HOSTED || !connected ) {
+        const text = generateLocalScProjection( session.document );
+        const saved = await saveProjectionFile( text, {
+          scoreID: session.document.scoreID,
+          handle: file.projectionHandle,
+          expectedText: file.projectionText,
+          saveAs: file.projectionHandle === null
+        } );
+        dispatch( { type: 'SET_WORKING_DOCUMENT', text } );
+        setFile( ( current ) => ( {
+          ...current,
+          projectionHandle: saved.handle ?? current.projectionHandle,
+          projectionText: text,
+          projectionStatus: 'saved locally',
+          message: saved.downloaded
+            ? 'Generated SC document downloaded locally.'
+            : 'Generated SC document saved locally.'
+        } ) );
+        dispatch( { type: 'SET_VIEW', view: 'console' } );
+        return;
+      }
       const identity = Object.freeze( {
         scoreID: session.document.scoreID,
         revision: session.document.revision,
@@ -373,7 +395,10 @@ export default function App() {
       setHostedMessage( `Generated ${ projection.scoreID } r${ projection.revision } SC document.` );
       dispatch( { type: 'SET_VIEW', view: 'console' } );
     } catch ( error ) {
-      setHostedMessage( error.message );
+      if ( error.name !== 'AbortError' ) {
+        if ( session.mode === MODES.HOSTED && connected ) setHostedMessage( error.message );
+        else setFile( ( current ) => ( { ...current, message: error.message } ) );
+      }
     }
   }
 
@@ -457,6 +482,7 @@ export default function App() {
           <button onClick={ chooseScoreFolder }>Open folder…</button>
           <button onClick={ () => saveDocument( false ) }>Save</button>
           <button onClick={ () => saveDocument( true ) }>Save as…</button>
+          <button onClick={ generateScDocument }>Generate SC document</button>
           { file.pendingIdentity && <button disabled={ !connected } onClick={ retryProjection }>Retry SC export</button> }
         </div>
         { scoreFolder.handle && <div className="scoreFolder">
@@ -548,7 +574,6 @@ export default function App() {
                 onClick={ () => hostedAction( () => hostedClient.command( session.document, 'seek', session.playhead ) ) }>Seek here</button>
               <button disabled={ !connected }
                 onClick={ () => hostedAction( () => hostedClient.command( session.document, 'state' ) ) }>State</button>
-              <button disabled={ !connected } onClick={ generateHostedDocument }>Generate SC document</button>
               <button disabled={ !connected } onClick={ openHostedDocument }>Open SC document</button>
             </div>
           ) : <div className="runtimeButtons">

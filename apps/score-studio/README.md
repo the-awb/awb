@@ -140,12 +140,13 @@ a persistence authority. Score Studio instead implements `requestProjection(iden
 protocol added in awbCollider `f56a4d5`. Missing text chunks keep the request pending and cause an
 idempotent retry; the bridge then replays the same cached begin/chunks/end/result response.
 
-In hosted mode, **Generate SC document** installs the current revision when necessary, requests
-the identity-checked projection, and opens its read-only working-document view without saving it.
-**Open SC document** likewise installs first, then asks desktop SuperCollider to generate and open
-the document. Both require a live hosted connection; standalone mode intentionally has no browser
-implementation of the sclang projection. Save remains the only operation that persists the JSON
-and `.score.scd` as a guarded pair.
+**Generate SC document** is available in every mode. With a hosted connection it installs the
+current revision when necessary, requests the desktop identity-checked projection, and opens its
+read-only working-document view without saving it. Without a host, Score Studio deterministically
+generates the same supported timeline vocabulary locally and saves or downloads the `.score.scd`.
+**Open SC document** remains hosted-only: it installs first, then asks desktop SuperCollider to
+generate and open the document. Ordinary Save remains the operation that persists canonical JSON
+and the hosted `.score.scd` as a guarded pair.
 
 The matched PR #7440 wasm assets are app-owned under `public/scsynth` and `public/sclang`; the
 reusable lifecycle and console machinery remains in `@awb/sc-wasm` and `@awb/sc-console`.

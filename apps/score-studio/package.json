@@ -8,7 +8,7 @@
     "dev:hosted": "node server/dev-hosted.mjs",
     "hosted-bridge": "node server/hosted-bridge.mjs",
     "build": "vite build",
-    "test": "node test/session.mjs && node test/hosted-transport.mjs && node test/pair-save.mjs && node test/standalone-executor.mjs && node test/synth-lifecycle-lanes.mjs && node test/timeline-scale.mjs && node test/event-payload-fields.mjs && node test/score-files.mjs",
+    "test": "node test/session.mjs && node test/hosted-transport.mjs && node test/pair-save.mjs && node test/standalone-executor.mjs && node test/synth-lifecycle-lanes.mjs && node test/timeline-scale.mjs && node test/event-payload-fields.mjs && node test/score-files.mjs && node test/local-sc-projection.mjs",
     "test:hosted-real": "node test/hosted-real-sclang.mjs",
     "test:hosted-browser-real": "node test/hosted-real-browser.mjs",
     "test:launched-hosted-real": "node test/launched-hosted-real-browser.mjs",
