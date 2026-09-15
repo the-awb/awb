@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import {
   commonGroup, duration, group, makeEvent, nudge, rippleFrom, setGap, sortScore, stretch, ungroup
 } from '@awb/score';
+import { projectSynthLifecycleLanes } from '../engine/synthLifecycleLanes.js';
 
 const PX_PER_SECOND = 22;
 const LEFT = 92;
@@ -12,6 +13,7 @@ const fmt = ( seconds ) => {
 };
 
 export default function ScoreTimeline( { session, dispatch } ) {
+  const [ layout, setLayout ] = useState( 'structure' );
   const [ step, setStep ] = useState( 1 );
   const [ gap, setGapValue ] = useState( 1 );
   const [ carryTail, setCarryTail ] = useState( true );
@@ -19,13 +21,34 @@ export default function ScoreTimeline( { session, dispatch } ) {
   const [ groupName, setGroupName ] = useState( 'group' );
   const entries = session.document.entries;
   const selected = new Set( session.selected );
-  const lanes = useMemo( () => {
+  const structureLanes = useMemo( () => {
     const names = [ ...new Set( entries.map( ( entry ) => entry.path[ 0 ] ?? 'ungrouped' ) ) ];
     return names.length ? names : [ 'ungrouped' ];
   }, [ entries ] );
-  const total = Math.max( 30, duration( entries ) + 12, session.playhead + 12 );
+  const synthLanes = useMemo( () => projectSynthLifecycleLanes( entries ), [ entries ] );
+  const lifecycleEnd = synthLanes.reduce( ( latest, lane ) => Math.max(
+    latest, ...lane.events.map( ( event ) => event.time )
+  ), 0 );
+  const total = Math.max( 30, duration( entries ) + 12, lifecycleEnd + 12, session.playhead + 12 );
   const width = LEFT + total * PX_PER_SECOND + 40;
   const sharedGroup = commonGroup( entries, selected );
+
+  const selectEntry = ( event, entryID ) => {
+    event.stopPropagation();
+    const additive = event.shiftKey || event.metaKey;
+    const ids = additive
+      ? ( selected.has( entryID )
+        ? session.selected.filter( ( id ) => id !== entryID )
+        : [ ...session.selected, entryID ] )
+      : [ entryID ];
+    dispatch( { type: 'SET_SELECTED', ids } );
+  };
+  const placePlayhead = ( event ) => {
+    if ( event.target !== event.currentTarget ) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    dispatch( { type: 'SET_PLAYHEAD', time: Math.max( 0, ( event.clientX - rect.left - LEFT ) / PX_PER_SECOND ) } );
+    dispatch( { type: 'SET_SELECTED', ids: [] } );
+  };
 
   const apply = ( next ) => dispatch( { type: 'EDIT_ENTRIES', entries: next } );
   const add = () => {
@@ -43,6 +66,12 @@ export default function ScoreTimeline( { session, dispatch } ) {
       <div className="scoreToolbars">
         <div className="scoreToolbar">
           <span className="timeReadout">{ fmt( session.playhead ) }</span>
+          <div className="layoutSwitch" aria-label="Timeline layout">
+            <button className={ layout === 'structure' ? 'active' : '' }
+              onClick={ () => setLayout( 'structure' ) }>Structure</button>
+            <button className={ layout === 'synths' ? 'active' : '' }
+              onClick={ () => setLayout( 'synths' ) }>Synth lifecycle</button>
+          </div>
           <button onClick={ add }>+ note</button>
           <button disabled={ !selected.size }
             onClick={ () => apply( entries.filter( ( entry ) => !selected.has( entry.id ) ) ) }>Delete</button>
@@ -87,33 +116,38 @@ export default function ScoreTimeline( { session, dispatch } ) {
                 onClick={ () => dispatch( { type: 'SET_PLAYHEAD', time } ) }>{ fmt( time ) }</button>
             ) ) }
           </div>
-          { lanes.map( ( lane ) => (
-            <div key={ lane } className="lane" onClick={ ( event ) => {
-              if ( event.target !== event.currentTarget ) return;
-              const rect = event.currentTarget.getBoundingClientRect();
-              dispatch( { type: 'SET_PLAYHEAD', time: Math.max( 0, ( event.clientX - rect.left - LEFT ) / PX_PER_SECOND ) } );
-              dispatch( { type: 'SET_SELECTED', ids: [] } );
-            } }>
-              <span className="laneName">{ lane }</span>
-              { entries.filter( ( entry ) => ( entry.path[ 0 ] ?? 'ungrouped' ) === lane ).map( ( entry ) => (
-                <button key={ entry.id }
-                  className={ `scoreEvent ${ entry.event.type }${ selected.has( entry.id ) ? ' selected' : '' }` }
-                  style={ { left: LEFT + entry.time * PX_PER_SECOND } }
-                  onClick={ ( event ) => {
-                    event.stopPropagation();
-                    const additive = event.shiftKey || event.metaKey;
-                    const ids = additive
-                      ? ( selected.has( entry.id )
-                        ? session.selected.filter( ( id ) => id !== entry.id )
-                        : [ ...session.selected, entry.id ] )
-                      : [ entry.id ];
-                    dispatch( { type: 'SET_SELECTED', ids } );
-                  } }
-                  title={ `${ entry.id } · ${ entry.time }s · ${ entry.path.join( '/' ) || 'ungrouped' }` }
-                >{ entry.event.def ?? entry.event.type }</button>
-              ) ) }
-            </div>
-          ) ) }
+          { layout === 'structure'
+            ? structureLanes.map( ( lane ) => (
+              <div key={ lane } className="lane" onClick={ placePlayhead }>
+                <span className="laneName">{ lane }</span>
+                { entries.filter( ( entry ) => ( entry.path[ 0 ] ?? 'ungrouped' ) === lane ).map( ( entry ) => (
+                  <button key={ entry.id }
+                    className={ `scoreEvent ${ entry.event.type }${ selected.has( entry.id ) ? ' selected' : '' }` }
+                    style={ { left: LEFT + entry.time * PX_PER_SECOND } }
+                    onClick={ ( event ) => selectEntry( event, entry.id ) }
+                    title={ `${ entry.id } · ${ entry.time }s · ${ entry.path.join( '/' ) || 'ungrouped' }` }
+                  >{ entry.event.def ?? entry.event.type }</button>
+                ) ) }
+              </div>
+            ) )
+            : synthLanes.map( ( lane ) => (
+              <div key={ lane.id } className="lane synthLane" onClick={ placePlayhead }>
+                <span className="laneName synthLaneName" title={ lane.path.join( '/' ) }>
+                  <strong>{ lane.id === '__unassigned__' ? 'unassigned' : lane.id }</strong>
+                  <small>{ lane.definition }{ lane.expansionCount > 1 ? ` ×${ lane.expansionCount }` : '' }</small>
+                </span>
+                { lane.events.map( ( marker, index ) => (
+                  <button key={ `${ marker.entry.id }:${ marker.role }:${ index }` }
+                    className={ `scoreEvent lifecycleEvent ${ marker.role }${ selected.has( marker.entry.id ) ? ' selected' : '' }` }
+                    style={ { left: LEFT + marker.time * PX_PER_SECOND } }
+                    onClick={ ( event ) => selectEntry( event, marker.entry.id ) }
+                    title={ `${ marker.role } · ${ marker.entry.id } · ${ marker.time }s${ marker.synthetic ? ' · derived, not authored' : '' }` }
+                  >{ marker.role === 'create'
+                    ? `create ${ lane.expansionCount > 1 ? `×${ lane.expansionCount }` : '' }`
+                    : marker.role.replace( '-', ' ' ) }</button>
+                ) ) }
+              </div>
+            ) ) }
           <div className="playhead" style={ { left: LEFT + session.playhead * PX_PER_SECOND } } />
         </div>
       </div>

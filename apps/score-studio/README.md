@@ -9,6 +9,7 @@ Current first slice:
 - canonical `awb.score/1` JSON documents from `@awb/score`;
 - authored document revisions kept separate from runtime/realization state;
 - an absolute-time score view exposing all seven canonical time/structure verbs;
+- switchable structural and one-row-per-authored-synth lifecycle projections;
 - direct time, path and payload editing with revision-safe undo/redo;
 - guarded File System Access saves, with JSON download fallback and local recovery drafts;
 - an editor-owned pair-save coordinator: canonical JSON first, identity-bound SC projection second,

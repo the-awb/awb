@@ -29,6 +29,12 @@ try {
   await page.getByText( 'AWB', { exact: true } ).waitFor();
   if ( await page.locator( '.scoreEvent' ).count() !== 3 ) failures.push( 'expected three seeded score events' );
 
+  await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).click();
+  if ( await page.locator( '.synthLane' ).count() !== 2 ) failures.push( 'expected one lifecycle lane per authored synth create' );
+  if ( await page.locator( '.lifecycleEvent.create' ).count() !== 2 ) failures.push( 'lifecycle view did not project both create events' );
+  if ( await page.locator( '.lifecycleEvent.release' ).count() !== 2 ) failures.push( '@all release was not projected onto both synth lanes' );
+  await page.getByRole( 'button', { name: 'Structure', exact: true } ).click();
+
   await page.locator( '.scoreEvent' ).first().click();
   if ( !( await page.locator( '.eventJson' ).isVisible() ) ) failures.push( 'event inspector did not open' );
   await page.getByLabel( 'Event time' ).fill( '4.5' );
@@ -68,4 +74,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 9/9 pass' );
+console.log( 'score-studio-browser: 12/12 pass' );

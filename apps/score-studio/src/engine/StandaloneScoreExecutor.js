@@ -1,4 +1,5 @@
 import { assertScoreDocument, checkScore, defineRenderer, describeCheck, sortScore } from '@awb/score';
+import { expandScEventParams, scoreEventSustain } from './scEventSemantics.js';
 
 const HANDLES = Object.freeze( {
   note: { required: [ 'def' ] },
@@ -7,10 +8,6 @@ const HANDLES = Object.freeze( {
   free: { required: [ 'target' ] }
 } );
 const RENDERER = defineRenderer( { name: 'standalone-scsynth', handles: HANDLES } );
-const RESERVED = new Set( [
-  'type', 'def', 'instrument', 'target', 'dur', 'delta', 'sustain', 'legato',
-  'addAction', 'group', 'args'
-] );
 const EPSILON = 0.002;
 
 function freezeState( state ) {
@@ -18,23 +15,6 @@ function freezeState( state ) {
     ...state,
     realizations: Object.freeze( state.realizations.map( ( item ) => Object.freeze( { ...item } ) ) )
   } );
-}
-
-function scalar( value, key ) {
-  if ( typeof value === 'boolean' ) return value ? 1 : 0;
-  if ( typeof value === 'number' && Number.isFinite( value ) ) return value;
-  if ( typeof value === 'string' ) return value;
-  throw new Error( `Standalone event control ${ key } must be a finite number, string or boolean.` );
-}
-
-function expandParams( event ) {
-  const controls = Object.entries( event ).filter( ( [ key, value ] ) => !RESERVED.has( key ) && value !== undefined );
-  const arrayLengths = controls.map( ( [ , value ] ) => Array.isArray( value ) ? value.length : 1 );
-  if ( arrayLengths.some( ( length ) => length === 0 ) ) throw new Error( 'Standalone event control arrays cannot be empty.' );
-  const count = Math.max( 1, ...arrayLengths );
-  return Array.from( { length: count }, ( _, index ) => Object.fromEntries( controls.map( ( [ key, value ] ) => [
-    key, scalar( Array.isArray( value ) ? value[ index % value.length ] : value, key )
-  ] ) ) );
 }
 
 function controlArgs( params ) {
@@ -109,15 +89,15 @@ export function createStandaloneScoreExecutor( {
       if ( typeof definition !== 'string' || !definition.length ) throw new Error( `Standalone note ${ entry.id } has no valid SynthDef name.` );
       const addAction = Number.isInteger( event.addAction ) ? event.addAction : 1;
       const group = Number.isInteger( event.group ) ? event.group : 0;
-      const duration = Number( event.sustain ?? ( Number( event.dur ) * Number( event.legato ?? 0.8 ) ) );
-      if ( Number.isFinite( duration ) && duration < 0 ) throw new Error( `Standalone note ${ entry.id } has a negative sustain.` );
+      const duration = scoreEventSustain( event );
+      if ( duration !== null && duration < 0 ) throw new Error( `Standalone note ${ entry.id } has a negative sustain.` );
       const created = [];
-      for ( const params of expandParams( event ) ) {
+      for ( const params of expandScEventParams( event ) ) {
         const nodeID = nextNodeID++;
         sendOsc( '/s_new', [ definition, nodeID, addAction, group, ...controlArgs( params ) ] );
         const node = {
           nodeID, entryID: entry.id, released: false,
-          releaseAt: Number.isFinite( duration ) ? entry.time + duration : null
+          releaseAt: duration === null ? null : entry.time + duration
         };
         live.set( nodeID, node );
         created.push( Object.freeze( { entryID: entry.id, nodeID, state: 'started' } ) );
@@ -128,7 +108,7 @@ export function createStandaloneScoreExecutor( {
 
     const targets = targetsFor( event.target );
     if ( event.type === 'set' ) {
-      const params = expandParams( event );
+      const params = expandScEventParams( event );
       if ( params.length !== 1 ) throw new Error( 'Standalone set events do not accept array-expanded controls.' );
       for ( const node of targets ) sendOsc( '/n_set', [ node.nodeID, ...controlArgs( params[ 0 ] ) ] );
     } else if ( event.type === 'release' ) {
