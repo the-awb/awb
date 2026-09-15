@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
-import { hashScoreDocument, parseScoreDocument, sortScore } from '@awb/score';
+import { sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import { openScoreFile, readScoreFile, saveScoreFile, storeRecoveryDraft } from './engine/scoreFiles.js';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { HostedScoreClient } from './engine/HostedScoreClient.js';
+import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
+import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
@@ -19,11 +21,24 @@ export default function App() {
   } );
   const [ endpoint, setEndpoint ] = useState( import.meta.env.VITE_HOSTED_ENDPOINT ?? '' );
   const [ hostedMessage, setHostedMessage ] = useState( '' );
+  const [ standaloneMessage, setStandaloneMessage ] = useState( '' );
   const inputRef = useRef( null );
   const sc = useSuperCollider( { importScsynth } );
   const sclang = useScLang( sc, { importSclang, locateFile: locateSclangFile, exposeDevGlobals: import.meta.env.DEV } );
   const hostedClient = useMemo( () => new HostedScoreClient(), [] );
   const hosted = useSyncExternalStore( hostedClient.subscribe, hostedClient.getState, hostedClient.getState );
+  const standaloneExecutorRef = useRef( null );
+  if ( standaloneExecutorRef.current === null ) {
+    standaloneExecutorRef.current = createStandaloneScoreExecutor( {
+      sendOsc: sc.sendOsc,
+      subscribeOscReply: sc.subscribeOscReply,
+      parseOsc: ( bytes ) => sc.getEngine()?.parseOscMessage( bytes )
+    } );
+  }
+  const standaloneExecutor = standaloneExecutorRef.current;
+  const standalone = useSyncExternalStore(
+    standaloneExecutor.subscribe, standaloneExecutor.getState, standaloneExecutor.getState
+  );
   const dirty = file.savedRevision !== session.document.revision;
   const selectedEntry = useMemo(
     () => session.document.entries.find( ( entry ) => entry.id === session.selected[ 0 ] ) ?? null,
@@ -34,7 +49,36 @@ export default function App() {
     try { storeRecoveryDraft( session.document ); } catch { /* local recovery is optional */ }
   }, [ session.document ] );
 
-  useEffect( () => () => hostedClient.disconnect(), [ hostedClient ] );
+  useEffect( () => {
+    if ( !import.meta.env.DEV ) return undefined;
+    window.__scoreSc = sc;
+    window.__standaloneScore = standaloneExecutor;
+    return () => {
+      if ( window.__scoreSc === sc ) delete window.__scoreSc;
+      if ( window.__standaloneScore === standaloneExecutor ) delete window.__standaloneScore;
+    };
+  }, [ sc, standaloneExecutor ] );
+
+  useEffect( () => () => {
+    hostedClient.disconnect();
+    // Do not permanently dispose here: React development StrictMode replays effect cleanup while
+    // preserving this component's refs. Stop owned nodes, but keep the executor reusable.
+    standaloneExecutor.stop();
+  }, [ hostedClient, standaloneExecutor ] );
+
+  useEffect( () => {
+    if ( session.mode === MODES.STANDALONE ) return;
+    if ( standalone.status === 'playing' || standalone.status === 'paused' ) standaloneExecutor.stop();
+  }, [ session.mode, standalone.status, standaloneExecutor ] );
+
+  useEffect( () => {
+    const currentRevision = standalone.scoreID === session.document.scoreID
+      && standalone.revision === session.document.revision;
+    if ( currentRevision || ( standalone.status !== 'playing' && standalone.status !== 'paused' ) ) return;
+    standaloneExecutor.stop();
+    setStandaloneMessage( 'Playback stopped because the authored score revision changed.' );
+  }, [ session.document.revision, session.document.scoreID, standalone.revision, standalone.scoreID,
+    standalone.status, standaloneExecutor ] );
 
   useEffect( () => {
     if ( session.mode !== MODES.HOSTED || !hosted.transport ) return undefined;
@@ -45,6 +89,15 @@ export default function App() {
     }, 50 );
     return () => clearInterval( timer );
   }, [ hosted.transport, hosted.clockOffset, hostedClient, session.mode ] );
+
+  useEffect( () => {
+    if ( session.mode !== MODES.STANDALONE || standalone.status !== 'playing' ) return undefined;
+    dispatch( { type: 'SET_PLAYHEAD', time: standaloneExecutor.estimatePosition() } );
+    const timer = setInterval( () => {
+      dispatch( { type: 'SET_PLAYHEAD', time: standaloneExecutor.estimatePosition() } );
+    }, 50 );
+    return () => clearInterval( timer );
+  }, [ session.mode, standalone.status, standaloneExecutor ] );
 
   async function hostedAction( action, success ) {
     setHostedMessage( '' );
@@ -60,6 +113,35 @@ export default function App() {
   const loadedRevision = connected
     && hosted.scoreID === session.document.scoreID
     && hosted.remoteRevision === session.document.revision;
+  const standaloneLoaded = standalone.scoreID === session.document.scoreID
+    && standalone.revision === session.document.revision;
+
+  async function prepareStandalone( { atPlayhead = false } = {} ) {
+    setStandaloneMessage( '' );
+    try {
+      await sc.boot();
+      const definitions = await loadStandaloneSynthDefs( sc, session.document );
+      if ( !standaloneLoaded ) standaloneExecutor.load( session.document );
+      if ( atPlayhead ) standaloneExecutor.seek( session.playhead );
+      setStandaloneMessage( `Revision ${ session.document.revision } ready · ${ definitions.length } SynthDef${ definitions.length === 1 ? '' : 's' }.` );
+      return true;
+    } catch ( error ) {
+      setStandaloneMessage( error.message );
+      return false;
+    }
+  }
+
+  async function playStandalone() {
+    if ( standalone.status === 'paused' && standaloneLoaded ) {
+      standaloneExecutor.play();
+      return;
+    }
+    if ( standalone.status === 'ended' ) dispatch( { type: 'SET_PLAYHEAD', time: 0 } );
+    if ( await prepareStandalone( { atPlayhead: true } ) ) {
+      if ( standalone.status === 'ended' ) standaloneExecutor.seek( 0 );
+      standaloneExecutor.play();
+    }
+  }
 
   async function acceptOpen( result ) {
     dispatch( { type: 'LOAD_DOCUMENT', document: result.document } );
@@ -205,9 +287,16 @@ export default function App() {
                   onClick={ () => sc.boot() }>{ sc.status === 'ready' ? 'Audio running' : 'Start audio' }</button>
                 <button disabled={ sclang.isAttached || sclang.status === 'attaching' }
                   onClick={ sclang.attach }>{ sclang.isAttached ? 'sclang attached' : 'Attach sclang' }</button>
-                <button disabled={ !sc.isBooted } onClick={ () => sc.shutdown() }>Quit</button>
+                <button disabled={ sc.status === 'loading' || sc.status === 'booting' }
+                  onClick={ () => prepareStandalone() }>Load revision</button>
+                <button disabled={ !sc.isBooted } onClick={ () => {
+                  standaloneExecutor.stop();
+                  sc.shutdown();
+                } }>Quit</button>
               </div>
-              <p className="boundaryNote">The browser owns only the nodes created by this standalone session. Score playback arrives in the next executor slice.</p>
+              <dl className="identity compact"><dt>Status</dt><dd>{ standalone.status }</dd><dt>Loaded</dt><dd>{ standalone.scoreID ? `${ standalone.scoreID } r${ standalone.revision }` : 'not loaded' }</dd><dt>Nodes</dt><dd>{ standalone.liveCount }</dd></dl>
+              { standaloneMessage && <p className={ standalone.status === 'failed' ? 'error' : 'fileMessage' }>{ standaloneMessage }</p> }
+              <p className="boundaryNote">The browser schedules canonical events against absolute score time and owns only the nodes created by this standalone run. Seeking starts at the next event boundary; it does not reconstruct sustaining state.</p>
               { ( sc.error || sclang.error ) && <p className="error">{ sc.error || sclang.error }</p> }
             </>
           ) }
@@ -231,19 +320,30 @@ export default function App() {
               <button disabled={ !loadedRevision }
                 onClick={ () => hostedAction( () => hostedClient.command( session.document, 'openDocument' ) ) }>Open SC document</button>
             </div>
-          ) : <div className="runtimeButtons"><button disabled>Play</button><button disabled>Pause</button><button disabled>Stop</button></div> }
+          ) : <div className="runtimeButtons">
+            <button disabled={ sc.status === 'loading' || sc.status === 'booting' || standalone.status === 'playing' }
+              onClick={ playStandalone }>{ standalone.status === 'paused' ? 'Resume' : 'Play' }</button>
+            <button disabled={ standalone.status !== 'playing' } onClick={ standaloneExecutor.pause }>Pause</button>
+            <button disabled={ !standaloneLoaded } onClick={ standaloneExecutor.stop }>Stop</button>
+            <button disabled={ !standaloneLoaded } onClick={ () => standaloneExecutor.seek( session.playhead ) }>Seek here</button>
+          </div> }
           <p className="timeLarge">{ session.playhead.toFixed( 3 ) } s</p>
           <p className="boundaryNote">{ session.mode === MODES.HOSTED && hosted.transport
             ? `${ hosted.transport.state } · run ${ hosted.transport.runID || '—' } · host-clock anchor`
-            : 'Controls stay disabled until their selected executor is connected.' }</p>
+            : session.mode === MODES.STANDALONE && standaloneLoaded
+              ? `${ standalone.status } · run ${ standalone.runID || '—' } · browser absolute-time anchor`
+              : 'Controls stay disabled until their selected executor is loaded.' }</p>
         </section>
 
-        { session.mode === MODES.HOSTED && <section className="realizations">
+        { ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 ) && <section className="realizations">
           <h2>Realizations</h2>
-          { hosted.realizations.length ? [ ...hosted.realizations ].reverse().slice( 0, 8 ).map( ( realization ) => (
-            <div className="realization" key={ realization.realizationID }>
+          { ( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ).length
+            ? [ ...( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ) ].reverse().slice( 0, 8 ).map( ( realization ) => (
+            <div className="realization" key={ realization.realizationID ?? realization.nodeID }>
               <strong>{ realization.entryID }</strong><span>{ realization.state }</span>
-              <small>{ realization.nodeIDs.length ? `nodes ${ realization.nodeIDs.join( ', ' ) }` : 'no server nodes' }</small>
+              <small>{ realization.nodeIDs?.length
+                ? `nodes ${ realization.nodeIDs.join( ', ' ) }`
+                : realization.nodeID ? `node ${ realization.nodeID }` : 'no server nodes' }</small>
             </div>
           ) ) : <p className="emptyCopy">No runtime realizations reported.</p> }
         </section> }

@@ -1,0 +1,574 @@
+{
+  "patches": [
+    {
+      "source": "basic_synthdefs.sc",
+      "defs": [
+        {
+          "name": "substrate",
+          "file": "substrate.scsyndef",
+          "controls": [
+            {
+              "name": "out",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "freqA",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 60
+            },
+            {
+              "name": "freqQ",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.065999999642372
+            },
+            {
+              "name": "beat",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 4
+            },
+            {
+              "name": "beatLFO",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "attackT",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 12
+            },
+            {
+              "name": "releaseT",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 12
+            },
+            {
+              "name": "modIn",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "amp",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "gate",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "transformF",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "movement",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "levelMod",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "difF",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "difFTime",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 5
+            },
+            {
+              "name": "beatEnvARatio",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.5
+            },
+            {
+              "name": "beatEnvRRatio",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.5
+            },
+            {
+              "name": "lagT",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "tremF",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 12
+            },
+            {
+              "name": "tremAmt",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "tremA",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "tremR",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "spread",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "feedback",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            }
+          ]
+        },
+        {
+          "name": "resonantBassEnv2",
+          "file": "resonantBassEnv2.scsyndef",
+          "controls": [
+            {
+              "name": "out",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "gate",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "freq",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 50
+            },
+            {
+              "name": "sinMod",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.5
+            },
+            {
+              "name": "phaseMod",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1.7999999523163
+            },
+            {
+              "name": "beat",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.5
+            },
+            {
+              "name": "beatEnvMod",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "ampEnvRatio",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.5
+            },
+            {
+              "name": "phaseEnvRatio",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.5
+            },
+            {
+              "name": "dur",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 10
+            },
+            {
+              "name": "sustain",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 5
+            },
+            {
+              "name": "modFreqRatio",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "amp",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            }
+          ]
+        },
+        {
+          "name": "awbSchedulerPulse",
+          "file": "awbSchedulerPulse.scsyndef",
+          "controls": [
+            {
+              "name": "out",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "freq",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1000
+            },
+            {
+              "name": "amp",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.10000000149012
+            },
+            {
+              "name": "dur",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.03999999910593
+            }
+          ]
+        },
+        {
+          "name": "fieldBasic",
+          "file": "fieldBasic.scsyndef",
+          "controls": [
+            {
+              "name": "out",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "gate",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "freqL",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 60
+            },
+            {
+              "name": "freqR",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 60.099998474121
+            },
+            {
+              "name": "ampL",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "ampR",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "phaseL",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "phaseR",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "amp",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "levelMod",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "attackT",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 2
+            },
+            {
+              "name": "releaseT",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 4
+            }
+          ]
+        },
+        {
+          "name": "substrate2",
+          "file": "substrate2.scsyndef",
+          "controls": [
+            {
+              "name": "out",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "freqLagTime",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 25
+            },
+            {
+              "name": "freq",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 144
+            },
+            {
+              "name": "freqQ",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.065999999642372
+            },
+            {
+              "name": "beat",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 2
+            },
+            {
+              "name": "slowBeat",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 2
+            },
+            {
+              "name": "beatBlend",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "slowBeatBlend",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "beatLFO",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "attackT",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 30
+            },
+            {
+              "name": "releaseT",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 30
+            },
+            {
+              "name": "modIn",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "amp",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "gate",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "transformF",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "movement",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "levelMod",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "difF",
+              "rate": "control",
+              "numChannels": 6,
+              "default": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "name": "difFTime",
+              "rate": "control",
+              "numChannels": 5,
+              "default": [
+                5,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "name": "difFGate",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            },
+            {
+              "name": "beatEnvARatio",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.5
+            },
+            {
+              "name": "beatEnvRRatio",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.5
+            },
+            {
+              "name": "transformLagT",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "tremF",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 12
+            },
+            {
+              "name": "tremAmt",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "tremA",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "tremR",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "flip",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "fb",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            }
+          ]
+        },
+        {
+          "name": "awbTestTone",
+          "file": "awbTestTone.scsyndef",
+          "controls": [
+            {
+              "name": "out",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "freq",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 220
+            },
+            {
+              "name": "amp",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.10000000149012
+            },
+            {
+              "name": "gate",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

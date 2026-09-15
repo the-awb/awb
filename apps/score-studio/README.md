@@ -15,6 +15,7 @@ Current first slice:
   with recoverable partial success;
 - explicit hosted/standalone mode surfaces;
 - a token-protected localhost WebSocket-to-OSC sidecar for hosted desktop execution;
+- browser-owned standalone playback through scsynth.wasm, with app-owned compiled SynthDefs;
 - the extracted `@awb/sc-console` editor and post window;
 - a read-only slot for the generated `.score.scd` working document.
 
@@ -22,7 +23,28 @@ The desktop agent owns SC normalization, `PTimelineOSCBridge`, transport reporti
 deduplication, chunked loading, NodeManager correlation and generated SC documents. This app does
 not duplicate those responsibilities. The app-owned sidecar forwards the frozen
 `/awb/timeline/...` vocabulary between WebSocket JSON frames and local OSC; it contains no score
-or scheduling policy. Standalone score scheduling is the next browser-owned slice.
+or scheduling policy. Standalone scheduling stays in the browser and does not pass through the
+desktop bridge.
+
+## Standalone execution
+
+`src/engine/StandaloneScoreExecutor.js` plays the same canonical revision directly through the
+browser's scsynth.wasm. It schedules every boundary from one absolute score-time anchor rather
+than accumulating delays. Stable same-time document order is preserved.
+
+The first adapter handles `note`, `set`, `release` and `free`. Note control arrays use
+SuperCollider-style wrap expansion, producing one browser-owned realization per expanded value.
+Targets may be an authored note entry ID, a browser node ID, `@prev`, `@all`, or an array of those.
+An omitted `sustain` follows SC's ordinary `dur * legato` rule with `legato = 0.8`. Pause uses
+`/n_run`; stop and event-boundary seek hard-free only nodes belonging to this execution session.
+
+This is intentionally not full state-reconstructing seek: a note that began before the target is
+not recreated. Array-expanded `set` controls and path/group targeting are also refused or absent
+rather than guessed. Unsupported event types fail score loading instead of disappearing silently.
+
+Compiled assets live under `public/synthdefs/`, with provenance recorded beside them. They are
+host assets, like `public/scsynth/` and `public/sclang/`; neither `@awb/score` nor `@awb/sc-wasm`
+owns authored instrument implementations.
 
 ## Hosted save ownership
 
@@ -51,6 +73,8 @@ npm run dev --workspace @awb/score-studio
 npm run dev:hosted --workspace @awb/score-studio -- --osc-port 57120
 npm run test:hosted-real --workspace @awb/score-studio
 npm run test:hosted-browser-real --workspace @awb/score-studio
+npm run test:standalone-audio --workspace @awb/score-studio
+npm run test:standalone-real --workspace @awb/score-studio
 ```
 
 The dev server is pinned to <http://localhost:5201> and supplies the cross-origin isolation headers

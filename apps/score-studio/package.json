@@ -8,9 +8,11 @@
     "dev:hosted": "node server/dev-hosted.mjs",
     "hosted-bridge": "node server/hosted-bridge.mjs",
     "build": "vite build",
-    "test": "node test/session.mjs && node test/hosted-transport.mjs && node test/pair-save.mjs",
+    "test": "node test/session.mjs && node test/hosted-transport.mjs && node test/pair-save.mjs && node test/standalone-executor.mjs",
     "test:hosted-real": "node test/hosted-real-sclang.mjs",
     "test:hosted-browser-real": "node test/hosted-real-browser.mjs",
+    "test:standalone-audio": "node test/standalone-audio.mjs",
+    "test:standalone-real": "node test/standalone-real-browser.mjs",
     "test:browser": "node test/browser-smoke.mjs",
     "preview": "vite preview"
   },

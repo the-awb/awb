@@ -1,0 +1,38 @@
+const base = () => import.meta.env.BASE_URL || '/';
+const loadedByEngine = new WeakMap();
+
+function scoreDefNames( document ) {
+  return [ ...new Set( document.entries
+    .filter( ( entry ) => entry.event?.type === 'note' )
+    .map( ( entry ) => entry.event.def ?? entry.event.instrument )
+    .filter( Boolean ) ) ];
+}
+
+export async function loadStandaloneSynthDefs( sc, document, { assetBase = `${ base() }synthdefs/` } = {} ) {
+  const engine = sc.getEngine();
+  if ( !engine ) throw new Error( 'Start the browser audio engine before loading SynthDefs.' );
+  let loaded = loadedByEngine.get( engine );
+  if ( !loaded ) {
+    loaded = new Set();
+    loadedByEngine.set( engine, loaded );
+  }
+
+  const response = await fetch( `${ assetBase }manifest.json` );
+  if ( !response.ok ) throw new Error( `Could not load standalone SynthDef manifest (${ response.status }).` );
+  const manifest = await response.json();
+  const available = new Map( ( manifest.patches ?? [] ).flatMap( ( patch ) => patch.defs ?? [] )
+    .map( ( definition ) => [ definition.name, definition ] ) );
+  const wanted = scoreDefNames( document );
+  const missing = wanted.filter( ( name ) => !available.has( name ) );
+  if ( missing.length ) throw new Error( `Standalone SynthDef${ missing.length > 1 ? 's' : '' } not installed: ${ missing.join( ', ' ) }.` );
+
+  for ( const name of wanted ) {
+    if ( loaded.has( name ) ) continue;
+    const definition = available.get( name );
+    const bytes = await fetch( `${ assetBase }${ definition.file }` );
+    if ( !bytes.ok ) throw new Error( `Could not load ${ definition.file } (${ bytes.status }).` );
+    await sc.loadSynthDef( new Uint8Array( await bytes.arrayBuffer() ), name );
+    loaded.add( name );
+  }
+  return Object.freeze( [ ...wanted ] );
+}

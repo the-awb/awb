@@ -7,9 +7,9 @@ export function seedDocument( scoreID = 'untitled-score' ) {
     scoreID,
     meta: { title: 'Untitled score', description: '', tags: [] },
     entries: sortScore( [
-      makeEvent( 0, { type: 'note', def: 'substrate', freqA: 36, dur: 8 }, { id: 'n1', path: [ 'opening' ] } ),
-      makeEvent( 8, { type: 'note', def: 'substrate', freqA: 40, dur: 8 }, { id: 'n2', path: [ 'answer' ] } ),
-      makeEvent( 20, { type: 'release', target: '@all' }, { id: 'n3', path: [] } )
+      makeEvent( 0, { type: 'note', def: 'awbTestTone', freq: 220, amp: 0.08, dur: 0.4 }, { id: 'n1', path: [ 'opening' ] } ),
+      makeEvent( 0.5, { type: 'note', def: 'awbTestTone', freq: 330, amp: 0.08, dur: 0.4 }, { id: 'n2', path: [ 'answer' ] } ),
+      makeEvent( 1, { type: 'release', target: '@all' }, { id: 'n3', path: [] } )
     ] )
   } );
 }
