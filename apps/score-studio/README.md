@@ -48,7 +48,8 @@ working duration.
 
 A thin strip below each synth bar shows coarse attack, gate-open and release lengths. For
 SynthDefs with independent `attackT` and `releaseT` controls, dragging its handles writes those
-values back to the canonical note event. `resonantBassEnv2` is deliberately shown as coupled:
+values through to the payload inspector live. The document revision and undo history are committed
+once, when the handle is released, rather than once per pointer movement. `resonantBassEnv2` is deliberately shown as coupled:
 both sides derive from `sustain * ampEnvRatio`, so those controls are edited in the inspector
 rather than presenting independent handles the SynthDef does not actually have. This is a duration
 model, not sampled envelope curvature; shaped envelope editing remains later work.

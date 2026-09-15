@@ -39,6 +39,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
   const synthOrderRef = useRef( [] );
   const fittedDocumentEpochRef = useRef( null );
   const entries = session.document.entries;
+  const displayedEntries = session.previewEntries ?? entries;
   if ( scoreIDRef.current !== session.document.scoreID ) {
     scoreIDRef.current = session.document.scoreID;
     structureOrderRef.current = [];
@@ -46,10 +47,10 @@ export default function ScoreTimeline( { session, dispatch } ) {
   }
   const selected = new Set( session.selected );
   const visibleEntries = useMemo(
-    () => drag ? nudge( entries, drag.ids, drag.delta ) : entries,
-    [ entries, drag ]
+    () => drag ? nudge( displayedEntries, drag.ids, drag.delta ) : displayedEntries,
+    [ displayedEntries, drag ]
   );
-  const structureNames = [ ...new Set( entries.map( ( entry ) => entry.path[ 0 ] ?? 'ungrouped' ) ) ];
+  const structureNames = [ ...new Set( displayedEntries.map( ( entry ) => entry.path[ 0 ] ?? 'ungrouped' ) ) ];
   const structureLanes = retainLaneOrder( structureOrderRef, structureNames.length ? structureNames : [ 'ungrouped' ] );
   const baseSynthLanes = useMemo( () => projectSynthLifecycleLanes( entries ), [ entries ] );
   const stableSynthOrder = new Map(
@@ -143,17 +144,19 @@ export default function ScoreTimeline( { session, dispatch } ) {
     removeHandleListenersRef.current();
     const initial = lane.envelope[ edge ];
     const startX = event.clientX;
+    const withValue = ( value ) => entries.map( ( entry ) => entry.id === lane.id
+      ? { ...entry, event: { ...entry.event, [ control ]: value } }
+      : entry );
     const move = ( pointerEvent ) => {
       const value = Math.max( 0, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 100 ) / 100 );
       setEnvelopeDrag( { laneID: lane.id, edge, value } );
+      dispatch( { type: 'PREVIEW_ENTRIES', entries: withValue( value ) } );
     };
     const end = ( pointerEvent ) => {
       const value = Math.max( 0, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 100 ) / 100 );
       removeHandleListenersRef.current();
       setEnvelopeDrag( null );
-      apply( entries.map( ( entry ) => entry.id === lane.id
-        ? { ...entry, event: { ...entry.event, [ control ]: value } }
-        : entry ) );
+      dispatch( { type: 'COMMIT_PREVIEW', entries: withValue( value ) } );
       dispatch( { type: 'SET_SELECTED', ids: [ lane.id ] } );
     };
     window.addEventListener( 'pointermove', move );
@@ -173,32 +176,33 @@ export default function ScoreTimeline( { session, dispatch } ) {
     removeHandleListenersRef.current();
     const initial = lane.gateReleaseTime;
     const startX = event.clientX;
+    const withTime = ( time ) => {
+      const marker = lane.gateMarker;
+      if ( marker.synthetic ) return entries.map( ( entry ) => {
+        if ( entry.id !== lane.id ) return entry;
+        const sustain = time - lane.startTime;
+        if ( entry.event.sustain !== undefined ) {
+          return { ...entry, event: { ...entry.event, sustain } };
+        }
+        const legato = Number( entry.event.legato ?? 0.8 );
+        return Number.isFinite( legato ) && legato > 0
+          ? { ...entry, event: { ...entry.event, dur: sustain / legato } }
+          : { ...entry, event: { ...entry.event, sustain } };
+      } );
+      return entries.map( ( entry ) => entry.id === marker.entry.id ? { ...entry, time } : entry );
+    };
     const move = ( pointerEvent ) => {
       const time = Math.max( lane.startTime, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 1000 ) / 1000 );
       setDurationDrag( { laneID: lane.id, time } );
+      dispatch( { type: 'PREVIEW_ENTRIES', entries: withTime( time ) } );
     };
     const end = ( pointerEvent ) => {
       const time = Math.max( lane.startTime, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 1000 ) / 1000 );
       const marker = lane.gateMarker;
       removeHandleListenersRef.current();
       setDurationDrag( null );
-      if ( marker.synthetic ) {
-        apply( entries.map( ( entry ) => {
-          if ( entry.id !== lane.id ) return entry;
-          const sustain = time - lane.startTime;
-          if ( entry.event.sustain !== undefined ) {
-            return { ...entry, event: { ...entry.event, sustain } };
-          }
-          const legato = Number( entry.event.legato ?? 0.8 );
-          return Number.isFinite( legato ) && legato > 0
-            ? { ...entry, event: { ...entry.event, dur: sustain / legato } }
-            : { ...entry, event: { ...entry.event, sustain } };
-        } ) );
-        dispatch( { type: 'SET_SELECTED', ids: [ lane.id ] } );
-      } else {
-        apply( entries.map( ( entry ) => entry.id === marker.entry.id ? { ...entry, time } : entry ) );
-        dispatch( { type: 'SET_SELECTED', ids: [ marker.entry.id ] } );
-      }
+      dispatch( { type: 'COMMIT_PREVIEW', entries: withTime( time ) } );
+      dispatch( { type: 'SET_SELECTED', ids: [ marker.synthetic ? lane.id : marker.entry.id ] } );
     };
     window.addEventListener( 'pointermove', move );
     window.addEventListener( 'pointerup', end );

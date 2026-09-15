@@ -54,9 +54,10 @@ export default function App() {
     standaloneExecutor.subscribe, standaloneExecutor.getState, standaloneExecutor.getState
   );
   const dirty = file.savedRevision !== session.document.revision;
+  const inspectedEntries = session.previewEntries ?? session.document.entries;
   const selectedEntry = useMemo(
-    () => session.document.entries.find( ( entry ) => entry.id === session.selected[ 0 ] ) ?? null,
-    [ session.document.entries, session.selected ]
+    () => inspectedEntries.find( ( entry ) => entry.id === session.selected[ 0 ] ) ?? null,
+    [ inspectedEntries, session.selected ]
   );
 
   useEffect( () => {
@@ -544,7 +545,7 @@ export default function App() {
         <section className="eventInspector">
           <h2>Event</h2>
           { selectedEntry
-            ? <EventEditor key={ `${ selectedEntry.id }:${ session.document.revision }` }
+            ? <EventEditor key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
               entry={ selectedEntry } onCommit={ updateSelectedEntry } />
             : <p className="emptyCopy">Select an event to inspect its authored payload.</p> }
         </section>

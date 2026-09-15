@@ -36,4 +36,14 @@ assert.equal( unchanged, state, 'writing unchanged metadata does not mint a revi
 const loaded = scoreSessionReducer( state, { type: 'LOAD_DOCUMENT', document: seedDocument( 'loaded-score' ) } );
 assert.equal( loaded.documentEpoch, state.documentEpoch + 1, 'opening a document advances the view epoch' );
 
-console.log( 'score-session: 15/15 pass' );
+const previewEntries = state.document.entries.map( ( entry ) => entry.id === 'n1'
+  ? { ...entry, event: { ...entry.event, dur: 12 } }
+  : entry );
+const previewed = scoreSessionReducer( state, { type: 'PREVIEW_ENTRIES', entries: previewEntries } );
+assert.equal( previewed.document.revision, state.document.revision, 'live drag preview does not mint a revision' );
+assert.equal( previewed.previewEntries.find( ( entry ) => entry.id === 'n1' ).event.dur, 12 );
+const committed = scoreSessionReducer( previewed, { type: 'COMMIT_PREVIEW', entries: previewEntries } );
+assert.equal( committed.document.revision, state.document.revision + 1, 'releasing a preview mints one revision' );
+assert.equal( committed.undo.length, state.undo.length + 1, 'a complete drag creates one undo step' );
+
+console.log( 'score-session: 19/19 pass' );

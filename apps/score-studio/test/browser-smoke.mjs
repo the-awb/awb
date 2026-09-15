@@ -150,6 +150,9 @@ try {
     await page.mouse.move( durationHandleBox.x + 2, durationHandleBox.y + 2 );
     await page.mouse.down();
     await page.mouse.move( durationHandleBox.x + 36, durationHandleBox.y + 2, { steps: 4 } );
+    if ( Number( await page.getByLabel( 'Payload dur', { exact: true } ).inputValue() ) <= 300 ) {
+      failures.push( 'duration handle did not preview payload dur before pointer-up' );
+    }
     await page.mouse.up();
     if ( Number( await page.getByLabel( 'Payload dur', { exact: true } ).inputValue() ) <= 300 ) {
       failures.push( 'duration handle did not update canonical dur through legato' );
@@ -163,6 +166,9 @@ try {
     await page.mouse.move( releaseHandleBox.x + 2, releaseHandleBox.y + 2 );
     await page.mouse.down();
     await page.mouse.move( releaseHandleBox.x + 38, releaseHandleBox.y + 2, { steps: 4 } );
+    if ( Number( await page.getByLabel( 'Payload releaseT', { exact: true } ).inputValue() ) <= 24 ) {
+      failures.push( 'release handle did not preview payload releaseT before pointer-up' );
+    }
     await page.mouse.up();
     if ( Number( await page.getByLabel( 'Payload releaseT', { exact: true } ).inputValue() ) <= 24 ) {
       failures.push( 'release envelope handle did not update the canonical SynthDef control' );
@@ -176,4 +182,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 33/33 pass' );
+console.log( 'score-studio-browser: 35/35 pass' );

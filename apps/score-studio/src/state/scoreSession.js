@@ -22,6 +22,8 @@ export function createSessionState( document = seedDocument() ) {
     redo: [],
     selected: [],
     documentEpoch: 0,
+    previewEntries: null,
+    previewVersion: 0,
     mode: MODES.HOSTED,
     view: 'score',
     playhead: 0,
@@ -40,13 +42,32 @@ export function scoreSessionReducer( state, action ) {
       return { ...state, playhead: Math.max( 0, action.time ) };
     case 'SET_SELECTED':
       return { ...state, selected: action.ids };
+    case 'PREVIEW_ENTRIES':
+      return { ...state, previewEntries: action.entries, previewVersion: state.previewVersion + 1 };
+    case 'COMMIT_PREVIEW': {
+      const entries = action.entries ?? state.previewEntries;
+      if ( !entries ) return state;
+      return {
+        ...state,
+        document: reviseScoreDocument( state.document, entries ),
+        undo: [ ...state.undo, state.document ].slice( -50 ),
+        redo: [],
+        previewEntries: null,
+        previewVersion: state.previewVersion + 1
+      };
+    }
+    case 'CANCEL_PREVIEW':
+      return state.previewEntries
+        ? { ...state, previewEntries: null, previewVersion: state.previewVersion + 1 }
+        : state;
     case 'EDIT_ENTRIES': {
       if ( action.entries === state.document.entries ) return state;
       return {
         ...state,
         document: reviseScoreDocument( state.document, action.entries ),
         undo: [ ...state.undo, state.document ].slice( -50 ),
-        redo: []
+        redo: [],
+        previewEntries: null
       };
     }
     case 'EDIT_META':
@@ -67,7 +88,8 @@ export function scoreSessionReducer( state, action ) {
         ...state,
         document: createScoreDocument( { ...previous, revision: state.document.revision + 1 } ),
         undo: state.undo.slice( 0, -1 ),
-        redo: [ ...state.redo, state.document ].slice( -50 )
+        redo: [ ...state.redo, state.document ].slice( -50 ),
+        previewEntries: null
       };
     }
     case 'REDO': {
@@ -77,7 +99,8 @@ export function scoreSessionReducer( state, action ) {
         ...state,
         document: createScoreDocument( { ...next, revision: state.document.revision + 1 } ),
         undo: [ ...state.undo, state.document ].slice( -50 ),
-        redo: state.redo.slice( 0, -1 )
+        redo: state.redo.slice( 0, -1 ),
+        previewEntries: null
       };
     }
     case 'LOAD_DOCUMENT':
