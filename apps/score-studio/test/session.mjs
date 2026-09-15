@@ -3,6 +3,7 @@ import { createSessionState, MODES, scoreSessionReducer, seedDocument } from '..
 
 let state = createSessionState( seedDocument( 'session-test' ) );
 assert.equal( state.document.revision, 0 );
+assert.equal( state.documentEpoch, 0 );
 assert.notEqual( state.document, state.hosted, 'authored and runtime state are separate' );
 
 state = scoreSessionReducer( state, { type: 'SET_MODE', mode: MODES.STANDALONE } );
@@ -32,4 +33,7 @@ assert.equal( state.redo.length, 0, 'a new authored edit clears redo history' );
 const unchanged = scoreSessionReducer( state, { type: 'EDIT_META', key: 'title', value: 'A branch' } );
 assert.equal( unchanged, state, 'writing unchanged metadata does not mint a revision' );
 
-console.log( 'score-session: 13/13 pass' );
+const loaded = scoreSessionReducer( state, { type: 'LOAD_DOCUMENT', document: seedDocument( 'loaded-score' ) } );
+assert.equal( loaded.documentEpoch, state.documentEpoch + 1, 'opening a document advances the view epoch' );
+
+console.log( 'score-session: 15/15 pass' );

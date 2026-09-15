@@ -61,7 +61,10 @@ separate.
 
 Ruler intervals adapt to zoom using 1/2/5 steps with a minimum label spacing. A fitted fourteen-
 minute score therefore uses minute-scale labels instead of drawing five-second text on top of
-itself; close zoom progressively exposes seconds and fractional seconds.
+itself; close zoom progressively exposes seconds and fractional seconds. Synth lifecycle is the
+default score layout, and each newly opened/replaced document is fitted once when that layout is
+shown. Fit may go below one pixel per second for long scores; the zoom readout retains decimals in
+that range. Ordinary edits preserve the user's current zoom and scroll position.
 
 A frequency-lane view is a later projection over the same score, not a new score format. Its
 vertical axis may be continuous Hz or an explicit just-intonation lattice. The JI form must carry

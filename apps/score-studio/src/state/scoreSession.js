@@ -21,6 +21,7 @@ export function createSessionState( document = seedDocument() ) {
     undo: [],
     redo: [],
     selected: [],
+    documentEpoch: 0,
     mode: MODES.HOSTED,
     view: 'score',
     playhead: 0,
@@ -81,7 +82,12 @@ export function scoreSessionReducer( state, action ) {
     }
     case 'LOAD_DOCUMENT':
       adoptIds( action.document.entries );
-      return { ...createSessionState( action.document ), mode: state.mode, view: state.view };
+      return {
+        ...createSessionState( action.document ),
+        documentEpoch: state.documentEpoch + 1,
+        mode: state.mode,
+        view: state.view
+      };
     case 'SET_WORKING_DOCUMENT':
       return { ...state, workingDocument: action.text };
     case 'HOSTED_STATE':

@@ -93,8 +93,12 @@ try {
   page.on( 'pageerror', ( error ) => errors.push( error.message ) );
   await page.goto( `http://127.0.0.1:${ vitePort }`, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'Opened attunement-01.score.json', { exact: true } ).waitFor();
-  if ( await page.locator( '.scoreEvent' ).count() !== 11 ) {
-    throw new Error( 'SC-launched browser did not load all eleven source-score events' );
+  const identity = await page.locator( '.filePanel .identity dd' ).allTextContents();
+  if ( identity[ 0 ] !== 'attunement-01.score.json'
+    || identity[ 1 ] !== 'sonic-attunement-01'
+    || identity[ 2 ] !== '1'
+    || identity[ 3 ] !== '11' ) {
+    throw new Error( `SC-launched browser loaded the wrong source identity: ${ identity.join( ' / ' ) }` );
   }
   passed += 1;
 

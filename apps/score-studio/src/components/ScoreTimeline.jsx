@@ -6,7 +6,7 @@ import { projectSynthLifecycleLanes } from '../engine/synthLifecycleLanes.js';
 import { formatTimelineTime, timelineTicks } from '../engine/timelineScale.js';
 
 const LEFT = 92;
-const MIN_ZOOM = 1;
+const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 160;
 
 function retainLaneOrder( orderRef, names ) {
@@ -19,7 +19,7 @@ function retainLaneOrder( orderRef, names ) {
 }
 
 export default function ScoreTimeline( { session, dispatch } ) {
-  const [ layout, setLayout ] = useState( 'structure' );
+  const [ layout, setLayout ] = useState( 'synths' );
   const [ step, setStep ] = useState( 1 );
   const [ gap, setGapValue ] = useState( 1 );
   const [ carryTail, setCarryTail ] = useState( true );
@@ -37,6 +37,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
   const scoreIDRef = useRef( null );
   const structureOrderRef = useRef( [] );
   const synthOrderRef = useRef( [] );
+  const fittedDocumentEpochRef = useRef( null );
   const entries = session.document.entries;
   if ( scoreIDRef.current !== session.document.scoreID ) {
     scoreIDRef.current = session.document.scoreID;
@@ -224,6 +225,14 @@ export default function ScoreTimeline( { session, dispatch } ) {
     const available = ( scrollRef.current?.clientWidth ?? 800 ) - LEFT - 40;
     changeZoom( available / Math.max( total, 1 ) );
   };
+  useEffect( () => {
+    if ( layout !== 'synths' || fittedDocumentEpochRef.current === session.documentEpoch ) return;
+    const frame = requestAnimationFrame( () => {
+      fittedDocumentEpochRef.current = session.documentEpoch;
+      fitTimeline();
+    } );
+    return () => cancelAnimationFrame( frame );
+  }, [ layout, session.documentEpoch ] );
   const toggleSynth = ( laneID ) => setExpandedSynths( ( current ) => {
     const next = new Set( current );
     if ( next.has( laneID ) ) next.delete( laneID );
@@ -263,7 +272,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
             <button aria-label="Fit timeline" onClick={ fitTimeline }>Fit</button>
             <button aria-label="Zoom in" disabled={ pxPerSecond >= MAX_ZOOM }
               onClick={ () => changeZoom( pxPerSecond * 1.6 ) }>+</button>
-            <output>{ Math.round( pxPerSecond ) } px/s</output>
+            <output>{ pxPerSecond < 1 ? pxPerSecond.toFixed( 2 ) : Math.round( pxPerSecond ) } px/s</output>
           </div>
           <label>Step <input aria-label="Edit step" type="number" min="0.01" step="0.25" value={ step }
             onChange={ ( event ) => setStep( Number( event.target.value ) ) } /> s</label>

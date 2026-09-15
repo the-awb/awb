@@ -27,9 +27,9 @@ page.on( 'pageerror', ( error ) => failures.push( error.message ) );
 try {
   await page.goto( url, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'AWB', { exact: true } ).waitFor();
-  if ( await page.locator( '.scoreEvent' ).count() !== 3 ) failures.push( 'expected three seeded score events' );
-
-  await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).click();
+  if ( !( await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).evaluate( ( button ) => button.classList.contains( 'active' ) ) ) ) {
+    failures.push( 'synth lifecycle is not the default score layout' );
+  }
   if ( await page.locator( '.synthLane' ).count() !== 2 ) failures.push( 'expected one lifecycle lane per authored synth create' );
   if ( await page.locator( '.synthBar' ).count() !== 2 ) failures.push( 'lifecycle view did not render one bar per synth' );
   if ( await page.locator( '.synthTriggerTick.release' ).count() !== 2 ) failures.push( '@all release was not projected onto both synth bars' );
@@ -64,6 +64,7 @@ try {
     }
   }
   await page.getByRole( 'button', { name: 'Structure', exact: true } ).click();
+  if ( await page.locator( '.scoreEvent' ).count() !== 3 ) failures.push( 'expected three seeded score events' );
 
   const widthBeforeZoom = await page.locator( '.timeline' ).evaluate( ( element ) => element.getBoundingClientRect().width );
   await page.getByRole( 'button', { name: 'Zoom in', exact: true } ).click();
@@ -125,11 +126,17 @@ try {
   page.once( 'dialog', ( dialog ) => dialog.accept() );
   await page.getByRole( 'button', { name: 'Demo score', exact: true } ).click();
   await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
-  if ( await page.locator( '.scoreEvent' ).count() !== 11 ) failures.push( 'bundled real demo did not open as a canonical score' );
+  if ( await page.locator( '.synthLane' ).count() !== 11 ) failures.push( 'bundled real demo did not open as a canonical score' );
   if ( await page.locator( '.titleInput' ).inputValue() !== 'Sonic Attunement 01' ) failures.push( 'bundled demo metadata did not load' );
-  await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).click();
   if ( await page.locator( '.synthEnvelope' ).count() !== 11 ) failures.push( 'real demo did not render one envelope strip per synth row' );
-  await page.getByRole( 'button', { name: 'Fit timeline', exact: true } ).click();
+  await page.waitForTimeout( 250 );
+  const fittedSize = await page.locator( '.timelineScroll' ).evaluate( ( scroll ) => ( {
+    viewport: scroll.clientWidth,
+    content: scroll.querySelector( '.timeline' ).getBoundingClientRect().width
+  } ) );
+  if ( fittedSize.content > fittedSize.viewport + 2 ) {
+    failures.push( `opened score did not fit automatically (${ fittedSize.content }px in ${ fittedSize.viewport }px)` );
+  }
   const tickPositions = await page.locator( '.tick' ).evaluateAll( ( ticks ) =>
     ticks.map( ( tick ) => tick.getBoundingClientRect().x ) );
   const closestTicks = Math.min( ...tickPositions.slice( 1 ).map( ( position, index ) => position - tickPositions[ index ] ) );
@@ -169,4 +176,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 31/31 pass' );
+console.log( 'score-studio-browser: 33/33 pass' );
