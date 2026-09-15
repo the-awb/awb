@@ -61,3 +61,6 @@ Canonical protocol evidence remains separate:
 - `packages/score/fixtures/connector-v1/osc-transcript.json` — frozen protocol-v1 exchange;
 - `test/hosted-transport.mjs` — WebSocket, UDP, snapshot recovery, idempotent retry, transport and
   realization integration test.
+- `test/hosted-real-sclang.mjs` — the same hosted client and sidecar against the real desktop
+  bridge, loading all eleven `sonic-attunement-01` events and seeking to 773 seconds without
+  starting playback.

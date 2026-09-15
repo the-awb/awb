@@ -13,7 +13,10 @@ const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
 
 export default function App() {
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
-  const [ file, setFile ] = useState( { handle: null, name: null, hash: null, savedRevision: null, message: '' } );
+  const [ file, setFile ] = useState( {
+    handle: null, name: null, hash: null, savedRevision: null,
+    projectionStatus: 'not generated', message: ''
+  } );
   const [ endpoint, setEndpoint ] = useState( import.meta.env.VITE_HOSTED_ENDPOINT ?? '' );
   const [ hostedMessage, setHostedMessage ] = useState( '' );
   const inputRef = useRef( null );
@@ -65,6 +68,7 @@ export default function App() {
       name: result.name,
       hash: result.hash,
       savedRevision: result.document.revision,
+      projectionStatus: 'not loaded',
       message: `Opened ${ result.name }`
     } );
   }
@@ -99,9 +103,10 @@ export default function App() {
         name: result.handle?.name ?? `${ session.document.scoreID }.score.json`,
         hash: result.hash,
         savedRevision: session.document.revision,
+        projectionStatus: 'pending desktop export',
         message: result.downloaded
           ? 'Canonical JSON downloaded. This browser cannot retain a writable file handle.'
-          : 'Canonical JSON saved. SC projection has not been requested yet.'
+          : 'Canonical JSON saved. SC projection is pending desktop export.'
       } );
     } catch ( error ) {
       if ( error.name !== 'AbortError' ) setFile( ( current ) => ( { ...current, message: error.message } ) );
@@ -111,7 +116,10 @@ export default function App() {
   function newDocument() {
     if ( dirty && !window.confirm( 'Discard the current unsaved revision?' ) ) return;
     dispatch( { type: 'LOAD_DOCUMENT', document: seedDocument( freshID() ) } );
-    setFile( { handle: null, name: null, hash: null, savedRevision: null, message: 'New unsaved score' } );
+    setFile( {
+      handle: null, name: null, hash: null, savedRevision: null,
+      projectionStatus: 'not generated', message: 'New unsaved score'
+    } );
   }
 
   function updateSelectedEvent( text ) {
@@ -157,6 +165,7 @@ export default function App() {
           <dt>Score ID</dt><dd>{ session.document.scoreID }</dd>
           <dt>Revision</dt><dd>{ session.document.revision }</dd>
           <dt>Entries</dt><dd>{ session.document.entries.length }</dd>
+          <dt>SC pair</dt><dd>{ file.projectionStatus }</dd>
         </dl>
         { file.message && <p className="fileMessage">{ file.message }</p> }
         <p className="boundaryNote">JSON is canonical. Browser drafts are recovery copies. The generated SC document is a projection.</p>

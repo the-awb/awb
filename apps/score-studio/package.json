@@ -8,7 +8,8 @@
     "dev:hosted": "node server/dev-hosted.mjs",
     "hosted-bridge": "node server/hosted-bridge.mjs",
     "build": "vite build",
-    "test": "node test/session.mjs && node test/hosted-transport.mjs",
+    "test": "node test/session.mjs && node test/hosted-transport.mjs && node test/pair-save.mjs",
+    "test:hosted-real": "node test/hosted-real-sclang.mjs",
     "test:browser": "node test/browser-smoke.mjs",
     "preview": "vite preview"
   },
