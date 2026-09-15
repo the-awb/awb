@@ -23,3 +23,16 @@ export {
 // against it before anything tries to play it. Still payload-blind — nothing here names an event
 // field; a renderer supplies the key names.
 export { defineRenderer, checkScore, describeCheck } from './renderers.js';
+
+// Canonical persisted score document. Runtime transport and realizations deliberately do not live
+// in this object; they belong to the active hosted or standalone execution session.
+export {
+  SCORE_SCHEMA,
+  validateScoreDocument,
+  assertScoreDocument,
+  createScoreDocument,
+  reviseScoreDocument,
+  serializeScoreDocument,
+  parseScoreDocument,
+  hashScoreDocument,
+} from './document.js';

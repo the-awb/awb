@@ -11,12 +11,14 @@ packages/
   field-engine/         renderer-neutral analytic field projection and propagation
   lissajous-engine/     React-free visual core with R3F, vanilla and browser adapters
   render-pipeline/      provider-neutral resolved jobs and indexed render scheduling
-apps/                   future shared AWB applications; intentionally empty today
+apps/
+  score-studio/         clean score authoring and browser-runtime development host
 ```
 
-The packages live here because more than one application needs them. Project studios remain in
-their own repositories until a shared application proves it can replace their working interfaces.
-`field_modelling` and `lissajous-viz` are consumers, not subdirectories of this repository.
+The packages live here because more than one application needs them. Score Studio lives here too:
+it develops the shared score workflow without coupling it to a field or Lissajous application.
+Project-specific studios remain in their own repositories. `field_modelling` and `lissajous-viz`
+are consumers, not subdirectories of this repository.
 
 ## Commands
 

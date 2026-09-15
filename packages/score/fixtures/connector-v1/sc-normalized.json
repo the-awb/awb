@@ -1,0 +1,40 @@
+[
+  {
+    "event": {
+      "dur": 8,
+      "freqA": 36,
+      "instrument": "substrate",
+      "type": "note"
+    },
+    "id": "n1",
+    "path": [
+      "opening",
+      "drone"
+    ],
+    "time": 0
+  },
+  {
+    "event": {
+      "freqA": 40,
+      "target": "n1",
+      "type": "set"
+    },
+    "id": "n2",
+    "path": [
+      "opening",
+      "drone"
+    ],
+    "time": 4
+  },
+  {
+    "event": {
+      "target": "n1",
+      "type": "release"
+    },
+    "id": "n3",
+    "path": [
+      "closing"
+    ],
+    "time": 12
+  }
+]

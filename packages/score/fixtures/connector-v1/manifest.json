@@ -1,0 +1,8 @@
+{
+  "schema": "awb.score-connector-fixture/1",
+  "scoreFile": "score.json",
+  "canonicalScoreSha256": "fd0c2d397d3931bf831fd608d8fcb73e96ae23957076502614692f938a85d953",
+  "expectedScNormalizationFile": "sc-normalized.json",
+  "oscTranscript": null,
+  "note": "The OSC transcript remains intentionally unset until the browser and desktop agents freeze the endpoint vocabulary together."
+}

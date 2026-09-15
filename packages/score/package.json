@@ -14,6 +14,6 @@
   "scripts": {
     "build": "node ../../tools/build-esm-package.mjs index=src/index.js",
     "prepack": "npm run build",
-    "test": "node test/score-verbs.mjs && node test/renderers.mjs"
+    "test": "node test/score-verbs.mjs && node test/renderers.mjs && node test/document.mjs"
   }
 }

@@ -1,0 +1,52 @@
+{
+  "entries": [
+    {
+      "event": {
+        "def": "substrate",
+        "dur": 8,
+        "freqA": 36,
+        "type": "note"
+      },
+      "id": "n1",
+      "path": [
+        "opening",
+        "drone"
+      ],
+      "time": 0
+    },
+    {
+      "event": {
+        "freqA": 40,
+        "target": "n1",
+        "type": "set"
+      },
+      "id": "n2",
+      "path": [
+        "opening",
+        "drone"
+      ],
+      "time": 4
+    },
+    {
+      "event": {
+        "target": "n1",
+        "type": "release"
+      },
+      "id": "n3",
+      "path": [
+        "closing"
+      ],
+      "time": 12
+    }
+  ],
+  "meta": {
+    "description": "Finite score shared by the browser and desktop connector tests.",
+    "tags": [
+      "fixture"
+    ],
+    "title": "Connector fixture v1"
+  },
+  "revision": 0,
+  "schema": "awb.score/1",
+  "scoreID": "connector-fixture-v1"
+}

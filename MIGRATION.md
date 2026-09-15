@@ -15,6 +15,11 @@ are consumers. They may retain a packed release artifact, but not a second edita
 | `@awb/lissajous-engine` | `lissajous-viz/packages/lissajous-engine` | extraction and distribution at `85a349a` | owned here; `lissajous-viz` consumes a packed artifact |
 | `@awb/render-pipeline` | `lissajous-viz/packages/render-pipeline` | portable-pipeline source at `85a349a` | owned here; `lissajous-viz` consumes a packed artifact |
 
+`apps/score-studio` is not another package migration. It is the clean development host for the
+shared score workflow: canonical editing and persistence, a hosted connector client, a standalone
+browser executor and browser integration tests. Field and Lissajous applications can import the
+finished score pieces later without becoming the place where those pieces are developed.
+
 The source comparisons were clean at cutover on 15 September 2026. Package-level tests moved with
 the source. Application-owned browser, audio, rendering and lifecycle harnesses remain in their
 application repositories and were rerun against the packed artifacts.
@@ -68,6 +73,8 @@ changing package ownership or public APIs.
 Application assets and policy do not move here merely because a package uses them. In particular:
 
 - `scsynth.wasm`, `sclang.wasm` and their `.data` files remain host-served assets;
+- Score Studio therefore owns pinned copies of its matched browser wasm assets while consuming
+  engine and console behaviour from `@awb/sc-wasm` and `@awb/sc-console`;
 - field and Lissajous scene shells, cameras, controls and UI remain application-owned;
 - the sharing rule is responsibility, not framework: evaluator contracts and editor machinery may
   be shared, while application shells, audience-specific policy and authored content are not;

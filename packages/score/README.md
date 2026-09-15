@@ -52,6 +52,26 @@ take, which has no anchors at all, a second kind of score.
 Supporting calls: `makeEvent`, `newEventId`, `adoptIds`, `sortScore`, `byId`, `duration`, and
 `commonGroup` / `groups` / `hasPrefix` for what a UI must ask before offering a verb.
 
+## Canonical documents and revisions
+
+The file and connector boundary wraps those entries in an `awb.score/1` document:
+
+```js
+{ schema, scoreID, revision, meta, entries }
+```
+
+`scoreID` identifies the authored score; `revision` identifies one immutable content version.
+Runtime `runID`, `entryID` and `realizationID` remain connector concerns and are not written back
+into the authored document. `createScoreDocument()`, `reviseScoreDocument()`, validation, parsing,
+canonical serialization and SHA-256 hashing live here because hosted and standalone modes must
+agree on exactly what was loaded.
+
+Canonical JSON uses recursively sorted object keys, two-space indentation and one trailing LF.
+Array order is retained: same-time entry order is semantic. The shared connector fixture is in
+`fixtures/connector-v1/`; its manifest pins the canonical hash and expected SC normalization. Its
+OSC transcript is deliberately unset until both runtime implementations freeze that vocabulary
+together.
+
 ## Five behaviours that are decisions, not details
 
 The tests pin each, and each is a way this could be silently wrong:
@@ -127,7 +147,8 @@ question and belongs to a runtime check.
 npm test        # node test/score-verbs.mjs
 ```
 
-46 assertions across two files (`score-verbs.mjs`, `renderers.mjs`), no browser and no build step. They state the exact times they expect, because a
+The Node suites cover score verbs, renderer contracts and canonical documents, with no browser.
+They state the exact times they expect, because a
 verb that moves the right events by nearly the right amount looks perfect on a timeline drawn at
 six pixels a second and is wrong in the material.
 
@@ -138,4 +159,5 @@ throws where it should not otherwise prints nothing at all, which reads as an em
 
 Delta ↔ absolute conversion, anchors (free-running cycles derived from the material's own beat
 frequencies) and the same-time ordering rules for deterministic replay are all pure, and belong
-here when they are built. Evaluating an envelope shape into engine arguments does not.
+here when they are built. SC payload normalization, OSC transport and evaluating an envelope shape
+into engine arguments do not.

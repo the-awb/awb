@@ -1,0 +1,24 @@
+{
+  "name": "@awb/score-studio",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node test/session.mjs",
+    "test:browser": "node test/browser-smoke.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@awb/sc-console": "0.1.0",
+    "@awb/sc-wasm": "0.1.0",
+    "@awb/score": "0.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.0",
+    "vite": "^8.2.2"
+  }
+}
