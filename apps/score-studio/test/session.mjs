@@ -19,5 +19,17 @@ assert.equal( state.document.revision, 1, 'runtime reports do not mutate authore
 state = scoreSessionReducer( state, { type: 'UNDO' } );
 assert.equal( state.document.revision, 2, 'undo creates a new revision rather than reviving an old one' );
 assert.equal( state.document.entries[1].time, 8 );
+assert.equal( state.redo.length, 1 );
 
-console.log( 'score-session: 8/8 pass' );
+state = scoreSessionReducer( state, { type: 'REDO' } );
+assert.equal( state.document.revision, 3, 'redo also creates a new immutable revision' );
+assert.equal( state.document.entries[1].time, 10 );
+
+state = scoreSessionReducer( state, { type: 'UNDO' } );
+state = scoreSessionReducer( state, { type: 'EDIT_META', key: 'title', value: 'A branch' } );
+assert.equal( state.redo.length, 0, 'a new authored edit clears redo history' );
+
+const unchanged = scoreSessionReducer( state, { type: 'EDIT_META', key: 'title', value: 'A branch' } );
+assert.equal( unchanged, state, 'writing unchanged metadata does not mint a revision' );
+
+console.log( 'score-session: 13/13 pass' );

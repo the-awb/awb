@@ -19,6 +19,7 @@ export function createSessionState( document = seedDocument() ) {
   return {
     document,
     undo: [],
+    redo: [],
     selected: [],
     mode: MODES.HOSTED,
     view: 'score',
@@ -43,17 +44,20 @@ export function scoreSessionReducer( state, action ) {
       return {
         ...state,
         document: reviseScoreDocument( state.document, action.entries ),
-        undo: [ ...state.undo, state.document ].slice( -50 )
+        undo: [ ...state.undo, state.document ].slice( -50 ),
+        redo: []
       };
     }
     case 'EDIT_META':
+      if ( state.document.meta[ action.key ] === action.value ) return state;
       return {
         ...state,
         document: reviseScoreDocument( state.document, state.document.entries, {
           ...state.document.meta,
           [ action.key ]: action.value
         } ),
-        undo: [ ...state.undo, state.document ].slice( -50 )
+        undo: [ ...state.undo, state.document ].slice( -50 ),
+        redo: []
       };
     case 'UNDO': {
       const previous = state.undo.at( -1 );
@@ -61,7 +65,18 @@ export function scoreSessionReducer( state, action ) {
       return {
         ...state,
         document: createScoreDocument( { ...previous, revision: state.document.revision + 1 } ),
-        undo: state.undo.slice( 0, -1 )
+        undo: state.undo.slice( 0, -1 ),
+        redo: [ ...state.redo, state.document ].slice( -50 )
+      };
+    }
+    case 'REDO': {
+      const next = state.redo.at( -1 );
+      if ( !next ) return state;
+      return {
+        ...state,
+        document: createScoreDocument( { ...next, revision: state.document.revision + 1 } ),
+        undo: [ ...state.undo, state.document ].slice( -50 ),
+        redo: state.redo.slice( 0, -1 )
       };
     }
     case 'LOAD_DOCUMENT':

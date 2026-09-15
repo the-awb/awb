@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
-import { hashScoreDocument, parseScoreDocument } from '@awb/score';
+import { hashScoreDocument, parseScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import { openScoreFile, readScoreFile, saveScoreFile, storeRecoveryDraft } from './engine/scoreFiles.js';
@@ -122,18 +122,13 @@ export default function App() {
     } );
   }
 
-  function updateSelectedEvent( text ) {
+  function updateSelectedEntry( patch ) {
     if ( !selectedEntry ) return;
-    try {
-      const event = JSON.parse( text );
-      const entries = session.document.entries.map( ( entry ) => (
-        entry.id === selectedEntry.id ? { ...entry, event } : entry
-      ) );
-      dispatch( { type: 'EDIT_ENTRIES', entries } );
-      setFile( ( current ) => ( { ...current, message: '' } ) );
-    } catch ( error ) {
-      setFile( ( current ) => ( { ...current, message: `Event JSON: ${ error.message }` } ) );
-    }
+    const entries = sortScore( session.document.entries.map( ( entry ) => (
+      entry.id === selectedEntry.id ? { ...entry, ...patch } : entry
+    ) ) );
+    dispatch( { type: 'EDIT_ENTRIES', entries } );
+    setFile( ( current ) => ( { ...current, message: '' } ) );
   }
 
   return (
@@ -257,7 +252,7 @@ export default function App() {
           <h2>Event</h2>
           { selectedEntry
             ? <EventEditor key={ `${ selectedEntry.id }:${ session.document.revision }` }
-              entry={ selectedEntry } onCommit={ updateSelectedEvent } />
+              entry={ selectedEntry } onCommit={ updateSelectedEntry } />
             : <p className="emptyCopy">Select an event to inspect its authored payload.</p> }
         </section>
       </aside>
@@ -266,12 +261,42 @@ export default function App() {
 }
 
 function EventEditor( { entry, onCommit } ) {
-  const [ text, setText ] = useState( () => JSON.stringify( entry.event, null, 2 ) );
+  const [ time, setTime ] = useState( String( entry.time ) );
+  const [ path, setPath ] = useState( () => entry.path.join( '/' ) );
+  const [ eventText, setEventText ] = useState( () => JSON.stringify( entry.event, null, 2 ) );
+  const [ error, setError ] = useState( '' );
+
+  function commit() {
+    try {
+      if ( !time.trim() ) throw new Error( 'Time is required.' );
+      const nextTime = Number( time );
+      if ( !Number.isFinite( nextTime ) || nextTime < 0 ) throw new Error( 'Time must be a finite number at or after zero.' );
+      const event = JSON.parse( eventText );
+      if ( !event || typeof event !== 'object' || Array.isArray( event ) ) throw new Error( 'Event payload must be a JSON object.' );
+      onCommit( {
+        time: nextTime,
+        path: path.split( '/' ).map( ( segment ) => segment.trim() ).filter( Boolean ),
+        event
+      } );
+      setError( '' );
+    } catch ( nextError ) {
+      setError( nextError.message );
+    }
+  }
+
   return (
     <>
-      <dl className="identity"><dt>ID</dt><dd>{ entry.id }</dd><dt>Time</dt><dd>{ entry.time } s</dd><dt>Path</dt><dd>{ entry.path.join( '/' ) || '—' }</dd></dl>
-      <textarea className="eventJson" value={ text } onChange={ ( event ) => setText( event.target.value ) } />
-      <button onClick={ () => onCommit( text ) }>Apply payload</button>
+      <dl className="identity compact"><dt>ID</dt><dd>{ entry.id }</dd></dl>
+      <div className="entryFields">
+        <label>Time (seconds)<input aria-label="Event time" type="number" min="0" step="0.001"
+          value={ time } onChange={ ( event ) => setTime( event.target.value ) } /></label>
+        <label>Path <input aria-label="Event path" value={ path } placeholder="section/voice"
+          onChange={ ( event ) => setPath( event.target.value ) } /></label>
+        <label>Event payload<textarea aria-label="Event payload" className="eventJson" value={ eventText }
+          onChange={ ( event ) => setEventText( event.target.value ) } /></label>
+      </div>
+      { error && <p className="error">{ error }</p> }
+      <button onClick={ commit }>Apply event</button>
     </>
   );
 }

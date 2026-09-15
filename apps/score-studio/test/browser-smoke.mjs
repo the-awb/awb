@@ -31,6 +31,21 @@ try {
 
   await page.locator( '.scoreEvent' ).first().click();
   if ( !( await page.locator( '.eventJson' ).isVisible() ) ) failures.push( 'event inspector did not open' );
+  await page.getByLabel( 'Event time' ).fill( '4.5' );
+  await page.getByLabel( 'Event path' ).fill( 'phrase/low' );
+  await page.getByRole( 'button', { name: 'Apply event', exact: true } ).click();
+  if ( !( await page.locator( '.laneName' ).filter( { hasText: 'phrase' } ).isVisible() ) ) {
+    failures.push( 'time/path event edit did not reach the canonical document' );
+  }
+  await page.getByRole( 'button', { name: 'Undo', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'Redo', exact: true } ).click();
+  if ( await page.getByLabel( 'Event time' ).inputValue() !== '4.5' ) failures.push( 'redo did not restore the event edit' );
+
+  await page.getByLabel( 'Group name' ).fill( 'movement' );
+  await page.getByRole( 'button', { name: 'Group', exact: true } ).click();
+  if ( !( await page.locator( '.laneName' ).filter( { hasText: 'movement' } ).isVisible() ) ) {
+    failures.push( 'group verb did not reach the canonical document' );
+  }
 
   await page.getByRole( 'button', { name: 'standalone', exact: true } ).click();
   if ( !( await page.getByRole( 'button', { name: 'Start audio', exact: true } ).isVisible() ) ) {
@@ -53,4 +68,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 6/6 pass' );
+console.log( 'score-studio-browser: 9/9 pass' );

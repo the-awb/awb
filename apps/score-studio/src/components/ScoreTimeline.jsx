@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
-import { duration, makeEvent, nudge, sortScore } from '@awb/score';
+import {
+  commonGroup, duration, group, makeEvent, nudge, rippleFrom, setGap, sortScore, stretch, ungroup
+} from '@awb/score';
 
 const PX_PER_SECOND = 22;
 const LEFT = 92;
@@ -11,6 +13,10 @@ const fmt = ( seconds ) => {
 
 export default function ScoreTimeline( { session, dispatch } ) {
   const [ step, setStep ] = useState( 1 );
+  const [ gap, setGapValue ] = useState( 1 );
+  const [ carryTail, setCarryTail ] = useState( true );
+  const [ factor, setFactor ] = useState( 2 );
+  const [ groupName, setGroupName ] = useState( 'group' );
   const entries = session.document.entries;
   const selected = new Set( session.selected );
   const lanes = useMemo( () => {
@@ -19,6 +25,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
   }, [ entries ] );
   const total = Math.max( 30, duration( entries ) + 12, session.playhead + 12 );
   const width = LEFT + total * PX_PER_SECOND + 40;
+  const sharedGroup = commonGroup( entries, selected );
 
   const apply = ( next ) => dispatch( { type: 'EDIT_ENTRIES', entries: next } );
   const add = () => {
@@ -33,21 +40,43 @@ export default function ScoreTimeline( { session, dispatch } ) {
 
   return (
     <section className="scoreView">
-      <div className="scoreToolbar">
-        <span className="timeReadout">{ fmt( session.playhead ) }</span>
-        <button onClick={ add }>+ note</button>
-        <button
-          disabled={ !selected.size }
-          onClick={ () => apply( entries.filter( ( entry ) => !selected.has( entry.id ) ) ) }
-        >Delete</button>
-        <button disabled={ !session.undo.length } onClick={ () => dispatch( { type: 'UNDO' } ) }>Undo</button>
-        <span className="spacer" />
-        <label>Step <input type="number" min="0.01" step="0.25" value={ step }
-          onChange={ ( event ) => setStep( Number( event.target.value ) ) } /> s</label>
-        <button disabled={ !selected.size }
-          onClick={ () => apply( nudge( entries, selected, -step ) ) }>Earlier</button>
-        <button disabled={ !selected.size }
-          onClick={ () => apply( nudge( entries, selected, step ) ) }>Later</button>
+      <div className="scoreToolbars">
+        <div className="scoreToolbar">
+          <span className="timeReadout">{ fmt( session.playhead ) }</span>
+          <button onClick={ add }>+ note</button>
+          <button disabled={ !selected.size }
+            onClick={ () => apply( entries.filter( ( entry ) => !selected.has( entry.id ) ) ) }>Delete</button>
+          <button disabled={ !session.undo.length } onClick={ () => dispatch( { type: 'UNDO' } ) }>Undo</button>
+          <button disabled={ !session.redo.length } onClick={ () => dispatch( { type: 'REDO' } ) }>Redo</button>
+          <span className="spacer" />
+          <label>Step <input aria-label="Edit step" type="number" min="0.01" step="0.25" value={ step }
+            onChange={ ( event ) => setStep( Number( event.target.value ) ) } /> s</label>
+          <button disabled={ !selected.size }
+            onClick={ () => apply( nudge( entries, selected, -step ) ) }>Earlier</button>
+          <button disabled={ !selected.size }
+            onClick={ () => apply( nudge( entries, selected, step ) ) }>Later</button>
+          <button onClick={ () => apply( rippleFrom( entries, session.playhead, -step ) ) }>Ripple −</button>
+          <button onClick={ () => apply( rippleFrom( entries, session.playhead, step ) ) }>Ripple +</button>
+        </div>
+        <div className="scoreToolbar structuralToolbar">
+          <label>Gap <input aria-label="Gap seconds" type="number" min="0" step="0.25" value={ gap }
+            onChange={ ( event ) => setGapValue( Number( event.target.value ) ) } /> s</label>
+          <label className="checkLabel"><input type="checkbox" checked={ carryTail }
+            onChange={ ( event ) => setCarryTail( event.target.checked ) } /> carry tail</label>
+          <button disabled={ selected.size !== 2 }
+            onClick={ () => apply( setGap( entries, session.selected[ 0 ], session.selected[ 1 ], gap, { ripple: carryTail } ) ) }>Set gap</button>
+          <label>Stretch <input aria-label="Stretch factor" type="number" min="0.01" step="0.1" value={ factor }
+            onChange={ ( event ) => setFactor( Number( event.target.value ) ) } /> ×</label>
+          <button disabled={ !selected.size || !( factor > 0 ) }
+            onClick={ () => apply( stretch( entries, selected, factor ) ) }>Apply stretch</button>
+          <span className="spacer" />
+          <label>Group <input aria-label="Group name" value={ groupName }
+            onChange={ ( event ) => setGroupName( event.target.value ) } /></label>
+          <button disabled={ !selected.size || !groupName.trim() }
+            onClick={ () => apply( group( entries, selected, groupName.trim() ) ) }>Group</button>
+          <button disabled={ !sharedGroup }
+            onClick={ () => apply( ungroup( entries, selected ) ) }>Ungroup{ sharedGroup ? ` ${ sharedGroup }` : '' }</button>
+        </div>
       </div>
 
       <div className="timelineScroll">
