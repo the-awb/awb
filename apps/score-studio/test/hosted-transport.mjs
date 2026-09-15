@@ -76,7 +76,10 @@ osc.on( 'message', ( packet, rinfo ) => {
 } );
 
 const bridge = await createHostedBridge( { port: 0, oscPort } );
-const client = new HostedScoreClient( { clientID: 'score-browser-test', WebSocketImpl: WebSocket, requestTimeoutMs: 80 } );
+const client = new HostedScoreClient( {
+  clientID: 'score-browser-test', toolSessionID: 'score-session-test',
+  WebSocketImpl: WebSocket, requestTimeoutMs: 80
+} );
 const waitFor = async ( predicate, timeout = 2000 ) => {
   const start = Date.now();
   while ( !predicate() ) {
@@ -89,6 +92,8 @@ try {
   await client.connect( bridge.endpoint );
   assert.equal( client.getState().status, 'connected' );
   assert.equal( client.getState().protocolVersion, 1 );
+  const hello = received.find( ( message ) => message.address === '/awb/timeline/hello' );
+  assert.equal( hello.args[ 2 ], 'score-session-test', 'hosted hello carries its ToolSession identity' );
 
   await client.loadDocument( fixture );
   assert.equal( endCount, 2, 'missing chunks restart the complete snapshot' );

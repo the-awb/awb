@@ -38,10 +38,12 @@ export class HostedProtocolError extends Error {
 export class HostedScoreClient {
   constructor( {
     clientID = `score-web-${ crypto.randomUUID() }`, WebSocketImpl = globalThis.WebSocket,
+    toolSessionID = '',
     requestTimeoutMs = 1500, maxProjectionCharacters = 4 * 1024 * 1024,
     maxProjectionChunks = 4096
   } = {} ) {
     this.clientID = clientID;
+    this.toolSessionID = toolSessionID;
     this.WebSocketImpl = WebSocketImpl;
     this.requestTimeoutMs = requestTimeoutMs;
     this.maxProjectionCharacters = maxProjectionCharacters;
@@ -138,7 +140,7 @@ export class HostedScoreClient {
     const { address, args = [] } = frame;
     if ( address === '/awb/bridge/ready' ) {
       this.replyPort = args[ 0 ];
-      this.send( '/awb/timeline/hello', [ this.clientID, this.replyPort ] );
+      this.send( '/awb/timeline/hello', [ this.clientID, this.replyPort, this.toolSessionID ] );
     } else if ( address === '/awb/bridge/error' ) {
       this.publish( { error: `${ args[ 0 ] }: ${ args[ 1 ] }` } );
     } else if ( address === '/awb/timeline/connected' && args[ 0 ] === this.clientID ) {

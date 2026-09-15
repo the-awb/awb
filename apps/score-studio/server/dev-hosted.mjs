@@ -1,21 +1,62 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process';
+import path from 'node:path';
 import process from 'node:process';
+import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { parseScoreDocument } from '@awb/score';
 import { createHostedBridge } from './hosted-bridge.mjs';
 
 const appRoot = fileURLToPath( new URL( '..', import.meta.url ) );
-const oscPortIndex = process.argv.indexOf( '--osc-port' );
-const oscPort = Number( oscPortIndex >= 0 ? process.argv[ oscPortIndex + 1 ] : 57120 );
+const option = ( name, fallback = null ) => {
+  const index = process.argv.indexOf( `--${ name }` );
+  return index >= 0 ? process.argv[ index + 1 ] : fallback;
+};
+const flag = ( name ) => process.argv.includes( `--${ name }` );
+const oscPort = Number( option( 'osc-port', 57120 ) );
+const vitePort = Number( option( 'vite-port', 5201 ) );
+const sourcePath = option( 'score' );
+const toolSessionID = option( 'tool-session', '' );
+let sourceName = '';
+
+if ( !Number.isInteger( oscPort ) || oscPort <= 0 || oscPort > 65535 ) {
+  throw new Error( `Invalid --osc-port: ${ oscPort }` );
+}
+if ( !Number.isInteger( vitePort ) || vitePort <= 0 || vitePort > 65535 ) {
+  throw new Error( `Invalid --vite-port: ${ vitePort }` );
+}
+if ( sourcePath ) {
+  if ( !sourcePath.endsWith( '.score.json' ) ) {
+    throw new Error( '--score must name a canonical .score.json document.' );
+  }
+  const sourceText = await readFile( sourcePath, 'utf8' );
+  parseScoreDocument( sourceText );
+  sourceName = path.basename( sourcePath );
+}
+
 const bridge = await createHostedBridge( { oscPort } );
-const vite = spawn( fileURLToPath( new URL( '../../../node_modules/.bin/vite', import.meta.url ) ), [], {
+const viteArgs = [
+  fileURLToPath( new URL( '../../../node_modules/vite/bin/vite.js', import.meta.url ) ),
+  '--host', '127.0.0.1', '--port', `${ vitePort }`
+];
+if ( flag( 'open' ) ) viteArgs.push( '--open' );
+const vite = spawn( process.execPath, viteArgs, {
   cwd: appRoot,
-  env: { ...process.env, VITE_HOSTED_ENDPOINT: bridge.endpoint },
+  env: {
+    ...process.env,
+    VITE_HOSTED_ENDPOINT: bridge.endpoint,
+    VITE_HOSTED_SCORE_URL: sourcePath ? '/__awb/hosted-score' : '',
+    VITE_HOSTED_SCORE_NAME: sourceName,
+    VITE_TOOL_SESSION_ID: toolSessionID,
+    AWB_SCORE_STUDIO_SOURCE: sourcePath ? path.resolve( sourcePath ) : ''
+  },
   stdio: 'inherit'
 } );
 
 console.log( `Hosted bridge ready: ${ bridge.endpoint }` );
 console.log( `Forwarding to sclang OSC at 127.0.0.1:${ oscPort }` );
+if ( sourcePath ) console.log( `Initial score: ${ path.resolve( sourcePath ) }` );
+if ( toolSessionID ) console.log( `Tool session: ${ toolSessionID }` );
 
 let stopping = false;
 async function stop( signal ) {

@@ -17,6 +17,9 @@ import { retryScoreProjection, saveScorePair } from './engine/scorePairSave.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
+const launchedScoreURL = import.meta.env.VITE_HOSTED_SCORE_URL ?? '';
+const launchedScoreName = import.meta.env.VITE_HOSTED_SCORE_NAME ?? 'hosted.score.json';
+const toolSessionID = import.meta.env.VITE_TOOL_SESSION_ID ?? '';
 
 export default function App() {
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
@@ -32,7 +35,10 @@ export default function App() {
   const inputRef = useRef( null );
   const sc = useSuperCollider( { importScsynth } );
   const sclang = useScLang( sc, { importSclang, locateFile: locateSclangFile, exposeDevGlobals: import.meta.env.DEV } );
-  const hostedClient = useMemo( () => new HostedScoreClient(), [] );
+  const hostedClient = useMemo( () => new HostedScoreClient( {
+    clientID: toolSessionID ? `score-tool-${ toolSessionID }` : undefined,
+    toolSessionID
+  } ), [] );
   const hosted = useSyncExternalStore( hostedClient.subscribe, hostedClient.getState, hostedClient.getState );
   const standaloneExecutorRef = useRef( null );
   if ( standaloneExecutorRef.current === null ) {
@@ -43,6 +49,7 @@ export default function App() {
     } );
   }
   const standaloneExecutor = standaloneExecutorRef.current;
+  const launchState = useRef( { scoreLoaded: false, installed: '' } );
   const standalone = useSyncExternalStore(
     standaloneExecutor.subscribe, standaloneExecutor.getState, standaloneExecutor.getState
   );
@@ -55,6 +62,50 @@ export default function App() {
   useEffect( () => {
     try { storeRecoveryDraft( session.document ); } catch { /* local recovery is optional */ }
   }, [ session.document ] );
+
+  useEffect( () => {
+    if ( !launchedScoreURL || launchState.current.scoreLoaded ) return;
+    launchState.current.scoreLoaded = true;
+    loadBundledScore( launchedScoreURL, launchedScoreName )
+      .then( acceptOpen )
+      .catch( ( error ) => setFile( ( current ) => ( { ...current, message: error.message } ) ) );
+  }, [] );
+
+  useEffect( () => {
+    if ( !toolSessionID || !endpoint || hosted.status !== 'disconnected' ) return undefined;
+    let cancelled = false;
+    const timer = setTimeout( () => {
+      if ( cancelled ) return;
+      hostedClient.connect( endpoint )
+        .then( () => setHostedMessage( 'Connected to desktop sclang.' ) )
+        .catch( ( error ) => setHostedMessage( error.message ) );
+    }, 0 );
+    return () => {
+      cancelled = true;
+      clearTimeout( timer );
+    };
+  }, [ endpoint, hosted.status, hostedClient ] );
+
+  useEffect( () => {
+    if ( !toolSessionID || !file.name || hosted.status !== 'connected' ) return;
+    const identity = `${ session.document.scoreID }:${ session.document.revision }`;
+    if ( launchState.current.installed === identity ) return;
+    if ( hosted.scoreID === session.document.scoreID
+      && hosted.remoteRevision === session.document.revision ) {
+      launchState.current.installed = identity;
+      return;
+    }
+    launchState.current.installed = identity;
+    hostedClient.loadDocument( session.document, {
+      expectedRevision: hosted.scoreID === session.document.scoreID
+        && Number.isInteger( hosted.remoteRevision ) ? hosted.remoteRevision : -1
+    } ).then( () => setHostedMessage( `Revision ${ session.document.revision } installed atomically.` ) )
+      .catch( ( error ) => {
+        launchState.current.installed = '';
+        setHostedMessage( error.message );
+      } );
+  }, [ file.name, hosted.remoteRevision, hosted.scoreID, hosted.status,
+    hostedClient, session.document ] );
 
   useEffect( () => {
     if ( !import.meta.env.DEV ) return undefined;

@@ -144,8 +144,10 @@ cd ~/awb
 npm install
 npm run dev --workspace @awb/score-studio
 npm run dev:hosted --workspace @awb/score-studio -- --osc-port 57120
+npm run dev:hosted --workspace @awb/score-studio -- --osc-port 57120 --vite-port 5201 --score /path/to/piece.score.json --tool-session SESSION_ID --open
 npm run test:hosted-real --workspace @awb/score-studio
 npm run test:hosted-browser-real --workspace @awb/score-studio
+npm run test:launched-hosted-real --workspace @awb/score-studio
 npm run test:standalone-audio --workspace @awb/score-studio
 npm run test:standalone-real --workspace @awb/score-studio
 ```
@@ -159,6 +161,13 @@ used by the desktop bridge when it differs. A separately hosted UI can run
 `npm run hosted-bridge --workspace @awb/score-studio -- --osc-port PORT` and paste the printed
 token-bearing endpoint into the Hosted runtime panel.
 
+The optional `--score` path is validated as a canonical `awb.score/1` document and exposed only at
+the development server's fixed initial-score endpoint; it is not embedded in the browser URL and
+does not enable general filesystem access. `--tool-session` makes the browser identify the
+language-side ToolSession during its OSC hello. With both values present, Score Studio loads the
+source document, connects, and installs its revision automatically. `--open` asks Vite to open the
+system browser.
+
 `test:hosted-real` temporarily derives a test language configuration from the user's live config,
 removing only the exact `classes WIP` exclusion without modifying the live file. It starts the real
 desktop bridge fixture, sends the eleven-event `sonic-attunement-01` document through the same
@@ -170,6 +179,11 @@ document through the file-input fallback, verifies eleven timeline entries, conn
 revision, downloads canonical JSON plus the identity-matched generated SC projection, displays that
 projection as the working document, and drives the UI playhead/seek to 773 seconds. It likewise
 never presses Play.
+
+`test:launched-hosted-real` covers the desktop entry point itself: real sclang creates the
+`ScoreStudioTool` ToolSession, the hosted process receives its session ID and canonical source-score
+path, Chromium loads the score, handshakes with that exact session and installs the revision without
+manual Connect or Load actions.
 
 Each WebSocket connection receives its own UDP reply socket. Frames are exactly
 `{ "address": "/awb/timeline/...", "args": [...] }`; other OSC namespaces, non-scalar arguments,
