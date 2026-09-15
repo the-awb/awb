@@ -9,7 +9,8 @@ Current first slice:
 - canonical `awb.score/1` JSON documents from `@awb/score`;
 - authored document revisions kept separate from runtime/realization state;
 - an absolute-time score view exposing all seven canonical time/structure verbs;
-- switchable structural and one-row-per-authored-synth lifecycle projections;
+- switchable structural and one-row-per-authored-synth lifecycle projections, with timeline zoom;
+- direct timeline dragging of authored entries and disclosed synth control boundaries;
 - direct time, path and payload editing with revision-safe undo/redo;
 - guarded File System Access saves, with JSON download fallback and local recovery drafts;
 - an editor-owned pair-save coordinator: canonical JSON first, identity-bound SC projection second,
@@ -26,6 +27,31 @@ not duplicate those responsibilities. The app-owned sidecar forwards the frozen
 `/awb/timeline/...` vocabulary between WebSocket JSON frames and local OSC; it contains no score
 or scheduling policy. Standalone scheduling stays in the browser and does not pass through the
 desktop bridge.
+
+## Timeline views and editing
+
+The synth lifecycle view is a projection of the canonical entries, not another score model. Each
+authored `note` is one stable row and one bar. The bar's left edge is its create time and its right
+edge is the earliest explicit `release`/`free` or derived sustain boundary. `set`, `release` and
+`free` entries appear as compact ticks; disclosing the row reveals labelled authored boundaries
+that can be selected and dragged. A derived auto-release is shown, but cannot be dragged because
+there is no separate canonical entry to edit.
+
+Dragging a structural event or synth bar changes that entry's absolute `time`; dragging a
+disclosed boundary changes the canonical control entry shared by every affected synth row. Existing
+multi-selection moves rigidly. Row order is view state and remains stable while and after times are
+changed. Zoom preserves the visible time around the viewport centre, while Fit shows the complete
+working duration.
+
+A frequency-lane view is a later projection over the same score, not a new score format. Its
+vertical axis may be continuous Hz or an explicit just-intonation lattice. The JI form must carry
+an explicit reference frequency and allowed ratios; the editor must not infer a tonic or collapse
+non-ratio frequencies onto a scale silently.
+
+The inspector currently permits complete event-payload editing as JSON. The next editor slice is a
+typed payload surface driven by event semantics and the instrument vocabulary, retaining raw JSON
+for fields that have no declared control UI. This belongs in Score Studio, not in payload-blind
+`@awb/score`.
 
 ## Standalone execution
 

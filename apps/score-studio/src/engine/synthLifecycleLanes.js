@@ -75,5 +75,12 @@ export function projectSynthLifecycleLanes( score ) {
     id: '__unassigned__', definition: 'unassigned', path: [], expansionCount: 0,
     projectionError: null, events: unassigned
   } );
-  return lanes.map( ( lane ) => ( { ...lane, events: lane.events.sort( ( a, b ) => a.time - b.time ) } ) );
+  return lanes.map( ( lane ) => {
+    const events = lane.events.sort( ( a, b ) => a.time - b.time );
+    const startTime = events.find( ( event ) => event.role === 'create' )?.time ?? events[ 0 ]?.time ?? 0;
+    const terminal = events.filter( ( event ) => [ 'release', 'free', 'auto-release' ].includes( event.role )
+      && event.time >= startTime );
+    const endTime = terminal.length ? Math.min( ...terminal.map( ( event ) => event.time ) ) : null;
+    return { ...lane, events, startTime, endTime };
+  } );
 }

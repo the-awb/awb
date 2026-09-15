@@ -20,10 +20,12 @@ assert.equal( lanes[ 0 ].expansionCount, 1 );
 assert.deepEqual( lanes[ 0 ].events.map( ( event ) => event.role ), [ 'create', 'set', 'release', 'free', 'auto-release' ] );
 assert.equal( lanes[ 0 ].events.at( -1 ).time, 8, 'implicit release uses dur times default legato' );
 assert.equal( lanes[ 0 ].events.at( -1 ).synthetic, true );
+assert.equal( lanes[ 0 ].startTime, 0 );
+assert.equal( lanes[ 0 ].endTime, 2, 'the first explicit release closes the displayed synth bar' );
 assert.equal( lanes[ 1 ].id, 'n2' );
 assert.equal( lanes[ 1 ].expansionCount, 3, 'runtime expansion stays a badge on one authored lane' );
 assert.deepEqual( lanes[ 1 ].events.map( ( event ) => event.entry.id ), [ 'n2', 'r1', 's2' ] );
 assert.equal( lanes[ 2 ].id, '__unassigned__' );
 assert.deepEqual( lanes[ 2 ].events.map( ( event ) => event.entry.id ), [ 's3', 'v1' ] );
 
-console.log( 'synth-lifecycle-lanes: 12/12 pass' );
+console.log( 'synth-lifecycle-lanes: 14/14 pass' );

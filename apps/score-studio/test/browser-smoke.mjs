@@ -31,11 +31,59 @@ try {
 
   await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).click();
   if ( await page.locator( '.synthLane' ).count() !== 2 ) failures.push( 'expected one lifecycle lane per authored synth create' );
-  if ( await page.locator( '.lifecycleEvent.create' ).count() !== 2 ) failures.push( 'lifecycle view did not project both create events' );
-  if ( await page.locator( '.lifecycleEvent.release' ).count() !== 2 ) failures.push( '@all release was not projected onto both synth lanes' );
+  if ( await page.locator( '.synthBar' ).count() !== 2 ) failures.push( 'lifecycle view did not render one bar per synth' );
+  if ( await page.locator( '.synthTriggerTick.release' ).count() !== 2 ) failures.push( '@all release was not projected onto both synth bars' );
+  await page.getByRole( 'button', { name: /Expand/ } ).first().click();
+  if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'expanded synth did not disclose its release trigger' );
+  const releaseTrigger = page.locator( '.expandedTrigger.release' ).first();
+  const releaseBox = await releaseTrigger.boundingBox();
+  if ( !releaseBox ) failures.push( 'could not locate expanded release trigger for drag test' );
+  else {
+    await page.mouse.move( releaseBox.x + 5, releaseBox.y + 5 );
+    await page.mouse.down();
+    await page.mouse.move( releaseBox.x + 27, releaseBox.y + 5, { steps: 3 } );
+    await page.mouse.up();
+    if ( Number( await page.getByLabel( 'Event time' ).inputValue() ) <= 1 ) {
+      failures.push( 'expanded lifecycle trigger drag did not edit its canonical entry' );
+    }
+  }
+  const synthOrder = await page.locator( '.synthLaneName strong' ).allTextContents();
+  const firstBar = page.locator( '.synthBar' ).first();
+  const barBox = await firstBar.boundingBox();
+  if ( !barBox ) failures.push( 'could not locate synth bar for drag test' );
+  else {
+    await page.mouse.move( barBox.x + 6, barBox.y + 6 );
+    await page.mouse.down();
+    await page.mouse.move( barBox.x + 36, barBox.y + 6, { steps: 4 } );
+    const orderDuringDrag = await page.locator( '.synthLaneName strong' ).allTextContents();
+    await page.mouse.up();
+    const orderAfterDrag = await page.locator( '.synthLaneName strong' ).allTextContents();
+    if ( JSON.stringify( orderDuringDrag ) !== JSON.stringify( synthOrder )
+      || JSON.stringify( orderAfterDrag ) !== JSON.stringify( synthOrder ) ) {
+      failures.push( 'dragging a synth bar reordered lifecycle rows' );
+    }
+  }
   await page.getByRole( 'button', { name: 'Structure', exact: true } ).click();
 
-  await page.locator( '.scoreEvent' ).first().click();
+  const widthBeforeZoom = await page.locator( '.timeline' ).evaluate( ( element ) => element.getBoundingClientRect().width );
+  await page.getByRole( 'button', { name: 'Zoom in', exact: true } ).click();
+  const widthAfterZoom = await page.locator( '.timeline' ).evaluate( ( element ) => element.getBoundingClientRect().width );
+  if ( widthAfterZoom <= widthBeforeZoom ) failures.push( 'zoom in did not enlarge the timeline' );
+
+  const firstEvent = page.locator( '.scoreEvent' ).first();
+  await firstEvent.scrollIntoViewIfNeeded();
+  const eventBox = await firstEvent.boundingBox();
+  if ( !eventBox ) failures.push( 'could not locate first event for drag test' );
+  else {
+    await page.mouse.move( eventBox.x + 8, eventBox.y + 8 );
+    await page.mouse.down();
+    await page.mouse.move( eventBox.x + 48, eventBox.y + 8, { steps: 4 } );
+    await page.mouse.up();
+    await firstEvent.click();
+    const draggedTime = Number( await page.getByLabel( 'Event time' ).inputValue() );
+    if ( draggedTime <= 0 ) failures.push( `drag did not move the canonical event time (got ${ draggedTime })` );
+  }
+
   if ( !( await page.locator( '.eventJson' ).isVisible() ) ) failures.push( 'event inspector did not open' );
   await page.getByLabel( 'Event time' ).fill( '4.5' );
   await page.getByLabel( 'Event path' ).fill( 'phrase/low' );
@@ -74,4 +122,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 12/12 pass' );
+console.log( 'score-studio-browser: 20/20 pass' );

@@ -1,11 +1,21 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   commonGroup, duration, group, makeEvent, nudge, rippleFrom, setGap, sortScore, stretch, ungroup
 } from '@awb/score';
 import { projectSynthLifecycleLanes } from '../engine/synthLifecycleLanes.js';
 
-const PX_PER_SECOND = 22;
 const LEFT = 92;
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 160;
+
+function retainLaneOrder( orderRef, names ) {
+  const present = new Set( names );
+  orderRef.current = [
+    ...orderRef.current.filter( ( name ) => present.has( name ) ),
+    ...names.filter( ( name ) => !orderRef.current.includes( name ) )
+  ];
+  return orderRef.current;
+}
 
 const fmt = ( seconds ) => {
   const minutes = Math.floor( seconds / 60 );
@@ -19,38 +29,128 @@ export default function ScoreTimeline( { session, dispatch } ) {
   const [ carryTail, setCarryTail ] = useState( true );
   const [ factor, setFactor ] = useState( 2 );
   const [ groupName, setGroupName ] = useState( 'group' );
+  const [ pxPerSecond, setPxPerSecond ] = useState( 22 );
+  const [ expandedSynths, setExpandedSynths ] = useState( new Set() );
+  const [ drag, setDrag ] = useState( null );
+  const scrollRef = useRef( null );
+  const dragRef = useRef( null );
+  const removeDragListenersRef = useRef( () => {} );
+  const scoreIDRef = useRef( null );
+  const structureOrderRef = useRef( [] );
+  const synthOrderRef = useRef( [] );
   const entries = session.document.entries;
+  if ( scoreIDRef.current !== session.document.scoreID ) {
+    scoreIDRef.current = session.document.scoreID;
+    structureOrderRef.current = [];
+    synthOrderRef.current = [];
+  }
   const selected = new Set( session.selected );
-  const structureLanes = useMemo( () => {
-    const names = [ ...new Set( entries.map( ( entry ) => entry.path[ 0 ] ?? 'ungrouped' ) ) ];
-    return names.length ? names : [ 'ungrouped' ];
-  }, [ entries ] );
-  const synthLanes = useMemo( () => projectSynthLifecycleLanes( entries ), [ entries ] );
+  const visibleEntries = useMemo(
+    () => drag ? nudge( entries, drag.ids, drag.delta ) : entries,
+    [ entries, drag ]
+  );
+  const structureNames = [ ...new Set( entries.map( ( entry ) => entry.path[ 0 ] ?? 'ungrouped' ) ) ];
+  const structureLanes = retainLaneOrder( structureOrderRef, structureNames.length ? structureNames : [ 'ungrouped' ] );
+  const baseSynthLanes = useMemo( () => projectSynthLifecycleLanes( entries ), [ entries ] );
+  const stableSynthOrder = new Map(
+    retainLaneOrder( synthOrderRef, baseSynthLanes.map( ( lane ) => lane.id ) )
+      .map( ( laneID, index ) => [ laneID, index ] )
+  );
+  const synthLanes = useMemo( () => projectSynthLifecycleLanes( visibleEntries ).sort( ( a, b ) =>
+    ( stableSynthOrder.get( a.id ) ?? Number.MAX_SAFE_INTEGER )
+      - ( stableSynthOrder.get( b.id ) ?? Number.MAX_SAFE_INTEGER )
+  ), [ visibleEntries, stableSynthOrder ] );
   const lifecycleEnd = synthLanes.reduce( ( latest, lane ) => Math.max(
     latest, ...lane.events.map( ( event ) => event.time )
   ), 0 );
-  const total = Math.max( 30, duration( entries ) + 12, lifecycleEnd + 12, session.playhead + 12 );
-  const width = LEFT + total * PX_PER_SECOND + 40;
+  const total = Math.max( 30, duration( visibleEntries ) + 12, lifecycleEnd + 12, session.playhead + 12 );
+  const width = LEFT + total * pxPerSecond + 40;
   const sharedGroup = commonGroup( entries, selected );
 
-  const selectEntry = ( event, entryID ) => {
-    event.stopPropagation();
-    const additive = event.shiftKey || event.metaKey;
-    const ids = additive
-      ? ( selected.has( entryID )
-        ? session.selected.filter( ( id ) => id !== entryID )
-        : [ ...session.selected, entryID ] )
-      : [ entryID ];
-    dispatch( { type: 'SET_SELECTED', ids } );
-  };
   const placePlayhead = ( event ) => {
     if ( event.target !== event.currentTarget ) return;
     const rect = event.currentTarget.getBoundingClientRect();
-    dispatch( { type: 'SET_PLAYHEAD', time: Math.max( 0, ( event.clientX - rect.left - LEFT ) / PX_PER_SECOND ) } );
+    dispatch( { type: 'SET_PLAYHEAD', time: Math.max( 0, ( event.clientX - rect.left - LEFT ) / pxPerSecond ) } );
     dispatch( { type: 'SET_SELECTED', ids: [] } );
   };
 
   const apply = ( next ) => dispatch( { type: 'EDIT_ENTRIES', entries: next } );
+  const beginDrag = ( event, entryID ) => {
+    if ( event.button !== 0 ) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const additive = event.shiftKey || event.metaKey;
+    let ids;
+    if ( additive ) {
+      ids = selected.has( entryID )
+        ? session.selected.filter( ( id ) => id !== entryID )
+        : [ ...session.selected, entryID ];
+    } else ids = selected.has( entryID ) ? session.selected : [ entryID ];
+    dispatch( { type: 'SET_SELECTED', ids } );
+    if ( !ids.includes( entryID ) ) return;
+    event.currentTarget.setPointerCapture( event.pointerId );
+    const next = { pointerId: event.pointerId, startX: event.clientX, ids, delta: 0 };
+    dragRef.current = next;
+    setDrag( next );
+    removeDragListenersRef.current();
+    const move = ( pointerEvent ) => {
+      const current = dragRef.current;
+      if ( !current ) return;
+      pointerEvent.preventDefault();
+      const delta = Math.round( ( pointerEvent.clientX - current.startX ) / pxPerSecond * 1000 ) / 1000;
+      const moved = { ...current, delta };
+      dragRef.current = moved;
+      setDrag( moved );
+    };
+    const end = ( pointerEvent ) => {
+      const current = dragRef.current;
+      if ( !current ) return;
+      pointerEvent.preventDefault();
+      removeDragListenersRef.current();
+      dragRef.current = null;
+      setDrag( null );
+      if ( current.delta ) apply( nudge( entries, current.ids, current.delta ) );
+    };
+    window.addEventListener( 'pointermove', move );
+    window.addEventListener( 'pointerup', end );
+    window.addEventListener( 'pointercancel', end );
+    window.addEventListener( 'mousemove', move );
+    window.addEventListener( 'mouseup', end );
+    removeDragListenersRef.current = () => {
+      window.removeEventListener( 'pointermove', move );
+      window.removeEventListener( 'pointerup', end );
+      window.removeEventListener( 'pointercancel', end );
+      window.removeEventListener( 'mousemove', move );
+      window.removeEventListener( 'mouseup', end );
+      removeDragListenersRef.current = () => {};
+    };
+  };
+  useEffect( () => () => removeDragListenersRef.current(), [] );
+  const dragProps = ( entryID ) => ( {
+    onPointerDown: ( event ) => beginDrag( event, entryID ),
+    onDragStart: ( event ) => event.preventDefault()
+  } );
+  const changeZoom = ( requested ) => {
+    const next = Math.max( MIN_ZOOM, Math.min( MAX_ZOOM, requested ) );
+    const scroll = scrollRef.current;
+    const centreTime = scroll
+      ? Math.max( 0, ( scroll.scrollLeft + scroll.clientWidth / 2 - LEFT ) / pxPerSecond )
+      : 0;
+    setPxPerSecond( next );
+    requestAnimationFrame( () => {
+      if ( scroll ) scroll.scrollLeft = Math.max( 0, LEFT + centreTime * next - scroll.clientWidth / 2 );
+    } );
+  };
+  const fitTimeline = () => {
+    const available = ( scrollRef.current?.clientWidth ?? 800 ) - LEFT - 40;
+    changeZoom( available / Math.max( total, 1 ) );
+  };
+  const toggleSynth = ( laneID ) => setExpandedSynths( ( current ) => {
+    const next = new Set( current );
+    if ( next.has( laneID ) ) next.delete( laneID );
+    else next.add( laneID );
+    return next;
+  } );
   const add = () => {
     const entry = makeEvent(
       session.playhead,
@@ -78,6 +178,14 @@ export default function ScoreTimeline( { session, dispatch } ) {
           <button disabled={ !session.undo.length } onClick={ () => dispatch( { type: 'UNDO' } ) }>Undo</button>
           <button disabled={ !session.redo.length } onClick={ () => dispatch( { type: 'REDO' } ) }>Redo</button>
           <span className="spacer" />
+          <div className="zoomControls" aria-label="Timeline zoom">
+            <button aria-label="Zoom out" disabled={ pxPerSecond <= MIN_ZOOM }
+              onClick={ () => changeZoom( pxPerSecond / 1.6 ) }>−</button>
+            <button aria-label="Fit timeline" onClick={ fitTimeline }>Fit</button>
+            <button aria-label="Zoom in" disabled={ pxPerSecond >= MAX_ZOOM }
+              onClick={ () => changeZoom( pxPerSecond * 1.6 ) }>+</button>
+            <output>{ Math.round( pxPerSecond ) } px/s</output>
+          </div>
           <label>Step <input aria-label="Edit step" type="number" min="0.01" step="0.25" value={ step }
             onChange={ ( event ) => setStep( Number( event.target.value ) ) } /> s</label>
           <button disabled={ !selected.size }
@@ -108,11 +216,11 @@ export default function ScoreTimeline( { session, dispatch } ) {
         </div>
       </div>
 
-      <div className="timelineScroll">
+      <div className="timelineScroll" ref={ scrollRef }>
         <div className="timeline" style={ { width } }>
           <div className="ruler">
             { Array.from( { length: Math.floor( total / 5 ) + 1 }, ( _, index ) => index * 5 ).map( ( time ) => (
-              <button key={ time } className="tick" style={ { left: LEFT + time * PX_PER_SECOND } }
+              <button key={ time } className="tick" style={ { left: LEFT + time * pxPerSecond } }
                 onClick={ () => dispatch( { type: 'SET_PLAYHEAD', time } ) }>{ fmt( time ) }</button>
             ) ) }
           </div>
@@ -120,35 +228,55 @@ export default function ScoreTimeline( { session, dispatch } ) {
             ? structureLanes.map( ( lane ) => (
               <div key={ lane } className="lane" onClick={ placePlayhead }>
                 <span className="laneName">{ lane }</span>
-                { entries.filter( ( entry ) => ( entry.path[ 0 ] ?? 'ungrouped' ) === lane ).map( ( entry ) => (
+                { visibleEntries.filter( ( entry ) => ( entry.path[ 0 ] ?? 'ungrouped' ) === lane ).map( ( entry ) => (
                   <button key={ entry.id }
-                    className={ `scoreEvent ${ entry.event.type }${ selected.has( entry.id ) ? ' selected' : '' }` }
-                    style={ { left: LEFT + entry.time * PX_PER_SECOND } }
-                    onClick={ ( event ) => selectEntry( event, entry.id ) }
+                    className={ `scoreEvent ${ entry.event.type }${ selected.has( entry.id ) ? ' selected' : '' }${ drag?.ids.includes( entry.id ) ? ' dragging' : '' }` }
+                    style={ { left: LEFT + entry.time * pxPerSecond } }
+                    { ...dragProps( entry.id ) }
                     title={ `${ entry.id } · ${ entry.time }s · ${ entry.path.join( '/' ) || 'ungrouped' }` }
                   >{ entry.event.def ?? entry.event.type }</button>
                 ) ) }
               </div>
             ) )
-            : synthLanes.map( ( lane ) => (
-              <div key={ lane.id } className="lane synthLane" onClick={ placePlayhead }>
-                <span className="laneName synthLaneName" title={ lane.path.join( '/' ) }>
-                  <strong>{ lane.id === '__unassigned__' ? 'unassigned' : lane.id }</strong>
-                  <small>{ lane.definition }{ lane.expansionCount > 1 ? ` ×${ lane.expansionCount }` : '' }</small>
-                </span>
-                { lane.events.map( ( marker, index ) => (
-                  <button key={ `${ marker.entry.id }:${ marker.role }:${ index }` }
-                    className={ `scoreEvent lifecycleEvent ${ marker.role }${ selected.has( marker.entry.id ) ? ' selected' : '' }` }
-                    style={ { left: LEFT + marker.time * PX_PER_SECOND } }
-                    onClick={ ( event ) => selectEntry( event, marker.entry.id ) }
-                    title={ `${ marker.role } · ${ marker.entry.id } · ${ marker.time }s${ marker.synthetic ? ' · derived, not authored' : '' }` }
-                  >{ marker.role === 'create'
-                    ? `create ${ lane.expansionCount > 1 ? `×${ lane.expansionCount }` : '' }`
-                    : marker.role.replace( '-', ' ' ) }</button>
-                ) ) }
-              </div>
-            ) ) }
-          <div className="playhead" style={ { left: LEFT + session.playhead * PX_PER_SECOND } } />
+            : synthLanes.map( ( lane ) => {
+              const unassigned = lane.id === '__unassigned__';
+              const expanded = unassigned || expandedSynths.has( lane.id );
+              const endTime = lane.endTime ?? Math.max( lane.startTime + 1, lifecycleEnd );
+              const triggers = lane.events.filter( ( marker ) => marker.role !== 'create' );
+              return (
+                <div key={ lane.id } className={ `lane synthLane${ expanded ? ' expanded' : '' }` } onClick={ placePlayhead }>
+                  <span className="laneName synthLaneName" title={ lane.path.join( '/' ) }>
+                    { !unassigned && <button className="synthDisclosure" aria-label={ `${ expanded ? 'Collapse' : 'Expand' } ${ lane.id }` }
+                      onClick={ ( event ) => { event.stopPropagation(); toggleSynth( lane.id ); } }>{ expanded ? '▾' : '▸' }</button> }
+                    <span>
+                      <strong>{ unassigned ? 'unassigned' : lane.id }</strong>
+                      <small>{ lane.definition }{ lane.expansionCount > 1 ? ` ×${ lane.expansionCount }` : '' }</small>
+                    </span>
+                  </span>
+                  { !unassigned && <button
+                    className={ `synthBar${ selected.has( lane.id ) ? ' selected' : '' }${ drag?.ids.includes( lane.id ) ? ' dragging' : '' }` }
+                    style={ {
+                      left: LEFT + lane.startTime * pxPerSecond,
+                      width: Math.max( 12, ( endTime - lane.startTime ) * pxPerSecond )
+                    } }
+                    title={ `${ lane.id } · ${ lane.startTime }s to ${ lane.endTime ?? 'open' } · drag to move create` }
+                    { ...dragProps( lane.id ) }
+                  >{ lane.definition }{ lane.expansionCount > 1 ? ` ×${ lane.expansionCount }` : '' }</button> }
+                  { triggers.map( ( marker, index ) => marker.synthetic || !expanded
+                    ? <span key={ `${ marker.entry.id }:${ marker.role }:${ index }` }
+                      className={ `synthTriggerTick ${ marker.role }` }
+                      style={ { left: LEFT + marker.time * pxPerSecond } }
+                      title={ `${ marker.role.replace( '-', ' ' ) } · ${ marker.time }s${ marker.synthetic ? ' · derived, not authored' : '' }` } />
+                    : <button key={ `${ marker.entry.id }:${ marker.role }:${ index }` }
+                      className={ `expandedTrigger ${ marker.role }${ selected.has( marker.entry.id ) ? ' selected' : '' }${ drag?.ids.includes( marker.entry.id ) ? ' dragging' : '' }` }
+                      style={ { left: LEFT + marker.time * pxPerSecond } }
+                      title={ `${ marker.role } · ${ marker.entry.id } · ${ marker.time }s · drag to move authored entry` }
+                      { ...dragProps( marker.entry.id ) }
+                    >{ marker.role }</button> ) }
+                </div>
+              );
+            } ) }
+          <div className="playhead" style={ { left: LEFT + session.playhead * pxPerSecond } } />
         </div>
       </div>
     </section>

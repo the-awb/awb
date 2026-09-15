@@ -47,6 +47,9 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .layoutSwitch { display: flex; padding: 2px; border: 1px solid var(--line); border-radius: 7px; }
 .layoutSwitch button { padding: 3px 7px; border: 0; background: transparent; font-size: 10px; }
 .layoutSwitch button.active { background: #33332d; color: var(--accent); }
+.zoomControls { display: flex; align-items: center; gap: 3px; }
+.zoomControls button { min-width: 28px; padding: 3px 6px; }
+.zoomControls output { min-width: 48px; color: var(--muted); font: 10px ui-monospace, monospace; text-align: right; }
 .timeReadout { min-width: 56px; font: 600 12px ui-monospace, monospace; color: var(--accent); }
 .timelineScroll { flex: 1; min-height: 0; overflow: auto; background: #11110f; }
 .timeline { position: relative; min-height: 100%; padding-top: 32px; }
@@ -54,19 +57,23 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .tick { position: absolute; top: 7px; transform: translateX(-50%); padding: 0; border: 0; background: transparent; color: #737168; font: 10px ui-monospace, monospace; }
 .lane { position: relative; height: 52px; border-bottom: 1px solid #252522; }
 .laneName { position: sticky; left: 0; z-index: 3; display: inline-flex; width: 82px; height: 100%; align-items: center; padding-left: 12px; background: linear-gradient(90deg, #181816 82%, transparent); color: var(--muted); font-size: 10px; }
-.synthLane { height: 78px; }
-.synthLaneName { flex-direction: column; align-items: flex-start; justify-content: center; line-height: 1.25; }
+.synthLane { height: 48px; transition: height .12s ease; }
+.synthLane.expanded { height: 76px; }
+.synthLaneName { align-items: center; gap: 3px; line-height: 1.25; }
+.synthLaneName > span { min-width: 0; }
 .synthLaneName strong, .synthLaneName small { display: block; width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .synthLaneName strong { color: #c9c7c0; }.synthLaneName small { color: var(--muted); }
-.scoreEvent { position: absolute; top: 12px; min-width: 70px; max-width: 130px; overflow: hidden; text-overflow: ellipsis; border-color: #61578a; background: #312c49; color: #ddd6ff; white-space: nowrap; }
+.synthDisclosure { flex: 0 0 16px; width: 16px; padding: 0; border: 0; background: transparent; color: var(--muted); }
+.scoreEvent { position: absolute; top: 12px; min-width: 70px; max-width: 130px; overflow: hidden; text-overflow: ellipsis; border-color: #61578a; background: #312c49; color: #ddd6ff; white-space: nowrap; cursor: grab; touch-action: none; }
 .scoreEvent.set { border-color: #75643b; background: #3d3524; color: #f0d99b; }.scoreEvent.release { border-color: #72494f; background: #3c282b; color: #f2b6bd; }
-.lifecycleEvent { top: 4px; height: 16px; min-width: 52px; max-width: 92px; padding: 0 5px; font-size: 9px; line-height: 14px; }
-.lifecycleEvent.create { top: 4px; border-color: #61578a; background: #312c49; color: #ddd6ff; }
-.lifecycleEvent.set { top: 22px; }
-.lifecycleEvent.release, .lifecycleEvent.free { top: 40px; }
-.lifecycleEvent.auto-release { top: 58px; border-style: dashed; border-color: #55534c; background: #242420; color: #918f87; }
-.lifecycleEvent.free { border-color: #804850; background: #3b2226; color: #ffb5bd; }
-.scoreEvent.selected { outline: 2px solid var(--accent); outline-offset: 2px; }
+.synthBar { position: absolute; top: 11px; height: 25px; min-width: 12px; overflow: hidden; padding: 3px 7px; border-color: #61578a; border-radius: 4px; background: #312c49; color: #ddd6ff; font-size: 10px; text-align: left; text-overflow: ellipsis; white-space: nowrap; cursor: grab; touch-action: none; }
+.synthTriggerTick { position: absolute; z-index: 2; top: 7px; width: 2px; height: 33px; background: #e0b34f; pointer-events: none; }
+.synthTriggerTick.release, .synthTriggerTick.free { background: #ed7e89; }
+.synthTriggerTick.auto-release { width: 1px; background: repeating-linear-gradient(to bottom, #77746b 0 3px, transparent 3px 6px); }
+.expandedTrigger { position: absolute; top: 45px; z-index: 2; min-width: 42px; height: 18px; padding: 0 5px; transform: translateX(-3px); border-color: #75643b; background: #3d3524; color: #f0d99b; font-size: 9px; line-height: 16px; cursor: grab; touch-action: none; }
+.expandedTrigger.release, .expandedTrigger.free { border-color: #72494f; background: #3c282b; color: #f2b6bd; }
+.scoreEvent.selected, .synthBar.selected, .expandedTrigger.selected { outline: 2px solid var(--accent); outline-offset: 2px; }
+.scoreEvent.dragging, .synthBar.dragging, .expandedTrigger.dragging { cursor: grabbing; opacity: .78; }
 .playhead { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--accent); pointer-events: none; }
 .playhead::before { content: ''; position: absolute; top: 0; left: -4px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 7px solid var(--accent); }
 .inspector section + section { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); }
