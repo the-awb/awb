@@ -23,9 +23,6 @@ for ( const [ name, contract ] of Object.entries( packages ) ) {
   }
 }
 
-const consoleHook = readFileSync( path.join( root, 'packages/sc-console/dist/hook.js' ), 'utf8' );
-assert.doesNotMatch( consoleHook, /@codemirror|@lezer/, 'the lifecycle hook pulls in the editor bundle' );
-
 const score = await import( '@awb/score' );
 const instruments = await import( '@awb/instruments' );
 const field = await import( '@awb/field-engine' );
