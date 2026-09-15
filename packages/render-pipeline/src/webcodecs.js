@@ -1,4 +1,14 @@
-import { Muxer, ArrayBufferTarget, FileSystemWritableFileStreamTarget } from 'mp4-muxer';
+import {
+  AudioSample,
+  AudioSampleSource,
+  BufferTarget,
+  Mp4OutputFormat,
+  Output,
+  Quality,
+  StreamTarget,
+  VideoSample,
+  VideoSampleSource
+} from 'mediabunny';
 
 const QUALITY_BPP = { draft: 0.04, standard: 0.09, high: 0.18 };
 
@@ -17,97 +27,59 @@ export const formatBytes = ( bytes ) =>
 export const webCodecsAvailable = () =>
   typeof globalThis.VideoEncoder !== 'undefined' && typeof globalThis.AudioEncoder !== 'undefined';
 
-const avcCandidates = ( width, height ) => {
-  const mbs = Math.ceil( width / 16 ) * Math.ceil( height / 16 );
-  return mbs > 8704 ? [ 'avc1.640034', 'avc1.640033', 'avc1.4D0034' ]
-    : mbs > 3600 ? [ 'avc1.640028', 'avc1.640033', 'avc1.4D0028' ]
-      : [ 'avc1.64001F', 'avc1.640028', 'avc1.42001F' ];
-};
-
-const pickBitrateMode = async ( config ) => {
-  for ( const bitrateMode of [ 'variable', 'constant' ] ) {
-    try {
-      const support = await VideoEncoder.isConfigSupported( { ...config, bitrateMode } );
-      if ( support.supported ) return bitrateMode;
-    } catch { /* next */ }
-  }
-  return undefined;
-};
-
-const pickVideoCodec = async ( width, height, bitrate, fps ) => {
-  for ( const codec of avcCandidates( width, height ) ) {
-    try {
-      const support = await VideoEncoder.isConfigSupported( { codec, width, height, bitrate, framerate: fps } );
-      if ( support.supported ) return codec;
-    } catch { /* next */ }
-  }
-  return null;
-};
-
-const encodeAudioTrack = async ( { muxer, audioBuffer, cueIn, cueOut, onError } ) => {
+const addAudioTrack = ( { output, audioBuffer, cueIn, cueOut, onPhase } ) => {
   if ( !audioBuffer ) return null;
+
   const sampleRate = audioBuffer.sampleRate;
   const numberOfChannels = Math.min( audioBuffer.numberOfChannels, 2 );
-  const bitrate = 192000;
-
-  let codec = null;
-  for ( const candidate of [ 'mp4a.40.2', 'opus' ] ) {
-    try {
-      const support = await AudioEncoder.isConfigSupported( { codec: candidate, sampleRate, numberOfChannels, bitrate } );
-      if ( support.supported ) { codec = candidate; break; }
-    } catch { /* next */ }
-  }
-  if ( !codec ) return null;
-
-  let failure = null;
-  const encoder = new AudioEncoder( {
-    output: ( chunk, meta ) => muxer.addAudioChunk( chunk, meta ),
-    error: ( error ) => { failure = error; onError?.( error ); }
-  } );
-  encoder.configure( { codec, sampleRate, numberOfChannels, bitrate } );
-
   const startSample = Math.floor( cueIn * sampleRate );
   const endSample = Math.min( Math.floor( cueOut * sampleRate ), audioBuffer.length );
-  const total = Math.max( 0, endSample - startSample );
-  const chunkSize = 8192;
   const channels = [];
   for ( let channel = 0; channel < numberOfChannels; channel++ ) {
     channels.push( audioBuffer.getChannelData( channel ) );
   }
 
-  for ( let offset = 0; offset < total && !failure; offset += chunkSize ) {
-    const frames = Math.min( chunkSize, total - offset );
-    const planar = new Float32Array( frames * numberOfChannels );
-    for ( let channel = 0; channel < numberOfChannels; channel++ ) {
-      planar.set(
-        channels[ channel ].subarray( startSample + offset, startSample + offset + frames ),
-        channel * frames
-      );
-    }
-    const data = new AudioData( {
-      format: 'f32-planar',
-      sampleRate,
-      numberOfFrames: frames,
-      numberOfChannels,
-      timestamp: Math.round( ( offset / sampleRate ) * 1e6 ),
-      data: planar
-    } );
-    encoder.encode( data );
-    data.close();
-    while ( encoder.encodeQueueSize > 16 ) await new Promise( ( resolve ) => setTimeout( resolve, 0 ) );
-  }
+  const source = new AudioSampleSource( {
+    codec: 'aac',
+    quality: new Quality( { bitrate: 192000 } )
+  } );
+  output.addAudioTrack( source );
 
-  await encoder.flush();
-  encoder.close();
-  return { codec, numberOfChannels, sampleRate };
+  return async () => {
+    onPhase?.( 'Encoding audio' );
+    const chunkSize = 8192;
+    for ( let sourceOffset = startSample; sourceOffset < endSample; sourceOffset += chunkSize ) {
+      const frameCount = Math.min( chunkSize, endSample - sourceOffset );
+      const planar = new Float32Array( frameCount * numberOfChannels );
+      for ( let channel = 0; channel < numberOfChannels; channel++ ) {
+        planar.set(
+          channels[ channel ].subarray( sourceOffset, sourceOffset + frameCount ),
+          channel * frameCount
+        );
+      }
+      const sample = new AudioSample( {
+        data: planar,
+        format: 'f32-planar',
+        numberOfChannels,
+        sampleRate,
+        timestamp: ( sourceOffset - startSample ) / sampleRate
+      } );
+      try {
+        await source.add( sample );
+      } finally {
+        sample.close();
+      }
+    }
+    source.close();
+  };
 };
 
 /**
- * A browser WebCodecs/MP4 sink for runRenderPipeline.
+ * Browser H.264/AAC MP4 sink for runRenderPipeline, encoded and muxed by Mediabunny.
  *
- * `job` is preferred and supplies dimensions, frame rate and cue range. The individual fields
- * remain accepted so existing producers can migrate without changing their output in the same
- * commit. Likewise addFrame accepts either a pipeline frame context or a numeric frame index.
+ * `job` is preferred and supplies dimensions, frame rate and cue range. Individual fields and a
+ * numeric frame index remain accepted for compatibility with hosts migrating from the original
+ * app-local sink.
  */
 export const createWebCodecsSink = async ( options = {} ) => {
   const {
@@ -124,75 +96,70 @@ export const createWebCodecsSink = async ( options = {} ) => {
   const cueIn = job?.timeline?.cueInSeconds ?? options.cueIn ?? 0;
   const cueOut = job?.timeline?.cueOutSeconds ?? options.cueOut ?? audioBuffer?.duration ?? 0;
   const bitrate = bitrateFor( width, height, fps, quality );
-  const codec = await pickVideoCodec( width, height, bitrate, fps );
-  if ( !codec ) throw new Error( `No supported H.264 configuration for ${ width }x${ height }` );
 
   const writable = fileHandle ? await fileHandle.createWritable() : null;
-  const target = writable ? new FileSystemWritableFileStreamTarget( writable ) : new ArrayBufferTarget();
-  const muxer = new Muxer( {
+  const target = writable ? new StreamTarget( writable ) : new BufferTarget();
+  const output = new Output( {
     target,
-    video: { codec: 'avc', width, height, frameRate: fps },
-    audio: audioBuffer ? {
-      codec: 'aac',
-      numberOfChannels: Math.min( audioBuffer.numberOfChannels, 2 ),
-      sampleRate: audioBuffer.sampleRate
-    } : undefined,
-    fastStart: writable ? 'fragmented' : 'in-memory'
+    format: new Mp4OutputFormat( { fastStart: writable ? 'fragmented' : 'in-memory' } )
   } );
+  const videoSource = new VideoSampleSource( {
+    codec: 'avc',
+    quality: new Quality( { bitrate, bitrateMode: 'variable' } ),
+    keyFrameInterval: 2,
+    latencyMode: 'quality'
+  } );
+  output.addVideoTrack( videoSource, { frameRate: fps } );
+  const encodeAudio = addAudioTrack( { output, audioBuffer, cueIn, cueOut, onPhase } );
 
-  let encoderError = null;
-  const encoder = new VideoEncoder( {
-    output: ( chunk, meta ) => muxer.addVideoChunk( chunk, meta ),
-    error: ( error ) => { encoderError = error; }
-  } );
-  const bitrateMode = await pickBitrateMode( { codec, width, height, bitrate, framerate: fps } );
-  encoder.configure( {
-    codec,
-    width,
-    height,
-    bitrate,
-    framerate: fps,
-    latencyMode: 'quality',
-    ...( bitrateMode ? { bitrateMode } : {} )
-  } );
-
-  onPhase?.( 'Encoding audio' );
-  await encodeAudioTrack( { muxer, audioBuffer, cueIn, cueOut } );
-  const keyFrameInterval = Math.max( 1, Math.round( fps * 2 ) );
+  try {
+    await output.start();
+    await encodeAudio?.();
+  } catch ( error ) {
+    await output.cancel().catch( () => {} );
+    throw error;
+  }
 
   return {
     name: 'webcodecs',
-    detail: `${ codec } @ ${ ( bitrate / 1e6 ).toFixed( 1 ) } Mbps ${ bitrateMode || 'default' }${ writable ? ', streaming to disk' : '' }`,
+    detail: `Mediabunny H.264 @ ${ ( bitrate / 1e6 ).toFixed( 1 ) } Mbps variable${ writable ? ', streaming to disk' : '' }`,
 
     async addFrame( frameSource, frame ) {
-      if ( encoderError ) throw encoderError;
       const frameIndex = typeof frame === 'number' ? frame : frame.frameIndex;
-      const videoFrame = new VideoFrame( frameSource, {
-        timestamp: Math.round( ( frameIndex / fps ) * 1e6 ),
-        duration: Math.round( 1e6 / fps )
+      const sourceWidth = frameSource.displayWidth ?? frameSource.width ?? frameSource.videoWidth;
+      const sourceHeight = frameSource.displayHeight ?? frameSource.height ?? frameSource.videoHeight;
+      if ( sourceWidth !== width || sourceHeight !== height ) {
+        throw new RangeError(
+          `frame ${ frameIndex } is ${ sourceWidth }x${ sourceHeight }; job requests ${ width }x${ height }`
+        );
+      }
+      const sample = new VideoSample( frameSource, {
+        timestamp: frameIndex / fps,
+        duration: 1 / fps
       } );
-      encoder.encode( videoFrame, { keyFrame: frameIndex % keyFrameInterval === 0 } );
-      videoFrame.close();
-      while ( encoder.encodeQueueSize > 8 && !encoderError ) {
-        await new Promise( ( resolve ) => setTimeout( resolve, 0 ) );
+      try {
+        await videoSource.add( sample, {
+          keyFrame: frameIndex % Math.max( 1, Math.round( fps * 2 ) ) === 0
+        } );
+      } finally {
+        sample.close();
       }
     },
 
     async finish( { frameCount } = {} ) {
       onPhase?.( 'Finalising video' );
-      await encoder.flush();
-      encoder.close();
-      muxer.finalize();
+      videoSource.close();
+      await output.finalize();
       if ( writable ) {
-        await writable.close();
         return { blob: null, fileName, frameCount, message: 'Saved to the file you chose.' };
       }
       return { blob: new Blob( [ target.buffer ], { type: 'video/mp4' } ), fileName, frameCount };
     },
 
     async abort() {
-      try { encoder.close(); } catch { /* already closed */ }
-      try { await writable?.close(); } catch { /* already closed */ }
+      if ( output.state !== 'finalized' && output.state !== 'canceled' ) {
+        await output.cancel();
+      }
     }
   };
 };

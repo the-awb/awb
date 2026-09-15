@@ -115,7 +115,7 @@ export async function runRenderPipeline( {
       status: 'completed',
       jobHash: job.contentHash,
       producer: Object.freeze( { kind: job.producer.kind, version: job.producer.version } ),
-      pipelineVersion: '0.2.0',
+      pipelineVersion: '0.3.0',
       executor: execution.executor || 'local',
       startedAt,
       completedAt: new Date().toISOString(),

@@ -49,9 +49,10 @@ Sink lifecycle:
 ## Browser WebCodecs sink
 
 `@awb/render-pipeline/webcodecs` provides the first portable production sink. It accepts a
-resolved job directly, encodes H.264 and optional AAC as frames arrive, and can either return an
-MP4 Blob or stream fragmented MP4 to a browser file handle. It contains no React or renderer
-dependency; the producer may hand it a canvas or any other `VideoFrame`-compatible source.
+resolved job directly and uses Mediabunny to encode H.264 and optional AAC as frames arrive. It
+can either return an MP4 Blob or stream fragmented MP4 to a browser file handle. It contains no
+React or renderer dependency; the producer may hand it a canvas or any other
+`VideoFrame`-compatible source.
 
 ```js
 import { createWebCodecsSink } from '@awb/render-pipeline/webcodecs';

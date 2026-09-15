@@ -31,6 +31,9 @@ for ( const [ name, contract ] of Object.entries( packages ) ) {
 
 const consoleHook = readFileSync( path.join( root, 'packages/sc-console/dist/hook.js' ), 'utf8' );
 assert.doesNotMatch( consoleHook, /@codemirror|@lezer/, 'the lifecycle hook pulls in the editor bundle' );
+const webcodecsSink = readFileSync( path.join( root, 'packages/render-pipeline/dist/webcodecs.js' ), 'utf8' );
+assert.match( webcodecsSink, /from\s*["']mediabunny["']/, 'the browser sink does not use Mediabunny' );
+assert.doesNotMatch( webcodecsSink, /mp4-muxer/, 'the deprecated muxer remains in the browser sink' );
 
 const score = await import( '@awb/score' );
 const instruments = await import( '@awb/instruments' );
