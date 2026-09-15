@@ -109,15 +109,22 @@ try {
     name: 'attunement-01.score.json', mimeType: 'application/json', buffer: Buffer.from( documentText )
   } );
   await page.getByText( 'Opened attunement-01.score.json', { exact: true } ).waitFor();
-  if ( await page.locator( '.scoreEvent' ).count() !== 11 ) throw new Error( 'browser did not load all eleven events' );
+  if ( await page.locator( '.synthLane' ).count() !== 11 ) throw new Error( 'browser did not load all eleven synth lifecycles' );
   passed += 1;
 
   await page.getByRole( 'button', { name: 'Connect', exact: true } ).click();
   await page.getByText( 'Connected to desktop sclang.', { exact: true } ).waitFor();
   passed += 1;
-  await page.getByRole( 'button', { name: 'Load revision', exact: true } ).click();
-  await page.getByText( 'Revision 1 installed atomically.', { exact: true } ).waitFor();
+  const openScDocument = page.getByRole( 'button', { name: 'Open SC document', exact: true } );
+  if ( await openScDocument.isDisabled() ) throw new Error( 'Open SC document stayed disabled after hosted connection' );
   passed += 1;
+  await page.getByRole( 'button', { name: 'Generate SC document', exact: true } ).click();
+  await page.getByText( 'Generated sonic-attunement-01 r1 SC document.', { exact: true } ).waitFor();
+  await page.getByText( 'AWB GENERATED SCORE PROJECTION', { exact: false } ).waitFor();
+  passed += 2;
+  await page.getByText( 'generated; not saved', { exact: true } ).waitFor();
+  passed += 1;
+  await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
 
   await page.getByRole( 'button', { name: 'Save', exact: true } ).click();
   await page.getByText( 'Canonical JSON and generated SC projection saved.', { exact: true } ).waitFor();
@@ -127,30 +134,24 @@ try {
     throw new Error( `paired save produced wrong downloads: ${ downloads.join( ', ' ) }` );
   }
   passed += 2;
-  await page.getByRole( 'button', { name: 'Console', exact: true } ).click();
-  await page.getByRole( 'button', { name: 'Working document', exact: true } ).click();
-  await page.getByText( 'AWB GENERATED SCORE PROJECTION', { exact: false } ).waitFor();
-  await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
-  passed += 2;
 
-  await page.locator( '.timelineScroll' ).evaluate( ( scroll, time ) => {
-    scroll.scrollLeft = time * 22;
-    const lane = scroll.querySelector( '.lane' );
-    const rect = lane.getBoundingClientRect();
+  await page.locator( '.synthBar' ).last().evaluate( ( finalBar ) => {
+    const lane = finalBar.closest( '.synthLane' );
+    const rect = finalBar.getBoundingClientRect();
     lane.dispatchEvent( new MouseEvent( 'click', {
-      bubbles: true, clientX: rect.left + 92 + time * 22, clientY: rect.top + 30
+      bubbles: true, clientX: rect.left, clientY: rect.bottom + 2
     } ) );
-  }, 773 );
-  await page.getByText( '773.000 s', { exact: true } ).waitFor();
+  } );
   await page.getByRole( 'button', { name: 'Seek here', exact: true } ).click();
+  await page.getByText( '773.000 s', { exact: true } ).waitFor();
   await page.locator( '.transport .boundaryNote' ).filter( { hasText: 'stopped' } ).waitFor();
   passed += 2;
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 1;
 
-  console.log( `hosted-real-browser: ${ passed }/13 pass (11 events, paired JSON/SC save, final onset 773s, no playback)` );
+  console.log( `hosted-real-browser: ${ passed }/14 pass (11 events, explicit SC generation, paired JSON/SC save, final onset 773s, no playback)` );
 } catch ( error ) {
-  console.error( `hosted-real-browser: FAIL after ${ passed }/13: ${ error.message }` );
+  console.error( `hosted-real-browser: FAIL after ${ passed }/14: ${ error.message }` );
   console.error( scOutput.slice( -8000 ) );
   process.exitCode = 1;
 } finally {

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
-import { sortScore } from '@awb/score';
+import { hashScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
@@ -13,7 +13,7 @@ import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets
 import { HostedScoreClient } from './engine/HostedScoreClient.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
 import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
-import { retryScoreProjection, saveScorePair } from './engine/scorePairSave.js';
+import { retryScoreProjection, saveScorePair, validateProjection } from './engine/scorePairSave.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
@@ -339,16 +339,53 @@ export default function App() {
     }
   }
 
-  async function requestHostedProjection( identity ) {
+  async function ensureHostedRevision() {
     if ( !connected ) throw new Error( 'Connect to the hosted bridge before requesting an SC projection.' );
     if ( hosted.scoreID !== session.document.scoreID || hosted.remoteRevision !== session.document.revision ) {
       const expectedRevision = hosted.scoreID === session.document.scoreID
         && Number.isInteger( hosted.remoteRevision ) ? hosted.remoteRevision : -1;
       await hostedClient.loadDocument( session.document, { expectedRevision } );
     }
+  }
+
+  async function requestHostedProjection( identity ) {
+    await ensureHostedRevision();
     const projection = await hostedClient.requestProjection( identity );
     dispatch( { type: 'SET_WORKING_DOCUMENT', text: projection.text } );
     return projection;
+  }
+
+  async function generateHostedDocument() {
+    setHostedMessage( '' );
+    try {
+      const identity = Object.freeze( {
+        scoreID: session.document.scoreID,
+        revision: session.document.revision,
+        contentHash: await hashScoreDocument( session.document ),
+        kind: 'timeline'
+      } );
+      const projection = validateProjection( await requestHostedProjection( identity ), identity );
+      setFile( ( current ) => ( {
+        ...current,
+        projectionStatus: 'generated; not saved',
+        message: 'Generated SC working document. Save writes the canonical JSON and SC projection as a guarded pair.'
+      } ) );
+      setHostedMessage( `Generated ${ projection.scoreID } r${ projection.revision } SC document.` );
+      dispatch( { type: 'SET_VIEW', view: 'console' } );
+    } catch ( error ) {
+      setHostedMessage( error.message );
+    }
+  }
+
+  async function openHostedDocument() {
+    setHostedMessage( '' );
+    try {
+      await ensureHostedRevision();
+      await hostedClient.command( session.document, 'openDocument' );
+      setHostedMessage( `Opened ${ session.document.scoreID } r${ session.document.revision } in desktop SuperCollider.` );
+    } catch ( error ) {
+      setHostedMessage( error.message );
+    }
   }
 
   async function retryProjection() {
@@ -511,8 +548,8 @@ export default function App() {
                 onClick={ () => hostedAction( () => hostedClient.command( session.document, 'seek', session.playhead ) ) }>Seek here</button>
               <button disabled={ !connected }
                 onClick={ () => hostedAction( () => hostedClient.command( session.document, 'state' ) ) }>State</button>
-              <button disabled={ !loadedRevision }
-                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'openDocument' ) ) }>Open SC document</button>
+              <button disabled={ !connected } onClick={ generateHostedDocument }>Generate SC document</button>
+              <button disabled={ !connected } onClick={ openHostedDocument }>Open SC document</button>
             </div>
           ) : <div className="runtimeButtons">
             <button disabled={ sc.status === 'loading' || sc.status === 'booting' || standalone.status === 'playing' }

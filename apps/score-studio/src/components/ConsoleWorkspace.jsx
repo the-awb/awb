@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 
 const ScConsolePanel = lazy( () => import( '@awb/sc-console/react' )
   .then( ( module ) => ( { default: module.ScConsolePanel } ) ) );
@@ -12,7 +12,10 @@ const STARTER = `// Browser sclang scratchpad. This is not the canonical score.
 `;
 
 export default function ConsoleWorkspace( { sc, sclang, workingDocument, mode } ) {
-  const [ tab, setTab ] = useState( 'scratch' );
+  const [ tab, setTab ] = useState( () => workingDocument ? 'working' : 'scratch' );
+  useEffect( () => {
+    if ( workingDocument ) setTab( 'working' );
+  }, [ workingDocument ] );
   return (
     <section className="consoleWorkspace">
       <div className="subtabs">
