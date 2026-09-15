@@ -16,6 +16,7 @@ const flag = ( name ) => process.argv.includes( `--${ name }` );
 const oscPort = Number( option( 'osc-port', 57120 ) );
 const vitePort = Number( option( 'vite-port', 5201 ) );
 const wsPort = Number( option( 'ws-port', 0 ) );
+const ownerPID = Number( option( 'owner-pid', 0 ) );
 const sourcePath = option( 'score' );
 const toolSessionID = option( 'tool-session', '' );
 let sourceName = '';
@@ -28,6 +29,9 @@ if ( !Number.isInteger( vitePort ) || vitePort <= 0 || vitePort > 65535 ) {
 }
 if ( !Number.isInteger( wsPort ) || wsPort < 0 || wsPort > 65535 ) {
   throw new Error( `Invalid --ws-port: ${ wsPort }` );
+}
+if ( !Number.isInteger( ownerPID ) || ownerPID < 0 ) {
+  throw new Error( `Invalid --owner-pid: ${ ownerPID }` );
 }
 if ( sourcePath ) {
   if ( !sourcePath.endsWith( '.score.json' ) ) {
@@ -65,13 +69,33 @@ console.log( `Forwarding to sclang OSC at 127.0.0.1:${ oscPort }` );
 if ( sourcePath ) console.log( `Initial score: ${ path.resolve( sourcePath ) }` );
 if ( toolSessionID ) console.log( `Tool session: ${ toolSessionID }` );
 
-let stopping = false;
-async function stop( signal ) {
-  if ( stopping ) return;
-  stopping = true;
-  if ( vite.exitCode === null ) vite.kill( signal );
-  await bridge.close();
+let stopPromise = null;
+let ownerTimer = null;
+function stop( signal ) {
+  if ( stopPromise ) return stopPromise;
+  stopPromise = ( async () => {
+    if ( ownerTimer ) clearInterval( ownerTimer );
+    if ( vite.exitCode === null ) vite.kill( signal );
+    await bridge.close();
+  } )();
+  return stopPromise;
 }
-process.once( 'SIGINT', () => stop( 'SIGINT' ) );
-process.once( 'SIGTERM', () => stop( 'SIGTERM' ) );
-vite.once( 'exit', async ( code ) => { await stop( 'SIGTERM' ); process.exitCode = code ?? 0; } );
+async function shutdown( signal, code = 0 ) {
+  await stop( signal );
+  process.exit( code );
+}
+if ( ownerPID > 0 ) {
+  ownerTimer = setInterval( () => {
+    try { process.kill( ownerPID, 0 ); }
+    catch {
+      console.error( `Owning sclang process ${ ownerPID } exited; stopping hosted Score Studio.` );
+      shutdown( 'SIGTERM', 0 );
+    }
+  }, 1000 );
+}
+process.once( 'SIGINT', () => shutdown( 'SIGINT', 0 ) );
+process.once( 'SIGTERM', () => shutdown( 'SIGTERM', 0 ) );
+vite.once( 'exit', async ( code ) => {
+  await stop( 'SIGTERM' );
+  process.exit( code ?? 0 );
+} );

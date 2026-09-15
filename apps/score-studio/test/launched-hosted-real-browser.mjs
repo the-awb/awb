@@ -29,6 +29,19 @@ const waitFor = async ( predicate, timeout = 30000 ) => {
   return predicate();
 };
 
+const terminateChild = async ( child, timeout = 2000 ) => {
+  if ( !child || child.exitCode !== null || child.signalCode !== null ) return;
+  child.kill( 'SIGTERM' );
+  await Promise.race( [
+    new Promise( ( resolve ) => child.once( 'exit', resolve ) ),
+    new Promise( ( resolve ) => setTimeout( resolve, timeout ) )
+  ] );
+  if ( child.exitCode === null && child.signalCode === null ) {
+    child.kill( 'SIGKILL' );
+    await new Promise( ( resolve ) => child.once( 'exit', resolve ) );
+  }
+};
+
 const freePort = async () => {
   const server = net.createServer();
   await new Promise( ( resolve ) => server.listen( 0, '127.0.0.1', resolve ) );
@@ -91,7 +104,8 @@ try {
 
   hostedChild = spawn( process.execPath, [
     launcherPath, '--osc-port', `${ oscPort }`, '--score', scorePath,
-    '--tool-session', toolSessionID, '--vite-port', `${ vitePort }`
+    '--tool-session', toolSessionID, '--vite-port', `${ vitePort }`,
+    '--owner-pid', `${ sclangChild.pid }`
   ], { cwd: appRoot, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
   hostedChild.stdout.on( 'data', ( chunk ) => { hostedOutput += chunk; } );
   hostedChild.stderr.on( 'data', ( chunk ) => { hostedOutput += chunk; } );
@@ -134,7 +148,7 @@ try {
 } finally {
   udp?.close();
   await browser?.close();
-  if ( hostedChild && hostedChild.exitCode === null ) hostedChild.kill( 'SIGTERM' );
-  if ( sclangChild.exitCode === null ) sclangChild.kill( 'SIGTERM' );
+  await terminateChild( hostedChild );
+  await terminateChild( sclangChild );
   await rm( temporary, { recursive: true, force: true } );
 }
