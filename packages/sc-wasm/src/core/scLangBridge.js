@@ -1,9 +1,10 @@
 // sclang, running in the page next to the scsynth that is already playing.
 //
-// No React and no app imports, deliberately: this is the file that moves unchanged when the
-// compositional tool and the public-facing app merge, and the seam the plan settled on is
-// react-or-not. Everything here is "two wasm modules talking to each other"; nothing here knows
-// what a field or an instrument is.
+// No React and no app imports, deliberately: this module owns the portable engine/bridge contract,
+// not an application's shell, policy or authored content. The broader sharing boundary is
+// responsibility rather than framework; common editor machinery may use React without belonging
+// here. Everything below is "two wasm modules talking to each other" and knows nothing about a
+// field or instrument.
 //
 // THE SHAPE OF THE PROBLEM. scsynth is already booted and audible before sclang exists, because
 // the app boots it on the first play. sclang's own model is the opposite - it boots the server and

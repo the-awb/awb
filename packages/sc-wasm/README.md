@@ -108,9 +108,15 @@ lifetime ends.
 
 ## What is NOT in here
 
-- **The React panels, the console, the editor.** The seam is react-or-not, and it is the seam
-  `shared-files.mjs` already documents: pure logic is shared, React components are not, because that
-  is where the two apps' audiences actually differ.
+- **The application panels, console shell and authored material.** The boundary is responsibility,
+  not framework: share evaluator contracts and editor machinery, including React machinery when
+  its behaviour is genuinely common; do not share an application's shell, audience-specific
+  policy or authored content. Those shared UI concerns may earn their own module, but they are not
+  part of the wasm engine lifecycle owned here.
+- **The practice's reusable sclang library.** Instrument vocabulary, Event prototypes,
+  pattern-to-score commitment and `/fm/event` provenance belong in a host-loaded `.scd`. The same
+  file can run in browser and desktop sclang without coupling it to this JavaScript package or to a
+  console UI. Each host decides which library and authored material it loads.
 - **`tools/compile-synthdefs.mjs`.** It is a build tool, not runtime. It stays copied between repos
   and `shared-files.mjs` keeps watching it; shipping a CLI from this package is a separate decision.
 - **The field physics.** That is `@awb/field-engine`, a different package with a different trigger.

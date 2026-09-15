@@ -58,5 +58,10 @@ Application assets and policy do not move here merely because a package uses the
 
 - `scsynth.wasm`, `sclang.wasm` and their `.data` files remain host-served assets;
 - field and Lissajous scene shells, cameras, controls and UI remain application-owned;
+- the sharing rule is responsibility, not framework: evaluator contracts and editor machinery may
+  be shared, while application shells, audience-specific policy and authored content are not;
+- the reusable practice-specific sclang layer is a host-loaded `.scd` of Event prototypes,
+  instrument vocabulary, pattern-to-score commitment and `/fm/event` provenance. It runs in browser
+  and desktop sclang and needs no npm packaging decision;
 - browser/audio behavior is verified in the applications, not inferred from package unit tests;
 - `body-acoustic-model` remains an independent repository and is not an AWB workspace package.
