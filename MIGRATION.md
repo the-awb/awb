@@ -9,7 +9,6 @@ are consumers. They may retain a packed release artifact, but not a second edita
 |---|---|---|---|
 | `@awb/score` | `field_modelling/packages/score` | introduced at `88e56ef`; workspace source at `8343cca` | owned here; `field_modelling` consumes a packed artifact |
 | `@awb/sc-wasm` | `field_modelling/packages/sc-wasm` | extraction `2d6b50f` / `2c2be66` | owned here; `field_modelling` consumes a packed artifact |
-| `@awb/sc-console` | `field_modelling/react-app` console introduced at `1afc425` | extracted 15 September 2026; consumer cutovers recorded separately | owned here; application shells, policy and authored documents remain with each studio |
 | `@awb/instruments` | `field_modelling/packages/instruments` | extraction `aab2cef` | owned here; `field_modelling` consumes a packed artifact |
 | `@awb/field-engine` | `field_modelling/packages/field-engine` | extraction `aab2cef` | owned here; `field_modelling` consumes a packed artifact |
 | `@awb/lissajous-engine` | `lissajous-viz/packages/lissajous-engine` | extraction and distribution at `85a349a` | owned here; `lissajous-viz` consumes a packed artifact |
