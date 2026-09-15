@@ -46,5 +46,31 @@ Sink lifecycle:
 - `finish({ job, signal, frameCount })` -> output metadata
 - `abort({ job, error, completedFrames })`
 
+## Browser WebCodecs sink
+
+`@awb/render-pipeline/webcodecs` provides the first portable production sink. It accepts a
+resolved job directly, encodes H.264 and optional AAC as frames arrive, and can either return an
+MP4 Blob or stream fragmented MP4 to a browser file handle. It contains no React or renderer
+dependency; the producer may hand it a canvas or any other `VideoFrame`-compatible source.
+
+```js
+import { createWebCodecsSink } from '@awb/render-pipeline/webcodecs';
+
+const receipt = await runRenderPipeline({
+  job,
+  createProducer,
+  createSink: ({ job }) => createWebCodecsSink({
+    job,
+    audioBuffer,
+    fileName: 'render.mp4',
+    fileHandle,
+  }),
+});
+```
+
+The same entry point exports browser capability detection, quality choices and bitrate helpers for
+host UI. Cross-sink size estimates, file/folder pickers and download presentation remain host
+concerns.
+
 Jobs contain immutable content and replaceable artifact locators, never executor credentials or
 provider queue settings. Execution facts belong in the returned receipt.

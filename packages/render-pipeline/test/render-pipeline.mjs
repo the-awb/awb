@@ -6,6 +6,11 @@ import {
   runRenderPipeline,
   sampleAudioWindow
 } from '@awb/render-pipeline';
+import {
+  bitrateFor,
+  formatBytes,
+  webCodecsAvailable
+} from '@awb/render-pipeline/webcodecs';
 
 const passes = [];
 const pass = ( label ) => passes.push( `  PASS  ${ label }` );
@@ -61,6 +66,11 @@ const sampled = sampleAudioWindow( audioBuffer, 0.25, 0.75 );
 assert.deepEqual( [ ...sampled.x ], [ 1, 2 ] );
 assert.deepEqual( [ ...sampled.y ], [ 5, 6 ] );
 pass( 'decoded audio sampling uses exact half-open time windows' );
+
+assert.equal( bitrateFor( 100, 50, 20, 'standard' ), 9000 );
+assert.equal( formatBytes( 1500000000 ), '1.5 GB' );
+assert.equal( webCodecsAvailable(), false );
+pass( 'WebCodecs sink planning stays usable without a browser runtime' );
 
 const lifecycle = [];
 const frames = [];

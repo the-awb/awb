@@ -1,6 +1,6 @@
 {
   "name": "@awb/render-pipeline",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "sideEffects": false,
@@ -9,11 +9,15 @@
     "README.md"
   ],
   "scripts": {
-    "build": "node ../../tools/build-esm-package.mjs index=src/index.js",
+    "build": "node ../../tools/build-esm-package.mjs index=src/index.js webcodecs=src/webcodecs.js",
     "prepack": "npm run build",
     "test": "node test/render-pipeline.mjs"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./webcodecs": "./dist/webcodecs.js"
+  },
+  "dependencies": {
+    "mp4-muxer": "^5.2.2"
   }
 }

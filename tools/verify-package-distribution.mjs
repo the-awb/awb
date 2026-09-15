@@ -13,7 +13,10 @@ const packages = {
   'synthdef-interface': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
   instruments: { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
   'field-engine': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
-  'render-pipeline': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] }
+  'render-pipeline': {
+    exports: { '.': './dist/index.js', './webcodecs': './dist/webcodecs.js' },
+    files: [ 'index.js', 'webcodecs.js' ]
+  }
 };
 
 for ( const [ name, contract ] of Object.entries( packages ) ) {
@@ -38,6 +41,7 @@ const envelope = await import( '@awb/sc-envelope' );
 const runtime = await import( '@awb/sc-runtime' );
 const synthDefInterface = await import( '@awb/synthdef-interface' );
 const pipeline = await import( '@awb/render-pipeline' );
+const webcodecs = await import( '@awb/render-pipeline/webcodecs' );
 
 assert.equal( typeof score.makeEvent, 'function' );
 assert.equal( typeof instruments.instrumentType, 'function' );
@@ -48,5 +52,6 @@ assert.equal( typeof envelope.scEnvAsArray, 'function' );
 assert.equal( typeof runtime.createPlaybackReadiness, 'function' );
 assert.equal( typeof synthDefInterface.buildSynthDefInterface, 'function' );
 assert.equal( typeof pipeline.runRenderPipeline, 'function' );
+assert.equal( typeof webcodecs.createWebCodecsSink, 'function' );
 
 console.log( 'All AWB package exports resolve from built distribution artifacts.' );
