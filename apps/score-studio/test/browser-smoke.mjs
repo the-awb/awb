@@ -85,6 +85,14 @@ try {
   }
 
   if ( !( await page.locator( '.eventJson' ).isVisible() ) ) failures.push( 'event inspector did not open' );
+  const frequencyControl = page.getByLabel( 'Payload freq', { exact: true } );
+  if ( !( await frequencyControl.isVisible() ) ) failures.push( 'typed frequency payload control did not render' );
+  else {
+    await frequencyControl.fill( '440' );
+    await page.getByRole( 'button', { name: 'Apply event', exact: true } ).click();
+    const payload = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
+    if ( payload.freq !== 440 ) failures.push( 'typed payload edit did not reach raw JSON and canonical entry' );
+  }
   await page.getByLabel( 'Event time' ).fill( '4.5' );
   await page.getByLabel( 'Event path' ).fill( 'phrase/low' );
   await page.getByRole( 'button', { name: 'Apply event', exact: true } ).click();
@@ -122,4 +130,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 20/20 pass' );
+console.log( 'score-studio-browser: 22/22 pass' );

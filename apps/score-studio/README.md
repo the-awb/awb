@@ -11,7 +11,7 @@ Current first slice:
 - an absolute-time score view exposing all seven canonical time/structure verbs;
 - switchable structural and one-row-per-authored-synth lifecycle projections, with timeline zoom;
 - direct timeline dragging of authored entries and disclosed synth control boundaries;
-- direct time, path and payload editing with revision-safe undo/redo;
+- direct time, path and typed/raw payload editing with revision-safe undo/redo;
 - guarded File System Access saves, with JSON download fallback and local recovery drafts;
 - an editor-owned pair-save coordinator: canonical JSON first, identity-bound SC projection second,
   with recoverable partial success;
@@ -48,10 +48,11 @@ vertical axis may be continuous Hz or an explicit just-intonation lattice. The J
 an explicit reference frequency and allowed ratios; the editor must not infer a tonic or collapse
 non-ratio frequencies onto a scale silently.
 
-The inspector currently permits complete event-payload editing as JSON. The next editor slice is a
-typed payload surface driven by event semantics and the instrument vocabulary, retaining raw JSON
-for fields that have no declared control UI. This belongs in Score Studio, not in payload-blind
-`@awb/score`.
+The inspector offers typed controls for event type, SynthDef/target, existing scalar fields, and
+numeric or boolean controls declared by `@awb/instruments`. They edit the same draft shown in the
+raw JSON area and enter the canonical document together on Apply. Arrays, envelopes and nested
+objects remain raw JSON until their semantics justify a dedicated editor. This UI belongs in Score
+Studio; payload-blind `@awb/score` remains unchanged.
 
 ## Standalone execution
 

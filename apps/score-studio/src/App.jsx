@@ -3,6 +3,7 @@ import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
 import { sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
+import EventPayloadEditor from './components/EventPayloadEditor.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import { openScoreFile, readScoreFile, saveScoreFile, storeRecoveryDraft } from './engine/scoreFiles.js';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
@@ -365,6 +366,16 @@ function EventEditor( { entry, onCommit } ) {
   const [ path, setPath ] = useState( () => entry.path.join( '/' ) );
   const [ eventText, setEventText ] = useState( () => JSON.stringify( entry.event, null, 2 ) );
   const [ error, setError ] = useState( '' );
+  let parsedEvent = null;
+  try {
+    const parsed = JSON.parse( eventText );
+    if ( parsed && typeof parsed === 'object' && !Array.isArray( parsed ) ) parsedEvent = parsed;
+  } catch { /* raw editor reports syntax errors on Apply */ }
+
+  function updatePayload( event ) {
+    setEventText( JSON.stringify( event, null, 2 ) );
+    setError( '' );
+  }
 
   function commit() {
     try {
@@ -392,7 +403,8 @@ function EventEditor( { entry, onCommit } ) {
           value={ time } onChange={ ( event ) => setTime( event.target.value ) } /></label>
         <label>Path <input aria-label="Event path" value={ path } placeholder="section/voice"
           onChange={ ( event ) => setPath( event.target.value ) } /></label>
-        <label>Event payload<textarea aria-label="Event payload" className="eventJson" value={ eventText }
+        <EventPayloadEditor event={ parsedEvent } onChange={ updatePayload } />
+        <label>Raw event JSON<textarea aria-label="Event payload" className="eventJson" value={ eventText }
           onChange={ ( event ) => setEventText( event.target.value ) } /></label>
       </div>
       { error && <p className="error">{ error }</p> }
