@@ -64,3 +64,5 @@ Canonical protocol evidence remains separate:
 - `test/hosted-real-sclang.mjs` — the same hosted client and sidecar against the real desktop
   bridge, loading all eleven `sonic-attunement-01` events and seeking to 773 seconds without
   starting playback.
+- `test/hosted-real-browser.mjs` — the complete Chromium editor → WebSocket sidecar → UDP →
+  desktop sclang path over the same real score and seek.

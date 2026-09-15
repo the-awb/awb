@@ -49,6 +49,7 @@ npm install
 npm run dev --workspace @awb/score-studio
 npm run dev:hosted --workspace @awb/score-studio -- --osc-port 57120
 npm run test:hosted-real --workspace @awb/score-studio
+npm run test:hosted-browser-real --workspace @awb/score-studio
 ```
 
 The dev server is pinned to <http://localhost:5201> and supplies the cross-origin isolation headers
@@ -65,6 +66,10 @@ removing only the exact `classes WIP` exclusion without modifying the live file.
 desktop bridge fixture, sends the eleven-event `sonic-attunement-01` document through the same
 Score Studio client and WebSocket sidecar, seeks to its 773-second final onset, and exits without
 playing the fourteen-minute work.
+
+`test:hosted-browser-real` adds the actual Chromium editor surface to that path: it opens the real
+document through the file-input fallback, verifies eleven timeline entries, connects, installs the
+revision and drives the UI playhead/seek to 773 seconds. It likewise never presses Play.
 
 Each WebSocket connection receives its own UDP reply socket. Frames are exactly
 `{ "address": "/awb/timeline/...", "args": [...] }`; other OSC namespaces, non-scalar arguments,
