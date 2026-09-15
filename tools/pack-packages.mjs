@@ -10,6 +10,7 @@ const npmCache = path.join( tmpdir(), 'awb-package-npm-cache' );
 const packages = [
   '@awb/score',
   '@awb/sc-wasm',
+  '@awb/sc-console',
   '@awb/instruments',
   '@awb/field-engine',
   '@awb/lissajous-engine',
