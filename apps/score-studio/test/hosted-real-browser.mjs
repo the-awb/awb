@@ -135,6 +135,16 @@ try {
   }
   passed += 2;
 
+  await page.getByRole( 'button', { name: 'Disconnect', exact: true } ).click();
+  const reconnect = page.getByRole( 'button', { name: 'Connect', exact: true } );
+  await reconnect.waitFor();
+  await reconnect.click();
+  await page.getByRole( 'button', { name: 'Disconnect', exact: true } ).waitFor();
+  passed += 1;
+  await page.getByRole( 'button', { name: 'Load revision', exact: true } ).click();
+  await page.getByText( 'Revision 1 installed atomically.', { exact: true } ).waitFor();
+  passed += 1;
+
   await page.locator( '.synthBar' ).last().evaluate( ( finalBar ) => {
     const lane = finalBar.closest( '.synthLane' );
     const rect = finalBar.getBoundingClientRect();
@@ -149,9 +159,9 @@ try {
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 1;
 
-  console.log( `hosted-real-browser: ${ passed }/14 pass (11 events, explicit SC generation, paired JSON/SC save, final onset 773s, no playback)` );
+  console.log( `hosted-real-browser: ${ passed }/16 pass (11 events, reconnect reconciliation, explicit SC generation, paired JSON/SC save, final onset 773s, no playback)` );
 } catch ( error ) {
-  console.error( `hosted-real-browser: FAIL after ${ passed }/14: ${ error.message }` );
+  console.error( `hosted-real-browser: FAIL after ${ passed }/16: ${ error.message }` );
   console.error( scOutput.slice( -8000 ) );
   process.exitCode = 1;
 } finally {

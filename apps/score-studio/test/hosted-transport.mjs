@@ -110,6 +110,13 @@ try {
   assert.equal( stateMessages.length, 2, 'a timed-out request is retried' );
   assert.equal( stateMessages[ 0 ].args[ 1 ], stateMessages[ 1 ].args[ 1 ], 'retry retains its idempotency key' );
 
+  client.publish( { scoreID: null, remoteRevision: null } );
+  await client.installDocument( fixture );
+  const reconciledBegin = received.filter( ( message ) => message.address === '/awb/timeline/snapshot/begin' ).at( -1 );
+  assert.equal( reconciledBegin.args[ 5 ], fixture.revision,
+    'an unknown client state queries and guards against the actual desktop revision' );
+  assert.equal( client.getState().remoteRevision, fixture.revision );
+
   const projection = await client.requestProjection( {
     scoreID: fixture.scoreID, revision: fixture.revision,
     contentHash: await hashScoreDocument( fixture ), kind: 'timeline'
@@ -127,7 +134,7 @@ try {
   const closeCode = await new Promise( ( resolve ) => untrusted.addEventListener( 'close', ( event ) => resolve( event.code ) ) );
   assert.equal( closeCode, 1008, 'bridge rejects clients without its session token' );
 
-  console.log( 'hosted-transport: 17/17 pass' );
+  console.log( 'hosted-transport: 19/19 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

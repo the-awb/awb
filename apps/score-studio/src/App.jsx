@@ -98,10 +98,8 @@ export default function App() {
       return;
     }
     launchState.current.installed = identity;
-    hostedClient.loadDocument( session.document, {
-      expectedRevision: hosted.scoreID === session.document.scoreID
-        && Number.isInteger( hosted.remoteRevision ) ? hosted.remoteRevision : -1
-    } ).then( () => setHostedMessage( `Revision ${ session.document.revision } installed atomically.` ) )
+    hostedClient.installDocument( session.document )
+      .then( () => setHostedMessage( `Revision ${ session.document.revision } installed atomically.` ) )
       .catch( ( error ) => {
         launchState.current.installed = '';
         setHostedMessage( error.message );
@@ -343,9 +341,7 @@ export default function App() {
   async function ensureHostedRevision() {
     if ( !connected ) throw new Error( 'Connect to the hosted bridge before requesting an SC projection.' );
     if ( hosted.scoreID !== session.document.scoreID || hosted.remoteRevision !== session.document.revision ) {
-      const expectedRevision = hosted.scoreID === session.document.scoreID
-        && Number.isInteger( hosted.remoteRevision ) ? hosted.remoteRevision : -1;
-      await hostedClient.loadDocument( session.document, { expectedRevision } );
+      await hostedClient.installDocument( session.document );
     }
   }
 
@@ -528,10 +524,9 @@ export default function App() {
                 <button disabled={ !endpoint || hosted.status === 'connecting' || connected }
                   onClick={ () => hostedAction( () => hostedClient.connect( endpoint ), 'Connected to desktop sclang.' ) }>Connect</button>
                 <button disabled={ !connected } onClick={ () => hostedClient.disconnect() }>Disconnect</button>
-                <button disabled={ !connected } onClick={ () => hostedAction( () => hostedClient.loadDocument( session.document, {
-                  expectedRevision: hosted.scoreID === session.document.scoreID && Number.isInteger( hosted.remoteRevision )
-                    ? hosted.remoteRevision : -1
-                } ), `Revision ${ session.document.revision } installed atomically.` ) }>Load revision</button>
+                <button disabled={ !connected }
+                  onClick={ () => hostedAction( () => hostedClient.installDocument( session.document ),
+                    `Revision ${ session.document.revision } installed atomically.` ) }>Load revision</button>
               </div>
               <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
               { ( hostedMessage || hosted.error ) && <p className={ hosted.error ? 'error' : 'fileMessage' }>{ hostedMessage || hosted.error }</p> }

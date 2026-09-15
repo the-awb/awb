@@ -148,6 +148,12 @@ generates the same supported timeline vocabulary locally and saves or downloads 
 generate and open the document. Ordinary Save remains the operation that persists canonical JSON
 and the hosted `.score.scd` as a guarded pair.
 
+A fresh browser connection may not yet know which revision desktop sclang already holds. Before
+installing in that state, the client issues an unguarded read-only `state` command for the score ID,
+then uses the returned revision as the guarded snapshot expectation. `-1` is retained only for an
+`unknownScore` response. Reconnecting therefore cannot mistake an existing score for a new one or
+blindly overwrite it.
+
 The matched PR #7440 wasm assets are app-owned under `public/scsynth` and `public/sclang`; the
 reusable lifecycle and console machinery remains in `@awb/sc-wasm` and `@awb/sc-console`.
 

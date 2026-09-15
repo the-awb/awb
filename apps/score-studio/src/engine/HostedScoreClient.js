@@ -353,11 +353,26 @@ export class HostedScoreClient {
     }
   }
 
-  command( document, command, argument = 0 ) {
+  command( document, command, argument = 0, expectedRevision = document.revision ) {
     const id = requestID( command );
     return this.request( '/awb/timeline/command', [
-      this.clientID, id, document.scoreID, document.revision, command, argument
+      this.clientID, id, document.scoreID, expectedRevision, command, argument
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
+  }
+
+  async installDocument( document, options = {} ) {
+    let expectedRevision = -1;
+    if ( this.state.scoreID === document.scoreID && Number.isInteger( this.state.remoteRevision ) ) {
+      expectedRevision = this.state.remoteRevision;
+    } else {
+      try {
+        const remote = await this.command( document, 'state', 0, -1 );
+        expectedRevision = remote.revision;
+      } catch ( error ) {
+        if ( error.result?.code !== 'unknownScore' ) throw error;
+      }
+    }
+    return this.loadDocument( document, { ...options, expectedRevision } );
   }
 
   requestProjection( { scoreID, revision, contentHash, kind = 'timeline' } ) {
