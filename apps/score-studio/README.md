@@ -173,9 +173,11 @@ npm run test:standalone-real --workspace @awb/score-studio
 The dev server is pinned to <http://localhost:5201> and supplies the cross-origin isolation headers
 required by scsynth.wasm.
 
-`dev:hosted` starts both Vite and the localhost sidecar, generates a fresh capability token, and
-injects its endpoint into the app. Port 57120 is sclang's usual language port; pass the actual port
-used by the desktop bridge when it differs. A separately hosted UI can run
+`dev:hosted` starts both Vite and a localhost sidecar on an OS-assigned free port, generates a
+fresh capability token, and injects its endpoint into the app. The dynamic sidecar port prevents
+an abandoned or concurrent editor session from blocking a new launch; `--ws-port PORT` remains
+available when a fixed port is specifically required. Port 57120 is sclang's usual language port;
+pass the actual port used by the desktop bridge when it differs. A separately hosted UI can run
 `npm run hosted-bridge --workspace @awb/score-studio -- --osc-port PORT` and paste the printed
 token-bearing endpoint into the Hosted runtime panel.
 

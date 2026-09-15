@@ -37,6 +37,17 @@ const freePort = async () => {
   return port;
 };
 
+const freeUdpPort = async () => {
+  const socket = dgram.createSocket( 'udp4' );
+  await new Promise( ( resolve, reject ) => {
+    socket.once( 'error', reject );
+    socket.bind( 0, '127.0.0.1', resolve );
+  } );
+  const port = socket.address().port;
+  await new Promise( ( resolve ) => socket.close( resolve ) );
+  return port;
+};
+
 const colliderRoot = process.env.AWB_COLLIDER_ROOT
   ?? '/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider';
 const sclang = process.env.SCLANG
@@ -55,7 +66,8 @@ const configText = await readFile( liveConfig, 'utf8' );
 await writeFile( testConfig,
   configText.split( '\n' ).filter( ( line ) => !line.includes( wipPath ) ).join( '\n' ) );
 
-const sclangChild = spawn( sclang, [ '-D', '-l', testConfig, fixturePath ], {
+const sclangPort = await freeUdpPort();
+const sclangChild = spawn( sclang, [ '-u', `${ sclangPort }`, '-D', '-l', testConfig, fixturePath ], {
   cwd: colliderRoot, stdio: [ 'ignore', 'pipe', 'pipe' ]
 } );
 let scOutput = '';

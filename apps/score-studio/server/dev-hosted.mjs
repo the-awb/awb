@@ -15,6 +15,7 @@ const option = ( name, fallback = null ) => {
 const flag = ( name ) => process.argv.includes( `--${ name }` );
 const oscPort = Number( option( 'osc-port', 57120 ) );
 const vitePort = Number( option( 'vite-port', 5201 ) );
+const wsPort = Number( option( 'ws-port', 0 ) );
 const sourcePath = option( 'score' );
 const toolSessionID = option( 'tool-session', '' );
 let sourceName = '';
@@ -25,6 +26,9 @@ if ( !Number.isInteger( oscPort ) || oscPort <= 0 || oscPort > 65535 ) {
 if ( !Number.isInteger( vitePort ) || vitePort <= 0 || vitePort > 65535 ) {
   throw new Error( `Invalid --vite-port: ${ vitePort }` );
 }
+if ( !Number.isInteger( wsPort ) || wsPort < 0 || wsPort > 65535 ) {
+  throw new Error( `Invalid --ws-port: ${ wsPort }` );
+}
 if ( sourcePath ) {
   if ( !sourcePath.endsWith( '.score.json' ) ) {
     throw new Error( '--score must name a canonical .score.json document.' );
@@ -34,7 +38,10 @@ if ( sourcePath ) {
   sourceName = path.basename( sourcePath );
 }
 
-const bridge = await createHostedBridge( { oscPort } );
+// Each launched editor gets its own capability URL. Let the OS allocate the
+// sidecar port by default so an abandoned or concurrently running session
+// cannot prevent Vite (and therefore the browser launcher) from starting.
+const bridge = await createHostedBridge( { oscPort, port: wsPort } );
 const viteArgs = [
   fileURLToPath( new URL( '../../../node_modules/vite/bin/vite.js', import.meta.url ) ),
   '--host', '127.0.0.1', '--port', `${ vitePort }`
