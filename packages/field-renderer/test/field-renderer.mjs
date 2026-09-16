@@ -19,6 +19,7 @@ const job = {
     kind: 'field',
     version: '0.1.0',
     state: {
+      mode: 'analytic-preview',
       room: { sep: 2, spkH: 1.1, conv: 20, pistonA: 0.07 },
       channels: [
         { instId: 'one', slot: 'a', freq: 1, gl: 1, gr: 0.4 },
@@ -54,6 +55,21 @@ assert.equal( canvas.height, 60 );
 assert.equal( draws.length, 2 * ( 1 + 4 * 3 ) );
 assert.equal( new Set( draws.map( ( draw ) => draw.fillStyle ) ).size > 2, true );
 
+assert.throws(
+  () => createFieldRenderProducer( {
+    canvas,
+    job: { ...job, producer: { ...job.producer, state: { ...job.producer.state, mode: 'realized-score' } } }
+  } ),
+  /requires field-phase-track support/
+);
+assert.throws(
+  () => createFieldRenderProducer( {
+    canvas,
+    job: { ...job, producer: { ...job.producer, state: { ...job.producer.state, mode: undefined } } }
+  } ),
+  /state.mode must be analytic-preview/
+);
+
 await assert.rejects(
   runRenderPipeline( {
     job: { ...job, producer: { ...job.producer, kind: 'not-field' } },
@@ -63,4 +79,4 @@ await assert.rejects(
   /Expected a field producer job/
 );
 
-console.log( '\n  PASS  field producer renders deterministic frames without an audio input\n\nAll checks passed.' );
+console.log( '\n  PASS  analytic-preview renders without audio and realized-score cannot be mislabelled\n\nAll checks passed.' );

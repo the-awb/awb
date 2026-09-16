@@ -1,6 +1,10 @@
 import { sampleColorReadings } from '@awb/field-engine';
 
 const TWO_PI = Math.PI * 2;
+export const FIELD_RENDER_MODES = Object.freeze( {
+  ANALYTIC_PREVIEW: 'analytic-preview',
+  REALIZED_SCORE: 'realized-score'
+} );
 
 const requireFinite = ( value, path ) => {
   if ( !Number.isFinite( value ) ) throw new TypeError( `${ path } must be finite` );
@@ -20,6 +24,12 @@ export function validateFieldRenderJob( job ) {
   }
   const state = job.producer.state;
   if ( !state || typeof state !== 'object' ) throw new TypeError( 'field producer state is required' );
+  if ( state.mode === FIELD_RENDER_MODES.REALIZED_SCORE ) {
+    throw new Error( 'field realized-score rendering requires field-phase-track support, which is not implemented' );
+  }
+  if ( state.mode !== FIELD_RENDER_MODES.ANALYTIC_PREVIEW ) {
+    throw new Error( 'field producer state.mode must be analytic-preview' );
+  }
   if ( !state.room || typeof state.room !== 'object' ) throw new TypeError( 'field state.room is required' );
   for ( const key of [ 'sep', 'spkH', 'conv', 'pistonA' ] ) requireFinite( state.room[ key ], `field state.room.${ key }` );
   if ( !Array.isArray( state.channels ) ) throw new TypeError( 'field state.channels must be an array' );
@@ -37,9 +47,9 @@ export function validateFieldRenderJob( job ) {
 /**
  * Deterministic, React-free Canvas2D field producer for @awb/render-pipeline.
  *
- * It intentionally consumes no audio. Analytic field state advances from the render clock, using
- * the same CPU equations as @awb/field-engine. A later WebGL producer can implement the same
- * structural contract without changing scheduling, sinks or executor placement.
+ * This analytic-preview producer intentionally consumes no audio. Analytic field state advances
+ * from the render clock, using the same CPU equations as @awb/field-engine. It does not claim
+ * correspondence with realized playback.
  */
 export function createFieldRenderProducer( { canvas, job } = {} ) {
   if ( !canvas ) throw new Error( 'createFieldRenderProducer requires a canvas' );
