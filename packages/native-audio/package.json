@@ -1,0 +1,15 @@
+{
+  "name": "@awb/native-audio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.js",
+  "scripts": {
+    "build": "swift build -c release --package-path native",
+    "test": "node --test test/*.test.mjs",
+    "smoke:device": "node tools/smoke-device.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}

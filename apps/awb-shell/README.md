@@ -6,8 +6,9 @@ The neutral Electron owner for AWB Toolkit Home and hosted tool views.
 npm start --workspace @awb/desktop-shell
 ```
 
-`start` builds the workspace-local Score Studio renderer before Electron starts. Packaged external
-tools such as Lissajous are already installed as complete renderer artifacts.
+`start` builds the workspace packages, including the native-audio helper and Score Studio renderer,
+before Electron starts. Packaged external tools such as Lissajous are already installed as complete
+renderer artifacts.
 
 An external launch uses the same router as Toolkit Home:
 
@@ -39,6 +40,24 @@ npm run test:neutral-shell-hosted-real --workspace @awb/score-studio
 
 The Electron suite includes a two-tool gate which launches Score Studio and Lissajous together,
 checks the latter's multichannel request and audio-input grant, and closes each view independently.
+
+## Native multichannel audio
+
+The shell owns the reusable `@awb/native-audio` service. An authorised tool declares the
+`native-audio` media capability and uses the frozen host request boundary:
+
+```js
+const devices = await awbHost.request('native-audio.devices');
+const capture = await awbHost.request('native-audio.start', {
+  deviceUID: devices.find((device) => device.name === '1248').uid
+});
+const socket = new WebSocket(capture.endpoint);
+```
+
+`native-audio.status` reports helper state and `native-audio.stop` releases the view's capture.
+Closing a view also releases it. The helper opens the selected Core Audio input device directly;
+it neither creates nor selects an aggregate device. The renderer receives only a tokenised loopback
+WebSocket endpoint carrying versioned Float32 PCM frames.
 
 ## Next shell slice
 

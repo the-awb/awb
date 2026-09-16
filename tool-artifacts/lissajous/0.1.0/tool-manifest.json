@@ -27,7 +27,8 @@
     "filesystem": [],
     "media": [
       "audio-input",
-      "system-audio"
+      "system-audio",
+      "native-audio"
     ],
     "connections": []
   }

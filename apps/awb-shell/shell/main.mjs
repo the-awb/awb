@@ -12,6 +12,8 @@ import { FileGrantStore } from '../src/fileGrants.mjs';
 import { atomicWriteText, guardedWriteText } from '../src/nativeFiles.mjs';
 import { ServiceRegistry } from '../src/serviceRegistry.mjs';
 import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
+import { createNativeAudioBroker } from '@awb/native-audio';
+import { NativeAudioAccess } from '../src/nativeAudioAccess.mjs';
 import {
   permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
 } from '../src/rendererPolicy.mjs';
@@ -29,6 +31,7 @@ const ownerTimers = new Map();
 const serviceReleases = new Map();
 const fileGrants = new FileGrantStore();
 const services = new ServiceRegistry( createOscWebSocketRelay );
+const nativeAudio = new NativeAudioAccess( createNativeAudioBroker() );
 let homeWindow = null;
 let quitting = false;
 let tools = new Map();
@@ -57,7 +60,7 @@ const developmentURL = loopbackDevelopmentURL( option( process.argv, 'dev-url', 
 
 const SUPPORTED_CAPABILITIES = Object.freeze( {
   filesystem: [ 'open-file', 'open-directory', 'save-file' ],
-  media: [ 'audio-input', 'system-audio' ], connections: [ 'hosted-timeline' ]
+  media: [ 'audio-input', 'system-audio', 'native-audio' ], connections: [ 'hosted-timeline' ]
 } );
 
 function option( args, name, fallback = null ) {
@@ -179,6 +182,9 @@ async function runMultitoolSmoke() {
   }
   if ( !lissajousContract.media.includes( 'system-audio' ) ) {
     throw new Error( `Lissajous system-audio policy was not installed: ${ JSON.stringify( lissajousContract ) }` );
+  }
+  if ( !lissajousContract.media.includes( 'native-audio' ) ) {
+    throw new Error( `Lissajous native-audio policy was not installed: ${ JSON.stringify( lissajousContract ) }` );
   }
   console.log( 'AWB_SHELL_MULTITOOL_READY score-studio=ready lissajous=ready requestedChannels=16' );
   await closeToolView( score.viewID ); await waitFor( () => windows.size === 1 );
@@ -315,6 +321,7 @@ function finalizeView( viewID, window, senderID ) {
   senderRecords.delete( senderID ); windows.delete( viewID );
   clearInterval( ownerTimers.get( viewID ) ); ownerTimers.delete( viewID );
   fileGrants.releaseView( viewID );
+  nativeAudio.releaseView( viewID ).catch( ( error ) => console.error( error ) );
   serviceReleases.get( viewID )?.().catch( ( error ) => console.error( error ) ); serviceReleases.delete( viewID );
   if ( registry.get( viewID ) ) { registry.update( viewID, { lifecycle: 'closed' } ); registry.remove( viewID ); }
   notifyHome();
@@ -384,6 +391,25 @@ async function handleToolOperation( sender, operation, payload ) {
   if ( operation === 'artifact.read-text' ) {
     const target = safeArtifactPath( tool, payload.path );
     return { name: payload.name ?? path.basename( target ), text: await readFile( target, 'utf8' ), handle: null };
+  }
+  if ( operation === 'native-audio.devices' ) {
+    requireCapability( tool, 'media', 'native-audio' );
+    return nativeAudio.listDevices();
+  }
+  if ( operation === 'native-audio.start' ) {
+    requireCapability( tool, 'media', 'native-audio' );
+    return nativeAudio.start( view.viewID, {
+      deviceUID: payload.deviceUID,
+      framesPerChunk: payload.framesPerChunk
+    } );
+  }
+  if ( operation === 'native-audio.status' ) {
+    requireCapability( tool, 'media', 'native-audio' );
+    return nativeAudio.status( view.viewID );
+  }
+  if ( operation === 'native-audio.stop' ) {
+    requireCapability( tool, 'media', 'native-audio' );
+    return nativeAudio.stop( view.viewID );
   }
   if ( operation === 'filesystem.initial-file' ) {
     requireCapability( tool, 'filesystem', 'open-file' );
@@ -544,7 +570,7 @@ if ( gotLock ) {
   } ).catch( reportFatal );
   app.on( 'activate', () => createHomeWindow().catch( reportFatal ) );
   app.on( 'window-all-closed', () => { if ( !quitting ) createHomeWindow().catch( reportFatal ); } );
-  app.on( 'before-quit', () => { quitting = true; } );
+  app.on( 'before-quit', () => { quitting = true; nativeAudio.close().catch( ( error ) => console.error( error ) ); } );
 }
 
 export { launchRequestFromArgs };
