@@ -33,17 +33,19 @@ export default function InstrumentPanel( { document, mode, standaloneDefinitions
           const definition = definitions?.get( instrument.definition );
           const hostedDefinition = hostedSynthDefs?.definitions?.[ instrument.definition ];
           const hostedControls = hostedDefinition?.interface.controls ?? [];
-          const controls = mode === 'hosted'
+          const hostInventoryKnown = Array.isArray( hostedSynthDefs?.inventory );
+          const hostedContextAvailable = hostedSynthDefs?.status === 'connected' && hostInventoryKnown;
+          const controls = mode === 'hosted' && hostedContextAvailable
             ? hostedControls
             : definition ? settableControls( definition ) : [];
           const currentStandalone = standaloneDefinitions.scoreID === document.scoreID
             && standaloneDefinitions.revision === document.revision;
           const missingStandalone = currentStandalone
             && standaloneDefinitions.missing.includes( instrument.definition );
-          const hostInventoryKnown = Array.isArray( hostedSynthDefs?.inventory );
           const hostHasDefinition = hostedSynthDefs?.inventory?.includes( instrument.definition );
           const runtimeStatus = mode === 'hosted'
-            ? hostedDefinition ? 'described by desktop host'
+            ? !hostedContextAvailable ? ( definition ? 'desktop unavailable · browser bundle available' : 'desktop context unavailable' )
+              : hostedDefinition ? 'described by desktop host'
               : hostInventoryKnown && hostHasDefinition ? 'available; description pending'
                 : hostInventoryKnown ? 'not in desktop context' : 'desktop context not queried'
             : missingStandalone ? 'missing from standalone'
@@ -74,7 +76,7 @@ export default function InstrumentPanel( { document, mode, standaloneDefinitions
               <InstrumentList label="Authored controls" values={ instrument.authoredControls } empty="none" />
               <InstrumentList label="SynthDef controls"
                 values={ controls.map( ( control ) => `${ control.name}=${ displayDefault( control.default ) }${ control.roles?.length ? ` · ${ control.roles.join( ', ' ) }` : '' }` ) }
-                empty={ mode === 'hosted'
+                empty={ mode === 'hosted' && hostedContextAvailable
                   ? ( hostedSynthDefs?.error || ( hostHasDefinition ? 'reading desktop graph…' : 'definition not in desktop context' ) )
                   : manifestError || ( definitions ? 'definition not in browser bundle' : 'reading manifest…' ) } />
               { instrument.envelopes.length > 0 && <div className="instrumentDetails">

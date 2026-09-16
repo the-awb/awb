@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "npm --prefix ../.. run build",
     "start": "electron shell/main.mjs",
-    "test": "node --test test/files.test.mjs test/manifest.test.mjs test/router.test.mjs test/renderer-policy.test.mjs test/services.test.mjs",
+    "test": "node --test test/files.test.mjs test/manifest.test.mjs test/node-manager-projection.test.mjs test/recent-store.test.mjs test/router.test.mjs test/renderer-policy.test.mjs test/services.test.mjs test/shared-host-integration.test.mjs test/synthdef-broker.test.mjs",
     "pretest:electron": "npm --prefix ../.. run build",
     "test:electron": "node test/electron-home.test.mjs && node test/electron-multiview.mjs && node test/electron-multitool.mjs && node test/electron-external-router.mjs && node test/electron-owner-loss.mjs"
   },

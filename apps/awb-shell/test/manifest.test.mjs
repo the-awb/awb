@@ -27,3 +27,21 @@ test( 'normalizes multi-protocol relay lifecycle addresses', () => {
   assert.deepEqual( manifest.connectionPolicies.hosted.disconnectAddresses,
     [ '/awb/timeline/disconnect', '/awb/synthdef/disconnect' ] );
 } );
+test( 'document actions exist only when declared by a document kind', () => {
+  const plain = validateToolManifest( valid, '/tmp/artifact' );
+  assert.deepEqual( plain.documentKinds, [] );
+  const documented = validateToolManifest( { ...valid, documentKinds: [ {
+    id: 'score', label: 'Score', extensions: [ 'score.json' ], actions: [ 'new', 'recent', 'browse' ]
+  } ] }, '/tmp/artifact' );
+  assert.deepEqual( documented.documentKinds[ 0 ].actions, [ 'new', 'recent', 'browse' ] );
+  assert.throws( () => validateToolManifest( { ...valid, documentKinds: [ {
+    id: 'score', label: 'Score', extensions: [ 'json' ], actions: [ 'delete' ]
+  } ] }, '/tmp/artifact' ), /unsupported action/ );
+  assert.throws( () => validateToolManifest( { ...valid, documentKinds: [
+    { id: 'score', label: 'Score', extensions: [ 'json' ], actions: [ 'new' ] },
+    { id: 'score', label: 'Other score', extensions: [ 'json' ], actions: [ 'browse' ] }
+  ] }, '/tmp/artifact' ), /Duplicate document kind/ );
+  assert.throws( () => validateToolManifest( { ...valid, documentKinds: [ {
+    id: 'score', label: 'Score', extensions: [ 'json' ], actions: [ 'new' ], profileID: 'missing'
+  } ] }, '/tmp/artifact' ), /unknown launch profile/ );
+} );

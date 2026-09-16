@@ -31,13 +31,18 @@ export function createNeutralDesktopHost( {
     nativeWindowFocus: true, nativeWindowClose: true
   } );
   const request = ( operation, payload = {} ) => bridge.request( operation, payload );
+  const validatedScore = async ( record ) => {
+    const result = await scoreResult( record );
+    if ( result?.handle ) bridge.reportDetailedState?.( { validatedDocumentKindID: 'score' } );
+    return result;
+  };
 
   return assertScoreStudioHost( {
     kind: 'desktop', capabilities,
-    async initialScore() { return scoreResult( await request( 'filesystem.initial-file' ) ); },
+    async initialScore() { return validatedScore( await request( 'filesystem.initial-file' ) ); },
     async openScore() {
-      const record = await request( 'filesystem.open-file', { filters: [ { name: 'AWB score', extensions: [ 'json' ] } ] } );
-      if ( !record ) abort(); return scoreResult( record );
+      const record = await request( 'filesystem.open-file', { documentKindID: 'score', filters: [ { name: 'AWB score', extensions: [ 'json' ] } ] } );
+      if ( !record ) abort(); return validatedScore( record );
     },
     readFallbackScore( file ) { return readScoreFile( file ); },
     async loadBundledScore( url, name ) {
@@ -52,7 +57,7 @@ export function createNeutralDesktopHost( {
       return request( 'filesystem.list-directory', { handle: directory.handle, suffix: '.score.json' } );
     },
     async openDirectoryScore( item ) {
-      return scoreResult( await request( 'filesystem.read-file', { handle: item.handle } ) );
+      return validatedScore( await request( 'filesystem.read-file', { handle: item.handle, documentKindID: 'score', markRecent: true } ) );
     },
     async saveCanonical( document, { handle = null, expectedHash = null, saveAs = false } = {} ) {
       let expectedText = null;

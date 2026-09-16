@@ -59,22 +59,29 @@ Closing a view also releases it. The helper opens the selected Core Audio input 
 it neither creates nor selects an aggregate device. The renderer receives only a tokenised loopback
 WebSocket endpoint carrying versioned Float32 PCM frames.
 
-## Next shell slice
+## Shared desktop host
 
-Toolkit Home is intended to become the junction between tool documents, hosted SuperCollider and
-live NodeManager state without owning any of them. The next implementation slice adds:
+Toolkit Home is the junction between tool documents, hosted SuperCollider and live NodeManager
+state without owning any of them:
 
-- the existing shell-level OSC/WebSocket relay now carries both hosted score transport and the
-  read-only SynthDef-context protocol declared by a tool; the remaining broker work is attached or
-  explicitly owned sclang/scsynth readiness and the NodeManager bridge;
+- one shell-owned host service per SC endpoint survives individual view closure, carries tool-owned
+  transport through per-view manifest grants, and intercepts the read-only SynthDef-context protocol
+  for shell-side request coalescing and exact-byte/spec caching;
+- SynthDef inventories establish cache generations: refresh invalidates prior descriptions and late
+  transfers cannot restore stale state;
 - a lightweight shared NodeManager subscription which the shell filters into per-tool and
   per-session container summaries;
 - explicit `toolID`/`toolSessionID` to `toolSource`/`toolInstance` bindings, never name-based
   inference;
+- bounded health probes and reconnect backoff for shell-first startup and attached bridge restarts;
 - manifest-declared document kinds which produce `New`, `Recent` and `Browse` actions on each
   applicable tool card;
 - bounded recent-file references while parsing, validation, revision state and canonical saves
   remain owned by the selected tool.
+
+The Home status strip reports sclang attachment, scsynth readiness, SynthDef-context readiness and
+NodeManager connectivity separately. A ready language context is not presented as proof that a
+definition is installed on the active server.
 
 Tools without a SuperCollider host or canonical document must still launch normally; unavailable
 hosted, tracking or file actions are shown as capabilities, not treated as application failures.

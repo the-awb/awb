@@ -77,6 +77,31 @@ export function validateToolManifest( input, artifactRoot ) {
     }
     return [ id, Object.freeze( { allowedPrefixes, clientIdentityAddresses, disconnectAddresses } ) ];
   } ) ) );
+  let nodeManagerBinding = null;
+  if ( input.hostBindings?.nodeManager !== undefined ) {
+    const binding = input.hostBindings.nodeManager;
+    if ( !binding || typeof binding !== 'object' || !/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test( binding.toolSource ?? '' ) ) {
+      throw new Error( 'hostBindings.nodeManager needs a bounded toolSource.' );
+    }
+    nodeManagerBinding = Object.freeze( { toolSource: binding.toolSource } );
+  }
+  if ( !Array.isArray( input.documentKinds ?? [] ) || ( input.documentKinds ?? [] ).length > 32 ) {
+    throw new Error( 'documentKinds must be a bounded array.' );
+  }
+  const documentKindIDs = new Set();
+  const documentKinds = ( input.documentKinds ?? [] ).map( ( kind ) => {
+    if ( !kind || typeof kind !== 'object' || !ID_PATTERN.test( kind.id ?? '' ) ) throw new Error( 'Document kind needs a kebab-case id.' );
+    if ( documentKindIDs.has( kind.id ) ) throw new Error( `Duplicate document kind: ${ kind.id }.` );
+    documentKindIDs.add( kind.id );
+    const extensions = boundedStringArray( kind.extensions, `documentKinds.${ kind.id }.extensions` );
+    if ( !extensions.length || extensions.some( ( extension ) => !/^[A-Za-z0-9.]+$/.test( extension ) ) ) throw new Error( `Document kind ${ kind.id } needs safe extensions.` );
+    const actions = boundedStringArray( kind.actions, `documentKinds.${ kind.id }.actions` );
+    if ( actions.some( ( action ) => ![ 'new', 'recent', 'browse' ].includes( action ) ) ) throw new Error( `Document kind ${ kind.id } has an unsupported action.` );
+    const profileID = kind.profileID ?? 'standalone';
+    if ( !profileIDs.has( profileID ) ) throw new Error( `Document kind ${ kind.id } uses unknown launch profile: ${ profileID }.` );
+    return Object.freeze( { id: kind.id, label: nonEmptyString( kind.label, 'Document kind label' ), extensions, actions,
+      profileID } );
+  } );
   const width = Number( input.view?.defaultWidth ?? 1200 );
   const height = Number( input.view?.defaultHeight ?? 800 );
   if ( !Number.isInteger( width ) || width < 480 || width > 4096
@@ -95,7 +120,9 @@ export function validateToolManifest( input, artifactRoot ) {
     } ),
     view: Object.freeze( { defaultWidth: width, defaultHeight: height, allowMultiple: input.view?.allowMultiple !== false } ),
     launchProfiles: Object.freeze( profiles ),
-    capabilities, connectionPolicies
+    capabilities, connectionPolicies,
+    hostBindings: Object.freeze( { nodeManager: nodeManagerBinding } ),
+    documentKinds: Object.freeze( documentKinds )
   } );
 }
 

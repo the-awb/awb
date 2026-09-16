@@ -36,6 +36,6 @@ try {
   await waitFor( () => shellChild.exitCode !== null ); if ( shellChild.exitCode !== 0 ) throw new Error( shellOutput );
   udp = dgram.createSocket( 'udp4' ); udp.send( encodeOscMessage( '/awb/test/score-studio/stop', [] ), Number( ready[ 1 ] ), '127.0.0.1' );
   await waitFor( () => scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_FIXTURE_STOPPED' ) );
-  console.log( 'neutral-shell-hosted-real: pass (named score, ToolSession hello, sclang-authoritative revision)' );
+  console.log( 'neutral-shell-hosted-real: pass (named score, ToolSession hello, SC-launch Recent, shell-brokered SynthDef context, sclang-authoritative revision)' );
 } catch ( error ) { console.error( `SHELL OUTPUT:\n${ shellOutput }` ); console.error( `SCLANG OUTPUT:\n${ scOutput.slice( -8000 ) }` ); throw error; }
 finally { udp?.close(); await stop( shellChild ); await stop( sclangChild ); await rm( temporary, { recursive: true, force: true } ); }

@@ -36,9 +36,8 @@ try {
     failures.push( 'seed score instrument panel did not name its SynthDef' );
   }
   await seedInstrument.locator( 'summary' ).click();
-  if ( !( await seedInstrument.getByText( 'freq=220', { exact: true } ).isVisible() ) ) {
-    failures.push( 'instrument panel did not disclose compiled SynthDef controls' );
-  }
+  await seedInstrument.getByText( 'freq=220', { exact: true } ).waitFor( { timeout: 5000 } )
+    .catch( () => failures.push( 'instrument panel did not disclose compiled SynthDef controls' ) );
   await page.getByRole( 'button', { name: 'Instruments', exact: true } ).click();
   if ( await page.locator( '.liveInstrument' ).count() !== 4 ) failures.push( 'live instrument tab did not expose the four catalogued instruments' );
   if ( !( await page.getByRole( 'heading', { name: 'Live instruments', exact: true } ).isVisible() ) ) failures.push( 'live instrument workspace heading is missing' );
