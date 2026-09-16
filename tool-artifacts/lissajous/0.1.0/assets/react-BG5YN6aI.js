@@ -1,4 +1,4 @@
-import{n as e,r as t,t as n}from"./index-ajmBV0SO.js";function r(e){let t=new Uint8Array(e.length),n=0;for(;n<e.length;){let r=e[n],i=e[n+1];if(r===`/`&&i===`/`){for(;n<e.length&&e[n]!==`
+import{n as e,r as t,t as n}from"./index-C7kYPF-K.js";function r(e){let t=new Uint8Array(e.length),n=0;for(;n<e.length;){let r=e[n],i=e[n+1];if(r===`/`&&i===`/`){for(;n<e.length&&e[n]!==`
 `;)n++;continue}if(r===`/`&&i===`*`){let t=1;for(n+=2;n<e.length&&t>0;){if(e[n]===`/`&&e[n+1]===`*`){t++,n+=2;continue}if(e[n]===`*`&&e[n+1]===`/`){t--,n+=2;continue}n++}continue}if(r===`"`||r===`'`){let t=r;for(n++;n<e.length;){if(e[n]===`\\`){n+=2;continue}if(e[n]===t){n++;break}n++}continue}if(r===`$`){n+=e[n+1]===`\\`?3:2;continue}t[n]=1,n++}return t}function i(e,t){let n=t,r=t;for(;n>0&&e[n-1]!==`
 `;)n--;for(;r<e.length&&e[r]!==`
 `;)r++;return{from:n,to:r}}function a(e,t){let n=r(e);for(let r=o(e,n,t);r>=0;r=o(e,n,r-1)){let i=s(e,n,r);if(i>=0&&t<=i)return{from:r,to:i+1}}return null}function o(e,t,n){for(let r=Math.min(n,e.length-1);r>=0;r--)if(e[r]===`(`&&t[r]&&(r===0||e[r-1]===`
