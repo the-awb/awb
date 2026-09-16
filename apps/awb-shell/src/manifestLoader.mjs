@@ -94,7 +94,7 @@ export function validateToolManifest( input, artifactRoot ) {
     if ( documentKindIDs.has( kind.id ) ) throw new Error( `Duplicate document kind: ${ kind.id }.` );
     documentKindIDs.add( kind.id );
     const extensions = boundedStringArray( kind.extensions, `documentKinds.${ kind.id }.extensions` );
-    if ( !extensions.length || extensions.some( ( extension ) => !/^[A-Za-z0-9.]+$/.test( extension ) ) ) throw new Error( `Document kind ${ kind.id } needs safe extensions.` );
+    if ( !extensions.length || extensions.some( ( extension ) => !/^[A-Za-z0-9.-]+$/.test( extension ) ) ) throw new Error( `Document kind ${ kind.id } needs safe extensions.` );
     const actions = boundedStringArray( kind.actions, `documentKinds.${ kind.id }.actions` );
     if ( actions.some( ( action ) => ![ 'new', 'recent', 'browse' ].includes( action ) ) ) throw new Error( `Document kind ${ kind.id } has an unsupported action.` );
     const profileID = kind.profileID ?? 'standalone';

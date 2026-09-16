@@ -1,0 +1,25 @@
+{
+  "name": "@awb/field-modelling",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node test/document-session.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@awb/field-documents": "0.1.0",
+    "@awb/field-engine": "0.1.0",
+    "@awb/instruments": "0.1.0",
+    "@awb/phase-fit": "0.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.0",
+    "vite": "^8.2.2"
+  }
+}

@@ -1,6 +1,7 @@
 {
   "artifacts": [
     "../score-studio",
+    "../field-modelling",
     "../../tool-artifacts/lissajous/0.1.0"
   ]
 }

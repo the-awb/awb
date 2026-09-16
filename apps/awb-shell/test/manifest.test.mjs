@@ -18,6 +18,13 @@ test( 'normalizes an explicitly declared local-render capability', () => {
   }, '/tmp/artifact' );
   assert.deepEqual( manifest.capabilities.rendering, [ 'local-render' ] );
 } );
+test( 'accepts safe compound and hyphenated document suffixes', () => {
+  const manifest = validateToolManifest( { ...valid, documentKinds: [ {
+    id: 'score-project', label: 'Score Project', extensions: [ 'awb-project.json' ],
+    actions: [ 'browse' ], profileID: 'standalone'
+  } ] }, '/tmp/artifact' );
+  assert.deepEqual( manifest.documentKinds[ 0 ].extensions, [ 'awb-project.json' ] );
+} );
 test( 'rejects malformed manifests', () => assert.throws( () => validateToolManifest( {}, '/tmp/artifact' ), /Unsupported/ ) );
 test( 'rejects escaping renderer paths', () => assert.throws( () => validateToolManifest( { ...valid, renderer: { ...valid.renderer, entry: '../escape.html' } }, '/tmp/artifact' ), /escapes/ ) );
 test( 'rejects unsupported preload protocols', () => assert.throws( () => validateToolManifest( { ...valid, renderer: { ...valid.renderer, preloadProtocol: 2 } }, '/tmp/artifact' ), /Unsupported preload/ ) );

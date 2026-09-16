@@ -16,6 +16,7 @@ import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
 import { createNativeAudioBroker } from '@awb/native-audio';
 import { NativeAudioAccess } from '../src/nativeAudioAccess.mjs';
 import { RenderJobBroker } from '../src/renderJobBroker.mjs';
+import { resolveToolBindingFromProject } from '../src/scoreProjectResolver.mjs';
 import {
   permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
 } from '../src/rendererPolicy.mjs';
@@ -68,7 +69,7 @@ const developmentURL = loopbackDevelopmentURL( option( process.argv, 'dev-url', 
 const SUPPORTED_CAPABILITIES = Object.freeze( {
   filesystem: [ 'open-file', 'open-directory', 'save-file' ],
   media: [ 'audio-input', 'system-audio', 'native-audio' ],
-  connections: [ 'hosted-timeline' ], rendering: [ 'local-render' ]
+  connections: [ 'hosted-timeline', 'hosted-field' ], rendering: [ 'local-render' ]
 } );
 
 function option( args, name, fallback = null ) {
@@ -356,13 +357,17 @@ async function createToolWindow( { viewID, request, tool } ) {
   registry.update( viewID, { lifecycle: 'loading' } );
   let effectiveRequest = request;
   if ( request.connections.oscPort ) {
-    const policy = tool.connectionPolicies[ 'hosted-timeline' ];
-    if ( !policy ) throw new Error( `${ tool.name } has no hosted-timeline relay policy.` );
+    const connectionID = tool.capabilities.connections.find( ( id ) => tool.connectionPolicies[ id ] );
+    const policy = connectionID ? tool.connectionPolicies[ connectionID ] : null;
+    if ( !policy ) throw new Error( `${ tool.name } has no hosted relay policy.` );
     const configuration = hostConfigurationFromRequest( request ); await ensureHost( configuration );
     const acquired = await services.acquire( configuration, {
       allowedPrefixes: [ ...policy.allowedPrefixes ],
       clientIdentityAddresses: [ ...policy.clientIdentityAddresses ],
-      disconnectAddresses: [ ...policy.disconnectAddresses ] } );
+      disconnectAddresses: [ ...policy.disconnectAddresses ],
+      connectionID, toolID: tool.id, viewID, toolSessionID: request.toolSessionID,
+      scoreSessionID: request.payload?.scoreSessionID ?? null,
+      runID: request.payload?.runID ?? null } );
     serviceReleases.set( viewID, acquired.release );
     effectiveRequest = Object.freeze( { ...request, connections: Object.freeze( {
       ...request.connections, endpoint: acquired.endpoint
@@ -537,6 +542,16 @@ async function handleToolOperation( sender, operation, payload ) {
     if ( payload.markRecent ) registry.update( view.viewID, { pendingRecentPath: grant.path,
       pendingDocumentKindID: payload.documentKindID ?? null } );
     return { handle: payload.handle, name: grant.name, text: await readFile( grant.path, 'utf8' ) };
+  }
+  if ( operation === 'filesystem.resolve-score-project' ) {
+    requireCapability( tool, 'filesystem', 'open-file' );
+    const projectGrant = fileGrants.resolve( view.viewID, payload.handle, 'file' );
+    const resolved = resolveToolBindingFromProject( await readFile( projectGrant.path, 'utf8' ), projectGrant.path,
+      { toolID: payload.toolID ?? tool.id, bindingID: payload.bindingID ?? null } );
+    if ( ( payload.toolID ?? tool.id ) !== tool.id ) throw new Error( 'A tool may resolve only its own project bindings.' );
+    return { projectID: resolved.project.projectID, scoreID: resolved.project.score.scoreID,
+      binding: resolved.binding, score: await fileGrants.fileRecord( view.viewID, resolved.scorePath ),
+      config: await fileGrants.fileRecord( view.viewID, resolved.configPath ) };
   }
   if ( operation === 'filesystem.save-file' ) {
     requireCapability( tool, 'filesystem', 'save-file' );

@@ -1,0 +1,52 @@
+{
+  "schema": "awb.tool/1",
+  "id": "field-modelling",
+  "name": "Field Modelling",
+  "version": "0.1.0",
+  "renderer": {
+    "entry": "dist/index.html",
+    "preloadProtocol": 1,
+    "crossOriginIsolated": false
+  },
+  "view": {
+    "defaultWidth": 1440,
+    "defaultHeight": 900,
+    "allowMultiple": true
+  },
+  "launchProfiles": [
+    { "id": "standalone", "label": "New analytic field" },
+    { "id": "attached", "label": "Attach to score session" }
+  ],
+  "capabilities": {
+    "filesystem": ["open-file", "save-file"],
+    "media": [],
+    "connections": ["hosted-field"],
+    "rendering": ["local-render"]
+  },
+  "connectionPolicies": {
+    "hosted-field": {
+      "allowedPrefixes": ["/awb/field/", "/awb/synthdef/", "/awb/nm/", "/awb/timeline/"],
+      "clientIdentityAddresses": ["/awb/field/hello", "/awb/synthdef/hello"],
+      "disconnectAddresses": ["/awb/field/disconnect", "/awb/synthdef/disconnect"]
+    }
+  },
+  "hostBindings": {
+    "nodeManager": { "toolSource": "fieldModelling" }
+  },
+  "documentKinds": [
+    {
+      "id": "field-config",
+      "label": "Field Config",
+      "extensions": ["field.json"],
+      "actions": ["new", "recent", "browse"],
+      "profileID": "standalone"
+    },
+    {
+      "id": "score-project",
+      "label": "Score Project",
+      "extensions": ["awb-project.json"],
+      "actions": ["recent", "browse"],
+      "profileID": "attached"
+    }
+  ]
+}

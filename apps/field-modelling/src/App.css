@@ -1,0 +1,324 @@
+:root {
+  --ink: #E8E4DC; --dim: #8A8578; --bg: #14161A;
+  --panel: #1C1F25; --line: #2E323A; --hot: #E0603A;
+}
+
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 { font-size: 18px; font-weight: 600; margin: 0 0 12px; letter-spacing: -.01em; }
+.sub { font-size: 13px; color: var(--dim); margin: 0 0 14px; line-height: 1.45; }
+
+/* The canvas is the only thing that isn't UI chrome -- a fixed full-viewport
+   background. Title/description float on top of it; the files list docks to
+   the left; instruments/settings dock to the bottom. --dockH/--lhsW are set
+   inline from React state so the other floating/docked pieces can react to
+   collapse state without each needing their own JS-measured layout. */
+.appRoot { position: relative; height: 100vh; overflow: hidden; }
+#stage { position: fixed; inset: 0; background: #000; }
+#stage canvas { width: 100% !important; height: 100% !important; display: block; }
+
+.fieldHostBar { position: fixed; z-index: 50; top: 12px; left: 16px; right: 16px; min-height: 44px;
+  display: flex; align-items: center; gap: 10px; padding: 7px 9px; color: #d8ddd8;
+  background: rgba(16, 18, 18, 0.9); border: 1px solid #353b3a; border-radius: 6px; }
+.fieldHostBar > div:first-child { display: grid; line-height: 1.1; }
+.fieldHostBar > div:first-child span { color: #7f8c89; font-size: 11px; }
+.fieldIdentity { display: flex; flex: 1; gap: 12px; color: #91a09c; font-size: 11px; overflow: hidden; }
+.fieldIdentity span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fieldError { position: fixed; z-index: 60; top: 68px; left: 16px; max-width: 620px; padding: 8px 10px;
+  color: #ffd5d0; background: #541f1c; border: 1px solid #98413a; border-radius: 4px; }
+.fieldTool .floatingTitle { top: 74px; }
+.fieldTool .floatingDescription { top: 111px; }
+
+.fieldHostBar { position: fixed; z-index: 50; top: 12px; left: 16px; right: 16px; min-height: 44px;
+  display: flex; align-items: center; gap: 10px; padding: 7px 9px; color: #d8ddd8;
+  background: rgba(16, 18, 18, 0.9); border: 1px solid #353b3a; border-radius: 6px; }
+.fieldHostBar > div:first-child { display: grid; line-height: 1.1; }
+.fieldHostBar > div:first-child span { color: #7f8c89; font-size: 11px; }
+.fieldIdentity { display: flex; flex: 1; gap: 12px; color: #91a09c; font-size: 11px; overflow: hidden; }
+.fieldIdentity span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fieldError { position: fixed; z-index: 60; top: 68px; left: 16px; max-width: 620px; padding: 8px 10px;
+  color: #ffd5d0; background: #541f1c; border: 1px solid #98413a; border-radius: 4px; }
+.fieldTool .floatingTitle { top: 74px; }
+.fieldTool .floatingDescription { top: 111px; }
+
+.floatingTitle {
+  position: fixed; top: 16px; left: calc(var(--lhsW) + 16px); z-index: 9;
+  font-size: 20px; font-weight: 600; letter-spacing: -.01em; color: var(--ink);
+  background: none; border: none; padding: 4px 2px; max-width: 40vw;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+}
+.floatingTitle:focus { outline: none; }
+
+.floatingDescription {
+  position: fixed; top: 16px; right: calc(var(--rhsW) + 16px); z-index: 9; width: min(320px, 34vw);
+  height: 76px; resize: vertical;
+  font-size: 12px; line-height: 1.5; color: var(--dim); font-family: inherit;
+  background: rgba(20, 22, 26, 0.72); backdrop-filter: blur(6px);
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+}
+.floatingDescription:focus { outline: none; color: var(--ink); border-color: var(--hot); }
+
+/* LHS files toolbar -- full height, independent of dock height */
+.lhs {
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 11; width: var(--lhsW);
+  background: rgba(20, 22, 26, 0.92); backdrop-filter: blur(10px);
+  border-right: 1px solid var(--line);
+  transition: width .15s ease;
+  display: flex; flex-direction: column;
+}
+.lhsToggle {
+  position: absolute; top: 8px; right: 6px; padding: 4px 8px; z-index: 1;
+}
+.lhsBody { flex: 1; min-height: 0; overflow-y: auto; padding: 40px 12px 14px; }
+
+/* RHS instrument-params toolbar -- mirrors the LHS files panel */
+.rhs {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 11; width: var(--rhsW);
+  background: rgba(20, 22, 26, 0.92); backdrop-filter: blur(10px);
+  border-left: 1px solid var(--line);
+  transition: width .15s ease;
+  display: flex; flex-direction: column;
+}
+.rhsToggle {
+  position: absolute; top: 8px; left: 6px; padding: 4px 8px; z-index: 1;
+}
+.rhsBody { flex: 1; min-height: 0; overflow-y: auto; overflow-x: auto; padding: 40px 12px 14px; }
+.lhsBody h2 {
+  font-size: 12px; font-weight: 600; color: var(--dim); margin: 0 0 10px; letter-spacing: .02em;
+}
+.fileList { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.fileRow {
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+  background: #0F1114; border: 1px solid var(--line); border-radius: 6px;
+  padding: 7px 8px;
+}
+.fileRow.selected { border-color: var(--hot); background: #1c1512; }
+.fileName { font-size: 12px; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fileRow button.remove {
+  padding: 2px 5px; font-size: 11px; color: var(--dim); border-color: transparent;
+}
+.fileRow button.remove:hover { color: var(--hot); }
+
+.saveAsRow { margin-top: 6px; }
+.saveAsRow input {
+  width: 100%; background: #0F1114; border: 1px solid var(--line);
+  color: var(--ink); border-radius: 4px; padding: 7px 8px; font-size: 13px; font-family: inherit;
+}
+.saveAsRow input:focus { outline: none; border-color: var(--hot); }
+
+/* Bottom dock: Instruments/Settings, vertical tabs on its own left edge so
+   the horizontal tab strip doesn't eat into the (deliberately minimized)
+   vertical footprint. Each pane inside scrolls on its own -- the dock itself
+   never scrolls as a whole. */
+.dock {
+  position: fixed; left: var(--lhsW); right: var(--rhsW); bottom: 0; z-index: 10; height: var(--dockH);
+  background: rgba(20, 22, 26, 0.92); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line); border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+  transition: height .15s ease, left .15s ease, right .15s ease;
+  overflow: hidden;
+}
+.dockToggle { position: absolute; top: 6px; right: 10px; padding: 4px 10px; z-index: 1; }
+.dockCollapsedLabel {
+  height: 100%; display: flex; align-items: center; padding: 0 16px;
+  font-size: 13px; color: var(--dim);
+}
+.dockBody { height: 100%; display: flex; }
+
+.dockTabs {
+  flex: 0 0 130px; display: flex; flex-direction: column; gap: 6px;
+  padding: 40px 10px 10px; border-right: 1px solid var(--line); overflow-y: auto;
+}
+.dockTabs button { text-align: left; padding: 9px 10px; }
+
+.dockContent { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; padding: 14px; overflow: hidden; }
+.dockContentHeader { flex: 0 0 auto; margin-bottom: 11px; }
+.hint { font-size: 12px; color: var(--dim); margin: 0 0 11px; line-height: 1.5; }
+
+/* Responsive panel layout used by Instruments and Settings. It stacks on
+   narrow viewports. Each panel scrolls
+   independently, since the dock height is fixed and deliberately small. */
+.splitPane { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.splitPane.settingsPane { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 760px) {
+  .splitPane { grid-template-columns: 1fr; overflow-y: auto; }
+  .splitPane.settingsPane { grid-template-columns: 1fr; }
+  .splitPane > .panel { height: auto; }
+}
+.splitPane > .panel { height: 100%; overflow-y: auto; overflow-x: auto; margin-top: 0; }
+
+.panel {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 8px; padding: 14px; margin-top: 14px;
+}
+.panel h2 {
+  font-size: 12px; font-weight: 600; color: var(--dim);
+  margin: 0 0 12px; letter-spacing: .02em;
+}
+
+.row { display: flex; align-items: center; gap: 6px; margin-bottom: 11px; }
+.row:last-child { margin-bottom: 0; }
+/* Sized to content, not a fixed column -- short labels ("Amp") give the
+   slider more of the row; only the longest ("Speaker height") ask for more. */
+.row label { font-size: 13px; flex: 0 0 auto; white-space: nowrap; cursor: default; }
+
+/* Units live in a title-attribute tooltip (see NumberSlider) rather than a
+   row cell -- with a label, a slider and a numbox already competing for
+   space, a unit glyph was consistently the thing that got squeezed out. */
+input[type=range] { flex: 1 1 auto; min-width: 150px; accent-color: var(--hot); }
+
+input[type=number].numbox {
+  width: 100%; flex: 0 0 58px; background: #0F1114; border: 1px solid var(--line);
+  color: var(--ink); border-radius: 4px; padding: 6px 4px;
+  font-size: 13px; font-variant-numeric: tabular-nums; text-align: center;
+}
+input[type=number].numbox::-webkit-inner-spin-button,
+input[type=number].numbox::-webkit-outer-spin-button { margin: 0; }
+
+button {
+  background: none; border: 1px solid var(--line); color: var(--dim);
+  border-radius: 5px; font-size: 13px; cursor: pointer; font-family: inherit;
+  padding: 6px 8px;
+}
+button.on { border-color: var(--hot); color: var(--ink); background: #231814; }
+button:disabled { opacity: .4; cursor: default; }
+.seg { display: flex; gap: 6px; }
+.seg button { flex: 1; padding: 9px; }
+
+select {
+  flex: 1 1 auto; min-width: 0; background: #0F1114; border: 1px solid var(--line);
+  color: var(--ink); border-radius: 4px; padding: 6px 8px; font: inherit;
+}
+
+.note { font-size: 12px; color: var(--dim); line-height: 1.55; margin-top: 12px; }
+
+.boolSlot { flex: 1; }
+.boolSlot button { width: 100%; padding: 7px 0; }
+
+/* Instruments list */
+/* A real <input type=color>, styled down to a plain clickable dot -- opens
+   the OS colour picker on click, no separate UI needed. */
+input.instSwatch {
+  -webkit-appearance: none; appearance: none; cursor: pointer;
+  flex: 0 0 16px; width: 16px; height: 16px; padding: 0; margin: 0;
+  border: none; border-radius: 50%; background: none; overflow: hidden;
+}
+input.instSwatch::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+input.instSwatch::-webkit-color-swatch { border: none; border-radius: 50%; box-shadow: 0 0 0 1px rgba(255,255,255,0.2); }
+input.instSwatch::-moz-color-swatch { border: none; border-radius: 50%; box-shadow: 0 0 0 1px rgba(255,255,255,0.2); }
+.instList { display: flex; flex-direction: column; gap: 6px; }
+.instRow {
+  display: flex; align-items: center; gap: 8px;
+  background: #0F1114; border: 1px solid var(--line); border-radius: 6px;
+  padding: 8px 10px; cursor: pointer;
+}
+.instRow.selected { border-color: var(--hot); background: #1c1512; }
+.instType { font-size: 13px; font-weight: 500; flex: 1 1 auto; }
+.surfaceGlyph { color: var(--hot); font-size: 16px; line-height: 1; }
+.micList { display: flex; flex-direction: column; gap: 7px; }
+.micRow { padding: 7px 8px; background: #0F1114; border: 1px solid var(--line); border-radius: 5px; }
+.micName { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; white-space: nowrap; }
+.micKind { width: 7px; height: 7px; border-radius: 50%; background: #63d6c5; box-shadow: 0 0 5px #63d6c588; }
+.micKind.body-site { background: #fff; box-shadow: 0 0 5px #ffffff88; }
+.micMeters { display: flex; flex-direction: column; gap: 3px; }
+.micMeterTrack { height: 5px; overflow: hidden; background: #242831; border-radius: 3px; }
+.micMeterFill { height: 100%; min-width: 0; border-radius: 3px; transition: width .12s linear; }
+.floatingMicPanel {
+  position: fixed; z-index: 12; width: 300px; max-height: min(520px, calc(100vh - 64px));
+  margin: 0; padding: 0; overflow: hidden; background: rgba(28, 31, 37, .94);
+  backdrop-filter: blur(10px); box-shadow: 0 12px 40px rgba(0, 0, 0, .38);
+}
+.floatingMicPanel > .micList { max-height: min(430px, calc(100vh - 145px)); overflow-y: auto; padding: 0 10px; }
+.floatingMicPanel > .note { margin: 9px 10px 11px; }
+.micModeSwitch { margin: 0 10px 10px; }
+.floatingMicHandle {
+  display: flex; justify-content: space-between; align-items: center; margin: 0 0 10px !important;
+  padding: 10px 12px; border-bottom: 1px solid var(--line); cursor: grab; user-select: none;
+}
+.floatingMicHandle:active { cursor: grabbing; }
+.floatingMicHandle span { color: #5f645f; font-size: 10px; font-weight: 400; text-transform: uppercase; letter-spacing: .08em; }
+.instFreq {
+  font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums;
+  flex: 0 0 auto; min-width: 60px; text-align: right;
+}
+.instRow button { padding: 5px 8px; font-size: 11px; }
+.instRow button.lrBtn { padding: 5px 9px; font-weight: 600; }
+.instRow button.remove { color: var(--dim); border-color: transparent; }
+.instRow button.remove:hover { color: var(--hot); }
+.addRow { margin-top: 11px; flex-wrap: wrap; }
+.addRow button { flex: 1 1 auto; min-width: 90px; }
+
+/* Per-channel table in InstrumentDetail */
+table.chTable { width: 100%; border-collapse: collapse; margin-top: 4px; }
+table.chTable td { padding: 4px 0; border-bottom: 1px solid var(--line); }
+table.chTable tr:last-child td { border-bottom: none; }
+table.chTable td.chName { font-size: 13px; text-transform: capitalize; }
+table.chTable td:last-child { width: 90px; text-align: right; }
+table.chTable button { width: 84px; padding: 6px 0; font-size: 12px; }
+
+/* --- Timeline (roadmap E7, over the seven verbs in @awb/score) --------------
+   Absolute seconds across the top, one lane per top-level group. Deliberately
+   not a DAW: no bars and beats, no track headers, no mixer. */
+.timelineBar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.timelineBar .tlSpacer { flex: 1 1 12px; }
+.tlReadout {
+  font-variant-numeric: tabular-nums; font-size: 15px; color: var(--hot);
+  padding: 2px 8px; border: 1px solid var(--line); border-radius: 5px;
+}
+.tlField { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--dim); }
+.tlField input[type=number].numbox { flex: 0 0 52px; width: 52px; padding: 4px 2px; font-size: 12px; }
+.tlName {
+  width: 100px; background: #0F1114; border: 1px solid var(--line); color: var(--ink);
+  border-radius: 4px; padding: 5px 6px; font: inherit; font-size: 12px;
+}
+.tlName:focus { outline: none; border-color: var(--hot); }
+
+.timelineScroll { flex: 1 1 auto; min-height: 0; overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.timelineInner { position: relative; min-height: 100%; }
+
+.tlRuler { position: relative; height: 22px; border-bottom: 1px solid var(--line); cursor: crosshair; }
+.tlTick {
+  position: absolute; top: 4px; font-size: 10px; color: var(--dim);
+  font-variant-numeric: tabular-nums; border-left: 1px solid var(--line);
+  padding-left: 3px; height: 18px; white-space: nowrap;
+}
+
+.tlLane { position: relative; border-bottom: 1px solid #23262c; cursor: crosshair; }
+.tlLaneName {
+  position: sticky; left: 0; z-index: 2; float: left; width: 64px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .07em;
+  background: var(--panel); border-right: 1px solid #23262c;
+  padding: 10px 6px 3px; pointer-events: none;
+}
+.tlEvent {
+  position: absolute; top: 8px; transform: translateX(-1px);
+  padding: 3px 7px; font-size: 11px; line-height: 1.2; white-space: nowrap;
+  border-radius: 4px; cursor: grab; touch-action: none;
+  background: #0F1114; border: 1px solid var(--line); color: var(--ink);
+}
+.tlEvent:active { cursor: grabbing; }
+.tlEvent.set { color: var(--dim); border-style: dashed; }
+.tlEvent.sel { border-color: var(--hot); background: #231814; color: var(--ink); }
+
+.tlPlayhead {
+  position: absolute; top: 0; bottom: 0; width: 1px; background: var(--hot);
+  pointer-events: none; box-shadow: 0 0 6px #e0603a88;
+}
+.tlNote { flex: 0 0 auto; margin-top: 8px; font-size: 11px; }
+
+/* The renderer check (@awb/score). Two states on purpose: `rejected` is always a bug,
+   `unhandled` may just be a renderer this app has not loaded, so it must not read as an
+   error -- a check that cries wolf is one people learn to ignore. */
+.tlCheck {
+  font-size: 11px; padding: 3px 8px; border-radius: 4px; white-space: nowrap;
+  border: 1px solid transparent;
+}
+.tlCheck.warn { color: #d9b168; border-color: #4a3d24; background: #1d1a13; }
+.tlCheck.bad { color: #e08a72; border-color: #5a2f22; background: #201412; }
+.tlEvent.unhandled { border-style: dotted; border-color: #6b5730; color: #d9b168; }
+.tlEvent.rejected { border-color: #a04b34; color: #e08a72; }
+.tlEvent.rejected.sel, .tlEvent.unhandled.sel { border-color: var(--hot); }
