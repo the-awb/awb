@@ -62,7 +62,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
       - ( stableSynthOrder.get( b.id ) ?? Number.MAX_SAFE_INTEGER )
   ), [ visibleEntries, stableSynthOrder ] );
   const lifecycleEnd = synthLanes.reduce( ( latest, lane ) => Math.max(
-    latest, lane.endTime ?? 0, ...lane.events.map( ( event ) => event.time )
+    latest, lane.endTime ?? 0, lane.durationTime ?? 0, ...lane.events.map( ( event ) => event.time )
   ), 0 );
   const total = Math.max( 30, duration( visibleEntries ) + 12, lifecycleEnd + 12, session.playhead + 12 );
   const width = LEFT + total * pxPerSecond + 40;
@@ -140,6 +140,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
     if ( event.button !== 0 || !control ) return;
     event.preventDefault();
     event.stopPropagation();
+    event.currentTarget.setPointerCapture( event.pointerId );
     dispatch( { type: 'SET_SELECTED', ids: [ lane.id ] } );
     removeHandleListenersRef.current();
     const initial = lane.envelope[ edge ];
@@ -170,27 +171,16 @@ export default function ScoreTimeline( { session, dispatch } ) {
     };
   };
   const beginDurationDrag = ( event, lane ) => {
-    if ( event.button !== 0 || !lane.gateMarker ) return;
+    if ( event.button !== 0 || lane.durationTime === null || !lane.durationControl ) return;
     event.preventDefault();
     event.stopPropagation();
+    event.currentTarget.setPointerCapture( event.pointerId );
     removeHandleListenersRef.current();
-    const initial = lane.gateReleaseTime;
+    const initial = lane.durationTime;
     const startX = event.clientX;
-    const withTime = ( time ) => {
-      const marker = lane.gateMarker;
-      if ( marker.synthetic ) return entries.map( ( entry ) => {
-        if ( entry.id !== lane.id ) return entry;
-        const sustain = time - lane.startTime;
-        if ( entry.event.sustain !== undefined ) {
-          return { ...entry, event: { ...entry.event, sustain } };
-        }
-        const legato = Number( entry.event.legato ?? 0.8 );
-        return Number.isFinite( legato ) && legato > 0
-          ? { ...entry, event: { ...entry.event, dur: sustain / legato } }
-          : { ...entry, event: { ...entry.event, sustain } };
-      } );
-      return entries.map( ( entry ) => entry.id === marker.entry.id ? { ...entry, time } : entry );
-    };
+    const withTime = ( time ) => entries.map( ( entry ) => entry.id === lane.id
+      ? { ...entry, event: { ...entry.event, [ lane.durationControl ]: time - lane.startTime } }
+      : entry );
     const move = ( pointerEvent ) => {
       const time = Math.max( lane.startTime, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 1000 ) / 1000 );
       setDurationDrag( { laneID: lane.id, time } );
@@ -198,11 +188,10 @@ export default function ScoreTimeline( { session, dispatch } ) {
     };
     const end = ( pointerEvent ) => {
       const time = Math.max( lane.startTime, Math.round( ( initial + ( pointerEvent.clientX - startX ) / pxPerSecond ) * 1000 ) / 1000 );
-      const marker = lane.gateMarker;
       removeHandleListenersRef.current();
       setDurationDrag( null );
       dispatch( { type: 'COMMIT_PREVIEW', entries: withTime( time ) } );
-      dispatch( { type: 'SET_SELECTED', ids: [ marker.synthetic ? lane.id : marker.entry.id ] } );
+      dispatch( { type: 'SET_SELECTED', ids: [ lane.id ] } );
     };
     window.addEventListener( 'pointermove', move );
     window.addEventListener( 'pointerup', end );
@@ -333,19 +322,21 @@ export default function ScoreTimeline( { session, dispatch } ) {
             : synthLanes.map( ( lane ) => {
               const unassigned = lane.id === '__unassigned__';
               const expanded = unassigned || expandedSynths.has( lane.id );
-              const endTime = lane.endTime ?? Math.max( lane.startTime + 1, lifecycleEnd );
+              const fallbackEnd = Math.max( lane.startTime + 1, lifecycleEnd );
               const shownAttack = envelopeDrag?.laneID === lane.id && envelopeDrag.edge === 'attack'
                 ? envelopeDrag.value : lane.envelope?.attack ?? 0;
               const shownRelease = envelopeDrag?.laneID === lane.id && envelopeDrag.edge === 'release'
                 ? envelopeDrag.value : lane.envelope?.release ?? 0;
-              const shownGate = durationDrag?.laneID === lane.id ? durationDrag.time : lane.gateReleaseTime;
-              const envelopeEnd = shownGate === null ? endTime : shownGate + shownRelease;
-              const shownEnd = lane.freeTime === null ? envelopeEnd : Math.min( envelopeEnd, lane.freeTime );
-              const attackEnd = Math.min( shownEnd, lane.startTime + shownAttack );
-              const releaseStart = shownGate === null ? shownEnd : Math.min( shownEnd, shownGate );
+              const shownGate = lane.gateReleaseTime;
+              const shownDuration = durationDrag?.laneID === lane.id ? durationDrag.time : lane.durationTime;
+              const shownEnd = shownDuration ?? lane.endTime ?? fallbackEnd;
+              const envelopeRows = expanded ? lane.envelopes : lane.envelope ? [ lane.envelope ] : [];
+              const triggerTop = expanded ? 45 + envelopeRows.length * 14 : 7;
+              const laneHeight = expanded ? Math.max( 82, triggerTop + 27 ) : 52;
               const triggers = lane.events.filter( ( marker ) => marker.role !== 'create' );
               return (
-                <div key={ lane.id } className={ `lane synthLane${ expanded ? ' expanded' : '' }` } onClick={ placePlayhead }>
+                <div key={ lane.id } className={ `lane synthLane${ expanded ? ' expanded' : '' }` }
+                  style={ { height: laneHeight } } onClick={ placePlayhead }>
                   <span className="laneName synthLaneName" title={ lane.path.join( '/' ) }>
                     { !unassigned && <button className="synthDisclosure" aria-label={ `${ expanded ? 'Collapse' : 'Expand' } ${ lane.id }` }
                       onClick={ ( event ) => { event.stopPropagation(); toggleSynth( lane.id ); } }>{ expanded ? '▾' : '▸' }</button> }
@@ -360,36 +351,68 @@ export default function ScoreTimeline( { session, dispatch } ) {
                       left: LEFT + lane.startTime * pxPerSecond,
                       width: Math.max( 12, ( shownEnd - lane.startTime ) * pxPerSecond )
                     } }
-                    title={ `${ lane.id } · ${ lane.startTime }s to ${ lane.endTime ?? 'open' } · gate ${ shownGate ?? 'open' } · drag to move create` }
+                    title={ `${ lane.id } · event ${ lane.startTime }s to ${ shownDuration ?? 'open'} · predicted node completion ${ lane.endTime ?? 'unknown'} · gate ${ shownGate ?? 'unknown'} · drag to move create` }
                     { ...dragProps( lane.id ) }
                   >{ lane.definition }{ lane.expansionCount > 1 ? ` ×${ lane.expansionCount }` : '' }</button> }
-                  { !unassigned && shownGate !== null && <button className="durationHandle"
+                  { !unassigned && shownDuration !== null && <button className="durationHandle"
                     aria-label={ `Adjust ${ lane.id } duration` }
-                    style={ { left: LEFT + shownGate * pxPerSecond } }
-                    title="Drag the gate boundary to adjust note duration"
+                    style={ { left: LEFT + shownDuration * pxPerSecond } }
+                    title="Drag the bar end to adjust total event duration"
+                    onClick={ ( clickEvent ) => clickEvent.stopPropagation() }
                     onPointerDown={ ( pointerEvent ) => beginDurationDrag( pointerEvent, lane ) } /> }
-                  { !unassigned && lane.envelope && <div className="synthEnvelope" style={ {
-                    left: LEFT + lane.startTime * pxPerSecond,
-                    width: Math.max( 12, ( shownEnd - lane.startTime ) * pxPerSecond )
-                  } } title={ `Amplitude envelope: attack ${ shownAttack }s, release ${ shownRelease }s${ lane.envelope.derived ? ' (derived controls; edit in the event inspector)' : '' }` }>
-                    <span className="envelopeAttack" style={ { width: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ) } } />
-                    <span className="envelopeHold" style={ { left: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ), width: Math.max( 0, ( releaseStart - attackEnd ) * pxPerSecond ) } } />
-                    <span className="envelopeRelease" style={ { left: Math.max( 0, ( releaseStart - lane.startTime ) * pxPerSecond ), width: Math.max( 0, ( shownEnd - releaseStart ) * pxPerSecond ) } } />
-                    { lane.envelope.attackControl && <button className="envelopeHandle attack" aria-label={ `Adjust ${ lane.id } attack` }
-                      style={ { left: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ) } }
-                      onPointerDown={ ( pointerEvent ) => beginEnvelopeDrag( pointerEvent, lane, 'attack' ) } /> }
-                    { lane.envelope.releaseControl && shownGate !== null && <button className="envelopeHandle release" aria-label={ `Adjust ${ lane.id } release` }
-                      style={ { left: Math.max( 0, ( shownEnd - lane.startTime ) * pxPerSecond ) } }
-                      onPointerDown={ ( pointerEvent ) => beginEnvelopeDrag( pointerEvent, lane, 'release' ) } /> }
-                  </div> }
+                  { !unassigned && envelopeRows.map( ( envelope, envelopeIndex ) => {
+                    const attack = envelope.id === lane.envelope?.id ? shownAttack : envelope.attack ?? 0;
+                    const release = envelope.id === lane.envelope?.id ? shownRelease : envelope.release ?? 0;
+                    const fixedEnd = envelope.duration === null ? shownEnd : lane.startTime + envelope.duration;
+                    const rowEnd = envelope.shape === 'gatedAsr'
+                      ? shownGate === null ? shownEnd : shownGate + release
+                      : fixedEnd;
+                    const clippedEnd = lane.freeTime === null ? rowEnd : Math.min( rowEnd, lane.freeTime );
+                    const attackEnd = Math.min( clippedEnd, lane.startTime + attack );
+                    const releaseStart = envelope.shape === 'gatedAsr'
+                      ? shownGate === null ? clippedEnd : Math.min( clippedEnd, shownGate )
+                      : envelope.shape === 'triangle'
+                        ? lane.startTime + ( envelope.duration ?? 0 ) / 2
+                        : attackEnd;
+                    const target = Array.isArray( envelope.target ) ? envelope.target.join( ', ' ) : envelope.target;
+                    return <div key={ envelope.id }
+                      className={ `synthEnvelope ${ envelope.role } ${ envelope.shape }` }
+                      style={ {
+                        top: 39 + envelopeIndex * 14,
+                        left: LEFT + lane.startTime * pxPerSecond,
+                        width: Math.max( 12, ( clippedEnd - lane.startTime ) * pxPerSecond )
+                      } }
+                      title={ `${ envelope.label } → ${ target }; ${ envelope.shape }; ${ envelope.completionAction === 'freeNode' ? 'frees node' : 'does not own node lifetime' }${ shownGate === null && envelope.shape === 'gatedAsr' ? '; gate timing unresolved' : '' }` }>
+                      <span className="envelopeAttack" style={ { width: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ) } } />
+                      <span className="envelopeHold" style={ {
+                        left: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ),
+                        width: Math.max( 0, ( releaseStart - attackEnd ) * pxPerSecond )
+                      } } />
+                      <span className="envelopeRelease" style={ {
+                        left: Math.max( 0, ( releaseStart - lane.startTime ) * pxPerSecond ),
+                        width: Math.max( 0, ( clippedEnd - releaseStart ) * pxPerSecond )
+                      } } />
+                      { expanded && <span className="envelopeName">{ envelope.label }</span> }
+                      { envelope.id === lane.envelope?.id && envelope.attackControl && <button
+                        className="envelopeHandle attack" aria-label={ `Adjust ${ lane.id } attack` }
+                        style={ { left: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ) } }
+                        onClick={ ( clickEvent ) => clickEvent.stopPropagation() }
+                        onPointerDown={ ( pointerEvent ) => beginEnvelopeDrag( pointerEvent, lane, 'attack' ) } /> }
+                      { envelope.id === lane.envelope?.id && envelope.releaseControl && shownGate !== null && <button
+                        className="envelopeHandle release" aria-label={ `Adjust ${ lane.id } release` }
+                        style={ { left: Math.max( 0, ( clippedEnd - lane.startTime ) * pxPerSecond ) } }
+                        onClick={ ( clickEvent ) => clickEvent.stopPropagation() }
+                        onPointerDown={ ( pointerEvent ) => beginEnvelopeDrag( pointerEvent, lane, 'release' ) } /> }
+                    </div>;
+                  } ) }
                   { triggers.map( ( marker, index ) => marker.synthetic || !expanded
                     ? <span key={ `${ marker.entry.id }:${ marker.role }:${ index }` }
                       className={ `synthTriggerTick ${ marker.role }` }
-                      style={ { left: LEFT + marker.time * pxPerSecond } }
+                      style={ { left: LEFT + marker.time * pxPerSecond, top: triggerTop } }
                       title={ `${ marker.role.replace( '-', ' ' ) } · ${ marker.time }s${ marker.synthetic ? ' · derived, not authored' : '' }` } />
                     : <button key={ `${ marker.entry.id }:${ marker.role }:${ index }` }
                       className={ `expandedTrigger ${ marker.role }${ selected.has( marker.entry.id ) ? ' selected' : '' }${ drag?.ids.includes( marker.entry.id ) ? ' dragging' : '' }` }
-                      style={ { left: LEFT + marker.time * pxPerSecond } }
+                      style={ { left: LEFT + marker.time * pxPerSecond, top: triggerTop } }
                       title={ `${ marker.role } · ${ marker.entry.id } · ${ marker.time }s · drag to move authored entry` }
                       { ...dragProps( marker.entry.id ) }
                     >{ marker.role }</button> ) }

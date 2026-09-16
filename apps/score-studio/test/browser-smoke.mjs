@@ -182,7 +182,7 @@ try {
     }
     await page.mouse.up();
     if ( Number( await page.getByLabel( 'Payload dur', { exact: true } ).inputValue() ) <= 300 ) {
-      failures.push( 'duration handle did not update canonical dur through legato' );
+      failures.push( 'duration handle did not update canonical dur' );
     }
   }
   const releaseHandle = page.getByRole( 'button', { name: 'Adjust rinse-01 release', exact: true } );

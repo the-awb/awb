@@ -22,8 +22,3 @@ export function expandScEventParams( event, { includeReserved = [] } = {} ) {
     key, scalar( Array.isArray( value ) ? value[ index % value.length ] : value, key )
   ] ) ) );
 }
-
-export function scoreEventSustain( event ) {
-  const sustain = Number( event.sustain ?? ( Number( event.dur ) * Number( event.legato ?? 0.8 ) ) );
-  return Number.isFinite( sustain ) ? sustain : null;
-}

@@ -67,7 +67,8 @@ assert.equal( sent.filter( ( message ) => message.address === '/n_run' && messag
 advance( 250 );
 assert.equal( sent.filter( ( message ) => message.address === '/n_set' && message.args.includes( 'gate' ) ).length, 1, '@prev releases only the latest realization' );
 advance( 300 );
-assert.equal( sent.filter( ( message ) => message.address === '/n_set' && message.args.includes( 'gate' ) ).length, 2, 'dur times default legato and releases the remaining realization' );
+assert.equal( sent.filter( ( message ) => message.address === '/n_set' && message.args.includes( 'gate' ) ).length, 1,
+  'unknown SynthDef duration does not manufacture a release boundary' );
 advance( 200 );
 assert.equal( sent.filter( ( message ) => message.address === '/n_free' ).length, 2 );
 assert.equal( executor.getState().status, 'ended' );
@@ -99,8 +100,8 @@ advance( 0 );
 const resobassArgs = sent.slice( beforeResobass ).find( ( message ) => message.address === '/s_new' ).args;
 assert.equal( resobassArgs[ resobassArgs.indexOf( 'dur' ) + 1 ], 10,
   'event dur is forwarded when the known SynthDef also declares dur' );
-assert.equal( resobassArgs[ resobassArgs.indexOf( 'sustain' ) + 1 ], 8,
-  'derived event sustain is forwarded when the known SynthDef uses it as an envelope control' );
+assert.equal( resobassArgs.includes( 'sustain' ), false,
+  'standalone execution does not manufacture sustain from modulation duration' );
 executor.stop();
 
 assert.throws( () => executor.load( createScoreDocument( {
@@ -109,4 +110,4 @@ assert.throws( () => executor.load( createScoreDocument( {
 executor.dispose();
 assert.equal( oscListeners.size, 0 );
 
-console.log( 'standalone-executor: 21/21 pass' );
+console.log( 'standalone-executor: pass' );

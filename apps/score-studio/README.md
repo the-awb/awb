@@ -33,13 +33,14 @@ desktop bridge.
 ## Timeline views and editing
 
 The synth lifecycle view is a projection of the canonical entries, not another score model. Each
-authored `note` is one stable row and one bar. The bar's left edge is its create time. A release
-boundary marks when the gate closes; the right edge includes the SynthDef's amplitude-envelope
-release tail and therefore marks predicted node completion. An explicit `free` still ends it
-immediately. `set`, `release` and
+authored `note` is one stable row and one bar. The bar's left edge is its create time and, when the
+event contains `dur`, its right edge is that authored event-duration boundary. It is not silently
+relabelled as gate time, sustain or node completion. A release boundary marks when the gate closes;
+an explicit `free` ends the runtime node immediately. `set`, `release` and
 `free` entries appear as compact ticks; disclosing the row reveals labelled authored boundaries
 that can be selected and dragged. A derived auto-release is shown, but cannot be dragged because
-there is no separate canonical entry to edit.
+there is no separate canonical entry to edit. Such a boundary exists only when the instrument
+catalog contains an explicit score-duration-to-gate contract.
 
 Dragging a structural event or synth bar changes that entry's absolute `time`; dragging a
 disclosed boundary changes the canonical control entry shared by every affected synth row. Existing
@@ -47,19 +48,20 @@ multi-selection moves rigidly. Row order is view state and remains stable while 
 changed. Zoom preserves the visible time around the viewport centre, while Fit shows the complete
 working duration.
 
-A thin strip below each synth bar shows coarse attack, gate-open and release lengths. For
-SynthDefs with independent `attackT` and `releaseT` controls, dragging its handles writes those
-values through to the payload inspector live. The document revision and undo history are committed
-once, when the handle is released, rather than once per pointer movement. `resonantBassEnv2` is deliberately shown as coupled:
-both sides derive from `sustain * ampEnvRatio`, so those controls are edited in the inspector
-rather than presenting independent handles the SynthDef does not actually have. This is a duration
-model, not sampled envelope curvature; shaped envelope editing remains later work.
+The collapsed row shows the amplitude envelope. Expanding it shows every envelope currently
+declared for the SynthDef, labelled by function and target. The Substrates therefore disclose
+amplitude, beat-modulation and tremolo envelopes, including their actual release-delay expressions;
+`resonantBassEnv2` discloses its gated amplitude ASR, `dur`-length frequency triangle and phase
+percussion envelope. Only the amplitude EnvGen with `Done.freeSelf` is node-completion authority.
+The other envelopes describe parameter motion, not note lifetime.
 
-The handle on the main bar marks the gate boundary rather than the end of the release tail. For a
-derived auto-release it edits authored `sustain`, or `dur` through the current `legato` when
-`sustain` is absent. When an explicit `release` entry owns the boundary, the same handle moves that
-entry instead. This keeps note duration, envelope release and final node completion visibly
-separate.
+For SynthDefs with directly editable `attackT` and `releaseT` controls, dragging amplitude handles
+writes those values through to the payload inspector live. The document revision and undo history
+are committed once, on pointer release. Derived or coupled boundaries remain inspector edits rather
+than pretending the SynthDef has an independent control. The main bar's duration handle always
+edits canonical `dur` directly. It never manufactures `sustain` or `legato`, and an explicit
+release trigger remains a separate authored event. Envelope strips are a timing projection of the
+declared graph, not sampled curvature; arbitrary envelope-shape editing remains later work.
 
 Ruler intervals adapt to zoom using 1/2/5 steps with a minimum label spacing. A fitted fourteen-
 minute score therefore uses minute-scale labels instead of drawing five-second text on top of
@@ -112,8 +114,12 @@ than accumulating delays. Stable same-time document order is preserved.
 The first adapter handles `note`, `set`, `release` and `free`. Note control arrays use
 SuperCollider-style wrap expansion, producing one browser-owned realization per expanded value.
 Targets may be an authored note entry ID, a browser node ID, `@prev`, `@all`, or an array of those.
-An omitted `sustain` follows SC's ordinary `dur * legato` rule with `legato = 0.8`. Pause uses
-`/n_run`; stop and event-boundary seek hard-free only nodes belonging to this execution session.
+Automatic gate release is scheduled only when `@awb/instruments` declares an explicit lifecycle
+mapping for that SynthDef. The executor does not inject `sustain`, does not assume a default
+`legato`, and does not treat every `dur` control as node lifetime. `resonantBassEnv2`, for example,
+uses `dur` for modulation envelopes; without an authored release/free boundary its node lifetime
+is intentionally unresolved. Pause uses `/n_run`; stop and event-boundary seek hard-free only
+nodes belonging to this execution session.
 
 This is intentionally not full state-reconstructing seek: a note that began before the target is
 not recreated. Array-expanded `set` controls and path/group targeting are also refused or absent

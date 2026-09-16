@@ -7,6 +7,54 @@ const numberEditor = ( label, min, max, step, decimals, unit = '' ) => (
 );
 
 const envelopeTimeEditor = ( label ) => numberEditor( label, 0, 3600, 0.1, 2, ' s' );
+const controlValue = ( name, defaultValue ) => ( { kind: 'control', name, default: defaultValue } );
+const productValue = ( ...factors ) => ( { kind: 'product', factors } );
+const maximumValue = ( ...values ) => ( { kind: 'max', values } );
+const sumValue = ( ...values ) => ( { kind: 'sum', values } );
+const subtractValue = ( left, right ) => ( { kind: 'subtract', left, right } );
+const lessThanValue = ( left, right ) => ( { kind: 'lessThan', left, right } );
+const conditionalValue = ( condition, whenTrue, whenFalse ) => ( {
+  kind: 'conditional', condition, whenTrue, whenFalse
+} );
+const oneMinusValue = ( value ) => ( { kind: 'oneMinus', value } );
+
+const amplitudeAsr = ( attack, release ) => ( {
+  id: 'amplitude', label: 'Amplitude', role: 'amplitude', target: 'outputGain',
+  shape: 'gatedAsr', gateControl: 'gate', completionAction: 'freeNode', attack, release
+} );
+
+function substrateEnvelopes( attackDefault, releaseDefault ) {
+  const attack = controlValue( 'attackT', attackDefault );
+  const release = controlValue( 'releaseT', releaseDefault );
+  const beatRelease = productValue( release, controlValue( 'beatEnvRRatio', 0.5 ) );
+  const tremRelease = controlValue( 'tremR', 0 );
+  const beatTail = maximumValue( beatRelease, tremRelease, release );
+  const tremTail = maximumValue( tremRelease, beatRelease, release );
+  // This deliberately mirrors the SynthDef's ampRDelay expression, including its asymmetric
+  // comparison. The catalog describes the graph that runs, not the tidier graph it may resemble.
+  const ampDelayBasis = maximumValue( beatRelease, tremRelease );
+  const ampTail = sumValue(
+    conditionalValue(
+      lessThanValue( beatRelease, ampDelayBasis ),
+      subtractValue( ampDelayBasis, release ),
+      0
+    ),
+    release
+  );
+  return [
+    { ...amplitudeAsr( attack, ampTail ), releaseControl: 'releaseT' },
+    {
+      id: 'beat', label: 'Beat modulation', role: 'modulation', target: 'beatFrequency',
+      shape: 'gatedAsr', gateControl: 'gate',
+      attack: productValue( attack, controlValue( 'beatEnvARatio', 0.5 ) ), release: beatTail
+    },
+    {
+      id: 'tremolo', label: 'Tremolo depth', role: 'modulation', target: 'tremoloDepth',
+      shape: 'gatedAsr', gateControl: 'gate',
+      attack: controlValue( 'tremA', 0 ), release: tremTail
+    }
+  ];
+}
 
 const RAW_CATALOG = {
   basic: {
@@ -15,11 +63,8 @@ const RAW_CATALOG = {
     synthDef: 'fieldBasic',
     gainControl: 'amp',
     primaryFrequency: { kind: 'speakerControl', prefix: 'freq', speakerIndex: 0 },
-    amplitudeEnvelope: {
-      kind: 'asr',
-      attack: { kind: 'control', name: 'attackT', default: 2 },
-      release: { kind: 'control', name: 'releaseT', default: 4 }
-    },
+    noteLifecycle: { kind: 'gatedTotalDuration', durationKey: 'dur' },
+    envelopes: [ amplitudeAsr( controlValue( 'attackT', 2 ), controlValue( 'releaseT', 4 ) ) ],
     controls: {
       amp: { role: 'continuousGain' },
       attackT: { role: 'envelopeAttack', synthDefault: 2, editor: envelopeTimeEditor( 'Attack' ) },
@@ -44,11 +89,8 @@ const RAW_CATALOG = {
     synthDef: 'substrate',
     gainControl: 'amp',
     primaryFrequency: { kind: 'control', name: 'freqA' },
-    amplitudeEnvelope: {
-      kind: 'asr',
-      attack: { kind: 'control', name: 'attackT', default: 12 },
-      release: { kind: 'control', name: 'releaseT', default: 12 }
-    },
+    noteLifecycle: { kind: 'gatedTotalDuration', durationKey: 'dur' },
+    envelopes: substrateEnvelopes( 12, 12 ),
     controls: {
       freqA: { role: 'frequency', scalesWithTime: true, initial: 60, editor: numberEditor( 'Freq', 20, 25000, 0.1, 1, ' Hz' ) },
       beat: { role: 'frequencyOffset', scalesWithTime: true, initial: 4, editor: numberEditor( 'Beat', -20, 20, 0.05, 2, ' Hz' ) },
@@ -68,11 +110,8 @@ const RAW_CATALOG = {
     synthDef: 'substrate2',
     gainControl: 'amp',
     primaryFrequency: { kind: 'control', name: 'freq' },
-    amplitudeEnvelope: {
-      kind: 'asr',
-      attack: { kind: 'control', name: 'attackT', default: 30 },
-      release: { kind: 'control', name: 'releaseT', default: 30 }
-    },
+    noteLifecycle: { kind: 'gatedTotalDuration', durationKey: 'dur' },
+    envelopes: substrateEnvelopes( 30, 30 ),
     editorOrder: [ 'freq', 'beat', 'slowBeat', 'slowBeatBlend', 'beatBlend', 'freqQ', 'movement' ],
     frequencyOrder: [ 'freq', 'beat', 'slowBeat', 'freqQ', 'tremF', 'difF' ],
     controls: {
@@ -98,11 +137,25 @@ const RAW_CATALOG = {
     synthDef: 'resonantBassEnv2',
     gainControl: 'amp',
     primaryFrequency: { kind: 'control', name: 'freq' },
-    amplitudeEnvelope: {
-      kind: 'asr',
-      attack: { kind: 'product', names: [ 'sustain', 'ampEnvRatio' ], defaults: [ 5, 0.5 ] },
-      release: { kind: 'product', names: [ 'sustain', 'ampEnvRatio' ], defaults: [ 5, 0.5 ] }
-    },
+    envelopes: [
+      amplitudeAsr(
+        productValue( controlValue( 'sustain', 5 ), controlValue( 'ampEnvRatio', 0.5 ) ),
+        productValue( controlValue( 'sustain', 5 ), controlValue( 'ampEnvRatio', 0.5 ) )
+      ),
+      {
+        id: 'frequency-motion', label: 'Frequency motion', role: 'modulation',
+        target: [ 'frequencyOffset', 'beatCrossfade' ], shape: 'triangle',
+        duration: controlValue( 'dur', 10 )
+      },
+      {
+        id: 'phase-modulation', label: 'Phase modulation', role: 'modulation',
+        target: 'phaseModulationIndex', shape: 'perc', depth: controlValue( 'phaseMod', 1.8 ),
+        attack: productValue( controlValue( 'dur', 10 ), controlValue( 'phaseEnvRatio', 0.5 ) ),
+        release: productValue(
+          controlValue( 'dur', 10 ), oneMinusValue( controlValue( 'phaseEnvRatio', 0.5 ) )
+        )
+      }
+    ],
     note: 'Sideband synthesis not implemented yet -- this instrument currently contributes no sound to the field.',
     controls: {
       freq: { role: 'frequency', scalesWithTime: true, initial: 50, editor: numberEditor( 'Freq', 20, 25000, 0.1, 1, ' Hz' ) },
@@ -113,7 +166,9 @@ const RAW_CATALOG = {
       amp: { role: 'continuousGain' },
       dur: { role: 'synthEnvelopeDuration', synthDefault: 10 },
       sustain: { role: 'envelopeBasis', synthDefault: 5, editor: envelopeTimeEditor( 'Envelope sustain basis' ) },
-      ampEnvRatio: { role: 'envelopeRatio', synthDefault: 0.5, editor: numberEditor( 'Attack/release ratio', 0, 4, 0.01, 2, '×' ) }
+      ampEnvRatio: { role: 'envelopeRatio', synthDefault: 0.5, editor: numberEditor( 'Amplitude envelope ratio', 0, 4, 0.01, 2, '×' ) },
+      phaseEnvRatio: { role: 'envelopeRatio', synthDefault: 0.5, editor: numberEditor( 'Phase envelope split', 0, 1, 0.01, 2 ) },
+      beatEnvMod: { role: 'blend', synthDefault: 0, editor: numberEditor( 'Beat envelope blend', 0, 1, 0.01, 2 ) }
     }
   }
 };
@@ -217,26 +272,107 @@ export function instrumentMainFrequency( key, params, speakers = [] ) {
   return params[ name ] ?? 0;
 }
 
-function envelopeSegmentLength( segment, params ) {
-  if ( !segment ) return null;
-  if ( segment.kind === 'control' ) {
-    const value = Number( params[ segment.name ] ?? segment.default );
+function envelopeValue( expression, params ) {
+  if ( typeof expression === 'number' ) return Number.isFinite( expression ) ? expression : null;
+  if ( !expression ) return null;
+  if ( expression.kind === 'control' ) {
+    const value = Number( params[ expression.name ] ?? expression.default );
     return Number.isFinite( value ) && value >= 0 ? value : null;
   }
-  if ( segment.kind === 'product' ) {
-    const values = segment.names.map( ( name, index ) => Number( params[ name ] ?? segment.defaults[ index ] ) );
+  if ( expression.kind === 'product' ) {
+    const values = expression.factors.map( ( factor ) => envelopeValue( factor, params ) );
     const value = values.reduce( ( product, item ) => product * item, 1 );
-    return values.every( ( item ) => Number.isFinite( item ) && item >= 0 ) ? value : null;
+    return values.every( ( item ) => item !== null ) ? value : null;
+  }
+  if ( expression.kind === 'max' ) {
+    const values = expression.values.map( ( item ) => envelopeValue( item, params ) );
+    return values.every( ( item ) => item !== null ) ? Math.max( ...values ) : null;
+  }
+  if ( expression.kind === 'sum' ) {
+    const values = expression.values.map( ( item ) => envelopeValue( item, params ) );
+    return values.every( ( item ) => item !== null )
+      ? values.reduce( ( total, item ) => total + item, 0 ) : null;
+  }
+  if ( expression.kind === 'subtract' ) {
+    const left = envelopeValue( expression.left, params );
+    const right = envelopeValue( expression.right, params );
+    return left === null || right === null ? null : left - right;
+  }
+  if ( expression.kind === 'lessThan' ) {
+    const left = envelopeValue( expression.left, params );
+    const right = envelopeValue( expression.right, params );
+    return left === null || right === null ? null : left < right;
+  }
+  if ( expression.kind === 'conditional' ) {
+    const condition = envelopeValue( expression.condition, params );
+    return condition === null ? null : envelopeValue(
+      condition ? expression.whenTrue : expression.whenFalse, params
+    );
+  }
+  if ( expression.kind === 'oneMinus' ) {
+    const value = envelopeValue( expression.value, params );
+    return value === null ? null : Math.max( 0, 1 - value );
   }
   return null;
 }
 
+export function instrumentEnvelopes( key, params = {} ) {
+  return Object.freeze( ( instrumentType( key )?.envelopes ?? [] ).map( ( envelope ) => {
+    const attack = envelopeValue( envelope.attack, params );
+    const release = envelopeValue( envelope.release, params );
+    const declaredDuration = envelopeValue( envelope.duration, params );
+    const duration = declaredDuration ?? ( attack !== null && release !== null ? attack + release : null );
+    return Object.freeze( {
+      id: envelope.id, label: envelope.label, role: envelope.role, target: envelope.target,
+      shape: envelope.shape, gateControl: envelope.gateControl ?? null,
+      completionAction: envelope.completionAction ?? null,
+      attack, release, duration,
+      attackControl: envelope.attackControl
+        ?? ( envelope.attack?.kind === 'control' ? envelope.attack.name : null ),
+      releaseControl: envelope.releaseControl
+        ?? ( envelope.release?.kind === 'control' ? envelope.release.name : null ),
+      durationControl: envelope.durationControl
+        ?? ( envelope.duration?.kind === 'control' ? envelope.duration.name : null ),
+      derived: [ envelope.attack, envelope.release, envelope.duration ]
+        .filter( Boolean ).some( ( value ) => value.kind !== 'control' )
+    } );
+  } ) );
+}
+
 export function instrumentEnvelopeLengths( key, params = {} ) {
-  const envelope = instrumentType( key )?.amplitudeEnvelope;
-  if ( !envelope ) return null;
-  const attack = envelopeSegmentLength( envelope.attack, params );
-  const release = envelopeSegmentLength( envelope.release, params );
-  return attack === null || release === null ? null : Object.freeze( { attack, release } );
+  const envelope = instrumentEnvelopes( key, params ).find( ( item ) => item.role === 'amplitude' );
+  return !envelope || envelope.attack === null || envelope.release === null
+    ? null
+    : Object.freeze( { attack: envelope.attack, release: envelope.release } );
+}
+
+export function instrumentNoteLifecycle( key, params = {} ) {
+  const descriptor = instrumentType( key );
+  const contract = descriptor?.noteLifecycle;
+  const envelope = instrumentEnvelopes( key, params ).find( ( item ) =>
+    item.completionAction === 'freeNode' );
+  if ( contract?.kind !== 'gatedTotalDuration' || !envelope || envelope.release === null ) return null;
+  const duration = Number( params[ contract.durationKey ] );
+  if ( !Number.isFinite( duration ) || duration < 0 ) return null;
+
+  let gateDuration;
+  let gateSource;
+  if ( Object.hasOwn( params, 'sustain' ) ) {
+    gateDuration = Number( params.sustain );
+    gateSource = 'sustain';
+  } else if ( Object.hasOwn( params, 'legato' ) ) {
+    gateDuration = duration * Number( params.legato );
+    gateSource = 'legato';
+  } else {
+    gateDuration = Math.max( 0, duration - envelope.release );
+    gateSource = 'instrument';
+  }
+  if ( !Number.isFinite( gateDuration ) || gateDuration < 0 ) return null;
+  return Object.freeze( {
+    duration,
+    totalDuration: gateSource === 'instrument' ? duration : gateDuration + envelope.release,
+    gateDuration, gateSource, attack: envelope.attack, release: envelope.release
+  } );
 }
 
 const TYPE_BY_SYNTH_DEF = new Map(

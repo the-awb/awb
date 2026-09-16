@@ -1,6 +1,6 @@
 import { sortScore } from '@awb/score';
-import { instrumentEnvelopeLengths, instrumentType, typeForSynthDef } from '@awb/instruments';
-import { expandScEventParams, scoreEventSustain } from './scEventSemantics.js';
+import { instrumentEnvelopes, instrumentNoteLifecycle, instrumentType, typeForSynthDef } from '@awb/instruments';
+import { expandScEventParams } from './scEventSemantics.js';
 
 function targets( target ) {
   return ( Array.isArray( target ) ? target : [ target ] ).filter( ( value ) => value !== undefined );
@@ -15,10 +15,6 @@ function instrumentFor( definition ) {
 function effectiveParamsAt( lane, time ) {
   const createEvent = lane.events.find( ( marker ) => marker.role === 'create' )?.entry.event ?? {};
   const params = { ...createEvent };
-  if ( params.sustain === undefined ) {
-    const sustain = scoreEventSustain( createEvent );
-    if ( sustain !== null ) params.sustain = sustain;
-  }
   for ( const marker of lane.events ) {
     if ( marker.time > time || marker.role !== 'set' ) continue;
     Object.assign( params, marker.entry.event );
@@ -49,10 +45,10 @@ export function projectSynthLifecycleLanes( score ) {
         instrument: instrumentFor( event.def ?? event.instrument ),
         events: [ { entry, role: 'create', time: entry.time, synthetic: false } ]
       };
-      const sustain = scoreEventSustain( event );
-      if ( sustain !== null && sustain >= 0 ) {
+      const lifecycle = lane.instrument ? instrumentNoteLifecycle( lane.instrument.key, event ) : null;
+      if ( lifecycle ) {
         lane.events.push( {
-          entry, role: 'auto-release', time: entry.time + sustain, synthetic: true
+          entry, role: 'auto-release', time: entry.time + lifecycle.gateDuration, synthetic: true
         } );
       }
       lanes.push( lane );
@@ -105,27 +101,31 @@ export function projectSynthLifecycleLanes( score ) {
     const releaseMarker = terminal.find( ( marker ) => [ 'release', 'auto-release' ].includes( marker.role ) );
     const freeTime = terminal.find( ( marker ) => marker.role === 'free' )?.time ?? null;
     const createParams = effectiveParamsAt( { ...lane, events }, startTime );
-    const initialEnvelope = lane.instrument
-      ? instrumentEnvelopeLengths( lane.instrument.key, createParams )
+    const initialEnvelopes = lane.instrument ? instrumentEnvelopes( lane.instrument.key, createParams ) : [];
+    const noteLifecycle = lane.instrument ? instrumentNoteLifecycle( lane.instrument.key, createParams ) : null;
+    const releaseEnvelopes = releaseMarker && lane.instrument
+      ? instrumentEnvelopes( lane.instrument.key, effectiveParamsAt( { ...lane, events }, releaseMarker.time ) )
+      : [];
+    const completionEnvelope = releaseEnvelopes.find( ( envelope ) => envelope.completionAction === 'freeNode' );
+    const naturalEnd = releaseMarker && completionEnvelope && completionEnvelope.release !== null
+      ? releaseMarker.time + completionEnvelope.release
       : null;
-    const releaseEnvelope = releaseMarker && lane.instrument
-      ? instrumentEnvelopeLengths( lane.instrument.key, effectiveParamsAt( { ...lane, events }, releaseMarker.time ) )
-      : null;
-    const naturalEnd = releaseMarker ? releaseMarker.time + ( releaseEnvelope?.release ?? 0 ) : null;
     const endTime = freeTime === null ? naturalEnd
       : naturalEnd === null ? freeTime : Math.min( freeTime, naturalEnd );
     const gateReleaseTime = releaseMarker && ( freeTime === null || releaseMarker.time < freeTime )
       ? releaseMarker.time : null;
-    const envelopeSpec = lane.instrument?.descriptor.amplitudeEnvelope ?? null;
+    const authoredDuration = Number( createParams.dur );
+    const durationTime = Number.isFinite( authoredDuration ) && authoredDuration >= 0
+      ? startTime + authoredDuration : null;
+    const envelopes = initialEnvelopes.map( ( envelope ) => {
+      const atRelease = releaseEnvelopes.find( ( item ) => item.id === envelope.id );
+      return { ...envelope, release: atRelease?.release ?? envelope.release };
+    } );
+    const amplitudeEnvelope = envelopes.find( ( envelope ) => envelope.role === 'amplitude' ) ?? null;
     return {
       ...lane, events, startTime, endTime, gateReleaseTime, gateMarker: releaseMarker ?? null, freeTime,
-      envelope: initialEnvelope && {
-        attack: initialEnvelope.attack,
-        release: releaseEnvelope?.release ?? initialEnvelope.release,
-        attackControl: envelopeSpec?.attack?.kind === 'control' ? envelopeSpec.attack.name : null,
-        releaseControl: envelopeSpec?.release?.kind === 'control' ? envelopeSpec.release.name : null,
-        derived: envelopeSpec?.attack?.kind !== 'control' || envelopeSpec?.release?.kind !== 'control'
-      }
+      durationTime, durationControl: durationTime === null ? null : 'dur', noteLifecycle,
+      envelopes, envelope: amplitudeEnvelope
     };
   } );
 }

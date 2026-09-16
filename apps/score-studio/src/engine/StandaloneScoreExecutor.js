@@ -1,6 +1,8 @@
 import { assertScoreDocument, checkScore, defineRenderer, describeCheck, sortScore } from '@awb/score';
-import { instrumentControls, instrumentType, typeForSynthDef } from '@awb/instruments';
-import { expandScEventParams, scoreEventSustain } from './scEventSemantics.js';
+import {
+  instrumentControls, instrumentNoteLifecycle, instrumentType, typeForSynthDef
+} from '@awb/instruments';
+import { expandScEventParams } from './scEventSemantics.js';
 
 const HANDLES = Object.freeze( {
   note: { required: [ 'def' ] },
@@ -22,15 +24,16 @@ function controlArgs( params ) {
   return Object.entries( params ).flatMap( ( [ key, value ] ) => [ key, value ] );
 }
 
-function noteParams( event, definition, duration ) {
-  const instrument = typeForSynthDef( definition ) ?? ( instrumentType( definition )
+function instrumentFor( definition ) {
+  return typeForSynthDef( definition ) ?? ( instrumentType( definition )
     ? { key: definition }
     : null );
+}
+
+function noteParams( event, definition ) {
+  const instrument = instrumentFor( definition );
   const synthControls = instrument ? instrumentControls( instrument.key ).map( ( control ) => control.name ) : [];
-  const adapted = synthControls.includes( 'sustain' ) && event.sustain === undefined && duration !== null
-    ? { ...event, sustain: duration }
-    : event;
-  return expandScEventParams( adapted, { includeReserved: synthControls } );
+  return expandScEventParams( event, { includeReserved: synthControls } );
 }
 
 export function createStandaloneScoreExecutor( {
@@ -101,15 +104,18 @@ export function createStandaloneScoreExecutor( {
       if ( typeof definition !== 'string' || !definition.length ) throw new Error( `Standalone note ${ entry.id } has no valid SynthDef name.` );
       const addAction = Number.isInteger( event.addAction ) ? event.addAction : 1;
       const group = Number.isInteger( event.group ) ? event.group : 0;
-      const duration = scoreEventSustain( event );
-      if ( duration !== null && duration < 0 ) throw new Error( `Standalone note ${ entry.id } has a negative sustain.` );
+      const instrument = instrumentFor( definition );
+      const lifecycle = instrument ? instrumentNoteLifecycle( instrument.key, event ) : null;
+      if ( event.dur !== undefined && ( !Number.isFinite( Number( event.dur ) ) || Number( event.dur ) < 0 ) ) {
+        throw new Error( `Standalone note ${ entry.id } has an invalid duration.` );
+      }
       const created = [];
-      for ( const params of noteParams( event, definition, duration ) ) {
+      for ( const params of noteParams( event, definition ) ) {
         const nodeID = nextNodeID++;
         sendOsc( '/s_new', [ definition, nodeID, addAction, group, ...controlArgs( params ) ] );
         const node = {
           nodeID, entryID: entry.id, released: false,
-          releaseAt: duration === null ? null : entry.time + duration
+          releaseAt: lifecycle === null ? null : entry.time + lifecycle.gateDuration
         };
         live.set( nodeID, node );
         created.push( Object.freeze( { entryID: entry.id, nodeID, state: 'started' } ) );

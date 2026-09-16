@@ -8,6 +8,8 @@ import {
   instrumentFields,
   instrumentFrequencyControls,
   instrumentEnvelopeLengths,
+  instrumentEnvelopes,
+  instrumentNoteLifecycle,
   instrumentMainFrequency,
   instrumentType,
   typeForSynthDef
@@ -76,6 +78,34 @@ assert.deepEqual( instrumentEnvelopeLengths( 'resobass2', { sustain: 160 } ), {
 } );
 assert.equal( instrumentEnvelopeLengths( 'missing' ), null );
 check( 'amplitude-envelope lengths follow declared SynthDef controls' );
+
+const resonantBassEnvelopes = instrumentEnvelopes( 'resobass2', {
+  dur: 20, sustain: 4, ampEnvRatio: 0.25, phaseEnvRatio: 0.4
+} );
+assert.deepEqual( resonantBassEnvelopes.map( ( envelope ) => [
+  envelope.id, envelope.role, envelope.shape, envelope.attack, envelope.release, envelope.duration,
+  envelope.completionAction
+] ), [
+  [ 'amplitude', 'amplitude', 'gatedAsr', 1, 1, 2, 'freeNode' ],
+  [ 'frequency-motion', 'modulation', 'triangle', null, null, 20, null ],
+  [ 'phase-modulation', 'modulation', 'perc', 8, 12, 20, null ]
+] );
+assert.equal( instrumentEnvelopes( 'substrate' ).length, 3 );
+assert.deepEqual(
+  instrumentEnvelopes( 'substrate', { releaseT: 12, beatEnvRRatio: 2, tremR: 0 } )
+    .map( ( envelope ) => envelope.release ),
+  [ 12, 24, 24 ],
+  'release tails reproduce the three actual delay expressions instead of flattening them'
+);
+check( 'plural envelopes retain role, target, shape and lifecycle authority' );
+
+assert.deepEqual( instrumentNoteLifecycle( 'substrate', { dur: 300, attackT: 20, releaseT: 24 } ), {
+  duration: 300, totalDuration: 300, gateDuration: 276,
+  gateSource: 'instrument', attack: 20, release: 24
+} );
+assert.equal( instrumentNoteLifecycle( 'resobass2', { dur: 20, sustain: 4 } ), null );
+assert.equal( instrumentNoteLifecycle( 'missing', { dur: 10 } ), null );
+check( 'only an explicit instrument contract derives note lifecycle' );
 
 assert.deepEqual( typeForSynthDef( 'resonantBassEnv2' ), {
   key: 'resobass2', descriptor: INSTRUMENT_CATALOG.resobass2

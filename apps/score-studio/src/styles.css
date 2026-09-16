@@ -74,13 +74,17 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .scoreEvent { position: absolute; top: 12px; min-width: 70px; max-width: 130px; overflow: hidden; text-overflow: ellipsis; border-color: #61578a; background: #312c49; color: #ddd6ff; white-space: nowrap; cursor: grab; touch-action: none; }
 .scoreEvent.set { border-color: #75643b; background: #3d3524; color: #f0d99b; }.scoreEvent.release { border-color: #72494f; background: #3c282b; color: #f2b6bd; }
 .synthBar { position: absolute; top: 11px; height: 25px; min-width: 12px; overflow: hidden; padding: 3px 7px; border-color: #61578a; border-radius: 4px; background: #312c49; color: #ddd6ff; font-size: 10px; text-align: left; text-overflow: ellipsis; white-space: nowrap; cursor: grab; touch-action: none; }
-.durationHandle { position: absolute; z-index: 3; top: 9px; width: 7px; height: 29px; min-width: 0; padding: 0; transform: translateX(-3px); border: 1px solid #f0d99b; border-radius: 3px; background: #26221a; cursor: ew-resize; touch-action: none; }
+.durationHandle { position: absolute; z-index: 3; top: 11px; width: 7px; height: 25px; min-width: 0; padding: 0; transform: translateX(-3px); border: 1px solid #f0d99b; border-radius: 3px; background: #26221a; cursor: ew-resize; touch-action: none; }
 .synthEnvelope { position: absolute; top: 39px; height: 7px; min-width: 12px; background: #29282e; }
 .synthEnvelope > span { position: absolute; top: 0; bottom: 0; pointer-events: none; }
 .envelopeAttack { left: 0; background: #5e7ea0; }
 .envelopeHold { background: #53506d; }
 .envelopeRelease { background: #8b5360; }
-.envelopeHandle { position: absolute; top: -3px; width: 7px; height: 13px; min-width: 0; padding: 0; transform: translateX(-3px); border: 1px solid #ddd6ff; border-radius: 3px; background: #17171a; cursor: ew-resize; pointer-events: auto; touch-action: none; }
+.synthEnvelope.modulation .envelopeAttack { background: #557c72; }
+.synthEnvelope.modulation .envelopeHold { background: #435e58; }
+.synthEnvelope.modulation .envelopeRelease { background: #7b6b46; }
+.synthEnvelope > .envelopeName { z-index: 2; top: -1px; bottom: auto; left: 4px; overflow: hidden; max-width: calc(100% - 8px); color: #e3e1d8; font-size: 8px; line-height: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.envelopeHandle { position: absolute; z-index: 4; top: -3px; width: 7px; height: 13px; min-width: 0; padding: 0; transform: translateX(-3px); border: 1px solid #ddd6ff; border-radius: 3px; background: #17171a; cursor: ew-resize; pointer-events: auto; touch-action: none; }
 .synthTriggerTick { position: absolute; z-index: 2; top: 7px; width: 2px; height: 33px; background: #e0b34f; pointer-events: none; }
 .synthTriggerTick.release, .synthTriggerTick.free { background: #ed7e89; }
 .synthTriggerTick.auto-release { width: 1px; background: repeating-linear-gradient(to bottom, #77746b 0 3px, transparent 3px 6px); }
