@@ -466,13 +466,19 @@ their own detailed diagnostic snapshot through their versioned adapter.
 4. Change `ScoreStudioTool` to launch the neutral shell with `toolID: score-studio`.
 5. Remove the old shell only after all real hosted and native-file checks pass.
 
-### Slice 3 — Lissajous integration
+### Slice 3 — Lissajous integration (implemented)
 
 1. Consume the versioned Lissajous renderer artifact and manifest.
 2. Launch the reduced system-audio profile with multichannel preference.
 3. Bind lifecycle readiness to the named ToolSession and parameter traffic to the existing
    Lissajous protocol.
 4. Run Score Studio and Lissajous concurrently and close either without disturbing the other.
+
+Implemented on the `feature/lissajous-neutral-shell` and
+`feature/neutral-awb-shell-adapter` branches. The installed 0.1.0 renderer is a reduced
+system-audio profile. It does not request cross-origin isolation because this profile excludes
+`scsynth.wasm` and threaded export; multichannel Web Audio capture itself does not require
+`SharedArrayBuffer`.
 
 ### Slice 4 — packaging and reverse launch
 

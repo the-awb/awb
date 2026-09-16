@@ -17,6 +17,8 @@ packages/
 apps/
   awb-shell/            planned neutral Electron host for independently packaged AWB tools
   score-studio/         clean score authoring and browser-runtime development host
+tool-artifacts/
+  lissajous/            installed versioned renderer builds; editable source stays in lissajous-viz
 ```
 
 The packages live here because more than one application needs them. Score Studio lives here too:

@@ -1,0 +1,33 @@
+{
+  "schema": "awb.tool/1",
+  "id": "lissajous",
+  "name": "Lissajous Viz",
+  "version": "0.1.0",
+  "renderer": {
+    "entry": "index.html",
+    "preloadProtocol": 1,
+    "crossOriginIsolated": false
+  },
+  "view": {
+    "defaultWidth": 1440,
+    "defaultHeight": 900,
+    "allowMultiple": true
+  },
+  "launchProfiles": [
+    {
+      "id": "standalone",
+      "label": "New visual session"
+    },
+    {
+      "id": "attached",
+      "label": "Attach to SuperCollider"
+    }
+  ],
+  "capabilities": {
+    "filesystem": [],
+    "media": [
+      "audio-input"
+    ],
+    "connections": []
+  }
+}

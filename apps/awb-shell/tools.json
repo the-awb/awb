@@ -1,5 +1,6 @@
 {
   "artifacts": [
-    "../score-studio"
+    "../score-studio",
+    "../../tool-artifacts/lissajous/0.1.0"
   ]
 }
