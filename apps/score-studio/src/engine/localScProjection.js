@@ -1,3 +1,10 @@
+import { scoreEventSustain } from './scEventSemantics.js';
+
+export const SC_PROJECTION_KINDS = Object.freeze( {
+  DESKTOP_SCORE: 'desktop-score',
+  BROWSER_PSEQ: 'browser-pseq'
+} );
+
 function scString( value ) {
   return JSON.stringify( value )
     .replaceAll( '\u2028', '\\u2028' )
@@ -59,10 +66,14 @@ function entryCode( entry, index ) {
   ].join( ' ' );
 }
 
-export function generateLocalScProjection( document ) {
-  const entries = document.entries
+function sortedEntries( document ) {
+  return document.entries
     .map( ( entry, index ) => ( { entry, index } ) )
-    .sort( ( left, right ) => left.entry.time - right.entry.time || left.index - right.index )
+    .sort( ( left, right ) => left.entry.time - right.entry.time || left.index - right.index );
+}
+
+function generateDesktopScore( document ) {
+  const entries = sortedEntries( document )
     .map( ( item ) => entryCode( item.entry, item.index ) )
     .join( ',\n    ' );
   return [
@@ -78,4 +89,59 @@ export function generateLocalScProjection( document ) {
     ')',
     ''
   ].join( '\n' );
+}
+
+function pseqEventCode( entry, index, delta ) {
+  const source = entry.event;
+  const fields = [];
+  const instrument = source.def ?? source.instrument;
+  const sustain = scoreEventSustain( source );
+  if ( typeof instrument !== 'string' || !instrument.length ) {
+    throw new TypeError( `Score entry ${ entry.id ?? index } has no SynthDef for Pseq projection` );
+  }
+  fields.push( `${ scSymbol( 'instrument' ) }: ${ scSymbol( instrument ) }` );
+  fields.push( `${ scSymbol( 'delta' ) }: ${ String( delta ) }` );
+  if ( sustain !== null ) fields.push( `${ scSymbol( 'sustain' ) }: ${ String( sustain ) }` );
+  for ( const [ key, value ] of Object.entries( source ) ) {
+    if ( [ 'type', 'def', 'instrument', 'target', 'dur', 'delta', 'sustain', 'legato' ].includes( key ) ) continue;
+    fields.push( `${ scSymbol( key ) }: ${ scValue( value, `score[${ index }].event.${ key }` ) }` );
+  }
+  return `( ${ fields.join( ', ' ) } )`;
+}
+
+function generateBrowserPseq( document ) {
+  const sorted = sortedEntries( document );
+  const notes = sorted.filter( ( { entry } ) => entry.event?.type === 'note' );
+  const omitted = sorted.filter( ( { entry } ) => entry.event?.type !== 'note' );
+  if ( notes.length === 0 ) throw new TypeError( 'A browser Pseq reduction needs at least one note event' );
+  const events = notes.map( ( item, noteIndex ) => {
+    const next = notes[ noteIndex + 1 ];
+    const delta = next ? Math.max( 0, next.entry.time - item.entry.time ) : 0;
+    return pseqEventCode( item.entry, item.index, delta );
+  } ).join( ',\n    ' );
+  const omittedSummary = omitted.length
+    ? omitted.map( ( { entry } ) => `${ entry.id }:${ entry.event?.type ?? 'untyped' }` ).join( ', ' )
+    : 'none';
+  return [
+    '// AWB GENERATED BROWSER PSEQ REDUCTION',
+    `// Score ID: ${ document.scoreID }`,
+    `// Revision: ${ document.revision }`,
+    '// Notes retain onset spacing as delta and gate length as sustain.',
+    '// This is not the canonical score and does not preserve target-based lifecycle control.',
+    `// Omitted non-note entries: ${ omittedSummary }`,
+    '(',
+    '~scorePattern = Pseq([',
+    `    ${ events }`,
+    '], 1);',
+    '// Play after the required SynthDefs are loaded:',
+    '// ~scorePlayer = ~scorePattern.play;',
+    ')',
+    ''
+  ].join( '\n' );
+}
+
+export function generateLocalScProjection( document, { kind = SC_PROJECTION_KINDS.DESKTOP_SCORE } = {} ) {
+  if ( kind === SC_PROJECTION_KINDS.DESKTOP_SCORE ) return generateDesktopScore( document );
+  if ( kind === SC_PROJECTION_KINDS.BROWSER_PSEQ ) return generateBrowserPseq( document );
+  throw new TypeError( `Unknown SC projection kind: ${ kind }` );
 }

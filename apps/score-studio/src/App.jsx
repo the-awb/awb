@@ -13,7 +13,8 @@ import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets
 import { HostedScoreClient } from './engine/HostedScoreClient.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
 import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
-import { generateLocalScProjection } from './engine/localScProjection.js';
+import { generateLocalScProjection, SC_PROJECTION_KINDS } from './engine/localScProjection.js';
+import { readLocalProjection, storeLocalProjection } from './engine/localProjectionStore.js';
 import { retryScoreProjection, saveScorePair, validateProjection } from './engine/scorePairSave.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
@@ -32,6 +33,8 @@ export default function App() {
   const [ endpoint, setEndpoint ] = useState( import.meta.env.VITE_HOSTED_ENDPOINT ?? '' );
   const [ hostedMessage, setHostedMessage ] = useState( '' );
   const [ standaloneMessage, setStandaloneMessage ] = useState( '' );
+  const [ projectionKind, setProjectionKind ] = useState( SC_PROJECTION_KINDS.DESKTOP_SCORE );
+  const [ localProjection, setLocalProjection ] = useState( null );
   const [ scoreFolder, setScoreFolder ] = useState( { handle: null, name: '', files: [], message: '' } );
   const inputRef = useRef( null );
   const sc = useSuperCollider( { importScsynth } );
@@ -64,6 +67,12 @@ export default function App() {
   useEffect( () => {
     try { storeRecoveryDraft( session.document ); } catch { /* local recovery is optional */ }
   }, [ session.document ] );
+
+  useEffect( () => {
+    if ( localProjection
+      && ( localProjection.scoreID !== session.document.scoreID
+        || localProjection.revision !== session.document.revision ) ) setLocalProjection( null );
+  }, [ localProjection, session.document.revision, session.document.scoreID ] );
 
   useEffect( () => {
     if ( !launchedScoreURL || launchState.current.scoreLoaded ) return;
@@ -202,7 +211,11 @@ export default function App() {
   }
 
   async function acceptOpen( result ) {
+    let stored = null;
+    try { stored = readLocalProjection( result.document, projectionKind ); } catch { /* optional app data */ }
     dispatch( { type: 'LOAD_DOCUMENT', document: result.document } );
+    setLocalProjection( stored );
+    if ( stored ) dispatch( { type: 'SET_WORKING_DOCUMENT', text: stored.text } );
     setFile( {
       handle: result.handle ?? null,
       name: result.name,
@@ -355,23 +368,17 @@ export default function App() {
   async function generateScDocument() {
     setHostedMessage( '' );
     try {
-      if ( session.mode !== MODES.HOSTED || !connected ) {
-        const text = generateLocalScProjection( session.document );
-        const saved = await saveProjectionFile( text, {
-          scoreID: session.document.scoreID,
-          handle: file.projectionHandle,
-          expectedText: file.projectionText,
-          saveAs: file.projectionHandle === null
-        } );
+      if ( projectionKind === SC_PROJECTION_KINDS.BROWSER_PSEQ
+        || session.mode !== MODES.HOSTED || !connected ) {
+        const text = generateLocalScProjection( session.document, { kind: projectionKind } );
+        const stored = storeLocalProjection( session.document, projectionKind, text );
+        setLocalProjection( stored );
         dispatch( { type: 'SET_WORKING_DOCUMENT', text } );
         setFile( ( current ) => ( {
           ...current,
-          projectionHandle: saved.handle ?? current.projectionHandle,
-          projectionText: text,
-          projectionStatus: 'saved locally',
-          message: saved.downloaded
-            ? 'Generated SC document downloaded locally.'
-            : 'Generated SC document saved locally.'
+          message: projectionKind === SC_PROJECTION_KINDS.BROWSER_PSEQ
+            ? 'Browser Pseq reduction stored in app data.'
+            : 'Desktop score projection stored in app data.'
         } ) );
         dispatch( { type: 'SET_VIEW', view: 'console' } );
         return;
@@ -438,11 +445,20 @@ export default function App() {
   function newDocument() {
     if ( !canDiscard() ) return;
     dispatch( { type: 'LOAD_DOCUMENT', document: seedDocument( freshID() ) } );
+    setLocalProjection( null );
     setFile( {
       handle: null, name: null, hash: null, savedRevision: null,
       projectionHandle: null, projectionText: null, pendingIdentity: null,
       projectionStatus: 'not generated', message: 'New unsaved score'
     } );
+  }
+
+  function chooseProjectionKind( kind ) {
+    setProjectionKind( kind );
+    let stored = null;
+    try { stored = readLocalProjection( session.document, kind ); } catch { /* optional app data */ }
+    setLocalProjection( stored );
+    if ( stored ) dispatch( { type: 'SET_WORKING_DOCUMENT', text: stored.text } );
   }
 
   function updateSelectedEntry( patch ) {
@@ -478,6 +494,13 @@ export default function App() {
           <button onClick={ chooseScoreFolder }>Open folder…</button>
           <button onClick={ () => saveDocument( false ) }>Save</button>
           <button onClick={ () => saveDocument( true ) }>Save as…</button>
+          <label className="projectionChoice">SC output
+            <select aria-label="SC output type" value={ projectionKind }
+              onChange={ ( event ) => chooseProjectionKind( event.target.value ) }>
+              <option value={ SC_PROJECTION_KINDS.DESKTOP_SCORE }>Desktop score</option>
+              <option value={ SC_PROJECTION_KINDS.BROWSER_PSEQ }>Browser Pseq reduction</option>
+            </select>
+          </label>
           <button onClick={ generateScDocument }>Generate SC document</button>
           { file.pendingIdentity && <button disabled={ !connected } onClick={ retryProjection }>Retry SC export</button> }
         </div>
@@ -496,9 +519,12 @@ export default function App() {
           <dt>Revision</dt><dd>{ session.document.revision }</dd>
           <dt>Entries</dt><dd>{ session.document.entries.length }</dd>
           <dt>SC pair</dt><dd>{ file.projectionStatus }</dd>
+          <dt>App SC</dt><dd>{ localProjection
+            ? `${ localProjection.kind === SC_PROJECTION_KINDS.BROWSER_PSEQ ? 'Pseq' : 'desktop' } r${ localProjection.revision }`
+            : 'not generated' }</dd>
         </dl>
         { file.message && <p className="fileMessage">{ file.message }</p> }
-        <p className="boundaryNote">JSON is canonical. Browser drafts are recovery copies. The generated SC document is a projection.</p>
+        <p className="boundaryNote">JSON is canonical. Generated SC documents are projections retained in local app data; desktop score and browser Pseq outputs have different runtime contracts.</p>
       </aside>
 
       <main className="workspace">

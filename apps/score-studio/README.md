@@ -20,7 +20,8 @@ Current first slice:
 - a token-protected localhost WebSocket-to-OSC sidecar for hosted desktop execution;
 - browser-owned standalone playback through scsynth.wasm, with app-owned compiled SynthDefs;
 - the extracted `@awb/sc-console` editor and post window;
-- a read-only slot for the generated `.score.scd` working document.
+- a read-only slot for generated SC working documents, with desktop-score and browser-Pseq targets
+  retained in local app data by score ID, revision and projection kind.
 
 The desktop agent owns SC normalization, `PTimelineOSCBridge`, transport reporting, command
 deduplication, chunked loading, NodeManager correlation and generated SC documents. This app does
@@ -142,8 +143,19 @@ idempotent retry; the bridge then replays the same cached begin/chunks/end/resul
 
 **Generate SC document** is available in every mode. With a hosted connection it installs the
 current revision when necessary, requests the desktop identity-checked projection, and opens its
-read-only working-document view without saving it. Without a host, Score Studio deterministically
-generates the same supported timeline vocabulary locally and saves or downloads the `.score.scd`.
+read-only working-document view without saving it. Local generation offers two explicit targets:
+
+- **Desktop score** preserves the absolute-time entry and lifecycle vocabulary in a generated
+  `PScoreTimelinePlayer` document.
+- **Browser Pseq reduction** emits only note events as a finite `Pseq` for the bundled sclang. It
+  converts absolute onset gaps to `delta`, converts authored gate length to `sustain`, and names
+  every omitted non-note lifecycle entry in the header. It is deliberately not described as a
+  lossless score projection.
+
+Both local outputs are stored in browser app data under score ID, canonical revision and target;
+Generate no longer opens a save picker or forces a download. Reopening the matching canonical
+revision restores its stored working document. Ordinary Save remains the explicit filesystem
+operation.
 **Open SC document** remains hosted-only: it installs first, then asks desktop SuperCollider to
 generate and open the document. Ordinary Save remains the operation that persists canonical JSON
 and the hosted `.score.scd` as a guarded pair.

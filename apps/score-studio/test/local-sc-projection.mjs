@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 import { createScoreDocument } from '@awb/score';
-import { generateLocalScProjection } from '../src/engine/localScProjection.js';
+import { generateLocalScProjection, SC_PROJECTION_KINDS } from '../src/engine/localScProjection.js';
 
 const document = createScoreDocument( {
   scoreID: 'local-score',
@@ -29,4 +29,24 @@ assert.throws( () => generateLocalScProjection( { ...document, entries: [ {
   id: 'bad', time: 0, path: [], event: { type: 'note', freq: Number.NaN }
 } ] } ), /non-finite number/ );
 
-console.log( 'local-sc-projection: 11/11 pass' );
+const pseqDocument = createScoreDocument( {
+  scoreID: 'browser-pattern',
+  revision: 7,
+  meta: { title: 'Browser pattern', description: '', tags: [] },
+  entries: [
+    { id: 'first', time: 2, path: [], event: { type: 'note', def: 'substrate', freqA: 36, dur: 10, legato: 0.5 } },
+    { id: 'release-all', time: 4, path: [], event: { type: 'release', target: '@all' } },
+    { id: 'second', time: 7, path: [], event: { type: 'note', def: 'substrate2', freq: 40, sustain: 3 } }
+  ]
+} );
+const pseq = generateLocalScProjection( pseqDocument, { kind: SC_PROJECTION_KINDS.BROWSER_PSEQ } );
+assert.match( pseq, /^\/\/ AWB GENERATED BROWSER PSEQ REDUCTION/m );
+assert.match( pseq, /~scorePattern = Pseq\(\[/ );
+assert.match( pseq, /'instrument': 'substrate', 'delta': 5, 'sustain': 5/ );
+assert.match( pseq, /'instrument': 'substrate2', 'delta': 0, 'sustain': 3/ );
+assert.match( pseq, /Omitted non-note entries: release-all:release/ );
+assert.doesNotMatch( pseq, /'target': '@all'/ );
+assert.match( pseq, /~scorePlayer = ~scorePattern\.play/ );
+assert.throws( () => generateLocalScProjection( document, { kind: 'unknown' } ), /Unknown SC projection kind/ );
+
+console.log( 'local-sc-projection: 19/19 pass' );

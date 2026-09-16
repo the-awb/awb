@@ -118,14 +118,27 @@ try {
     failures.push( 'standalone runtime controls did not appear' );
   }
 
-  const projectionDownload = page.waitForEvent( 'download' );
   await page.getByRole( 'button', { name: 'Generate SC document', exact: true } ).click();
-  const projection = await projectionDownload;
-  if ( projection.suggestedFilename() !== 'untitled-score.score.scd' ) {
-    failures.push( `local SC projection used wrong filename: ${ projection.suggestedFilename() }` );
+  if ( !( await page.getByText( 'Desktop score projection stored in app data.', { exact: true } ).isVisible() ) ) {
+    failures.push( 'standalone desktop score projection was not retained in app data' );
   }
   if ( !( await page.getByText( 'AWB GENERATED SCORE PROJECTION', { exact: false } ).isVisible() ) ) {
     failures.push( 'standalone generation did not open the local SC working document' );
+  }
+  await page.getByLabel( 'SC output type' ).selectOption( 'browser-pseq' );
+  await page.getByRole( 'button', { name: 'Generate SC document', exact: true } ).click();
+  if ( !( await page.getByText( 'Browser Pseq reduction stored in app data.', { exact: true } ).isVisible() ) ) {
+    failures.push( 'standalone Pseq reduction was not retained in app data' );
+  }
+  if ( !( await page.getByText( 'AWB GENERATED BROWSER PSEQ REDUCTION', { exact: false } ).isVisible() ) ) {
+    failures.push( 'Pseq reduction did not become the working document' );
+  }
+  const storedProjection = await page.evaluate( () => JSON.parse(
+    localStorage.getItem( 'awb.score.projection.untitled-score.browser-pseq' )
+  ) );
+  if ( !Number.isInteger( storedProjection?.revision )
+    || !storedProjection?.text?.includes( '~scorePattern = Pseq' ) ) {
+    failures.push( 'Pseq app-data record did not preserve the generated revision and text' );
   }
 
   await page.getByRole( 'button', { name: 'Console', exact: true } ).click();
@@ -134,7 +147,7 @@ try {
   await page.locator( '.consoleWorkspace' ).getByRole( 'button', { name: 'Attach sclang', exact: true } ).click();
   await page.getByText( 'Ctrl-enter evaluates a line', { exact: false } ).waitFor( { timeout: 90000 } );
   await page.getByRole( 'button', { name: 'Working document', exact: true } ).click();
-  if ( !( await page.getByText( 'AWB GENERATED SCORE PROJECTION', { exact: false } ).isVisible() ) ) {
+  if ( !( await page.getByText( 'AWB GENERATED BROWSER PSEQ REDUCTION', { exact: false } ).isVisible() ) ) {
     failures.push( 'local SC working document disappeared after attaching browser sclang' );
   }
   page.once( 'dialog', ( dialog ) => dialog.accept() );
