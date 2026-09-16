@@ -14,8 +14,8 @@
     "allowMultiple": true
   },
   "launchProfiles": [
-    { "id": "standalone", "label": "New standalone session" },
-    { "id": "attached", "label": "Attach to SuperCollider" }
+    { "id": "attached", "label": "Use SuperCollider IDE" },
+    { "id": "headless", "label": "Use headless SuperCollider" }
   ],
   "capabilities": {
     "filesystem": ["open-file", "open-directory", "save-file"],
@@ -34,6 +34,6 @@
   },
   "documentKinds": [
     { "id": "score", "label": "Score", "extensions": ["score.json"],
-      "actions": ["new", "recent", "browse"], "profileID": "standalone" }
+      "actions": ["new", "recent", "browse"], "profileID": "headless" }
   ]
 }

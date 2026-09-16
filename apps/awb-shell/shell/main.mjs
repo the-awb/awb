@@ -35,6 +35,7 @@ const windows = new Map();
 const senderRecords = new Map();
 const ownerTimers = new Map();
 const serviceReleases = new Map();
+const nativeToolSessions = new Map();
 const hostSubscriptions = new Map();
 const fileGrants = new FileGrantStore();
 const services = new ServiceRegistry( createOscWebSocketRelay );
@@ -132,7 +133,7 @@ function launchRequestFromArgs( rawArgs ) {
   return {
     toolID,
     toolSessionID: option( args, 'tool-session' ),
-    profileID: option( args, 'profile', ownerPID || endpoint || oscPort ? 'attached' : 'standalone' ),
+    profileID: option( args, 'profile', ownerPID || endpoint || oscPort ? 'attached' : 'headless' ),
     launchOrigin: option( args, 'origin', 'supercollider' ),
     owner: ownerPID ? { kind: 'attached-process', pid: ownerPID } : { kind: 'none', pid: null },
     connections: { ...( endpoint ? { endpoint } : {} ), ...( oscPort ? { oscPort, oscHost } : {} ) },
@@ -198,6 +199,9 @@ async function startHeadlessHost() {
 
 async function stopHeadlessHost() {
   const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.mode === 'headless' );
+  if ( [ ...nativeToolSessions.values() ].some( ( owned ) => owned.service === service ) ) {
+    throw new Error( 'Close headless SuperCollider tool views before stopping their host.' );
+  }
   return nativeScHost.stop( () => service?.shutdownHost?.() );
 }
 
@@ -205,6 +209,53 @@ async function setNodeManager( action ) {
   const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.status === 'ready' );
   if ( !service ) throw new Error( 'No AWB-enabled SuperCollider host is available.' );
   return service.setNodeManager( action );
+}
+
+async function nativeHostForProfile( profileID ) {
+  const configuration = hostConfigurationFromArgs( process.argv.slice( 1 ) );
+  const service = await ensureHost( configuration );
+  if ( profileID === 'headless' ) {
+    await startHeadlessHost();
+    await waitFor( () => service.hostSnapshot().control?.status === 'ready'
+      && service.hostSnapshot().control?.mode === 'headless', 30000 );
+  } else if ( profileID === 'attached' ) {
+    try {
+      await waitFor( () => service.hostSnapshot().control?.status === 'ready', 5000 );
+    } catch {
+      throw new Error( 'No AWB-enabled SuperCollider IDE is attached. Open SuperCollider and recompile its class library.' );
+    }
+    if ( service.hostSnapshot().control?.mode !== 'ide' ) {
+      throw new Error( 'The available SuperCollider host is not an attached IDE session.' );
+    }
+  } else return null;
+  return { configuration, service };
+}
+
+async function launchFromHome( rawRequest ) {
+  if ( rawRequest.toolID !== 'score-studio'
+    || ![ 'attached', 'headless' ].includes( rawRequest.profileID )
+    || rawRequest.toolSessionID
+    || rawRequest.connections?.oscPort ) return router.launch( rawRequest );
+
+  const native = await nativeHostForProfile( rawRequest.profileID );
+  const sessionID = `scoreArranger:${ crypto.randomUUID() }`;
+  await native.service.openToolSession( 'score-studio', sessionID );
+  const request = { ...rawRequest, toolSessionID: sessionID,
+    connections: { ...( rawRequest.connections ?? {} ), oscHost: native.configuration.oscHost,
+      oscPort: native.configuration.oscPort } };
+  let result;
+  try {
+    result = await router.launch( request );
+    if ( result.status === 'accepted' ) {
+      nativeToolSessions.set( result.viewID, { service: native.service, toolID: 'score-studio', sessionID } );
+      return result;
+    }
+    return result;
+  } finally {
+    if ( result?.status !== 'accepted' ) {
+      await native.service.closeToolSession( 'score-studio', sessionID ).catch( () => {} );
+    }
+  }
 }
 
 async function launchDocument( payload ) {
@@ -220,7 +271,8 @@ async function launchDocument( payload ) {
   } else if ( payload.action === 'recent' ) {
     target = recentStore.resolve( payload.recentID, tool.id, kind.id ); documentPayload = { ...documentPayload, documentPath: target };
   } else documentPayload = { ...documentPayload, newDocumentID: crypto.randomUUID() };
-  const result = await router.launch( { toolID: tool.id, profileID: kind.profileID, launchOrigin: 'desktop', payload: documentPayload } );
+  const result = await launchFromHome( { toolID: tool.id, profileID: kind.profileID,
+    launchOrigin: 'desktop', payload: documentPayload } );
   if ( target && result.viewID ) registry.update( result.viewID, { pendingRecentPath: target, pendingDocumentKindID: kind.id } );
   return result;
 }
@@ -298,9 +350,9 @@ async function runMultiviewSmoke() {
   const payload = scorePath ? { scorePath: path.resolve( scorePath ) } : {};
   const results = await homeWindow.webContents.executeJavaScript( `(async () => {
     const payload = ${ JSON.stringify( payload ) };
-    const first = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'standalone', toolSessionID: 'smoke-a', launchOrigin: 'desktop', payload });
-    const repeated = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'standalone', toolSessionID: 'smoke-a', launchOrigin: 'desktop', payload });
-    const second = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'standalone', toolSessionID: 'smoke-b', launchOrigin: 'desktop', payload });
+    const first = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'headless', toolSessionID: 'smoke-a', launchOrigin: 'desktop', payload });
+    const repeated = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'headless', toolSessionID: 'smoke-a', launchOrigin: 'desktop', payload });
+    const second = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'headless', toolSessionID: 'smoke-b', launchOrigin: 'desktop', payload });
     return { first, repeated, second };
   })()` );
   if ( results.first.status !== 'accepted' || results.repeated.status !== 'focused-existing'
@@ -320,7 +372,7 @@ async function runMultiviewSmoke() {
 
 async function runMultitoolSmoke() {
   smokeRunning = true;
-  const score = await router.launch( { toolID: 'score-studio', profileID: 'standalone',
+  const score = await router.launch( { toolID: 'score-studio', profileID: 'headless',
     toolSessionID: 'multitool-score', launchOrigin: 'desktop' } );
   const lissajous = await router.launch( { toolID: 'lissajous', profileID: 'standalone',
     toolSessionID: 'multitool-lissajous', launchOrigin: 'desktop' } );
@@ -504,11 +556,27 @@ async function runHeadlessScSmoke() {
   } ), 30000 );
   await setNodeManager( 'enable' );
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'ready' ), 5000 );
+  const launched = await launchFromHome( { toolID: 'score-studio', profileID: 'headless', launchOrigin: 'desktop' } );
+  if ( launched.status !== 'accepted' ) throw new Error( `Native Score Studio launch failed: ${ JSON.stringify( launched ) }` );
+  await waitFor( () => {
+    const view = registry.get( launched.viewID );
+    return view?.lifecycle === 'ready' && view.sessionState?.mode === 'hosted'
+      && view.sessionState?.connection === 'connected';
+  }, 25000 );
+  if ( !nativeToolSessions.has( launched.viewID ) ) throw new Error( 'Native Score Studio view has no owned sclang ToolSession.' );
+  const executionModes = await windows.get( launched.viewID ).webContents.executeJavaScript(
+    `[ ...document.querySelectorAll('.modeSwitch button') ].map((button) => button.textContent.trim())`
+  );
+  if ( executionModes.length !== 1 || executionModes[ 0 ] !== 'hosted' ) {
+    throw new Error( `Desktop Score Studio exposed non-native execution modes: ${ JSON.stringify( executionModes ) }` );
+  }
+  await closeToolView( launched.viewID );
+  await waitFor( () => !registry.get( launched.viewID ) && !nativeToolSessions.has( launched.viewID ), 5000 );
   await setNodeManager( 'manual' );
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'disabled' ), 5000 );
   await stopHeadlessHost();
   await waitFor( () => nativeScHost.snapshot().state === 'stopped', 8000 );
-  console.log( 'AWB_SHELL_HEADLESS_SC_READY engine=native nodeManager=toggleable shutdown=owned' );
+  console.log( 'AWB_SHELL_HEADLESS_SC_READY engine=native scoreStudio=hosted toolSession=owned nodeManager=toggleable shutdown=owned' );
   app.quit();
 }
 
@@ -623,6 +691,9 @@ function finalizeView( viewID, window, senderID ) {
   clearInterval( ownerTimers.get( viewID ) ); ownerTimers.delete( viewID );
   fileGrants.releaseView( viewID );
   nativeAudio.releaseView( viewID ).catch( ( error ) => console.error( error ) );
+  const nativeSession = nativeToolSessions.get( viewID ); nativeToolSessions.delete( viewID );
+  nativeSession?.service.closeToolSession( nativeSession.toolID, nativeSession.sessionID )
+    .catch( ( error ) => console.error( error ) );
   serviceReleases.get( viewID )?.().catch( ( error ) => console.error( error ) ); serviceReleases.delete( viewID );
   if ( registry.get( viewID ) ) { registry.update( viewID, { lifecycle: 'closed' } ); registry.remove( viewID ); }
   notifyHome();
@@ -848,7 +919,7 @@ function registerIPC() {
     const payload = boundedOperationPayload( request.payload ?? {} );
     if ( sender.kind === 'home' ) {
       if ( request.operation === 'shell.snapshot' ) return shellSnapshot();
-      if ( request.operation === 'shell.launch' ) return router.launch( payload );
+      if ( request.operation === 'shell.launch' ) return launchFromHome( payload );
       if ( request.operation === 'shell.launch-document' ) return launchDocument( payload );
       if ( request.operation === 'shell.focus' ) { await focusToolView( payload.viewID ); return true; }
       if ( request.operation === 'shell.close' ) return closeToolView( payload.viewID );
@@ -966,7 +1037,7 @@ if ( gotLock ) {
     try {
       await ensureHost( hostConfigurationFromRequest( request ) ?? hostConfigurationFromArgs( commandLine ) );
       if ( request ) {
-        const result = await router.launch( request );
+        const result = await launchFromHome( request );
         if ( smokeExternalRouter ) await recordExternalSmokeResult( result );
       } else await createHomeWindow();
     } catch ( error ) { reportFatal( error ); }
@@ -981,7 +1052,7 @@ if ( gotLock ) {
       ?? hostConfigurationFromArgs( process.argv.slice( 1 ) ) );
     await createRenderExecutorWindow();
     await createHomeWindow();
-    if ( initialRequest ) await router.launch( initialRequest );
+    if ( initialRequest ) await launchFromHome( initialRequest );
   } ).catch( reportFatal );
   app.on( 'activate', () => createHomeWindow().catch( reportFatal ) );
   app.on( 'window-all-closed', () => { if ( !quitting ) createHomeWindow().catch( reportFatal ); } );
@@ -992,10 +1063,14 @@ if ( gotLock ) {
     if ( !serviceShutdown ) serviceShutdown = ( async () => {
       for ( const unsubscribe of hostSubscriptions.values() ) unsubscribe();
       hostSubscriptions.clear();
+      const nativeSessionStops = await Promise.allSettled( [ ...nativeToolSessions.values() ].map(
+        ( owned ) => owned.service.closeToolSession( owned.toolID, owned.sessionID )
+      ) );
+      nativeToolSessions.clear();
       const headlessService = services.firstService( ( service ) => service.hostSnapshot?.().control?.mode === 'headless' );
       const hostStop = await Promise.allSettled( [ nativeAudio.close(),
         nativeScHost.stop( () => headlessService?.shutdownHost?.() ) ] );
-      const results = [ ...hostStop, ...await Promise.allSettled( [ services.closeAll() ] ) ];
+      const results = [ ...nativeSessionStops, ...hostStop, ...await Promise.allSettled( [ services.closeAll() ] ) ];
       results.filter( ( result ) => result.status === 'rejected' )
         .forEach( ( result ) => console.error( result.reason ) );
       servicesClosed = true; app.quit();

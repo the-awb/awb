@@ -113,6 +113,8 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
       scsynth: { status: control.scsynth }, synthDefs: synthDefs.snapshot(), nodeManager: nodeManager.snapshot(), control
     } ); },
     setNodeManager: ( action ) => hostControl.setNodeManager( action ),
+    openToolSession: ( toolID, sessionID ) => hostControl.openToolSession( toolID, sessionID ),
+    closeToolSession: ( toolID, sessionID ) => hostControl.closeToolSession( toolID, sessionID ),
     shutdownHost: () => hostControl.shutdown(),
     nodeManagerView: ( binding ) => nodeManager.viewForBinding( binding ),
     subscribeHost: ( listener ) => { hostListeners.add( listener ); return () => hostListeners.delete( listener ); },

@@ -46,6 +46,14 @@ export class HostControlProjection {
       if ( pending ) { clearTimeout( pending.timer ); this.pending.delete( requestID ); pending.resolve( { status: 'shutting-down' } ); }
       return true;
     }
+    if ( address === '/awb/host/tool/status' ) {
+      const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
+      if ( pending ) {
+        clearTimeout( pending.timer ); this.pending.delete( requestID );
+        pending.resolve( Object.freeze( { status: `${ args[ 2 ] }`, toolID: `${ args[ 3 ] }`, sessionID: `${ args[ 4 ] }` } ) );
+      }
+      return true;
+    }
     if ( address === '/awb/host/error' ) {
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) { clearTimeout( pending.timer ); this.pending.delete( requestID ); pending.reject( new Error( `${ args[ 2 ] }` ) ); }
@@ -72,6 +80,14 @@ export class HostControlProjection {
   }
 
   shutdown() { return this.request( '/awb/host/shutdown', [] ); }
+
+  openToolSession( toolID, sessionID ) {
+    return this.request( '/awb/host/tool/open', [ toolID, sessionID ] );
+  }
+
+  closeToolSession( toolID, sessionID ) {
+    return this.request( '/awb/host/tool/close', [ toolID, sessionID ] );
+  }
 
   snapshot() {
     return Object.freeze( { status: this.status, protocolVersion: this.protocolVersion,

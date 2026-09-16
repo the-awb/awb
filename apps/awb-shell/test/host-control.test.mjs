@@ -24,6 +24,21 @@ test( 'host control correlates NodeManager commands and protects the control tok
   assert.equal( ( await pending ).nodeManager, 'ready' ); host.close();
 } );
 
+test( 'host control creates and closes named native tool sessions', async () => {
+  const sent = []; const host = new HostControlProjection( { sendOsc: ( address, args ) => sent.push( { address, args } ),
+    token: 'secret', healthIntervalMs: 60000 } );
+  host.receive( { address: '/awb/host/status', args: [ host.clientID, '', 1, 'headless', 'disabled', 'manual', 'ready', 456 ] } );
+  const opened = host.openToolSession( 'score-studio', 'scoreArranger:shell-a' ); const open = sent.at( -1 );
+  assert.equal( open.address, '/awb/host/tool/open' );
+  assert.deepEqual( open.args.slice( 2, -1 ), [ 'score-studio', 'scoreArranger:shell-a' ] );
+  host.receive( { address: '/awb/host/tool/status', args: [ host.clientID, open.args[ 1 ], 'active', 'score-studio', 'scoreArranger:shell-a' ] } );
+  assert.deepEqual( await opened, { status: 'active', toolID: 'score-studio', sessionID: 'scoreArranger:shell-a' } );
+  const closed = host.closeToolSession( 'score-studio', 'scoreArranger:shell-a' ); const close = sent.at( -1 );
+  assert.equal( close.address, '/awb/host/tool/close' );
+  host.receive( { address: '/awb/host/tool/status', args: [ host.clientID, close.args[ 1 ], 'closed', 'score-studio', 'scoreArranger:shell-a' ] } );
+  assert.equal( ( await closed ).status, 'closed' ); host.close();
+} );
+
 test( 'NodeManager projection stops retrying while the host reports it disabled', () => {
   const sent = []; const projection = new NodeManagerProjection( { sendOsc: ( address, args ) => sent.push( { address, args } ) } );
   projection.connect(); projection.setHostStatus( 'disabled' );

@@ -21,6 +21,7 @@ const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
 
 export default function App( { host, createHostedClient } ) {
   const launchContext = useMemo( () => host.hostedLaunchContext(), [ host ] );
+  const executionModes = host.capabilities.executionModes ?? Object.values( MODES );
   const { endpoint: launchedEndpoint, toolSessionID } = launchContext;
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
   const [ file, setFile ] = useState( {
@@ -68,6 +69,12 @@ export default function App( { host, createHostedClient } ) {
     () => inspectedEntries.find( ( entry ) => entry.id === session.selected[ 0 ] ) ?? null,
     [ inspectedEntries, session.selected ]
   );
+
+  useEffect( () => {
+    if ( !executionModes.includes( session.mode ) ) {
+      dispatch( { type: 'SET_MODE', mode: executionModes[ 0 ] } );
+    }
+  }, [ executionModes, session.mode ] );
 
   useEffect( () => {
     try { host.storeRecovery( session.document ); } catch { /* host recovery is optional */ }
@@ -541,7 +548,7 @@ export default function App( { host, createHostedClient } ) {
           onChange={ ( event ) => dispatch( { type: 'EDIT_META', key: 'title', value: event.target.value } ) } />
         <span className={ `saveState ${ dirty ? 'dirty' : '' }` }>{ dirty ? 'unsaved' : 'saved' }</span>
         <div className="modeSwitch" aria-label="Execution mode">
-          { Object.values( MODES ).map( ( mode ) => (
+          { executionModes.map( ( mode ) => (
             <button key={ mode } className={ session.mode === mode ? 'active' : '' }
               onClick={ () => dispatch( { type: 'SET_MODE', mode } ) }>{ mode }</button>
           ) ) }

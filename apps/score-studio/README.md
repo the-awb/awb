@@ -19,7 +19,7 @@ Current first slice:
 - a bundled eleven-event Sonic Attunement demo plus a session-local folder browser for `.score.json` files;
 - an editor-owned pair-save coordinator: canonical JSON first, identity-bound SC projection second,
   with recoverable partial success;
-- explicit hosted/standalone mode surfaces;
+- explicit hosted/standalone mode surfaces in the browser and hosted-only execution in Electron;
 - a token-protected localhost WebSocket-to-OSC sidecar for hosted desktop execution;
 - browser-owned standalone playback through scsynth.wasm, with app-owned compiled SynthDefs;
 - the extracted `@awb/sc-console` editor and post window;
@@ -31,7 +31,8 @@ deduplication, chunked loading, NodeManager correlation and generated SC documen
 not duplicate those responsibilities. The app-owned sidecar forwards the frozen
 `/awb/timeline/...` and read-only `/awb/synthdef/...` vocabularies between WebSocket JSON frames
 and local OSC; it contains no score, instrument or scheduling policy. The AWB shell provides the
-same manifest-bounded relay for installed tool views. Standalone scheduling stays in the browser.
+same manifest-bounded relay for installed tool views. Standalone scheduling stays in the browser;
+Electron uses either the attached IDE host or the shell-owned headless native sclang/scsynth host.
 
 The hosted Instruments view lists the complete `SynthDescLib.global` inventory. It refreshes on
 open, window focus and a bounded interval, but requests compiled graph bytes and builds an

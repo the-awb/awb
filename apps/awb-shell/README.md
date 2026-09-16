@@ -144,6 +144,14 @@ and subscriptions but never stops, releases or frees sound objects. A ToolSessio
 reactivates the manager and its external bridge under `when needed`; `manual` refuses implicit
 activation.
 
+Score Studio's desktop launch profiles are now literal: **Use SuperCollider IDE** requires an
+attached `AWBHostControl`, while **Use headless SuperCollider** starts the shell-owned native host.
+In either case the shell asks sclang to create a named `ToolSession`, supplies that identity to the
+renderer, and closes only that shell-owned session with the view. Multiple score views therefore
+have separate sessions and `PScoreTimelinePlayer` instances while sharing the selected language and
+server host. The Electron renderer exposes hosted execution only; it cannot silently boot
+scsynth.wasm. Browser Score Studio retains its standalone WASM mode.
+
 ## Lissajous config documents
 
 The hosted Lissajous tool declares `lissajous-config` as a first-class document kind. These JSON

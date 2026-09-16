@@ -28,6 +28,7 @@ const opened = await host.initialScore();
 assert.equal( opened.document.scoreID, 'sonic-attunement-01' );
 assert.equal( opened.handle.grantID, 'file-1' ); assert.equal( opened.handle.path, undefined );
 assert.equal( host.hostedLaunchContext().toolSessionID, 'tool-1' );
+assert.deepEqual( host.capabilities.executionModes, [ 'hosted' ] );
 const saved = await host.saveCanonical( opened.document, { handle, expectedHash: opened.hash } );
 assert.equal( saved.handle.grantID, 'file-1' );
 assert.equal( calls.at( -1 )[ 0 ], 'filesystem.save-file' ); assert.equal( calls.at( -1 )[ 1 ].expectedText, text );
