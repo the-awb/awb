@@ -4,10 +4,12 @@ import App from './App.jsx';
 import { HostedScoreClient } from './engine/HostedScoreClient.js';
 import { createBrowserHost } from './host/browserHost.js';
 import { createDesktopHost } from './host/desktopHost.js';
+import { createNeutralDesktopHost } from './host/neutralDesktopHost.js';
 import './styles.css';
 
-const host = globalThis.awbDesktopHost
-  ? createDesktopHost()
+const host = globalThis.awbHost
+  ? createNeutralDesktopHost()
+  : globalThis.awbDesktopHost ? createDesktopHost()
   : createBrowserHost( { launch: {
     endpoint: import.meta.env.VITE_HOSTED_ENDPOINT ?? '',
     initialScoreURL: import.meta.env.VITE_HOSTED_SCORE_URL ?? '',
@@ -16,6 +18,20 @@ const host = globalThis.awbDesktopHost
   } } );
 const createHostedClient = ( options ) => new HostedScoreClient( options );
 
-createRoot( document.getElementById( 'root' ) ).render(
+let unsubscribeShellCommand = null;
+if ( globalThis.awbHost ) {
+  const context = globalThis.awbHost.initialLaunchContext();
+  globalThis.awbHost.reportReady( { toolID: 'score-studio', viewID: context.viewID,
+    toolSessionID: context.toolSessionID } );
+}
+
+const root = createRoot( document.getElementById( 'root' ) );
+root.render(
   <StrictMode><App host={ host } createHostedClient={ createHostedClient } /></StrictMode>
 );
+
+if ( globalThis.awbHost ) unsubscribeShellCommand = globalThis.awbHost.onCommand( ( command ) => {
+  if ( command?.type !== 'dispose' ) return;
+  unsubscribeShellCommand?.(); root.unmount();
+  globalThis.awbHost.reportDetailedState( { disposeAcknowledged: true } );
+} );
