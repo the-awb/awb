@@ -126,9 +126,12 @@ test definitions do not appear in this rack.
 **Start** boots/resumes scsynth, loads all four library SynthDefs and creates that instrument with
 the visible values. Control edits reach the running node immediately through `/n_set`. Pause uses
 `/n_run`; Release sends `gate=0` and waits for the SynthDef's own envelope/done action; Free sends
-`/n_free` immediately. Reset restores the manifest defaults except that the rack starts the global
-`amp` control at `0.1` rather than a musical SynthDef's louder default. Release all and Free all
-operate only on rack-owned library nodes, not score realizations.
+`/n_free` immediately. Reset restores the actual manifest defaults, including `amp`. The rack must
+not quietly attenuate that control: these SynthDefs already contain their own output scaling, so an
+extra `0.1` made them practically silent. Each card reports its catalogue-derived amplitude attack
+and release timing; `running` means that the node exists, not that a 12- or 30-second attack has
+reached an audible level. Release all and Free all operate only on rack-owned library nodes, not
+score realizations.
 
 This remains browser-local even when the selected score mode is Hosted. The timeline bridge is a
 score execution protocol, not a generic remote-control channel. Desktop live instrument control

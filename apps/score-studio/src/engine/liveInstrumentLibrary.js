@@ -1,10 +1,6 @@
 import { INSTRUMENT_CATALOG, instrumentControls } from '@awb/instruments';
 import { settableControls } from '@awb/sc-wasm/core';
 
-const safeDefault = ( control ) => control.name === 'amp'
-  ? Math.min( Number( control.default ), 0.1 )
-  : control.default;
-
 export function liveInstrumentLibrary( manifest ) {
   return Object.entries( INSTRUMENT_CATALOG ).map( ( [ key, descriptor ] ) => {
     const definition = manifest.get( descriptor.synthDef );
@@ -15,7 +11,7 @@ export function liveInstrumentLibrary( manifest ) {
       const catalog = catalogControls.get( control.name );
       return Object.freeze( {
         name: control.name,
-        default: safeDefault( control ),
+        default: control.default,
         synthDefault: control.default,
         rate: control.rate ?? 'control',
         role: catalog?.role ?? null,

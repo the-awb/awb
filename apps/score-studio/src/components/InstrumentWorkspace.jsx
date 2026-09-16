@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { instrumentEnvelopes } from '@awb/instruments';
 import { loadSynthDefManifest } from '@awb/sc-wasm/core';
 import { liveInstrumentLibrary, initialLiveInstrumentParams } from '../engine/liveInstrumentLibrary.js';
 import { synthDefManifestUrl } from '../engine/scAssets.js';
@@ -115,9 +116,15 @@ function LiveInstrument( {
   instrument, values, node, busy, onStart, onPause, onResume, onRelease, onFree, onReset, onChange
 } ) {
   const state = !node ? 'idle' : node.released ? 'releasing' : node.paused ? 'paused' : 'running';
+  const amplitudeEnvelope = instrumentEnvelopes( instrument.key, values )
+    .find( ( envelope ) => envelope.role === 'amplitude' );
+  const attack = amplitudeEnvelope?.attack;
+  const stateLabel = state === 'running' && Number.isFinite( attack ) && attack > 0
+    ? `${ state } · ${ formatDuration( attack ) } attack`
+    : state;
   return <section className={ `liveInstrument ${ state }` }>
     <header><div><h2>{ instrument.label }</h2><code>\{ instrument.definition }</code></div>
-      <span>{ state }</span></header>
+      <span>{ stateLabel }</span></header>
     <div className="liveInstrumentActions">
       <button aria-label={ `Start ${ instrument.label }` } disabled={ busy || !instrument.available || Boolean( node ) }
         onClick={ onStart }>Start</button>
@@ -129,6 +136,8 @@ function LiveInstrument( {
       <button disabled={ busy } onClick={ onReset }>Reset</button>
     </div>
     { !instrument.available && <p className="error">SynthDef is not installed in this browser bundle.</p> }
+    { amplitudeEnvelope && <p className="liveEnvelopeSummary">Amplitude envelope: { formatDuration( amplitudeEnvelope.attack ) } attack
+      { amplitudeEnvelope.release !== null && <> · { formatDuration( amplitudeEnvelope.release ) } release</> }</p> }
     <div className="liveControls">{ instrument.controls.map( ( control ) => (
       <LiveControl key={ control.name } control={ control } value={ values[ control.name ] }
         disabled={ Boolean( node?.released ) } onChange={ ( value ) => onChange( control, value ) } />
@@ -162,4 +171,8 @@ function LiveControl( { control, value, disabled, onChange } ) {
 
 function formatNumber( value ) {
   return typeof value === 'number' ? String( Number( value.toPrecision( 7 ) ) ) : String( value );
+}
+
+function formatDuration( value ) {
+  return Number.isFinite( value ) ? `${ formatNumber( value ) }s` : 'unknown';
 }

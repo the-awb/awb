@@ -149,6 +149,7 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .liveInstrument > header > span { color: var(--muted); font-size: 9px; text-transform: uppercase; }.liveInstrument.running > header > span { color: var(--accent); }
 .liveInstrumentActions { display: flex; flex-wrap: wrap; gap: 5px; margin: 12px 0; }
 .liveInstrumentActions button { padding: 4px 8px; font-size: 10px; }
+.liveEnvelopeSummary { margin: -3px 0 10px; color: var(--muted); font-size: 10px; }
 .liveControls { display: grid; gap: 7px; }
 .liveControl, .liveBoolean { display: grid; grid-template-columns: minmax(105px, .8fr) minmax(150px, 1.2fr); align-items: center; gap: 10px; color: #c7c5bd; font-size: 10px; }
 .liveControl > span small, .liveBoolean > span small { display: block; margin-top: 1px; color: #737168; font: 8px ui-monospace, monospace; }

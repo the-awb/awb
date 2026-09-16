@@ -23,33 +23,64 @@ const errors = [];
 page.on( 'pageerror', ( error ) => errors.push( error.message ) );
 let passed = 0;
 
+async function outputPeak( seconds = 0.25 ) {
+  return page.evaluate( ( windowSeconds ) => {
+    const samples = window.__scoreSc?.readRecentSamples( windowSeconds );
+    if ( !samples ) return 0;
+    let result = 0;
+    for ( const channel of [ samples.x, samples.y ] ) {
+      for ( const value of channel ) result = Math.max( result, Math.abs( value ) );
+    }
+    return result;
+  }, seconds );
+}
+
+async function waitForAudibleOutput( threshold, timeout = 8000 ) {
+  let peak = 0;
+  const deadline = Date.now() + timeout;
+  while ( Date.now() < deadline && peak < threshold ) {
+    peak = await outputPeak();
+    if ( peak < threshold ) await page.waitForTimeout( 50 );
+  }
+  return peak;
+}
+
 try {
   await page.goto( url, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'AWB', { exact: true } ).waitFor();
   await page.getByRole( 'button', { name: 'Instruments', exact: true } ).click();
   passed += 1;
+  const checks = [
+    { label: 'Basic', definition: 'fieldBasic', prepare: [ [ 'attackT', 0.05 ], [ 'releaseT', 0.05 ] ], threshold: 0.05 },
+    { label: 'Substrate', definition: 'substrate', prepare: [ [ 'attackT', 0.05 ], [ 'releaseT', 0.05 ] ], threshold: 0.04 },
+    { label: 'Substrate 2', definition: 'substrate2', prepare: [ [ 'attackT', 0.05 ], [ 'releaseT', 0.05 ] ], threshold: 0.04 },
+    { label: 'Resobass2', definition: 'resonantBassEnv2', prepare: [ [ 'ampEnvRatio', 0.02 ] ], threshold: 0.02 }
+  ];
+  const peaks = {};
+  for ( const check of checks ) {
+    const card = page.locator( '.liveInstrument' ).filter( {
+      has: page.getByText( `\\${ check.definition }`, { exact: true } )
+    } );
+    for ( const [ control, value ] of check.prepare ) {
+      await card.getByLabel( `Live ${ control }`, { exact: true } ).fill( String( value ) );
+    }
+    await page.getByRole( 'button', { name: `Start ${ check.label }`, exact: true } ).click();
+    await card.waitFor( { state: 'visible', timeout: 60000 } );
+    await page.getByText( '4 live instrument SynthDefs ready.', { exact: true } ).waitFor();
+    const peak = await waitForAudibleOutput( check.threshold );
+    if ( peak < check.threshold ) {
+      throw new Error( `live ${ check.label } remained inaudible (peak ${ peak.toFixed( 6 ) })` );
+    }
+    peaks[ check.definition ] = peak;
+    await page.getByRole( 'button', { name: `Free ${ check.label }`, exact: true } ).click();
+    await page.waitForFunction( ( definition ) => !window.__scoreSc?.nodes?.[ definition ], check.definition );
+    await page.waitForTimeout( 350 );
+  }
+  passed += 4;
+
   await page.getByRole( 'button', { name: 'Start Basic', exact: true } ).click();
   await page.locator( '.liveInstrument.running' ).filter( { hasText: 'fieldBasic' } )
     .waitFor( { timeout: 60000 } );
-  passed += 1;
-  await page.getByText( '4 live instrument SynthDefs ready.', { exact: true } ).waitFor();
-  passed += 1;
-
-  let peak = 0;
-  const deadline = Date.now() + 8000;
-  while ( Date.now() < deadline && peak < 0.00001 ) {
-    peak = await page.evaluate( () => {
-      const samples = window.__scoreSc?.readRecentSamples( 0.5 );
-      if ( !samples ) return 0;
-      let result = 0;
-      for ( const channel of [ samples.x, samples.y ] ) {
-        for ( const value of channel ) result = Math.max( result, Math.abs( value ) );
-      }
-      return result;
-    } );
-    if ( peak < 0.00001 ) await page.waitForTimeout( 50 );
-  }
-  if ( peak < 0.00001 ) throw new Error( `live Basic instrument remained silent (peak ${ peak.toFixed( 6 ) })` );
   passed += 1;
 
   await page.getByLabel( 'Live freqL', { exact: true } ).fill( '72' );
@@ -71,9 +102,10 @@ try {
   passed += 1;
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 1;
-  console.log( `live-instrument-browser: ${ passed }/8 pass (Basic peak ${ peak.toFixed( 5 )}, live n_set, gated release)` );
+  console.log( `live-instrument-browser: ${ passed }/10 pass (${ Object.entries( peaks )
+    .map( ( [ definition, peak ] ) => `${ definition } ${ peak.toFixed( 4 ) }` ).join( ', ' ) }; live n_set, gated release)` );
 } catch ( error ) {
-  console.error( `live-instrument-browser: FAIL after ${ passed }/8: ${ error.message }` );
+  console.error( `live-instrument-browser: FAIL after ${ passed }/10: ${ error.message }` );
   process.exitCode = 1;
 } finally {
   await browser.close();

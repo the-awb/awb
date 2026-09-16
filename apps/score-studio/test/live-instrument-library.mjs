@@ -19,7 +19,7 @@ const basic = library[ 0 ];
 assert.ok( basic.controls.some( ( control ) => control.name === 'freqL' ) );
 assert.ok( basic.controls.every( ( control ) => ![ 'out', 'gate' ].includes( control.name ) ) );
 const basicParams = initialLiveInstrumentParams( basic );
-assert.equal( basicParams.amp, 0.1, 'live global gain starts below the SynthDef default' );
+assert.equal( basicParams.amp, 1, 'live rack preserves the audible SynthDef gain default' );
 assert.equal( basicParams.freqL, 60 );
 assert.ok( Object.isFrozen( library[ 0 ] ) && Object.isFrozen( basicParams ) );
 const substrate2 = library.find( ( instrument ) => instrument.key === 'substrate2' );
