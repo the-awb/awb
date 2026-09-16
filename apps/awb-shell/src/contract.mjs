@@ -14,6 +14,7 @@ export function publicManifest( manifest ) {
   return Object.freeze( {
     id: manifest.id, name: manifest.name, version: manifest.version,
     launchProfiles: manifest.launchProfiles,
-    capabilities: manifest.capabilities
+    capabilities: manifest.capabilities,
+    documentKinds: manifest.documentKinds
   } );
 }

@@ -11,6 +11,7 @@ import { ViewRegistry } from '../src/viewRegistry.mjs';
 import { FileGrantStore } from '../src/fileGrants.mjs';
 import { atomicWriteText, guardedWriteText } from '../src/nativeFiles.mjs';
 import { ServiceRegistry } from '../src/serviceRegistry.mjs';
+import { RecentStore } from '../src/recentStore.mjs';
 import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
 import {
   permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
@@ -29,6 +30,7 @@ const ownerTimers = new Map();
 const serviceReleases = new Map();
 const fileGrants = new FileGrantStore();
 const services = new ServiceRegistry( createOscWebSocketRelay );
+let recentStore;
 let homeWindow = null;
 let quitting = false;
 let tools = new Map();
@@ -108,15 +110,49 @@ function bindNavigationGuards( window, allowed ) {
 
 function viewSnapshot( view ) {
   const tool = tools.get( view.toolID );
+  const binding = tool?.hostBindings.nodeManager && view.toolSessionID ? {
+    toolSource: tool.hostBindings.nodeManager.toolSource, toolInstance: view.toolSessionID
+  } : null;
   return { viewID: view.viewID, toolID: view.toolID, toolName: tool?.name ?? view.toolID,
     toolSessionID: view.toolSessionID, launchOrigin: view.launchOrigin, lifecycle: view.lifecycle,
-    owner: view.owner, sessionState: view.sessionState, lastError: view.lastError ?? null };
+    owner: view.owner, sessionState: view.sessionState, lastError: view.lastError ?? null,
+    liveRuntime: binding ? services.projectionForBinding( binding ) : { containers: [], entries: [] } };
 }
 
 function shellSnapshot() {
+  const serviceSnapshots = services.snapshot();
+  const serviceHost = serviceSnapshots.find( ( item ) => item.host )?.host ?? {
+    sclang: { status: 'absent' }, scsynth: { status: 'unavailable' },
+    synthDefs: { status: 'unavailable' }, nodeManager: { status: 'unavailable' }
+  };
+  const scsynthStates = registry.list().map( ( view ) => view.sessionState?.scsynthStatus ).filter( Boolean );
+  const scsynthStatus = scsynthStates.includes( 'ready' ) ? 'ready'
+    : scsynthStates.includes( 'booting' ) ? 'booting' : serviceHost.scsynth.status;
+  const host = { ...serviceHost, scsynth: { status: scsynthStatus } };
   return { shellProtocol: SHELL_PROTOCOL, shellInstanceID, processID: process.pid,
-    tools: [ ...tools.values() ].map( publicManifest ), views: registry.list().map( viewSnapshot ),
-    failures: manifestFailures };
+    tools: [ ...tools.values() ].map( ( tool ) => ( { ...publicManifest( tool ),
+      documentKinds: tool.documentKinds.map( ( kind ) => ( { ...kind,
+        recentItems: recentStore?.list( tool.id, kind.id ) ?? [] } ) ) } ) ),
+    views: registry.list().map( viewSnapshot ),
+    host, failures: manifestFailures };
+}
+
+async function launchDocument( payload ) {
+  const tool = tools.get( payload.toolID );
+  const kind = tool?.documentKinds.find( ( item ) => item.id === payload.documentKindID );
+  if ( !tool || !kind || !kind.actions.includes( payload.action ) ) throw new Error( 'Document action is not declared by this tool.' );
+  let target = null; let documentPayload = { documentKindID: kind.id };
+  if ( payload.action === 'browse' ) {
+    const result = await dialog.showOpenDialog( homeWindow, { properties: [ 'openFile' ],
+      filters: [ { name: kind.label, extensions: [ ...kind.extensions ] } ] } );
+    if ( result.canceled ) return { status: 'cancelled' };
+    target = result.filePaths[ 0 ]; documentPayload = { ...documentPayload, scorePath: target };
+  } else if ( payload.action === 'recent' ) {
+    target = recentStore.resolve( payload.recentID, tool.id, kind.id ); documentPayload = { ...documentPayload, scorePath: target };
+  } else documentPayload = { ...documentPayload, newDocumentID: crypto.randomUUID() };
+  const result = await router.launch( { toolID: tool.id, profileID: kind.profileID, launchOrigin: 'desktop', payload: documentPayload } );
+  if ( target && result.viewID ) registry.update( result.viewID, { pendingRecentPath: target, pendingDocumentKindID: kind.id } );
+  return result;
 }
 
 function notifyHome() {
@@ -129,6 +165,21 @@ async function waitFor( predicate, timeout = 15000 ) {
     if ( Date.now() - started > timeout ) throw new Error( 'Timed out during AWB shell smoke check.' );
     await new Promise( ( resolve ) => setTimeout( resolve, 25 ) );
   }
+}
+
+async function runHomeSmoke() {
+  const result = await homeWindow.webContents.executeJavaScript( `new Promise((resolve, reject) => {
+    const started = Date.now();
+    const check = () => {
+      const scoreActions = document.querySelectorAll('[data-document-tool="score-studio"]').length;
+      const lissajousActions = document.querySelectorAll('[data-document-tool="lissajous"]').length;
+      const hostFacts = document.querySelectorAll('.host-fact').length;
+      if (scoreActions === 2 && lissajousActions === 0 && hostFacts === 4) resolve({ scoreActions, hostFacts });
+      else if (Date.now() - started > 5000) reject(new Error('Toolkit Home document and host facts did not render'));
+      else setTimeout(check, 25);
+    }; check();
+  })` );
+  console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions } hostFacts=${ result.hostFacts }` ); app.quit();
 }
 
 async function runMultiviewSmoke() {
@@ -215,8 +266,9 @@ async function runHostedSmoke( viewID ) {
     const check = () => {
       const text = document.body.innerText;
       const file = document.querySelector('.filePanel .identity dd')?.textContent;
-      if (text.includes('installed atomically.') && file === ${ JSON.stringify( loadedName ) }) resolve(true);
-      else if (Date.now() - started > 25000) reject(new Error('named hosted score was not installed'));
+      if (text.includes('installed atomically.') && text.includes('in desktop context')
+        && file === ${ JSON.stringify( loadedName ) }) resolve(true);
+      else if (Date.now() - started > 25000) reject(new Error('named hosted score or SynthDef context was not installed'));
       else setTimeout(check, 25);
     }; check();
   })` );
@@ -276,7 +328,8 @@ async function createToolWindow( { viewID, request, tool } ) {
       allowedPrefixes: [ ...policy.allowedPrefixes ],
       clientIdentityAddresses: [ ...policy.clientIdentityAddresses ],
       disconnectAddresses: [ ...policy.disconnectAddresses ] } );
-    serviceReleases.set( viewID, acquired.release );
+    const unsubscribeHost = acquired.service.subscribeHost?.( notifyHome ) ?? ( () => {} );
+    serviceReleases.set( viewID, async () => { unsubscribeHost(); await acquired.release(); } );
     effectiveRequest = Object.freeze( { ...request, connections: Object.freeze( {
       ...request.connections, endpoint: acquired.service.endpoint
     } ) } );
@@ -387,12 +440,18 @@ async function handleToolOperation( sender, operation, payload ) {
   }
   if ( operation === 'filesystem.initial-file' ) {
     requireCapability( tool, 'filesystem', 'open-file' );
-    return view.requestPayload?.scorePath ? fileGrants.fileRecord( view.viewID, view.requestPayload.scorePath ) : null;
+    if ( !view.requestPayload?.scorePath ) return null;
+    registry.update( view.viewID, { pendingRecentPath: view.requestPayload.scorePath,
+      pendingDocumentKindID: view.requestPayload.documentKindID ?? null } );
+    return fileGrants.fileRecord( view.viewID, view.requestPayload.scorePath );
   }
   if ( operation === 'filesystem.open-file' ) {
     requireCapability( tool, 'filesystem', 'open-file' );
     const result = await dialog.showOpenDialog( window, { properties: [ 'openFile' ], filters: payload.filters ?? [] } );
-    return result.canceled ? null : fileGrants.fileRecord( view.viewID, result.filePaths[ 0 ] );
+    if ( result.canceled ) return null;
+    registry.update( view.viewID, { pendingRecentPath: result.filePaths[ 0 ],
+      pendingDocumentKindID: payload.documentKindID ?? null } );
+    return fileGrants.fileRecord( view.viewID, result.filePaths[ 0 ] );
   }
   if ( operation === 'filesystem.open-directory' ) {
     requireCapability( tool, 'filesystem', 'open-directory' );
@@ -408,6 +467,8 @@ async function handleToolOperation( sender, operation, payload ) {
   if ( operation === 'filesystem.read-file' ) {
     requireCapability( tool, 'filesystem', 'open-file' );
     const grant = fileGrants.resolve( view.viewID, payload.handle, 'file' );
+    if ( payload.markRecent ) registry.update( view.viewID, { pendingRecentPath: grant.path,
+      pendingDocumentKindID: payload.documentKindID ?? null } );
     return { handle: payload.handle, name: grant.name, text: await readFile( grant.path, 'utf8' ) };
   }
   if ( operation === 'filesystem.save-file' ) {
@@ -433,7 +494,7 @@ function registerIPC() {
     if ( sender.kind === 'home' ) {
       homeReadyCount += 1;
       console.log( 'AWB_SHELL_HOME_READY' );
-      if ( smokeHome ) setTimeout( () => app.quit(), 50 );
+      if ( smokeHome ) runHomeSmoke().catch( reportFatal );
       else if ( smokeMultiview && !smokeRunning ) runMultiviewSmoke().catch( reportFatal );
       else if ( smokeMultitool && !smokeRunning ) runMultitoolSmoke().catch( reportFatal );
       else if ( smokeOwnerLoss && !smokeRunning ) runOwnerLossSmoke().catch( reportFatal );
@@ -457,6 +518,13 @@ function registerIPC() {
     if ( !sender ) return;
     if ( sender.kind === 'tool' ) {
       const safe = boundedRendererState( state ); registry.update( sender.viewID, { detailedState: safe } );
+      const view = registry.get( sender.viewID );
+      if ( safe.validatedDocumentKindID && view?.pendingRecentPath
+        && safe.validatedDocumentKindID === view.pendingDocumentKindID ) {
+        recentStore.add( { toolID: view.toolID, documentKindID: safe.validatedDocumentKindID,
+          target: view.pendingRecentPath } ).then( notifyHome ).catch( ( error ) => console.error( error ) );
+        registry.update( sender.viewID, { pendingRecentPath: null } );
+      }
       if ( safe.disposeAcknowledged && registry.get( sender.viewID )?.lifecycle === 'closing' ) windows.get( sender.viewID )?.close();
     }
   } );
@@ -470,6 +538,7 @@ function registerIPC() {
     if ( sender.kind === 'home' ) {
       if ( request.operation === 'shell.snapshot' ) return shellSnapshot();
       if ( request.operation === 'shell.launch' ) return router.launch( payload );
+      if ( request.operation === 'shell.launch-document' ) return launchDocument( payload );
       if ( request.operation === 'shell.focus' ) { await focusToolView( payload.viewID ); return true; }
       if ( request.operation === 'shell.close' ) return closeToolView( payload.viewID );
     }
@@ -536,7 +605,9 @@ if ( gotLock ) {
     else createHomeWindow().catch( reportFatal );
   } );
   app.whenReady().then( async () => {
-    await loadTools(); registerIPC(); registerRendererPolicies();
+    await loadTools();
+    recentStore = new RecentStore( { filePath: path.join( app.getPath( 'userData' ), 'recent-documents.json' ) } );
+    await recentStore.load(); registerIPC(); registerRendererPolicies();
     router = new LaunchRouter( { tools, registry, createView: createToolWindow, focusView: focusToolView } );
     registry.subscribe( notifyHome );
     await createHomeWindow();

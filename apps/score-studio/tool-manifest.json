@@ -24,9 +24,16 @@
   },
   "connectionPolicies": {
     "hosted-timeline": {
-      "allowedPrefixes": ["/awb/timeline/", "/awb/synthdef/"],
+      "allowedPrefixes": ["/awb/timeline/", "/awb/synthdef/", "/awb/nm/"],
       "clientIdentityAddresses": ["/awb/timeline/hello", "/awb/synthdef/hello"],
       "disconnectAddresses": ["/awb/timeline/disconnect", "/awb/synthdef/disconnect"]
     }
-  }
+  },
+  "hostBindings": {
+    "nodeManager": { "toolSource": "scoreArranger" }
+  },
+  "documentKinds": [
+    { "id": "score", "label": "Score", "extensions": ["score.json"],
+      "actions": ["new", "recent", "browse"], "profileID": "standalone" }
+  ]
 }

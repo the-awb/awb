@@ -40,14 +40,15 @@ npm run test:neutral-shell-hosted-real --workspace @awb/score-studio
 The Electron suite includes a two-tool gate which launches Score Studio and Lissajous together,
 checks the latter's multichannel request and audio-input grant, and closes each view independently.
 
-## Next shell slice
+## Shared desktop host
 
-Toolkit Home is intended to become the junction between tool documents, hosted SuperCollider and
-live NodeManager state without owning any of them. The next implementation slice adds:
+Toolkit Home is the junction between tool documents, hosted SuperCollider and live NodeManager
+state without owning any of them:
 
-- the existing shell-level OSC/WebSocket relay now carries both hosted score transport and the
-  read-only SynthDef-context protocol declared by a tool; the remaining broker work is attached or
-  explicitly owned sclang/scsynth readiness and the NodeManager bridge;
+- one shared host service carries tool-owned score transport while intercepting the read-only
+  SynthDef-context protocol for shell-side request coalescing and exact-byte/spec caching;
+- SynthDef inventories establish cache generations: refresh invalidates prior descriptions and late
+  transfers cannot restore stale state;
 - a lightweight shared NodeManager subscription which the shell filters into per-tool and
   per-session container summaries;
 - explicit `toolID`/`toolSessionID` to `toolSource`/`toolInstance` bindings, never name-based
@@ -56,6 +57,10 @@ live NodeManager state without owning any of them. The next implementation slice
   applicable tool card;
 - bounded recent-file references while parsing, validation, revision state and canonical saves
   remain owned by the selected tool.
+
+The Home status strip reports sclang attachment, scsynth readiness, SynthDef-context readiness and
+NodeManager connectivity separately. A ready language context is not presented as proof that a
+definition is installed on the active server.
 
 Tools without a SuperCollider host or canonical document must still launch normally; unavailable
 hosted, tracking or file actions are shown as capabilities, not treated as application failures.

@@ -151,9 +151,11 @@ export default function App( { host, createHostedClient } ) {
       dirty,
       mode: session.mode,
       connection: hosted.status,
+      scsynthStatus: hosted.readiness.engine === 'ready' ? 'ready'
+        : hosted.status === 'connecting' ? 'booting' : 'unavailable',
       transport: hosted.transport?.state ?? null
     } ) );
-  }, [ dirty, host, hosted.status, hosted.transport?.state, session.document.revision,
+  }, [ dirty, host, hosted.readiness.engine, hosted.status, hosted.transport?.state, session.document.revision,
     session.document.scoreID, session.mode ] );
 
   useEffect( () => {
