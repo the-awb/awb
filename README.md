@@ -14,6 +14,7 @@ packages/
   lissajous-engine/     React-free visual core with R3F, vanilla and browser adapters
   render-pipeline/      provider-neutral resolved jobs and indexed render scheduling
 apps/
+  awb-shell/            planned neutral Electron host for independently packaged AWB tools
   score-studio/         clean score authoring and browser-runtime development host
 ```
 
@@ -41,5 +42,8 @@ They must not depend on this repository's working `src/` tree. That boundary pre
 uncommitted change here from silently entering a build elsewhere.
 
 See [MIGRATION.md](./MIGRATION.md) for provenance and the transition boundary.
+The shared desktop host contract and extraction sequence are specified in
+[AWB_DESKTOP_SHELL_SPEC.md](./AWB_DESKTOP_SHELL_SPEC.md). The current Score Studio Electron code is
+the working prototype, not a one-shell-per-tool precedent.
 The current OSC/WebSocket inventory and extraction boundary are recorded in
 [`apps/score-studio/server/README.md`](./apps/score-studio/server/README.md).
