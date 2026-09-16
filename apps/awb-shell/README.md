@@ -6,6 +6,12 @@ The neutral Electron owner for AWB Toolkit Home and hosted tool views.
 npm start --workspace @awb/desktop-shell
 ```
 
+A plain shell launch probes the standard local sclang OSC endpoint at
+`127.0.0.1:57120`. Use `--osc-host` and `--osc-port` (or `AWB_SC_OSC_PORT`) to
+target a different language process. The AWB OSC bridges must also be running
+inside that sclang process; starting SuperCollider alone does not install their
+responders.
+
 `start` builds the workspace packages, including the native-audio helper and Score Studio renderer,
 before Electron starts. Packaged external tools such as Lissajous are already installed as complete
 renderer artifacts.

@@ -87,7 +87,7 @@ function hostConfigurationFromRequest( request ) {
 }
 
 function hostConfigurationFromArgs( args ) {
-  const oscPort = Number( option( args, 'osc-port', 0 ) );
+  const oscPort = Number( option( args, 'osc-port', process.env.AWB_SC_OSC_PORT ?? 57120 ) );
   if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) return null;
   return Object.freeze( { oscHost: option( args, 'osc-host', '127.0.0.1' ), oscPort } );
 }
@@ -205,7 +205,7 @@ async function runHomeSmoke() {
       else setTimeout(check, 25);
     }; check();
   })` );
-  console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions } hostFacts=${ result.hostFacts }` ); app.quit();
+  console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions } hostFacts=${ result.hostFacts } hostServices=${ services.snapshot().length }` ); app.quit();
 }
 
 async function runMultiviewSmoke() {
