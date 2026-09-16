@@ -5,12 +5,7 @@ import { hashScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
-import {
-  listScoreDirectory, loadBundledScore, openScoreDirectory, openScoreFile, readScoreFile,
-  readScoreHandle, saveProjectionFile, saveScoreFile, storeRecoveryDraft
-} from './engine/scoreFiles.js';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
-import { HostedScoreClient } from './engine/HostedScoreClient.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
 import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
 import { generateLocalScProjection, SC_PROJECTION_KINDS } from './engine/localScProjection.js';
@@ -19,18 +14,17 @@ import { retryScoreProjection, saveScorePair, validateProjection } from './engin
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
-const launchedScoreURL = import.meta.env.VITE_HOSTED_SCORE_URL ?? '';
-const launchedScoreName = import.meta.env.VITE_HOSTED_SCORE_NAME ?? 'hosted.score.json';
-const toolSessionID = import.meta.env.VITE_TOOL_SESSION_ID ?? '';
 
-export default function App() {
+export default function App( { host, createHostedClient } ) {
+  const launchContext = useMemo( () => host.hostedLaunchContext(), [ host ] );
+  const { endpoint: launchedEndpoint, toolSessionID } = launchContext;
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
   const [ file, setFile ] = useState( {
     handle: null, name: null, hash: null, savedRevision: null,
     projectionHandle: null, projectionText: null, pendingIdentity: null,
     projectionStatus: 'not generated', message: ''
   } );
-  const [ endpoint, setEndpoint ] = useState( import.meta.env.VITE_HOSTED_ENDPOINT ?? '' );
+  const [ endpoint, setEndpoint ] = useState( launchedEndpoint );
   const [ hostedMessage, setHostedMessage ] = useState( '' );
   const [ standaloneMessage, setStandaloneMessage ] = useState( '' );
   const [ projectionKind, setProjectionKind ] = useState( SC_PROJECTION_KINDS.DESKTOP_SCORE );
@@ -39,10 +33,10 @@ export default function App() {
   const inputRef = useRef( null );
   const sc = useSuperCollider( { importScsynth } );
   const sclang = useScLang( sc, { importSclang, locateFile: locateSclangFile, exposeDevGlobals: import.meta.env.DEV } );
-  const hostedClient = useMemo( () => new HostedScoreClient( {
+  const hostedClient = useMemo( () => createHostedClient( {
     clientID: toolSessionID ? `score-tool-${ toolSessionID }` : undefined,
     toolSessionID
-  } ), [] );
+  } ), [ createHostedClient, toolSessionID ] );
   const hosted = useSyncExternalStore( hostedClient.subscribe, hostedClient.getState, hostedClient.getState );
   const standaloneExecutorRef = useRef( null );
   if ( standaloneExecutorRef.current === null ) {
@@ -65,8 +59,8 @@ export default function App() {
   );
 
   useEffect( () => {
-    try { storeRecoveryDraft( session.document ); } catch { /* local recovery is optional */ }
-  }, [ session.document ] );
+    try { host.storeRecovery( session.document ); } catch { /* host recovery is optional */ }
+  }, [ host, session.document ] );
 
   useEffect( () => {
     if ( localProjection
@@ -75,12 +69,12 @@ export default function App() {
   }, [ localProjection, session.document.revision, session.document.scoreID ] );
 
   useEffect( () => {
-    if ( !launchedScoreURL || launchState.current.scoreLoaded ) return;
+    if ( launchState.current.scoreLoaded ) return;
     launchState.current.scoreLoaded = true;
-    loadBundledScore( launchedScoreURL, launchedScoreName )
-      .then( acceptOpen )
+    host.initialScore()
+      .then( ( result ) => result && acceptOpen( result ) )
       .catch( ( error ) => setFile( ( current ) => ( { ...current, message: error.message } ) ) );
-  }, [] );
+  }, [ host ] );
 
   useEffect( () => {
     if ( !toolSessionID || !endpoint || hosted.status !== 'disconnected' ) return undefined;
@@ -132,6 +126,18 @@ export default function App() {
     // preserving this component's refs. Stop owned nodes, but keep the executor reusable.
     standaloneExecutor.stop();
   }, [ hostedClient, standaloneExecutor ] );
+
+  useEffect( () => {
+    host.reportSessionState( Object.freeze( {
+      scoreID: session.document.scoreID,
+      revision: session.document.revision,
+      dirty,
+      mode: session.mode,
+      connection: hosted.status,
+      transport: hosted.transport?.state ?? null
+    } ) );
+  }, [ dirty, host, hosted.status, hosted.transport?.state, session.document.revision,
+    session.document.scoreID, session.mode ] );
 
   useEffect( () => {
     if ( session.mode === MODES.STANDALONE ) return;
@@ -235,15 +241,16 @@ export default function App() {
     const untouchedWelcomeScore = file.name === null
       && session.document.scoreID === 'untitled-score'
       && session.document.revision === 0;
-    return !dirty || untouchedWelcomeScore || window.confirm( 'Discard the current unsaved revision?' );
+    return !dirty || untouchedWelcomeScore || host.confirmDiscard( 'Discard the current unsaved revision?' );
   }
 
   async function openDocument() {
     if ( !canDiscard() ) return;
     try {
-      const result = await openScoreFile();
+      const result = await host.openScore();
       if ( result ) await acceptOpen( result );
-      else inputRef.current?.click();
+      else if ( host.capabilities.fileInputFallback ) inputRef.current?.click();
+      else setFile( ( current ) => ( { ...current, message: 'This host cannot open score files.' } ) );
     } catch ( error ) {
       if ( error.name !== 'AbortError' ) setFile( ( current ) => ( { ...current, message: error.message } ) );
     }
@@ -253,15 +260,17 @@ export default function App() {
     const picked = event.target.files?.[ 0 ];
     event.target.value = '';
     if ( !picked || !canDiscard() ) return;
-    try { await acceptOpen( await readScoreFile( picked ) ); }
+    try { await acceptOpen( await host.readFallbackScore( picked ) ); }
     catch ( error ) { setFile( ( current ) => ( { ...current, message: error.message } ) ); }
   }
 
   async function chooseScoreFolder() {
     try {
-      const result = await openScoreDirectory();
+      const result = await host.openScoreDirectory();
       if ( !result ) {
-        setScoreFolder( ( current ) => ( { ...current, message: 'Folder browsing requires Chromium; use Open… in this browser.' } ) );
+        setScoreFolder( ( current ) => ( {
+          ...current, message: 'Folder browsing is unavailable in this host; use Open… instead.'
+        } ) );
         return;
       }
       setScoreFolder( { ...result, message: result.files.length ? '' : 'No .score.json files in this folder.' } );
@@ -273,9 +282,10 @@ export default function App() {
   async function refreshScoreFolder() {
     if ( !scoreFolder.handle ) return;
     try {
-      const files = await listScoreDirectory( scoreFolder.handle );
+      const refreshed = await host.refreshScoreDirectory( scoreFolder );
       setScoreFolder( ( current ) => ( {
-        ...current, files, message: files.length ? '' : 'No .score.json files in this folder.'
+        ...current, ...refreshed,
+        message: refreshed.files.length ? '' : 'No .score.json files in this folder.'
       } ) );
     } catch ( error ) {
       setScoreFolder( ( current ) => ( { ...current, message: error.message } ) );
@@ -284,14 +294,14 @@ export default function App() {
 
   async function openFolderScore( item ) {
     if ( !canDiscard() ) return;
-    try { await acceptOpen( await readScoreHandle( item.handle ) ); }
+    try { await acceptOpen( await host.openDirectoryScore( item ) ); }
     catch ( error ) { setScoreFolder( ( current ) => ( { ...current, message: error.message } ) ); }
   }
 
   async function openDemoScore() {
     if ( !canDiscard() ) return;
     try {
-      const result = await loadBundledScore(
+      const result = await host.loadBundledScore(
         '/examples/sonic-attunement-01.score.json', 'sonic-attunement-01.score.json'
       );
       await acceptOpen( result );
@@ -305,11 +315,11 @@ export default function App() {
       if ( session.mode === MODES.HOSTED && connected ) {
         const result = await saveScorePair( {
           document: session.document,
-          saveCanonical: () => saveScoreFile( session.document, {
+          saveCanonical: () => host.saveCanonical( session.document, {
             handle: file.handle, expectedHash: file.hash, saveAs
           } ),
           requestProjection: requestHostedProjection,
-          saveProjection: ( text, identity ) => saveProjectionFile( text, {
+          saveProjection: ( text, identity ) => host.saveProjection( text, {
             scoreID: identity.scoreID,
             handle: file.projectionHandle,
             expectedText: file.projectionText,
@@ -332,7 +342,9 @@ export default function App() {
         } ) );
         return;
       }
-      const result = await saveScoreFile( session.document, { handle: file.handle, expectedHash: file.hash, saveAs } );
+      const result = await host.saveCanonical( session.document, {
+        handle: file.handle, expectedHash: file.hash, saveAs
+      } );
       setFile( {
         handle: result.handle,
         name: result.handle?.name ?? `${ session.document.scoreID }.score.json`,
@@ -423,7 +435,7 @@ export default function App() {
         document: session.document,
         identity: file.pendingIdentity,
         requestProjection: requestHostedProjection,
-        saveProjection: ( text, identity ) => saveProjectionFile( text, {
+        saveProjection: ( text, identity ) => host.saveProjection( text, {
           scoreID: identity.scoreID,
           handle: file.projectionHandle,
           expectedText: file.projectionText
@@ -512,7 +524,8 @@ export default function App() {
             onClick={ () => openFolderScore( item ) }>{ item.name }</button> ) }
         </div> }
         { scoreFolder.message && <p className="fileMessage">{ scoreFolder.message }</p> }
-        <input ref={ inputRef } hidden type="file" accept=".json,.score.json,application/json" onChange={ onFallbackFile } />
+        { host.capabilities.fileInputFallback && <input ref={ inputRef } hidden type="file"
+          accept=".json,.score.json,application/json" onChange={ onFallbackFile } /> }
         <dl className="identity">
           <dt>File</dt><dd>{ file.name ?? 'not saved' }</dd>
           <dt>Score ID</dt><dd>{ session.document.scoreID }</dd>
