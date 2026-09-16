@@ -13,6 +13,7 @@ import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.
 import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
 import { generateLocalScProjection, SC_PROJECTION_KINDS } from './engine/localScProjection.js';
 import { readLocalProjection, storeLocalProjection } from './engine/localProjectionStore.js';
+import { scoreInstruments } from './engine/scoreInstruments.js';
 import { retryScoreProjection, saveScorePair, validateProjection } from './engine/scorePairSave.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
@@ -44,6 +45,10 @@ export default function App( { host, createHostedClient } ) {
     toolSessionID
   } ), [ createHostedClient, toolSessionID ] );
   const hosted = useSyncExternalStore( hostedClient.subscribe, hostedClient.getState, hostedClient.getState );
+  const referencedSynthDefs = useMemo(
+    () => scoreInstruments( session.document ).map( ( instrument ) => instrument.definition ),
+    [ session.document ]
+  );
   const standaloneExecutorRef = useRef( null );
   if ( standaloneExecutorRef.current === null ) {
     standaloneExecutorRef.current = createStandaloneScoreExecutor( {
@@ -115,6 +120,12 @@ export default function App( { host, createHostedClient } ) {
       } );
   }, [ file.name, hosted.remoteRevision, hosted.scoreID, hosted.status,
     hostedClient, session.document ] );
+
+  useEffect( () => {
+    if ( hosted.status !== 'connected' || hosted.synthDefContext.status !== 'connected' ) return;
+    hostedClient.loadSynthDefContext( referencedSynthDefs ).catch( () => {} );
+  }, [ hosted.status, hosted.synthDefContext.status, hostedClient, referencedSynthDefs,
+    session.document.revision, session.document.scoreID ] );
 
   useEffect( () => {
     if ( !import.meta.env.DEV ) return undefined;
@@ -608,9 +619,9 @@ export default function App( { host, createHostedClient } ) {
                   onClick={ () => hostedAction( () => hostedClient.installDocument( session.document ),
                     `Revision ${ session.document.revision } installed atomically.` ) }>Load revision</button>
               </div>
-              <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>Audio</dt><dd>{ hosted.readiness.engine }</dd><dt>Playback</dt><dd>{ hostedCanPlay ? 'ready' : hosted.readiness.reason }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
+              <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>SynthDefs</dt><dd>{ hosted.synthDefContext.inventory ? `${ hosted.synthDefContext.inventory.length } in desktop context` : hosted.synthDefContext.status }</dd><dt>Audio</dt><dd>{ hosted.readiness.engine }</dd><dt>Playback</dt><dd>{ hostedCanPlay ? 'ready' : hosted.readiness.reason }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
               { ( hostedMessage || hosted.error ) && <p className={ hosted.error ? 'error' : 'fileMessage' }>{ hostedMessage || hosted.error }</p> }
-              <p className="boundaryNote">The local WebSocket sidecar forwards only `/awb/timeline/...` OSC. Desktop sclang remains the scheduling and transport authority.</p>
+              <p className="boundaryNote">The local WebSocket sidecar forwards the timeline and read-only SynthDef-context protocols. Desktop sclang remains the scheduling, transport and loaded-definition authority.</p>
             </>
           ) : (
             <>
@@ -635,6 +646,7 @@ export default function App( { host, createHostedClient } ) {
         </section>
 
         <InstrumentPanel document={ session.document } mode={ session.mode }
+          hostedSynthDefs={ hosted.synthDefContext }
           standaloneDefinitions={ definitionsCurrent ? standaloneDefinitions : {
             scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
           } } />

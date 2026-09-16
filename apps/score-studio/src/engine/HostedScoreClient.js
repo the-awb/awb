@@ -1,10 +1,17 @@
 import { hashScoreDocument } from '@awb/score';
 import { createPlaybackReadiness } from '@awb/sc-runtime';
+import { buildSynthDefInterface, parseSynthDef, synthDefFingerprint } from '@awb/synthdef-interface';
+
+const EMPTY_SYNTHDEF_CONTEXT = Object.freeze( {
+  status: 'disconnected', protocolVersion: null, inventory: null,
+  definitions: Object.freeze( {} ), error: ''
+} );
 
 const EMPTY_STATE = Object.freeze( {
   status: 'disconnected', protocolVersion: null, error: '', scoreID: null,
   remoteRevision: null, transport: null, realizations: [], clockOffset: null,
-  readiness: createPlaybackReadiness( { hostKind: 'desktop' } )
+  readiness: createPlaybackReadiness( { hostKind: 'desktop' } ),
+  synthDefContext: EMPTY_SYNTHDEF_CONTEXT
 } );
 
 const numericString = /^[-+]?(?:\d+\.?\d*|\.\d+)$/;
@@ -53,6 +60,7 @@ export class HostedScoreClient {
     this.state = EMPTY_STATE;
     this.listeners = new Set();
     this.pending = new Map();
+    this.synthDefPending = new Map();
     this.pings = new Map();
     this.nonce = 1;
     this.replyPort = null;
@@ -126,6 +134,11 @@ export class HostedScoreClient {
       pending.reject( error );
     }
     this.pending.clear();
+    for ( const pending of this.synthDefPending.values() ) {
+      clearTimeout( pending.timer );
+      pending.reject( error );
+    }
+    this.synthDefPending.clear();
   }
 
   send( address, args ) {
@@ -143,6 +156,7 @@ export class HostedScoreClient {
     if ( address === '/awb/bridge/ready' ) {
       this.replyPort = args[ 0 ];
       this.send( '/awb/timeline/hello', [ this.clientID, this.replyPort, this.toolSessionID ] );
+      this.send( '/awb/synthdef/hello', [ this.clientID, this.replyPort ] );
     } else if ( address === '/awb/bridge/error' ) {
       this.publish( { error: `${ args[ 0 ] }: ${ args[ 1 ] }` } );
     } else if ( address === '/awb/timeline/connected' && args[ 0 ] === this.clientID ) {
@@ -150,6 +164,10 @@ export class HostedScoreClient {
       this.resolveConnect?.();
       this.resolveConnect = null;
       this.rejectConnect = null;
+    } else if ( address === '/awb/synthdef/connected' && args[ 0 ] === this.clientID ) {
+      this.publishSynthDefContext( { status: 'connected', protocolVersion: args[ 1 ], error: '' } );
+    } else if ( address.startsWith( '/awb/synthdef/' ) && args[ 0 ] === this.clientID ) {
+      this.receiveSynthDefFrame( address, args );
     } else if ( address === '/awb/timeline/runtime' && args[ 0 ] === this.clientID ) {
       const missingCount = Number( args[ 6 ] ) || 0;
       this.publish( { readiness: createPlaybackReadiness( {
@@ -201,6 +219,166 @@ export class HostedScoreClient {
         this.publish( { clockOffset } );
       }
     }
+  }
+
+  publishSynthDefContext( patch ) {
+    this.publish( { synthDefContext: Object.freeze( { ...this.state.synthDefContext, ...patch } ) } );
+  }
+
+  receiveSynthDefFrame( address, args ) {
+    const id = args[ 1 ];
+    const pending = this.synthDefPending.get( id );
+    if ( !pending ) return;
+    if ( address === '/awb/synthdef/error' ) {
+      this.rejectSynthDefRequest( id, `${ args[ 2 ] }: ${ args[ 3 ] }` );
+      return;
+    }
+    if ( pending.kind === 'list' ) this.receiveSynthDefListFrame( address, args, pending );
+    else if ( pending.kind === 'description' ) this.receiveSynthDefDescriptionFrame( address, args, pending );
+  }
+
+  receiveSynthDefListFrame( address, args, pending ) {
+    if ( address === '/awb/synthdef/list/begin' ) {
+      if ( !Number.isInteger( args[ 2 ] ) || args[ 2 ] < 0 || args[ 2 ] > 65536 ) {
+        this.rejectSynthDefRequest( args[ 1 ], 'invalid inventory bound' );
+      } else pending.count = args[ 2 ];
+    } else if ( address === '/awb/synthdef/list/item' ) {
+      if ( !Number.isInteger( args[ 2 ] ) || args[ 2 ] < 0 || typeof args[ 3 ] !== 'string' ) {
+        this.rejectSynthDefRequest( args[ 1 ], 'invalid inventory item' );
+      } else pending.items.set( args[ 2 ], args[ 3 ] );
+    } else if ( address === '/awb/synthdef/list/end' ) {
+      if ( pending.count === null || args[ 2 ] !== pending.count || pending.items.size !== pending.count ) {
+        this.rejectSynthDefRequest( args[ 1 ], 'incomplete inventory' );
+        return;
+      }
+      const inventory = Object.freeze( Array.from( { length: pending.count }, ( _, index ) => pending.items.get( index ) ) );
+      if ( inventory.some( ( name ) => typeof name !== 'string' ) ) {
+        this.rejectSynthDefRequest( args[ 1 ], 'inventory indexes are not contiguous' );
+        return;
+      }
+      this.resolveSynthDefRequest( args[ 1 ], inventory );
+      this.publishSynthDefContext( { inventory, error: '' } );
+    }
+  }
+
+  receiveSynthDefDescriptionFrame( address, args, pending ) {
+    const id = args[ 1 ];
+    if ( address === '/awb/synthdef/description/begin' ) {
+      const begin = { name: args[ 2 ], byteCount: args[ 3 ], chunkCount: args[ 4 ], specCount: args[ 5 ] };
+      if ( begin.name !== pending.name || !Number.isInteger( begin.byteCount ) || begin.byteCount < 1
+        || begin.byteCount > 4 * 1024 * 1024 || !Number.isInteger( begin.chunkCount )
+        || begin.chunkCount < 1 || begin.chunkCount > 8192 || !Number.isInteger( begin.specCount )
+        || begin.specCount < 0 || begin.specCount > 65536 ) {
+        this.rejectSynthDefRequest( id, 'invalid description bounds or identity' );
+      } else pending.begin = begin;
+    } else if ( address === '/awb/synthdef/description/chunk' ) {
+      if ( !Number.isInteger( args[ 2 ] ) || args[ 2 ] < 0 || typeof args[ 3 ] !== 'string'
+        || args[ 3 ].length > 4096 || args[ 3 ].length % 2 !== 0 || !/^[0-9a-f]*$/i.test( args[ 3 ] ) ) {
+        this.rejectSynthDefRequest( id, 'invalid graph chunk' );
+      } else pending.chunks.set( args[ 2 ], args[ 3 ] );
+    } else if ( address === '/awb/synthdef/description/spec' ) {
+      if ( typeof args[ 2 ] !== 'string' || ![ 'named', 'curve' ].includes( args[ 5 ] ) ) {
+        this.rejectSynthDefRequest( id, 'invalid ControlSpec' );
+      } else pending.specs.set( args[ 2 ], Object.freeze( {
+        min: args[ 3 ], max: args[ 4 ], warp: args[ 5 ] === 'named' ? args[ 6 ] : Number( args[ 6 ] ),
+        step: args[ 7 ], default: args[ 8 ], unit: args[ 9 ]
+      } ) );
+    } else if ( address === '/awb/synthdef/description/end' ) {
+      if ( !pending.begin || args[ 2 ] !== pending.begin.name || args[ 3 ] !== pending.begin.byteCount
+        || args[ 4 ] !== pending.begin.chunkCount || args[ 5 ] !== pending.begin.specCount
+        || pending.chunks.size !== pending.begin.chunkCount || pending.specs.size !== pending.begin.specCount ) {
+        this.rejectSynthDefRequest( id, 'incomplete or mismatched description' );
+        return;
+      }
+      this.finishSynthDefDescription( id, pending );
+    }
+  }
+
+  async finishSynthDefDescription( id, pending ) {
+    try {
+      const hex = Array.from( { length: pending.begin.chunkCount }, ( _, index ) => pending.chunks.get( index ) );
+      if ( hex.some( ( chunk ) => typeof chunk !== 'string' ) ) throw new Error( 'graph indexes are not contiguous' );
+      const bytes = Uint8Array.from( hex.join( '' ).match( /.{2}/g ) ?? [], ( pair ) => Number.parseInt( pair, 16 ) );
+      if ( bytes.byteLength !== pending.begin.byteCount ) throw new Error( 'graph byte count does not match framing' );
+      const parsed = parseSynthDef( bytes );
+      const definition = parsed.definitions.find( ( item ) => item.name === pending.name );
+      if ( !definition ) throw new Error( 'compiled graph did not contain the requested definition' );
+      const interfaceModel = buildSynthDefInterface( definition, {
+        specs: Object.fromEntries( pending.specs )
+      } );
+      const result = Object.freeze( {
+        name: pending.name, fingerprint: await synthDefFingerprint( bytes ), interface: interfaceModel
+      } );
+      this.resolveSynthDefRequest( id, result );
+      this.publishSynthDefContext( {
+        definitions: Object.freeze( { ...this.state.synthDefContext.definitions, [ pending.name ]: result } ),
+        error: ''
+      } );
+    } catch ( error ) {
+      this.rejectSynthDefRequest( id, error.message );
+    }
+  }
+
+  resolveSynthDefRequest( id, value ) {
+    const pending = this.synthDefPending.get( id );
+    if ( !pending ) return;
+    clearTimeout( pending.timer );
+    this.synthDefPending.delete( id );
+    pending.resolve( value );
+  }
+
+  rejectSynthDefRequest( id, message ) {
+    const pending = this.synthDefPending.get( id );
+    if ( !pending ) return;
+    clearTimeout( pending.timer );
+    this.synthDefPending.delete( id );
+    const error = new Error( `SynthDef context: ${ message }` );
+    this.publishSynthDefContext( { error: error.message } );
+    pending.reject( error );
+  }
+
+  synthDefRequest( address, args, pending ) {
+    return new Promise( ( resolve, reject ) => {
+      const id = args[ 1 ];
+      pending.resolve = resolve;
+      pending.reject = reject;
+      pending.timer = setTimeout( () => {
+        this.synthDefPending.delete( id );
+        const error = new Error( `Timed out waiting for ${ id }` );
+        this.publishSynthDefContext( { error: error.message } );
+        reject( error );
+      }, this.requestTimeoutMs );
+      this.synthDefPending.set( id, pending );
+      try { this.send( address, args ); }
+      catch ( error ) { clearTimeout( pending.timer ); this.synthDefPending.delete( id ); reject( error ); }
+    } );
+  }
+
+  listSynthDefs() {
+    const id = requestID( 'synthdefs' );
+    return this.synthDefRequest( '/awb/synthdef/list', [ this.clientID, id ], {
+      kind: 'list', count: null, items: new Map()
+    } );
+  }
+
+  describeSynthDef( name ) {
+    const id = requestID( 'synthdef' );
+    return this.synthDefRequest( '/awb/synthdef/describe', [ this.clientID, id, name ], {
+      kind: 'description', name, begin: null, chunks: new Map(), specs: new Map()
+    } );
+  }
+
+  async loadSynthDefContext( names = [] ) {
+    const inventory = await this.listSynthDefs();
+    const available = new Set( inventory );
+    const requested = [ ...new Set( names ) ];
+    await Promise.all( requested.filter( ( name ) => available.has( name ) )
+      .map( ( name ) => this.describeSynthDef( name ) ) );
+    return Object.freeze( {
+      inventory,
+      definitions: this.state.synthDefContext.definitions,
+      missing: Object.freeze( requested.filter( ( name ) => !available.has( name ) ) )
+    } );
   }
 
   rejectProjection( id, message ) {

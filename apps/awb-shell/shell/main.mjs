@@ -268,8 +268,9 @@ async function createToolWindow( { viewID, request, tool } ) {
     const policy = tool.connectionPolicies[ 'hosted-timeline' ];
     if ( !policy ) throw new Error( `${ tool.name } has no hosted-timeline relay policy.` );
     const acquired = await services.acquire( { oscPort: request.connections.oscPort, port: 0,
-      allowedPrefixes: [ ...policy.allowedPrefixes ], clientIdentityAddress: policy.clientIdentityAddress,
-      disconnectAddress: policy.disconnectAddress } );
+      allowedPrefixes: [ ...policy.allowedPrefixes ],
+      clientIdentityAddresses: [ ...policy.clientIdentityAddresses ],
+      disconnectAddresses: [ ...policy.disconnectAddresses ] } );
     serviceReleases.set( viewID, acquired.release );
     effectiveRequest = Object.freeze( { ...request, connections: Object.freeze( {
       ...request.connections, endpoint: acquired.service.endpoint

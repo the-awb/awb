@@ -64,7 +64,18 @@ export function validateToolManifest( input, artifactRoot ) {
     for ( const field of [ 'clientIdentityAddress', 'disconnectAddress' ] ) {
       if ( policy[ field ] !== undefined && ( typeof policy[ field ] !== 'string' || !policy[ field ].startsWith( '/' ) ) ) throw new Error( `${ field } must be an OSC address.` );
     }
-    return [ id, Object.freeze( { allowedPrefixes, clientIdentityAddress: policy.clientIdentityAddress ?? null, disconnectAddress: policy.disconnectAddress ?? null } ) ];
+    const clientIdentityAddresses = boundedStringArray(
+      policy.clientIdentityAddresses ?? ( policy.clientIdentityAddress ? [ policy.clientIdentityAddress ] : [] ),
+      `connectionPolicies.${ id }.clientIdentityAddresses`
+    );
+    const disconnectAddresses = boundedStringArray(
+      policy.disconnectAddresses ?? ( policy.disconnectAddress ? [ policy.disconnectAddress ] : [] ),
+      `connectionPolicies.${ id }.disconnectAddresses`
+    );
+    if ( [ ...clientIdentityAddresses, ...disconnectAddresses ].some( ( address ) => !address.startsWith( '/' ) ) ) {
+      throw new Error( `Connection policy ${ id } identity and disconnect entries must be OSC addresses.` );
+    }
+    return [ id, Object.freeze( { allowedPrefixes, clientIdentityAddresses, disconnectAddresses } ) ];
   } ) ) );
   const width = Number( input.view?.defaultWidth ?? 1200 );
   const height = Number( input.view?.defaultHeight ?? 800 );

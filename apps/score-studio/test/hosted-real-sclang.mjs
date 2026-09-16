@@ -68,6 +68,15 @@ try {
   if ( client.getState().protocolVersion !== 1 ) throw new Error( 'desktop did not negotiate protocol v1' );
   passed += 1;
 
+  await waitFor( () => client.getState().synthDefContext.status === 'connected' );
+  const synthDefContext = await client.loadSynthDefContext( [ 'default', 'resonantBassEnv2' ] );
+  if ( !synthDefContext.inventory.includes( 'default' )
+    || !synthDefContext.missing.includes( 'resonantBassEnv2' )
+    || synthDefContext.definitions.default.interface.name !== 'default' ) {
+    throw new Error( 'desktop SynthDef context did not remain authoritative' );
+  }
+  passed += 3;
+
   await client.loadDocument( document, { maxChunkBytes: 512 } );
   if ( client.getState().scoreID !== rawScore.scoreID
     || client.getState().remoteRevision !== rawScore.revision ) {
@@ -120,9 +129,9 @@ try {
   const exitCode = await new Promise( ( resolve ) => child.once( 'exit', resolve ) );
   if ( exitCode !== 0 ) throw new Error( `sclang fixture exited ${ exitCode }` );
   passed += 1;
-  console.log( `hosted-real-sclang: ${ passed }/13 pass (11 events, missing local SynthDef disclosed and Play rejected, bounded SC projection, final onset 773s)` );
+  console.log( `hosted-real-sclang: ${ passed }/16 pass (live SynthDef graph analysed, 11 events, missing local SynthDef disclosed and Play rejected, bounded SC projection, final onset 773s)` );
 } catch ( error ) {
-  console.error( `hosted-real-sclang: FAIL after ${ passed }/13: ${ error.message }` );
+  console.error( `hosted-real-sclang: FAIL after ${ passed }/16: ${ error.message }` );
   console.error( output.slice( -8000 ) );
   process.exitCode = 1;
 } finally {

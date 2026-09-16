@@ -13,7 +13,7 @@ Current first slice:
 - direct timeline dragging of authored entries and disclosed synth control boundaries;
 - direct time, path and typed/raw payload editing with revision-safe undo/redo;
 - a score-derived instrument panel showing each referenced SynthDef, usage, authored controls,
-  compiled browser controls and catalogued envelope roles;
+  compiled browser controls, or the exact hosted desktop graph and author specs;
 - a separate live Instruments workspace with one controllable browser synth per catalogue entry;
 - guarded File System Access saves, with JSON download fallback and local recovery drafts;
 - a bundled eleven-event Sonic Attunement demo plus a session-local folder browser for `.score.json` files;
@@ -26,12 +26,12 @@ Current first slice:
 - a read-only slot for generated SC working documents, with desktop-score and browser-Pseq targets
   retained in local app data by score ID, revision and projection kind.
 
-The desktop agent owns SC normalization, `PTimelineOSCBridge`, transport reporting, command
+The desktop agent owns SC normalization, `PTimelineOSCBridge`, `SynthDefContextOSCBridge`, transport reporting, command
 deduplication, chunked loading, NodeManager correlation and generated SC documents. This app does
 not duplicate those responsibilities. The app-owned sidecar forwards the frozen
-`/awb/timeline/...` vocabulary between WebSocket JSON frames and local OSC; it contains no score
-or scheduling policy. Standalone scheduling stays in the browser and does not pass through the
-desktop bridge.
+`/awb/timeline/...` and read-only `/awb/synthdef/...` vocabularies between WebSocket JSON frames
+and local OSC; it contains no score, instrument or scheduling policy. The AWB shell provides the
+same manifest-bounded relay for installed tool views. Standalone scheduling stays in the browser.
 
 ## Playback readiness
 
@@ -112,8 +112,11 @@ the `def`/`instrument` references in the current score, reports their entry coun
 paths, and distinguishes controls actually authored in Event payloads from the complete settable
 control surface recorded in the compiled SynthDef manifest. Catalogued envelope roles come from
 `@awb/instruments`; an uncatalogued SynthDef still appears. Browser-bundle presence is known
-locally. Hosted availability is labelled unknown because the timeline protocol's aggregate
-readiness result does not expose a per-definition desktop inventory.
+locally. In hosted mode, the desktop context supplies a point-in-time `SynthDescLib` inventory,
+exact `SynthDesc.def.asBytes` graph, and separate `ControlSpec` metadata. Score Studio parses that
+graph with `@awb/synthdef-interface`, so arbitrary definitions expose their actual controls,
+functional roles and envelopes without becoming entries in a central registry. The shared catalog
+may still annotate a known definition, but it is not the authority for availability or interface.
 
 ## Live instrument workspace
 
@@ -283,7 +286,8 @@ path, Chromium loads the score, handshakes with that exact session and installs 
 manual Connect or Load actions.
 
 Each WebSocket connection receives its own UDP reply socket. Frames are exactly
-`{ "address": "/awb/timeline/...", "args": [...] }`; other OSC namespaces, non-scalar arguments,
+`{ "address": "/awb/timeline/...", "args": [...] }` or the read-only `/awb/synthdef/...`
+equivalent; other OSC namespaces, non-scalar arguments,
 oversize frames, non-loopback WebSocket access and clients without the generated token are
 rejected. The browser retries timed-out commands with the same request ID and restarts a complete
 snapshot after incomplete-snapshot rejection.

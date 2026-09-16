@@ -6,18 +6,26 @@ import { decodeOscPacket, encodeOscMessage } from './oscCodec.mjs';
 const MAX_FRAME_BYTES = 64 * 1024;
 export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
   oscHost = '127.0.0.1', oscPort, allowedPrefixes, clientIdentityAddress = null,
-  disconnectAddress = null } ) {
+  disconnectAddress = null, clientIdentityAddresses = [], disconnectAddresses = [] } ) {
   if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) throw new Error( 'Invalid relay OSC port.' );
   if ( !Array.isArray( allowedPrefixes ) || !allowedPrefixes.length
     || allowedPrefixes.some( ( prefix ) => typeof prefix !== 'string' || !prefix.startsWith( '/' ) ) ) throw new Error( 'Relay needs bounded OSC address prefixes.' );
   const token = `awb-${ crypto.randomUUID() }`; const clients = new Set();
+  const identities = new Set( [ ...clientIdentityAddresses, clientIdentityAddress ].filter( Boolean ) );
+  const disconnects = [ ...new Set( [ ...disconnectAddresses, disconnectAddress ].filter( Boolean ) ) ];
   const server = new WebSocketServer( { host, port, maxPayload: MAX_FRAME_BYTES } );
   const allowed = ( address ) => allowedPrefixes.some( ( prefix ) => address.startsWith( prefix ) );
   const send = ( browser, address, args = [] ) => { if ( browser.readyState === WebSocket.OPEN ) browser.send( JSON.stringify( { address, args } ) ); };
   const closeClient = ( client, notify = true ) => {
     if ( client.closing ) return; client.closing = true; clients.delete( client );
     const finish = () => { try { client.udp.close(); } catch {} };
-    if ( notify && disconnectAddress && client.clientID ) client.udp.send( encodeOscMessage( disconnectAddress, [ client.clientID ] ), oscPort, oscHost, finish );
+    if ( notify && disconnects.length && client.clientID ) {
+      let remaining = disconnects.length;
+      const sent = () => { remaining -= 1; if ( remaining === 0 ) finish(); };
+      disconnects.forEach( ( address ) => client.udp.send(
+        encodeOscMessage( address, [ client.clientID ] ), oscPort, oscHost, sent
+      ) );
+    }
     else finish();
   };
   server.on( 'connection', ( browser, request ) => {
@@ -35,7 +43,7 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
         const frame = JSON.parse( data.toString() );
         if ( typeof frame.address !== 'string' || !allowed( frame.address ) ) throw new Error( 'addressNotAllowed' );
         if ( !Array.isArray( frame.args ) || frame.args.some( ( value ) => !( typeof value === 'string' || typeof value === 'number' && Number.isFinite( value ) ) ) ) throw new Error( 'invalidArguments' );
-        if ( frame.address === clientIdentityAddress && typeof frame.args[ 0 ] === 'string' ) client.clientID = frame.args[ 0 ];
+        if ( identities.has( frame.address ) && typeof frame.args[ 0 ] === 'string' ) client.clientID = frame.args[ 0 ];
         udp.send( encodeOscMessage( frame.address, frame.args ), oscPort, oscHost );
       } catch ( error ) { send( browser, '/awb/bridge/error', [ error.message, 'Frame was not forwarded.' ] ); }
     } );

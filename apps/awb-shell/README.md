@@ -42,8 +42,9 @@ checks the latter's multichannel request and audio-input grant, and closes each 
 Toolkit Home is intended to become the junction between tool documents, hosted SuperCollider and
 live NodeManager state without owning any of them. The next implementation slice adds:
 
-- one shell-level broker for attached or explicitly owned sclang, scsynth readiness and the
-  NodeManager bridge;
+- the existing shell-level OSC/WebSocket relay now carries both hosted score transport and the
+  read-only SynthDef-context protocol declared by a tool; the remaining broker work is attached or
+  explicitly owned sclang/scsynth readiness and the NodeManager bridge;
 - a lightweight shared NodeManager subscription which the shell filters into per-tool and
   per-session container summaries;
 - explicit `toolID`/`toolSessionID` to `toolSource`/`toolInstance` bindings, never name-based

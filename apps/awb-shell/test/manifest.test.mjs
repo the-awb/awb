@@ -14,3 +14,16 @@ test( 'validates a bounded awb.tool/1 manifest', () => {
 test( 'rejects malformed manifests', () => assert.throws( () => validateToolManifest( {}, '/tmp/artifact' ), /Unsupported/ ) );
 test( 'rejects escaping renderer paths', () => assert.throws( () => validateToolManifest( { ...valid, renderer: { ...valid.renderer, entry: '../escape.html' } }, '/tmp/artifact' ), /escapes/ ) );
 test( 'rejects unsupported preload protocols', () => assert.throws( () => validateToolManifest( { ...valid, renderer: { ...valid.renderer, preloadProtocol: 2 } }, '/tmp/artifact' ), /Unsupported preload/ ) );
+test( 'normalizes multi-protocol relay lifecycle addresses', () => {
+  const manifest = validateToolManifest( {
+    ...valid,
+    capabilities: { connections: [ 'hosted' ] },
+    connectionPolicies: { hosted: {
+      allowedPrefixes: [ '/awb/timeline/', '/awb/synthdef/' ],
+      clientIdentityAddresses: [ '/awb/timeline/hello', '/awb/synthdef/hello' ],
+      disconnectAddresses: [ '/awb/timeline/disconnect', '/awb/synthdef/disconnect' ]
+    } }
+  }, '/tmp/artifact' );
+  assert.deepEqual( manifest.connectionPolicies.hosted.disconnectAddresses,
+    [ '/awb/timeline/disconnect', '/awb/synthdef/disconnect' ] );
+} );

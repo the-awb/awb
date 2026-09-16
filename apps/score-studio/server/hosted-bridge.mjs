@@ -6,7 +6,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { WebSocket, WebSocketServer } from 'ws';
 import { decodeOscPacket, encodeOscMessage } from './osc-codec.mjs';
 
-const TIMELINE_PREFIX = '/awb/timeline/';
+const ALLOWED_PREFIXES = [ '/awb/timeline/', '/awb/synthdef/' ];
 const MAX_FRAME_BYTES = 64 * 1024;
 
 function sendFrame( socket, address, args = [] ) {
@@ -16,7 +16,8 @@ function sendFrame( socket, address, args = [] ) {
 function parseFrame( data ) {
   if ( data.length > MAX_FRAME_BYTES ) throw new Error( 'frameTooLarge' );
   const frame = JSON.parse( data.toString() );
-  if ( typeof frame.address !== 'string' || !frame.address.startsWith( TIMELINE_PREFIX ) ) {
+  if ( typeof frame.address !== 'string'
+    || !ALLOWED_PREFIXES.some( ( prefix ) => frame.address.startsWith( prefix ) ) ) {
     throw new Error( 'addressNotAllowed' );
   }
   if ( !Array.isArray( frame.args ) || frame.args.some( ( value ) => (
@@ -40,10 +41,12 @@ export async function createHostedBridge( {
       try { client.udp.close(); } catch {}
     };
     if ( notify && client.clientID ) {
-      client.udp.send(
-        encodeOscMessage( '/awb/timeline/disconnect', [ client.clientID ] ),
-        oscPort, oscHost, finish
-      );
+      let remaining = 2;
+      const sent = () => { remaining -= 1; if ( remaining === 0 ) finish(); };
+      client.udp.send( encodeOscMessage( '/awb/timeline/disconnect', [ client.clientID ] ),
+        oscPort, oscHost, sent );
+      client.udp.send( encodeOscMessage( '/awb/synthdef/disconnect', [ client.clientID ] ),
+        oscPort, oscHost, sent );
     } else finish();
   };
 
@@ -70,7 +73,7 @@ export async function createHostedBridge( {
     browser.on( 'message', ( data ) => {
       try {
         const frame = parseFrame( data );
-        if ( frame.address === '/awb/timeline/hello'
+        if ( [ '/awb/timeline/hello', '/awb/synthdef/hello' ].includes( frame.address )
           && typeof frame.args[ 0 ] === 'string' ) client.clientID = frame.args[ 0 ];
         udp.send( encodeOscMessage( frame.address, frame.args ), oscPort, oscHost );
       } catch ( error ) {

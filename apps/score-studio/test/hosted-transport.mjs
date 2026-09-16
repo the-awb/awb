@@ -11,6 +11,10 @@ import { HostedScoreClient } from '../src/engine/HostedScoreClient.js';
 const fixture = parseScoreDocument( await readFile(
   new URL( '../../../packages/score/fixtures/connector-v1/score.json', import.meta.url ), 'utf8'
 ) );
+const synthDefBytes = await readFile(
+  new URL( '../public/synthdefs/fieldBasic.scsyndef', import.meta.url )
+);
+const synthDefHexChunks = synthDefBytes.toString( 'hex' ).match( /.{1,1200}/g );
 const osc = dgram.createSocket( 'udp4' );
 await new Promise( ( resolve ) => osc.bind( 0, '127.0.0.1', resolve ) );
 const oscPort = osc.address().port;
@@ -34,6 +38,22 @@ osc.on( 'message', ( packet, rinfo ) => {
   if ( message.address === '/awb/timeline/hello' ) {
     reply( rinfo, '/awb/timeline/connected', [ args[ 0 ], 1 ] );
     reply( rinfo, '/awb/timeline/runtime', [ args[ 0 ], 'ready', 'notApplicable', 'notLoaded', 'unknown', '', 0 ] );
+  } else if ( message.address === '/awb/synthdef/hello' ) {
+    reply( rinfo, '/awb/synthdef/connected', [ args[ 0 ], 1 ] );
+  } else if ( message.address === '/awb/synthdef/list' ) {
+    reply( rinfo, '/awb/synthdef/list/begin', [ args[ 0 ], args[ 1 ], 1 ] );
+    reply( rinfo, '/awb/synthdef/list/item', [ args[ 0 ], args[ 1 ], 0, 'fieldBasic' ] );
+    reply( rinfo, '/awb/synthdef/list/end', [ args[ 0 ], args[ 1 ], 1 ] );
+  } else if ( message.address === '/awb/synthdef/describe' ) {
+    reply( rinfo, '/awb/synthdef/description/begin', [
+      args[ 0 ], args[ 1 ], args[ 2 ], synthDefBytes.length, synthDefHexChunks.length, 0
+    ] );
+    synthDefHexChunks.forEach( ( chunk, index ) => reply(
+      rinfo, '/awb/synthdef/description/chunk', [ args[ 0 ], args[ 1 ], index, chunk ]
+    ) );
+    reply( rinfo, '/awb/synthdef/description/end', [
+      args[ 0 ], args[ 1 ], args[ 2 ], synthDefBytes.length, synthDefHexChunks.length, 0
+    ] );
   } else if ( message.address === '/awb/timeline/ping' ) {
     reply( rinfo, '/awb/timeline/pong', [ args[ 0 ], args[ 1 ], performance.now() / 1000 + 100 ] );
   } else if ( message.address === '/awb/timeline/snapshot/begin' ) {
@@ -97,6 +117,14 @@ try {
   assert.equal( client.getState().readiness.canPlay, false );
   const hello = received.find( ( message ) => message.address === '/awb/timeline/hello' );
   assert.equal( hello.args[ 2 ], 'score-session-test', 'hosted hello carries its ToolSession identity' );
+  await waitFor( () => client.getState().synthDefContext.status === 'connected' );
+  const context = await client.loadSynthDefContext( [ 'fieldBasic', 'missingFromDesktop' ] );
+  assert.deepEqual( context.inventory, [ 'fieldBasic' ] );
+  assert.deepEqual( context.missing, [ 'missingFromDesktop' ] );
+  assert.equal( context.definitions.fieldBasic.interface.name, 'fieldBasic' );
+  assert.ok( context.definitions.fieldBasic.interface.controls
+    .find( ( control ) => control.name === 'freqL' ).roles.includes( 'oscillatorFrequency' ) );
+  assert.match( context.definitions.fieldBasic.fingerprint, /^sha256:[0-9a-f]{64}$/ );
 
   await client.loadDocument( fixture );
   assert.equal( endCount, 2, 'missing chunks restart the complete snapshot' );
@@ -143,8 +171,12 @@ try {
     message.address === '/awb/timeline/disconnect'
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
+  await waitFor( () => received.some( ( message ) => (
+    message.address === '/awb/synthdef/disconnect'
+      && message.args[ 0 ] === 'score-browser-test'
+  ) ) );
 
-  console.log( 'hosted-transport: 22/22 pass' );
+  console.log( 'hosted-transport: 28/28 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

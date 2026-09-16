@@ -7,7 +7,7 @@ const displayTarget = ( target ) => Array.isArray( target ) ? target.join( ', ' 
 const displayDefault = ( value ) => typeof value === 'number'
   ? String( Number( value.toPrecision( 7 ) ) ) : String( value );
 
-export default function InstrumentPanel( { document, mode, standaloneDefinitions } ) {
+export default function InstrumentPanel( { document, mode, standaloneDefinitions, hostedSynthDefs } ) {
   const instruments = useMemo( () => scoreInstruments( document ), [ document ] );
   const [ definitions, setDefinitions ] = useState( null );
   const [ manifestError, setManifestError ] = useState( '' );
@@ -31,13 +31,21 @@ export default function InstrumentPanel( { document, mode, standaloneDefinitions
         ? <p className="emptyCopy">This score does not reference a SynthDef.</p>
         : instruments.map( ( instrument ) => {
           const definition = definitions?.get( instrument.definition );
-          const controls = definition ? settableControls( definition ) : [];
+          const hostedDefinition = hostedSynthDefs?.definitions?.[ instrument.definition ];
+          const hostedControls = hostedDefinition?.interface.controls ?? [];
+          const controls = mode === 'hosted'
+            ? hostedControls
+            : definition ? settableControls( definition ) : [];
           const currentStandalone = standaloneDefinitions.scoreID === document.scoreID
             && standaloneDefinitions.revision === document.revision;
           const missingStandalone = currentStandalone
             && standaloneDefinitions.missing.includes( instrument.definition );
+          const hostInventoryKnown = Array.isArray( hostedSynthDefs?.inventory );
+          const hostHasDefinition = hostedSynthDefs?.inventory?.includes( instrument.definition );
           const runtimeStatus = mode === 'hosted'
-            ? 'desktop host not queried'
+            ? hostedDefinition ? 'described by desktop host'
+              : hostInventoryKnown && hostHasDefinition ? 'available; description pending'
+                : hostInventoryKnown ? 'not in desktop context' : 'desktop context not queried'
             : missingStandalone ? 'missing from standalone'
               : currentStandalone && standaloneDefinitions.state === 'ready' ? 'loaded standalone'
                 : !definitions ? ( manifestError ? 'bundle manifest unavailable' : 'checking browser bundle' )
@@ -58,14 +66,17 @@ export default function InstrumentPanel( { document, mode, standaloneDefinitions
                 <dt>Catalog</dt><dd>{ instrument.catalogKey ?? 'uncatalogued' }</dd>
                 <dt>Browser</dt><dd>{ bundleStatus }</dd>
                 <dt>Runtime</dt><dd>{ runtimeStatus }</dd>
+                { hostedDefinition && <><dt>Graph</dt><dd>{ hostedDefinition.fingerprint.slice( 0, 18 ) }…</dd></> }
                 <dt>Entries</dt><dd>{ instrument.entryCount }</dd>
                 <dt>Span</dt><dd>{ instrument.firstTime.toFixed( 3 ) }–{ instrument.lastTime.toFixed( 3 ) } s</dd>
                 <dt>Paths</dt><dd>{ instrument.paths.length ? instrument.paths.join( ', ' ) : 'root' }</dd>
               </dl>
               <InstrumentList label="Authored controls" values={ instrument.authoredControls } empty="none" />
               <InstrumentList label="SynthDef controls"
-                values={ controls.map( ( control ) => `${ control.name}=${ displayDefault( control.default ) }` ) }
-                empty={ manifestError || ( definitions ? 'definition not in browser bundle' : 'reading manifest…' ) } />
+                values={ controls.map( ( control ) => `${ control.name}=${ displayDefault( control.default ) }${ control.roles?.length ? ` · ${ control.roles.join( ', ' ) }` : '' }` ) }
+                empty={ mode === 'hosted'
+                  ? ( hostedSynthDefs?.error || ( hostHasDefinition ? 'reading desktop graph…' : 'definition not in desktop context' ) )
+                  : manifestError || ( definitions ? 'definition not in browser bundle' : 'reading manifest…' ) } />
               { instrument.envelopes.length > 0 && <div className="instrumentDetails">
                 <h3>Envelopes</h3>
                 <ul>{ instrument.envelopes.map( ( envelope ) => (
@@ -78,7 +89,7 @@ export default function InstrumentPanel( { document, mode, standaloneDefinitions
             </details>
           );
         } ) }
-      <p className="boundaryNote">Derived from this score’s Event payloads. Catalog and browser-bundle presence do not assert that a desktop host has loaded the SynthDef.</p>
+      <p className="boundaryNote">The score determines which definitions matter. In hosted mode, controls and functional roles come from the desktop context’s exact compiled graph and specs; the catalog is only an optional shared-context overlay.</p>
     </section>
   );
 }
