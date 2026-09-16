@@ -118,3 +118,6 @@ with Field Modelling's Three.js `FieldCanvas`.
 Not yet implemented: shell file/audio resolution, the Render Centre UI, the phase-track schema and
 realized-score field mode, FieldCanvas visual parity, remote submission, and optional
 SC-score-to-audio job chaining.
+
+The full Field application migration and hosted-audio boundary are specified separately in
+[FIELD_MODELLING_TOOL_IMPORT.md](./FIELD_MODELLING_TOOL_IMPORT.md).

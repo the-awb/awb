@@ -48,6 +48,9 @@ uncommitted change here from silently entering a build elsewhere.
 See [MIGRATION.md](./MIGRATION.md) for provenance and the transition boundary.
 See [RENDER_PIPELINE.md](./RENDER_PIPELINE.md) for the shared render contract, producer differences
 and the local/cloud integration sequence.
+See [FIELD_MODELLING_TOOL_IMPORT.md](./FIELD_MODELLING_TOOL_IMPORT.md) for the application-preserving
+Field Modelling import, score-project association, hosted SuperCollider audio topology, phase
+observation boundary and acceptance gates.
 The shared desktop host contract and extraction sequence are specified in
 [AWB_DESKTOP_SHELL_SPEC.md](./AWB_DESKTOP_SHELL_SPEC.md). The AWB shell owns shared renderer
 lifecycle and manifest-bounded local relays; Score Studio is one installed tool, not a private
