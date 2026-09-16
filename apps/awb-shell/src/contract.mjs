@@ -5,7 +5,7 @@ export const HOST_METHODS = Object.freeze( [
 ] );
 
 export function grantedCapabilities( requested, supported ) {
-  return Object.freeze( Object.fromEntries( [ 'filesystem', 'media', 'connections' ].map( ( group ) => [
+  return Object.freeze( Object.fromEntries( [ 'filesystem', 'media', 'connections', 'rendering' ].map( ( group ) => [
     group, Object.freeze( ( requested[ group ] ?? [] ).filter( ( item ) => supported[ group ]?.includes( item ) ) )
   ] ) ) );
 }

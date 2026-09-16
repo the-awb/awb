@@ -65,6 +65,26 @@ Closing a view also releases it. The helper opens the selected Core Audio input 
 it neither creates nor selects an aggregate device. The renderer receives only a tokenised loopback
 WebSocket endpoint carrying versioned Float32 PCM frames.
 
+## Headless render jobs
+
+Tools declaring `capabilities.rendering: ["local-render"]` may submit a resolved job through:
+
+```js
+const render = await awbHost.request('render.submit', { job, executionTarget: 'local' });
+```
+
+The shell validates and queues the job independently of the visible tool view. Local execution is
+intended to run in a hidden Chromium render worker/window: WebGL, canvas and WebCodecs remain
+available, but no editor UI is shown. Closing the submitting view therefore does not cancel its
+job. A later cloud executor leases the same immutable job through the same broker contract.
+
+`render.status`, `render.list` and `render.cancel` are available only to tools with the capability.
+Toolkit Home can also cancel a queued or running job. Frame sources, PCM and encoded media never
+pass through lifecycle IPC; executors report only bounded progress and a final receipt.
+
+This slice supplies the validated queue and executor-lease state machine. The hidden local runner,
+guarded binary-output streaming, persisted receipts and remote adapters are subsequent slices.
+
 ## Shared desktop host
 
 Toolkit Home is the junction between tool documents, hosted SuperCollider and live NodeManager

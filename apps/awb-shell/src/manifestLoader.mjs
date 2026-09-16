@@ -4,7 +4,7 @@ import { access, readFile } from 'node:fs/promises';
 const MANIFEST_SCHEMA = 'awb.tool/1';
 const PRELOAD_PROTOCOL = 1;
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const CAPABILITY_GROUPS = Object.freeze( [ 'filesystem', 'media', 'connections' ] );
+const CAPABILITY_GROUPS = Object.freeze( [ 'filesystem', 'media', 'connections', 'rendering' ] );
 
 function nonEmptyString( value, label ) {
   if ( typeof value !== 'string' || !value.trim() ) throw new Error( `${ label } must be a non-empty string.` );

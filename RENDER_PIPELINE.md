@@ -21,6 +21,8 @@ visual producer -----------------------> frame sink
 
 Executor placement and credentials are deliberately outside the immutable job. A local desktop
 worker and a cloud worker should receive the same job, producer version and resolved artifacts.
+The local worker may be headless: a hidden Chromium renderer still has a GPU-backed canvas,
+WebGL/WebGPU and WebCodecs without presenting an editor window. Headless does not mean CPU-only.
 
 ## Input rule
 
@@ -101,8 +103,9 @@ with Field Modelling's Three.js `FieldCanvas`.
 
 ## Next vertical slices
 
-1. Add a shell render service which resolves granted files into job inputs, runs local jobs, writes
-   outputs through guarded file grants and persists receipts.
+1. Complete the shell render service: the validated queue and executor leases exist; next add a
+   hidden Chromium local runner, granted-input resolution, guarded output streaming and persisted
+   receipts. Jobs belong to the shell queue and may outlive the tool view that submitted them.
 2. Wire the hosted Lissajous artifact to create schema-v2 jobs from a saved visual config plus an
    audio file. Keep decoded audio in the renderer/worker data plane, not lifecycle IPC.
 3. Specify and test the `field-phase-track` artifact and its separate observation/extraction step,

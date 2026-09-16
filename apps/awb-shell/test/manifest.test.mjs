@@ -11,6 +11,13 @@ test( 'validates a bounded awb.tool/1 manifest', () => {
   assert.equal( manifest.id, 'test-tool' );
   assert.equal( manifest.renderer.entryPath, '/tmp/artifact/dist/index.html' );
 } );
+test( 'normalizes an explicitly declared local-render capability', () => {
+  const manifest = validateToolManifest( {
+    ...valid,
+    capabilities: { rendering: [ 'local-render' ] }
+  }, '/tmp/artifact' );
+  assert.deepEqual( manifest.capabilities.rendering, [ 'local-render' ] );
+} );
 test( 'rejects malformed manifests', () => assert.throws( () => validateToolManifest( {}, '/tmp/artifact' ), /Unsupported/ ) );
 test( 'rejects escaping renderer paths', () => assert.throws( () => validateToolManifest( { ...valid, renderer: { ...valid.renderer, entry: '../escape.html' } }, '/tmp/artifact' ), /escapes/ ) );
 test( 'rejects unsupported preload protocols', () => assert.throws( () => validateToolManifest( { ...valid, renderer: { ...valid.renderer, preloadProtocol: 2 } }, '/tmp/artifact' ), /Unsupported preload/ ) );

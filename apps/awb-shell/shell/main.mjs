@@ -15,6 +15,7 @@ import { documentKindIDForPath, RecentStore } from '../src/recentStore.mjs';
 import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
 import { createNativeAudioBroker } from '@awb/native-audio';
 import { NativeAudioAccess } from '../src/nativeAudioAccess.mjs';
+import { RenderJobBroker } from '../src/renderJobBroker.mjs';
 import {
   permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
 } from '../src/rendererPolicy.mjs';
@@ -34,6 +35,7 @@ const hostSubscriptions = new Map();
 const fileGrants = new FileGrantStore();
 const services = new ServiceRegistry( createOscWebSocketRelay );
 const nativeAudio = new NativeAudioAccess( createNativeAudioBroker() );
+const renderJobs = new RenderJobBroker();
 let recentStore;
 let homeWindow = null;
 let quitting = false;
@@ -65,7 +67,8 @@ const developmentURL = loopbackDevelopmentURL( option( process.argv, 'dev-url', 
 
 const SUPPORTED_CAPABILITIES = Object.freeze( {
   filesystem: [ 'open-file', 'open-directory', 'save-file' ],
-  media: [ 'audio-input', 'system-audio', 'native-audio' ], connections: [ 'hosted-timeline' ]
+  media: [ 'audio-input', 'system-audio', 'native-audio' ],
+  connections: [ 'hosted-timeline' ], rendering: [ 'local-render' ]
 } );
 
 function option( args, name, fallback = null ) {
@@ -159,7 +162,7 @@ function shellSnapshot() {
     tools: [ ...tools.values() ].map( ( tool ) => ( { ...publicManifest( tool ),
       documentKinds: tool.documentKinds.map( ( kind ) => ( { ...kind,
         recentItems: recentStore?.list( tool.id, kind.id ) ?? [] } ) ) } ) ),
-    views: registry.list().map( viewSnapshot ),
+    views: registry.list().map( viewSnapshot ), renders: renderJobs.list(),
     host, failures: manifestFailures };
 }
 
@@ -184,6 +187,7 @@ async function launchDocument( payload ) {
 function notifyHome() {
   if ( homeWindow && !homeWindow.isDestroyed() ) homeWindow.webContents.send( 'awb:command', { type: 'shell-registry-changed' } );
 }
+renderJobs.subscribe( notifyHome );
 
 async function waitFor( predicate, timeout = 15000 ) {
   const started = Date.now();
@@ -328,7 +332,7 @@ async function createHomeWindow() {
   const context = Object.freeze( { shellProtocol: SHELL_PROTOCOL, shellInstanceID, viewID: 'toolkit-home',
     tool: { id: 'awb-toolkit-home', version: app.getVersion() }, toolSessionID: null,
     launchOrigin: 'desktop', owner: { kind: 'none', pid: null },
-    grantedCapabilities: { filesystem: [], media: [], connections: [] }, connections: {}, payload: {} } );
+    grantedCapabilities: { filesystem: [], media: [], connections: [], rendering: [] }, connections: {}, payload: {} } );
   const window = new BrowserWindow( secureWindowOptions( 1080, 760, context ) );
   const senderID = window.webContents.id;
   homeWindow = window;
@@ -465,6 +469,17 @@ function safeArtifactPath( tool, relative ) {
 
 async function handleToolOperation( sender, operation, payload ) {
   const { view, tool, window } = requireToolSender( sender );
+  if ( operation.startsWith( 'render.' ) ) requireCapability( tool, 'rendering', 'local-render' );
+  if ( operation === 'render.submit' ) {
+    return renderJobs.submit( { requestedByToolID: tool.id, requestedByViewID: view.viewID,
+      job: payload.job, executionTarget: payload.executionTarget ?? 'local' } );
+  }
+  if ( operation === 'render.status' ) return renderJobs.getForTool( tool.id, payload.renderID );
+  if ( operation === 'render.list' ) return renderJobs.list( tool.id );
+  if ( operation === 'render.cancel' ) {
+    renderJobs.getForTool( tool.id, payload.renderID );
+    return renderJobs.requestCancel( payload.renderID );
+  }
   if ( operation === 'artifact.read-text' ) {
     const target = safeArtifactPath( tool, payload.path );
     return { name: payload.name ?? path.basename( target ), text: await readFile( target, 'utf8' ), handle: null };
@@ -596,6 +611,7 @@ function registerIPC() {
       if ( request.operation === 'shell.launch-document' ) return launchDocument( payload );
       if ( request.operation === 'shell.focus' ) { await focusToolView( payload.viewID ); return true; }
       if ( request.operation === 'shell.close' ) return closeToolView( payload.viewID );
+      if ( request.operation === 'render.cancel' ) return renderJobs.requestCancel( payload.renderID );
     }
     return handleToolOperation( sender, request.operation, payload );
   } );
