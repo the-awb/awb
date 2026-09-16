@@ -9,7 +9,8 @@ packages/
   sc-envelope/          JSON-safe SuperCollider Env definition and exact array projection
   sc-wasm/              browser scsynth lifecycle, audio tap and sclang bridge
   sc-console/           shared sclang evaluator, editor and React lifecycle machinery
-  instruments/          serialisable AWB instrument vocabulary and control semantics
+  synthdef-interface/   arbitrary SynthDef graph parsing and rich interface derivation
+  instruments/          current shared-context annotations; not a runtime inventory
   field-engine/         renderer-neutral analytic field projection and propagation
   lissajous-engine/     React-free visual core with R3F, vanilla and browser adapters
   render-pipeline/      provider-neutral resolved jobs and indexed render scheduling

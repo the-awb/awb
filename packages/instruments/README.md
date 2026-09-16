@@ -1,8 +1,15 @@
 # `@awb/instruments`
 
-The canonical practice-specific instrument vocabulary shared by browser, desktop and offline integrations.
-It is not a universal SuperCollider model and it does not own a live sclang or scsynth process.
-Cross-repository consumers use its built private artifact rather than copying this source.
+The current practice-specific semantic annotations shared by the field and Score Studio browser
+context. It is not a universal SuperCollider model, an inventory of what a host may execute, or the
+authority for a SynthDef's raw control surface. Cross-repository consumers use its built private
+artifact rather than copying this source.
+
+`@awb/synthdef-interface` now establishes the general boundary: each execution context builds its
+primary interface from the exact SynthDefs and author specs available there, then uses graph
+analysis to determine functionality. This catalog remains a provisional context overlay for facts
+that the current applications have not yet moved to that derived model. Catalog membership must
+never reject an arbitrary desktop, imported or otherwise context-owned SynthDef.
 
 The catalog records stable instrument and SynthDef identity plus authored control meaning: initial
 values, units, useful bounds, primary frequency, continuous gain, envelope graphs and which

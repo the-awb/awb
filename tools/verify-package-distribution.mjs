@@ -9,6 +9,8 @@ const packages = {
   'sc-wasm': { exports: { './core': './dist/core.js', './react': './dist/react.js' }, files: [ 'core.js', 'react.js' ] },
   'sc-console': { exports: { './core': './dist/core.js', './hook': './dist/hook.js', './react': './dist/react.js' }, files: [ 'core.js', 'hook.js', 'react.js' ] },
   'sc-envelope': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
+  'sc-runtime': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
+  'synthdef-interface': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
   instruments: { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
   'field-engine': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
   'render-pipeline': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] }
@@ -33,6 +35,8 @@ const field = await import( '@awb/field-engine' );
 const sc = await import( '@awb/sc-wasm/core' );
 const consoleCore = await import( '@awb/sc-console/core' );
 const envelope = await import( '@awb/sc-envelope' );
+const runtime = await import( '@awb/sc-runtime' );
+const synthDefInterface = await import( '@awb/synthdef-interface' );
 const pipeline = await import( '@awb/render-pipeline' );
 
 assert.equal( typeof score.makeEvent, 'function' );
@@ -41,6 +45,8 @@ assert.equal( typeof field.projectInstrumentToFieldComponents, 'function' );
 assert.equal( typeof sc.createScEngine, 'function' );
 assert.equal( typeof consoleCore.evalRangeAt, 'function' );
 assert.equal( typeof envelope.scEnvAsArray, 'function' );
+assert.equal( typeof runtime.createPlaybackReadiness, 'function' );
+assert.equal( typeof synthDefInterface.buildSynthDefInterface, 'function' );
 assert.equal( typeof pipeline.runRenderPipeline, 'function' );
 
 console.log( 'All AWB package exports resolve from built distribution artifacts.' );
