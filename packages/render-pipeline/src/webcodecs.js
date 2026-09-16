@@ -88,6 +88,7 @@ export const createWebCodecsSink = async ( options = {} ) => {
     audioBuffer = null,
     fileName = 'render.mp4',
     fileHandle = null,
+    writableStream = null,
     onPhase = null
   } = options;
   const width = job?.output?.width ?? options.width;
@@ -97,7 +98,10 @@ export const createWebCodecsSink = async ( options = {} ) => {
   const cueOut = job?.timeline?.cueOutSeconds ?? options.cueOut ?? audioBuffer?.duration ?? 0;
   const bitrate = bitrateFor( width, height, fps, quality );
 
-  const writable = fileHandle ? await fileHandle.createWritable() : null;
+  if ( fileHandle && writableStream ) {
+    throw new TypeError( 'Use fileHandle or writableStream, not both' );
+  }
+  const writable = writableStream ?? ( fileHandle ? await fileHandle.createWritable() : null );
   const target = writable ? new StreamTarget( writable ) : new BufferTarget();
   const output = new Output( {
     target,

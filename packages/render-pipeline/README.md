@@ -74,7 +74,9 @@ Sink lifecycle:
 
 `@awb/render-pipeline/webcodecs` provides the first portable production sink. It accepts a
 resolved job directly and uses Mediabunny to encode H.264 and optional AAC as frames arrive. It
-can either return an MP4 Blob or stream fragmented MP4 to a browser file handle. It contains no
+can either return an MP4 Blob, stream fragmented MP4 to a browser file handle, or write to a host
+supplied `WritableStream`. Stream chunks include byte positions, so native hosts must preserve
+positioned writes rather than treating them as append-only data. It contains no
 React or renderer dependency; the producer may hand it a canvas or any other
 `VideoFrame`-compatible source.
 
@@ -88,7 +90,7 @@ const receipt = await runRenderPipeline({
     job,
     audioBuffer,
     fileName: 'render.mp4',
-    fileHandle,
+    fileHandle, // alternatively: writableStream
   }),
 });
 ```

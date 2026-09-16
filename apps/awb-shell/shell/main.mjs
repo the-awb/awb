@@ -17,12 +17,13 @@ import { createNativeAudioBroker } from '@awb/native-audio';
 import { NativeAudioAccess } from '../src/nativeAudioAccess.mjs';
 import { RenderJobBroker } from '../src/renderJobBroker.mjs';
 import { resolveToolBindingFromProject } from '../src/scoreProjectResolver.mjs';
+import { RenderOutputStore } from '../src/renderOutputStore.mjs';
 import {
   permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
 } from '../src/rendererPolicy.mjs';
 
 const require = createRequire( import.meta.url );
-const { app, BrowserWindow, desktopCapturer, dialog, ipcMain, session, webContents } = require( 'electron/main' );
+const { app, BrowserWindow, desktopCapturer, dialog, ipcMain, MessageChannelMain, session, webContents } = require( 'electron/main' );
 const shellRoot = path.dirname( fileURLToPath( import.meta.url ) );
 const appRoot = path.resolve( shellRoot, '..' );
 const preloadPath = path.join( shellRoot, 'preload.cjs' );
@@ -37,6 +38,8 @@ const fileGrants = new FileGrantStore();
 const services = new ServiceRegistry( createOscWebSocketRelay );
 const nativeAudio = new NativeAudioAccess( createNativeAudioBroker() );
 const renderJobs = new RenderJobBroker();
+const renderOutputs = new RenderOutputStore();
+const renderExecutorID = `headless-local-${ crypto.randomUUID() }`;
 let recentStore;
 let homeWindow = null;
 let quitting = false;
@@ -45,12 +48,16 @@ let serviceShutdown = null;
 let tools = new Map();
 let manifestFailures = [];
 let router;
+let renderExecutorWindow = null;
+let renderExecutorReady = false;
+let renderExecutorLease = null;
 const smokeHome = process.argv.includes( '--smoke-home' );
 const smokeMultiview = process.argv.includes( '--smoke-multiview' );
 const smokeHosted = process.argv.includes( '--smoke-hosted' );
 const smokeOwnerLoss = process.argv.includes( '--smoke-owner-loss' );
 const smokeExternalRouter = process.argv.includes( '--smoke-external-router' );
 const smokeMultitool = process.argv.includes( '--smoke-multitool' );
+const smokeRender = process.argv.includes( '--smoke-render' );
 let smokeRunning = false;
 let homeReadyCount = 0;
 const externalSmokeResults = [];
@@ -195,7 +202,42 @@ async function launchDocument( payload ) {
 function notifyHome() {
   if ( homeWindow && !homeWindow.isDestroyed() ) homeWindow.webContents.send( 'awb:command', { type: 'shell-registry-changed' } );
 }
-renderJobs.subscribe( notifyHome );
+renderJobs.subscribe( () => {
+  notifyHome();
+  queueMicrotask( () => pumpRenderExecutor().catch( reportFatal ) );
+} );
+
+async function pumpRenderExecutor() {
+  if ( quitting || !renderExecutorReady || renderExecutorLease
+    || !renderExecutorWindow || renderExecutorWindow.isDestroyed() ) return;
+  const lease = renderJobs.claim( renderExecutorID, { producerKinds: [ 'field' ] } );
+  if ( !lease ) return;
+  renderExecutorLease = lease;
+  try {
+    const output = renderOutputs.descriptor( lease.renderID );
+    const { port1, port2 } = new MessageChannelMain();
+    await renderOutputs.open( lease.renderID, lease.leaseID, port1 );
+    renderExecutorWindow.webContents.postMessage( 'awb:render-lease', { ...lease, output }, [ port2 ] );
+  } catch ( error ) {
+    await renderOutputs.abort( lease.renderID );
+    renderOutputs.release( lease.renderID );
+    renderJobs.fail( renderExecutorID, lease.renderID, lease.leaseID, error );
+    renderExecutorLease = null;
+  }
+}
+
+function cancelActiveRender( renderID ) {
+  if ( renderExecutorLease?.renderID === renderID && renderExecutorWindow && !renderExecutorWindow.isDestroyed() ) {
+    renderExecutorWindow.webContents.send( 'awb:render-command', { type: 'cancel', renderID } );
+  }
+}
+
+function requestRenderCancellation( renderID ) {
+  const cancelled = renderJobs.requestCancel( renderID );
+  if ( cancelled.status === 'cancelled' ) renderOutputs.release( renderID );
+  else cancelActiveRender( renderID );
+  return cancelled;
+}
 
 async function waitFor( predicate, timeout = 15000 ) {
   const started = Date.now();
@@ -348,6 +390,71 @@ async function recordExternalSmokeResult( result ) {
   await waitFor( () => windows.size === 0 ); app.quit();
 }
 
+async function runRenderSmoke() {
+  smokeRunning = true;
+  const targetPath = path.resolve( option( process.argv, 'smoke-render-output' ) );
+  const submitted = renderJobs.submit( { requestedByToolID: 'field-modelling',
+    requestedByViewID: 'smoke-render', job: {
+      schemaVersion: 2,
+      contentHash: 'sha256:headless-field-smoke',
+      producer: { kind: 'field', version: '0.1.0', state: {
+        mode: 'analytic-preview',
+        room: { sep: 2, spkH: 1.1, conv: 20, pistonA: 0.07 },
+        channels: [
+          { instId: 'smoke', slot: 'a', freq: 1, gl: 1, gr: 0.35 },
+          { instId: 'smoke', slot: 'b', freq: 1.5, gl: 0.35, gr: 1 }
+        ],
+        grid: { columns: 24, rows: 14 },
+        bounds: { xMin: -2, xMax: 2, zMin: 0.5, zMax: 4 }
+      } },
+      inputs: [],
+      timeline: { cueInSeconds: 0, cueOutSeconds: 0.5 },
+      output: { width: 320, height: 180, fps: 4, format: 'mp4' }
+    } } );
+  renderOutputs.register( submitted.renderID, targetPath );
+  await pumpRenderExecutor();
+  await waitFor( () => [ 'completed', 'failed', 'cancelled' ].includes(
+    renderJobs.getForTool( 'field-modelling', submitted.renderID ).status ), 10000 );
+  const completed = renderJobs.getForTool( 'field-modelling', submitted.renderID );
+  if ( completed.status !== 'completed' ) throw new Error( `Headless render failed: ${ completed.error }` );
+  const bytes = await readFile( targetPath );
+  if ( bytes.length < 64 || bytes.subarray( 4, 8 ).toString() !== 'ftyp' ) {
+    throw new Error( `Headless render did not produce an MP4 file (bytes=${ bytes.length }, header=${ bytes.subarray( 0, 16 ).toString( 'hex' ) }).` );
+  }
+  console.log( `AWB_SHELL_HEADLESS_RENDER frames=${ completed.completedFrames } bytes=${ bytes.length } producer=field` );
+  app.quit();
+}
+
+async function createRenderExecutorWindow() {
+  if ( renderExecutorWindow && !renderExecutorWindow.isDestroyed() ) return renderExecutorWindow;
+  const window = new BrowserWindow( { show: false, webPreferences: {
+    preload: path.join( appRoot, 'render-worker/preload.cjs' ),
+    contextIsolation: true, nodeIntegration: false, sandbox: true
+  } } );
+  const senderID = window.webContents.id;
+  renderExecutorWindow = window;
+  renderExecutorReady = false;
+  senderRecords.set( senderID, { kind: 'render-executor', executorID: renderExecutorID } );
+  bindNavigationGuards( window, ( url ) => url.startsWith( 'file:' ) );
+  window.webContents.on( 'console-message', ( event ) => {
+    if ( event.level === 'error' || smokeRender ) console.error( `[render-executor] ${ event.message }` );
+  } );
+  window.webContents.on( 'render-process-gone', async ( event, details ) => {
+    console.error( `Headless render executor stopped: ${ details.reason }` );
+    renderExecutorReady = false;
+    if ( renderExecutorLease ) await renderOutputs.abort( renderExecutorLease.renderID );
+    renderJobs.releaseExecutor( renderExecutorID );
+    renderExecutorLease = null;
+  } );
+  window.on( 'closed', () => {
+    senderRecords.delete( senderID );
+    renderExecutorReady = false;
+    if ( renderExecutorWindow === window ) renderExecutorWindow = null;
+  } );
+  await window.loadFile( path.join( appRoot, 'dist/render-worker/index.html' ) );
+  return window;
+}
+
 async function createHomeWindow() {
   if ( homeWindow && !homeWindow.isDestroyed() ) {
     if ( homeWindow.isMinimized() ) homeWindow.restore();
@@ -497,14 +604,22 @@ async function handleToolOperation( sender, operation, payload ) {
   const { view, tool, window } = requireToolSender( sender );
   if ( operation.startsWith( 'render.' ) ) requireCapability( tool, 'rendering', 'local-render' );
   if ( operation === 'render.submit' ) {
-    return renderJobs.submit( { requestedByToolID: tool.id, requestedByViewID: view.viewID,
+    const result = await dialog.showSaveDialog( window, {
+      defaultPath: path.basename( payload.suggestedName || `${ tool.id }-render.mp4` ),
+      filters: [ { name: 'MPEG-4 video', extensions: [ 'mp4' ] } ]
+    } );
+    if ( result.canceled || !result.filePath ) return { status: 'cancelled' };
+    const submitted = renderJobs.submit( { requestedByToolID: tool.id, requestedByViewID: view.viewID,
       job: payload.job, executionTarget: payload.executionTarget ?? 'local' } );
+    renderOutputs.register( submitted.renderID, result.filePath );
+    await pumpRenderExecutor();
+    return submitted;
   }
   if ( operation === 'render.status' ) return renderJobs.getForTool( tool.id, payload.renderID );
   if ( operation === 'render.list' ) return renderJobs.list( tool.id );
   if ( operation === 'render.cancel' ) {
     renderJobs.getForTool( tool.id, payload.renderID );
-    return renderJobs.requestCancel( payload.renderID );
+    return requestRenderCancellation( payload.renderID );
   }
   if ( operation === 'artifact.read-text' ) {
     const target = safeArtifactPath( tool, payload.path );
@@ -601,6 +716,7 @@ function registerIPC() {
       homeReadyCount += 1;
       console.log( 'AWB_SHELL_HOME_READY' );
       if ( smokeHome ) runHomeSmoke().catch( reportFatal );
+      else if ( smokeRender && !smokeRunning ) runRenderSmoke().catch( reportFatal );
       else if ( smokeMultiview && !smokeRunning ) runMultiviewSmoke().catch( reportFatal );
       else if ( smokeMultitool && !smokeRunning ) runMultitoolSmoke().catch( reportFatal );
       else if ( smokeOwnerLoss && !smokeRunning ) runOwnerLossSmoke().catch( reportFatal );
@@ -647,9 +763,57 @@ function registerIPC() {
       if ( request.operation === 'shell.launch-document' ) return launchDocument( payload );
       if ( request.operation === 'shell.focus' ) { await focusToolView( payload.viewID ); return true; }
       if ( request.operation === 'shell.close' ) return closeToolView( payload.viewID );
-      if ( request.operation === 'render.cancel' ) return renderJobs.requestCancel( payload.renderID );
+      if ( request.operation === 'render.cancel' ) {
+        return requestRenderCancellation( payload.renderID );
+      }
     }
     return handleToolOperation( sender, request.operation, payload );
+  } );
+  ipcMain.on( 'awb:render-executor-ready', ( event ) => {
+    const sender = senderRecord( event );
+    if ( sender.kind !== 'render-executor' || sender.executorID !== renderExecutorID ) {
+      throw new Error( 'Rejected render executor registration.' );
+    }
+    renderExecutorReady = true;
+    pumpRenderExecutor().catch( reportFatal );
+  } );
+  ipcMain.handle( 'awb:render-executor-control', async ( event, request ) => {
+    const sender = senderRecord( event );
+    if ( sender.kind !== 'render-executor' || sender.executorID !== renderExecutorID ) {
+      throw new Error( 'Rejected render executor control message.' );
+    }
+    const payload = boundedOperationPayload( request?.payload ?? {} );
+    const active = renderExecutorLease;
+    if ( !active || payload.renderID !== active.renderID || payload.leaseID !== active.leaseID ) {
+      throw new Error( 'Render executor control does not match the active lease.' );
+    }
+    if ( request.operation === 'progress' ) {
+      return renderJobs.progress( renderExecutorID, active.renderID, active.leaseID, payload );
+    }
+    if ( request.operation === 'complete' ) {
+      const completed = renderJobs.complete( renderExecutorID, active.renderID, active.leaseID, payload.receipt );
+      renderOutputs.release( active.renderID );
+      renderExecutorLease = null;
+      await pumpRenderExecutor();
+      return completed;
+    }
+    if ( request.operation === 'fail' ) {
+      await renderOutputs.abort( active.renderID );
+      const failed = renderJobs.fail( renderExecutorID, active.renderID, active.leaseID, payload.error );
+      renderOutputs.release( active.renderID );
+      renderExecutorLease = null;
+      await pumpRenderExecutor();
+      return failed;
+    }
+    if ( request.operation === 'cancelled' ) {
+      await renderOutputs.abort( active.renderID );
+      const cancelled = renderJobs.cancelled( renderExecutorID, active.renderID, active.leaseID );
+      renderOutputs.release( active.renderID );
+      renderExecutorLease = null;
+      await pumpRenderExecutor();
+      return cancelled;
+    }
+    throw new Error( 'Unknown render executor control operation.' );
   } );
 }
 
@@ -722,6 +886,7 @@ if ( gotLock ) {
     registry.subscribe( notifyHome );
     await ensureHost( hostConfigurationFromRequest( initialRequest )
       ?? hostConfigurationFromArgs( process.argv.slice( 1 ) ) );
+    await createRenderExecutorWindow();
     await createHomeWindow();
     if ( initialRequest ) await router.launch( initialRequest );
   } ).catch( reportFatal );

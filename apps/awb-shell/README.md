@@ -70,20 +70,27 @@ WebSocket endpoint carrying versioned Float32 PCM frames.
 Tools declaring `capabilities.rendering: ["local-render"]` may submit a resolved job through:
 
 ```js
-const render = await awbHost.request('render.submit', { job, executionTarget: 'local' });
+const render = await awbHost.request('render.submit', {
+  job,
+  executionTarget: 'local',
+  suggestedName: 'field-preview.mp4'
+});
 ```
 
-The shell validates and queues the job independently of the visible tool view. Local execution is
-intended to run in a hidden Chromium render worker/window: WebGL, canvas and WebCodecs remain
-available, but no editor UI is shown. Closing the submitting view therefore does not cancel its
-job. A later cloud executor leases the same immutable job through the same broker contract.
+The shell asks for an output file, validates the job and queues it independently of the visible tool
+view. Local field previews run in a separately authenticated hidden Chromium worker: WebGL, canvas
+and WebCodecs remain available, but no editor UI is shown. Closing the submitting view therefore
+does not cancel its job. A later cloud executor leases the same immutable job through the same
+broker contract.
 
 `render.status`, `render.list` and `render.cancel` are available only to tools with the capability.
 Toolkit Home can also cancel a queued or running job. Frame sources, PCM and encoded media never
-pass through lifecycle IPC; executors report only bounded progress and a final receipt.
+pass through lifecycle IPC; executors report only bounded progress and a final receipt. Encoded
+chunks use a dedicated back-pressured message port and shell-owned positioned writes to a temporary
+file. The temporary file is atomically renamed only after the muxer closes successfully.
 
-This slice supplies the validated queue and executor-lease state machine. The hidden local runner,
-guarded binary-output streaming, persisted receipts and remote adapters are subsequent slices.
+The local worker currently executes `field` `analytic-preview` jobs. Granted input resolution,
+Lissajous audio rendering, persisted receipts and remote adapters remain subsequent slices.
 
 ## Shared desktop host
 

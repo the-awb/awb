@@ -97,15 +97,19 @@ track. `@awb/field-renderer` should eventually supply the common renderer, but m
   `@awb/field-engine`'s CPU propagation equations. It accepts only explicitly labelled
   `analytic-preview` jobs; its integration test runs through the shared scheduler and sink contract
   with `inputs: []`. `realized-score` is reserved and rejected until phase-track consumption exists.
+- The desktop shell owns a validated render queue and a separately authenticated hidden Chromium
+  executor. It currently renders analytic field jobs through the real Canvas2D/WebCodecs/Mediabunny
+  path. Encoded data travels on a dedicated back-pressured message port into shell-owned positioned
+  file writes; only an opaque locator and validated receipt return through control IPC. Output is
+  committed by atomic rename after successful muxer close.
 
 The Canvas2D producer is a boundary proof and useful preview renderer. It is not yet visual parity
 with Field Modelling's Three.js `FieldCanvas`.
 
 ## Next vertical slices
 
-1. Complete the shell render service: the validated queue and executor leases exist; next add a
-   hidden Chromium local runner, granted-input resolution, guarded output streaming and persisted
-   receipts. Jobs belong to the shell queue and may outlive the tool view that submitted them.
+1. Add granted-input resolution to the hidden executor, beginning with local audio files. Input
+   bytes and decoded samples stay in its data plane rather than crossing lifecycle IPC.
 2. Wire the hosted Lissajous artifact to create schema-v2 jobs from a saved visual config plus an
    audio file. Keep decoded audio in the renderer/worker data plane, not lifecycle IPC.
 3. Specify and test the `field-phase-track` artifact and its separate observation/extraction step,
@@ -115,10 +119,10 @@ with Field Modelling's Three.js `FieldCanvas`.
    then compare both field modes against the live `FieldCanvas` at landmark frames.
 5. Add a provider adapter interface for large jobs. The first remote adapter may target Runpod, but
    provider choice stays deployment policy rather than entering the job schema.
-6. Add a shell Render Centre only after the service contract is stable: queue, progress, cancel,
+6. Persist bounded receipts and add a shell Render Centre only after the service contract is stable: queue, progress, cancel,
    output/reveal and retry belong there; producer controls remain in their tools.
 
-Not yet implemented: shell file/audio resolution, the Render Centre UI, the phase-track schema and
+Not yet implemented: shell file/audio resolution, persisted receipts, the Render Centre UI, the phase-track schema and
 realized-score field mode, FieldCanvas visual parity, remote submission, and optional
 SC-score-to-audio job chaining.
 
