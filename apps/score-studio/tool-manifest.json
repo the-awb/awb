@@ -1,0 +1,25 @@
+{
+  "schema": "awb.tool/1",
+  "id": "score-studio",
+  "name": "Score Studio",
+  "version": "0.1.0",
+  "renderer": {
+    "entry": "dist/index.html",
+    "preloadProtocol": 1,
+    "crossOriginIsolated": false
+  },
+  "view": {
+    "defaultWidth": 1440,
+    "defaultHeight": 900,
+    "allowMultiple": true
+  },
+  "launchProfiles": [
+    { "id": "standalone", "label": "New standalone session" },
+    { "id": "attached", "label": "Attach to SuperCollider" }
+  ],
+  "capabilities": {
+    "filesystem": ["open-file", "open-directory", "save-file"],
+    "media": [],
+    "connections": ["hosted-timeline"]
+  }
+}

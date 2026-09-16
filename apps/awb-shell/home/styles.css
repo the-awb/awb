@@ -1,0 +1,6 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #111316; color: #e9edf0; }
+* { box-sizing: border-box; } body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 15% 0, #26343b 0, #111316 38rem); }
+header, main { max-width: 1080px; margin: auto; padding: 2.5rem; } header { padding-bottom: 1rem; } h1 { margin: .1rem 0; font-size: clamp(2.3rem, 7vw, 4.8rem); letter-spacing: -.06em; } h2 { font-size: 1rem; color: #aab4ba; text-transform: uppercase; letter-spacing: .12em; margin-top: 2.5rem; }
+.eyebrow { color: #8cd5c2; font-weight: 700; letter-spacing: .22em; } .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .8rem; }
+.card { border: 1px solid #364147; border-radius: 12px; padding: 1rem; background: #181c20dd; } .card h3 { margin: 0 0 .3rem; } .meta { color: #9da7ad; font-size: .85rem; }
+button { background: #8cd5c2; color: #09211b; border: 0; border-radius: 7px; padding: .6rem .8rem; margin: .35rem .35rem 0 0; font: inherit; font-weight: 650; cursor: pointer; } button.secondary { background: #2b3338; color: #eef2f4; } .empty { color: #7f898f; font-style: italic; }
