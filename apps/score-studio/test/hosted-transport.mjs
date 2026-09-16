@@ -33,6 +33,7 @@ osc.on( 'message', ( packet, rinfo ) => {
   const args = message.args;
   if ( message.address === '/awb/timeline/hello' ) {
     reply( rinfo, '/awb/timeline/connected', [ args[ 0 ], 1 ] );
+    reply( rinfo, '/awb/timeline/runtime', [ args[ 0 ], 'ready', 'notApplicable', 'notLoaded', 'unknown', '', 0 ] );
   } else if ( message.address === '/awb/timeline/ping' ) {
     reply( rinfo, '/awb/timeline/pong', [ args[ 0 ], args[ 1 ], performance.now() / 1000 + 100 ] );
   } else if ( message.address === '/awb/timeline/snapshot/begin' ) {
@@ -46,6 +47,7 @@ osc.on( 'message', ( packet, rinfo ) => {
       result( rinfo, args, false, 'snapshotEnd', fixture.scoreID, fixture.revision, 'missingChunks', 'retry whole snapshot' );
     } else {
       result( rinfo, args, true, 'snapshotEnd', fixture.scoreID, fixture.revision, 'installed' );
+      reply( rinfo, '/awb/timeline/runtime', [ args[ 0 ], 'ready', 'notApplicable', 'ready', 'ready', '', 0 ] );
       reply( rinfo, '/awb/timeline/transport', [ args[ 0 ], fixture.scoreID, fixture.revision, '', 'stopped', 0, performance.now() / 1000 + 100, 0, 0 ] );
     }
   } else if ( message.address === '/awb/timeline/command' ) {
@@ -92,12 +94,14 @@ try {
   await client.connect( bridge.endpoint );
   assert.equal( client.getState().status, 'connected' );
   assert.equal( client.getState().protocolVersion, 1 );
+  assert.equal( client.getState().readiness.canPlay, false );
   const hello = received.find( ( message ) => message.address === '/awb/timeline/hello' );
   assert.equal( hello.args[ 2 ], 'score-session-test', 'hosted hello carries its ToolSession identity' );
 
   await client.loadDocument( fixture );
   assert.equal( endCount, 2, 'missing chunks restart the complete snapshot' );
   assert.equal( client.getState().remoteRevision, fixture.revision );
+  assert.equal( client.getState().readiness.canPlay, true );
   assert.ok( received.some( ( message ) => message.address === '/awb/timeline/snapshot/chunk' ) );
 
   await client.command( fixture, 'play' );
@@ -140,7 +144,7 @@ try {
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
 
-  console.log( 'hosted-transport: 20/20 pass' );
+  console.log( 'hosted-transport: 22/22 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

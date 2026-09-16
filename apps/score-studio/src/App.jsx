@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
+import { createPlaybackReadiness } from '@awb/sc-runtime';
 import { hashScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
@@ -27,6 +28,9 @@ export default function App( { host, createHostedClient } ) {
   const [ endpoint, setEndpoint ] = useState( launchedEndpoint );
   const [ hostedMessage, setHostedMessage ] = useState( '' );
   const [ standaloneMessage, setStandaloneMessage ] = useState( '' );
+  const [ standaloneDefinitions, setStandaloneDefinitions ] = useState( {
+    scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
+  } );
   const [ projectionKind, setProjectionKind ] = useState( SC_PROJECTION_KINDS.DESKTOP_SCORE );
   const [ localProjection, setLocalProjection ] = useState( null );
   const [ scoreFolder, setScoreFolder ] = useState( { handle: null, name: '', files: [], message: '' } );
@@ -186,19 +190,49 @@ export default function App( { host, createHostedClient } ) {
   const loadedRevision = connected
     && hosted.scoreID === session.document.scoreID
     && hosted.remoteRevision === session.document.revision;
+  const hostedCanPlay = loadedRevision && hosted.readiness.canPlay;
   const standaloneLoaded = standalone.scoreID === session.document.scoreID
     && standalone.revision === session.document.revision;
+  const definitionsCurrent = standaloneDefinitions.scoreID === session.document.scoreID
+    && standaloneDefinitions.revision === session.document.revision;
+  const standaloneReadiness = createPlaybackReadiness( {
+    hostKind: 'standalone',
+    engine: sc.status === 'ready' ? 'ready'
+      : ( sc.status === 'loading' || sc.status === 'booting' ) ? 'booting'
+        : sc.status === 'failed' ? 'failed' : 'offline',
+    audio: sc.audioContextState === 'running' ? 'running'
+      : sc.audioContextState === 'suspended' || sc.audioContextState === 'interrupted'
+        ? 'suspended' : 'unknown',
+    score: standaloneLoaded ? 'ready' : 'notLoaded',
+    definitions: definitionsCurrent ? standaloneDefinitions.state : 'unknown',
+    missingDefinitions: definitionsCurrent ? standaloneDefinitions.missing : [],
+    detail: definitionsCurrent ? standaloneDefinitions.detail : ( sc.error || '' )
+  } );
 
   async function prepareStandalone( { atPlayhead = false } = {} ) {
     setStandaloneMessage( '' );
+    setStandaloneDefinitions( {
+      scoreID: session.document.scoreID, revision: session.document.revision,
+      state: 'loading', missing: [], detail: ''
+    } );
     try {
-      await sc.boot();
+      if ( sc.isBooted ) await sc.resumeAudio();
+      else await sc.boot();
       const definitions = await loadStandaloneSynthDefs( sc, session.document );
       if ( !standaloneLoaded ) standaloneExecutor.load( session.document );
       if ( atPlayhead ) standaloneExecutor.seek( session.playhead );
+      setStandaloneDefinitions( {
+        scoreID: session.document.scoreID, revision: session.document.revision,
+        state: 'ready', missing: [], detail: ''
+      } );
       setStandaloneMessage( `Revision ${ session.document.revision } ready · ${ definitions.length } SynthDef${ definitions.length === 1 ? '' : 's' }.` );
       return true;
     } catch ( error ) {
+      setStandaloneDefinitions( {
+        scoreID: session.document.scoreID, revision: session.document.revision,
+        state: error.code === 'missingSynthDefs' ? 'missing' : 'failed',
+        missing: error.missingDefinitions ?? [], detail: error.message
+      } );
       setStandaloneMessage( error.message );
       return false;
     }
@@ -206,6 +240,7 @@ export default function App( { host, createHostedClient } ) {
 
   async function playStandalone() {
     if ( standalone.status === 'paused' && standaloneLoaded ) {
+      if ( sc.audioContextState !== 'running' ) await sc.resumeAudio();
       standaloneExecutor.play();
       return;
     }
@@ -567,15 +602,15 @@ export default function App( { host, createHostedClient } ) {
                   onClick={ () => hostedAction( () => hostedClient.installDocument( session.document ),
                     `Revision ${ session.document.revision } installed atomically.` ) }>Load revision</button>
               </div>
-              <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
+              <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>Audio</dt><dd>{ hosted.readiness.engine }</dd><dt>Playback</dt><dd>{ hostedCanPlay ? 'ready' : hosted.readiness.reason }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
               { ( hostedMessage || hosted.error ) && <p className={ hosted.error ? 'error' : 'fileMessage' }>{ hostedMessage || hosted.error }</p> }
               <p className="boundaryNote">The local WebSocket sidecar forwards only `/awb/timeline/...` OSC. Desktop sclang remains the scheduling and transport authority.</p>
             </>
           ) : (
             <>
               <div className="runtimeButtons">
-                <button disabled={ sc.status === 'ready' || sc.status === 'loading' || sc.status === 'booting' }
-                  onClick={ () => sc.boot() }>{ sc.status === 'ready' ? 'Audio running' : 'Start audio' }</button>
+                <button disabled={ sc.audioContextState === 'running' || sc.status === 'loading' || sc.status === 'booting' }
+                  onClick={ () => sc.isBooted ? sc.resumeAudio() : sc.boot() }>{ sc.audioContextState === 'running' ? 'Audio running' : sc.isBooted ? 'Resume audio' : 'Start audio' }</button>
                 <button disabled={ sclang.isAttached || sclang.status === 'attaching' }
                   onClick={ sclang.attach }>{ sclang.isAttached ? 'sclang attached' : 'Attach sclang' }</button>
                 <button disabled={ sc.status === 'loading' || sc.status === 'booting' }
@@ -585,7 +620,7 @@ export default function App( { host, createHostedClient } ) {
                   sc.shutdown();
                 } }>Quit</button>
               </div>
-              <dl className="identity compact"><dt>Status</dt><dd>{ standalone.status }</dd><dt>Loaded</dt><dd>{ standalone.scoreID ? `${ standalone.scoreID } r${ standalone.revision }` : 'not loaded' }</dd><dt>Nodes</dt><dd>{ standalone.liveCount }</dd></dl>
+              <dl className="identity compact"><dt>Status</dt><dd>{ standalone.status }</dd><dt>Audio</dt><dd>{ standaloneReadiness.engine } / { standaloneReadiness.audio }</dd><dt>Playback</dt><dd>{ standaloneReadiness.canPlay ? 'ready' : standaloneReadiness.reason }</dd><dt>Loaded</dt><dd>{ standalone.scoreID ? `${ standalone.scoreID } r${ standalone.revision }` : 'not loaded' }</dd><dt>Nodes</dt><dd>{ standalone.liveCount }</dd></dl>
               { standaloneMessage && <p className={ standalone.status === 'failed' ? 'error' : 'fileMessage' }>{ standaloneMessage }</p> }
               <p className="boundaryNote">The browser schedules canonical events against absolute score time and owns only the nodes created by this standalone run. Seeking starts at the next event boundary; it does not reconstruct sustaining state.</p>
               { ( sc.error || sclang.error ) && <p className="error">{ sc.error || sclang.error }</p> }
@@ -597,7 +632,7 @@ export default function App( { host, createHostedClient } ) {
           <h2>Transport</h2>
           { session.mode === MODES.HOSTED ? (
             <div className="runtimeButtons">
-              <button disabled={ !loadedRevision || hosted.transport?.state === 'playing' }
+              <button disabled={ !hostedCanPlay || hosted.transport?.state === 'playing' }
                 onClick={ () => hostedAction( () => hostedClient.command( session.document,
                   hosted.transport?.state === 'paused' ? 'resume' : 'play' ) ) }>{ hosted.transport?.state === 'paused' ? 'Resume' : 'Play' }</button>
               <button disabled={ !loadedRevision || hosted.transport?.state !== 'playing' }

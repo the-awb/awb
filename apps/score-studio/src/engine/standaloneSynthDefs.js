@@ -24,7 +24,12 @@ export async function loadStandaloneSynthDefs( sc, document, { assetBase = `${ b
     .map( ( definition ) => [ definition.name, definition ] ) );
   const wanted = scoreDefNames( document );
   const missing = wanted.filter( ( name ) => !available.has( name ) );
-  if ( missing.length ) throw new Error( `Standalone SynthDef${ missing.length > 1 ? 's' : '' } not installed: ${ missing.join( ', ' ) }.` );
+  if ( missing.length ) {
+    const error = new Error( `Standalone SynthDef${ missing.length > 1 ? 's' : '' } not installed: ${ missing.join( ', ' ) }.` );
+    error.code = 'missingSynthDefs';
+    error.missingDefinitions = Object.freeze( [ ...missing ] );
+    throw error;
+  }
 
   for ( const name of wanted ) {
     if ( loaded.has( name ) ) continue;

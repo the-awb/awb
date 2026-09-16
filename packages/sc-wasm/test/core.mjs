@@ -11,6 +11,7 @@ assert.strictEqual( engine.getState(), initial );
 assert.deepEqual( initial, {
   isBooted: false,
   status: 'idle',
+  audioContextState: 'unavailable',
   error: null,
   log: [],
   nodes: {}

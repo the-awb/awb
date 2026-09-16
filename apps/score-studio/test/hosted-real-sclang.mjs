@@ -74,6 +74,19 @@ try {
     throw new Error( 'desktop installed the wrong score identity' );
   }
   passed += 2;
+  await waitFor( () => client.getState().readiness.score === 'ready' );
+  if ( client.getState().readiness.canPlay
+    || !client.getState().readiness.missingDefinitions.includes( 'resonantBassEnv2' ) ) {
+    throw new Error( 'desktop failed to report the real score fixture\'s unloaded local SynthDef' );
+  }
+  passed += 1;
+  try {
+    await client.command( document, 'play' );
+    throw new Error( 'desktop accepted Play without the score SynthDef' );
+  } catch ( error ) {
+    if ( error.result?.code !== 'runtimeNotReady' ) throw error;
+  }
+  passed += 1;
 
   const projection = await client.requestProjection( {
     scoreID: document.scoreID,
@@ -107,9 +120,9 @@ try {
   const exitCode = await new Promise( ( resolve ) => child.once( 'exit', resolve ) );
   if ( exitCode !== 0 ) throw new Error( `sclang fixture exited ${ exitCode }` );
   passed += 1;
-  console.log( `hosted-real-sclang: ${ passed }/11 pass (11 events, bounded SC projection, final onset 773s, no playback)` );
+  console.log( `hosted-real-sclang: ${ passed }/13 pass (11 events, missing local SynthDef disclosed and Play rejected, bounded SC projection, final onset 773s)` );
 } catch ( error ) {
-  console.error( `hosted-real-sclang: FAIL after ${ passed }/11: ${ error.message }` );
+  console.error( `hosted-real-sclang: FAIL after ${ passed }/13: ${ error.message }` );
   console.error( output.slice( -8000 ) );
   process.exitCode = 1;
 } finally {

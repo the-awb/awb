@@ -48,12 +48,14 @@ export function createScEngine( { importScsynth } = {} ) {
   let state = Object.freeze( {
     isBooted: false,
     status: 'idle', // idle | loading | booting | ready | failed
+    audioContextState: 'unavailable',
     error: null,
     log: Object.freeze( [] ),
     nodes: Object.freeze( {} )
   } );
   let scEngine = null;
   let audioContext = null;
+  let audioContextStateHandler = null;
   let bootPromise = null;
   let pendingChunks = [];
   let tapNode = null;
@@ -490,6 +492,9 @@ export function createScEngine( { importScsynth } = {} ) {
 
       tapNode = tap;
       audioContext = ctx;
+      audioContextStateHandler = () => publish( { audioContextState: ctx.state } );
+      ctx.addEventListener( 'statechange', audioContextStateHandler );
+      audioContextStateHandler();
 
       // Ready as soon as the graph is connected - deliberately NOT gated on a handshake.
       //
@@ -512,6 +517,17 @@ export function createScEngine( { importScsynth } = {} ) {
     }
     } )();
     return bootPromise;
+  };
+
+  // Browsers may suspend an already booted AudioContext when the page loses its user-activation
+  // grant. Resuming that graph is not a second scsynth boot and must remain a user gesture.
+  const resumeAudio = async () => {
+    if ( !audioContext ) return boot();
+    if ( audioContext.state === 'suspended' || audioContext.state === 'interrupted' ) {
+      await audioContext.resume();
+      publish( { audioContextState: audioContext.state } );
+    }
+    return scEngine;
   };
 
   const stop = () => {
@@ -570,6 +586,7 @@ export function createScEngine( { importScsynth } = {} ) {
       try { node.disconnect(); } catch { /* already out */ }
     }
     const ctx = audioContext;
+    if ( ctx && audioContextStateHandler ) ctx.removeEventListener( 'statechange', audioContextStateHandler );
     if ( ctx && ctx.state !== 'closed' ) {
       try { await ctx.close(); } catch { /* already closing */ }
     }
@@ -580,13 +597,14 @@ export function createScEngine( { importScsynth } = {} ) {
     scEngine = null;
     tapNode = null;
     audioContext = null;
+    audioContextStateHandler = null;
     caughtAudio = null;
     bootPromise = null;
     bootOptionsState = null;
     pendingChunks = [];
     setNodes( {} );
     setIsBooted( false );
-    setStatus( 'idle' );
+    publish( { status: 'idle', audioContextState: 'unavailable' } );
     setError( null );
     appendLog( 'server quit' );
   };
@@ -616,7 +634,7 @@ export function createScEngine( { importScsynth } = {} ) {
   };
 
   return {
-    boot, stop, shutdown, dispose, setMonitoring,
+    boot, resumeAudio, stop, shutdown, dispose, setMonitoring,
     drainNewSamples, readRecentSamples, sendOsc, sync, loadSynthDef, reloadSynthDefs,
     playSynth, pauseSynth, resumeSynth, freeSynth, freeAll,
     subscribeOscReply, subscribePrint, subscribe, getState, getEngine, getBootOptions

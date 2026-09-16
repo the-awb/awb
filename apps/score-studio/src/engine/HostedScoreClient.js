@@ -1,8 +1,10 @@
 import { hashScoreDocument } from '@awb/score';
+import { createPlaybackReadiness } from '@awb/sc-runtime';
 
 const EMPTY_STATE = Object.freeze( {
   status: 'disconnected', protocolVersion: null, error: '', scoreID: null,
-  remoteRevision: null, transport: null, realizations: [], clockOffset: null
+  remoteRevision: null, transport: null, realizations: [], clockOffset: null,
+  readiness: createPlaybackReadiness( { hostKind: 'desktop' } )
 } );
 
 const numericString = /^[-+]?(?:\d+\.?\d*|\.\d+)$/;
@@ -148,6 +150,13 @@ export class HostedScoreClient {
       this.resolveConnect?.();
       this.resolveConnect = null;
       this.rejectConnect = null;
+    } else if ( address === '/awb/timeline/runtime' && args[ 0 ] === this.clientID ) {
+      const missingCount = Number( args[ 6 ] ) || 0;
+      this.publish( { readiness: createPlaybackReadiness( {
+        hostKind: 'desktop', engine: args[ 1 ], audio: args[ 2 ], score: args[ 3 ],
+        definitions: args[ 4 ], detail: args[ 5 ],
+        missingDefinitions: args.slice( 7, 7 + missingCount )
+      } ) } );
     } else if ( address === '/awb/timeline/result' && args[ 0 ] === this.clientID ) {
       const result = resultFromArgs( args );
       const pending = this.pending.get( result.requestID );

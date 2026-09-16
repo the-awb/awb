@@ -30,6 +30,26 @@ not duplicate those responsibilities. The app-owned sidecar forwards the frozen
 or scheduling policy. Standalone scheduling stays in the browser and does not pass through the
 desktop bridge.
 
+## Playback readiness
+
+Connection, score installation and playback readiness are separate states. `@awb/sc-runtime`
+defines their shared result shape and `canPlay` policy, but it does not implement a handshake.
+The browser adapter retains the Web Audio/scsynth.wasm boot sequence, including AudioContext state
+and SynthDef loading. The desktop adapter retains sclang `Server` and SynthDescLib checks and
+reports them through `/awb/timeline/runtime`.
+
+Hosted Play is disabled and the bridge rejects `play` or `resume` while the desktop server is
+offline, the selected revision is absent or a required SynthDef is unknown to the language.
+Standalone mode exposes the same readiness meaning from its different evidence. A `ready` report
+means that the selected host can accept and realize the score; it is not proof that an external
+audio device or loudspeaker is producing sound.
+
+Desktop definition checking currently uses `SynthDescLib`: it proves that sclang knows the
+definition, while the bridge separately proves that the server is running. scsynth has no
+side-effect-free “is this SynthDef installed?” query. A server restarted outside the normal
+definition-restoration path can therefore invalidate that inference; an eventual score-project
+dependency loader should own sending the definitions and `/sync`, then report stronger evidence.
+
 ## Timeline views and editing
 
 The synth lifecycle view is a projection of the canonical entries, not another score model. Each
