@@ -82,6 +82,12 @@ osc.on( 'message', ( packet, rinfo ) => {
       reply( rinfo, '/awb/timeline/transport', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'playing', 0, hostTime, 1, 0 ] );
       reply( rinfo, '/awb/timeline/realization', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'n1', 'realization-1', 'started', 0, 0, 2, 1001, 1002 ] );
     }
+  } else if ( message.address === '/awb/timeline/instrument' ) {
+    result( rinfo, args, true, args[ 2 ], args[ 3 ], 0, 'applied' );
+    reply( rinfo, '/awb/timeline/instrument/state', [
+      args[ 0 ], args[ 3 ], args[ 2 ] === 'free' ? 'ended' : 'running',
+      args[ 2 ] === 'free' ? -1 : 1200
+    ] );
   } else if ( message.address === '/awb/timeline/projection/request' ) {
     projectionRequests += 1;
     const text = '// α projection\n';
@@ -125,6 +131,13 @@ try {
   assert.ok( context.definitions.fieldBasic.interface.controls
     .find( ( control ) => control.name === 'freqL' ).roles.includes( 'oscillatorFrequency' ) );
   assert.match( context.definitions.fieldBasic.fingerprint, /^sha256:[0-9a-f]{64}$/ );
+
+  await client.instrumentCommand( 'start', 'basic', 'fieldBasic', { freqL: 60, amp: 1 } );
+  await waitFor( () => client.getState().liveInstruments.basic?.nodeID === 1200 );
+  const instrumentStart = received.find( ( message ) => message.address === '/awb/timeline/instrument' );
+  assert.deepEqual( instrumentStart.args.slice( 2 ), [ 'start', 'basic', 'fieldBasic', 'freqL', 60, 'amp', 1 ] );
+  await client.instrumentCommand( 'free', 'basic', 'fieldBasic' );
+  await waitFor( () => !client.getState().liveInstruments.basic );
 
   await client.loadDocument( fixture );
   assert.equal( endCount, 2, 'missing chunks restart the complete snapshot' );
@@ -176,7 +189,7 @@ try {
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
 
-  console.log( 'hosted-transport: 28/28 pass' );
+  console.log( 'hosted-transport: 32/32 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

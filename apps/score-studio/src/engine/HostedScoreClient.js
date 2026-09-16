@@ -10,6 +10,7 @@ const EMPTY_SYNTHDEF_CONTEXT = Object.freeze( {
 const EMPTY_STATE = Object.freeze( {
   status: 'disconnected', protocolVersion: null, error: '', scoreID: null,
   remoteRevision: null, transport: null, realizations: [], clockOffset: null,
+  liveInstruments: Object.freeze( {} ),
   readiness: createPlaybackReadiness( { hostKind: 'desktop' } ),
   synthDefContext: EMPTY_SYNTHDEF_CONTEXT
 } );
@@ -210,6 +211,15 @@ export class HostedScoreClient {
       } );
       const realizations = [ ...this.state.realizations.filter( ( item ) => item.realizationID !== realization.realizationID ), realization ].slice( -100 );
       this.publish( { realizations: Object.freeze( realizations ) } );
+    } else if ( address === '/awb/timeline/instrument/state' && args[ 0 ] === this.clientID ) {
+      const instrumentID = `${ args[ 1 ] }`;
+      const state = `${ args[ 2 ] }`;
+      const liveInstruments = { ...this.state.liveInstruments };
+      if ( state === 'ended' ) delete liveInstruments[ instrumentID ];
+      else liveInstruments[ instrumentID ] = Object.freeze( {
+        instrumentID, state, nodeID: Number( args[ 3 ] )
+      } );
+      this.publish( { liveInstruments: Object.freeze( liveInstruments ) } );
     } else if ( address === '/awb/timeline/pong' && args[ 0 ] === this.clientID ) {
       const sent = this.pings.get( args[ 1 ] );
       if ( sent !== undefined ) {
@@ -544,6 +554,25 @@ export class HostedScoreClient {
     const id = requestID( command );
     return this.request( '/awb/timeline/command', [
       this.clientID, id, document.scoreID, expectedRevision, command, argument
+    ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
+  }
+
+  instrumentCommand( command, instrumentID, definition = '', params = {} ) {
+    if ( ![ 'start', 'set', 'pause', 'resume', 'release', 'free' ].includes( command ) ) {
+      throw new Error( `Unknown hosted instrument command: ${ command }` );
+    }
+    if ( typeof instrumentID !== 'string' || !instrumentID.length ) {
+      throw new Error( 'Hosted instrument command requires an instrument ID' );
+    }
+    const controls = Object.entries( params ).flatMap( ( [ name, value ] ) => {
+      if ( typeof value !== 'number' || !Number.isFinite( value ) ) {
+        throw new Error( `Hosted instrument control ${ name } must be numeric` );
+      }
+      return [ name, value ];
+    } );
+    const id = requestID( `instrument-${ command }` );
+    return this.request( '/awb/timeline/instrument', [
+      this.clientID, id, command, instrumentID, definition, ...controls
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
   }
 

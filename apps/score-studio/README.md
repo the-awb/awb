@@ -120,8 +120,8 @@ may still annotate a known definition, but it is not the authority for availabil
 
 ## Live instrument workspace
 
-The main **Instruments** tab is deliberately not the score-derived inspector described above. It
-is a browser-local live rack over the complete `@awb/instruments` catalogue. Each instrument gets
+In Standalone mode, the main **Instruments** tab is deliberately not the score-derived inspector
+described above. It is a browser-local live rack over the complete `@awb/instruments` catalogue. Each instrument gets
 one owned scsynth node, the full scalar control surface from the compiled SynthDef manifest, and
 catalogue-aware sliders or boolean controls where semantic editor metadata exists. Uncatalogued
 test definitions do not appear in this rack.
@@ -136,9 +136,12 @@ and release timing; `running` means that the node exists, not that a 12- or 30-s
 reached an audible level. Release all and Free all operate only on rack-owned library nodes, not
 score realizations.
 
-This remains browser-local even when the selected score mode is Hosted. The timeline bridge is a
-score execution protocol, not a generic remote-control channel. Desktop live instrument control
-belongs on the NodeManager tool route when that adapter is added.
+Hosted mode never boots or falls back to the browser audio engine. Its instrument surface sends
+bounded, idempotent start, set, pause, resume, release and free commands to the authenticated
+desktop Score Studio ToolSession. Desktop sclang creates the Synths on desktop scsynth and the
+ToolSession owns them, so NodeManager can project them when tracking is enabled. Losing the desktop
+connection disables hosted controls rather than silently changing execution engine. Switching to
+Hosted also stops standalone score playback and shuts down the browser engine.
 
 ## Score files and demo
 

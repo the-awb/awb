@@ -161,7 +161,8 @@ export default function App( { host, createHostedClient } ) {
   useEffect( () => {
     if ( session.mode === MODES.STANDALONE ) return;
     if ( standalone.status === 'playing' || standalone.status === 'paused' ) standaloneExecutor.stop();
-  }, [ session.mode, standalone.status, standaloneExecutor ] );
+    if ( sc.isBooted ) sc.shutdown();
+  }, [ session.mode, standalone.status, standaloneExecutor, sc.isBooted ] );
 
   useEffect( () => {
     const currentRevision = standalone.scoreID === session.document.scoreID
@@ -602,7 +603,8 @@ export default function App( { host, createHostedClient } ) {
         { session.view === 'score'
           ? <ScoreTimeline session={ session } dispatch={ dispatch } />
           : session.view === 'instruments'
-            ? <InstrumentWorkspace sc={ sc } mode={ session.mode } />
+            ? <InstrumentWorkspace sc={ sc } mode={ session.mode }
+              hostedClient={ hostedClient } hostedState={ hosted } />
             : <ConsoleWorkspace sc={ sc } sclang={ sclang } workingDocument={ session.workingDocument } mode={ session.mode } /> }
       </main>
 

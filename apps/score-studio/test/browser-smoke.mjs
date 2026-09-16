@@ -39,12 +39,14 @@ try {
   await seedInstrument.getByText( 'freq=220', { exact: true } ).waitFor( { timeout: 5000 } )
     .catch( () => failures.push( 'instrument panel did not disclose compiled SynthDef controls' ) );
   await page.getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  if ( !( await page.getByRole( 'heading', { name: 'Hosted instruments', exact: true } ).isVisible() ) ) failures.push( 'hosted instrument boundary is missing' );
+  if ( await page.getByRole( 'button', { name: 'Prepare audio', exact: true } ).count() ) failures.push( 'hosted mode exposed browser audio preparation' );
+  await page.getByRole( 'button', { name: 'standalone', exact: true } ).click();
   if ( await page.locator( '.liveInstrument' ).count() !== 4 ) failures.push( 'live instrument tab did not expose the four catalogued instruments' );
   if ( !( await page.getByRole( 'heading', { name: 'Live instruments', exact: true } ).isVisible() ) ) failures.push( 'live instrument workspace heading is missing' );
   if ( await page.getByLabel( 'Live freqL', { exact: true } ).inputValue() !== '60' ) failures.push( 'live Basic GUI did not use the compiled frequency default' );
   if ( Number( await page.getByLabel( 'Live amp', { exact: true } ).first().inputValue() ) !== 1 ) failures.push( 'live instrument gain did not preserve the SynthDef default' );
   if ( !( await page.getByText( 'Amplitude envelope: 2s attack · 4s release', { exact: true } ).isVisible() ) ) failures.push( 'live instrument did not disclose its audible envelope timing' );
-  if ( !( await page.getByText( 'This rack is browser-local', { exact: false } ).isVisible() ) ) failures.push( 'hosted live-rack boundary is not visible' );
   await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
   if ( !( await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).evaluate( ( button ) => button.classList.contains( 'active' ) ) ) ) {
     failures.push( 'synth lifecycle is not the default score layout' );

@@ -5,14 +5,18 @@ import { liveInstrumentLibrary, initialLiveInstrumentParams } from '../engine/li
 import { synthDefManifestUrl } from '../engine/scAssets.js';
 import { loadInstrumentLibrarySynthDefs } from '../engine/standaloneSynthDefs.js';
 
-export default function InstrumentWorkspace( { sc, mode } ) {
+export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedState } ) {
   const [ manifest, setManifest ] = useState( null );
   const [ params, setParams ] = useState( {} );
   const [busy, setBusy] = useState( '' );
   const [message, setMessage] = useState( '' );
   const [error, setError] = useState( '' );
   const instruments = useMemo( () => manifest ? liveInstrumentLibrary( manifest ) : [], [ manifest ] );
-  const rackNodeCount = instruments.filter( ( instrument ) => sc.nodes[ instrument.definition ] ).length;
+  const hosted = mode === 'hosted';
+  const hostedNodes = hostedState?.liveInstruments ?? {};
+  const rackNodeCount = hosted
+    ? Object.keys( hostedNodes ).length
+    : instruments.filter( ( instrument ) => sc.nodes[ instrument.definition ] ).length;
 
   useEffect( () => {
     let live = true;
@@ -54,7 +58,10 @@ export default function InstrumentWorkspace( { sc, mode } ) {
   function updateParam( instrument, control, value ) {
     const next = { ...( params[ instrument.definition ] ?? {} ), [ control.name ]: value };
     setParams( ( current ) => ( { ...current, [ instrument.definition ]: next } ) );
-    if ( sc.nodes[ instrument.definition ] && !sc.nodes[ instrument.definition ].released ) {
+    if ( hostedNodes[ instrument.key ] && hostedNodes[ instrument.key ].state !== 'releasing' ) {
+      hostedClient.instrumentCommand( 'set', instrument.key, instrument.definition, { [ control.name ]: value } )
+        .catch( ( nextError ) => setError( nextError.message ) );
+    } else if ( !hosted && sc.nodes[ instrument.definition ] && !sc.nodes[ instrument.definition ].released ) {
       sc.setSynth( instrument.definition, { [ control.name ]: value } );
     }
   }
@@ -62,58 +69,86 @@ export default function InstrumentWorkspace( { sc, mode } ) {
   function resetInstrument( instrument ) {
     const next = initialLiveInstrumentParams( instrument );
     setParams( ( current ) => ( { ...current, [ instrument.definition ]: next } ) );
-    if ( sc.nodes[ instrument.definition ] && !sc.nodes[ instrument.definition ].released ) {
+    if ( hostedNodes[ instrument.key ] && hostedNodes[ instrument.key ].state !== 'releasing' ) {
+      hostedClient.instrumentCommand( 'set', instrument.key, instrument.definition, next )
+        .catch( ( nextError ) => setError( nextError.message ) );
+    } else if ( !hosted && sc.nodes[ instrument.definition ] && !sc.nodes[ instrument.definition ].released ) {
       sc.setSynth( instrument.definition, next );
     }
   }
 
-  function releaseAll() {
-    for ( const instrument of instruments ) sc.releaseSynth( instrument.definition );
+  async function instrumentAction( instrument, action ) {
+    if ( hosted ) {
+      return hostedClient.instrumentCommand( action, instrument.key, instrument.definition );
+    }
+    if ( action === 'pause' ) sc.pauseSynth( instrument.definition );
+    else if ( action === 'resume' ) sc.resumeSynth( instrument.definition );
+    else if ( action === 'release' ) sc.releaseSynth( instrument.definition );
+    else if ( action === 'free' ) sc.freeSynth( instrument.definition );
   }
 
-  function freeAll() {
-    for ( const instrument of instruments ) sc.freeSynth( instrument.definition );
+  async function startInstrument( instrument ) {
+    const values = params[ instrument.definition ] ?? initialLiveInstrumentParams( instrument );
+    if ( hosted ) return hostedClient.instrumentCommand( 'start', instrument.key, instrument.definition, values );
+    await prepare();
+    sc.playSynth( instrument.definition, values );
+  }
+
+  async function allAction( action ) {
+    const active = instruments.filter( ( instrument ) => hosted
+      ? hostedNodes[ instrument.key ]
+      : sc.nodes[ instrument.definition ] );
+    await Promise.all( active.map( ( instrument ) => instrumentAction( instrument, action ) ) );
   }
 
   return <div className="instrumentWorkspace">
     <header className="instrumentWorkspaceHeader">
-      <div><h1>Live instruments</h1>
-        <p>Browser-owned synths for playing and shaping directly. Nothing here edits the score.</p></div>
+      <div><h1>{ hosted ? 'Hosted instruments' : 'Live instruments' }</h1>
+        <p>{ hosted
+          ? 'Desktop ToolSession synths played by the connected SuperCollider language and server.'
+          : 'Browser-owned synths for playing and shaping directly. Nothing here edits the score.' }</p></div>
       <div className="liveRackActions">
-        <span>{ sc.status } · { sc.audioContextState } · { rackNodeCount } live</span>
-        <button disabled={ Boolean( busy ) || sc.status === 'loading' || sc.status === 'booting' }
-          onClick={ () => act( 'prepare', prepare ) }>{ sc.isBooted ? 'Resume audio' : 'Prepare audio' }</button>
-        <button disabled={ rackNodeCount === 0 } onClick={ releaseAll }>Release all live</button>
-        <button disabled={ rackNodeCount === 0 } onClick={ freeAll }>Free all live</button>
+        <span>{ hosted
+          ? `${ hostedState?.status ?? 'disconnected' } · ${ hostedState?.readiness?.engine ?? 'unknown' } · ${ rackNodeCount } live`
+          : `${ sc.status } · ${ sc.audioContextState } · ${ rackNodeCount } live` }</span>
+        { !hosted && <button disabled={ Boolean( busy ) || sc.status === 'loading' || sc.status === 'booting' }
+          onClick={ () => act( 'prepare', prepare ) }>{ sc.isBooted ? 'Resume audio' : 'Prepare audio' }</button> }
+        <button disabled={ rackNodeCount === 0 } onClick={ () => act( 'release-all', () => allAction( 'release' ) ) }>Release all live</button>
+        <button disabled={ rackNodeCount === 0 } onClick={ () => act( 'free-all', () => allAction( 'free' ) ) }>Free all live</button>
       </div>
     </header>
-    { mode === 'hosted' && <p className="liveRackBoundary">This rack is browser-local even while score transport is hosted. Desktop live instruments belong on the NodeManager control route, not the score timeline bridge.</p> }
+    { hosted && <p className="liveRackBoundary">Hosted mode never boots the browser audio engine. These controls address the desktop ToolSession; its Synths are tracked by NodeManager when tracking is enabled.</p> }
     { message && <p className="liveRackMessage">{ message }</p> }
-    { ( error || sc.error ) && <p className="error">{ error || sc.error }</p> }
+    { ( error || ( !hosted && sc.error ) ) && <p className="error">{ error || sc.error }</p> }
     { !manifest && !error
       ? <p className="emptyState">Reading the compiled instrument library…</p>
-      : <div className="instrumentGrid">{ instruments.map( ( instrument ) => (
-        <LiveInstrument key={ instrument.key } instrument={ instrument }
+      : <div className="instrumentGrid">{ instruments.map( ( instrument ) => {
+        const hostInventory = hostedState?.synthDefContext?.inventory;
+        const effectiveInstrument = hosted ? { ...instrument,
+          available: Array.isArray( hostInventory ) && hostInventory.includes( instrument.definition ) }
+          : instrument;
+        const hostedNode = hostedNodes[ instrument.key ];
+        const node = hosted ? hostedNode && {
+          paused: hostedNode.state === 'paused', released: hostedNode.state === 'releasing'
+        } : sc.nodes[ instrument.definition ];
+        return <LiveInstrument key={ instrument.key } instrument={ effectiveInstrument }
+          hosted={ hosted }
           values={ params[ instrument.definition ] ?? initialLiveInstrumentParams( instrument ) }
-          node={ sc.nodes[ instrument.definition ] }
+          node={ node }
           busy={ Boolean( busy ) }
-          onStart={ () => act( instrument.key, async () => {
-            await prepare();
-            sc.playSynth( instrument.definition,
-              params[ instrument.definition ] ?? initialLiveInstrumentParams( instrument ) );
-          } ) }
-          onPause={ () => sc.pauseSynth( instrument.definition ) }
-          onResume={ () => sc.resumeSynth( instrument.definition ) }
-          onRelease={ () => sc.releaseSynth( instrument.definition ) }
-          onFree={ () => sc.freeSynth( instrument.definition ) }
+          onStart={ () => act( instrument.key, () => startInstrument( instrument ) ) }
+          onPause={ () => act( instrument.key, () => instrumentAction( instrument, 'pause' ) ) }
+          onResume={ () => act( instrument.key, () => instrumentAction( instrument, 'resume' ) ) }
+          onRelease={ () => act( instrument.key, () => instrumentAction( instrument, 'release' ) ) }
+          onFree={ () => act( instrument.key, () => instrumentAction( instrument, 'free' ) ) }
           onReset={ () => resetInstrument( instrument ) }
-          onChange={ ( control, value ) => updateParam( instrument, control, value ) } />
-      ) ) }</div> }
+          onChange={ ( control, value ) => updateParam( instrument, control, value ) } />;
+      } ) }</div> }
   </div>;
 }
 
 function LiveInstrument( {
-  instrument, values, node, busy, onStart, onPause, onResume, onRelease, onFree, onReset, onChange
+  instrument, values, node, busy, hosted, onStart, onPause, onResume, onRelease, onFree, onReset, onChange
 } ) {
   const state = !node ? 'idle' : node.released ? 'releasing' : node.paused ? 'paused' : 'running';
   const amplitudeEnvelope = instrumentEnvelopes( instrument.key, values )
@@ -135,7 +170,9 @@ function LiveInstrument( {
       <button aria-label={ `Free ${ instrument.label }` } disabled={ !node } onClick={ onFree }>Free</button>
       <button disabled={ busy } onClick={ onReset }>Reset</button>
     </div>
-    { !instrument.available && <p className="error">SynthDef is not installed in this browser bundle.</p> }
+    { !instrument.available && <p className="error">{ hosted
+      ? 'SynthDef is not installed in the desktop SuperCollider context.'
+      : 'SynthDef is not installed in this browser bundle.' }</p> }
     { amplitudeEnvelope && <p className="liveEnvelopeSummary">Amplitude envelope: { formatDuration( amplitudeEnvelope.attack ) } attack
       { amplitudeEnvelope.release !== null && <> · { formatDuration( amplitudeEnvelope.release ) } release</> }</p> }
     <div className="liveControls">{ instrument.controls.map( ( control ) => (

@@ -14,17 +14,17 @@ const STARTER = `// Browser sclang scratchpad. This is not the canonical score.
 export default function ConsoleWorkspace( { sc, sclang, workingDocument, mode } ) {
   const [ tab, setTab ] = useState( () => workingDocument ? 'working' : 'scratch' );
   useEffect( () => {
-    if ( workingDocument ) setTab( 'working' );
-  }, [ workingDocument ] );
+    if ( mode === 'hosted' || workingDocument ) setTab( 'working' );
+  }, [ mode, workingDocument ] );
   return (
     <section className="consoleWorkspace">
       <div className="subtabs">
-        <button className={ tab === 'scratch' ? 'active' : '' } onClick={ () => setTab( 'scratch' ) }>Scratch console</button>
+        { mode === 'standalone' && <button className={ tab === 'scratch' ? 'active' : '' } onClick={ () => setTab( 'scratch' ) }>Scratch console</button> }
         <button className={ tab === 'working' ? 'active' : '' } onClick={ () => setTab( 'working' ) }>Working document</button>
         <span className="spacer" />
         <span>{ mode === 'hosted' ? 'Hosted working documents arrive from desktop SC.' : 'Console uses browser sclang.' }</span>
       </div>
-      { tab === 'scratch' ? (
+      { mode === 'standalone' && tab === 'scratch' ? (
         <Suspense fallback={ <div className="emptyState">Loading editor…</div> }>
           <ScConsolePanel
             sclang={ sclang }
