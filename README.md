@@ -6,6 +6,7 @@ Shared, application-independent foundations for the Acoustic Workbench.
 packages/
   score/                absolute-time, payload-blind score editing and renderer contracts
   sc-runtime/           host-neutral SC playback-readiness state and policy
+  sc-envelope/          JSON-safe SuperCollider Env definition and exact array projection
   sc-wasm/              browser scsynth lifecycle, audio tap and sclang bridge
   sc-console/           shared sclang evaluator, editor and React lifecycle machinery
   instruments/          serialisable AWB instrument vocabulary and control semantics
