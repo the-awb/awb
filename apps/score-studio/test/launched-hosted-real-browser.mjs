@@ -133,14 +133,19 @@ try {
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 2;
 
+  await browser.close();
+  browser = null;
+  await waitFor( () => scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_DISCONNECTED' ) );
+  passed += 1;
+
   udp = dgram.createSocket( 'udp4' );
   udp.send( encodeOscMessage( '/awb/test/score-studio/stop', [] ), oscPort, '127.0.0.1' );
   await waitFor( () => scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_FIXTURE_STOPPED' ) );
   passed += 1;
 
-  console.log( `launched-hosted-real-browser: ${ passed }/6 pass (SC ToolSession, source score, automatic handshake and revision install)` );
+  console.log( `launched-hosted-real-browser: ${ passed }/7 pass (SC ToolSession, source score, handshake, revision install and disconnect)` );
 } catch ( error ) {
-  console.error( `launched-hosted-real-browser: FAIL after ${ passed }/6: ${ error.message }` );
+  console.error( `launched-hosted-real-browser: FAIL after ${ passed }/7: ${ error.message }` );
   console.error( `HOSTED OUTPUT:\n${ hostedOutput }` );
   if ( page ) console.error( `BROWSER TEXT:\n${ await page.locator( 'body' ).innerText().catch( () => '' ) }` );
   console.error( scOutput );

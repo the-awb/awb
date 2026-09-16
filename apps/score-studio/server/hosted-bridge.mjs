@@ -32,6 +32,21 @@ export async function createHostedBridge( {
   const clients = new Set();
   const server = new WebSocketServer( { host, port, maxPayload: MAX_FRAME_BYTES } );
 
+  const closeClient = ( client, notify = true ) => {
+    if ( client.closing ) return;
+    client.closing = true;
+    clients.delete( client );
+    const finish = () => {
+      try { client.udp.close(); } catch {}
+    };
+    if ( notify && client.clientID ) {
+      client.udp.send(
+        encodeOscMessage( '/awb/timeline/disconnect', [ client.clientID ] ),
+        oscPort, oscHost, finish
+      );
+    } else finish();
+  };
+
   server.on( 'connection', ( browser, request ) => {
     const supplied = new URL( request.url, `http://${ host }` ).searchParams.get( 'token' );
     if ( supplied !== token ) {
@@ -40,10 +55,8 @@ export async function createHostedBridge( {
     }
 
     const udp = dgram.createSocket( 'udp4' );
-    clients.add( udp );
-    const closeUdp = () => {
-      if ( clients.delete( udp ) ) udp.close();
-    };
+    const client = { udp, clientID: null, closing: false };
+    clients.add( client );
     udp.on( 'message', ( packet ) => {
       try {
         decodeOscPacket( packet ).forEach( ( message ) => sendFrame( browser, message.address, message.args ) );
@@ -57,13 +70,15 @@ export async function createHostedBridge( {
     browser.on( 'message', ( data ) => {
       try {
         const frame = parseFrame( data );
+        if ( frame.address === '/awb/timeline/hello'
+          && typeof frame.args[ 0 ] === 'string' ) client.clientID = frame.args[ 0 ];
         udp.send( encodeOscMessage( frame.address, frame.args ), oscPort, oscHost );
       } catch ( error ) {
         sendFrame( browser, '/awb/bridge/error', [ error.message, 'Frame was not forwarded.' ] );
       }
     } );
     browser.on( 'close', () => {
-      closeUdp();
+      closeClient( client );
     } );
   } );
 
@@ -79,10 +94,7 @@ export async function createHostedBridge( {
     token,
     close: async () => {
       for ( const browser of server.clients ) browser.terminate();
-      for ( const udp of [ ...clients ] ) {
-        clients.delete( udp );
-        udp.close();
-      }
+      for ( const client of [ ...clients ] ) closeClient( client );
       await new Promise( ( resolve ) => server.close( resolve ) );
     }
   };

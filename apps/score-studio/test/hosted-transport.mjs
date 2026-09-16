@@ -134,7 +134,13 @@ try {
   const closeCode = await new Promise( ( resolve ) => untrusted.addEventListener( 'close', ( event ) => resolve( event.code ) ) );
   assert.equal( closeCode, 1008, 'bridge rejects clients without its session token' );
 
-  console.log( 'hosted-transport: 19/19 pass' );
+  client.disconnect();
+  await waitFor( () => received.some( ( message ) => (
+    message.address === '/awb/timeline/disconnect'
+      && message.args[ 0 ] === 'score-browser-test'
+  ) ) );
+
+  console.log( 'hosted-transport: 20/20 pass' );
 } finally {
   client.disconnect();
   await bridge.close();
