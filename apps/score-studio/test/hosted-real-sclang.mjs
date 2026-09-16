@@ -84,8 +84,8 @@ try {
   if ( !projection.text.includes( 'AWB GENERATED SCORE PROJECTION' ) ) {
     throw new Error( 'desktop returned text without the generated-projection marker' );
   }
-  if ( !projection.text.includes( 'PScoreTimelinePlayer' ) ) {
-    throw new Error( 'desktop timeline projection does not construct a connected PScoreTimelinePlayer' );
+  if ( !projection.text.includes( 'PTimelineOSCBridge.connectedPlayer' ) ) {
+    throw new Error( 'desktop timeline projection does not resolve the bridge-owned PScoreTimelinePlayer' );
   }
   passed += 3;
 
