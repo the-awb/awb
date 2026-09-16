@@ -33,8 +33,9 @@ await engine.loadSynthDef(bytes)     // → /done
 await engine.reloadSynthDefs()
 
 // nodes
-engine.playSynth(def, args)   engine.pauseSynth(def)   engine.resumeSynth(def)
-engine.freeSynth(def)         engine.freeAll()
+engine.playSynth(def, args)      engine.setSynth(def, args)
+engine.releaseSynth(def)         engine.pauseSynth(def)   engine.resumeSynth(def)
+engine.freeSynth(def)            engine.freeAll()
 
 // audio
 engine.drainNewSamples()             // destructive: every sample delivered exactly once

@@ -39,6 +39,13 @@ try {
   if ( !( await seedInstrument.getByText( 'freq=220', { exact: true } ).isVisible() ) ) {
     failures.push( 'instrument panel did not disclose compiled SynthDef controls' );
   }
+  await page.getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  if ( await page.locator( '.liveInstrument' ).count() !== 4 ) failures.push( 'live instrument tab did not expose the four catalogued instruments' );
+  if ( !( await page.getByRole( 'heading', { name: 'Live instruments', exact: true } ).isVisible() ) ) failures.push( 'live instrument workspace heading is missing' );
+  if ( await page.getByLabel( 'Live freqL', { exact: true } ).inputValue() !== '60' ) failures.push( 'live Basic GUI did not use the compiled frequency default' );
+  if ( Number( await page.getByLabel( 'Live amp', { exact: true } ).first().inputValue() ) !== 0.1 ) failures.push( 'live instrument gain did not start at the safe rack default' );
+  if ( !( await page.getByText( 'This rack is browser-local', { exact: false } ).isVisible() ) ) failures.push( 'hosted live-rack boundary is not visible' );
+  await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
   if ( !( await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).evaluate( ( button ) => button.classList.contains( 'active' ) ) ) ) {
     failures.push( 'synth lifecycle is not the default score layout' );
   }
@@ -219,4 +226,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 41/41 pass' );
+console.log( 'score-studio-browser: 46/46 pass' );

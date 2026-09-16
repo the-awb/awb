@@ -6,6 +6,7 @@ import { hashScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
 import InstrumentPanel from './components/InstrumentPanel.jsx';
+import InstrumentWorkspace from './components/InstrumentWorkspace.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
@@ -580,12 +581,16 @@ export default function App( { host, createHostedClient } ) {
         <nav className="viewTabs">
           <button className={ session.view === 'score' ? 'active' : '' }
             onClick={ () => dispatch( { type: 'SET_VIEW', view: 'score' } ) }>Score</button>
+          <button className={ session.view === 'instruments' ? 'active' : '' }
+            onClick={ () => dispatch( { type: 'SET_VIEW', view: 'instruments' } ) }>Instruments</button>
           <button className={ session.view === 'console' ? 'active' : '' }
             onClick={ () => dispatch( { type: 'SET_VIEW', view: 'console' } ) }>Console</button>
         </nav>
         { session.view === 'score'
           ? <ScoreTimeline session={ session } dispatch={ dispatch } />
-          : <ConsoleWorkspace sc={ sc } sclang={ sclang } workingDocument={ session.workingDocument } mode={ session.mode } /> }
+          : session.view === 'instruments'
+            ? <InstrumentWorkspace sc={ sc } mode={ session.mode } />
+            : <ConsoleWorkspace sc={ sc } sclang={ sclang } workingDocument={ session.workingDocument } mode={ session.mode } /> }
       </main>
 
       <aside className="inspector">

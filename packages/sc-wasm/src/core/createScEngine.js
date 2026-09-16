@@ -116,7 +116,10 @@ export function createScEngine( { importScsynth } = {} ) {
     const nodes = typeof updater === 'function' ? updater( state.nodes ) : updater;
     if ( nodes !== state.nodes ) {
       const frozenNodes = Object.fromEntries(
-        Object.entries( nodes ).map( ( [ name, node ] ) => [ name, Object.freeze( node ) ] )
+        Object.entries( nodes ).map( ( [ name, node ] ) => [ name, Object.freeze( {
+          ...node,
+          ...( node.params ? { params: Object.freeze( { ...node.params } ) } : {} )
+        } ) ] )
       );
       publish( { nodes: Object.freeze( frozenNodes ) } );
     }
@@ -271,8 +274,35 @@ export function createScEngine( { importScsynth } = {} ) {
     const args = [ name, nodeId, 1, 0 ];
     for ( const [ key, value ] of Object.entries( params ) ) args.push( key, value );
     sendOsc( '/s_new', args );
-    setNodes( ( prev ) => ( { ...prev, [ name ]: { id: nodeId, paused: false } } ) );
+    setNodes( ( prev ) => ( {
+      ...prev,
+      [ name ]: { id: nodeId, paused: false, released: false, params: { ...params } }
+    } ) );
     return nodeId;
+  };
+
+  const setSynth = ( name, params = {} ) => {
+    const node = state.nodes[ name ];
+    if ( !node || node.released ) return false;
+    const entries = Object.entries( params );
+    if ( entries.length === 0 ) return true;
+    sendOsc( '/n_set', [ node.id, ...entries.flatMap( ( [ key, value ] ) => [ key, value ] ) ] );
+    setNodes( ( prev ) => ( {
+      ...prev,
+      [ name ]: { ...prev[ name ], params: { ...prev[ name ].params, ...params } }
+    } ) );
+    return true;
+  };
+
+  const releaseSynth = ( name ) => {
+    const node = state.nodes[ name ];
+    if ( !node || node.released ) return false;
+    sendOsc( '/n_set', [ node.id, 'gate', 0 ] );
+    setNodes( ( prev ) => ( {
+      ...prev,
+      [ name ]: { ...prev[ name ], paused: false, released: true }
+    } ) );
+    return true;
   };
 
   // A real pause, not a stop: /n_run 0 leaves the synth alive with its state intact and simply
@@ -636,7 +666,7 @@ export function createScEngine( { importScsynth } = {} ) {
   return {
     boot, resumeAudio, stop, shutdown, dispose, setMonitoring,
     drainNewSamples, readRecentSamples, sendOsc, sync, loadSynthDef, reloadSynthDefs,
-    playSynth, pauseSynth, resumeSynth, freeSynth, freeAll,
+    playSynth, setSynth, releaseSynth, pauseSynth, resumeSynth, freeSynth, freeAll,
     subscribeOscReply, subscribePrint, subscribe, getState, getEngine, getBootOptions
   };
 }

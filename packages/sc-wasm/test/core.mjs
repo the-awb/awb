@@ -20,12 +20,21 @@ pass( 'getState returns one stable frozen initial snapshot' );
 
 const nodesEngine = createScEngine();
 assert.equal( nodesEngine.playSynth( 'test', { freq: 42 } ), 2000 );
-assert.deepEqual( nodesEngine.getState().nodes, { test: { id: 2000, paused: false } } );
+assert.deepEqual( nodesEngine.getState().nodes, {
+  test: { id: 2000, paused: false, released: false, params: { freq: 42 } }
+} );
 assert.ok( Object.isFrozen( nodesEngine.getState().nodes ) );
 assert.ok( Object.isFrozen( nodesEngine.getState().nodes.test ) );
+assert.ok( Object.isFrozen( nodesEngine.getState().nodes.test.params ) );
+assert.equal( nodesEngine.setSynth( 'test', { freq: 84, amp: 0.1 } ), true );
+assert.deepEqual( nodesEngine.getState().nodes.test.params, { freq: 84, amp: 0.1 } );
 assert.equal( nodesEngine.pauseSynth( 'test' ), true );
 assert.equal( nodesEngine.getState().nodes.test.paused, true );
 assert.equal( nodesEngine.resumeSynth( 'test' ), true );
+assert.equal( nodesEngine.releaseSynth( 'test' ), true );
+assert.equal( nodesEngine.getState().nodes.test.released, true );
+assert.equal( nodesEngine.releaseSynth( 'test' ), false );
+assert.equal( nodesEngine.setSynth( 'test', { freq: 21 } ), false );
 assert.equal( nodesEngine.freeSynth( 'test' ), true );
 assert.deepEqual( nodesEngine.getState().nodes, {} );
 await nodesEngine.dispose();

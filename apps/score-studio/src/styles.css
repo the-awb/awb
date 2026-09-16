@@ -132,7 +132,33 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .workingHeader { display: flex; gap: 12px; padding-bottom: 8px; }.workingHeader span { color: var(--muted); font-size: 11px; }
 .workingDocument pre { flex: 1; min-height: 0; overflow: auto; margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 6px; background: #0e0e0d; color: #c9c7c0; font: 11px/1.55 ui-monospace, monospace; white-space: pre-wrap; }
 .emptyState { padding: 24px; color: var(--muted); }
+.instrumentWorkspace { flex: 1; min-height: 0; overflow: auto; padding: 18px; background: #11110f; }
+.instrumentWorkspaceHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 14px; }
+.instrumentWorkspaceHeader h1 { margin: 0; color: #deddd7; font-size: 20px; }
+.instrumentWorkspaceHeader p { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+.liveRackActions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; align-items: center; }
+.liveRackActions span { width: 100%; color: var(--muted); font: 10px ui-monospace, monospace; text-align: right; }
+.liveRackBoundary, .liveRackMessage { margin: 0 0 14px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.liveRackMessage { border-color: #435434; color: var(--accent); }
+.instrumentGrid { display: grid; grid-template-columns: repeat(2, minmax(300px, 1fr)); gap: 12px; align-items: start; }
+.liveInstrument { min-width: 0; padding: 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.liveInstrument.running { border-color: #61743e; }.liveInstrument.paused { border-color: #75643b; }.liveInstrument.releasing { border-color: #72494f; }
+.liveInstrument > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.liveInstrument > header h2 { margin-bottom: 3px; color: #deddd7; font-size: 13px; text-transform: none; letter-spacing: 0; }
+.liveInstrument > header code { color: var(--muted); font: 10px ui-monospace, monospace; }
+.liveInstrument > header > span { color: var(--muted); font-size: 9px; text-transform: uppercase; }.liveInstrument.running > header > span { color: var(--accent); }
+.liveInstrumentActions { display: flex; flex-wrap: wrap; gap: 5px; margin: 12px 0; }
+.liveInstrumentActions button { padding: 4px 8px; font-size: 10px; }
+.liveControls { display: grid; gap: 7px; }
+.liveControl, .liveBoolean { display: grid; grid-template-columns: minmax(105px, .8fr) minmax(150px, 1.2fr); align-items: center; gap: 10px; color: #c7c5bd; font-size: 10px; }
+.liveControl > span small, .liveBoolean > span small { display: block; margin-top: 1px; color: #737168; font: 8px ui-monospace, monospace; }
+.liveControl > div { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.liveControl input[type="range"] { min-width: 60px; flex: 1; padding: 0; }
+.liveControl input[type="number"] { width: 78px; min-width: 62px; padding: 4px 5px; font: 10px ui-monospace, monospace; }
+.liveControl em { color: var(--muted); font-size: 9px; font-style: normal; }
+.liveBoolean input { justify-self: end; }
 @media (max-width: 900px) {
   .appShell { grid-template-columns: 180px minmax(360px, 1fr); }
   .inspector { display: none; }
+  .instrumentGrid { grid-template-columns: 1fr; }
 }

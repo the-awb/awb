@@ -14,6 +14,7 @@ Current first slice:
 - direct time, path and typed/raw payload editing with revision-safe undo/redo;
 - a score-derived instrument panel showing each referenced SynthDef, usage, authored controls,
   compiled browser controls and catalogued envelope roles;
+- a separate live Instruments workspace with one controllable browser synth per catalogue entry;
 - guarded File System Access saves, with JSON download fallback and local recovery drafts;
 - a bundled eleven-event Sonic Attunement demo plus a session-local folder browser for `.score.json` files;
 - an editor-owned pair-save coordinator: canonical JSON first, identity-bound SC projection second,
@@ -113,6 +114,25 @@ control surface recorded in the compiled SynthDef manifest. Catalogued envelope 
 `@awb/instruments`; an uncatalogued SynthDef still appears. Browser-bundle presence is known
 locally. Hosted availability is labelled unknown because the timeline protocol's aggregate
 readiness result does not expose a per-definition desktop inventory.
+
+## Live instrument workspace
+
+The main **Instruments** tab is deliberately not the score-derived inspector described above. It
+is a browser-local live rack over the complete `@awb/instruments` catalogue. Each instrument gets
+one owned scsynth node, the full scalar control surface from the compiled SynthDef manifest, and
+catalogue-aware sliders or boolean controls where semantic editor metadata exists. Uncatalogued
+test definitions do not appear in this rack.
+
+**Start** boots/resumes scsynth, loads all four library SynthDefs and creates that instrument with
+the visible values. Control edits reach the running node immediately through `/n_set`. Pause uses
+`/n_run`; Release sends `gate=0` and waits for the SynthDef's own envelope/done action; Free sends
+`/n_free` immediately. Reset restores the manifest defaults except that the rack starts the global
+`amp` control at `0.1` rather than a musical SynthDef's louder default. Release all and Free all
+operate only on rack-owned library nodes, not score realizations.
+
+This remains browser-local even when the selected score mode is Hosted. The timeline bridge is a
+score execution protocol, not a generic remote-control channel. Desktop live instrument control
+belongs on the NodeManager tool route when that adapter is added.
 
 ## Score files and demo
 
