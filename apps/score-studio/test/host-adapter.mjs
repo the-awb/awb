@@ -66,6 +66,7 @@ assert.equal( await host.openScoreDirectory(), null );
 assert.equal( host.confirmDiscard( 'discard?' ), true );
 assert.equal( host.focusWindow(), false );
 assert.equal( host.closeWindow(), false );
+assert.equal( host.shellState().kind, 'browser' );
 
 assert.equal( host.storeRecovery( initial.document ), true );
 assert.match( stored.get( 'awb.score.draft.sonic-attunement-01' ), /"schema": "awb.score\/1"/ );

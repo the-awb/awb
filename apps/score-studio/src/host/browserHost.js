@@ -137,6 +137,12 @@ export function createBrowserHost( {
     confirmDiscard( message ) { return browser.confirm( message ); },
     hostedLaunchContext() { return launchContext; },
     reportSessionState() {},
+    shellState() {
+      return Object.freeze( {
+        kind: 'browser', processID: null, windowID: null,
+        focused: null, visible: true, minimized: false, sessions: []
+      } );
+    },
     focusWindow() { return false; },
     closeWindow() { return false; }
   } );

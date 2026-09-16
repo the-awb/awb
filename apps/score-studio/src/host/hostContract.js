@@ -12,6 +12,7 @@ const REQUIRED_METHODS = Object.freeze( [
   'confirmDiscard',
   'hostedLaunchContext',
   'reportSessionState',
+  'shellState',
   'focusWindow',
   'closeWindow'
 ] );

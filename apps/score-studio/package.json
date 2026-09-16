@@ -8,7 +8,10 @@
     "dev:hosted": "node server/dev-hosted.mjs",
     "hosted-bridge": "node server/hosted-bridge.mjs",
     "build": "vite build",
-    "test": "node test/session.mjs && node test/hosted-transport.mjs && node test/pair-save.mjs && node test/standalone-executor.mjs && node test/synth-lifecycle-lanes.mjs && node test/timeline-scale.mjs && node test/event-payload-fields.mjs && node test/score-files.mjs && node test/host-adapter.mjs && node test/local-sc-projection.mjs && node test/local-projection-store.mjs",
+    "shell:start": "npm run build && electron shell/main.mjs",
+    "test": "node test/session.mjs && node test/hosted-transport.mjs && node test/pair-save.mjs && node test/standalone-executor.mjs && node test/synth-lifecycle-lanes.mjs && node test/timeline-scale.mjs && node test/event-payload-fields.mjs && node test/score-files.mjs && node test/host-adapter.mjs && node test/desktop-host.mjs && node test/shell-native-files.mjs && node test/local-sc-projection.mjs && node test/local-projection-store.mjs",
+    "test:shell": "node test/shell-smoke.mjs",
+    "test:shell-hosted-real": "node test/shell-hosted-real.mjs",
     "test:hosted-real": "node test/hosted-real-sclang.mjs",
     "test:hosted-browser-real": "node test/hosted-real-browser.mjs",
     "test:launched-hosted-real": "node test/launched-hosted-real-browser.mjs",
@@ -28,6 +31,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.1.0",
+    "electron": "44.4.1",
     "vite": "^8.2.2"
   }
 }

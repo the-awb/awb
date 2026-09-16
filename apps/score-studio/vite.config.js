@@ -28,6 +28,7 @@ function hostedScoreSource() {
 }
 
 export default defineConfig( {
+  base: './',
   plugins: [ react(), hostedScoreSource() ],
   resolve: { dedupe: [ 'react', 'react-dom' ] },
   optimizeDeps: { exclude: [ '@awb/sc-wasm' ] },
