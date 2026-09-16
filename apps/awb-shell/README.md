@@ -91,3 +91,12 @@ definition is installed on the active server.
 
 Tools without a SuperCollider host or canonical document must still launch normally; unavailable
 hosted, tracking or file actions are shown as capabilities, not treated as application failures.
+
+## Lissajous config documents
+
+The hosted Lissajous tool declares `lissajous-config` as a first-class document kind. These JSON
+documents contain complete visual state and live stereo-pair routing, but no audio asset, score
+relationship, device identity, recording or automation. Toolkit Home exposes New, Recent and
+Browse actions; the renderer reads and writes through opaque per-view grants and guarded atomic
+writes. A future score-container resolver may reference the same config without changing its
+meaning or making the shell interpret the document.

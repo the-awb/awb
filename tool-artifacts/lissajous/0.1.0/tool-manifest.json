@@ -24,12 +24,30 @@
     }
   ],
   "capabilities": {
-    "filesystem": [],
+    "filesystem": [
+      "open-file",
+      "save-file"
+    ],
     "media": [
       "audio-input",
       "system-audio",
       "native-audio"
     ],
     "connections": []
-  }
+  },
+  "documentKinds": [
+    {
+      "id": "lissajous-config",
+      "label": "Lissajous Config",
+      "extensions": [
+        "lissajous.json"
+      ],
+      "actions": [
+        "new",
+        "recent",
+        "browse"
+      ],
+      "profileID": "standalone"
+    }
+  ]
 }

@@ -172,9 +172,9 @@ async function launchDocument( payload ) {
     const result = await dialog.showOpenDialog( homeWindow, { properties: [ 'openFile' ],
       filters: [ { name: kind.label, extensions: [ ...kind.extensions ] } ] } );
     if ( result.canceled ) return { status: 'cancelled' };
-    target = result.filePaths[ 0 ]; documentPayload = { ...documentPayload, scorePath: target };
+    target = result.filePaths[ 0 ]; documentPayload = { ...documentPayload, documentPath: target };
   } else if ( payload.action === 'recent' ) {
-    target = recentStore.resolve( payload.recentID, tool.id, kind.id ); documentPayload = { ...documentPayload, scorePath: target };
+    target = recentStore.resolve( payload.recentID, tool.id, kind.id ); documentPayload = { ...documentPayload, documentPath: target };
   } else documentPayload = { ...documentPayload, newDocumentID: crypto.randomUUID() };
   const result = await router.launch( { toolID: tool.id, profileID: kind.profileID, launchOrigin: 'desktop', payload: documentPayload } );
   if ( target && result.viewID ) registry.update( result.viewID, { pendingRecentPath: target, pendingDocumentKindID: kind.id } );
@@ -200,12 +200,12 @@ async function runHomeSmoke() {
       const scoreActions = document.querySelectorAll('[data-document-tool="score-studio"]').length;
       const lissajousActions = document.querySelectorAll('[data-document-tool="lissajous"]').length;
       const hostFacts = document.querySelectorAll('.host-fact').length;
-      if (scoreActions === 2 && lissajousActions === 0 && hostFacts === 4) resolve({ scoreActions, hostFacts });
+      if (scoreActions === 2 && lissajousActions === 2 && hostFacts === 4) resolve({ scoreActions, lissajousActions, hostFacts });
       else if (Date.now() - started > 5000) reject(new Error('Toolkit Home document and host facts did not render'));
       else setTimeout(check, 25);
     }; check();
   })` );
-  console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions } hostFacts=${ result.hostFacts } hostServices=${ services.snapshot().length }` ); app.quit();
+  console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions + result.lissajousActions } hostFacts=${ result.hostFacts } hostServices=${ services.snapshot().length }` ); app.quit();
 }
 
 async function runMultiviewSmoke() {
@@ -490,11 +490,12 @@ async function handleToolOperation( sender, operation, payload ) {
   }
   if ( operation === 'filesystem.initial-file' ) {
     requireCapability( tool, 'filesystem', 'open-file' );
-    if ( !view.requestPayload?.scorePath ) return null;
-    registry.update( view.viewID, { pendingRecentPath: view.requestPayload.scorePath,
+    const initialPath = view.requestPayload?.documentPath ?? view.requestPayload?.scorePath;
+    if ( !initialPath ) return null;
+    registry.update( view.viewID, { pendingRecentPath: initialPath,
       pendingDocumentKindID: view.requestPayload.documentKindID
-        ?? documentKindIDForPath( tool.documentKinds, view.requestPayload.scorePath ) } );
-    return fileGrants.fileRecord( view.viewID, view.requestPayload.scorePath );
+        ?? documentKindIDForPath( tool.documentKinds, initialPath ) } );
+    return fileGrants.fileRecord( view.viewID, initialPath );
   }
   if ( operation === 'filesystem.open-file' ) {
     requireCapability( tool, 'filesystem', 'open-file' );
@@ -533,6 +534,9 @@ async function handleToolOperation( sender, operation, payload ) {
     }
     if ( payload.expectedText !== null && payload.expectedText !== undefined ) await guardedWriteText( target, payload.text, { expectedText: payload.expectedText } );
     else await atomicWriteText( target, payload.text );
+    if ( payload.markRecent && payload.documentKindID ) registry.update( view.viewID, {
+      pendingRecentPath: target, pendingDocumentKindID: payload.documentKindID
+    } );
     return { handle, name: path.basename( target ) };
   }
   throw new Error( `Operation is not available: ${ operation }.` );
