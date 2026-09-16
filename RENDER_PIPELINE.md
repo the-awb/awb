@@ -31,7 +31,7 @@ portable shape; each producer validates what it needs.
 |---|---|---|
 | Lissajous | audio | decoded samples plus saved visual state |
 | Field: `analytic-preview` | none | declared initial phase plus deterministic clock evolution |
-| Field: `realized-score` | score and `field-phase-track` | waveform-derived observations anchoring analytic evolution |
+| Field: `realized-score` | `field-phase-track` | sparse waveform-derived corrections anchoring analytic evolution |
 
 Lissajous audio may be an authored master already stored with a score, or the result of a separate
 SuperCollider score-render job. SC rendering is never hidden inside the visual job. Channels 0/1
@@ -39,27 +39,48 @@ remain the authored listening master; higher stereo pairs may be sampled indepen
 analysis.
 
 Field Modelling has two intentionally different claims. An `analytic-preview` renders model state
-without audio and must remain labelled model-only. A `realized-score` render claims correspondence
-with playback and therefore needs waveform-derived phase observations associated with its score and
-configuration. It may evolve phase analytically between observations, but must use the observations
-to anchor and periodically correct that evolution.
+without observations and must remain labelled model-only. A `realized-score` render claims
+correspondence with playback and therefore needs sparse waveform-derived phase observations
+associated with its score and configuration. It still renders the analytic field between anchors;
+the observations periodically correct phase drift. It does not render, encode or consume ordinary
+audio samples frame by frame.
 
 The phase track may be materialised from live `FieldModellingTool` snapshots, a saved recording, an
-offline SC score render, or raw audio passed through a preprocessing step. Once materialised, the
-visual renderer does not need the original audio:
+offline SC score render, or raw multichannel audio passed through a preprocessing step. Raw audio is
+an input to that observation step, not to field rendering. Once the track exists, the visual
+renderer needs only resolved field state and the sparse correction track:
 
 ```js
 inputs: [
-  { id: 'score', kind: 'score', artifactHash, locator, metadata: { scoreID, revision } },
   { id: 'phase-observations', kind: 'field-phase-track', artifactHash, locator,
-    metadata: { sampleRate } }
+    metadata: { sourceSampleRate, scoreID, scoreRevision } }
 ]
 ```
 
-Live and offline ownership remain separate. `FieldModellingTool` owns live SC routing, capture and
-observation production; the live view consumes that stream directly. The render pipeline consumes
-frozen configuration and artifacts. `@awb/field-renderer` should eventually supply their common
-renderer, but must not own the SC `ToolSession`.
+The score project manifest associates the score, field configuration and observation artifact. The
+render-job resolver snapshots the resolved configuration into producer state and retains score
+identity as provenance. It need not make the score document a runtime renderer input unless a future
+producer genuinely reads score events itself.
+
+Live, observation and render ownership remain separate:
+
+```text
+live SC stream or recorded multichannel audio
+                    |
+                    v
+        phase observation/extraction
+                    |
+                    v
+          sparse field-phase-track
+                    |
+                    v
+ analytic field renderer + periodic correction
+```
+
+`FieldModellingTool` owns live SC routing, capture and observation production; the live view consumes
+its stream directly. The render pipeline consumes frozen configuration and the materialised phase
+track. `@awb/field-renderer` should eventually supply the common renderer, but must not own the SC
+`ToolSession` or the observation extractor.
 
 ## Current implementation
 
@@ -84,8 +105,9 @@ with Field Modelling's Three.js `FieldCanvas`.
    outputs through guarded file grants and persists receipts.
 2. Wire the hosted Lissajous artifact to create schema-v2 jobs from a saved visual config plus an
    audio file. Keep decoded audio in the renderer/worker data plane, not lifecycle IPC.
-3. Specify and test the `field-phase-track` artifact, including anchor interpolation and correction
-   policy, before implementing `realized-score` rendering.
+3. Specify and test the `field-phase-track` artifact and its separate observation/extraction step,
+   including component identity, timestamps, confidence, phase unwrapping and correction policy,
+   before implementing `realized-score` rendering.
 4. Extract the Field Modelling WebGL scene, camera and fixed-frame tick into `@awb/field-renderer`,
    then compare both field modes against the live `FieldCanvas` at landmark frames.
 5. Add a provider adapter interface for large jobs. The first remote adapter may target Runpod, but
