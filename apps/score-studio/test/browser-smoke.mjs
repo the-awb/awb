@@ -30,6 +30,15 @@ page.on( 'pageerror', ( error ) => failures.push( error.message ) );
 try {
   await page.goto( url, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'AWB', { exact: true } ).waitFor();
+  if ( await page.locator( '.instrumentCard' ).count() !== 1 ) failures.push( 'seed score instrument panel did not deduplicate SynthDefs' );
+  const seedInstrument = page.locator( '.instrumentCard' ).first();
+  if ( !( await seedInstrument.getByText( '\\awbTestTone', { exact: true } ).isVisible() ) ) {
+    failures.push( 'seed score instrument panel did not name its SynthDef' );
+  }
+  await seedInstrument.locator( 'summary' ).click();
+  if ( !( await seedInstrument.getByText( 'freq=220', { exact: true } ).isVisible() ) ) {
+    failures.push( 'instrument panel did not disclose compiled SynthDef controls' );
+  }
   if ( !( await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).evaluate( ( button ) => button.classList.contains( 'active' ) ) ) ) {
     failures.push( 'synth lifecycle is not the default score layout' );
   }
@@ -156,6 +165,7 @@ try {
   if ( await page.locator( '.synthLane' ).count() !== 11 ) failures.push( 'bundled real demo did not open as a canonical score' );
   if ( await page.locator( '.titleInput' ).inputValue() !== 'Sonic Attunement 01' ) failures.push( 'bundled demo metadata did not load' );
   if ( await page.locator( '.synthEnvelope' ).count() !== 11 ) failures.push( 'real demo did not render one envelope strip per synth row' );
+  if ( await page.locator( '.instrumentCard' ).count() !== 2 ) failures.push( 'real demo instrument panel did not show its two SynthDefs' );
   await page.waitForTimeout( 250 );
   const fittedSize = await page.locator( '.timelineScroll' ).evaluate( ( scroll ) => ( {
     viewport: scroll.clientWidth,
@@ -209,4 +219,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 37/37 pass' );
+console.log( 'score-studio-browser: 41/41 pass' );

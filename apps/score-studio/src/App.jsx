@@ -5,6 +5,7 @@ import { createPlaybackReadiness } from '@awb/sc-runtime';
 import { hashScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
+import InstrumentPanel from './components/InstrumentPanel.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
@@ -627,6 +628,11 @@ export default function App( { host, createHostedClient } ) {
             </>
           ) }
         </section>
+
+        <InstrumentPanel document={ session.document } mode={ session.mode }
+          standaloneDefinitions={ definitionsCurrent ? standaloneDefinitions : {
+            scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
+          } } />
 
         <section className="transport">
           <h2>Transport</h2>

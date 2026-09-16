@@ -12,6 +12,8 @@ Current first slice:
 - switchable structural and one-row-per-authored-synth lifecycle projections, with timeline zoom;
 - direct timeline dragging of authored entries and disclosed synth control boundaries;
 - direct time, path and typed/raw payload editing with revision-safe undo/redo;
+- a score-derived instrument panel showing each referenced SynthDef, usage, authored controls,
+  compiled browser controls and catalogued envelope roles;
 - guarded File System Access saves, with JSON download fallback and local recovery drafts;
 - a bundled eleven-event Sonic Attunement demo plus a session-local folder browser for `.score.json` files;
 - an editor-owned pair-save coordinator: canonical JSON first, identity-bound SC projection second,
@@ -73,7 +75,10 @@ declared for the SynthDef, labelled by function and target. The Substrates there
 amplitude, beat-modulation and tremolo envelopes, including their actual release-delay expressions;
 `resonantBassEnv2` discloses its gated amplitude ASR, `dur`-length frequency triangle and phase
 percussion envelope. Only the amplitude EnvGen with `Done.freeSelf` is node-completion authority.
-The other envelopes describe parameter motion, not note lifetime.
+The other envelopes describe parameter motion, but `resonantBassEnv2` deliberately also consumes
+the standard Event `dur` value so that motion tracks the Event span. Its eventual lifecycle
+projection must combine Event duration resolution with the SynthDef's `sustain`-based amplitude
+EnvGen.
 
 For SynthDefs with directly editable `attackT` and `releaseT` controls, dragging amplitude handles
 writes those values through to the payload inspector live. The document revision and undo history
@@ -100,6 +105,14 @@ numeric or boolean controls declared by `@awb/instruments`. They edit the same d
 raw JSON area and enter the canonical document together on Apply. Arrays, envelopes and nested
 objects remain raw JSON until their semantics justify a dedicated editor. This UI belongs in Score
 Studio; payload-blind `@awb/score` remains unchanged.
+
+The Instruments panel is likewise a projection rather than a second document model. It deduplicates
+the `def`/`instrument` references in the current score, reports their entry count, time span and
+paths, and distinguishes controls actually authored in Event payloads from the complete settable
+control surface recorded in the compiled SynthDef manifest. Catalogued envelope roles come from
+`@awb/instruments`; an uncatalogued SynthDef still appears. Browser-bundle presence is known
+locally. Hosted availability is labelled unknown because the timeline protocol's aggregate
+readiness result does not expose a per-definition desktop inventory.
 
 ## Score files and demo
 
@@ -134,12 +147,14 @@ than accumulating delays. Stable same-time document order is preserved.
 The first adapter handles `note`, `set`, `release` and `free`. Note control arrays use
 SuperCollider-style wrap expansion, producing one browser-owned realization per expanded value.
 Targets may be an authored note entry ID, a browser node ID, `@prev`, `@all`, or an array of those.
-Automatic gate release is scheduled only when `@awb/instruments` declares an explicit lifecycle
-mapping for that SynthDef. The executor does not inject `sustain`, does not assume a default
-`legato`, and does not treat every `dur` control as node lifetime. `resonantBassEnv2`, for example,
-uses `dur` for modulation envelopes; without an authored release/free boundary its node lifetime
-is intentionally unresolved. Pause uses `/n_run`; stop and event-boundary seek hard-free only
-nodes belonging to this execution session.
+Automatic gate release is currently scheduled only when `@awb/instruments` declares an explicit
+lifecycle mapping for that SynthDef. The existing executor does not inject `sustain` or assume a
+default `legato`. That leaves `resonantBassEnv2` incomplete: its `dur` is both Event timing and an
+intentionally matching modulation control, while its freeing amplitude EnvGen is based on
+Event-resolved `sustain`. Reproducing that Event-to-SynthDef mapping is the next lifecycle adapter
+correction; the current player still requires an authored release/free boundary for this def.
+Pause uses `/n_run`; stop and event-boundary seek hard-free only nodes belonging to this execution
+session.
 
 This is intentionally not full state-reconstructing seek: a note that began before the target is
 not recreated. Array-expanded `set` controls and path/group targeting are also refused or absent
