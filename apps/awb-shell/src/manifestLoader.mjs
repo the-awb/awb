@@ -60,7 +60,11 @@ export function validateToolManifest( input, artifactRoot ) {
   const connectionPolicies = Object.freeze( Object.fromEntries( Object.entries( input.connectionPolicies ?? {} ).map( ( [ id, policy ] ) => {
     if ( !capabilities.connections.includes( id ) || !policy || typeof policy !== 'object' ) throw new Error( `Invalid connection policy: ${ id }.` );
     const allowedPrefixes = boundedStringArray( policy.allowedPrefixes, `connectionPolicies.${ id }.allowedPrefixes` );
-    if ( !allowedPrefixes.length || allowedPrefixes.some( ( prefix ) => !prefix.startsWith( '/' ) ) ) throw new Error( `Connection policy ${ id } needs OSC address prefixes.` );
+    const allowedAddresses = boundedStringArray( policy.allowedAddresses, `connectionPolicies.${ id }.allowedAddresses` );
+    if ( !( allowedPrefixes.length || allowedAddresses.length )
+      || [ ...allowedPrefixes, ...allowedAddresses ].some( ( address ) => !address.startsWith( '/' ) ) ) {
+      throw new Error( `Connection policy ${ id } needs OSC address prefixes or exact addresses.` );
+    }
     for ( const field of [ 'clientIdentityAddress', 'disconnectAddress' ] ) {
       if ( policy[ field ] !== undefined && ( typeof policy[ field ] !== 'string' || !policy[ field ].startsWith( '/' ) ) ) throw new Error( `${ field } must be an OSC address.` );
     }
@@ -75,7 +79,7 @@ export function validateToolManifest( input, artifactRoot ) {
     if ( [ ...clientIdentityAddresses, ...disconnectAddresses ].some( ( address ) => !address.startsWith( '/' ) ) ) {
       throw new Error( `Connection policy ${ id } identity and disconnect entries must be OSC addresses.` );
     }
-    return [ id, Object.freeze( { allowedPrefixes, clientIdentityAddresses, disconnectAddresses } ) ];
+    return [ id, Object.freeze( { allowedPrefixes, allowedAddresses, clientIdentityAddresses, disconnectAddresses } ) ];
   } ) ) );
   let nodeManagerBinding = null;
   if ( input.hostBindings?.nodeManager !== undefined ) {

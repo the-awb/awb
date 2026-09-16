@@ -1,6 +1,7 @@
 import {
   FIELD_CONFIG_SCHEMA, createFieldConfig, parseFieldConfig, parseScoreProject, serializeFieldConfig
 } from '@awb/field-documents';
+import { parseScoreDocument } from '@awb/score';
 
 export const saveableFieldState = ( state ) => {
   const { instruments, room, surfaces, microphones, display, timeFactor, meta } = state;
@@ -29,9 +30,11 @@ export async function openInitialDocument( host, launchContext ) {
       bindingID: launchContext.payload?.bindingID ?? null, toolID: 'field-modelling' } );
     const configFile = await host.request( 'filesystem.read-file', { handle: resolved.config.handle,
       markRecent: false } );
+    const scoreFile = await host.request( 'filesystem.read-file', { handle: resolved.score.handle,
+      markRecent: false } );
     return { kind: 'project', project, binding: resolved.binding,
       config: parseFieldConfig( configFile.text ), file: { ...configFile, originalText: configFile.text },
-      score: resolved.score };
+      score: { ...resolved.score, document: parseScoreDocument( scoreFile.text ) } };
   }
   return { kind: 'config', config: parseFieldConfig( opened.text ),
     file: { ...opened, originalText: opened.text }, project: null };

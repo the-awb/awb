@@ -112,6 +112,10 @@ function launchRequestFromArgs( rawArgs ) {
   const oscPort = Number( option( args, 'osc-port', 0 ) ) || null;
   const oscHost = option( args, 'osc-host', '127.0.0.1' );
   const ownerPID = positivePID( option( args, 'owner-pid' ) );
+  const scoreSessionID = option( args, 'score-session' );
+  const runID = option( args, 'run-id' );
+  const projectPath = option( args, 'project' );
+  const bindingID = option( args, 'binding' );
   return {
     toolID,
     toolSessionID: option( args, 'tool-session' ),
@@ -119,7 +123,10 @@ function launchRequestFromArgs( rawArgs ) {
     launchOrigin: option( args, 'origin', 'supercollider' ),
     owner: ownerPID ? { kind: 'attached-process', pid: ownerPID } : { kind: 'none', pid: null },
     connections: { ...( endpoint ? { endpoint } : {} ), ...( oscPort ? { oscPort, oscHost } : {} ) },
-    payload: { ...( score ? { scorePath: path.resolve( score ) } : {} ) }
+    payload: { ...( score ? { scorePath: path.resolve( score ) } : {} ),
+      ...( projectPath ? { documentPath: path.resolve( projectPath ), documentKindID: 'score-project' } : {} ),
+      ...( bindingID ? { bindingID } : {} ), ...( scoreSessionID ? { scoreSessionID } : {} ),
+      ...( runID ? { runID } : {} ) }
   };
 }
 
@@ -245,10 +252,16 @@ async function runMultitoolSmoke() {
     toolSessionID: 'multitool-score', launchOrigin: 'desktop' } );
   const lissajous = await router.launch( { toolID: 'lissajous', profileID: 'standalone',
     toolSessionID: 'multitool-lissajous', launchOrigin: 'desktop' } );
-  if ( score.status !== 'accepted' || lissajous.status !== 'accepted' ) {
-    throw new Error( `Multi-tool launch failed: score=${ JSON.stringify( score ) } lissajous=${ JSON.stringify( lissajous ) }` );
+  const field = await router.launch( { toolID: 'field-modelling', profileID: 'standalone',
+    toolSessionID: 'multitool-field', launchOrigin: 'desktop' } );
+  if ( score.status !== 'accepted' || lissajous.status !== 'accepted' || field.status !== 'accepted' ) {
+    throw new Error( `Multi-tool launch failed: score=${ JSON.stringify( score ) } lissajous=${ JSON.stringify( lissajous ) } field=${ JSON.stringify( field ) }` );
   }
-  await waitFor( () => registry.list().length === 2 && registry.list().every( ( view ) => view.lifecycle === 'ready' ), 25000 );
+  try {
+    await waitFor( () => registry.list().length === 3 && registry.list().every( ( view ) => view.lifecycle === 'ready' ), 25000 );
+  } catch ( error ) {
+    throw new Error( `${ error.message } views=${ JSON.stringify( registry.list().map( viewSnapshot ) ) }` );
+  }
   const lissajousView = registry.get( lissajous.viewID );
   if ( lissajousView?.sessionState?.audioRequestedChannels !== 16 ) {
     throw new Error( 'Lissajous did not request its default multichannel input.' );
@@ -265,9 +278,19 @@ async function runMultitoolSmoke() {
   if ( !lissajousContract.media.includes( 'native-audio' ) ) {
     throw new Error( `Lissajous native-audio policy was not installed: ${ JSON.stringify( lissajousContract ) }` );
   }
-  console.log( 'AWB_SHELL_MULTITOOL_READY score-studio=ready lissajous=ready requestedChannels=16' );
-  await closeToolView( score.viewID ); await waitFor( () => windows.size === 1 );
-  if ( !windows.has( lissajous.viewID ) ) throw new Error( 'Closing Score Studio disturbed Lissajous.' );
+  const fieldContract = await windows.get( field.viewID ).webContents.executeJavaScript( `( {
+    filesystem: globalThis.awbHost.capabilities().filesystem,
+    media: globalThis.awbHost.capabilities().media,
+    connections: globalThis.awbHost.capabilities().connections,
+    title: document.querySelector('.fieldHostBar strong')?.textContent
+  } )` );
+  if ( fieldContract.title !== 'Field Modelling' || fieldContract.media?.length
+    || !fieldContract.filesystem.includes( 'save-file' ) ) throw new Error( 'Field renderer contract was not installed.' );
+  console.log( 'AWB_SHELL_MULTITOOL_READY score-studio=ready lissajous=ready field-modelling=ready requestedChannels=16' );
+  await closeToolView( score.viewID ); await waitFor( () => windows.size === 2 );
+  if ( !windows.has( lissajous.viewID ) || !windows.has( field.viewID ) ) throw new Error( 'Closing Score Studio disturbed another tool.' );
+  await closeToolView( field.viewID ); await waitFor( () => windows.size === 1 );
+  if ( !windows.has( lissajous.viewID ) ) throw new Error( 'Closing Field Modelling disturbed Lissajous.' );
   await closeToolView( lissajous.viewID ); await waitFor( () => windows.size === 0 );
   console.log( 'AWB_SHELL_MULTITOOL_ISOLATION pass' );
   app.quit();
@@ -363,11 +386,9 @@ async function createToolWindow( { viewID, request, tool } ) {
     const configuration = hostConfigurationFromRequest( request ); await ensureHost( configuration );
     const acquired = await services.acquire( configuration, {
       allowedPrefixes: [ ...policy.allowedPrefixes ],
+      allowedAddresses: [ ...policy.allowedAddresses ],
       clientIdentityAddresses: [ ...policy.clientIdentityAddresses ],
-      disconnectAddresses: [ ...policy.disconnectAddresses ],
-      connectionID, toolID: tool.id, viewID, toolSessionID: request.toolSessionID,
-      scoreSessionID: request.payload?.scoreSessionID ?? null,
-      runID: request.payload?.runID ?? null } );
+      disconnectAddresses: [ ...policy.disconnectAddresses ] } );
     serviceReleases.set( viewID, acquired.release );
     effectiveRequest = Object.freeze( { ...request, connections: Object.freeze( {
       ...request.connections, endpoint: acquired.endpoint

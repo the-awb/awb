@@ -28,7 +28,7 @@ try {
   if ( code !== 0 || !output.includes( 'AWB_SHELL_MULTITOOL_READY' )
     || !output.includes( 'AWB_SHELL_MULTITOOL_ISOLATION pass' ) ) {
     console.error( output ); process.exitCode = 1;
-  } else console.log( 'electron-multitool: pass (Score Studio and Lissajous coexist and close independently)' );
+  } else console.log( 'electron-multitool: pass (Score Studio, Field Modelling and Lissajous coexist and close independently)' );
 } finally {
   clearTimeout( timeout );
   if ( child.exitCode === null ) child.kill( 'SIGKILL' );

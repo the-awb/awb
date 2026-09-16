@@ -41,6 +41,20 @@ test( 'normalizes multi-protocol relay lifecycle addresses', () => {
   assert.deepEqual( manifest.connectionPolicies.hosted.disconnectAddresses,
     [ '/awb/timeline/disconnect', '/awb/synthdef/disconnect' ] );
 } );
+test( 'accepts an exact-address-only relay policy', () => {
+  const manifest = validateToolManifest( {
+    ...valid,
+    capabilities: { connections: [ 'observed' ] },
+    connectionPolicies: { observed: {
+      allowedAddresses: [ '/awb/timeline/hello', '/awb/timeline/observe' ],
+      clientIdentityAddresses: [ '/awb/timeline/hello' ],
+      disconnectAddresses: [ '/awb/timeline/disconnect' ]
+    } }
+  }, '/tmp/artifact' );
+  assert.deepEqual( manifest.connectionPolicies.observed.allowedPrefixes, [] );
+  assert.deepEqual( manifest.connectionPolicies.observed.allowedAddresses,
+    [ '/awb/timeline/hello', '/awb/timeline/observe' ] );
+} );
 test( 'document actions exist only when declared by a document kind', () => {
   const plain = validateToolManifest( valid, '/tmp/artifact' );
   assert.deepEqual( plain.documentKinds, [] );

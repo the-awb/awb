@@ -238,7 +238,8 @@ export function instrumentFields( key, speakers = [] ) {
     .map( ( control ) => ( {
       path: [ control.name ], label: control.editor.label,
       min: control.editor.min, max: control.editor.max, step: control.editor.step,
-      decimals: control.editor.decimals, unit: control.editor.unit
+      decimals: control.editor.decimals, unit: control.editor.unit,
+      defaultValue: control.initial ?? control.synthDefault
     } ) );
 }
 

@@ -34,10 +34,6 @@ export default function InstrumentDetail({ instrument, colorIndex, speakers, dis
   const fields = instrumentFields(instrument.type, speakers);
   const booleanFields = instrumentBooleanFields(instrument.type, speakers);
   const channelSlots = Object.keys(instrument.channels);
-  // Which control names already have a curated slider above, so SynthControls can offer the rest
-  // of the def without showing anything twice. Only single-segment paths are control names -
-  // Speaker-materialised controls are flat names such as freqL, just like the SynthDef controls.
-
   return (
     <div className="panel">
       <h2 style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -73,7 +69,7 @@ export default function InstrumentDetail({ instrument, colorIndex, speakers, dis
         <NumberSlider
           key={f.path.join('.')}
           label={f.label}
-          value={getPath(instrument.params, f.path)}
+          value={getPath(instrument.params, f.path) ?? f.defaultValue}
           min={f.min} max={f.max} step={f.step} decimals={f.decimals} unit={f.unit}
           onChange={(v) => dispatch({ type: 'UPDATE_INSTRUMENT_PARAM', id: instrument.id, path: f.path, value: v })}
         />

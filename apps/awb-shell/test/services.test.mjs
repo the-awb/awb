@@ -7,6 +7,16 @@ import { decodeOscPacket, encodeOscMessage } from '../services/oscCodec.mjs';
 import { ServiceRegistry } from '../src/serviceRegistry.mjs';
 import { NativeAudioAccess } from '../src/nativeAudioAccess.mjs';
 
+async function waitFor( predicate, timeoutMs = 2000 ) {
+  const deadline = Date.now() + timeoutMs;
+  while ( Date.now() < deadline ) {
+    const value = predicate();
+    if ( value ) return value;
+    await new Promise( ( resolve ) => setTimeout( resolve, 5 ) );
+  }
+  throw new Error( 'Timed out waiting for service condition.' );
+}
+
 test( 'one shell-owned host survives view release and layers distinct tool grants', async () => {
   let created = 0; let closed = 0;
   const grants = [];
@@ -70,6 +80,25 @@ test( 'the shell relay carries and closes every declared context protocol', asyn
   osc.close();
   assert.equal( received.find( ( message ) => message.address === '/awb/synthdef/disconnect' ).args[ 0 ], hello.args[ 0] );
   assert.notEqual( hello.args[ 0 ], 'tool-context' );
+} );
+
+test( 'exact relay grants do not widen into address prefixes', async () => {
+  const osc = dgram.createSocket( 'udp4' ); const received = [];
+  osc.on( 'message', ( packet ) => received.push( ...decodeOscPacket( packet ) ) );
+  await new Promise( ( resolve ) => osc.bind( 0, '127.0.0.1', resolve ) );
+  const relay = await createOscWebSocketRelay( { oscPort: osc.address().port } );
+  const access = relay.grant( { allowedPrefixes: [], allowedAddresses: [ '/awb/timeline/observe' ] } );
+  const socket = new WebSocket( access.endpoint ); const frames = [];
+  socket.on( 'message', ( data ) => frames.push( JSON.parse( data.toString() ) ) );
+  await new Promise( ( resolve ) => socket.once( 'open', resolve ) );
+  await waitFor( () => frames.some( ( frame ) => frame.address === '/awb/bridge/ready' ) );
+  socket.send( JSON.stringify( { address: '/awb/timeline/observe', args: [ 'client', 'request', 'score', 1 ] } ) );
+  await waitFor( () => received.some( ( message ) => message.address === '/awb/timeline/observe' ) );
+  socket.send( JSON.stringify( { address: '/awb/timeline/observe/command', args: [] } ) );
+  await waitFor( () => frames.some( ( frame ) => frame.address === '/awb/bridge/error'
+    && frame.args[ 0 ] === 'addressNotAllowed' ) );
+  assert.equal( received.some( ( message ) => message.address === '/awb/timeline/observe/command' ), false );
+  socket.close(); access.release(); await relay.close(); osc.close();
 } );
 
 test( 'native audio capture is view-scoped while its broker can share devices', async () => {

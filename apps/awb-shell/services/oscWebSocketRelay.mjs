@@ -44,7 +44,8 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
   server.on( 'connection', ( browser, request ) => {
     const token = new URL( request.url, `http://${ host }` ).searchParams.get( 'token' ); const policy = grants.get( token );
     if ( !policy ) { browser.close( 1008, 'invalid relay token' ); return; }
-    const allowed = ( address ) => policy.allowedPrefixes.some( ( prefix ) => address.startsWith( prefix ) );
+    const allowed = ( address ) => policy.allowedAddresses.has( address )
+      || policy.allowedPrefixes.some( ( prefix ) => address.startsWith( prefix ) );
     const udp = dgram.createSocket( 'udp4' ); const clientKey = crypto.randomUUID();
     const client = { udp, clientID: null, clientKey, token, policy, closing: false, browser }; clients.add( client ); browsers.set( clientKey, browser );
     udp.on( 'message', ( packet ) => {
@@ -79,12 +80,15 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
   synthDefs.connect(); nodeManager.connect();
   const address = server.address();
   const grant = ( rawPolicy ) => {
-    if ( !rawPolicy || !Array.isArray( rawPolicy.allowedPrefixes ) || !rawPolicy.allowedPrefixes.length
-      || rawPolicy.allowedPrefixes.some( ( prefix ) => typeof prefix !== 'string' || !prefix.startsWith( '/' ) ) ) {
-      throw new Error( 'Relay grant needs bounded OSC address prefixes.' );
+    if ( !rawPolicy || !Array.isArray( rawPolicy.allowedPrefixes ) || !Array.isArray( rawPolicy.allowedAddresses ?? [] )
+      || !( rawPolicy.allowedPrefixes.length || rawPolicy.allowedAddresses?.length )
+      || [ ...rawPolicy.allowedPrefixes, ...( rawPolicy.allowedAddresses ?? [] ) ]
+        .some( ( address ) => typeof address !== 'string' || !address.startsWith( '/' ) ) ) {
+      throw new Error( 'Relay grant needs bounded OSC address prefixes or exact addresses.' );
     }
     const grantToken = `awb-${ crypto.randomUUID() }`; let released = false;
     grants.set( grantToken, Object.freeze( { allowedPrefixes: Object.freeze( [ ...rawPolicy.allowedPrefixes ] ),
+      allowedAddresses: new Set( rawPolicy.allowedAddresses ?? [] ),
       identities: new Set( rawPolicy.clientIdentityAddresses ?? [] ),
       disconnects: Object.freeze( [ ...new Set( rawPolicy.disconnectAddresses ?? [] ) ] ) } ) );
     return { endpoint: `ws://${ host }:${ address.port }/?token=${ encodeURIComponent( grantToken ) }`, release: () => {

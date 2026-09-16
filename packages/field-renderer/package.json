@@ -9,14 +9,18 @@
     "README.md"
   ],
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./react": "./dist/react.js"
   },
   "scripts": {
-    "build": "node ../../tools/build-esm-package.mjs index=src/index.js",
+    "build": "node ../../tools/build-esm-package.mjs index=src/index.js react=src/FieldCanvas.jsx",
     "prepack": "npm run build",
     "test": "node test/field-renderer.mjs"
   },
   "dependencies": {
-    "@awb/field-engine": "0.1.0"
+    "@awb/field-engine": "0.1.0",
+    "@awb/phase-fit": "0.1.0",
+    "react": "^18.3.1",
+    "three": "^0.185.1"
   }
 }

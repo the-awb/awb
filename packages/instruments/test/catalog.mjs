@@ -46,6 +46,14 @@ assert.deepEqual( instrumentDefaultParams( 'basic', speakers ), {
 check( 'static and speaker-dependent defaults materialise' );
 
 assert.deepEqual(
+  instrumentFields( 'substrate', speakers )
+    .filter( ( field ) => [ 'attackT', 'releaseT' ].includes( field.path[ 0 ] ) )
+    .map( ( field ) => field.defaultValue ),
+  [ 12, 12 ]
+);
+check( 'editor fields expose SynthDef defaults when no explicit parameter is stored' );
+
+assert.deepEqual(
   instrumentFields( 'basic', speakers ).map( ( field ) => [ field.path[ 0 ], field.label ] ),
   [
     [ 'attackT', 'Attack' ], [ 'releaseT', 'Release' ],

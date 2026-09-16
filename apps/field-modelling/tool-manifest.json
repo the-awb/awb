@@ -25,9 +25,15 @@
   },
   "connectionPolicies": {
     "hosted-field": {
-      "allowedPrefixes": ["/awb/field/", "/awb/synthdef/", "/awb/nm/", "/awb/timeline/"],
-      "clientIdentityAddresses": ["/awb/field/hello", "/awb/synthdef/hello"],
-      "disconnectAddresses": ["/awb/field/disconnect", "/awb/synthdef/disconnect"]
+      "allowedPrefixes": ["/awb/synthdef/"],
+      "allowedAddresses": [
+        "/awb/timeline/hello", "/awb/timeline/connected", "/awb/timeline/observe",
+        "/awb/timeline/result", "/awb/timeline/runtime", "/awb/timeline/transport",
+        "/awb/timeline/realization", "/awb/timeline/ping", "/awb/timeline/pong",
+        "/awb/timeline/disconnect"
+      ],
+      "clientIdentityAddresses": ["/awb/timeline/hello", "/awb/synthdef/hello"],
+      "disconnectAddresses": ["/awb/timeline/disconnect", "/awb/synthdef/disconnect"]
     }
   },
   "hostBindings": {

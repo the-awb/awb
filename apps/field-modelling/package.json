@@ -6,14 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test": "node test/document-session.mjs",
+    "test": "node --test test/document-session.mjs test/hosted-field-client.mjs test/score-projection.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
     "@awb/field-documents": "0.1.0",
     "@awb/field-engine": "0.1.0",
+    "@awb/field-renderer": "0.1.0",
     "@awb/instruments": "0.1.0",
     "@awb/phase-fit": "0.1.0",
+    "@awb/score": "0.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.185.1"

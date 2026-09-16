@@ -10,6 +10,7 @@ import RoomPanel from './components/room/RoomPanel.jsx';
 import SurfaceList from './components/surfaces/SurfaceList.jsx';
 import { fieldReducer, initialFieldState } from './state/fieldReducer.js';
 import { openInitialDocument, saveFieldDocument, stateFromFieldConfig } from './documentSession.js';
+import { useHostedField } from './useHostedField.js';
 import './App.css';
 
 const host = globalThis.awbHost ?? null;
@@ -21,6 +22,7 @@ export default function App() {
   const [ tab, setTab ] = useState( 'instruments' );
   const [ file, setFile ] = useState( null );
   const [ project, setProject ] = useState( null );
+  const [ scoreDocument, setScoreDocument ] = useState( null );
   const [ documentStatus, setDocumentStatus ] = useState( 'new' );
   const [ error, setError ] = useState( null );
   const [ readings, setReadings ] = useState( {} );
@@ -33,6 +35,9 @@ export default function App() {
       .map( ( instrument ) => [ instrument.id, { startedAt: 0, releasedAt: null } ] ) ) },
     isSounding: ( id ) => state.instruments.some( ( instrument ) => instrument.id === id && instrument.playing !== false )
   } ), [ state.instruments ] );
+  const hosted = useHostedField( { context, document: scoreDocument,
+    speakers: state.room.speakers, enabled: attached } );
+  const voices = attached ? hosted.voices : analyticVoices;
 
   useEffect( () => {
     let live = true;
@@ -45,6 +50,7 @@ export default function App() {
         setFile( opened.file ? { ...opened.file, configID: opened.config?.configID } : null );
         setProject( opened.kind === 'project' ? { projectID: opened.project.projectID,
           scoreID: opened.project.score.scoreID, bindingID: opened.binding.bindingID } : null );
+        setScoreDocument( opened.score?.document ?? null );
         setDocumentStatus( opened.kind === 'new' ? 'new field' : `opened ${ opened.file.name }` );
         host.reportDetailedState( { validatedDocumentKindID: opened.kind === 'project' ? 'score-project' :
           opened.kind === 'config' ? 'field-config' : null } );
@@ -84,13 +90,14 @@ export default function App() {
   const selected = state.instruments[ selectedIndex ] ?? null;
 
   return <div className="appRoot fieldTool" style={{ '--dockH': '35vh', '--lhsW': '40px', '--rhsW': '400px' }}>
-    <FieldCanvas state={ state } voices={ analyticVoices } readRecentSamples={ null }
+    <FieldCanvas state={ state } voices={ voices } readRecentSamples={ null }
       onMicrophoneReadings={ setReadings } analytic={ !attached } />
     <header className="fieldHostBar">
       <div><strong>Field Modelling</strong><span>{ attached ? 'Hosted score field' : 'Analytic preview' }</span></div>
       <div className="fieldIdentity">
         { project && <span>{ project.projectID } / { project.bindingID }</span> }
         { attached && <span>session { context.payload.scoreSessionID } / run { context.payload.runID }</span> }
+        { attached && <span>score { hosted.runtime.status } · { hosted.projection.instruments.length } master-only · { hosted.projection.unsupported.length } unsupported</span> }
         <span>{ documentStatus }</span>
       </div>
       <button onClick={ () => save( false ) } disabled={ !host }>Save</button>
