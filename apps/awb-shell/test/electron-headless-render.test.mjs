@@ -29,7 +29,7 @@ test( 'hidden Chromium executor renders an analytic field job to guarded MP4 out
         child.once( 'exit', resolve ); child.once( 'error', reject );
       } );
       assert.equal( exitCode, 0, output );
-      assert.match( output, /AWB_SHELL_HEADLESS_RENDER frames=2 bytes=\d+ producer=field/ );
+      assert.match( output, /AWB_SHELL_HEADLESS_RENDER frames=2 bytes=\d+ producer=field repeatPixels=stable landmarks=distinct liveParity=exact/ );
       const bytes = await readFile( outputPath );
       assert.equal( bytes.subarray( 4, 8 ).toString(), 'ftyp' );
     } finally {

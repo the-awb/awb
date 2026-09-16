@@ -1,19 +1,15 @@
-import { sampleColorReadings } from '@awb/field-engine';
+import { createFieldRenderer } from './createFieldRenderer.js';
 
-const TWO_PI = Math.PI * 2;
+export { createFieldRenderer } from './createFieldRenderer.js';
+
 export const FIELD_RENDER_MODES = Object.freeze( {
   ANALYTIC_PREVIEW: 'analytic-preview',
   REALIZED_SCORE: 'realized-score'
 } );
 
-const requireFinite = ( value, path ) => {
-  if ( !Number.isFinite( value ) ) throw new TypeError( `${ path } must be finite` );
-  return value;
-};
-
-const requirePositiveInteger = ( value, path ) => {
-  if ( !Number.isInteger( value ) || value <= 0 ) {
-    throw new TypeError( `${ path } must be a positive integer` );
+const requireObject = ( value, path ) => {
+  if ( !value || typeof value !== 'object' || Array.isArray( value ) ) {
+    throw new TypeError( `${ path } must be an object` );
   }
   return value;
 };
@@ -22,79 +18,83 @@ export function validateFieldRenderJob( job ) {
   if ( job?.producer?.kind !== 'field' ) {
     throw new Error( `Expected a field producer job, received ${ job?.producer?.kind || 'none' }` );
   }
-  const state = job.producer.state;
-  if ( !state || typeof state !== 'object' ) throw new TypeError( 'field producer state is required' );
+  const state = requireObject( job.producer.state, 'field producer state' );
   if ( state.mode === FIELD_RENDER_MODES.REALIZED_SCORE ) {
-    throw new Error( 'field realized-score rendering requires field-phase-track support, which is not implemented' );
+    throw new Error( 'field realized-score rendering requires an observation artifact, which is not implemented' );
   }
   if ( state.mode !== FIELD_RENDER_MODES.ANALYTIC_PREVIEW ) {
     throw new Error( 'field producer state.mode must be analytic-preview' );
   }
-  if ( !state.room || typeof state.room !== 'object' ) throw new TypeError( 'field state.room is required' );
-  for ( const key of [ 'sep', 'spkH', 'conv', 'pistonA' ] ) requireFinite( state.room[ key ], `field state.room.${ key }` );
-  if ( !Array.isArray( state.channels ) ) throw new TypeError( 'field state.channels must be an array' );
-  state.channels.forEach( ( channel, index ) => {
-    requireFinite( channel.freq, `field state.channels[${ index }].freq` );
-    requireFinite( channel.gl, `field state.channels[${ index }].gl` );
-    requireFinite( channel.gr, `field state.channels[${ index }].gr` );
-  } );
-  const grid = state.grid || {};
-  requirePositiveInteger( grid.columns || 96, 'field state.grid.columns' );
-  requirePositiveInteger( grid.rows || 54, 'field state.grid.rows' );
-  return state;
+  if ( state.pixelRatio !== undefined && state.pixelRatio !== 1 ) {
+    throw new Error( 'Deterministic Field renders require producer.state.pixelRatio = 1' );
+  }
+  const field = requireObject( state.field, 'field producer state.field' );
+  requireObject( field.room, 'field producer state.field.room' );
+  requireObject( field.surfaces, 'field producer state.field.surfaces' );
+  requireObject( field.display, 'field producer state.field.display' );
+  if ( !Array.isArray( field.instruments ) ) {
+    throw new TypeError( 'field producer state.field.instruments must be an array' );
+  }
+  if ( field.microphones !== undefined && !Array.isArray( field.microphones ) ) {
+    throw new TypeError( 'field producer state.field.microphones must be an array' );
+  }
+  return Object.freeze( { state, field } );
 }
 
-/**
- * Deterministic, React-free Canvas2D field producer for @awb/render-pipeline.
- *
- * This analytic-preview producer intentionally consumes no audio. Analytic field state advances
- * from the render clock, using the same CPU equations as @awb/field-engine. It does not claim
- * correspondence with realized playback.
- */
-export function createFieldRenderProducer( { canvas, job } = {} ) {
+/** Deterministic adapter from the shared vanilla WebGL controller to @awb/render-pipeline. */
+export function createFieldRenderProducer( {
+  canvas,
+  job,
+  engineOptions = {},
+  engineFactory = createFieldRenderer
+} = {} ) {
   if ( !canvas ) throw new Error( 'createFieldRenderProducer requires a canvas' );
-  const state = validateFieldRenderJob( job );
-  const grid = { columns: 96, rows: 54, ...state.grid };
-  const bounds = { xMin: -4, xMax: 4, zMin: 0, zMax: 8, height: state.room.spkH, ...state.bounds };
-  const displayGain = state.displayGain ?? 1;
-  let context = null;
+  const { state, field } = validateFieldRenderJob( job );
+  let engine = null;
+  let prepared = false;
 
   return {
     frameSource: canvas,
 
     async prepare() {
-      canvas.width = job.output.width;
-      canvas.height = job.output.height;
-      context = canvas.getContext?.( '2d', { alpha: false } );
-      if ( !context ) throw new Error( 'Field renderer requires a 2D canvas context' );
+      if ( prepared ) throw new Error( 'Field producer is already prepared' );
+      engine = engineFactory( {
+        ...engineOptions,
+        canvas,
+        controls: 'none',
+        pixelRatio: 1,
+        width: job.output.width,
+        height: job.output.height,
+        preserveDrawingBuffer: true
+      } );
+      engine.setState( field );
+      if ( state.camera ) engine.setCamera( state.camera );
+      prepared = true;
     },
 
     async renderFrame( frame ) {
-      if ( !context ) throw new Error( 'Prepare the field producer before rendering' );
-      const channels = state.channels.map( ( channel ) => ( {
-        ...channel,
-        phase: ( ( channel.phase || 0 ) + TWO_PI * channel.freq * frame.time ) % TWO_PI
-      } ) );
-      const cellWidth = canvas.width / grid.columns;
-      const cellHeight = canvas.height / grid.rows;
-      context.fillStyle = state.background || 'rgb(0 0 0)';
-      context.fillRect( 0, 0, canvas.width, canvas.height );
-      for ( let row = 0; row < grid.rows; row++ ) {
-        const z = bounds.zMin + ( row + 0.5 ) / grid.rows * ( bounds.zMax - bounds.zMin );
-        for ( let column = 0; column < grid.columns; column++ ) {
-          const x = bounds.xMin + ( column + 0.5 ) / grid.columns * ( bounds.xMax - bounds.xMin );
-          context.fillStyle = sampleColorReadings(
-            channels,
-            state.room,
-            [ x, bounds.height, z ],
-            displayGain
-          ).composite.color;
-          context.fillRect( column * cellWidth, row * cellHeight, cellWidth + 0.5, cellHeight + 0.5 );
-        }
-      }
+      if ( !prepared ) throw new Error( 'Prepare the Field producer before rendering' );
+      engine.renderFrame( {
+        time: frame.time,
+        delta: frame.delta,
+        now: frame.time * 1000,
+        analytic: true,
+        phaseMode: 'absolute'
+      } );
       return canvas;
     },
 
-    async dispose() { context = null; }
+    async dispose() {
+      engine?.dispose();
+      engine = null;
+      prepared = false;
+    },
+
+    readPixels() {
+      if ( !prepared ) throw new Error( 'Prepare the Field producer before reading pixels' );
+      return engine.readPixels();
+    },
+
+    get engine() { return engine; }
   };
 }

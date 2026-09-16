@@ -12,7 +12,7 @@
   "dependencies": {
     "@awb/field-documents": "0.1.0",
     "@awb/field-engine": "0.1.0",
-    "@awb/field-renderer": "0.1.0",
+    "@awb/field-renderer": "0.2.0",
     "@awb/instruments": "0.1.0",
     "@awb/phase-fit": "0.1.0",
     "@awb/score": "0.1.0",

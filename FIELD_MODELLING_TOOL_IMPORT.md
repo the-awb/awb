@@ -67,17 +67,16 @@ to put them behind the current AWB document, host and session boundaries—not r
   helpers.
 - `@awb/sc-wasm`: standalone browser SC engine and sample tap.
 - `@awb/score`: canonical score document and editing contracts.
-- `@awb/field-renderer`: a deterministic Canvas2D boundary proof over the shared render pipeline.
+- `@awb/field-renderer`: the React-free Three.js/WebGL scene controller shared by the live adapter
+  and deterministic render-pipeline producer.
 - `@awb/render-pipeline`: typed resolved inputs, fixed-frame scheduling, sinks and receipts.
 - AWB shell: tool manifests, opaque file grants, shared hosted-SC services and native audio.
 - Score Studio: hosted score installation, authoritative desktop transport and
   `entryID -> realizationID -> nodeID` reporting.
 
-### Still application-owned in `field_modelling`
+### Application state retained by Field Modelling
 
-- the Three.js `FieldCanvas` and interaction/camera implementation;
 - application state and panels for room, instruments, surfaces, probes and display;
-- `phaseFit.js` and `phaseLock.js`;
 - glue from live queried nodes to field instruments;
 - old localStorage file handling;
 - an obsolete app-owned score/timeline surface;
@@ -408,9 +407,10 @@ A render-job resolver reads the score-project association, freezes the Field con
 the required artifacts. Rendering or capturing SuperCollider audio is an upstream job and is not
 hidden inside the visual producer.
 
-The existing Canvas2D producer remains a useful boundary proof. It is not parity acceptance for the
-import. Extract the live Three.js scene/camera/fixed-frame tick into `@awb/field-renderer` as a
-second producer and compare it with the source application at landmark states and times.
+The live adapter and analytic export producer now use the same React-free Three.js/WebGL controller
+in `@awb/field-renderer`. The Electron parity gate checks repeat stability, phase advancement and
+live/export pixels at landmark frames. This does not widen the current analytic-only claim or add
+the future phase-observation contract.
 
 ## 11. Migration slices
 

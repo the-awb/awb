@@ -58,6 +58,7 @@ const smokeOwnerLoss = process.argv.includes( '--smoke-owner-loss' );
 const smokeExternalRouter = process.argv.includes( '--smoke-external-router' );
 const smokeMultitool = process.argv.includes( '--smoke-multitool' );
 const smokeRender = process.argv.includes( '--smoke-render' );
+const smokeField = process.argv.includes( '--smoke-field' );
 let smokeRunning = false;
 let homeReadyCount = 0;
 const externalSmokeResults = [];
@@ -217,7 +218,11 @@ async function pumpRenderExecutor() {
     const output = renderOutputs.descriptor( lease.renderID );
     const { port1, port2 } = new MessageChannelMain();
     await renderOutputs.open( lease.renderID, lease.leaseID, port1 );
-    renderExecutorWindow.webContents.postMessage( 'awb:render-lease', { ...lease, output }, [ port2 ] );
+    renderExecutorWindow.webContents.postMessage( 'awb:render-lease', {
+      ...lease,
+      output,
+      diagnostics: smokeRender ? { verifyPixels: true } : null
+    }, [ port2 ] );
   } catch ( error ) {
     await renderOutputs.abort( lease.renderID );
     renderOutputs.release( lease.renderID );
@@ -397,15 +402,27 @@ async function runRenderSmoke() {
     requestedByViewID: 'smoke-render', job: {
       schemaVersion: 2,
       contentHash: 'sha256:headless-field-smoke',
-      producer: { kind: 'field', version: '0.1.0', state: {
-        mode: 'analytic-preview',
-        room: { sep: 2, spkH: 1.1, conv: 20, pistonA: 0.07 },
-        channels: [
-          { instId: 'smoke', slot: 'a', freq: 1, gl: 1, gr: 0.35 },
-          { instId: 'smoke', slot: 'b', freq: 1.5, gl: 0.35, gr: 1 }
-        ],
-        grid: { columns: 24, rows: 14 },
-        bounds: { xMin: -2, xMax: 2, zMin: 0.5, zMax: 4 }
+      producer: { kind: 'field', version: '0.2.0', state: {
+        mode: 'analytic-preview', pixelRatio: 1,
+        camera: { position: [ 4.8, 6.6, 7.6 ], target: [ 0, 0.35, 1.5 ] },
+        field: {
+          instruments: [ { id: 'smoke', type: 'substrate', playing: true, mute: false,
+            solo: false, amp: 1, lActive: true, rActive: true,
+            params: { freqA: 36, beat: 0.1, freqQ: 0.1, movement: 0.4 }, channels: {},
+            color: '#e0603a', highlight: true } ],
+          room: { speakers: [ { id: 'L' }, { id: 'R' } ], sep: 2, spkH: 1.1,
+            bedH: 0.6, bedY: 2, pistonA: 0.07, roomDiam: 7, roomBack: 2, conv: 20 },
+          surfaces: {
+            horizontal: { visible: true, radius: 3.5, height: 0.56, mode: 'abs',
+              colorMode: 'composite', highlight: true, opacity: 1, contour: 0, contourN: 12 },
+            spherical: { visible: false, radius: 3.1, width: 2.2, height: 2, mode: 'abs',
+              colorMode: 'composite', highlight: true, opacity: 1, contour: 0, contourN: 12 },
+            body: { visible: false, setupId: 'lying', showSites: false, mode: 'abs',
+              colorMode: 'composite', highlight: true, opacity: 1, contour: 0, contourN: 12 }
+          },
+          microphones: [], display: { gain: 1, timeScaleExp: -2.7, playing: true, phaseSync: false },
+          timeFactor: 1
+        }
       } },
       inputs: [],
       timeline: { cueInSeconds: 0, cueOutSeconds: 0.5 },
@@ -417,11 +434,39 @@ async function runRenderSmoke() {
     renderJobs.getForTool( 'field-modelling', submitted.renderID ).status ), 10000 );
   const completed = renderJobs.getForTool( 'field-modelling', submitted.renderID );
   if ( completed.status !== 'completed' ) throw new Error( `Headless render failed: ${ completed.error }` );
+  const diagnostics = completed.receipt?.output?.diagnostics;
+  if ( !diagnostics?.repeatStable || !diagnostics.liveParity || diagnostics.frameHashes?.length !== 2
+    || diagnostics.frameHashes[ 0 ] === diagnostics.frameHashes[ 1 ] ) {
+    throw new Error( `Headless Field pixel determinism failed: ${ JSON.stringify( diagnostics ) }` );
+  }
   const bytes = await readFile( targetPath );
   if ( bytes.length < 64 || bytes.subarray( 4, 8 ).toString() !== 'ftyp' ) {
     throw new Error( `Headless render did not produce an MP4 file (bytes=${ bytes.length }, header=${ bytes.subarray( 0, 16 ).toString( 'hex' ) }).` );
   }
-  console.log( `AWB_SHELL_HEADLESS_RENDER frames=${ completed.completedFrames } bytes=${ bytes.length } producer=field` );
+  console.log( `AWB_SHELL_HEADLESS_RENDER frames=${ completed.completedFrames } bytes=${ bytes.length } producer=field repeatPixels=stable landmarks=distinct liveParity=exact` );
+  app.quit();
+}
+
+async function runFieldSmoke() {
+  smokeRunning = true;
+  const launched = await router.launch( { toolID: 'field-modelling', profileID: 'standalone',
+    toolSessionID: 'field-live-smoke', launchOrigin: 'desktop' } );
+  if ( launched.status !== 'accepted' ) throw new Error( `Field launch failed: ${ JSON.stringify( launched ) }` );
+  await waitFor( () => registry.get( launched.viewID )?.lifecycle === 'ready', 25000 );
+  const result = await windows.get( launched.viewID ).webContents.executeJavaScript( `new Promise((resolve, reject) => {
+    const started = Date.now();
+    const check = () => {
+      const canvas = document.querySelector('#stage canvas');
+      const analytic = document.body.innerText.includes('Analytic preview');
+      if (canvas && canvas.width > 0 && canvas.height > 0 && analytic) {
+        resolve({ width: canvas.width, height: canvas.height });
+      } else if (Date.now() - started > 10000) reject(new Error('Field WebGL canvas did not become ready'));
+      else setTimeout(check, 25);
+    }; check();
+  })` );
+  console.log( `AWB_SHELL_FIELD_WEBGL_READY width=${ result.width } height=${ result.height }` );
+  await closeToolView( launched.viewID );
+  await waitFor( () => windows.size === 0 );
   app.quit();
 }
 
@@ -717,6 +762,7 @@ function registerIPC() {
       console.log( 'AWB_SHELL_HOME_READY' );
       if ( smokeHome ) runHomeSmoke().catch( reportFatal );
       else if ( smokeRender && !smokeRunning ) runRenderSmoke().catch( reportFatal );
+      else if ( smokeField && !smokeRunning ) runFieldSmoke().catch( reportFatal );
       else if ( smokeMultiview && !smokeRunning ) runMultiviewSmoke().catch( reportFatal );
       else if ( smokeMultitool && !smokeRunning ) runMultitoolSmoke().catch( reportFatal );
       else if ( smokeOwnerLoss && !smokeRunning ) runOwnerLossSmoke().catch( reportFatal );

@@ -89,8 +89,11 @@ pass through lifecycle IPC; executors report only bounded progress and a final r
 chunks use a dedicated back-pressured message port and shell-owned positioned writes to a temporary
 file. The temporary file is atomically renamed only after the muxer closes successfully.
 
-The local worker currently executes `field` `analytic-preview` jobs. Granted input resolution,
-Lissajous audio rendering, persisted receipts and remote adapters remain subsequent slices.
+The local worker currently executes `field` `analytic-preview` jobs with the same React-free WebGL
+scene controller used by the live Field application. Its smoke gate checks repeatable pixels,
+landmark-time phase progression and live/export scene parity before accepting the encoded output.
+Granted input resolution, Lissajous audio rendering, persisted receipts and remote adapters remain
+subsequent slices.
 
 ## Shared desktop host
 

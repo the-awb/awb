@@ -81,8 +81,8 @@ live SC stream or recorded multichannel audio
 
 `FieldModellingTool` owns live SC routing, capture and observation production; the live view consumes
 its stream directly. The render pipeline consumes frozen configuration and the materialised phase
-track. `@awb/field-renderer` should eventually supply the common renderer, but must not own the SC
-`ToolSession` or the observation extractor.
+track. `@awb/field-renderer` supplies the common React-free WebGL controller used by both the live
+adapter and deterministic producer, but does not own the SC `ToolSession` or observation extraction.
 
 ## Current implementation
 
@@ -93,18 +93,21 @@ track. `@awb/field-renderer` should eventually supply the common renderer, but m
   a supported output, not an error case.
 - `@awb/lissajous-engine`'s render producer now rejects jobs with no audio descriptor and frames
   with no decoded audio samples.
-- `@awb/field-renderer` provides the first deterministic, React-free Canvas2D field producer using
-  `@awb/field-engine`'s CPU propagation equations. It accepts only explicitly labelled
-  `analytic-preview` jobs; its integration test runs through the shared scheduler and sink contract
-  with `inputs: []`. `realized-score` is reserved and rejected until phase-track consumption exists.
+- `@awb/field-renderer` provides one React-free Three.js/WebGL controller for the live React adapter
+  and deterministic producer. Export fixes pixel ratio at 1, disables controls and drives explicit
+  frame times without an internal animation loop. It accepts only explicitly labelled
+  `analytic-preview` jobs; `realized-score` is reserved and rejected until phase-track consumption
+  exists.
 - The desktop shell owns a validated render queue and a separately authenticated hidden Chromium
-  executor. It currently renders analytic field jobs through the real Canvas2D/WebCodecs/Mediabunny
+  executor. It currently renders analytic field jobs through the shared WebGL/WebCodecs/Mediabunny
   path. Encoded data travels on a dedicated back-pressured message port into shell-owned positioned
   file writes; only an opaque locator and validated receipt return through control IPC. Output is
   committed by atomic rename after successful muxer close.
 
-The Canvas2D producer is a boundary proof and useful preview renderer. It is not yet visual parity
-with Field Modelling's Three.js `FieldCanvas`.
+The Electron smoke gate renders real pixels through both controller configurations. It verifies
+repeat stability for one frame, visible phase progression between landmark times, exact output
+dimensions and pixel parity between live and export settings on the reference machine. A separate
+smoke gate opens the Field application on the shared controller.
 
 ## Next vertical slices
 
@@ -115,15 +118,13 @@ with Field Modelling's Three.js `FieldCanvas`.
 3. Specify and test the `field-phase-track` artifact and its separate observation/extraction step,
    including component identity, timestamps, confidence, phase unwrapping and correction policy,
    before implementing `realized-score` rendering.
-4. Extract the Field Modelling WebGL scene, camera and fixed-frame tick into `@awb/field-renderer`,
-   then compare both field modes against the live `FieldCanvas` at landmark frames.
-5. Add a provider adapter interface for large jobs. The first remote adapter may target Runpod, but
+4. Add a provider adapter interface for large jobs. The first remote adapter may target Runpod, but
    provider choice stays deployment policy rather than entering the job schema.
-6. Persist bounded receipts and add a shell Render Centre only after the service contract is stable: queue, progress, cancel,
+5. Persist bounded receipts and add a shell Render Centre only after the service contract is stable: queue, progress, cancel,
    output/reveal and retry belong there; producer controls remain in their tools.
 
 Not yet implemented: shell file/audio resolution, persisted receipts, the Render Centre UI, the phase-track schema and
-realized-score field mode, FieldCanvas visual parity, remote submission, and optional
+realized-score field mode, remote submission, and optional
 SC-score-to-audio job chaining.
 
 The full Field application migration and hosted-audio boundary are specified separately in
