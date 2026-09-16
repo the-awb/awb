@@ -5,17 +5,19 @@ they do not keep an editable copy of this package.
 
 Provider-neutral deterministic frame scheduling for AWB visual producers.
 
-This package begins at a **resolved** render job. An upstream score/container resolver must already
-have selected or rendered the exact audio artifact. The package does not inspect score folders,
-choose between masters and raw renders, open Bitwig projects, fetch from Drive, or submit work to a
-cloud provider.
+This package begins at a **resolved** render job. Schema v2 jobs carry zero or more typed input
+descriptors. The scheduler does not make audio universal: a Lissajous producer requires it, while a
+field producer can render directly from analytic state. An upstream resolver must resolve every
+input that a particular producer requires. The package does not inspect score folders, choose
+between masters and raw renders, open Bitwig projects, fetch from Drive, or submit work to a cloud
+provider.
 
 ```text
 score/container resolver -> ResolvedRenderJob -> render pipeline -> execution receipt
                                       local/cloud assignment lives outside the job ^
 ```
 
-The pipeline owns frame indices, fixed times, audio-window cadence, progress, cancellation,
+The pipeline owns frame indices, fixed times, per-frame input cadence, progress, cancellation,
 producer/sink cleanup and frame-count validation. A producer owns its renderer, scene and camera;
 a sink owns encoding and storage.
 
@@ -26,12 +28,34 @@ const receipt = await runRenderPipeline({
   job,
   createProducer: async ({ job, signal }) => producer,
   createSink: async ({ job, signal, frameSource }) => sink,
-  sampleAudio: ({ startTime, endTime }) => decodedAudio.window(startTime, endTime),
+  readFrameInputs: ({ startTime, endTime }) => ({
+    audio: decodedAudio?.window(startTime, endTime),
+  }),
   execution: { executor: 'local' },
   signal,
   onProgress,
 });
 ```
+
+`sampleAudio` remains as a schema-v1 migration alias. New integrations use `readFrameInputs`. A
+producer must validate its own descriptor and runtime requirements; the generic scheduler only
+validates the portable manifest shape.
+
+Schema v2 separates immutable descriptors from decoded runtime data:
+
+```js
+{
+  schemaVersion: 2,
+  producer: { kind: 'field', version: '0.1.0', state: { /* ... */ } },
+  inputs: [],
+  timeline: { cueInSeconds: 0, cueOutSeconds: 30 },
+  output: { width: 1920, height: 1080, fps: 60, format: 'mp4' }
+}
+```
+
+An audio-driven job instead includes an input such as `{ id: 'soundtrack', kind: 'audio',
+artifactHash, locator, metadata }`. Rendering an SC score to audio is an upstream job and may be
+chained before the visual job; it is not hidden inside the visual renderer.
 
 Producer lifecycle:
 

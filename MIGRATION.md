@@ -13,6 +13,7 @@ are consumers. They may retain a packed release artifact, but not a second edita
 | `@awb/synthdef-interface` | introduced here | arbitrary `.scsyndef` graph parser and SC-aware interface derivation, 16 September 2026 | owned here; context SynthDefs remain authoritative |
 | `@awb/instruments` | `field_modelling/packages/instruments` | extraction `aab2cef` | owned here; `field_modelling` consumes a packed artifact |
 | `@awb/field-engine` | `field_modelling/packages/field-engine` | extraction `aab2cef` | owned here; `field_modelling` consumes a packed artifact |
+| `@awb/field-renderer` | introduced here | first portable audio-free field producer, 16 September 2026 | owned here; Field Modelling's current Three.js renderer remains the future parity source |
 | `@awb/lissajous-engine` | `lissajous-viz/packages/lissajous-engine` | extraction and distribution at `85a349a` | owned here; `lissajous-viz` consumes a packed artifact |
 | `@awb/render-pipeline` | `lissajous-viz/packages/render-pipeline` | portable-pipeline source at `85a349a` | owned here; `lissajous-viz` consumes a packed artifact |
 
@@ -44,7 +45,7 @@ npm run verify
 npm run pack:packages
 ```
 
-The second command rebuilds all ten packages and writes ten tarballs to ignored `artifacts/`. A
+The second command rebuilds all workspace packages and writes their tarballs to ignored `artifacts/`. A
 consumer copies the required tarball into its own `vendor/awb/` directory and depends on that file,
 for example:
 

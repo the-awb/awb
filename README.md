@@ -12,8 +12,9 @@ packages/
   synthdef-interface/   arbitrary SynthDef graph parsing and rich interface derivation
   instruments/          current shared-context annotations; not a runtime inventory
   field-engine/         renderer-neutral analytic field projection and propagation
+  field-renderer/       React-free deterministic field render producers
   lissajous-engine/     React-free visual core with R3F, vanilla and browser adapters
-  render-pipeline/      provider-neutral resolved jobs and indexed render scheduling
+  render-pipeline/      provider-neutral typed jobs, indexed scheduling and browser encoding
 apps/
   awb-shell/            neutral Electron host for independently packaged AWB tools
   score-studio/         clean score authoring and browser-runtime development host

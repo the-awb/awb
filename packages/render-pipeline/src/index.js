@@ -1,3 +1,8 @@
-export { createResolvedRenderJob, getRenderFrameCount } from './job.js';
-export { sampleAudioWindow } from './audio.js';
+export {
+  createResolvedRenderJob,
+  getRenderFrameCount,
+  getRenderInput,
+  requireRenderInput
+} from './job.js';
+export { selectMasterStereo, sampleAudioWindow, sampleAudioPairs } from './audio.js';
 export { RenderCancelledError, runRenderPipeline } from './runRenderPipeline.js';

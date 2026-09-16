@@ -12,6 +12,10 @@ export function createLissajousRenderProducer( { canvas, job, engineOptions = {}
   if ( job?.producer?.kind !== 'lissajous' ) {
     throw new Error( `Expected a lissajous producer job, received ${ job?.producer?.kind || 'none' }` );
   }
+  const audioInput = job.schemaVersion === 1
+    ? job.audio
+    : job.inputs?.find( ( input ) => input.kind === 'audio' );
+  if ( !audioInput ) throw new Error( 'Lissajous requires an audio render input' );
 
   const state = job.producer.state || {};
   if ( state.pixelRatio !== undefined && state.pixelRatio !== 1 ) {
@@ -50,11 +54,13 @@ export function createLissajousRenderProducer( { canvas, job, engineOptions = {}
 
     async renderFrame( frame ) {
       if ( !prepared ) throw new Error( 'Prepare the Lissajous producer before rendering' );
+      const audioWindow = frame.inputs?.audio ?? frame.audioWindow;
+      if ( !audioWindow ) throw new Error( 'Lissajous received no audio samples for this frame' );
       engine.renderFrame( frame.frameIndex, {
         fps: job.output.fps,
         time: frame.time,
         delta: frame.delta,
-        newSamples: frame.audioWindow,
+        newSamples: audioWindow,
         automationLog: state.automationLog || null,
         automationOverrides: state.automationOverrides || null,
         playheadPosition: frame.time

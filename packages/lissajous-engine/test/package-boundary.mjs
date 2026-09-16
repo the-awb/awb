@@ -49,6 +49,18 @@ for ( const exported of [
 const vanilla = await import( '@awb/lissajous-engine/vanilla' );
 assert.equal( typeof vanilla.createLissajousEngine, 'function' );
 assert.equal( typeof vanilla.createLissajousRenderProducer, 'function' );
+assert.throws(
+  () => vanilla.createLissajousRenderProducer( {
+    canvas: {},
+    job: {
+      schemaVersion: 2,
+      producer: { kind: 'lissajous', state: {} },
+      inputs: [],
+      output: { width: 1, height: 1, fps: 1 }
+    }
+  } ),
+  /requires an audio render input/
+);
 pass( 'Node resolves the workspace package and its public APIs' );
 
 console.log( `\n${ passes.join( '\n' ) }\n\nAll checks passed.` );

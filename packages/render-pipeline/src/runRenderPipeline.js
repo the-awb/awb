@@ -38,6 +38,7 @@ export async function runRenderPipeline( {
   createProducer,
   createSink,
   sampleAudio = null,
+  readFrameInputs = null,
   signal = null,
   onProgress = null,
   execution = {}
@@ -47,6 +48,12 @@ export async function runRenderPipeline( {
   if ( typeof createSink !== 'function' ) throw new TypeError( 'createSink must be a function' );
   if ( sampleAudio !== null && typeof sampleAudio !== 'function' ) {
     throw new TypeError( 'sampleAudio must be a function or null' );
+  }
+  if ( readFrameInputs !== null && typeof readFrameInputs !== 'function' ) {
+    throw new TypeError( 'readFrameInputs must be a function or null' );
+  }
+  if ( sampleAudio && readFrameInputs ) {
+    throw new TypeError( 'Use readFrameInputs or the legacy sampleAudio hook, not both' );
   }
 
   throwIfAborted( signal );
@@ -78,6 +85,21 @@ export async function runRenderPipeline( {
       throwIfAborted( signal );
       const windowStartSeconds = cueInSeconds + frameIndex / fps;
       const windowEndSeconds = Math.min( cueOutSeconds, cueInSeconds + ( frameIndex + 1 ) / fps );
+      const inputContext = {
+        job,
+        frameIndex,
+        startTime: windowStartSeconds,
+        endTime: windowEndSeconds,
+        signal
+      };
+      const inputs = readFrameInputs
+        ? await readFrameInputs( inputContext )
+        : sampleAudio
+          ? { audio: await sampleAudio( inputContext ) }
+          : {};
+      if ( inputs === null || typeof inputs !== 'object' || Array.isArray( inputs ) ) {
+        throw new TypeError( `frame input reader returned a non-object for frame ${ frameIndex }` );
+      }
       const frame = {
         job,
         frameIndex,
@@ -86,9 +108,9 @@ export async function runRenderPipeline( {
         delta: 1 / fps,
         windowStartSeconds,
         windowEndSeconds,
-        audioWindow: sampleAudio
-          ? await sampleAudio( { job, frameIndex, startTime: windowStartSeconds, endTime: windowEndSeconds, signal } )
-          : null,
+        inputs,
+        // Compatibility for schema-v1 producers. New producers should consume frame.inputs.
+        audioWindow: inputs.audio ?? null,
         signal
       };
       throwIfAborted( signal );
@@ -115,7 +137,7 @@ export async function runRenderPipeline( {
       status: 'completed',
       jobHash: job.contentHash,
       producer: Object.freeze( { kind: job.producer.kind, version: job.producer.version } ),
-      pipelineVersion: '0.3.0',
+      pipelineVersion: '0.7.0',
       executor: execution.executor || 'local',
       startedAt,
       completedAt: new Date().toISOString(),

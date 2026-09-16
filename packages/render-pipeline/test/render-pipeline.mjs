@@ -2,9 +2,13 @@ import assert from 'node:assert/strict';
 import {
   RenderCancelledError,
   createResolvedRenderJob,
+  getRenderInput,
   getRenderFrameCount,
+  requireRenderInput,
   runRenderPipeline,
-  sampleAudioWindow
+  sampleAudioPairs,
+  sampleAudioWindow,
+  selectMasterStereo
 } from '@awb/render-pipeline';
 import {
   bitrateFor,
@@ -55,6 +59,33 @@ assert.throws(
 );
 pass( 'invalid manifests fail before producer or sink setup' );
 
+const fieldJob = createResolvedRenderJob( {
+  schemaVersion: 2,
+  contentHash: 'sha256:field-job-fixture',
+  producer: { kind: 'field', version: '0.1.0', state: { view: 'horizontal' } },
+  inputs: [],
+  timeline: { cueInSeconds: 0, cueOutSeconds: 5 },
+  output: { width: 640, height: 360, fps: 2, format: 'mp4' }
+} );
+assert.equal( getRenderFrameCount( fieldJob ), 10 );
+assert.equal( getRenderInput( fieldJob, 'audio' ), null );
+assert.throws( () => requireRenderInput( fieldJob, 'audio', 'Lissajous' ), /requires audio/ );
+
+const audioJob = createResolvedRenderJob( {
+  ...fieldJob,
+  contentHash: 'sha256:lissajous-v2-fixture',
+  producer: { kind: 'lissajous', version: '0.1.0', state: {} },
+  inputs: [ {
+    id: 'soundtrack',
+    kind: 'audio',
+    artifactHash: 'sha256:audio-v2-fixture',
+    locator: 'fixture://audio.wav',
+    metadata: { sampleRate: 48000, channels: 14, durationSeconds: 1 }
+  } ]
+} );
+assert.equal( requireRenderInput( audioJob, 'audio' ).id, 'soundtrack' );
+pass( 'schema-v2 jobs support typed optional inputs without making audio a scheduler requirement' );
+
 const audioBuffer = {
   sampleRate: 4,
   numberOfChannels: 2,
@@ -66,6 +97,17 @@ const sampled = sampleAudioWindow( audioBuffer, 0.25, 0.75 );
 assert.deepEqual( [ ...sampled.x ], [ 1, 2 ] );
 assert.deepEqual( [ ...sampled.y ], [ 5, 6 ] );
 pass( 'decoded audio sampling uses exact half-open time windows' );
+
+const multichannel = {
+  sampleRate: 4,
+  numberOfChannels: 4,
+  length: 4,
+  duration: 1,
+  getChannelData: ( channel ) => new Float32Array( [ channel, channel + 1, channel + 2, channel + 3 ] )
+};
+assert.deepEqual( [ ...sampleAudioPairs( multichannel, 0, 0.5, [ 1 ] ).pairs[ 1 ].x ], [ 2, 3 ] );
+assert.equal( selectMasterStereo( multichannel ).getChannelData( 1 )[ 0 ], 1 );
+pass( 'multichannel analysis selects discrete pairs while channels 0/1 remain the authored master' );
 
 assert.equal( bitrateFor( 100, 50, 20, 'standard' ), 9000 );
 assert.equal( formatBytes( 1500000000 ), '1.5 GB' );
@@ -126,6 +168,37 @@ assert.equal( progress.at( -1 ).phase, 'completed' );
 assert.equal( progress.at( -1 ).progress, 1 );
 pass( 'the pipeline owns exact frame timing, one audio read per frame and ordered lifecycle' );
 pass( 'execution placement is recorded in the receipt without entering the immutable job' );
+
+const typedFrames = [];
+await runRenderPipeline( {
+  job: fieldJob,
+  createProducer: async () => ( {
+    frameSource: stableFrameSource,
+    async prepare() {},
+    async renderFrame( frame ) { typedFrames.push( frame ); },
+    async dispose() {}
+  } ),
+  createSink: async () => ( {
+    async addFrame() {},
+    async finish( { frameCount } ) { return { frameCount }; },
+    async abort() {}
+  } ),
+  readFrameInputs: ( { frameIndex } ) => ( { control: { frameIndex } } )
+} );
+assert.equal( typedFrames.length, 10 );
+assert.deepEqual( typedFrames[ 3 ].inputs, { control: { frameIndex: 3 } } );
+assert.equal( typedFrames[ 3 ].audioWindow, null );
+await assert.rejects(
+  runRenderPipeline( {
+    job: fieldJob,
+    createProducer: async () => ( {} ),
+    createSink: async () => ( {} ),
+    sampleAudio: () => ( {} ),
+    readFrameInputs: () => ( {} )
+  } ),
+  /not both/
+);
+pass( 'generic per-frame inputs flow through the scheduler and exclude the legacy audio hook' );
 
 const controller = new AbortController();
 let aborted = false;

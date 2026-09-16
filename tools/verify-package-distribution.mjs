@@ -13,6 +13,7 @@ const packages = {
   'synthdef-interface': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
   instruments: { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
   'field-engine': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
+  'field-renderer': { exports: { '.': './dist/index.js' }, files: [ 'index.js' ] },
   'render-pipeline': {
     exports: { '.': './dist/index.js', './webcodecs': './dist/webcodecs.js' },
     files: [ 'index.js', 'webcodecs.js' ]
@@ -38,6 +39,7 @@ assert.doesNotMatch( webcodecsSink, /mp4-muxer/, 'the deprecated muxer remains i
 const score = await import( '@awb/score' );
 const instruments = await import( '@awb/instruments' );
 const field = await import( '@awb/field-engine' );
+const fieldRenderer = await import( '@awb/field-renderer' );
 const sc = await import( '@awb/sc-wasm/core' );
 const consoleCore = await import( '@awb/sc-console/core' );
 const envelope = await import( '@awb/sc-envelope' );
@@ -49,6 +51,7 @@ const webcodecs = await import( '@awb/render-pipeline/webcodecs' );
 assert.equal( typeof score.makeEvent, 'function' );
 assert.equal( typeof instruments.instrumentType, 'function' );
 assert.equal( typeof field.projectInstrumentToFieldComponents, 'function' );
+assert.equal( typeof fieldRenderer.createFieldRenderProducer, 'function' );
 assert.equal( typeof sc.createScEngine, 'function' );
 assert.equal( typeof consoleCore.evalRangeAt, 'function' );
 assert.equal( typeof envelope.scEnvAsArray, 'function' );
