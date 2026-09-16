@@ -266,8 +266,13 @@ export class HostedScoreClient {
         this.rejectSynthDefRequest( args[ 1 ], 'inventory indexes are not contiguous' );
         return;
       }
+      const available = new Set( inventory );
+      const definitions = Object.freeze( Object.fromEntries(
+        Object.entries( this.state.synthDefContext.definitions )
+          .filter( ( [ name ] ) => available.has( name ) )
+      ) );
       this.resolveSynthDefRequest( args[ 1 ], inventory );
-      this.publishSynthDefContext( { inventory, error: '' } );
+      this.publishSynthDefContext( { inventory, definitions, error: '' } );
     }
   }
 

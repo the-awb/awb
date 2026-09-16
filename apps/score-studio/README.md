@@ -33,6 +33,13 @@ not duplicate those responsibilities. The app-owned sidecar forwards the frozen
 and local OSC; it contains no score, instrument or scheduling policy. The AWB shell provides the
 same manifest-bounded relay for installed tool views. Standalone scheduling stays in the browser.
 
+The hosted Instruments view lists the complete `SynthDescLib.global` inventory. It refreshes on
+open, window focus and a bounded interval, but requests compiled graph bytes and builds an
+`@awb/synthdef-interface` model only when a definition is selected or referenced by the score.
+Removed names prune their cached renderer models; the shell continues to coalesce transfers and
+cache descriptions by compiled-byte fingerprint for its current host-context generation. A model
+can be explicitly reloaded after replacing a same-named definition.
+
 ## Playback readiness
 
 Connection, score installation and playback readiness are separate states. `@awb/sc-runtime`

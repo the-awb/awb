@@ -120,6 +120,8 @@ export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedSta
     { hosted && <p className="liveRackBoundary">Hosted mode never boots the browser audio engine. These controls address the desktop ToolSession; its Synths are tracked by NodeManager when tracking is enabled.</p> }
     { message && <p className="liveRackMessage">{ message }</p> }
     { ( error || ( !hosted && sc.error ) ) && <p className="error">{ error || sc.error }</p> }
+    { hosted && <HostedSynthDefLibrary hostedClient={ hostedClient } hostedState={ hostedState } /> }
+    { hosted && <h2 className="instrumentSectionTitle">Curated instruments</h2> }
     { !manifest && !error
       ? <p className="emptyState">Reading the compiled instrument library…</p>
       : <div className="instrumentGrid">{ instruments.map( ( instrument ) => {
@@ -144,6 +146,104 @@ export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedSta
           onReset={ () => resetInstrument( instrument ) }
           onChange={ ( control, value ) => updateParam( instrument, control, value ) } />;
       } ) }</div> }
+  </div>;
+}
+
+function HostedSynthDefLibrary( { hostedClient, hostedState } ) {
+  const [ query, setQuery ] = useState( '' );
+  const [ selected, setSelected ] = useState( '' );
+  const [ loading, setLoading ] = useState( false );
+  const [ error, setError ] = useState( '' );
+  const context = hostedState?.synthDefContext;
+  const inventory = context?.inventory ?? [];
+  const filtered = useMemo( () => {
+    const needle = query.trim().toLocaleLowerCase();
+    return needle ? inventory.filter( ( name ) => name.toLocaleLowerCase().includes( needle ) ) : inventory;
+  }, [ inventory, query ] );
+  const description = selected ? context?.definitions?.[ selected ] : null;
+
+  useEffect( () => {
+    if ( context?.status !== 'connected' ) return undefined;
+    let live = true;
+    let refreshing = false;
+    const refresh = async () => {
+      if ( !live || refreshing ) return;
+      refreshing = true;
+      try { await hostedClient.listSynthDefs(); if ( live ) setError( '' ); }
+      catch ( nextError ) { if ( live ) setError( nextError.message ); }
+      finally { refreshing = false; }
+    };
+    const onFocus = () => refresh();
+    const onVisibility = () => { if ( document.visibilityState === 'visible' ) refresh(); };
+    refresh();
+    const timer = setInterval( refresh, 5000 );
+    window.addEventListener( 'focus', onFocus );
+    document.addEventListener( 'visibilitychange', onVisibility );
+    return () => {
+      live = false;
+      clearInterval( timer );
+      window.removeEventListener( 'focus', onFocus );
+      document.removeEventListener( 'visibilitychange', onVisibility );
+    };
+  }, [ context?.status, hostedClient ] );
+
+  useEffect( () => {
+    if ( selected && !inventory.includes( selected ) ) setSelected( '' );
+  }, [ inventory, selected ] );
+
+  async function selectDefinition( name, force = false ) {
+    setSelected( name );
+    setError( '' );
+    if ( context?.definitions?.[ name ] && !force ) return;
+    setLoading( true );
+    try {
+      if ( force ) await hostedClient.listSynthDefs();
+      if ( !hostedClient.getState().synthDefContext.inventory?.includes( name ) ) {
+        throw new Error( `SynthDef \\${ name } is no longer in the desktop context.` );
+      }
+      await hostedClient.describeSynthDef( name );
+    }
+    catch ( nextError ) { setError( nextError.message ); }
+    finally { setLoading( false ); }
+  }
+
+  return <section className="hostedSynthLibrary">
+    <header><div><h2>Desktop SynthDefs</h2><p>{ inventory.length } available · models load when selected</p></div>
+      <button disabled={ context?.status !== 'connected' }
+        onClick={ () => hostedClient.listSynthDefs().catch( ( nextError ) => setError( nextError.message ) ) }>Refresh</button></header>
+    <div className="hostedSynthLibraryBody">
+      <div className="hostedSynthList">
+        <input aria-label="Filter desktop SynthDefs" type="search" value={ query }
+          placeholder="Filter SynthDefs" onChange={ ( event ) => setQuery( event.target.value ) } />
+        <div role="listbox" aria-label="Desktop SynthDefs">
+          { filtered.map( ( name ) => <button key={ name } role="option" aria-selected={ selected === name }
+            className={ selected === name ? 'selected' : '' } onClick={ () => selectDefinition( name ) }>
+            <code>\{ name }</code>{ context?.definitions?.[ name ] && <span>modelled</span> }
+          </button> ) }
+          { context?.status === 'connected' && filtered.length === 0
+            && <p>{ inventory.length ? 'No matching SynthDefs.' : 'No SynthDefs reported.' }</p> }
+        </div>
+      </div>
+      <SynthDefSummary name={ selected } description={ description } loading={ loading }
+        onReload={ () => selectDefinition( selected, true ) } />
+    </div>
+    { error && <p className="error">{ error }</p> }
+  </section>;
+}
+
+function SynthDefSummary( { name, description, loading, onReload } ) {
+  if ( !name ) return <div className="synthDefSummary empty">Select a SynthDef to inspect its compiled model.</div>;
+  if ( loading && !description ) return <div className="synthDefSummary empty">Building <code>\{ name }</code>…</div>;
+  if ( !description ) return <div className="synthDefSummary empty">No model loaded for <code>\{ name }</code>.</div>;
+  const model = description.interface;
+  return <div className="synthDefSummary">
+    <header><div><h3>\{ name }</h3><code>{ description.fingerprint }</code></div>
+      <div><span>{ model.controls.length } controls · { model.ugens.length } UGens</span>
+        <button disabled={ loading } onClick={ onReload }>Reload model</button></div></header>
+    <div className="synthDefControlList">{ model.controls.map( ( control ) => <div key={ control.name }>
+      <code>{ control.name }</code><span>default { formatNumber( control.default ) }</span>
+      <small>{ control.spec?.unit || control.roles.join( ', ' ) || control.rate }</small>
+    </div> ) }</div>
   </div>;
 }
 

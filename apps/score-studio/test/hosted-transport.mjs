@@ -22,6 +22,7 @@ const received = [];
 let endCount = 0;
 let droppedStateID = null;
 let projectionRequests = 0;
+let synthDefInventory = [ 'fieldBasic', 'unmodelled' ];
 
 function reply( rinfo, address, args ) {
   osc.send( encodeOscMessage( address, args ), rinfo.port, rinfo.address );
@@ -41,9 +42,11 @@ osc.on( 'message', ( packet, rinfo ) => {
   } else if ( message.address === '/awb/synthdef/hello' ) {
     reply( rinfo, '/awb/synthdef/connected', [ args[ 0 ], 1 ] );
   } else if ( message.address === '/awb/synthdef/list' ) {
-    reply( rinfo, '/awb/synthdef/list/begin', [ args[ 0 ], args[ 1 ], 1 ] );
-    reply( rinfo, '/awb/synthdef/list/item', [ args[ 0 ], args[ 1 ], 0, 'fieldBasic' ] );
-    reply( rinfo, '/awb/synthdef/list/end', [ args[ 0 ], args[ 1 ], 1 ] );
+    reply( rinfo, '/awb/synthdef/list/begin', [ args[ 0 ], args[ 1 ], synthDefInventory.length ] );
+    synthDefInventory.forEach( ( name, index ) => {
+      reply( rinfo, '/awb/synthdef/list/item', [ args[ 0 ], args[ 1 ], index, name ] );
+    } );
+    reply( rinfo, '/awb/synthdef/list/end', [ args[ 0 ], args[ 1 ], synthDefInventory.length ] );
   } else if ( message.address === '/awb/synthdef/describe' ) {
     reply( rinfo, '/awb/synthdef/description/begin', [
       args[ 0 ], args[ 1 ], args[ 2 ], synthDefBytes.length, synthDefHexChunks.length, 0
@@ -125,12 +128,18 @@ try {
   assert.equal( hello.args[ 2 ], 'score-session-test', 'hosted hello carries its ToolSession identity' );
   await waitFor( () => client.getState().synthDefContext.status === 'connected' );
   const context = await client.loadSynthDefContext( [ 'fieldBasic', 'missingFromDesktop' ] );
-  assert.deepEqual( context.inventory, [ 'fieldBasic' ] );
+  assert.deepEqual( context.inventory, [ 'fieldBasic', 'unmodelled' ] );
   assert.deepEqual( context.missing, [ 'missingFromDesktop' ] );
   assert.equal( context.definitions.fieldBasic.interface.name, 'fieldBasic' );
   assert.ok( context.definitions.fieldBasic.interface.controls
     .find( ( control ) => control.name === 'freqL' ).roles.includes( 'oscillatorFrequency' ) );
   assert.match( context.definitions.fieldBasic.fingerprint, /^sha256:[0-9a-f]{64}$/ );
+  assert.equal( received.filter( ( message ) => message.address === '/awb/synthdef/describe' ).length, 1,
+    'inventory refresh does not eagerly request unselected definition graphs' );
+  synthDefInventory = [ 'unmodelled' ];
+  await client.listSynthDefs();
+  assert.equal( client.getState().synthDefContext.definitions.fieldBasic, undefined,
+    'inventory refresh prunes models whose definitions disappeared' );
 
   await client.instrumentCommand( 'start', 'basic', 'fieldBasic', { freqL: 60, amp: 1 } );
   await waitFor( () => client.getState().liveInstruments.basic?.nodeID === 1200 );
@@ -189,7 +198,7 @@ try {
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
 
-  console.log( 'hosted-transport: 32/32 pass' );
+  console.log( 'hosted-transport: 34/34 pass' );
 } finally {
   client.disconnect();
   await bridge.close();
