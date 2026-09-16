@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test": "node --test test/document-session.mjs test/hosted-field-client.mjs test/score-projection.mjs",
+    "test": "node --test test/document-session.mjs test/hosted-field-client.mjs test/instrument-presentation.mjs test/score-projection.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

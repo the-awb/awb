@@ -11,13 +11,24 @@ import SurfaceList from './components/surfaces/SurfaceList.jsx';
 import { fieldReducer, initialFieldState } from './state/fieldReducer.js';
 import { openInitialDocument, saveFieldDocument, stateFromFieldConfig } from './documentSession.js';
 import { useHostedField } from './useHostedField.js';
+import { instrumentType } from '@awb/instruments';
+import { drawableRuntimeInstruments } from './engine/instrumentPresentation.js';
 import './App.css';
 
 const host = globalThis.awbHost ?? null;
 const context = host?.initialLaunchContext?.() ?? { tool: { id: 'field-modelling' }, viewID: 'browser',
   toolSessionID: null, payload: {}, connections: {}, launchOrigin: 'web' };
 
-export default function App() {
+const EMPTY_INSTRUMENT_RUNTIME = Object.freeze( {
+  externalNodes: Object.freeze( [] ), voices: null,
+  isSounding: null, synthDefFor: () => null,
+  command: () => {}, setControl: () => {}
+} );
+
+// The desktop composition root supplies a NodeManager-backed runtime; the web composition root may
+// supply an equivalent WASM projection. Field's application layer consumes only this projection
+// and never discovers synths or talks to a server directly.
+export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) {
   const [ state, dispatch ] = useReducer( fieldReducer, undefined, initialFieldState );
   const [ tab, setTab ] = useState( 'instruments' );
   const [ file, setFile ] = useState( null );
@@ -28,6 +39,17 @@ export default function App() {
   const [ readings, setReadings ] = useState( {} );
   const stateRef = useRef( state ); stateRef.current = state;
   const attached = Boolean( context.payload?.scoreSessionID && context.payload?.runID );
+  const runtime = useMemo( () => ( {
+    ...EMPTY_INSTRUMENT_RUNTIME,
+    ...instrumentRuntime,
+    externalNodes: Array.isArray( instrumentRuntime?.externalNodes ) ? instrumentRuntime.externalNodes : [],
+    synthDefFor: typeof instrumentRuntime?.synthDefFor === 'function'
+      ? instrumentRuntime.synthDefFor : EMPTY_INSTRUMENT_RUNTIME.synthDefFor,
+    command: typeof instrumentRuntime?.command === 'function'
+      ? instrumentRuntime.command : EMPTY_INSTRUMENT_RUNTIME.command,
+    setControl: typeof instrumentRuntime?.setControl === 'function'
+      ? instrumentRuntime.setControl : EMPTY_INSTRUMENT_RUNTIME.setControl
+  } ), [ instrumentRuntime ] );
 
   const analyticVoices = useMemo( () => ( {
     external: [], voicesRef: { current: new Map( state.instruments
@@ -37,7 +59,15 @@ export default function App() {
   } ), [ state.instruments ] );
   const hosted = useHostedField( { context, document: scoreDocument,
     speakers: state.room.speakers, enabled: attached } );
-  const voices = attached ? hosted.voices : analyticVoices;
+  const runtimeExternals = useMemo( () => drawableRuntimeInstruments(
+    runtime.externalNodes, state.room.speakers
+  ), [ runtime.externalNodes, state.room.speakers ] );
+  const runtimeVoices = useMemo( () => ( {
+    ...( runtime.voices ?? analyticVoices ),
+    external: runtimeExternals
+  } ), [ runtime.voices, runtimeExternals, analyticVoices ] );
+  const voices = attached ? hosted.voices : runtimeVoices;
+  const mode = attached ? 'attached' : ( runtime.voices == null ? 'analytic' : 'live' );
 
   useEffect( () => {
     let live = true;
@@ -56,14 +86,14 @@ export default function App() {
           opened.kind === 'config' ? 'field-config' : null } );
       } catch ( failure ) { if ( live ) { setError( failure.message ); setDocumentStatus( 'open failed' ); } }
       host.reportReady( { toolID: 'field-modelling', viewID: context.viewID,
-        toolSessionID: context.toolSessionID, mode: attached ? 'attached' : 'analytic' } );
+        toolSessionID: context.toolSessionID, mode } );
     } )();
     return () => { live = false; };
   }, [] );
 
-  useEffect( () => { host?.reportSessionState( { mode: attached ? 'attached' : 'analytic',
+  useEffect( () => { host?.reportSessionState( { mode,
     scoreSessionID: context.payload?.scoreSessionID ?? null, runID: context.payload?.runID ?? null,
-    project, documentStatus } ); }, [ project, documentStatus, attached ] );
+    project, documentStatus } ); }, [ project, documentStatus, mode ] );
 
   useEffect( () => host?.onCommand( ( command ) => {
     if ( command?.type === 'dispose' ) host.reportDetailedState( { disposeAcknowledged: true } );
@@ -88,12 +118,18 @@ export default function App() {
 
   const selectedIndex = state.instruments.findIndex( ( instrument ) => instrument.id === state.selectedInstrumentId );
   const selected = state.instruments[ selectedIndex ] ?? null;
+  const selectedRuntimeNode = runtime.externalNodes.find(
+    ( node ) => node.entryID === state.selectedNodeId ) ?? null;
+  const selectedSynthDef = selected
+    ? runtime.synthDefFor( instrumentType( selected.type )?.synthDef ?? null )
+    : null;
 
   return <div className="appRoot fieldTool" style={{ '--dockH': '35vh', '--lhsW': '40px', '--rhsW': '400px' }}>
     <FieldCanvas state={ state } voices={ voices } readRecentSamples={ null }
-      onMicrophoneReadings={ setReadings } analytic={ !attached } />
+      onMicrophoneReadings={ setReadings } analytic={ mode === 'analytic' } />
     <header className="fieldHostBar">
-      <div><strong>Field Modelling</strong><span>{ attached ? 'Hosted score field' : 'Analytic preview' }</span></div>
+      <div><strong>Field Modelling</strong><span>{ mode === 'attached' ? 'Hosted score field'
+        : mode === 'live' ? 'Desktop live field' : 'Analytic preview' }</span></div>
       <div className="fieldIdentity">
         { project && <span>{ project.projectID } / { project.bindingID }</span> }
         { attached && <span>session { context.payload.scoreSessionID } / run { context.payload.runID }</span> }
@@ -109,12 +145,15 @@ export default function App() {
     <textarea className="floatingDescription" value={ state.meta.description }
       onChange={ ( event ) => dispatch( { type: 'SET_META', key: 'description', value: event.target.value } ) } />
     <MicrophonesPanel microphones={ state.microphones } bodySurface={ state.surfaces.body }
-      instruments={ state.instruments } externals={ [] } room={ state.room } timeFactor={ state.timeFactor }
+      instruments={ state.instruments } externals={ voices?.external ?? [] } room={ state.room } timeFactor={ state.timeFactor }
       displayGain={ state.display.gain } liveReadings={ readings } />
     <InstrumentParamsPanel open={ state.paramsOpen }
       onToggle={ () => dispatch( { type: 'SET_PARAMS_OPEN', open: !state.paramsOpen } ) }
-      instrument={ selected } colorIndex={ selectedIndex } selectedSurfaceId={ state.selectedSurfaceId }
-      surfaces={ state.surfaces } speakers={ state.room.speakers } dispatch={ dispatch } />
+      instrument={ selected } colorIndex={ selectedIndex } synthDefInterface={ selectedSynthDef }
+      selectedSurfaceId={ state.selectedSurfaceId } surfaces={ state.surfaces }
+      selectedNodeId={ state.selectedNodeId } runtimeNode={ selectedRuntimeNode }
+      onSetRuntimeControl={ runtime.setControl } onRuntimeCommand={ runtime.command }
+      speakers={ state.room.speakers } dispatch={ dispatch } />
     <div className="dock"><div className="dockBody">
       <div className="dockTabs">
         <button className={ tab === 'instruments' ? 'on' : '' } onClick={ () => setTab( 'instruments' ) }>Instruments</button>
@@ -127,7 +166,10 @@ export default function App() {
         </div>
         <InstrumentsPanel instruments={ state.instruments } speakers={ state.room.speakers }
           selectedId={ state.selectedInstrumentId } dispatch={ dispatch }
-          isSounding={ analyticVoices.isSounding } external={ [] } />
+          selectedNodeId={ state.selectedNodeId }
+          isSounding={ runtime.isSounding ?? analyticVoices.isSounding }
+          runtimeNodes={ runtime.externalNodes }
+          onRuntimeCommand={ runtime.command } />
       </div> : <div className="dockContent"><div className="splitPane settingsPane">
         <SurfaceList surfaces={ state.surfaces } selectedId={ state.selectedSurfaceId } dispatch={ dispatch } />
         <RoomPanel room={ state.room } dispatch={ dispatch } />

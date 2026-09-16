@@ -1,11 +1,13 @@
 import { INSTRUMENT_TYPE_KEYS, instrumentType } from '@awb/instruments';
 import { mainFreq } from '../../engine/instrumentState.js';
 import { resolveInstrumentColor } from '@awb/field-engine';
+import RuntimeNodes from './RuntimeNodes.jsx';
 
 // Deliberately minimal: identify each instrument by type + main frequency,
 // plus the instrument-level mute/solo/remove. Full param + per-channel
 // controls live in InstrumentDetail for whichever row is selected.
-export default function InstrumentsPanel({ instruments, speakers, selectedId, selectedNodeId, dispatch, isSounding, external, onFreeExternal, onReleaseExternal }) {
+export default function InstrumentsPanel({ instruments, speakers, selectedId, selectedNodeId, dispatch,
+  isSounding, runtimeNodes = [], onRuntimeCommand }) {
   return (
     <div className="panel">
       <h2>Instruments</h2>
@@ -83,6 +85,10 @@ export default function InstrumentsPanel({ instruments, speakers, selectedId, se
           );
         })}
       </div>
+      <RuntimeNodes nodes={ runtimeNodes } selectedID={ selectedNodeId } speakers={ speakers }
+        colorOffset={ instruments.length }
+        onSelect={ ( id ) => dispatch( { type: 'SELECT_NODE', id } ) }
+        onCommand={ onRuntimeCommand } />
       <div className="seg addRow">
         {INSTRUMENT_TYPE_KEYS.map((k) => (
           <button key={k} onClick={() => dispatch({ type: 'ADD_INSTRUMENT', instType: k })}>

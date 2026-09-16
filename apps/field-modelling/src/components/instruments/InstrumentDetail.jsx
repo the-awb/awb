@@ -6,6 +6,7 @@ import {
 } from '@awb/instruments';
 import { getPath } from '../../engine/instrumentState.js';
 import { resolveInstrumentColor } from '@awb/field-engine';
+import SynthDefControls from './SynthDefControls.jsx';
 
 // Full param controls for whichever instrument is selected in the list, plus
 // (for types where it means something) a per-channel on/off table. No solo
@@ -20,7 +21,7 @@ import { resolveInstrumentColor } from '@awb/field-engine';
 // channel table at all: a per-channel toggle there would just be a second,
 // driftable copy of L/R. Substrate 2's base/pulse/beat blend across both
 // speakers at once, so its table is real, independent information.
-export default function InstrumentDetail({ instrument, colorIndex, speakers, dispatch }) {
+export default function InstrumentDetail({ instrument, colorIndex, speakers, synthDefInterface, dispatch }) {
   if (!instrument) {
     return (
       <div className="panel">
@@ -91,6 +92,9 @@ export default function InstrumentDetail({ instrument, colorIndex, speakers, dis
           </div>
         );
       })}
+
+      <SynthDefControls instrument={ instrument } speakers={ speakers }
+        synthDefInterface={ synthDefInterface } dispatch={ dispatch } />
 
       {channelSlots.length > 0 && (
         <>
