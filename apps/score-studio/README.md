@@ -148,9 +148,10 @@ read-only working-document view without saving it. Local generation offers two e
 - **Desktop score** preserves the absolute-time entry and lifecycle vocabulary in a generated
   `PScoreTimelinePlayer` document.
 - **Browser Pseq reduction** emits only note events as a finite `Pseq` for the bundled sclang. It
-  converts absolute onset gaps to `delta`, converts authored gate length to `sustain`, and names
-  every omitted non-note lifecycle entry in the header. It is deliberately not described as a
-  lossless score projection.
+  converts absolute onset gaps to `delta`, preserves authored `dur`, `sustain` and `legato`
+  unchanged, and names every omitted non-note lifecycle entry in the header. In particular it does
+  not manufacture `sustain` when the score has none. It is deliberately not described as a lossless
+  score projection.
 
 Both local outputs are stored in browser app data under score ID, canonical revision and target;
 Generate no longer opens a save picker or forces a download. Reopening the matching canonical

@@ -1,5 +1,3 @@
-import { scoreEventSustain } from './scEventSemantics.js';
-
 export const SC_PROJECTION_KINDS = Object.freeze( {
   DESKTOP_SCORE: 'desktop-score',
   BROWSER_PSEQ: 'browser-pseq'
@@ -95,15 +93,13 @@ function pseqEventCode( entry, index, delta ) {
   const source = entry.event;
   const fields = [];
   const instrument = source.def ?? source.instrument;
-  const sustain = scoreEventSustain( source );
   if ( typeof instrument !== 'string' || !instrument.length ) {
     throw new TypeError( `Score entry ${ entry.id ?? index } has no SynthDef for Pseq projection` );
   }
   fields.push( `${ scSymbol( 'instrument' ) }: ${ scSymbol( instrument ) }` );
   fields.push( `${ scSymbol( 'delta' ) }: ${ String( delta ) }` );
-  if ( sustain !== null ) fields.push( `${ scSymbol( 'sustain' ) }: ${ String( sustain ) }` );
   for ( const [ key, value ] of Object.entries( source ) ) {
-    if ( [ 'type', 'def', 'instrument', 'target', 'dur', 'delta', 'sustain', 'legato' ].includes( key ) ) continue;
+    if ( [ 'type', 'def', 'instrument', 'target', 'delta' ].includes( key ) ) continue;
     fields.push( `${ scSymbol( key ) }: ${ scValue( value, `score[${ index }].event.${ key }` ) }` );
   }
   return `( ${ fields.join( ', ' ) } )`;
@@ -126,7 +122,7 @@ function generateBrowserPseq( document ) {
     '// AWB GENERATED BROWSER PSEQ REDUCTION',
     `// Score ID: ${ document.scoreID }`,
     `// Revision: ${ document.revision }`,
-    '// Notes retain onset spacing as delta and gate length as sustain.',
+    '// Notes retain onset spacing as delta; authored dur, sustain and legato are unchanged.',
     '// This is not the canonical score and does not preserve target-based lifecycle control.',
     `// Omitted non-note entries: ${ omittedSummary }`,
     '(',
