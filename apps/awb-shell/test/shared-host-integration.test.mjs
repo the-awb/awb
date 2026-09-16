@@ -40,12 +40,18 @@ test( 'two views share SynthDef transfers and one NodeManager subscription', asy
     }
   } ) );
   await new Promise( ( resolve ) => osc.bind( 0, '127.0.0.1', resolve ) );
-  const relay = await createOscWebSocketRelay( { oscPort: osc.address().port,
-    allowedPrefixes: [ '/awb/timeline/', '/awb/synthdef/', '/awb/nm/' ],
-    clientIdentityAddresses: [ '/awb/timeline/hello', '/awb/synthdef/hello' ],
-    disconnectAddresses: [ '/awb/timeline/disconnect', '/awb/synthdef/disconnect' ] } );
+  const relay = await createOscWebSocketRelay( { oscPort: osc.address().port } );
+  await waitFor( () => counts.subscribe === 1 );
+  assert.equal( relay.hostSnapshot().nodeManager.status, 'ready', 'host connects before any tool view exists' );
+  const grants = [
+    relay.grant( { allowedPrefixes: [ '/awb/timeline/', '/awb/synthdef/' ],
+      clientIdentityAddresses: [ '/awb/timeline/hello', '/awb/synthdef/hello' ],
+      disconnectAddresses: [ '/awb/timeline/disconnect', '/awb/synthdef/disconnect' ] } ),
+    relay.grant( { allowedPrefixes: [ '/awb/other-tool/', '/awb/synthdef/' ],
+      clientIdentityAddresses: [ '/awb/synthdef/hello' ], disconnectAddresses: [ '/awb/synthdef/disconnect' ] } )
+  ];
   const frames = [ [], [] ];
-  const sockets = [ new WebSocket( relay.endpoint ), new WebSocket( relay.endpoint ) ];
+  const sockets = grants.map( ( grant ) => new WebSocket( grant.endpoint ) );
   sockets.forEach( ( socket, index ) => socket.on( 'message', ( data ) => frames[ index ].push( JSON.parse( data.toString() ) ) ) );
   await Promise.all( sockets.map( ( socket ) => new Promise( ( resolve ) => socket.once( 'open', resolve ) ) ) );
   sockets.forEach( ( socket, index ) => socket.send( JSON.stringify( { address: '/awb/synthdef/hello', args: [ `view-${ index }`, 0 ] } ) ) );
@@ -58,5 +64,5 @@ test( 'two views share SynthDef transfers and one NodeManager subscription', asy
   assert.equal( relay.hostSnapshot().synthDefs.status, 'ready' );
   assert.equal( relay.hostSnapshot().nodeManager.status, 'ready' );
   assert.equal( relay.hostSnapshot().scsynth.status, 'unavailable' );
-  sockets.forEach( ( socket ) => socket.terminate() ); await relay.close(); osc.close();
+  sockets.forEach( ( socket ) => socket.terminate() ); grants.forEach( ( grant ) => grant.release() ); await relay.close(); osc.close();
 } );

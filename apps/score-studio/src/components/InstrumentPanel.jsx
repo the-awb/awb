@@ -34,7 +34,7 @@ export default function InstrumentPanel( { document, mode, standaloneDefinitions
           const hostedDefinition = hostedSynthDefs?.definitions?.[ instrument.definition ];
           const hostedControls = hostedDefinition?.interface.controls ?? [];
           const hostInventoryKnown = Array.isArray( hostedSynthDefs?.inventory );
-          const hostedContextAvailable = hostedSynthDefs?.status === 'connected' || hostInventoryKnown;
+          const hostedContextAvailable = hostedSynthDefs?.status === 'connected' && hostInventoryKnown;
           const controls = mode === 'hosted' && hostedContextAvailable
             ? hostedControls
             : definition ? settableControls( definition ) : [];

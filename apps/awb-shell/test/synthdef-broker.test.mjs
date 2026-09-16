@@ -2,6 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SynthDefContextBroker } from '../services/synthDefContextBroker.mjs';
 
+const delay = ( milliseconds ) => new Promise( ( resolve ) => setTimeout( resolve, milliseconds ) );
+const waitFor = async ( predicate, timeout = 500 ) => {
+  const started = Date.now(); while ( !predicate() ) {
+    if ( Date.now() - started > timeout ) throw new Error( 'Timed out waiting for SynthDef-context recovery.' );
+    await delay( 5 );
+  }
+};
+
 test( 'SynthDef broker shares transfers, replays exact data and rejects stale generations', () => {
   const osc = []; const client = [];
   const broker = new SynthDefContextBroker( { sendOsc: ( address, args ) => osc.push( { address, args } ),
@@ -47,4 +55,20 @@ test( 'SynthDef broker shares transfers, replays exact data and rejects stale ge
   assert.equal( client.some( ( message ) => message.address === '/awb/synthdef/error'
     && message.args?.[ 1 ] === 'late' ), true );
   assert.equal( broker.snapshot().cachedDescriptions, 0 ); broker.close();
+} );
+
+test( 'SynthDef broker reconnects for late bridge startup and bridge restart', async () => {
+  const osc = []; const broker = new SynthDefContextBroker( { sendOsc: ( address, args ) => osc.push( { address, args } ),
+    sendClient: () => {}, connectTimeoutMs: 15, healthIntervalMs: 10, reconnectBaseMs: 5, reconnectMaxMs: 10 } );
+  broker.connect();
+  await waitFor( () => osc.filter( ( message ) => message.address === '/awb/synthdef/hello' ).length >= 2 );
+  broker.receive( { address: '/awb/synthdef/connected', args: [ broker.clientID, 1 ] } );
+  assert.equal( broker.snapshot().status, 'ready' );
+  await waitFor( () => broker.snapshot().status !== 'ready'
+    && osc.filter( ( message ) => message.address === '/awb/synthdef/hello' ).length >= 3 );
+  assert.notEqual( broker.snapshot().status, 'ready' );
+  const beforeRecovery = osc.filter( ( message ) => message.address === '/awb/synthdef/hello' ).length;
+  broker.receive( { address: '/awb/synthdef/connected', args: [ broker.clientID, 1 ] } );
+  assert.equal( broker.snapshot().status, 'ready' );
+  assert.ok( beforeRecovery >= 3 ); broker.close();
 } );

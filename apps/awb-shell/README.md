@@ -45,14 +45,16 @@ checks the latter's multichannel request and audio-input grant, and closes each 
 Toolkit Home is the junction between tool documents, hosted SuperCollider and live NodeManager
 state without owning any of them:
 
-- one shared host service carries tool-owned score transport while intercepting the read-only
-  SynthDef-context protocol for shell-side request coalescing and exact-byte/spec caching;
+- one shell-owned host service per SC endpoint survives individual view closure, carries tool-owned
+  transport through per-view manifest grants, and intercepts the read-only SynthDef-context protocol
+  for shell-side request coalescing and exact-byte/spec caching;
 - SynthDef inventories establish cache generations: refresh invalidates prior descriptions and late
   transfers cannot restore stale state;
 - a lightweight shared NodeManager subscription which the shell filters into per-tool and
   per-session container summaries;
 - explicit `toolID`/`toolSessionID` to `toolSource`/`toolInstance` bindings, never name-based
   inference;
+- bounded health probes and reconnect backoff for shell-first startup and attached bridge restarts;
 - manifest-declared document kinds which produce `New`, `Recent` and `Browse` actions on each
   applicable tool card;
 - bounded recent-file references while parsing, validation, revision state and canonical saves

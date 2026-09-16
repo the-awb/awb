@@ -3,7 +3,13 @@ import assert from 'node:assert/strict';
 import { mkdtemp, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { RecentStore } from '../src/recentStore.mjs';
+import { documentKindIDForPath, RecentStore } from '../src/recentStore.mjs';
+
+test( 'document kinds are inferred from declared compound suffixes', () => {
+  const kinds = [ { id: 'score', extensions: [ 'score.json' ] }, { id: 'json', extensions: [ 'json' ] } ];
+  assert.equal( documentKindIDForPath( kinds, '/scores/Named Piece.score.json' ), 'score' );
+  assert.equal( documentKindIDForPath( kinds, '/scores/Named Piece.txt' ), null );
+} );
 
 test( 'recent descriptors are bounded, redacted and scoped to tool document kinds', async () => {
   const root = await mkdtemp( path.join( os.tmpdir(), 'awb-recents-' ) );

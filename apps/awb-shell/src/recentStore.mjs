@@ -3,6 +3,14 @@ import path from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { atomicWriteText } from './nativeFiles.mjs';
 
+export function documentKindIDForPath( documentKinds, target ) {
+  if ( !Array.isArray( documentKinds ) || typeof target !== 'string' ) return null;
+  const lower = path.basename( target ).toLowerCase();
+  return documentKinds.find( ( kind ) => kind.extensions?.some(
+    ( extension ) => lower.endsWith( `.${ `${ extension }`.toLowerCase() }` )
+  ) )?.id ?? null;
+}
+
 export class RecentStore {
   constructor( { filePath = null, limit = 20 } = {} ) {
     this.filePath = filePath; this.limit = Number.isInteger( limit ) && limit > 0 && limit <= 100 ? limit : 20; this.items = [];

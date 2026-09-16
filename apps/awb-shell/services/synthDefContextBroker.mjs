@@ -12,12 +12,15 @@ function safeCount( value, maximum, label ) {
 
 export class SynthDefContextBroker {
   constructor( { sendOsc, sendClient, requestTimeoutMs = 1200, maxRetries = 1,
-    clientID = `awb-shell-synthdef-${ crypto.randomUUID() }`, onChange = () => {} } ) {
+    clientID = `awb-shell-synthdef-${ crypto.randomUUID() }`, onChange = () => {},
+    connectTimeoutMs = 1500, healthIntervalMs = 2500, reconnectBaseMs = 250, reconnectMaxMs = 4000 } ) {
     this.sendOsc = sendOsc; this.sendClient = sendClient; this.requestTimeoutMs = requestTimeoutMs;
     this.maxRetries = maxRetries; this.clientID = clientID; this.onChange = onChange; this.clients = new Map();
+    this.connectTimeoutMs = connectTimeoutMs; this.healthIntervalMs = healthIntervalMs;
+    this.reconnectBaseMs = reconnectBaseMs; this.reconnectMaxMs = reconnectMaxMs;
     this.status = 'unavailable'; this.generation = 0; this.nonce = 0;
     this.inventory = Object.freeze( [] ); this.nameFingerprints = new Map();
-    this.descriptions = new Map(); this.flights = new Map(); this.connected = false;
+    this.descriptions = new Map(); this.flights = new Map(); this.connected = false; this.retryAttempt = 0; this.closed = false;
   }
 
   snapshot() {
@@ -34,15 +37,35 @@ export class SynthDefContextBroker {
   detach( clientKey ) { this.clients.delete( clientKey ); }
 
   connect() {
-    if ( this.status === 'connecting' ) return;
-    this.status = 'connecting'; this.onChange( this.snapshot() ); this.sendOsc( '/awb/synthdef/hello', [ this.clientID ] );
+    if ( this.closed || this.connectTimer ) return;
+    clearTimeout( this.reconnectTimer ); this.reconnectTimer = null;
+    this.status = this.retryAttempt ? 'reconnecting' : 'connecting'; this.onChange( this.snapshot() ); this.sendHello();
   }
 
   markUnavailable( detail = 'connection-lost' ) {
-    this.connected = false; this.status = 'stale'; this.generation += 1;
+    if ( this.closed ) return;
+    clearTimeout( this.connectTimer ); this.connectTimer = null; clearTimeout( this.healthTimer );
+    this.connected = false; this.status = 'reconnecting'; this.generation += 1;
     this.inventory = Object.freeze( [] ); this.nameFingerprints.clear(); this.descriptions.clear();
     for ( const flight of this.flights.values() ) this.failFlight( flight, 'contextUnavailable', detail );
-    this.onChange( this.snapshot() );
+    this.onChange( this.snapshot() ); this.scheduleReconnect();
+  }
+
+  sendHello() {
+    this.sendOsc( '/awb/synthdef/hello', [ this.clientID ] ); clearTimeout( this.connectTimer );
+    this.connectTimer = setTimeout( () => { this.connectTimer = null; this.markUnavailable( 'hello-timeout' ); }, this.connectTimeoutMs );
+    this.connectTimer.unref?.();
+  }
+
+  scheduleReconnect() {
+    if ( this.closed || this.reconnectTimer ) return;
+    const delay = Math.min( this.reconnectMaxMs, this.reconnectBaseMs * ( 2 ** this.retryAttempt ) ); this.retryAttempt += 1;
+    this.reconnectTimer = setTimeout( () => { this.reconnectTimer = null; this.connect(); }, delay ); this.reconnectTimer.unref?.();
+  }
+
+  scheduleHealthCheck() {
+    clearTimeout( this.healthTimer );
+    this.healthTimer = setTimeout( () => { if ( !this.closed ) this.sendHello(); }, this.healthIntervalMs ); this.healthTimer.unref?.();
   }
 
   handleFrame( clientKey, frame ) {
@@ -105,8 +128,10 @@ export class SynthDefContextBroker {
     const { address, args = [] } = message;
     if ( !address.startsWith( PREFIX ) || args[ 0 ] !== this.clientID ) return false;
     if ( address === '/awb/synthdef/connected' ) {
-      this.connected = true; this.status = 'ready';
-      for ( const [ clientKey, rendererClientID ] of this.clients ) this.sendClient( clientKey, address, [ rendererClientID, args[ 1 ] ] );
+      const becameReady = !this.connected; clearTimeout( this.connectTimer ); this.connectTimer = null;
+      clearTimeout( this.reconnectTimer ); this.reconnectTimer = null;
+      this.connected = true; this.status = 'ready'; this.retryAttempt = 0; this.scheduleHealthCheck();
+      if ( becameReady ) for ( const [ clientKey, rendererClientID ] of this.clients ) this.sendClient( clientKey, address, [ rendererClientID, args[ 1 ] ] );
       this.onChange( this.snapshot() ); return true;
     }
     const flight = [ ...this.flights.values() ].find( ( item ) => item.internalID === args[ 1 ] );
@@ -198,6 +223,7 @@ export class SynthDefContextBroker {
   }
 
   close() {
+    this.closed = true; clearTimeout( this.connectTimer ); clearTimeout( this.reconnectTimer ); clearTimeout( this.healthTimer );
     for ( const flight of this.flights.values() ) clearTimeout( flight.timer );
     this.flights.clear();
     if ( this.connected ) this.sendOsc( '/awb/synthdef/disconnect', [ this.clientID ] );

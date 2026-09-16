@@ -6,17 +6,35 @@ import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
 import { decodeOscPacket, encodeOscMessage } from '../services/oscCodec.mjs';
 import { ServiceRegistry } from '../src/serviceRegistry.mjs';
 
-test( 'a shared service closes only after its final view releases it', async () => {
+test( 'one shell-owned host survives view release and layers distinct tool grants', async () => {
   let created = 0; let closed = 0;
-  const registry = new ServiceRegistry( async () => ( { port: ++created, close: async () => { closed += 1; } } ) );
-  const first = await registry.acquire( { oscPort: 57120, allowedPrefixes: [ '/tool/' ] } );
-  const second = await registry.acquire( { oscPort: 57120, allowedPrefixes: [ '/tool/' ] } );
+  const grants = [];
+  const registry = new ServiceRegistry( async () => ( { port: ++created,
+    grant: ( policy ) => { grants.push( policy ); return { endpoint: `grant:${ grants.length }`, release: () => {} }; },
+    close: async () => { closed += 1; } } ) );
+  await registry.ensure( { oscHost: '127.0.0.1', oscPort: 57120 } );
+  const first = await registry.acquire( { oscHost: '127.0.0.1', oscPort: 57120 }, { allowedPrefixes: [ '/tool-a/' ] } );
+  const second = await registry.acquire( { oscHost: '127.0.0.1', oscPort: 57120 }, { allowedPrefixes: [ '/tool-b/' ] } );
   assert.equal( created, 1 ); assert.equal( registry.snapshot()[ 0 ].references, 2 );
-  await first.release(); assert.equal( closed, 0 ); await second.release(); assert.equal( closed, 1 );
-  const different = await registry.acquire( { oscPort: 57120, policy: { prefixes: [ '/other/' ] } } );
-  const alsoDifferent = await registry.acquire( { oscPort: 57120, policy: { prefixes: [ '/tool/' ] } } );
-  assert.equal( created, 3 );
-  await different.release(); await alsoDifferent.release();
+  assert.equal( first.endpoint, 'grant:1' ); assert.equal( second.endpoint, 'grant:2' );
+  await first.release(); await second.release();
+  assert.equal( registry.snapshot()[ 0 ].references, 0 ); assert.equal( closed, 0 );
+  await registry.closeAll(); assert.equal( closed, 1 );
+} );
+
+test( 'concurrent acquisition creates only one host for an endpoint', async () => {
+  let created = 0; let releaseFactory;
+  const factoryGate = new Promise( ( resolve ) => { releaseFactory = resolve; } );
+  const registry = new ServiceRegistry( async () => {
+    created += 1; await factoryGate;
+    return { grant: () => ( { endpoint: 'shared', release: () => {} } ), close: async () => {} };
+  } );
+  const configuration = { oscHost: '127.0.0.1', oscPort: 57120 };
+  const first = registry.acquire( configuration, { allowedPrefixes: [ '/first/' ] } );
+  const second = registry.acquire( configuration, { allowedPrefixes: [ '/second/' ] } );
+  releaseFactory(); const acquisitions = await Promise.all( [ first, second ] );
+  assert.equal( created, 1 ); assert.equal( registry.snapshot()[ 0 ].references, 2 );
+  await Promise.all( acquisitions.map( ( acquisition ) => acquisition.release() ) ); await registry.closeAll();
 } );
 
 test( 'the shell relay carries and closes every declared context protocol', async () => {

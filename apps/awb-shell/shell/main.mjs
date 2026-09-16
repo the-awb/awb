@@ -11,7 +11,7 @@ import { ViewRegistry } from '../src/viewRegistry.mjs';
 import { FileGrantStore } from '../src/fileGrants.mjs';
 import { atomicWriteText, guardedWriteText } from '../src/nativeFiles.mjs';
 import { ServiceRegistry } from '../src/serviceRegistry.mjs';
-import { RecentStore } from '../src/recentStore.mjs';
+import { documentKindIDForPath, RecentStore } from '../src/recentStore.mjs';
 import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
 import {
   permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
@@ -28,11 +28,14 @@ const windows = new Map();
 const senderRecords = new Map();
 const ownerTimers = new Map();
 const serviceReleases = new Map();
+const hostSubscriptions = new Map();
 const fileGrants = new FileGrantStore();
 const services = new ServiceRegistry( createOscWebSocketRelay );
 let recentStore;
 let homeWindow = null;
 let quitting = false;
+let servicesClosed = false;
+let serviceShutdown = null;
 let tools = new Map();
 let manifestFailures = [];
 let router;
@@ -74,6 +77,25 @@ function positivePID( value ) {
   return Number.isInteger( pid ) && pid > 0 ? pid : null;
 }
 
+function hostConfigurationFromRequest( request ) {
+  const oscPort = Number( request?.connections?.oscPort );
+  if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) return null;
+  return Object.freeze( { oscHost: request.connections.oscHost ?? '127.0.0.1', oscPort } );
+}
+
+function hostConfigurationFromArgs( args ) {
+  const oscPort = Number( option( args, 'osc-port', 0 ) );
+  if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) return null;
+  return Object.freeze( { oscHost: option( args, 'osc-host', '127.0.0.1' ), oscPort } );
+}
+
+async function ensureHost( configuration ) {
+  if ( !configuration ) return null;
+  const service = await services.ensure( configuration );
+  if ( !hostSubscriptions.has( service ) ) hostSubscriptions.set( service, service.subscribeHost?.( notifyHome ) ?? ( () => {} ) );
+  return service;
+}
+
 function launchRequestFromArgs( rawArgs ) {
   const args = rawArgs.slice( rawArgs[ 0 ]?.endsWith( '.mjs' ) ? 1 : 0 );
   const toolID = option( args, 'tool' );
@@ -81,6 +103,7 @@ function launchRequestFromArgs( rawArgs ) {
   const score = option( args, 'score' );
   const endpoint = option( args, 'endpoint' );
   const oscPort = Number( option( args, 'osc-port', 0 ) ) || null;
+  const oscHost = option( args, 'osc-host', '127.0.0.1' );
   const ownerPID = positivePID( option( args, 'owner-pid' ) );
   return {
     toolID,
@@ -88,7 +111,7 @@ function launchRequestFromArgs( rawArgs ) {
     profileID: option( args, 'profile', ownerPID || endpoint || oscPort ? 'attached' : 'standalone' ),
     launchOrigin: option( args, 'origin', 'supercollider' ),
     owner: ownerPID ? { kind: 'attached-process', pid: ownerPID } : { kind: 'none', pid: null },
-    connections: { ...( endpoint ? { endpoint } : {} ), ...( oscPort ? { oscPort } : {} ) },
+    connections: { ...( endpoint ? { endpoint } : {} ), ...( oscPort ? { oscPort, oscHost } : {} ) },
     payload: { ...( score ? { scorePath: path.resolve( score ) } : {} ) }
   };
 }
@@ -273,7 +296,8 @@ async function runHostedSmoke( viewID ) {
     }; check();
   })` );
   const view = registry.get( viewID );
-  console.log( `AWB_SHELL_HOSTED_INSTALLED session=${ view.toolSessionID } score=${ loadedName }` );
+  await waitFor( () => recentStore.list( 'score-studio', 'score' ).some( ( item ) => item.name === loadedName ) );
+  console.log( `AWB_SHELL_HOSTED_INSTALLED session=${ view.toolSessionID } score=${ loadedName } recent=recorded` );
   await closeToolView( viewID ); await waitFor( () => windows.size === 0 ); app.quit();
 }
 
@@ -324,14 +348,14 @@ async function createToolWindow( { viewID, request, tool } ) {
   if ( request.connections.oscPort ) {
     const policy = tool.connectionPolicies[ 'hosted-timeline' ];
     if ( !policy ) throw new Error( `${ tool.name } has no hosted-timeline relay policy.` );
-    const acquired = await services.acquire( { oscPort: request.connections.oscPort, port: 0,
+    const configuration = hostConfigurationFromRequest( request ); await ensureHost( configuration );
+    const acquired = await services.acquire( configuration, {
       allowedPrefixes: [ ...policy.allowedPrefixes ],
       clientIdentityAddresses: [ ...policy.clientIdentityAddresses ],
       disconnectAddresses: [ ...policy.disconnectAddresses ] } );
-    const unsubscribeHost = acquired.service.subscribeHost?.( notifyHome ) ?? ( () => {} );
-    serviceReleases.set( viewID, async () => { unsubscribeHost(); await acquired.release(); } );
+    serviceReleases.set( viewID, acquired.release );
     effectiveRequest = Object.freeze( { ...request, connections: Object.freeze( {
-      ...request.connections, endpoint: acquired.service.endpoint
+      ...request.connections, endpoint: acquired.endpoint
     } ) } );
   }
   const context = launchContextFor( viewID, effectiveRequest, tool );
@@ -442,7 +466,8 @@ async function handleToolOperation( sender, operation, payload ) {
     requireCapability( tool, 'filesystem', 'open-file' );
     if ( !view.requestPayload?.scorePath ) return null;
     registry.update( view.viewID, { pendingRecentPath: view.requestPayload.scorePath,
-      pendingDocumentKindID: view.requestPayload.documentKindID ?? null } );
+      pendingDocumentKindID: view.requestPayload.documentKindID
+        ?? documentKindIDForPath( tool.documentKinds, view.requestPayload.scorePath ) } );
     return fileGrants.fileRecord( view.viewID, view.requestPayload.scorePath );
   }
   if ( operation === 'filesystem.open-file' ) {
@@ -597,12 +622,15 @@ const gotLock = app.requestSingleInstanceLock( { launchRequest: initialRequest }
 if ( !gotLock ) app.quit();
 
 if ( gotLock ) {
-  app.on( 'second-instance', ( event, commandLine, workingDirectory, additionalData ) => {
+  app.on( 'second-instance', async ( event, commandLine, workingDirectory, additionalData ) => {
     const request = additionalData?.launchRequest ?? launchRequestFromArgs( commandLine );
-    if ( request ) router.launch( request ).then( ( result ) => {
-      if ( smokeExternalRouter ) recordExternalSmokeResult( result ).catch( reportFatal );
-    } ).catch( reportFatal );
-    else createHomeWindow().catch( reportFatal );
+    try {
+      await ensureHost( hostConfigurationFromRequest( request ) ?? hostConfigurationFromArgs( commandLine ) );
+      if ( request ) {
+        const result = await router.launch( request );
+        if ( smokeExternalRouter ) await recordExternalSmokeResult( result );
+      } else await createHomeWindow();
+    } catch ( error ) { reportFatal( error ); }
   } );
   app.whenReady().then( async () => {
     await loadTools();
@@ -610,12 +638,22 @@ if ( gotLock ) {
     await recentStore.load(); registerIPC(); registerRendererPolicies();
     router = new LaunchRouter( { tools, registry, createView: createToolWindow, focusView: focusToolView } );
     registry.subscribe( notifyHome );
+    await ensureHost( hostConfigurationFromRequest( initialRequest )
+      ?? hostConfigurationFromArgs( process.argv.slice( 1 ) ) );
     await createHomeWindow();
     if ( initialRequest ) await router.launch( initialRequest );
   } ).catch( reportFatal );
   app.on( 'activate', () => createHomeWindow().catch( reportFatal ) );
   app.on( 'window-all-closed', () => { if ( !quitting ) createHomeWindow().catch( reportFatal ); } );
-  app.on( 'before-quit', () => { quitting = true; } );
+  app.on( 'before-quit', ( event ) => {
+    quitting = true;
+    if ( servicesClosed ) return;
+    event.preventDefault();
+    if ( !serviceShutdown ) serviceShutdown = ( async () => {
+      for ( const unsubscribe of hostSubscriptions.values() ) unsubscribe();
+      hostSubscriptions.clear(); await services.closeAll(); servicesClosed = true; app.quit();
+    } )().catch( reportFatal );
+  } );
 }
 
 export { launchRequestFromArgs };
