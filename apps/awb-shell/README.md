@@ -36,3 +36,22 @@ npm run test:neutral-shell-hosted-real --workspace @awb/score-studio
 
 The Electron suite includes a two-tool gate which launches Score Studio and Lissajous together,
 checks the latter's multichannel request and audio-input grant, and closes each view independently.
+
+## Next shell slice
+
+Toolkit Home is intended to become the junction between tool documents, hosted SuperCollider and
+live NodeManager state without owning any of them. The next implementation slice adds:
+
+- one shell-level broker for attached or explicitly owned sclang, scsynth readiness and the
+  NodeManager bridge;
+- a lightweight shared NodeManager subscription which the shell filters into per-tool and
+  per-session container summaries;
+- explicit `toolID`/`toolSessionID` to `toolSource`/`toolInstance` bindings, never name-based
+  inference;
+- manifest-declared document kinds which produce `New`, `Recent` and `Browse` actions on each
+  applicable tool card;
+- bounded recent-file references while parsing, validation, revision state and canonical saves
+  remain owned by the selected tool.
+
+Tools without a SuperCollider host or canonical document must still launch normally; unavailable
+hosted, tracking or file actions are shown as capabilities, not treated as application failures.

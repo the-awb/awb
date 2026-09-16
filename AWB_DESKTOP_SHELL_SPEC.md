@@ -43,6 +43,9 @@ the application.
 - Every native capability is explicit. Renderers do not infer desktop support from user-agent data
   or receive unrestricted Node access.
 - SuperCollider may launch a view, but the shell must also support desktop-first and no-SC views.
+- One shell-level host broker owns shared desktop sclang, scsynth-readiness and NodeManager
+  connections. Tool views receive scoped logical connections and never start competing copies of
+  shared host infrastructure.
 - Process ownership is recorded per view or service. An attached process is never terminated.
 - Closing one tool must not close unrelated tools or shared services still in use.
 - The shell transports tool messages but does not reinterpret score events, Lissajous parameters,
@@ -86,6 +89,10 @@ BusRecorder take. It is not silently converted into Score Studio timeline events
 - native dialogs and bounded filesystem operations granted to a view;
 - media permission policy and reporting of acquired capabilities;
 - owned bridge and child-process supervision;
+- attachment to an existing desktop SuperCollider host and, later, explicitly owned headless
+  sclang processes;
+- one shared, reference-counted NodeManager subscription adapter with per-view filtered
+  projections;
 - immutable launch-context delivery;
 - routing between a named view and its external session endpoint;
 - reference counting and disposal of shared services;
@@ -102,6 +109,8 @@ BusRecorder take. It is not silently converted into Score Studio timeline events
 - tool-specific persistence policy;
 - tool-specific OSC addresses and state projections;
 - cleanup of its WebGL, AudioContext, media-stream, worker and timer resources.
+- validation and interpretation of its own document formats, including whether a recent file is
+  still meaningful to that tool.
 
 ### Desktop SuperCollider owns
 
@@ -112,7 +121,9 @@ BusRecorder take. It is not silently converted into Score Studio timeline events
 - whether an sclang process is attached or explicitly shell-owned.
 
 The shell never infers authored score membership from NodeManager and never treats receipt of an
-OSC parameter as proof that a ToolSession is valid.
+OSC parameter as proof that a ToolSession is valid. NodeManager remains authoritative for realized
+language-side objects and their container membership. The shell holds only a replaceable projection
+for display and routing.
 
 ## 5. Toolkit Home
 
@@ -124,8 +135,11 @@ It displays:
 - installed tools, their versions and available launch profiles;
 - active tool views and their connection/lifecycle status;
 - whether a view is standalone, attached to SuperCollider or backed by an owned process;
-- recent project/document references supplied explicitly by tools;
+- shared host status, reported separately for sclang, scsynth readiness and NodeManager;
+- tool-applicable NodeManager containers and their live entry counts;
+- recent project/document references grouped by tool and document kind;
 - capability or dependency failures that prevent a requested mode;
+- per-tool `New`, `Recent` and `Browse` actions where the manifest declares document support;
 - actions to launch, focus and close a tool view.
 
 Toolkit Home may initiate a session in either direction:
@@ -137,9 +151,15 @@ Desktop first  Home requests a new tool view; the tool runs standalone or uses a
 ```
 
 The hub owns shell navigation, not tool truth. It does not hold score revisions, Lissajous groups,
-NodeManager objects, presets or playback clocks. Its active-session cards are projections of the
-view registry and the bounded status each renderer reports. Selecting a card focuses its view;
-closing a card invokes the normal view shutdown path.
+NodeManager objects, presets or playback clocks. Its active-session cards join three disposable
+projections: the view registry, bounded renderer status and NodeManager container summaries.
+Selecting a card focuses its view; closing a card invokes the normal view shutdown path.
+
+Tool/container association is explicit. A desktop handshake supplies the mapping between
+`toolID`, `toolSessionID`, NodeManager `toolSource` and `toolInstance`; the shell never guesses it
+from a SynthDef name, process ID or window title. A tool container with no open view may be shown
+with an `Open interface` action. Containers without a tool binding belong in a separate optional
+live-runtime/unassigned section rather than being attached to an arbitrary tool card.
 
 Opening AWB with no launch request shows Toolkit Home. An external launch may open/focus the named
 tool directly while keeping Home available. Closing Home does not close active tools. Closing the
@@ -147,8 +167,10 @@ last tool returns to or reopens Home unless the user explicitly quits the applic
 Quit applies the ownership rules in this specification and never terminates attached processes.
 
 Recent items are convenience references, not canonical storage. A tool publishes a redacted,
-bounded recent-item descriptor and remains responsible for reopening and validating it. The shell
-must tolerate moved or missing files without deleting tool data or manufacturing replacements.
+bounded recent-item descriptor containing its tool ID, document kind, display name, last-opened
+time and a shell-owned locator or opaque grant. The shell does not parse or index document content.
+The owning tool remains responsible for reopening and validating it. The shell must tolerate moved
+or missing files without deleting tool data or manufacturing replacements.
 
 ## 6. Repository layout
 
@@ -158,6 +180,8 @@ The target layout is:
 apps/
   awb-shell/                 neutral Electron main/preload and shell tests
   score-studio/              Score Studio renderer and web host
+tool-artifacts/
+  lissajous/<version>/       installed versioned renderer artifact
 packages/
   ...                        existing portable packages
 ```
@@ -194,6 +218,14 @@ Every hosted renderer supplies a JSON manifest with this minimum shape:
     { "id": "standalone", "label": "New standalone session" },
     { "id": "attached", "label": "Attach to SuperCollider" }
   ],
+  "documents": [
+    {
+      "id": "score",
+      "label": "Score",
+      "extensions": ["score.json"],
+      "actions": ["new", "recent", "browse"]
+    }
+  ],
   "capabilities": {
     "filesystem": ["open-file", "open-directory", "save-file"],
     "media": [],
@@ -217,6 +249,8 @@ Manifest rules:
 - a manifest cannot request arbitrary IPC channel names or unrestricted filesystem access.
 - launch profiles advertise possible entry points to Toolkit Home; availability is still determined
   from current capabilities and connection state.
+- document declarations advertise launcher actions and native-dialog constraints; they do not give
+  the shell authority to parse, migrate or overwrite the document.
 
 ## 8. Identity model
 
@@ -341,6 +375,25 @@ separate:
 - media: system audio capture or future native streams;
 - bulk artifacts: files and future recording/render outputs.
 
+The shell host broker is the preferred desktop owner of these shared host facts:
+
+```text
+SuperCollider host
+  sclang process: attached | owned | absent
+  scsynth: ready | booting | unavailable
+  NodeManager bridge: ready | reconnecting | unavailable
+```
+
+An attached sclang is observed and never terminated. Tools remain usable in standalone mode when
+the host or NodeManager is unavailable; hosted transport, live tracking and runtime-container
+features become visibly unavailable rather than preventing launch.
+
+For NodeManager, the shell owns one adapter connection per complete host configuration. It may keep
+one lightweight `all / summary / coalesced` subscription for Toolkit Home, then fan out explicitly
+scoped tool or container projections to views. A view requesting detailed `values` receives a
+separate bounded subscription so every tool does not pay that cost. Snapshot sequence numbers,
+completion markers and gap recovery remain those of the authoritative NodeManager protocol.
+
 The shell may supervise generic WebSocket/UDP relays, but address vocabularies and command meaning
 remain tool-owned. The existing Score Studio `/awb/timeline/...` protocol is not generalized into a
 universal tool protocol. Lissajous retains `/lissajous/<groupId>/<field>` for its parameter plane.
@@ -403,6 +456,13 @@ The shell provides bounded filesystem mechanisms, not a universal document model
   not migrate them.
 - Project-local files should be supported so tool material can travel with the project that owns
   it.
+- Tool manifests declare zero or more document kinds. Toolkit Home derives `New`, `Recent` and
+  `Browse` actions from those declarations; tools without canonical files expose no false file
+  controls.
+- `Browse` uses a capability-checked native dialog and passes an opaque grant or explicit approved
+  path to the selected tool. `New` creates a tool session with a tool-owned empty document or
+  initial payload. `Recent` repeats the same validated launch path; it is not a shortcut around
+  permissions or external-change checks.
 - Shell preferences, recent items and window placement may live in shell application data, but
   project documents must not become canonical there by accident.
 - Crash recovery is tool-owned data stored through an explicitly granted shell facility.
@@ -480,7 +540,18 @@ system-audio profile. It does not request cross-origin isolation because this pr
 `scsynth.wasm` and threaded export; multichannel Web Audio capture itself does not require
 `SharedArrayBuffer`.
 
-### Slice 4 — packaging and reverse launch
+### Slice 4 — shared host, live containers and document launchers
+
+1. Add the shell-level SuperCollider host broker with separate sclang, scsynth-readiness and
+   NodeManager status.
+2. Move shared WebSocket/OSC adapter ownership out of individual tool views while preserving each
+   tool's semantic address vocabulary.
+3. Consume the existing NodeManager snapshot/delta protocol and show explicitly associated tool
+   containers beneath active or discoverable ToolSessions.
+4. Add manifest-declared document kinds and per-tool `New`, `Recent` and `Browse` launcher actions.
+5. Persist bounded recent-file descriptors without making Toolkit Home a document authority.
+
+### Slice 5 — packaging and reverse launch
 
 1. Add icons, version metadata, packaged artifact inventory and macOS signing/notarisation work.
 2. Refine Toolkit Home's recent views and connection controls without giving it semantic document
@@ -511,6 +582,12 @@ Automated checks must prove:
     actual acquired channel count/fallback;
 16. closing Lissajous disposes WebGL, AudioContext, media streams, workers and timers;
 17. no renderer gains unrestricted Node, filesystem, IPC or process access.
+18. one NodeManager adapter serves multiple views while applying independent scopes and data modes;
+19. container cards are associated through explicit tool/session metadata, never SynthDef-name
+    inference;
+20. loss of sclang or NodeManager degrades hosted features without disabling standalone tools;
+21. `New`, `Recent` and `Browse` appear only for declared document kinds, and reopening a recent
+    item still passes through tool validation and shell permission checks.
 
 Manual acceptance must exercise real desktop sclang, realistic sustained OSC traffic, active
 multichannel audio and both tools visible together. A build, unit test or screenshot alone does not
