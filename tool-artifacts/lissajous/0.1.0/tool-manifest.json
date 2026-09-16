@@ -26,7 +26,8 @@
   "capabilities": {
     "filesystem": [],
     "media": [
-      "audio-input"
+      "audio-input",
+      "system-audio"
     ],
     "connections": []
   }

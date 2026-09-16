@@ -20,4 +20,10 @@ export function permitsMediaCheck( tool, permission, details = {} ) {
     && details.mediaType === 'audio';
 }
 
+export function permitsDisplayMediaRequest( tool, request = {} ) {
+  return tool?.capabilities?.media?.includes( 'system-audio' ) === true
+    && request.audioRequested === true
+    && request.videoRequested === true;
+}
+
 export { CROSS_ORIGIN_HEADERS };

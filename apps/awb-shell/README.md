@@ -24,7 +24,10 @@ The installed Lissajous Viz renderer lives under `../../tool-artifacts/lissajous
 source remains in `~/lissajous-viz`; rebuild it there with `npm run build:tool`, then replace the
 complete versioned artifact and update `SOURCE.md`. The first desktop profile requests audio-input
 permission, defaults to multichannel capture and excludes file workflows, browser SuperCollider,
-automation persistence and deterministic export.
+automation persistence and deterministic export. It also declares `system-audio`: the shell grants
+its explicit System Output action a stereo macOS loopback stream while keeping display capture
+unavailable to tools that do not declare that capability. On macOS 14.2 and later this uses
+Electron's CoreAudio Tap path and requires Screen & System Audio Recording permission.
 
 Run the neutral unit and desktop gates with:
 

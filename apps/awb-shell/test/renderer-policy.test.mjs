@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { permitsMediaCheck, permitsMediaRequest, responseHeadersForTool } from '../src/rendererPolicy.mjs';
+import {
+  permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
+} from '../src/rendererPolicy.mjs';
 
 const lissajous = {
   renderer: { crossOriginIsolated: true },
-  capabilities: { media: [ 'audio-input' ] }
+  capabilities: { media: [ 'audio-input', 'system-audio' ] }
 };
 
 test( 'cross-origin isolation headers are limited to requesting tools', () => {
@@ -15,6 +17,15 @@ test( 'cross-origin isolation headers are limited to requesting tools', () => {
   } );
   assert.deepEqual( responseHeadersForTool( { renderer: { crossOriginIsolated: false } }, { Existing: [ 'yes' ] } ),
     { Existing: [ 'yes' ] } );
+} );
+
+test( 'display capture is restricted to declared system-audio tools', () => {
+  assert.equal( permitsDisplayMediaRequest( lissajous, { audioRequested: true, videoRequested: true } ), true );
+  assert.equal( permitsDisplayMediaRequest( lissajous, { audioRequested: false, videoRequested: true } ), false );
+  assert.equal( permitsDisplayMediaRequest( lissajous, { audioRequested: true, videoRequested: false } ), false );
+  assert.equal( permitsDisplayMediaRequest( { capabilities: { media: [] } }, {
+    audioRequested: true, videoRequested: true
+  } ), false );
 } );
 
 test( 'media permission is audio-only and capability-gated', () => {

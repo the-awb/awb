@@ -12,10 +12,12 @@ import { FileGrantStore } from '../src/fileGrants.mjs';
 import { atomicWriteText, guardedWriteText } from '../src/nativeFiles.mjs';
 import { ServiceRegistry } from '../src/serviceRegistry.mjs';
 import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
-import { permitsMediaCheck, permitsMediaRequest, responseHeadersForTool } from '../src/rendererPolicy.mjs';
+import {
+  permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
+} from '../src/rendererPolicy.mjs';
 
 const require = createRequire( import.meta.url );
-const { app, BrowserWindow, dialog, ipcMain, session } = require( 'electron/main' );
+const { app, BrowserWindow, desktopCapturer, dialog, ipcMain, session, webContents } = require( 'electron/main' );
 const shellRoot = path.dirname( fileURLToPath( import.meta.url ) );
 const appRoot = path.resolve( shellRoot, '..' );
 const preloadPath = path.join( shellRoot, 'preload.cjs' );
@@ -55,7 +57,7 @@ const developmentURL = loopbackDevelopmentURL( option( process.argv, 'dev-url', 
 
 const SUPPORTED_CAPABILITIES = Object.freeze( {
   filesystem: [ 'open-file', 'open-directory', 'save-file' ],
-  media: [ 'audio-input' ], connections: [ 'hosted-timeline' ]
+  media: [ 'audio-input', 'system-audio' ], connections: [ 'hosted-timeline' ]
 } );
 
 function option( args, name, fallback = null ) {
@@ -174,6 +176,9 @@ async function runMultitoolSmoke() {
   } )` );
   if ( !lissajousContract.media.includes( 'audio-input' ) ) {
     throw new Error( `Lissajous renderer policy was not installed: ${ JSON.stringify( lissajousContract ) }` );
+  }
+  if ( !lissajousContract.media.includes( 'system-audio' ) ) {
+    throw new Error( `Lissajous system-audio policy was not installed: ${ JSON.stringify( lissajousContract ) }` );
   }
   console.log( 'AWB_SHELL_MULTITOOL_READY score-studio=ready lissajous=ready requestedChannels=16' );
   await closeToolView( score.viewID ); await waitFor( () => windows.size === 1 );
@@ -497,6 +502,22 @@ function registerRendererPolicies() {
   session.defaultSession.setPermissionCheckHandler( ( webContents, permission, _origin, details ) => (
     permitsMediaCheck( toolForWebContents( webContents ), permission, details )
   ) );
+  session.defaultSession.setDisplayMediaRequestHandler( async ( request, callback ) => {
+    const requestingContents = request.frame ? webContents.fromFrame( request.frame ) : null;
+    if ( !permitsDisplayMediaRequest( toolForWebContents( requestingContents ), request ) ) {
+      callback( {} ); return;
+    }
+    try {
+      const sources = await desktopCapturer.getSources( {
+        types: [ 'screen' ], thumbnailSize: { width: 0, height: 0 }
+      } );
+      if ( !sources.length ) callback( {} );
+      else callback( { video: sources[ 0 ], audio: 'loopback' } );
+    } catch ( error ) {
+      console.error( `System audio capture failed: ${ error.message }` );
+      callback( {} );
+    }
+  } );
 }
 
 function reportFatal( error ) { console.error( error?.stack ?? error ); quitting = true; app.exit( 1 ); }
