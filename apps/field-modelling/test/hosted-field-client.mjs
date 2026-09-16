@@ -31,3 +31,35 @@ test( 'observes one exact score run and rejects cross-run runtime frames', () =>
   assert.equal( client.socket, null );
   client.disconnect();
 } );
+
+test( 'requests and atomically commits a scheduled relative-phase snapshot', () => {
+  const client = new HostedFieldClient( { WebSocketImpl: FakeSocket,
+    heartbeatMs: 100000, observationMs: 100000 } );
+  client.connect( 'ws://fixture', { scoreID: 'score-a', revision: 4, runID: 'run-a' } );
+  const socket = client.socket;
+  socket.emit( '/awb/bridge/ready', [ 60001 ] );
+  socket.emit( '/awb/timeline/connected', [ client.clientID, 1 ] );
+  const ping = socket.sent.find( ( frame ) => frame.address === '/awb/timeline/ping' );
+  socket.emit( '/awb/timeline/pong', [ client.clientID, ping.args[ 1 ], performance.now() / 1000 ] );
+  socket.emit( '/awb/timeline/result', [ client.clientID, client.observeID,
+    1, 'observe', 'score-a', 4, 'observing', 'run-a' ] );
+  client.setObservedNodeIDs( [ 1001 ] );
+  client.requestPhaseSnapshot();
+  const request = socket.sent.findLast( ( frame ) => frame.address === '/awb/field/observe' );
+  assert.deepEqual( request.args.slice( 2 ), [ 'score-a', 4, 'run-a', 1, 1001 ] );
+  const requestID = request.args[ 1 ];
+  socket.emit( '/awb/field/result', [ client.clientID, requestID, 1,
+    'scheduled', '17', 12.5, 2 ] );
+  socket.emit( '/awb/field/snapshot/begin', [ client.clientID, requestID,
+    'score-a', 4, 'run-a', 12.5, 1001, 0, 60, 2 ] );
+  socket.emit( '/awb/field/snapshot/component', [ client.clientID, requestID,
+    1001, 0, 60, 0, 0.1, 1 ] );
+  assert.equal( client.getState().phaseSnapshot, null, 'partial snapshots must remain invisible' );
+  socket.emit( '/awb/field/snapshot/component', [ client.clientID, requestID,
+    1001, 1, 61, 1.25, 0.1, 1 ] );
+  socket.emit( '/awb/field/snapshot/end', [ client.clientID, requestID, 2 ] );
+  assert.equal( client.getState().phaseStatus, 'locked' );
+  assert.equal( client.getState().phaseSnapshot.components.length, 2 );
+  assert.equal( client.getState().phaseSnapshot.components[ 1 ].relativePhase, 1.25 );
+  client.disconnect();
+} );

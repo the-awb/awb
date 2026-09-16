@@ -15,7 +15,7 @@
   "scripts": {
     "build": "node ../../tools/build-esm-package.mjs index=src/index.js react=src/FieldCanvas.jsx",
     "prepack": "npm run build",
-    "test": "node test/field-renderer.mjs"
+    "test": "node --test test/field-renderer.mjs test/phase-snapshot.mjs"
   },
   "dependencies": {
     "@awb/field-engine": "0.1.0",

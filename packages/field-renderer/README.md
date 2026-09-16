@@ -51,3 +51,9 @@ correct phase. The reserved mode fails loudly until that contract and consumer e
 
 The controller deliberately does not own observation, scheduling, SuperCollider session state or
 encoding. Those remain separate live-host and render-pipeline responsibilities.
+
+The interactive hosted renderer can consume sparse relative-phase snapshots produced by desktop
+SuperCollider. It preserves the current reference phase, advances each observed relative offset
+from its scheduled observation time, and applies a snapshot only when its complete component set
+is valid. This does not lift the offline `realized-score` restriction above: deterministic export
+still needs a persisted `field-phase-track`, not a transient live-session snapshot.

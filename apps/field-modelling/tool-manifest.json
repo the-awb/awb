@@ -27,6 +27,8 @@
     "hosted-field": {
       "allowedPrefixes": ["/awb/synthdef/"],
       "allowedAddresses": [
+        "/awb/field/observe", "/awb/field/result", "/awb/field/snapshot/begin",
+        "/awb/field/snapshot/component", "/awb/field/snapshot/end",
         "/awb/timeline/hello", "/awb/timeline/connected", "/awb/timeline/observe",
         "/awb/timeline/result", "/awb/timeline/runtime", "/awb/timeline/transport",
         "/awb/timeline/realization", "/awb/timeline/ping", "/awb/timeline/pong",

@@ -14,6 +14,7 @@ import {
   toeInRad
 } from '@awb/field-engine';
 import { createPhaseLock } from '@awb/phase-fit';
+import { applyRelativePhaseSnapshot } from './phaseSnapshot.js';
 
 // Visual sync mode's period. A lock costs ~8ms, so this is 0.03% of the frame budget - the reason
 // it is a toggle at all is that it is one more thing to switch off when a session gets heavy, not
@@ -414,6 +415,7 @@ export function createFieldRenderer( {
     // removed, muted or reordered -- only that channel's own on/off state
     // (via the flattened list simply omitting it) resets its phase.
     const phaseMap = new Map();
+    let appliedPhaseSnapshotID = null;
     // When each sounding instrument's note began, in the canvas's own time base. Kept here rather
     // than in the voice layer so there is exactly ONE clock in play: pausing the field freezes the
     // envelopes with everything else, which it would not if this read wall time. Same
@@ -483,6 +485,17 @@ export function createFieldRenderer( {
       // and starts again; only the channel list is filtered.
       const channels = flattenChannels(drawable, room.speakers, timeFactor, time, localTime);
       const n = Math.min(channels.length, MAX_CH);
+
+      // Hosted desktop playback reports sparse relative-phase observations against a scheduled
+      // host time. Keep the live reference component continuous, advance the observed offsets to
+      // this frame, and apply each complete snapshot once. This belongs in the shared controller
+      // so the React adapter and any future interactive host cannot drift.
+      const phaseSnapshot = currentVoices?.phaseSnapshot;
+      if (phaseMode === 'continuous' && !hasWavefrontView && phaseSnapshot
+        && phaseSnapshot.id !== appliedPhaseSnapshotID
+        && applyRelativePhaseSnapshot(phaseMap, phaseSnapshot, now / 1000)) {
+        appliedPhaseSnapshotID = phaseSnapshot.id;
+      }
 
       // Measure the real phase off the engine's output whenever the model might have moved - a
       // synth mounted, or a control touched that changes a frequency or a gain. Debounced inside,

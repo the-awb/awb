@@ -133,7 +133,7 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
       <div className="fieldIdentity">
         { project && <span>{ project.projectID } / { project.bindingID }</span> }
         { attached && <span>session { context.payload.scoreSessionID } / run { context.payload.runID }</span> }
-        { attached && <span>score { hosted.runtime.status } · { hosted.projection.instruments.length } master-only · { hosted.projection.unsupported.length } unsupported</span> }
+        { attached && <span>score { hosted.runtime.status } · phase { hosted.runtime.phaseStatus } · { hosted.projection.instruments.length } master-only · { hosted.projection.unsupported.length } unsupported</span> }
         <span>{ documentStatus }</span>
       </div>
       <button onClick={ () => save( false ) } disabled={ !host }>Save</button>
