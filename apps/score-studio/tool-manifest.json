@@ -21,5 +21,12 @@
     "filesystem": ["open-file", "open-directory", "save-file"],
     "media": [],
     "connections": ["hosted-timeline"]
+  },
+  "connectionPolicies": {
+    "hosted-timeline": {
+      "allowedPrefixes": ["/awb/timeline/"],
+      "clientIdentityAddress": "/awb/timeline/hello",
+      "disconnectAddress": "/awb/timeline/disconnect"
+    }
   }
 }

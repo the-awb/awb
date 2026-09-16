@@ -67,7 +67,8 @@ try {
     '--score', scorePath,
     '--tool-session', ready[ 2 ],
     '--owner-pid', `${ sclangChild.pid }`,
-    '--smoke-hosted'
+    '--smoke-hosted',
+    `--user-data-dir=${ path.join( temporary, 'electron-profile' ) }`
   ], { cwd: appRoot, env, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
   shellChild.stdout.on( 'data', ( chunk ) => { shellOutput += chunk; } );
   shellChild.stderr.on( 'data', ( chunk ) => { shellOutput += chunk; } );

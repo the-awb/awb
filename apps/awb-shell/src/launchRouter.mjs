@@ -56,7 +56,8 @@ export class LaunchRouter {
     try {
       const viewID = crypto.randomUUID();
       this.registry.add( { viewID, toolID: tool.id, toolSessionID: request.toolSessionID, requestID: request.requestID,
-        launchOrigin: request.launchOrigin, owner: request.owner, lifecycle: 'requested' } );
+        launchOrigin: request.launchOrigin, owner: request.owner, requestPayload: request.payload,
+        lifecycle: 'requested' } );
       await this.createView( { viewID, request, tool } );
       return { requestID: request.requestID, status: 'accepted', viewID };
     } catch ( error ) {

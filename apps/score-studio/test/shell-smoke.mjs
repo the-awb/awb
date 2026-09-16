@@ -15,6 +15,7 @@ const main = path.join( appRoot, 'shell/main.mjs' );
 const source = path.join( appRoot, 'public/examples/sonic-attunement-01.score.json' );
 const temporary = await mkdtemp( path.join( os.tmpdir(), 'awb-shell-smoke-' ) );
 const saved = path.join( temporary, 'native-save.score.json' );
+const userData = path.join( temporary, 'electron-profile' );
 const env = { ...process.env, ELECTRON_DISABLE_SECURITY_WARNINGS: 'true' };
 delete env.ELECTRON_RUN_AS_NODE;
 const waitFor = async ( predicate, timeout = 20000 ) => {
@@ -40,7 +41,7 @@ let secondary;
 let output = '';
 try {
   primary = spawn( electron, [ main, '--score', source, '--smoke-save', saved,
-    '--smoke-close-after-focus' ], { cwd: appRoot, env, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
+    '--smoke-close-after-focus', `--user-data-dir=${ userData }` ], { cwd: appRoot, env, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
   primary.stdout.on( 'data', ( chunk ) => { output += chunk; } );
   primary.stderr.on( 'data', ( chunk ) => { output += chunk; } );
   await waitFor( () => {
@@ -50,7 +51,7 @@ try {
   assert.match( output, /SCORE_STUDIO_SHELL_SMOKE_SAVED/ );
   assert.equal( parseScoreDocument( await readFile( saved, 'utf8' ) ).scoreID, 'sonic-attunement-01' );
 
-  secondary = spawn( electron, [ main, '--focus-existing' ], {
+  secondary = spawn( electron, [ main, '--focus-existing', `--user-data-dir=${ userData }` ], {
     cwd: appRoot, env, stdio: [ 'ignore', 'pipe', 'pipe' ]
   } );
   await waitFor( () => output.includes( 'SCORE_STUDIO_SHELL_FOCUSED' ) );

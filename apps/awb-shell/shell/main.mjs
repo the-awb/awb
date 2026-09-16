@@ -8,9 +8,13 @@ import { grantedCapabilities, publicManifest, SHELL_PROTOCOL } from '../src/cont
 import { LaunchRouter } from '../src/launchRouter.mjs';
 import { loadToolArtifacts } from '../src/manifestLoader.mjs';
 import { ViewRegistry } from '../src/viewRegistry.mjs';
+import { FileGrantStore } from '../src/fileGrants.mjs';
+import { atomicWriteText, guardedWriteText } from '../src/nativeFiles.mjs';
+import { ServiceRegistry } from '../src/serviceRegistry.mjs';
+import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
 
 const require = createRequire( import.meta.url );
-const { app, BrowserWindow, ipcMain } = require( 'electron/main' );
+const { app, BrowserWindow, dialog, ipcMain } = require( 'electron/main' );
 const shellRoot = path.dirname( fileURLToPath( import.meta.url ) );
 const appRoot = path.resolve( shellRoot, '..' );
 const preloadPath = path.join( shellRoot, 'preload.cjs' );
@@ -19,12 +23,33 @@ const registry = new ViewRegistry();
 const windows = new Map();
 const senderRecords = new Map();
 const ownerTimers = new Map();
+const serviceReleases = new Map();
+const fileGrants = new FileGrantStore();
+const services = new ServiceRegistry( createOscWebSocketRelay );
 let homeWindow = null;
 let quitting = false;
 let tools = new Map();
 let manifestFailures = [];
 let router;
 const smokeHome = process.argv.includes( '--smoke-home' );
+const smokeMultiview = process.argv.includes( '--smoke-multiview' );
+const smokeHosted = process.argv.includes( '--smoke-hosted' );
+const smokeOwnerLoss = process.argv.includes( '--smoke-owner-loss' );
+const smokeExternalRouter = process.argv.includes( '--smoke-external-router' );
+let smokeRunning = false;
+let homeReadyCount = 0;
+const externalSmokeResults = [];
+
+function loopbackDevelopmentURL( value ) {
+  if ( !value ) return '';
+  const url = new URL( value );
+  if ( ![ 'http:', 'https:' ].includes( url.protocol )
+    || ![ '127.0.0.1', 'localhost', '[::1]' ].includes( url.hostname ) ) {
+    throw new Error( '--dev-url must use HTTP(S) on a loopback host.' );
+  }
+  return url.href;
+}
+const developmentURL = loopbackDevelopmentURL( option( process.argv, 'dev-url', '' ) );
 
 const SUPPORTED_CAPABILITIES = Object.freeze( {
   filesystem: [ 'open-file', 'open-directory', 'save-file' ],
@@ -94,6 +119,90 @@ function notifyHome() {
   if ( homeWindow && !homeWindow.isDestroyed() ) homeWindow.webContents.send( 'awb:command', { type: 'shell-registry-changed' } );
 }
 
+async function waitFor( predicate, timeout = 15000 ) {
+  const started = Date.now();
+  while ( !predicate() ) {
+    if ( Date.now() - started > timeout ) throw new Error( 'Timed out during AWB shell smoke check.' );
+    await new Promise( ( resolve ) => setTimeout( resolve, 25 ) );
+  }
+}
+
+async function runMultiviewSmoke() {
+  smokeRunning = true;
+  const scorePath = option( process.argv, 'smoke-score' );
+  const payload = scorePath ? { scorePath: path.resolve( scorePath ) } : {};
+  const results = await homeWindow.webContents.executeJavaScript( `(async () => {
+    const payload = ${ JSON.stringify( payload ) };
+    const first = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'standalone', toolSessionID: 'smoke-a', launchOrigin: 'desktop', payload });
+    const repeated = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'standalone', toolSessionID: 'smoke-a', launchOrigin: 'desktop', payload });
+    const second = await window.awbHost.request('shell.launch', { toolID: 'score-studio', profileID: 'standalone', toolSessionID: 'smoke-b', launchOrigin: 'desktop', payload });
+    return { first, repeated, second };
+  })()` );
+  if ( results.first.status !== 'accepted' || results.repeated.status !== 'focused-existing'
+    || results.second.status !== 'accepted' || results.first.viewID !== results.repeated.viewID ) throw new Error( 'Multiview routing contract failed.' );
+  await waitFor( () => registry.list().length === 2 && registry.list().every( ( view ) => view.lifecycle === 'ready' ) );
+  console.log( 'AWB_SHELL_MULTIVIEW_READY views=2 repeated=focused-existing' );
+  homeWindow.close(); await waitFor( () => !homeWindow );
+  if ( windows.size !== 2 ) throw new Error( 'Closing Home disturbed tool views.' );
+  console.log( 'AWB_SHELL_HOME_CLOSED tools=2' );
+  await closeToolView( results.first.viewID ); await waitFor( () => windows.size === 1 );
+  if ( !windows.has( results.second.viewID ) ) throw new Error( 'Closing one view disturbed the other.' );
+  console.log( 'AWB_SHELL_VIEW_ISOLATION pass' );
+  await closeToolView( results.second.viewID ); await waitFor( () => windows.size === 0 && homeReadyCount >= 2 );
+  console.log( 'AWB_SHELL_HOME_RETURNED' );
+  setTimeout( () => app.quit(), 50 );
+}
+
+async function runOwnerLossSmoke() {
+  smokeRunning = true;
+  const ownerA = positivePID( option( process.argv, 'owner-a' ) );
+  const ownerB = positivePID( option( process.argv, 'owner-b' ) );
+  if ( !ownerA || !ownerB ) throw new Error( 'Owner-loss smoke requires two owner PIDs.' );
+  const scorePath = option( process.argv, 'smoke-score' );
+  const first = await router.launch( { toolID: 'score-studio', profileID: 'attached', toolSessionID: 'owner-a',
+    launchOrigin: 'supercollider', owner: { kind: 'attached-process', pid: ownerA }, payload: { scorePath } } );
+  const second = await router.launch( { toolID: 'score-studio', profileID: 'attached', toolSessionID: 'owner-b',
+    launchOrigin: 'supercollider', owner: { kind: 'attached-process', pid: ownerB }, payload: { scorePath } } );
+  await waitFor( () => registry.list().length === 2 && registry.list().every( ( view ) => view.lifecycle === 'ready' ) );
+  console.log( 'AWB_SHELL_OWNER_VIEWS_READY' );
+  await waitFor( () => windows.size === 1, 12000 );
+  if ( windows.has( first.viewID ) || !windows.has( second.viewID ) ) throw new Error( 'Owner loss affected the wrong view.' );
+  try { process.kill( ownerB, 0 ); } catch { throw new Error( 'Shell terminated an attached owner process.' ); }
+  console.log( 'AWB_SHELL_OWNER_ISOLATION pass' );
+  await closeToolView( second.viewID ); await waitFor( () => windows.size === 0 ); app.quit();
+}
+
+async function runHostedSmoke( viewID ) {
+  smokeRunning = true; const window = windows.get( viewID );
+  const loadedName = path.basename( option( process.argv, 'score', '' ) );
+  await window.webContents.executeJavaScript( `new Promise((resolve, reject) => {
+    const started = Date.now();
+    const check = () => {
+      const text = document.body.innerText;
+      const file = document.querySelector('.filePanel .identity dd')?.textContent;
+      if (text.includes('installed atomically.') && file === ${ JSON.stringify( loadedName ) }) resolve(true);
+      else if (Date.now() - started > 25000) reject(new Error('named hosted score was not installed'));
+      else setTimeout(check, 25);
+    }; check();
+  })` );
+  const view = registry.get( viewID );
+  console.log( `AWB_SHELL_HOSTED_INSTALLED session=${ view.toolSessionID } score=${ loadedName }` );
+  await closeToolView( viewID ); await waitFor( () => windows.size === 0 ); app.quit();
+}
+
+async function recordExternalSmokeResult( result ) {
+  externalSmokeResults.push( result );
+  if ( externalSmokeResults.length < 3 ) return;
+  const [ first, repeated, second ] = externalSmokeResults;
+  if ( first.status !== 'accepted' || repeated.status !== 'focused-existing' || second.status !== 'accepted'
+    || first.viewID !== repeated.viewID || first.viewID === second.viewID || windows.size !== 2 ) {
+    throw new Error( 'External single-instance launch routing failed.' );
+  }
+  console.log( 'AWB_SHELL_EXTERNAL_ROUTER views=2 repeated=focused-existing' );
+  await closeToolView( first.viewID ); await closeToolView( second.viewID );
+  await waitFor( () => windows.size === 0 ); app.quit();
+}
+
 async function createHomeWindow() {
   if ( homeWindow && !homeWindow.isDestroyed() ) {
     if ( homeWindow.isMinimized() ) homeWindow.restore();
@@ -124,18 +233,31 @@ function launchContextFor( viewID, request, tool ) {
 
 async function createToolWindow( { viewID, request, tool } ) {
   registry.update( viewID, { lifecycle: 'loading' } );
-  const context = launchContextFor( viewID, request, tool );
+  let effectiveRequest = request;
+  if ( request.connections.oscPort ) {
+    const policy = tool.connectionPolicies[ 'hosted-timeline' ];
+    if ( !policy ) throw new Error( `${ tool.name } has no hosted-timeline relay policy.` );
+    const acquired = await services.acquire( { oscPort: request.connections.oscPort, port: 0,
+      allowedPrefixes: [ ...policy.allowedPrefixes ], clientIdentityAddress: policy.clientIdentityAddress,
+      disconnectAddress: policy.disconnectAddress } );
+    serviceReleases.set( viewID, acquired.release );
+    effectiveRequest = Object.freeze( { ...request, connections: Object.freeze( {
+      ...request.connections, endpoint: acquired.service.endpoint
+    } ) } );
+  }
+  const context = launchContextFor( viewID, effectiveRequest, tool );
   const window = new BrowserWindow( secureWindowOptions( tool.view.defaultWidth, tool.view.defaultHeight, context ) );
   const senderID = window.webContents.id;
   windows.set( viewID, window ); senderRecords.set( senderID, { kind: 'tool', viewID } );
-  bindNavigationGuards( window, ( url ) => url.startsWith( 'file:' ) );
+  bindNavigationGuards( window, ( url ) => developmentURL ? url.startsWith( developmentURL ) : url.startsWith( 'file:' ) );
   window.once( 'ready-to-show', () => window.show() );
   window.webContents.on( 'render-process-gone', ( event, details ) => {
     if ( registry.get( viewID ) ) registry.update( viewID, { lifecycle: 'failed', lastError: `renderer-${ details.reason }` } );
   } );
   window.on( 'closed', () => finalizeView( viewID, window, senderID ) );
   if ( request.owner.kind === 'attached-process' && request.owner.pid ) monitorOwner( viewID, request.owner.pid );
-  await window.loadFile( tool.renderer.entryPath );
+  if ( developmentURL ) await window.loadURL( developmentURL );
+  else await window.loadFile( tool.renderer.entryPath );
   notifyHome();
 }
 
@@ -156,6 +278,8 @@ function monitorOwner( viewID, pid ) {
 function finalizeView( viewID, window, senderID ) {
   senderRecords.delete( senderID ); windows.delete( viewID );
   clearInterval( ownerTimers.get( viewID ) ); ownerTimers.delete( viewID );
+  fileGrants.releaseView( viewID );
+  serviceReleases.get( viewID )?.().catch( ( error ) => console.error( error ) ); serviceReleases.delete( viewID );
   if ( registry.get( viewID ) ) { registry.update( viewID, { lifecycle: 'closed' } ); registry.remove( viewID ); }
   notifyHome();
   if ( !quitting && windows.size === 0 ) createHomeWindow().catch( reportFatal );
@@ -188,12 +312,89 @@ function boundedRendererState( state ) {
   return structuredClone( state );
 }
 
+function boundedOperationPayload( payload ) {
+  if ( !payload || typeof payload !== 'object' || Array.isArray( payload ) ) throw new Error( 'Operation payload must be an object.' );
+  if ( Buffer.byteLength( JSON.stringify( payload ) ) > 20 * 1024 * 1024 ) throw new Error( 'Operation payload is too large.' );
+  return payload;
+}
+
+function requireToolSender( sender ) {
+  if ( sender.kind !== 'tool' ) throw new Error( 'Operation requires a tool view.' );
+  const view = registry.get( sender.viewID ); const tool = tools.get( view?.toolID );
+  if ( !view || !tool ) throw new Error( 'Tool view is unavailable.' );
+  return { view, tool, window: windows.get( sender.viewID ) };
+}
+
+function requireCapability( tool, group, capability ) {
+  if ( !tool.capabilities[ group ]?.includes( capability ) || !SUPPORTED_CAPABILITIES[ group ]?.includes( capability ) ) {
+    throw new Error( `${ tool.id } was not granted ${ group }:${ capability }.` );
+  }
+}
+
+function safeArtifactPath( tool, relative ) {
+  if ( typeof relative !== 'string' || path.isAbsolute( relative ) ) throw new Error( 'Artifact path must be relative.' );
+  const target = path.resolve( tool.artifactRoot, relative.replace( /^[./\\]+/, '' ) );
+  if ( target !== tool.artifactRoot && !target.startsWith( `${ tool.artifactRoot }${ path.sep }` ) ) throw new Error( 'Artifact path escaped the tool artifact.' );
+  return target;
+}
+
+async function handleToolOperation( sender, operation, payload ) {
+  const { view, tool, window } = requireToolSender( sender );
+  if ( operation === 'artifact.read-text' ) {
+    const target = safeArtifactPath( tool, payload.path );
+    return { name: payload.name ?? path.basename( target ), text: await readFile( target, 'utf8' ), handle: null };
+  }
+  if ( operation === 'filesystem.initial-file' ) {
+    requireCapability( tool, 'filesystem', 'open-file' );
+    return view.requestPayload?.scorePath ? fileGrants.fileRecord( view.viewID, view.requestPayload.scorePath ) : null;
+  }
+  if ( operation === 'filesystem.open-file' ) {
+    requireCapability( tool, 'filesystem', 'open-file' );
+    const result = await dialog.showOpenDialog( window, { properties: [ 'openFile' ], filters: payload.filters ?? [] } );
+    return result.canceled ? null : fileGrants.fileRecord( view.viewID, result.filePaths[ 0 ] );
+  }
+  if ( operation === 'filesystem.open-directory' ) {
+    requireCapability( tool, 'filesystem', 'open-directory' );
+    const result = await dialog.showOpenDialog( window, { properties: [ 'openDirectory' ] } );
+    if ( result.canceled ) return null;
+    const handle = fileGrants.grant( view.viewID, result.filePaths[ 0 ], 'directory' );
+    return fileGrants.listDirectory( view.viewID, handle, { suffix: payload.suffix ?? '' } );
+  }
+  if ( operation === 'filesystem.list-directory' ) {
+    requireCapability( tool, 'filesystem', 'open-directory' );
+    return fileGrants.listDirectory( view.viewID, payload.handle, { suffix: payload.suffix ?? '' } );
+  }
+  if ( operation === 'filesystem.read-file' ) {
+    requireCapability( tool, 'filesystem', 'open-file' );
+    const grant = fileGrants.resolve( view.viewID, payload.handle, 'file' );
+    return { handle: payload.handle, name: grant.name, text: await readFile( grant.path, 'utf8' ) };
+  }
+  if ( operation === 'filesystem.save-file' ) {
+    requireCapability( tool, 'filesystem', 'save-file' );
+    let target; let handle = payload.saveAs ? null : payload.handle;
+    if ( handle ) target = fileGrants.resolve( view.viewID, handle, 'file' ).path;
+    else {
+      const result = await dialog.showSaveDialog( window, { defaultPath: payload.suggestedName, filters: payload.filters ?? [] } );
+      if ( result.canceled ) return null;
+      target = result.filePath; handle = fileGrants.grant( view.viewID, target, 'file' );
+    }
+    if ( payload.expectedText !== null && payload.expectedText !== undefined ) await guardedWriteText( target, payload.text, { expectedText: payload.expectedText } );
+    else await atomicWriteText( target, payload.text );
+    return { handle, name: path.basename( target ) };
+  }
+  throw new Error( `Operation is not available: ${ operation }.` );
+}
+
 function registerIPC() {
   ipcMain.on( 'awb:report-ready', ( event, state ) => {
     const sender = senderRecord( event );
     if ( sender.kind === 'home' ) {
+      homeReadyCount += 1;
       console.log( 'AWB_SHELL_HOME_READY' );
       if ( smokeHome ) setTimeout( () => app.quit(), 50 );
+      else if ( smokeMultiview && !smokeRunning ) runMultiviewSmoke().catch( reportFatal );
+      else if ( smokeOwnerLoss && !smokeRunning ) runOwnerLossSmoke().catch( reportFatal );
+      else if ( smokeExternalRouter ) smokeRunning = true;
       return;
     }
     const view = registry.get( sender.viewID ); const safe = boundedRendererState( state );
@@ -201,12 +402,17 @@ function registerIPC() {
     if ( safe.viewID && safe.viewID !== view.viewID ) throw new Error( 'Renderer view identity mismatch.' );
     if ( safe.toolSessionID && safe.toolSessionID !== view.toolSessionID ) throw new Error( 'Renderer ToolSession mismatch.' );
     registry.update( sender.viewID, { lifecycle: 'ready' } ); notifyHome();
+    if ( smokeHosted && !smokeRunning ) runHostedSmoke( sender.viewID ).catch( reportFatal );
   } );
   ipcMain.on( 'awb:report-session-state', ( event, state ) => {
     const sender = senderRecord( event ); if ( sender.kind === 'tool' ) registry.update( sender.viewID, { sessionState: boundedRendererState( state ) } ); notifyHome();
   } );
   ipcMain.on( 'awb:report-detailed-state', ( event, state ) => {
-    const sender = senderRecord( event ); if ( sender.kind === 'tool' ) registry.update( sender.viewID, { detailedState: boundedRendererState( state ) } );
+    const sender = senderRecord( event );
+    if ( sender.kind === 'tool' ) {
+      const safe = boundedRendererState( state ); registry.update( sender.viewID, { detailedState: safe } );
+      if ( safe.disposeAcknowledged && registry.get( sender.viewID )?.lifecycle === 'closing' ) windows.get( sender.viewID )?.close();
+    }
   } );
   ipcMain.handle( 'awb:focus-view', async ( event ) => { const sender = senderRecord( event ); if ( sender.kind !== 'tool' ) return false; await focusToolView( sender.viewID ); return true; } );
   ipcMain.handle( 'awb:close-view', async ( event ) => { const sender = senderRecord( event ); return sender.kind === 'tool' && closeToolView( sender.viewID ); } );
@@ -214,14 +420,14 @@ function registerIPC() {
   ipcMain.handle( 'awb:request', async ( event, request ) => {
     const sender = senderRecord( event );
     if ( !request || typeof request.operation !== 'string' || request.operation.length > 128 ) throw new Error( 'Invalid shell operation.' );
-    boundedRendererState( request.payload ?? {} );
+    const payload = boundedOperationPayload( request.payload ?? {} );
     if ( sender.kind === 'home' ) {
       if ( request.operation === 'shell.snapshot' ) return shellSnapshot();
-      if ( request.operation === 'shell.launch' ) return router.launch( request.payload );
-      if ( request.operation === 'shell.focus' ) { await focusToolView( request.payload.viewID ); return true; }
-      if ( request.operation === 'shell.close' ) return closeToolView( request.payload.viewID );
+      if ( request.operation === 'shell.launch' ) return router.launch( payload );
+      if ( request.operation === 'shell.focus' ) { await focusToolView( payload.viewID ); return true; }
+      if ( request.operation === 'shell.close' ) return closeToolView( payload.viewID );
     }
-    throw new Error( `Operation is not available: ${ request.operation }.` );
+    return handleToolOperation( sender, request.operation, payload );
   } );
 }
 
@@ -241,7 +447,10 @@ if ( !gotLock ) app.quit();
 if ( gotLock ) {
   app.on( 'second-instance', ( event, commandLine, workingDirectory, additionalData ) => {
     const request = additionalData?.launchRequest ?? launchRequestFromArgs( commandLine );
-    if ( request ) router.launch( request ).catch( reportFatal ); else createHomeWindow().catch( reportFatal );
+    if ( request ) router.launch( request ).then( ( result ) => {
+      if ( smokeExternalRouter ) recordExternalSmokeResult( result ).catch( reportFatal );
+    } ).catch( reportFatal );
+    else createHomeWindow().catch( reportFatal );
   } );
   app.whenReady().then( async () => {
     await loadTools(); registerIPC();

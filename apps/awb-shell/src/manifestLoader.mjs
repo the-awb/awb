@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 
 const MANIFEST_SCHEMA = 'awb.tool/1';
 const PRELOAD_PROTOCOL = 1;
@@ -57,6 +57,15 @@ export function validateToolManifest( input, artifactRoot ) {
   const capabilities = Object.freeze( Object.fromEntries( CAPABILITY_GROUPS.map( ( group ) => [
     group, boundedStringArray( requested[ group ], `capabilities.${ group }` )
   ] ) ) );
+  const connectionPolicies = Object.freeze( Object.fromEntries( Object.entries( input.connectionPolicies ?? {} ).map( ( [ id, policy ] ) => {
+    if ( !capabilities.connections.includes( id ) || !policy || typeof policy !== 'object' ) throw new Error( `Invalid connection policy: ${ id }.` );
+    const allowedPrefixes = boundedStringArray( policy.allowedPrefixes, `connectionPolicies.${ id }.allowedPrefixes` );
+    if ( !allowedPrefixes.length || allowedPrefixes.some( ( prefix ) => !prefix.startsWith( '/' ) ) ) throw new Error( `Connection policy ${ id } needs OSC address prefixes.` );
+    for ( const field of [ 'clientIdentityAddress', 'disconnectAddress' ] ) {
+      if ( policy[ field ] !== undefined && ( typeof policy[ field ] !== 'string' || !policy[ field ].startsWith( '/' ) ) ) throw new Error( `${ field } must be an OSC address.` );
+    }
+    return [ id, Object.freeze( { allowedPrefixes, clientIdentityAddress: policy.clientIdentityAddress ?? null, disconnectAddress: policy.disconnectAddress ?? null } ) ];
+  } ) ) );
   const width = Number( input.view?.defaultWidth ?? 1200 );
   const height = Number( input.view?.defaultHeight ?? 800 );
   if ( !Number.isInteger( width ) || width < 480 || width > 4096
@@ -75,7 +84,7 @@ export function validateToolManifest( input, artifactRoot ) {
     } ),
     view: Object.freeze( { defaultWidth: width, defaultHeight: height, allowMultiple: input.view?.allowMultiple !== false } ),
     launchProfiles: Object.freeze( profiles ),
-    capabilities
+    capabilities, connectionPolicies
   } );
 }
 
@@ -84,7 +93,10 @@ export async function loadToolManifest( artifactRoot ) {
   let parsed;
   try { parsed = JSON.parse( await readFile( manifestPath, 'utf8' ) ); }
   catch ( error ) { throw new Error( `Cannot load ${ manifestPath }: ${ error.message }`, { cause: error } ); }
-  return validateToolManifest( parsed, artifactRoot );
+  const manifest = validateToolManifest( parsed, artifactRoot );
+  try { await access( manifest.renderer.entryPath ); }
+  catch { throw new Error( `Renderer entry does not exist: ${ manifest.renderer.entry }.` ); }
+  return manifest;
 }
 
 export async function loadToolArtifacts( roots ) {
