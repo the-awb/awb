@@ -3,9 +3,11 @@
 The neutral Electron owner for AWB Toolkit Home and hosted tool views.
 
 ```sh
-npm run build --workspace @awb/score-studio
 npm start --workspace @awb/desktop-shell
 ```
+
+`start` builds the workspace-local Score Studio renderer before Electron starts. Packaged external
+tools such as Lissajous are already installed as complete renderer artifacts.
 
 An external launch uses the same router as Toolkit Home:
 
