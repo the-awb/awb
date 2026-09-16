@@ -18,6 +18,7 @@ import { NativeAudioAccess } from '../src/nativeAudioAccess.mjs';
 import { RenderJobBroker } from '../src/renderJobBroker.mjs';
 import { resolveToolBindingFromProject } from '../src/scoreProjectResolver.mjs';
 import { RenderOutputStore } from '../src/renderOutputStore.mjs';
+import { NativeScHostSupervisor, openSuperColliderIDE } from '../src/nativeScHostSupervisor.mjs';
 import {
   permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
 } from '../src/rendererPolicy.mjs';
@@ -28,6 +29,7 @@ const shellRoot = path.dirname( fileURLToPath( import.meta.url ) );
 const appRoot = path.resolve( shellRoot, '..' );
 const preloadPath = path.join( shellRoot, 'preload.cjs' );
 const shellInstanceID = crypto.randomUUID();
+const shellHostToken = crypto.randomUUID();
 const registry = new ViewRegistry();
 const windows = new Map();
 const senderRecords = new Map();
@@ -39,6 +41,8 @@ const services = new ServiceRegistry( createOscWebSocketRelay );
 const nativeAudio = new NativeAudioAccess( createNativeAudioBroker() );
 const renderJobs = new RenderJobBroker();
 const renderOutputs = new RenderOutputStore();
+const nativeScHost = new NativeScHostSupervisor( { token: shellHostToken,
+  bootstrapPath: path.join( appRoot, 'sc/AWBHeadlessHost.scd' ), onChange: () => notifyHome() } );
 const renderExecutorID = `headless-local-${ crypto.randomUUID() }`;
 let recentStore;
 let homeWindow = null;
@@ -59,6 +63,7 @@ const smokeExternalRouter = process.argv.includes( '--smoke-external-router' );
 const smokeMultitool = process.argv.includes( '--smoke-multitool' );
 const smokeRender = process.argv.includes( '--smoke-render' );
 const smokeField = process.argv.includes( '--smoke-field' );
+const smokeHeadlessSc = process.argv.includes( '--smoke-headless-sc' );
 let smokeRunning = false;
 let homeReadyCount = 0;
 const externalSmokeResults = [];
@@ -95,13 +100,13 @@ function positivePID( value ) {
 function hostConfigurationFromRequest( request ) {
   const oscPort = Number( request?.connections?.oscPort );
   if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) return null;
-  return Object.freeze( { oscHost: request.connections.oscHost ?? '127.0.0.1', oscPort } );
+  return Object.freeze( { oscHost: request.connections.oscHost ?? '127.0.0.1', oscPort, hostToken: shellHostToken } );
 }
 
 function hostConfigurationFromArgs( args ) {
   const oscPort = Number( option( args, 'osc-port', process.env.AWB_SC_OSC_PORT ?? 57120 ) );
   if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) return null;
-  return Object.freeze( { oscHost: option( args, 'osc-host', '127.0.0.1' ), oscPort } );
+  return Object.freeze( { oscHost: option( args, 'osc-host', '127.0.0.1' ), oscPort, hostToken: shellHostToken } );
 }
 
 async function ensureHost( configuration ) {
@@ -179,7 +184,27 @@ function shellSnapshot() {
       documentKinds: tool.documentKinds.map( ( kind ) => ( { ...kind,
         recentItems: recentStore?.list( tool.id, kind.id ) ?? [] } ) ) } ) ),
     views: registry.list().map( viewSnapshot ), renders: renderJobs.list(),
-    host, failures: manifestFailures };
+    host, nativeScHost: nativeScHost.snapshot(), failures: manifestFailures };
+}
+
+async function startHeadlessHost() {
+  const configuration = hostConfigurationFromArgs( process.argv.slice( 1 ) );
+  const service = await ensureHost( configuration ); const host = service.hostSnapshot();
+  if ( host.sclang?.status === 'attached' && host.control?.mode !== 'headless' ) {
+    throw new Error( 'An attached SuperCollider IDE host is already available.' );
+  }
+  return nativeScHost.start( { oscPort: configuration.oscPort } );
+}
+
+async function stopHeadlessHost() {
+  const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.mode === 'headless' );
+  return nativeScHost.stop( () => service?.shutdownHost?.() );
+}
+
+async function setNodeManager( action ) {
+  const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.status === 'ready' );
+  if ( !service ) throw new Error( 'No AWB-enabled SuperCollider host is available.' );
+  return service.setNodeManager( action );
 }
 
 async function launchDocument( payload ) {
@@ -260,7 +285,7 @@ async function runHomeSmoke() {
       const lissajousActions = document.querySelectorAll('[data-document-tool="lissajous"]').length;
       const hostFacts = document.querySelectorAll('.host-fact').length;
       if (scoreActions === 2 && lissajousActions === 2 && hostFacts === 4) resolve({ scoreActions, lissajousActions, hostFacts });
-      else if (Date.now() - started > 5000) reject(new Error('Toolkit Home document and host facts did not render'));
+      else if (Date.now() - started > 5000) reject(new Error('Toolkit Home document and host facts did not render: score=' + scoreActions + ' lissajous=' + lissajousActions + ' host=' + hostFacts));
       else setTimeout(check, 25);
     }; check();
   })` );
@@ -467,6 +492,23 @@ async function runFieldSmoke() {
   console.log( `AWB_SHELL_FIELD_WEBGL_READY width=${ result.width } height=${ result.height }` );
   await closeToolView( launched.viewID );
   await waitFor( () => windows.size === 0 );
+  app.quit();
+}
+
+async function runHeadlessScSmoke() {
+  smokeRunning = true;
+  await startHeadlessHost();
+  await waitFor( () => services.firstService( ( service ) => {
+    const host = service.hostSnapshot?.(); return host?.control?.status === 'ready'
+      && host.control.mode === 'headless' && host.scsynth.status === 'ready';
+  } ), 30000 );
+  await setNodeManager( 'enable' );
+  await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'ready' ), 5000 );
+  await setNodeManager( 'manual' );
+  await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'disabled' ), 5000 );
+  await stopHeadlessHost();
+  await waitFor( () => nativeScHost.snapshot().state === 'stopped', 8000 );
+  console.log( 'AWB_SHELL_HEADLESS_SC_READY engine=native nodeManager=toggleable shutdown=owned' );
   app.quit();
 }
 
@@ -763,6 +805,7 @@ function registerIPC() {
       if ( smokeHome ) runHomeSmoke().catch( reportFatal );
       else if ( smokeRender && !smokeRunning ) runRenderSmoke().catch( reportFatal );
       else if ( smokeField && !smokeRunning ) runFieldSmoke().catch( reportFatal );
+      else if ( smokeHeadlessSc && !smokeRunning ) runHeadlessScSmoke().catch( reportFatal );
       else if ( smokeMultiview && !smokeRunning ) runMultiviewSmoke().catch( reportFatal );
       else if ( smokeMultitool && !smokeRunning ) runMultitoolSmoke().catch( reportFatal );
       else if ( smokeOwnerLoss && !smokeRunning ) runOwnerLossSmoke().catch( reportFatal );
@@ -809,6 +852,10 @@ function registerIPC() {
       if ( request.operation === 'shell.launch-document' ) return launchDocument( payload );
       if ( request.operation === 'shell.focus' ) { await focusToolView( payload.viewID ); return true; }
       if ( request.operation === 'shell.close' ) return closeToolView( payload.viewID );
+      if ( request.operation === 'shell.open-supercollider' ) return openSuperColliderIDE();
+      if ( request.operation === 'shell.start-headless-sc' ) return startHeadlessHost();
+      if ( request.operation === 'shell.stop-headless-sc' ) return stopHeadlessHost();
+      if ( request.operation === 'shell.nodemanager' ) return setNodeManager( payload.action );
       if ( request.operation === 'render.cancel' ) {
         return requestRenderCancellation( payload.renderID );
       }
@@ -945,7 +992,10 @@ if ( gotLock ) {
     if ( !serviceShutdown ) serviceShutdown = ( async () => {
       for ( const unsubscribe of hostSubscriptions.values() ) unsubscribe();
       hostSubscriptions.clear();
-      const results = await Promise.allSettled( [ nativeAudio.close(), services.closeAll() ] );
+      const headlessService = services.firstService( ( service ) => service.hostSnapshot?.().control?.mode === 'headless' );
+      const hostStop = await Promise.allSettled( [ nativeAudio.close(),
+        nativeScHost.stop( () => headlessService?.shutdownHost?.() ) ] );
+      const results = [ ...hostStop, ...await Promise.allSettled( [ services.closeAll() ] ) ];
       results.filter( ( result ) => result.status === 'rejected' )
         .forEach( ( result ) => console.error( result.reason ) );
       servicesClosed = true; app.quit();

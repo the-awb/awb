@@ -4,11 +4,12 @@ import { WebSocket, WebSocketServer } from 'ws';
 import { decodeOscPacket, encodeOscMessage } from './oscCodec.mjs';
 import { SynthDefContextBroker } from './synthDefContextBroker.mjs';
 import { NodeManagerProjection } from './nodeManagerProjection.mjs';
+import { HostControlProjection } from './hostControlProjection.mjs';
 
 const MAX_FRAME_BYTES = 64 * 1024;
 export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
   oscHost = '127.0.0.1', oscPort, allowedPrefixes = null, clientIdentityAddress = null,
-  disconnectAddress = null, clientIdentityAddresses = [], disconnectAddresses = [] } ) {
+  disconnectAddress = null, clientIdentityAddresses = [], disconnectAddresses = [], hostToken = '' } ) {
   if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) throw new Error( 'Invalid relay OSC port.' );
   const clients = new Set(); const grants = new Map();
   const server = new WebSocketServer( { host, port, maxPayload: MAX_FRAME_BYTES } );
@@ -27,6 +28,12 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     sendOsc: ( address, args ) => sharedUdp.send( encodeOscMessage( address,
       address === '/awb/nm/subscribe' ? [ args[ 0 ], sharedUdp.address().port, ...args.slice( 1 ) ] : args ), oscPort, oscHost ),
     onChange: hostChanged
+  } );
+  const hostControl = new HostControlProjection( {
+    token: hostToken,
+    sendOsc: ( address, args ) => sharedUdp.send( encodeOscMessage( address,
+      [ args[ 0 ], sharedUdp.address().port, ...args.slice( 1 ) ] ), oscPort, oscHost ),
+    onChange: ( snapshot ) => { nodeManager.setHostStatus( snapshot.nodeManager ); hostChanged(); }
   } );
   const closeClient = ( client, notify = true ) => {
     if ( client.closing ) return; client.closing = true; clients.delete( client );
@@ -69,7 +76,7 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     browser.on( 'close', () => { synthDefs.detach( clientKey ); browsers.delete( clientKey ); closeClient( client ); } );
   } );
   sharedUdp.on( 'message', ( packet ) => {
-    try { decodeOscPacket( packet ).forEach( ( message ) => { synthDefs.receive( message ); nodeManager.receive( message ); } ); }
+    try { decodeOscPacket( packet ).forEach( ( message ) => { hostControl.receive( message ); synthDefs.receive( message ); nodeManager.receive( message ); } ); }
     catch ( error ) { synthDefs.markUnavailable( error.message ); nodeManager.markUnavailable( error.message ); }
   } );
   sharedUdp.on( 'error', ( error ) => { synthDefs.markUnavailable( error.message ); nodeManager.markUnavailable( error.message ); } );
@@ -77,7 +84,7 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     new Promise( ( resolve, reject ) => { server.once( 'listening', resolve ); server.once( 'error', reject ); } ),
     new Promise( ( resolve, reject ) => { sharedUdp.once( 'listening', resolve ); sharedUdp.once( 'error', reject ); sharedUdp.bind( 0, host ); } )
   ] );
-  synthDefs.connect(); nodeManager.connect();
+  hostControl.connect(); synthDefs.connect(); nodeManager.connect();
   const address = server.address();
   const grant = ( rawPolicy ) => {
     if ( !rawPolicy || !Array.isArray( rawPolicy.allowedPrefixes ) || !Array.isArray( rawPolicy.allowedAddresses ?? [] )
@@ -100,12 +107,17 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     clientIdentityAddresses: [ ...clientIdentityAddresses, clientIdentityAddress ].filter( Boolean ),
     disconnectAddresses: [ ...disconnectAddresses, disconnectAddress ].filter( Boolean ) } ) : null;
   return { endpoint: legacyPolicy?.endpoint ?? null, grant, port: address.port,
-    hostSnapshot: () => ( { sclang: { status: synthDefs.connected || nodeManager.status === 'ready' ? 'attached' : 'unavailable' },
-      scsynth: { status: 'unavailable' }, synthDefs: synthDefs.snapshot(), nodeManager: nodeManager.snapshot() } ),
+    hostSnapshot: () => { const control = hostControl.snapshot(); return ( {
+      sclang: { status: control.status === 'ready' || synthDefs.connected || nodeManager.status === 'ready' ? 'attached' : 'unavailable',
+        mode: control.mode, processID: control.processID },
+      scsynth: { status: control.scsynth }, synthDefs: synthDefs.snapshot(), nodeManager: nodeManager.snapshot(), control
+    } ); },
+    setNodeManager: ( action ) => hostControl.setNodeManager( action ),
+    shutdownHost: () => hostControl.shutdown(),
     nodeManagerView: ( binding ) => nodeManager.viewForBinding( binding ),
     subscribeHost: ( listener ) => { hostListeners.add( listener ); return () => hostListeners.delete( listener ); },
     close: async () => {
-      legacyPolicy?.release(); synthDefs.close(); nodeManager.close(); grants.clear(); for ( const browser of server.clients ) browser.terminate();
+      legacyPolicy?.release(); hostControl.close(); synthDefs.close(); nodeManager.close(); grants.clear(); for ( const browser of server.clients ) browser.terminate();
       for ( const client of [ ...clients ] ) closeClient( client );
       await new Promise( ( resolve ) => setImmediate( resolve ) );
       try { sharedUdp.close(); } catch {}

@@ -9,11 +9,11 @@ export class NodeManagerProjection {
     this.reconnectBaseMs = reconnectBaseMs; this.reconnectMaxMs = reconnectMaxMs;
     this.status = 'unavailable'; this.protocolVersion = null; this.highWater = 0;
     this.containers = new Map(); this.entries = new Map(); this.staging = null; this.batch = null;
-    this.retryAttempt = 0; this.lastPongAt = 0; this.pingNonce = 0; this.closed = false;
+    this.retryAttempt = 0; this.lastPongAt = 0; this.pingNonce = 0; this.closed = false; this.hostDisabled = false;
   }
 
   connect() {
-    if ( this.closed ) return;
+    if ( this.closed || this.hostDisabled ) return;
     clearTimeout( this.reconnectTimer ); clearTimeout( this.connectTimer ); clearInterval( this.healthTimer );
     this.status = this.retryAttempt ? 'reconnecting' : 'connecting';
     this.sendOsc( '/awb/nm/subscribe', [ this.clientID, 'all', '', 'summary', 'coalesced', 0.016 ] );
@@ -25,7 +25,7 @@ export class NodeManagerProjection {
   }
 
   scheduleReconnect() {
-    if ( this.closed || this.reconnectTimer ) return;
+    if ( this.closed || this.hostDisabled || this.reconnectTimer ) return;
     const delay = Math.min( this.reconnectMaxMs, this.reconnectBaseMs * ( 2 ** this.retryAttempt ) ); this.retryAttempt += 1;
     this.reconnectTimer = setTimeout( () => { this.reconnectTimer = null; this.connect(); }, delay ); this.reconnectTimer.unref?.();
   }
@@ -39,7 +39,7 @@ export class NodeManagerProjection {
   }
 
   markUnavailable() {
-    if ( this.closed ) return;
+    if ( this.closed || this.hostDisabled ) return;
     clearTimeout( this.connectTimer ); clearInterval( this.healthTimer );
     this.status = 'reconnecting'; this.protocolVersion = null; this.highWater = 0;
     this.containers.clear(); this.entries.clear(); this.staging = null; this.batch = null;
@@ -112,6 +112,18 @@ export class NodeManagerProjection {
   }
 
   recover() { this.status = 'reconnecting'; this.sendOsc( '/awb/nm/snapshot', [ this.clientID ] ); this.onChange( this.snapshot() ); }
+
+  setHostStatus( status ) {
+    const disabled = status === 'disabled';
+    if ( disabled === this.hostDisabled ) return;
+    this.hostDisabled = disabled;
+    if ( disabled ) {
+      clearTimeout( this.connectTimer ); clearTimeout( this.reconnectTimer ); clearInterval( this.healthTimer );
+      this.reconnectTimer = null; this.status = 'disabled'; this.protocolVersion = null; this.highWater = 0;
+      this.containers.clear(); this.entries.clear(); this.staging = null; this.batch = null;
+      this.onChange( this.snapshot() );
+    } else this.connect();
+  }
 
   viewForBinding( { toolSource, toolInstance } ) {
     const key = `toolSession_${ toolSource }_${ toolInstance }`;

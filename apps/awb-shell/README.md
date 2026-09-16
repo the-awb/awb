@@ -122,6 +122,28 @@ definition is installed on the active server.
 Tools without a SuperCollider host or canonical document must still launch normally; unavailable
 hosted, tracking or file actions are shown as capabilities, not treated as application failures.
 
+## Native SuperCollider hosts
+
+Electron uses native SuperCollider; the WASM language and engine remain browser implementations.
+Toolkit Home offers two full language hosts:
+
+- **Open SuperCollider** launches or activates the real IDE. That process, its documents and its
+  server remain user-owned and are never terminated by the shell.
+- **Start headless host** launches an explicit tool-only native sclang and scsynth pair. The shell
+  owns that pair, authenticates its control connection and shuts it down when requested or when the
+  shell quits. It is not presented as a replacement code editor.
+
+The headless process uses the installed SuperCollider class-library configuration and therefore
+expects `AWBHostControl` and the other awbCollider classes to be available. Override discovery with
+`AWB_SCLANG_PATH` and, when testing another checkout, `AWB_SCLANG_CONFIG`. Its scsynth port is
+selected away from an occupied default, or fixed with `AWB_HEADLESS_SERVER_PORT`.
+
+The lightweight host-control responder is separate from NodeManager. Toolkit Home can select
+`when needed`, `always on`, or `off / manual`. Turning NodeManager off removes tracking responders
+and subscriptions but never stops, releases or frees sound objects. A ToolSession Track request
+reactivates the manager and its external bridge under `when needed`; `manual` refuses implicit
+activation.
+
 ## Lissajous config documents
 
 The hosted Lissajous tool declares `lissajous-config` as a first-class document kind. These JSON

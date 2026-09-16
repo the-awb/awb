@@ -59,16 +59,14 @@ test( 'the shell relay carries and closes every declared context protocol', asyn
     clientIdentityAddresses: [ '/awb/timeline/hello', '/awb/synthdef/hello' ],
     disconnectAddresses: [ '/awb/timeline/disconnect', '/awb/synthdef/disconnect' ]
   } );
+  await waitFor( () => received.find( ( message ) => message.address === '/awb/synthdef/hello' ) );
+  const hello = received.find( ( message ) => message.address === '/awb/synthdef/hello' );
+  osc.send( encodeOscMessage( '/awb/synthdef/connected', [ hello.args[ 0 ], 1 ] ), hello.args[ 1 ], '127.0.0.1' );
   const socket = new WebSocket( relay.endpoint );
   const frames = [];
   socket.on( 'message', ( data ) => frames.push( JSON.parse( data.toString() ) ) );
   await new Promise( ( resolve ) => socket.once( 'open', resolve ) );
   socket.send( JSON.stringify( { address: '/awb/synthdef/hello', args: [ 'tool-context', 57121 ] } ) );
-  while ( !received.some( ( message ) => message.address === '/awb/synthdef/hello' ) ) {
-    await new Promise( ( resolve ) => setTimeout( resolve, 5 ) );
-  }
-  const hello = received.find( ( message ) => message.address === '/awb/synthdef/hello' );
-  osc.send( encodeOscMessage( '/awb/synthdef/connected', [ hello.args[ 0 ], 1 ] ), hello.args[ 1 ], '127.0.0.1' );
   while ( !frames.some( ( frame ) => frame.address === '/awb/synthdef/connected' ) ) {
     await new Promise( ( resolve ) => setTimeout( resolve, 5 ) );
   }

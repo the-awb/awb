@@ -34,6 +34,10 @@ export class ServiceRegistry {
     }
     return { containers: [], entries: [] };
   }
+  firstService( predicate = () => true ) {
+    for ( const record of this.#services.values() ) if ( record.service && predicate( record.service, record.configuration ) ) return record.service;
+    return null;
+  }
   async closeAll() {
     const records = [ ...this.#services.values() ]; this.#services.clear();
     await Promise.allSettled( records.map( async ( record ) => ( record.service ?? await record.pending )?.close() ) );
