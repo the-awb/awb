@@ -116,10 +116,12 @@ state without owning any of them:
   remain owned by the selected tool.
 
 Score Studio documents also have one deliberately narrow native dependency operation. Given the
-view's opaque grant for a canonical `*.score.json`, the shell resolves only a sibling named
-`synths.scd` and asks that view's native Score Studio ToolSession to load and synchronize it. The
-renderer cannot submit an arbitrary path or SuperCollider source string. Missing score-owned
-definitions fail document opening instead of silently borrowing global or app-bundled definitions.
+view's opaque grant for a canonical `*.score.json`, the shell checks only for an optional sibling
+named `synths.scd`. When present, that file is authoritative for the score: the shell asks the
+view's native Score Studio ToolSession to load and synchronize it before accepting the document.
+The renderer cannot submit an arbitrary path or SuperCollider source string. When the sibling is
+absent, the score uses definitions already installed in the connected desktop context; normal
+runtime readiness still blocks playback and names any definition which is genuinely missing.
 
 The Home status strip reports sclang attachment, scsynth readiness, SynthDef-context readiness and
 NodeManager connectivity separately. A ready language context is not presented as proof that a

@@ -34,18 +34,19 @@ and local OSC; it contains no score, instrument or scheduling policy. The AWB sh
 same manifest-bounded relay for installed tool views. Standalone scheduling stays in the browser;
 Electron uses either the attached IDE host or the shell-owned headless native sclang/scsynth host.
 
-Every score owns its SynthDefs. In the desktop shell, a canonical `*.score.json` file must have a
-`synths.scd` sibling. The shell resolves that fixed sibling from its opaque file grant, and the
-named Score Studio ToolSession executes it and synchronizes the active server before the document
-is accepted. Same-named definitions already present in the global language context are not treated
-as substitutes. The browser build may package compiled copies for WebAssembly execution, but those
-assets remain dependencies of the score that supplied them, not an application-wide definition
-authority.
+A score may own SynthDefs through an optional `synths.scd` sibling beside its canonical
+`*.score.json`. The shell resolves only that fixed sibling from its opaque file grant; when it is
+present, the named Score Studio ToolSession executes it and synchronizes the active server before
+the document is accepted. Those definitions deliberately override same-named definitions already
+installed in the host. Without a sibling, hosted playback uses the connected desktop context and
+reports any genuinely missing definitions through normal readiness. The browser build may package
+compiled copies for WebAssembly execution, but those assets do not override the desktop host.
 
-The current native host has one process-global SynthDef namespace. It therefore accepts multiple
-views of the same score dependency set but refuses simultaneous sessions backed by different
-`synths.scd` files. Supporting concurrent scores with colliding definition names requires explicit
-definition namespacing or separate server contexts; last-writer-wins replacement is not allowed.
+The current native host has one process-global SynthDef namespace. It accepts multiple views of the
+same score dependency set but refuses simultaneous sessions backed by different score-local
+`synths.scd` files. Supporting concurrent local overrides with colliding definition names requires
+explicit definition namespacing or separate server contexts; last-writer-wins replacement is not
+allowed.
 
 The hosted Instruments view lists the complete `SynthDescLib.global` inventory. It refreshes on
 open, window focus and a bounded interval, but requests compiled graph bytes and builds an
@@ -69,10 +70,11 @@ means that the selected host can accept and realize the score; it is not proof t
 audio device or loudspeaker is producing sound.
 
 Desktop definition checking uses `SynthDescLib`: it proves that sclang knows the definition, while
-the bridge separately proves that the server is running. The score dependency loader now executes
-the score-local `synths.scd` and waits for `/sync` before accepting the document. A server restarted
-outside that load path can still invalidate the inference because scsynth has no side-effect-free
-“is this SynthDef installed?” query; reopening the score restores its definitions.
+the bridge separately proves that the server is running. When supplied, the score dependency loader
+executes score-local `synths.scd` and waits for `/sync` before accepting the document. A server
+restarted outside that load path can still invalidate the inference because scsynth has no
+side-effect-free “is this SynthDef installed?” query; reopening a score with a local dependency
+file restores its definitions.
 
 ## Timeline views and editing
 

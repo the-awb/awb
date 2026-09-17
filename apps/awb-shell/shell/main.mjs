@@ -828,7 +828,7 @@ async function handleToolOperation( sender, operation, payload ) {
     const sourcePath = path.join( path.dirname( score.path ), 'synths.scd' );
     const source = await stat( sourcePath ).catch( () => null );
     if ( !source?.isFile() ) {
-      throw new Error( `Score dependency is missing: ${ path.basename( sourcePath ) } must sit beside ${ score.name }.` );
+      return { status: 'notProvided', sourceName: null };
     }
     const result = await nativeSession.service.loadScoreSynthDefs( nativeSession.sessionID, sourcePath );
     return { ...result, sourcePath: undefined };
