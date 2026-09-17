@@ -577,11 +577,29 @@ async function runHeadlessScSmoke() {
   }
   await closeToolView( launched.viewID );
   await waitFor( () => !registry.get( launched.viewID ) && !nativeToolSessions.has( launched.viewID ), 5000 );
+  const field = await launchFromHome( { toolID: 'field-modelling', profileID: 'headless', launchOrigin: 'desktop' } );
+  if ( field.status !== 'accepted' ) throw new Error( `Native Field launch failed: ${ JSON.stringify( field ) }` );
+  await waitFor( () => registry.get( field.viewID )?.lifecycle === 'ready', 25000 );
+  if ( !nativeToolSessions.has( field.viewID ) ) throw new Error( 'Native Field view has no owned sclang ToolSession.' );
+  await windows.get( field.viewID ).webContents.executeJavaScript( `new Promise((resolve, reject) => {
+    const started = Date.now();
+    const check = () => {
+      const live = [ ...document.querySelectorAll('.instLive') ]
+        .some((item) => item.title === 'Sounding on the server');
+      const canvas = document.querySelector('#stage canvas');
+      if (live && canvas?.width > 0 && canvas?.height > 0) resolve(true);
+      else if (Date.now() - started > 12000) reject(new Error(
+        'Hosted Field did not create a sounding ToolSession-owned instrument: ' + document.body.innerText.slice(0, 1000)));
+      else setTimeout(check, 25);
+    }; check();
+  })` );
+  await closeToolView( field.viewID );
+  await waitFor( () => !registry.get( field.viewID ) && !nativeToolSessions.has( field.viewID ), 5000 );
   await setNodeManager( 'manual' );
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'disabled' ), 5000 );
   await stopHeadlessHost();
   await waitFor( () => nativeScHost.snapshot().state === 'stopped', 8000 );
-  console.log( 'AWB_SHELL_HEADLESS_SC_READY engine=native scoreStudio=hosted toolSession=owned nodeManager=toggleable shutdown=owned' );
+  console.log( 'AWB_SHELL_HEADLESS_SC_READY engine=native scoreStudio=hosted fieldModelling=hosted toolSession=owned nodeManager=toggleable shutdown=owned' );
   app.quit();
 }
 

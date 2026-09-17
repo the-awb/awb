@@ -39,7 +39,7 @@ test( 'Electron owns and cleanly stops an optional native sclang/scsynth host', 
       child.once( 'exit', resolve ); child.once( 'error', reject );
     } );
     assert.equal( exitCode, 0, output );
-    assert.match( output, /AWB_SHELL_HEADLESS_SC_READY engine=native scoreStudio=hosted toolSession=owned nodeManager=toggleable shutdown=owned/ );
+    assert.match( output, /AWB_SHELL_HEADLESS_SC_READY engine=native scoreStudio=hosted fieldModelling=hosted toolSession=owned nodeManager=toggleable shutdown=owned/ );
   } finally {
     if ( child.exitCode === null ) child.kill( 'SIGKILL' );
     await rm( userData, { recursive: true, force: true } );
