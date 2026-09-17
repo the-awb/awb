@@ -32,6 +32,31 @@ test( 'observes one exact score run and rejects cross-run runtime frames', () =>
   client.disconnect();
 } );
 
+test( 'score attachment follows authoritative transport across successive runs', () => {
+  const client = new HostedFieldClient( { WebSocketImpl: FakeSocket, heartbeatMs: 100000 } );
+  client.connect( 'ws://fixture', { scoreID: 'score-a', revision: 4, followRuns: true } );
+  const socket = client.socket;
+  socket.emit( '/awb/bridge/ready', [ 60001 ] );
+  socket.emit( '/awb/timeline/connected', [ client.clientID, 1 ] );
+  socket.emit( '/awb/timeline/result', [ client.clientID, client.observeID,
+    1, 'observe', 'score-a', 4, 'observing', 'run-a' ] );
+  socket.emit( '/awb/timeline/transport', [ client.clientID,
+    'score-a', 4, 'run-a', 'playing', 0, 10, 1, 0 ] );
+  socket.emit( '/awb/timeline/realization', [ client.clientID,
+    'score-a', 4, 'run-a', 'entry-a', 'first', 'started', 0, 0, 1, 1001 ] );
+  assert.deepEqual( client.getState().realizations.map( ( item ) => item.realizationID ), [ 'first' ] );
+  socket.emit( '/awb/timeline/transport', [ client.clientID,
+    'score-a', 4, 'run-b', 'playing', 0, 20, 1, 0 ] );
+  assert.deepEqual( client.getState().realizations, [], 'a new run clears stale realizations' );
+  socket.emit( '/awb/timeline/realization', [ client.clientID,
+    'score-a', 4, 'run-a', 'entry-a', 'late', 'started', 0, 0, 1, 1002 ] );
+  socket.emit( '/awb/timeline/realization', [ client.clientID,
+    'score-a', 4, 'run-b', 'entry-a', 'second', 'started', 0, 0, 1, 1003 ] );
+  assert.deepEqual( client.getState().realizations.map( ( item ) => item.realizationID ), [ 'second' ] );
+  assert.equal( client.getState().discarded, 1 );
+  client.disconnect();
+} );
+
 test( 'requests and atomically commits a scheduled relative-phase snapshot', () => {
   const client = new HostedFieldClient( { WebSocketImpl: FakeSocket,
     heartbeatMs: 100000, observationMs: 100000 } );

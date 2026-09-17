@@ -160,7 +160,8 @@ export default function App( { host, createHostedClient } ) {
       connection: hosted.status,
       scsynthStatus: hosted.readiness.engine === 'ready' ? 'ready'
         : hosted.status === 'connecting' ? 'booting' : 'unavailable',
-      transport: hosted.transport?.state ?? null
+      transport: hosted.transport?.state ?? null,
+      runID: hosted.transport?.runID || null
     } ) );
   }, [ dirty, host, hosted.readiness.engine, hosted.status, hosted.transport?.state, session.document.revision,
     session.document.scoreID, session.mode ] );

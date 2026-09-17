@@ -167,7 +167,29 @@ function viewSnapshot( view ) {
   return { viewID: view.viewID, toolID: view.toolID, toolName: tool?.name ?? view.toolID,
     toolSessionID: view.toolSessionID, launchOrigin: view.launchOrigin, lifecycle: view.lifecycle,
     owner: view.owner, sessionState: view.sessionState, lastError: view.lastError ?? null,
+    canOpenScoreField: view.toolID === 'score-studio' && Boolean( view.toolSessionID
+      && ( view.currentDocumentPath || view.pendingRecentPath ) && view.sessionState?.scoreID ),
     liveRuntime: binding ? services.projectionForBinding( binding ) : { containers: [], entries: [] } };
+}
+
+async function openFieldForScore( scoreViewID ) {
+  const scoreView = registry.get( scoreViewID );
+  const scorePath = scoreView?.currentDocumentPath || scoreView?.pendingRecentPath;
+  if ( !scoreView || scoreView.toolID !== 'score-studio' || !scoreView.toolSessionID
+    || !scorePath || !scoreView.sessionState?.scoreID ) {
+    throw new Error( 'The selected Score Studio view has no open hosted score to observe.' );
+  }
+  const owned = nativeToolSessions.get( scoreViewID );
+  if ( !owned ) throw new Error( 'The selected score is not using a shell-owned native session.' );
+  const mode = owned.service.hostSnapshot?.().control?.mode;
+  const profileID = mode === 'headless' ? 'headless' : mode === 'ide' ? 'attached' : null;
+  if ( !profileID ) throw new Error( 'The selected score no longer has a native SuperCollider host.' );
+  return launchFromHome( { toolID: 'field-modelling', profileID, launchOrigin: 'desktop', payload: {
+    documentKindID: 'score', scorePath,
+    scoreSessionID: scoreView.toolSessionID, scoreID: scoreView.sessionState.scoreID,
+    revision: scoreView.sessionState.revision, runID: scoreView.sessionState.runID ?? null,
+    followRuns: true
+  } } );
 }
 
 function shellSnapshot() {
@@ -610,11 +632,11 @@ async function runHeadlessScSmoke() {
       }; check();
     })` );
   }
-  await closeToolView( launched.viewID );
-  await waitFor( () => !registry.get( launched.viewID ) && !nativeToolSessions.has( launched.viewID ), 5000 );
-  const field = await launchFromHome( { toolID: 'field-modelling', profileID: 'headless', launchOrigin: 'desktop' } );
+  const field = scorePath ? await openFieldForScore( launched.viewID )
+    : await launchFromHome( { toolID: 'field-modelling', profileID: 'headless', launchOrigin: 'desktop' } );
   if ( field.status !== 'accepted' ) throw new Error( `Native Field launch failed: ${ JSON.stringify( field ) }` );
-  await waitFor( () => registry.get( field.viewID )?.lifecycle === 'ready', 25000 );
+  await waitFor( () => registry.get( field.viewID )?.lifecycle === 'ready'
+    && ( !scorePath || registry.get( field.viewID )?.sessionState?.mode === 'attached' ), 25000 );
   if ( !nativeToolSessions.has( field.viewID ) ) throw new Error( 'Native Field view has no owned sclang ToolSession.' );
   await windows.get( field.viewID ).webContents.executeJavaScript( `new Promise((resolve, reject) => {
     const started = Date.now();
@@ -622,19 +644,22 @@ async function runHeadlessScSmoke() {
       const live = [ ...document.querySelectorAll('.instLive') ]
         .some((item) => item.title === 'Sounding on the server');
       const canvas = document.querySelector('#stage canvas');
-      if (live && canvas?.width > 0 && canvas?.height > 0) resolve(true);
+      const scoreProjected = ${ scorePath ? "document.body.innerText.includes('Hosted score field') && !document.body.innerText.includes('0 master-only')" : 'true' };
+      if (live && scoreProjected && canvas?.width > 0 && canvas?.height > 0) resolve(true);
       else if (Date.now() - started > 12000) reject(new Error(
-        'Hosted Field did not create a sounding ToolSession-owned instrument: ' + document.body.innerText.slice(0, 1000)));
+        'Hosted Field did not combine its owned instrument with the score projection: ' + document.body.innerText.slice(0, 1200)));
       else setTimeout(check, 25);
     }; check();
   })` );
   await closeToolView( field.viewID );
   await waitFor( () => !registry.get( field.viewID ) && !nativeToolSessions.has( field.viewID ), 5000 );
+  await closeToolView( launched.viewID );
+  await waitFor( () => !registry.get( launched.viewID ) && !nativeToolSessions.has( launched.viewID ), 5000 );
   await setNodeManager( 'manual' );
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'disabled' ), 5000 );
   await stopHeadlessHost();
   await waitFor( () => nativeScHost.snapshot().state === 'stopped', 8000 );
-  console.log( `AWB_SHELL_HEADLESS_SC_READY engine=native audioProbe=sent scoreStudio=hosted${ scorePath ? ' scorePlayback=realized' : '' } fieldModelling=hosted toolSession=owned nodeManager=toggleable shutdown=owned` );
+  console.log( `AWB_SHELL_HEADLESS_SC_READY engine=native audioProbe=sent scoreStudio=hosted${ scorePath ? ' scorePlayback=realized fieldScore=observed fieldAuthored=running' : '' } fieldModelling=hosted toolSession=owned nodeManager=toggleable shutdown=owned` );
   app.quit();
 }
 
@@ -979,7 +1004,8 @@ function registerIPC() {
         && safe.validatedDocumentKindID === view.pendingDocumentKindID ) {
         recentStore.add( { toolID: view.toolID, documentKindID: safe.validatedDocumentKindID,
           target: view.pendingRecentPath } ).then( notifyHome ).catch( ( error ) => console.error( error ) );
-        registry.update( sender.viewID, { pendingRecentPath: null } );
+        registry.update( sender.viewID, { currentDocumentPath: view.pendingRecentPath,
+          pendingRecentPath: null } );
       }
       if ( safe.disposeAcknowledged && registry.get( sender.viewID )?.lifecycle === 'closing' ) windows.get( sender.viewID )?.close();
     }
@@ -1005,6 +1031,7 @@ function registerIPC() {
         if ( !service ) throw new Error( 'No AWB-enabled SuperCollider host is available.' );
         return service.audioProbe( { frequency: 440, duration: 0.35, amplitude: 0.08 } );
       }
+      if ( request.operation === 'shell.open-field-for-score' ) return openFieldForScore( payload.viewID );
       if ( request.operation === 'shell.nodemanager' ) return setNodeManager( payload.action );
       if ( request.operation === 'render.cancel' ) {
         return requestRenderCancellation( payload.renderID );

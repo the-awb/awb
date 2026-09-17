@@ -24,6 +24,10 @@ export async function openInitialDocument( host, launchContext ) {
   if ( !record ) return { kind: 'new', config: null, file: null, project: null };
   const opened = await host.request( 'filesystem.read-file', { handle: record.handle,
     markRecent: true, documentKindID: launchContext.payload?.documentKindID } );
+  if ( opened.name.toLowerCase().endsWith( '.score.json' ) ) {
+    return { kind: 'score', config: null, file: null, project: null,
+      score: { ...opened, document: parseScoreDocument( opened.text ) } };
+  }
   if ( opened.name.toLowerCase().endsWith( '.awb-project.json' ) ) {
     const project = parseScoreProject( opened.text );
     const resolved = await host.request( 'filesystem.resolve-score-project', { handle: opened.handle,

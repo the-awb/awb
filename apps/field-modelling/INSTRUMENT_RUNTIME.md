@@ -36,9 +36,11 @@ commands; sclang creates and owns the Synths, validates controls against `SynthD
 their node IDs and lifecycle. Those synths are associated with the Field ToolSession and therefore
 remain visible to NodeManager without making the browser a second node allocator.
 
-This path is deliberately disabled when the Field view is attached to a score. In that mode the
-score's realizations are the sounding source and Field Modelling only projects them. It must not
-also start the field configuration's seed instruments and double the sound.
+This path remains available when the Field view is attached to a score. Score realizations are
+observed as externally owned voices, while instruments authored in the Field document remain owned
+by its separate `fieldModelling:*` ToolSession. They may therefore coexist deliberately. The UI and
+runtime projection must keep those ownership classes distinct so that a score realization is never
+respawned, released or drawn twice as though it were a Field-authored instrument.
 
 Natural completion or an external free reconciles the authored instrument back to `Play`; it is
 not silently respawned. A bridge disconnect does not make the same claim—the synth may still exist

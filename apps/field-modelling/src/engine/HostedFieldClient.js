@@ -21,8 +21,9 @@ export class HostedFieldClient {
     if ( this.socket?.readyState !== this.WebSocketImpl.OPEN ) throw new Error( 'Hosted Field bridge is not connected.' );
     this.socket.send( JSON.stringify( { address, args } ) );
   }
-  connect( endpoint, { scoreID = null, revision = null, runID = null, toolSessionID = '' } = {} ) {
-    this.disconnect(); this.binding = Object.freeze( { scoreID, revision, runID, toolSessionID } );
+  connect( endpoint, { scoreID = null, revision = null, runID = null,
+    followRuns = false, toolSessionID = '' } = {} ) {
+    this.disconnect(); this.binding = Object.freeze( { scoreID, revision, runID, followRuns, toolSessionID } );
     this.publish( { ...EMPTY, status: 'connecting' } );
     const socket = new this.WebSocketImpl( endpoint ); this.socket = socket;
     socket.addEventListener( 'message', ( event ) => this.receive( event.data ) );
@@ -66,8 +67,11 @@ export class HostedFieldClient {
     } else if ( address === '/awb/timeline/transport' && args[ 0 ] === this.clientID ) {
       const transport = { scoreID: args[ 1 ], revision: args[ 2 ], runID: args[ 3 ], state: args[ 4 ],
         scorePosition: args[ 5 ], hostMonotonicTime: args[ 6 ], rate: args[ 7 ], currentIndex: args[ 8 ] };
-      if ( !this.accepts( transport ) ) { this.publish( { discarded: this.state.discarded + 1 } ); return; }
-      this.publish( { transport: Object.freeze( transport ) } );
+      if ( !this.acceptsTransport( transport ) ) { this.publish( { discarded: this.state.discarded + 1 } ); return; }
+      const changedRun = this.binding.followRuns && this.state.transport?.runID !== transport.runID;
+      if ( changedRun ) this.phasePending.clear();
+      this.publish( { transport: Object.freeze( transport ),
+        ...( changedRun ? { realizations: Object.freeze( [] ), phaseStatus: 'idle', phaseSnapshot: null } : {} ) } );
     } else if ( address === '/awb/timeline/realization' && args[ 0 ] === this.clientID ) {
       const realization = { scoreID: args[ 1 ], revision: args[ 2 ], runID: args[ 3 ], entryID: args[ 4 ],
         realizationID: args[ 5 ], state: args[ 6 ], scoreIndex: args[ 7 ], scoreTime: args[ 8 ],
@@ -134,10 +138,12 @@ export class HostedFieldClient {
   }
   requestPhaseSnapshot() {
     if ( this.state.status !== 'observing' || !this.observedNodeIDs.length || this.phasePending.size ) return;
+    const runID = this.state.transport?.runID || this.binding.runID;
+    if ( !runID ) return;
     const requestID = `field-${ ++this.phaseNonce }`;
     this.phasePending.set( requestID, { requestID, components: new Map(), expected: null } );
     this.send( '/awb/field/observe', [ this.clientID, requestID,
-      this.binding.scoreID, this.binding.revision, this.binding.runID,
+      this.binding.scoreID, this.binding.revision, runID,
       this.observedNodeIDs.length, ...this.observedNodeIDs ] );
   }
   completePhaseSnapshot( requestID, reportedCount ) {
@@ -158,8 +164,15 @@ export class HostedFieldClient {
       components: Object.freeze( [ ...pending.components.values() ] )
     } ) } );
   }
-  accepts( message ) { return message.scoreID === this.binding.scoreID
-    && message.revision === this.binding.revision && message.runID === this.binding.runID; }
+  accepts( message ) {
+    if ( message.scoreID !== this.binding.scoreID || message.revision !== this.binding.revision ) return false;
+    const runID = this.binding.followRuns ? this.state.transport?.runID : this.binding.runID;
+    return !runID || message.runID === runID;
+  }
+  acceptsTransport( message ) {
+    if ( message.scoreID !== this.binding.scoreID || message.revision !== this.binding.revision ) return false;
+    return this.binding.followRuns || !this.binding.runID || message.runID === this.binding.runID;
+  }
   request( address, args, requestID ) {
     return new Promise( ( resolve, reject ) => {
       const timer = setTimeout( () => {

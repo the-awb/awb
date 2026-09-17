@@ -43,3 +43,17 @@ test( 'project open resolves score and config while config save leaves score unt
   assert.equal( writes[ 0 ].payload.documentKindID, 'field-config' );
   assert.equal( score.revision, 7 );
 } );
+
+test( 'direct score attachment opens observation data without inventing a Field config', async () => {
+  const score = createScoreDocument( { scoreID: 'score-a', revision: 7 } );
+  const host = { request: async ( operation ) => {
+    if ( operation === 'filesystem.initial-file' ) return { handle: 'score', name: 'score-a.score.json' };
+    if ( operation === 'filesystem.read-file' ) return { handle: 'score', name: 'score-a.score.json',
+      text: serializeScoreDocument( score ) };
+    throw new Error( `Unexpected operation: ${ operation }` );
+  } };
+  const opened = await openInitialDocument( host, { payload: { documentKindID: 'score' } } );
+  assert.equal( opened.kind, 'score' );
+  assert.equal( opened.config, null );
+  assert.equal( opened.score.document.scoreID, 'score-a' );
+} );

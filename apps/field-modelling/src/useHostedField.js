@@ -13,9 +13,11 @@ export function useHostedField( { context, document, speakers, instruments, disp
     if ( !enabled || !context.connections?.endpoint ) return undefined;
     client.connect( context.connections.endpoint, { scoreID: document?.scoreID ?? null,
       revision: document?.revision ?? null, runID: context.payload?.runID ?? null,
+      followRuns: context.payload?.followRuns === true,
       toolSessionID: context.toolSessionID ?? '' } );
     return () => client.disconnect();
-  }, [ client, context.connections?.endpoint, context.payload?.runID, context.toolSessionID, document, enabled ] );
+  }, [ client, context.connections?.endpoint, context.payload?.followRuns,
+    context.payload?.runID, context.toolSessionID, document, enabled ] );
   const projection = useMemo( () => projectScoreRealizations( document, runtime, speakers ),
     [ document, runtime.realizations, speakers ] );
   useEffect( () => {
@@ -45,7 +47,7 @@ export function useHostedField( { context, document, speakers, instruments, disp
       corrections: Object.freeze( corrections ) } );
   }, [ projection.instruments, runtime.phaseSnapshot, speakers ] );
   const authored = useHostedInstrumentVoices( {
-    client, runtime, instruments, enabled: enabled && !document, dispatch, timeFactor
+    client, runtime, instruments, enabled, dispatch, timeFactor
   } );
   const voices = useMemo( () => enabled ? Object.freeze( {
     external: projection.instruments, voicesRef: authored.voicesRef,

@@ -169,8 +169,10 @@ scsynth.wasm. Browser Score Studio retains its standalone WASM mode.
 Field Modelling follows the same ownership boundary. **New analytic field** needs no audio host;
 **Use SuperCollider IDE** and **Use headless SuperCollider** ask the selected native sclang host to
 create a named `fieldModelling:*` ToolSession. Authored Field instruments are then created and
-controlled through that session. A Field view opened from a score project instead observes the
-named score run and does not duplicate it with a second authored-instrument playback path.
+controlled through that session. An active hosted Score Studio card exposes **Open Field for this
+score**. That view observes the score's current and subsequent runs while retaining its separate
+Field ToolSession: score realizations and Field-authored instruments can therefore coexist without
+confusing their ownership or lifecycle.
 
 ## Lissajous config documents
 

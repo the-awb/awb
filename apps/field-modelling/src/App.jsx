@@ -38,7 +38,7 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
   const [ error, setError ] = useState( null );
   const [ readings, setReadings ] = useState( {} );
   const stateRef = useRef( state ); stateRef.current = state;
-  const attached = Boolean( context.payload?.scoreSessionID && context.payload?.runID );
+  const attached = Boolean( context.payload?.scoreSessionID && scoreDocument );
   const hostedConnection = Boolean( context.connections?.endpoint && context.toolSessionID );
   const runtime = useMemo( () => ( {
     ...EMPTY_INSTRUMENT_RUNTIME,
@@ -83,7 +83,8 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
         setProject( opened.kind === 'project' ? { projectID: opened.project.projectID,
           scoreID: opened.project.score.scoreID, bindingID: opened.binding.bindingID } : null );
         setScoreDocument( opened.score?.document ?? null );
-        setDocumentStatus( opened.kind === 'new' ? 'new field' : `opened ${ opened.file.name }` );
+        setDocumentStatus( opened.kind === 'new' ? 'new field'
+          : opened.kind === 'score' ? `observing ${ opened.score.name}` : `opened ${ opened.file.name }` );
         host.reportDetailedState( { validatedDocumentKindID: opened.kind === 'project' ? 'score-project' :
           opened.kind === 'config' ? 'field-config' : null } );
       } catch ( failure ) { if ( live ) { setError( failure.message ); setDocumentStatus( 'open failed' ); } }
@@ -134,7 +135,7 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
         : mode === 'live' ? 'Desktop live field' : 'Analytic preview' }</span></div>
       <div className="fieldIdentity">
         { project && <span>{ project.projectID } / { project.bindingID }</span> }
-        { attached && <span>session { context.payload.scoreSessionID } / run { context.payload.runID }</span> }
+        { attached && <span>session { context.payload.scoreSessionID } / run { hosted.runtime.transport?.runID || 'waiting' }</span> }
         { attached && <span>score { hosted.runtime.status } · phase { hosted.runtime.phaseStatus } · { hosted.projection.instruments.length } master-only · { hosted.projection.unsupported.length } unsupported</span> }
         <span>{ documentStatus }</span>
       </div>
