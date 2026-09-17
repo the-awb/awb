@@ -31,6 +31,11 @@ export function payloadFields( event ) {
   return fields;
 }
 
+export function payloadFieldPlaceholder( field ) {
+  if ( !field.declared || field.defaultValue === undefined ) return undefined;
+  return String( field.defaultValue );
+}
+
 export function updatePayloadField( event, name, value, kind ) {
   const next = { ...event };
   if ( value === '' && kind !== 'boolean' ) {

@@ -1,6 +1,6 @@
 import { INSTRUMENT_CATALOG } from '@awb/instruments';
 import { useEffect, useState } from 'react';
-import { payloadFields, updatePayloadField } from '../engine/eventPayloadFields.js';
+import { payloadFieldPlaceholder, payloadFields, updatePayloadField } from '../engine/eventPayloadFields.js';
 import { formatScValue, parseScValue } from '../engine/scValueSyntax.js';
 
 const COMMON_TYPES = [ 'note', 'set', 'release', 'free' ];
@@ -46,7 +46,9 @@ export default function EventPayloadEditor( { event, onChange } ) {
               <input aria-label={ `Payload ${ field.name }` } type={ field.kind }
                 min={ field.min } max={ field.max } step={ field.step }
                 value={ event[ field.name ] ?? '' }
-                placeholder={ field.declared ? 'unset' : undefined }
+                className={ event[ field.name ] === undefined && field.defaultValue !== undefined
+                  ? 'payloadInheritedDefault' : undefined }
+                placeholder={ payloadFieldPlaceholder( field ) }
                 onChange={ ( change ) => update( field.name, change.target.value, field.kind ) } />
             </label> ) }
       </div>
