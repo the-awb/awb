@@ -25,10 +25,10 @@ input, textarea { border: 1px solid var(--line); border-radius: 5px; background:
 .saveState { color: var(--muted); font-size: 11px; }.saveState.dirty { color: #f0b466; }
 .modeSwitch { margin-left: auto; display: flex; padding: 2px; border: 1px solid var(--line); border-radius: 8px; }
 .modeSwitch button { border: 0; background: transparent; text-transform: capitalize; }.modeSwitch button.active { background: var(--panel-2); color: var(--accent); }
-.panelLayout { --bottom-panel-height: 300px; flex: 1; min-height: 0; display: grid; grid-template-columns: 264px minmax(420px, 1fr) 280px; grid-template-rows: minmax(0, 1fr) var(--bottom-panel-height); }
-.panelLayout.leftCollapsed { grid-template-columns: 32px minmax(420px, 1fr) 280px; }
-.panelLayout.rightCollapsed { grid-template-columns: 264px minmax(420px, 1fr) 32px; }
-.panelLayout.leftCollapsed.rightCollapsed { grid-template-columns: 32px minmax(420px, 1fr) 32px; }
+.panelLayout { --bottom-panel-height: 300px; flex: 1; min-height: 0; display: grid; grid-template-columns: 300px minmax(420px, 1fr) 280px; grid-template-rows: minmax(0, 1fr) var(--bottom-panel-height); }
+.panelLayout.leftCollapsed { grid-template-columns: 52px minmax(420px, 1fr) 280px; }
+.panelLayout.rightCollapsed { grid-template-columns: 300px minmax(420px, 1fr) 32px; }
+.panelLayout.leftCollapsed.rightCollapsed { grid-template-columns: 52px minmax(420px, 1fr) 32px; }
 .panelLayout.bottomCollapsed { grid-template-rows: minmax(0, 1fr) 31px; }
 .studioRail { position: relative; min-width: 0; min-height: 0; background: var(--panel); }
 .leftRail { grid-column: 1; grid-row: 1; border-right: 1px solid var(--line); }
@@ -36,10 +36,16 @@ input, textarea { border: 1px solid var(--line); border-radius: 5px; background:
 .workspace { grid-column: 2; grid-row: 1; }
 .railCollapse { position: absolute; z-index: 8; top: 7px; width: 24px; height: 24px; padding: 0; }
 .leftRail > .railCollapse { right: 5px; }.rightRail > .railCollapse { left: 5px; }
-.leftRailContent, .runtimeRailContent { height: 100%; min-height: 0; display: flex; flex-direction: column; }
-.railTabs { flex: 0 0 39px; display: flex; gap: 2px; padding: 6px 34px 6px 7px; border-bottom: 1px solid var(--line); }
-.railTabs button { min-width: 0; padding: 4px 7px; border-color: transparent; background: transparent; font-size: 10px; }
-.railTabs button.active { border-color: var(--line); background: var(--panel-2); color: var(--accent); }
+.leftRailContent { height: 100%; min-height: 0; display: grid; grid-template-columns: 52px minmax(0, 1fr); }
+.runtimeRailContent { height: 100%; min-height: 0; display: flex; flex-direction: column; }
+.activityRail { min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 7px 5px; border-right: 1px solid var(--line); background: #121210; }
+.activityRail button { position: relative; width: 40px; height: 40px; padding: 0; border-color: transparent; background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; }
+.activityRail button.active { background: var(--panel-2); color: var(--accent); }
+.activityRail button.active::before { content: ''; position: absolute; top: 5px; bottom: 5px; left: -6px; width: 2px; background: var(--accent); }
+.activityRail .spacer { flex: 1; }
+.railPanel { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.railPanel > header { flex: 0 0 39px; display: flex; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.railPanel > header h2 { margin: 0; }
 .railScroll { min-height: 0; overflow: auto; padding: 14px; }
 .runtimeRailContent > header { flex: 0 0 39px; display: flex; align-items: center; gap: 8px; padding: 8px 36px 8px 12px; border-bottom: 1px solid var(--line); }
 .runtimeRailContent > header h2 { margin: 0; }.runtimeRailContent > header span { color: var(--muted); font-size: 9px; }
@@ -260,10 +266,10 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .liveControl em { color: var(--muted); font-size: 9px; font-style: normal; }
 .liveBoolean input { justify-self: end; }
 @media (max-width: 900px) {
-  .panelLayout { grid-template-columns: 210px minmax(360px, 1fr) 220px; }
-  .panelLayout.leftCollapsed { grid-template-columns: 32px minmax(360px, 1fr) 220px; }
-  .panelLayout.rightCollapsed { grid-template-columns: 210px minmax(360px, 1fr) 32px; }
-  .panelLayout.leftCollapsed.rightCollapsed { grid-template-columns: 32px minmax(360px, 1fr) 32px; }
+  .panelLayout { grid-template-columns: 260px minmax(360px, 1fr) 220px; }
+  .panelLayout.leftCollapsed { grid-template-columns: 52px minmax(360px, 1fr) 220px; }
+  .panelLayout.rightCollapsed { grid-template-columns: 260px minmax(360px, 1fr) 32px; }
+  .panelLayout.leftCollapsed.rightCollapsed { grid-template-columns: 52px minmax(360px, 1fr) 32px; }
   .focusPanelScroll .entryFields { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
   .instrumentGrid { grid-template-columns: 1fr; }
   .hostedSynthLibraryBody { grid-template-columns: 1fr; }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { cloneElement, useEffect, useRef, useState } from 'react';
 
 const MIN_BOTTOM_HEIGHT = 180;
 const MAX_BOTTOM_HEIGHT = 560;
@@ -32,10 +32,10 @@ export default function PanelLayout( { left, centre, right, bottom } ) {
     <div className={ `panelLayout ${ collapsed.left ? 'leftCollapsed' : '' } ${ collapsed.right ? 'rightCollapsed' : '' } ${ collapsed.bottom ? 'bottomCollapsed' : '' }` }
       style={ { '--bottom-panel-height': `${ bottomHeight }px` } }>
       <aside className="studioRail leftRail">
-        <button className="railCollapse" aria-label={ collapsed.left ? 'Expand left panel' : 'Collapse left panel' }
-          title={ collapsed.left ? 'Expand left panel' : 'Collapse left panel' }
-          onClick={ () => toggle( 'left' ) }>{ collapsed.left ? '\u203a' : '\u2039' }</button>
-        { !collapsed.left && left }
+        { cloneElement( left, {
+          collapsed: collapsed.left,
+          onToggleCollapsed: () => toggle( 'left' )
+        } ) }
       </aside>
       <main className="workspace">{ centre }</main>
       <aside className="studioRail rightRail">

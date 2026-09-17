@@ -29,8 +29,10 @@ explicitly performs a future insertion action.
 
 - Canonical authored data is the open `awb.score/1` document. While open, the editor owns its live
   revision. A saved file is a persistence checkpoint, not a competing in-memory authority.
-- `PTimelinePlayer`/`PScoreTimelinePlayer` owns hosted scheduling and transport. The standalone
-  executor owns browser scheduling. The renderer must not invent a second clock.
+- `PTimelinePlayer`/`PScoreTimelinePlayer` owns shell scheduling and transport. Every shell runtime
+  is hosted: either shell-managed headless SuperCollider or a connection to an existing desktop
+  context. The standalone executor owns scheduling only for a browser host that explicitly
+  advertises it. The renderer must not invent a second clock.
 - NodeManager observes and controls realized desktop objects through their owning context. It does
   not own score membership.
 - The current execution context's SynthDef inventory is authoritative for availability. Interface
@@ -39,8 +41,9 @@ explicitly performs a future insertion action.
   everything desktop SuperCollider can play.
 - `@awb/sc-envelope` defines envelope values. `@awb/synthdef-interface` decides whether an actual
   SynthDef exposes an `envArray`, parametric envelope, or inspect-only baked envelope.
-- Hosted and standalone execution remain strict modes. Hosted controls use the connected desktop
-  engine; they must never fall back silently to scsynth.wasm.
+- The shell exposes only `hosted` execution. Headless versus connected is hosted topology reported
+  by the host, not a score execution mode. Browser hosts may separately advertise standalone
+  `scsynth.wasm`; hosted controls must never fall back silently to it.
 
 Relevant implementation surfaces:
 
@@ -55,20 +58,23 @@ Relevant implementation surfaces:
 ## 3. Target layout
 
 ```text
-+----------------+--------------------------------------+----------------+
-| Left rail      | Transport                            | Right rail     |
-| [Document]     +--------------------------------------+ loaded/runtime |
-| [Instruments]  |                                      | instruments    |
-|                | Score timeline                       | realizations   |
-| collapsible    |                                      | collapsible    |
-+----------------+--------------------------------------+----------------+
++----+-----------+--------------------------------------+----------------+
+|Act.| Left      | Transport                            | Right rail     |
+|rail| content   +--------------------------------------+ loaded/runtime |
+|[D] | panel     |                                      | instruments    |
+|[I] |           | Score timeline                       | realizations   |
+|    |collapsible|                                      | collapsible    |
++----+-----------+--------------------------------------+----------------+
 | Bottom edit and audition panel — collapsible and vertically resizable       |
 +------------------------------------------------------------------------------+
 ```
 
-The left rail, right rail and bottom panel must each be independently collapsible. The bottom
-panel should also be vertically resizable. Panel dimensions and collapsed state are view state,
-not score data; persist them per Score Studio view when the host offers view preferences.
+The left side follows the VS Code pattern: a narrow persistent activity rail owns the Document and
+Instruments tabs, and a distinct adjacent content panel shows the selected tab. Collapsing the left
+content panel leaves the activity rail visible. The left content panel, right rail and bottom panel
+must each be independently collapsible. The bottom panel should also be vertically resizable. Panel
+dimensions and collapsed state are view state, not score data; persist them per Score Studio view
+when the host offers view preferences.
 
 The existing transport strip remains above the timeline controls. Timeline cursor and playhead
 remain separate: single click places/focuses, double-click seeks.
@@ -81,9 +87,10 @@ Move the following into the first left-rail tab:
 - file name, score ID, revision, entry count and dirty/saved state;
 - Save and Save As;
 - SC projection state and generation actions where still useful;
-- hosted or standalone runtime connection/readiness details;
+- hosted topology (headless or connected), connection and readiness details;
 - hosted Connect/Disconnect, Load revision, State and Open SC document actions;
-- standalone engine/language preparation and shutdown actions.
+- browser-only standalone engine/language preparation and shutdown actions when that host
+  capability is present.
 
 Toolkit Home is the desktop source of New, Open, Browse and Recents. Therefore the embedded AWB
 shell view should not repeat New, Open or Demo score. Do not delete browser ingress blindly:
@@ -115,6 +122,15 @@ Opening the tab may refresh the cheap name inventory. Compiled graph transfer an
 `@awb/synthdef-interface` construction remain lazy: build the detailed model only when a row is
 selected, referenced by the score, or explicitly refreshed. Do not eagerly model hundreds of
 SynthDefs merely to draw the list.
+
+System and execution-context SynthDefs must appear in the available inventory even when the score
+does not reference them and `@awb/instruments` does not catalogue them. Selecting or explicitly
+loading one admits its exact name, context generation and fingerprint into this Score Studio view's
+loaded set and creates an audition draft from the transferred compiled graph. System provenance
+alone must not make a definition inspect-only: it is auditionable whenever its actual interface and
+runtime lifecycle can be driven safely. If it cannot be auditioned, keep it visible and state the
+specific missing control, routing or lifecycle capability. Browser-standalone mode may offer only
+system definitions whose exact compiled binary is installed in that browser context.
 
 Clicking an instrument row puts a SynthDef audition draft into the bottom panel. It does not start
 a node and does not alter the score.
@@ -197,8 +213,9 @@ audition voices may coexist. The panel should display how many it owns and provi
 Do not target `@all`, do not reuse the score event ID as the node owner, and do not let Stop touch
 score playback, rack nodes, another view, or another audition draft. Hosted audition nodes belong
 to the Score Studio ToolContext/ToolSession with explicit audition metadata so NodeManager can
-observe them without confusing them with score realizations. Standalone nodes require the same
-logical ownership even though their server node IDs are browser-local.
+observe them without confusing them with score realizations. Browser-standalone nodes require the
+same logical ownership even though their server node IDs are browser-local; the shell never exposes
+this path.
 
 Natural node completion removes that realization from the audition controller. Changing focus must
 not orphan still-running audition nodes: retain their ownership record until completion or an
@@ -234,39 +251,29 @@ At target score time `T`:
 
 1. fold all deterministic note/set/release/free entries before `T` into a logical runtime state;
 2. discard notes already released/freed/completed before `T`;
-3. for each note logically alive at `T`, create a new realization with a fresh realization ID;
+3. for each note logically alive at `T` with an exact state adapter, create a new realization with a
+   fresh realization ID; report every other logically alive note as skipped;
 4. apply the latest deterministic control values that should be in force at `T`;
 5. calculate remaining gate, release, free and event-duration boundaries relative to `T`;
 6. schedule future authored entries from `T` normally.
 
 The authored event and original realization are never reused. Reconstructed nodes belong to the
-new run and must be reported as reconstructed/approximate in runtime metadata.
+new run and must be reported as `reconstruction: exact` in runtime metadata.
 
 ### 5.1 Reconstruction capability levels
 
-Smart seek cannot honestly be universal. Define per-instrument reconstruction capability:
+Smart seek cannot honestly be universal. Reconstruction is binary for this workflow:
 
-- **exact state adapter** — the instrument exposes enough controls to restore oscillator phase,
-  envelope position and relevant state;
-- **lifecycle reconstruction** — effective controls and remaining lifetime are known, but internal
-  oscillator/envelope state cannot be restored exactly;
-- **restart only** — the note can only be restarted with its current controls;
-- **unsupported** — nondeterministic or opaque state must be omitted rather than guessed.
+- **exact state adapter** — the instrument exposes enough controls to restore oscillator/sample
+  phase, envelope position, effective controls and remaining lifetime;
+- **unsupported** — the note is omitted from reconstruction and reported as skipped.
 
-The first useful implementation should target deterministic note lifecycles:
-
-- compute `elapsed = T - noteStart` and remaining authored duration;
-- fold preceding deterministic `set` events into the recreated payload;
-- shorten future gate/release/free scheduling to the remaining intervals;
-- use an explicit short anti-click attack or instrument-specific reconstruction adapter rather
-  than claiming a restarted baked EnvGen is at its original level;
-- mark the realization `reconstruction: lifecycle` or `reconstruction: restart`.
-
-For an editable `envArray`, a later adapter may evaluate the envelope at `elapsed` and construct a
-remaining envelope beginning at that level. Parametric or baked envelopes cannot generally be
-rewound from outside their SynthDef. Phase-continuous oscillators likewise require an explicit
-phase/offset interface. “Shorter `dur`” is useful, but by itself is not exact acoustic
-reconstruction.
+The planner may fold deterministic note/set/release/free history to identify notes logically alive
+at `T`, but it must emit a reconstruction only when an exact adapter can restore that note's audible
+state. A shorter duration, a fresh baked EnvGen, a short anti-click attack or a phase-reset oscillator
+is a restart, not reconstruction, and must therefore be excluded. For an editable `envArray`, an
+exact adapter may evaluate the envelope at `elapsed` and construct the remaining envelope beginning
+at that level, but it must also restore every other audible state the instrument declares relevant.
 
 Seeking while paused must continue to free the suspended nodes before reconstruction. Seeking
 while playing should atomically replace the old run: stop/free old owned nodes, install the new
@@ -282,8 +289,18 @@ anchor and reconstruction plan, then resume. No old `/n_end` may attach to the n
 - reconstructing notes whose lifetime contract is unknown.
 
 The UI should distinguish ordinary boundary seek from smart seek until the latter's supported
-surface is well understood. It should report skipped or approximate reconstructions rather than
-silently implying exactness.
+surface is well understood. It should report skipped notes and the missing exact-state capability;
+it must not offer or label approximate reconstruction.
+
+### 5.3 Planner and executor ownership
+
+`buildSeekReconstructionPlan(document, target, capabilities)` is a pure JS/domain function. It
+folds authored deterministic state and returns exact reconstructions, skipped-note diagnostics and
+future authored boundaries; it does not create nodes or own a clock. In both headless-hosted and
+connected-hosted shell contexts, `PTimelinePlayer`/`PScoreTimelinePlayer` remains the authoritative
+scheduler and atomically applies the plan to a fresh run. Only an explicit browser-standalone host
+uses `StandaloneScoreExecutor` to apply the same plan. The React tool selects seek mode and displays
+the report; it never performs reconstruction itself.
 
 ## 6. State and component boundaries
 
@@ -294,12 +311,13 @@ Do not make `App.jsx` larger. This refactor is the right moment to extract:
 - `ScoreFocusPanel` for the bottom scope/draft/audition state machine;
 - `ScoreRuntimeRail` for loaded definitions and realizations;
 - `PanelLayout` for collapse/resize view state;
-- an engine-side `AuditionController` with hosted and standalone adapters;
+- an engine-side `AuditionController` with a hosted adapter and an optional browser-standalone
+  adapter;
 - an engine-side pure `buildSeekReconstructionPlan(document, target, capabilities)`.
 
-Canonical score mutations still go through `scoreSessionReducer`. Runtime state remains in the
-hosted client or standalone executor. Panel geometry, active tabs, search text and focus drafts are
-editor/view state and must not be serialized into the score.
+Canonical score mutations still go through `scoreSessionReducer`. Shell runtime state remains in
+the hosted client; browser-only standalone state remains in its executor. Panel geometry, active
+tabs, search text and focus drafts are editor/view state and must not be serialized into the score.
 
 ## 7. Implementation slices
 
@@ -314,6 +332,7 @@ editor/view state and must not be serialized into the score.
 ### Slice B — instrument inventory and focus
 
 - build the categorised searchable compact list;
+- include system/execution-context SynthDefs and allow explicit admission to the loaded set;
 - retain lazy interface loading and fingerprint invalidation;
 - selecting an event or SynthDef establishes explicit bottom-panel scope;
 - embed compact parametric/read-only envelope projections.
@@ -321,16 +340,17 @@ editor/view state and must not be serialized into the score.
 ### Slice C — isolated audition
 
 - add `AuditionController` and identity model;
-- Play creates fresh hosted or standalone audition realizations;
+- Play creates fresh hosted audition realizations, or browser-standalone realizations only when the
+  browser host explicitly enables that mode;
 - Stop frees only the current draft's audition nodes;
 - integrate the compact `envArray` editor where authorised;
 - project hosted audition nodes through NodeManager with explicit origin metadata.
 
-### Slice D — smart-seek plan and lifecycle reconstruction
+### Slice D — smart-seek plan and exact reconstruction
 
 - implement and fixture-test the pure reconstruction planner first;
-- add hosted and standalone execution adapters over the same plan;
-- expose approximate/skipped reconstruction reports;
+- add the hosted execution adapter over the plan, plus the optional browser-standalone adapter;
+- reconstruct only through exact state adapters and expose skipped-note reports;
 - validate run/realization isolation against late lifecycle messages.
 
 ## 8. Acceptance criteria
@@ -340,6 +360,8 @@ editor/view state and must not be serialized into the score.
   where its host still owns it.
 - Instrument list ordering is score-pinned, loaded, then remaining, with no duplicates and working
   search.
+- System/context SynthDefs can be admitted and auditioned when their exact compiled interface and
+  runtime lifecycle support it; unsupported definitions remain visible with a concrete reason.
 - Selecting one instrument builds only that detailed interface model.
 - Event selection and SynthDef selection produce the correct, visibly named bottom-panel scope.
 - Applying an event draft creates exactly one document revision; auditioning creates none.
@@ -349,10 +371,11 @@ editor/view state and must not be serialized into the score.
 - Envelope UI matches `envArray`/`parametric`/`inspectOnly` capability and never offers a control
   that cannot reach the selected SynthDef.
 - Left, right and bottom panels collapse independently; resizing does not touch canonical data.
-- Smart seek never mutates authored entries, never reuses old realization IDs and reports
-  approximate or skipped reconstruction honestly.
-- Existing hosted and standalone readiness, save, transport, typed/raw event editing, browser
-  smoke, real hosted sclang and real standalone audio gates remain green.
+- Smart seek never mutates authored entries, never reuses old realization IDs, excludes every note
+  without an exact state adapter and reports each skipped note honestly.
+- Existing hosted readiness, save, transport, typed/raw event editing, browser smoke and real hosted
+  sclang gates remain green. Browser-standalone gates remain green for the web host; the shell must
+  not expose that mode.
 
 ## 9. Main gotchas
 
@@ -364,8 +387,8 @@ editor/view state and must not be serialized into the score.
    parsing every compiled graph is not.
 4. **Do not make the envelope picture promise editability.** Graph capability decides which
    controls exist.
-5. **Do not call approximate smart seek exact.** Restarting an oscillator or baked EnvGen with a
-   shorter duration does not restore its phase or envelope position.
+5. **Do not reconstruct without an exact adapter.** Restarting an oscillator or baked EnvGen with a
+   shorter duration does not restore its phase or envelope position and must be reported as skipped.
 6. **Keep draft and canonical state separate.** Raw JSON, typed controls, envelope controls and
    audition must share one focus draft; only Apply changes the score.
 7. **Guard focus changes.** A late hosted reply, SynthDef inventory refresh or score revision must

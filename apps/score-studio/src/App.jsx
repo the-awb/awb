@@ -612,12 +612,12 @@ export default function App( { host, createHostedClient } ) {
     <div className="appShell">
       <header className="topbar">
         <div className="brand"><span>AWB</span><strong>Score</strong></div>
-        <div className="modeSwitch" aria-label="Execution mode">
+        { executionModes.length > 1 && <div className="modeSwitch" aria-label="Execution mode">
           { executionModes.map( ( mode ) => (
             <button key={ mode } className={ session.mode === mode ? 'active' : '' }
               onClick={ () => dispatch( { type: 'SET_MODE', mode } ) }>{ mode }</button>
           ) ) }
-        </div>
+        </div> }
       </header>
       <PanelLayout
         left={ <ScoreStudioLeftRail

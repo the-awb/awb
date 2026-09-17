@@ -30,19 +30,25 @@ page.on( 'pageerror', ( error ) => failures.push( error.message ) );
 try {
   await page.goto( url, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'AWB', { exact: true } ).waitFor();
-  if ( !( await page.locator( '.railTabs' ).isVisible() ) ) failures.push( 'left contextual rail tabs are missing' );
+  if ( !( await page.locator( '.activityRail' ).isVisible() )
+    || !( await page.locator( '.railPanel' ).isVisible() ) ) {
+    failures.push( 'left activity rail and separate content panel are missing' );
+  }
   if ( await page.getByRole( 'button', { name: 'New', exact: true } ).count() !== 1
     || await page.getByRole( 'button', { name: 'Open…', exact: true } ).count() !== 1
     || await page.getByRole( 'button', { name: 'Demo score', exact: true } ).count() !== 1 ) {
     failures.push( 'browser document ingress controls are missing' );
   }
-  await page.locator( '.railTabs' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
   if ( !( await page.getByRole( 'button', { name: 'Open instrument workspace', exact: true } ).isVisible() ) ) {
     failures.push( 'left instrument tab did not preserve access to the existing workspace' );
   }
-  await page.locator( '.railTabs' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
   await page.getByRole( 'button', { name: 'Collapse left panel', exact: true } ).click();
   if ( await page.locator( '.panelLayout.leftCollapsed' ).count() !== 1 ) failures.push( 'left panel did not collapse independently' );
+  if ( !( await page.locator( '.activityRail' ).isVisible() ) || await page.locator( '.railPanel' ).count() !== 0 ) {
+    failures.push( 'left collapse did not preserve the activity rail while hiding its content panel' );
+  }
   await page.getByRole( 'button', { name: 'Expand left panel', exact: true } ).click();
   await page.getByRole( 'button', { name: 'Collapse right panel', exact: true } ).click();
   if ( await page.locator( '.panelLayout.rightCollapsed' ).count() !== 1 ) failures.push( 'right panel did not collapse independently' );
