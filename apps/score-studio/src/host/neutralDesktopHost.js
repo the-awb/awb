@@ -28,6 +28,7 @@ export function createNeutralDesktopHost( {
     projectionSave: grants.filesystem?.includes( 'save-file' ) ?? false,
     retainedFileHandles: true, downloadFallback: false, recoveryStorage: Boolean( storage ),
     hostedLaunch: Boolean( launch.connections?.endpoint || launch.toolSessionID ),
+    documentIngress: Object.freeze( { new: false, open: false, demo: false, browse: false } ),
     executionModes: Object.freeze( [ 'hosted' ] ),
     nativeWindowFocus: true, nativeWindowClose: true
   } );

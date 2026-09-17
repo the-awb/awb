@@ -48,6 +48,7 @@ assert.deepEqual( host.capabilities, {
   downloadFallback: true,
   recoveryStorage: true,
   hostedLaunch: true,
+  documentIngress: { new: true, open: true, demo: true, browse: true },
   executionModes: [ 'hosted', 'standalone' ],
   nativeWindowFocus: false,
   nativeWindowClose: false

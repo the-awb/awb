@@ -30,6 +30,37 @@ page.on( 'pageerror', ( error ) => failures.push( error.message ) );
 try {
   await page.goto( url, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'AWB', { exact: true } ).waitFor();
+  if ( !( await page.locator( '.railTabs' ).isVisible() ) ) failures.push( 'left contextual rail tabs are missing' );
+  if ( await page.getByRole( 'button', { name: 'New', exact: true } ).count() !== 1
+    || await page.getByRole( 'button', { name: 'Open…', exact: true } ).count() !== 1
+    || await page.getByRole( 'button', { name: 'Demo score', exact: true } ).count() !== 1 ) {
+    failures.push( 'browser document ingress controls are missing' );
+  }
+  await page.locator( '.railTabs' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  if ( !( await page.getByRole( 'button', { name: 'Open instrument workspace', exact: true } ).isVisible() ) ) {
+    failures.push( 'left instrument tab did not preserve access to the existing workspace' );
+  }
+  await page.locator( '.railTabs' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'Collapse left panel', exact: true } ).click();
+  if ( await page.locator( '.panelLayout.leftCollapsed' ).count() !== 1 ) failures.push( 'left panel did not collapse independently' );
+  await page.getByRole( 'button', { name: 'Expand left panel', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'Collapse right panel', exact: true } ).click();
+  if ( await page.locator( '.panelLayout.rightCollapsed' ).count() !== 1 ) failures.push( 'right panel did not collapse independently' );
+  await page.getByRole( 'button', { name: 'Expand right panel', exact: true } ).click();
+  const bottomBeforeResize = await page.locator( '.bottomPanel' ).evaluate( ( element ) => element.getBoundingClientRect().height );
+  const resizeHandle = await page.getByRole( 'separator', { name: 'Resize edit panel' } ).boundingBox();
+  if ( !resizeHandle ) failures.push( 'bottom panel resize handle is missing' );
+  else {
+    await page.mouse.move( resizeHandle.x + 20, resizeHandle.y + 2 );
+    await page.mouse.down();
+    await page.mouse.move( resizeHandle.x + 20, resizeHandle.y - 45, { steps: 3 } );
+    await page.mouse.up();
+    const bottomAfterResize = await page.locator( '.bottomPanel' ).evaluate( ( element ) => element.getBoundingClientRect().height );
+    if ( bottomAfterResize <= bottomBeforeResize ) failures.push( 'bottom panel did not resize vertically' );
+  }
+  await page.getByRole( 'button', { name: 'Collapse edit panel', exact: true } ).click();
+  if ( await page.locator( '.panelLayout.bottomCollapsed' ).count() !== 1 ) failures.push( 'bottom panel did not collapse independently' );
+  await page.getByRole( 'button', { name: 'Expand edit panel', exact: true } ).click();
   if ( await page.locator( '.instrumentCard' ).count() !== 1 ) failures.push( 'seed score instrument panel did not deduplicate SynthDefs' );
   const seedInstrument = page.locator( '.instrumentCard' ).first();
   if ( !( await seedInstrument.getByText( '\\substrate', { exact: true } ).isVisible() ) ) {
@@ -38,7 +69,7 @@ try {
   await seedInstrument.locator( 'summary' ).click();
   await seedInstrument.getByText( 'freqA=60', { exact: true } ).waitFor( { timeout: 5000 } )
     .catch( () => failures.push( 'instrument panel did not disclose compiled SynthDef controls' ) );
-  await page.getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  await page.locator( '.viewTabs' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
   if ( !( await page.getByRole( 'heading', { name: 'Hosted instruments', exact: true } ).isVisible() ) ) failures.push( 'hosted instrument boundary is missing' );
   if ( await page.getByRole( 'button', { name: 'Prepare audio', exact: true } ).count() ) failures.push( 'hosted mode exposed browser audio preparation' );
   await page.getByRole( 'button', { name: 'standalone', exact: true } ).click();
@@ -115,6 +146,7 @@ try {
   }
 
   if ( !( await page.locator( '.eventJson' ).isVisible() ) ) failures.push( 'event inspector did not open' );
+  if ( await page.locator( '.bottomPanel .eventJson' ).count() !== 1 ) failures.push( 'event editor was not relocated to the bottom focus panel' );
   const frequencyControl = page.getByLabel( 'Payload freqA', { exact: true } );
   if ( !( await frequencyControl.isVisible() ) ) failures.push( 'typed frequency payload control did not render' );
   else {
@@ -280,4 +312,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 55/55 pass' );
+console.log( 'score-studio-browser: 64/64 pass' );

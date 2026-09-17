@@ -50,6 +50,7 @@ export function createBrowserHost( {
     downloadFallback: true,
     recoveryStorage: Boolean( storage ),
     hostedLaunch: Boolean( launchContext.endpoint || launchContext.toolSessionID ),
+    documentIngress: Object.freeze( { new: true, open: true, demo: true, browse: true } ),
     executionModes: Object.freeze( [ 'hosted', 'standalone' ] ),
     nativeWindowFocus: false,
     nativeWindowClose: false

@@ -7,6 +7,10 @@ import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
 import InstrumentPanel from './components/InstrumentPanel.jsx';
 import InstrumentWorkspace from './components/InstrumentWorkspace.jsx';
+import PanelLayout from './components/PanelLayout.jsx';
+import ScoreFocusPanel from './components/ScoreFocusPanel.jsx';
+import ScoreRuntimeRail from './components/ScoreRuntimeRail.jsx';
+import ScoreStudioLeftRail from './components/ScoreStudioLeftRail.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
@@ -22,6 +26,8 @@ const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
 export default function App( { host, createHostedClient } ) {
   const launchContext = useMemo( () => host.hostedLaunchContext(), [ host ] );
   const executionModes = host.capabilities.executionModes ?? Object.values( MODES );
+  const documentIngress = host.capabilities.documentIngress
+    ?? { new: true, open: true, demo: true, browse: true };
   const { endpoint: launchedEndpoint, toolSessionID } = launchContext;
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
   const [ file, setFile ] = useState( {
@@ -606,9 +612,6 @@ export default function App( { host, createHostedClient } ) {
     <div className="appShell">
       <header className="topbar">
         <div className="brand"><span>AWB</span><strong>Score</strong></div>
-        <input className="titleInput" value={ session.document.meta.title }
-          onChange={ ( event ) => dispatch( { type: 'EDIT_META', key: 'title', value: event.target.value } ) } />
-        <span className={ `saveState ${ dirty ? 'dirty' : '' }` }>{ dirty ? 'unsaved' : 'saved' }</span>
         <div className="modeSwitch" aria-label="Execution mode">
           { executionModes.map( ( mode ) => (
             <button key={ mode } className={ session.mode === mode ? 'active' : '' }
@@ -616,61 +619,101 @@ export default function App( { host, createHostedClient } ) {
           ) ) }
         </div>
       </header>
-
-      <aside className="filePanel">
-        <h2>Scores</h2>
-        <div className="fileButtons">
-          <button onClick={ newDocument }>New</button>
-          <button onClick={ openDocument }>Open…</button>
-          <button onClick={ openDemoScore }>Demo score</button>
-          <button onClick={ chooseScoreFolder }>Open folder…</button>
-          <button onClick={ () => saveDocument( false ) }>Save</button>
-          <button onClick={ () => saveDocument( true ) }>Save as…</button>
-          <label className="projectionChoice">SC output
-            <select aria-label="SC output type" value={ projectionKind }
-              onChange={ ( event ) => chooseProjectionKind( event.target.value ) }>
-              <option value={ SC_PROJECTION_KINDS.DESKTOP_SCORE }>Desktop score</option>
-              <option value={ SC_PROJECTION_KINDS.BROWSER_PSEQ }>Browser Pseq reduction</option>
-            </select>
-          </label>
-          <button onClick={ generateScDocument }>Generate SC document</button>
-          { file.pendingIdentity && <button disabled={ !connected } onClick={ retryProjection }>Retry SC export</button> }
-        </div>
-        { scoreFolder.handle && <div className="scoreFolder">
-          <div className="scoreFolderHeader"><strong>{ scoreFolder.name }</strong>
-            <button onClick={ refreshScoreFolder }>Refresh</button></div>
-          { scoreFolder.files.map( ( item ) => <button key={ item.name }
-            className={ file.name === item.name ? 'active' : '' }
-            onClick={ () => openFolderScore( item ) }>{ item.name }</button> ) }
-        </div> }
-        { scoreFolder.message && <p className="fileMessage">{ scoreFolder.message }</p> }
-        { host.capabilities.fileInputFallback && <input ref={ inputRef } hidden type="file"
-          accept=".json,.score.json,application/json" onChange={ onFallbackFile } /> }
-        <dl className="identity">
-          <dt>File</dt><dd>{ file.name ?? 'not saved' }</dd>
-          <dt>Score ID</dt><dd>{ session.document.scoreID }</dd>
-          <dt>Revision</dt><dd>{ session.document.revision }</dd>
-          <dt>Entries</dt><dd>{ session.document.entries.length }</dd>
-          <dt>SC pair</dt><dd>{ file.projectionStatus }</dd>
-          <dt>App SC</dt><dd>{ localProjection
-            ? `${ localProjection.kind === SC_PROJECTION_KINDS.BROWSER_PSEQ ? 'Pseq' : 'desktop' } r${ localProjection.revision }`
-            : 'not generated' }</dd>
-        </dl>
-        { file.message && <p className="fileMessage">{ file.message }</p> }
-        <p className="boundaryNote">JSON is canonical. Generated SC documents are projections retained in local app data; desktop score and browser Pseq outputs have different runtime contracts.</p>
-      </aside>
-
-      <main className="workspace">
-        <nav className="viewTabs">
-          <button className={ session.view === 'score' ? 'active' : '' }
-            onClick={ () => dispatch( { type: 'SET_VIEW', view: 'score' } ) }>Score</button>
-          <button className={ session.view === 'instruments' ? 'active' : '' }
-            onClick={ () => dispatch( { type: 'SET_VIEW', view: 'instruments' } ) }>Instruments</button>
-          <button className={ session.view === 'console' ? 'active' : '' }
-            onClick={ () => dispatch( { type: 'SET_VIEW', view: 'console' } ) }>Console</button>
-        </nav>
-        { session.view === 'score'
-          ? <div className="scoreWorkspace">
+      <PanelLayout
+        left={ <ScoreStudioLeftRail
+          onOpenInstrumentWorkspace={ () => dispatch( { type: 'SET_VIEW', view: 'instruments' } ) }
+          documentPanel={ <>
+            <section className="documentSummary filePanel">
+              <h2>Score document</h2>
+              <label>Title<input className="titleInput" value={ session.document.meta.title }
+                onChange={ ( event ) => dispatch( { type: 'EDIT_META', key: 'title', value: event.target.value } ) } /></label>
+              <span className={ `saveState ${ dirty ? 'dirty' : '' }` }>{ dirty ? 'unsaved changes' : 'saved' }</span>
+              <div className="fileButtons">
+                { documentIngress.new && <button onClick={ newDocument }>New</button> }
+                { documentIngress.open && <button onClick={ openDocument }>Open…</button> }
+                { documentIngress.demo && <button onClick={ openDemoScore }>Demo score</button> }
+                { documentIngress.browse && <button onClick={ chooseScoreFolder }>Open folder…</button> }
+                <button onClick={ () => saveDocument( false ) }>Save</button>
+                <button onClick={ () => saveDocument( true ) }>Save as…</button>
+                <label className="projectionChoice">SC output
+                  <select aria-label="SC output type" value={ projectionKind }
+                    onChange={ ( event ) => chooseProjectionKind( event.target.value ) }>
+                    <option value={ SC_PROJECTION_KINDS.DESKTOP_SCORE }>Desktop score</option>
+                    <option value={ SC_PROJECTION_KINDS.BROWSER_PSEQ }>Browser Pseq reduction</option>
+                  </select>
+                </label>
+                <button onClick={ generateScDocument }>Generate SC document</button>
+                { file.pendingIdentity && <button disabled={ !connected } onClick={ retryProjection }>Retry SC export</button> }
+              </div>
+              { scoreFolder.handle && <div className="scoreFolder">
+                <div className="scoreFolderHeader"><strong>{ scoreFolder.name }</strong>
+                  <button onClick={ refreshScoreFolder }>Refresh</button></div>
+                { scoreFolder.files.map( ( item ) => <button key={ item.name }
+                  className={ file.name === item.name ? 'active' : '' }
+                  onClick={ () => openFolderScore( item ) }>{ item.name }</button> ) }
+              </div> }
+              { scoreFolder.message && <p className="fileMessage">{ scoreFolder.message }</p> }
+              { host.capabilities.fileInputFallback && <input ref={ inputRef } hidden type="file"
+                accept=".json,.score.json,application/json" onChange={ onFallbackFile } /> }
+              <dl className="identity">
+                <dt>File</dt><dd>{ file.name ?? 'not saved' }</dd>
+                <dt>Score ID</dt><dd>{ session.document.scoreID }</dd>
+                <dt>Revision</dt><dd>{ session.document.revision }</dd>
+                <dt>Entries</dt><dd>{ session.document.entries.length }</dd>
+                <dt>SC pair</dt><dd>{ file.projectionStatus }</dd>
+                <dt>App SC</dt><dd>{ localProjection
+                  ? `${ localProjection.kind === SC_PROJECTION_KINDS.BROWSER_PSEQ ? 'Pseq' : 'desktop' } r${ localProjection.revision }`
+                  : 'not generated' }</dd>
+              </dl>
+              { file.message && <p className="fileMessage">{ file.message }</p> }
+              <p className="boundaryNote">JSON is canonical. Generated SC documents are projections retained in local app data; desktop score and browser Pseq outputs have different runtime contracts.</p>
+            </section>
+            <section className="runtimeContext">
+              <h2>{ session.mode === MODES.HOSTED ? 'Hosted runtime' : 'Standalone runtime' }</h2>
+              { session.mode === MODES.HOSTED ? <>
+                <label>WebSocket endpoint<input value={ endpoint } placeholder="Waiting for the frozen host endpoint"
+                  onChange={ ( event ) => setEndpoint( event.target.value ) } /></label>
+                <div className="runtimeButtons hostedConnection">
+                  <button disabled={ !endpoint || hosted.status === 'connecting' || connected }
+                    onClick={ () => hostedAction( () => hostedClient.connect( endpoint ), 'Connected to desktop sclang.' ) }>Connect</button>
+                  <button disabled={ !connected } onClick={ () => hostedClient.disconnect() }>Disconnect</button>
+                  <button disabled={ !connected } onClick={ () => hostedAction(
+                    () => hostedClient.installDocument( session.document ),
+                    `Revision ${ session.document.revision } installed atomically.` ) }>Load revision</button>
+                  <button disabled={ !connected }
+                    onClick={ () => hostedAction( () => hostedClient.command( session.document, 'state' ) ) }>State</button>
+                  <button disabled={ !connected } onClick={ openHostedDocument }>Open SC document</button>
+                </div>
+                <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>SynthDefs</dt><dd>{ hosted.synthDefContext.inventory ? `${ hosted.synthDefContext.inventory.length } in desktop context` : hosted.synthDefContext.status }</dd><dt>Audio</dt><dd>{ hosted.readiness.engine }</dd><dt>Playback</dt><dd>{ hostedCanPlay ? 'ready' : hosted.readiness.reason }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
+                { ( hostedMessage || hosted.error ) && <p className={ hosted.error ? 'error' : 'fileMessage' }>{ hostedMessage || hosted.error }</p> }
+                <p className="boundaryNote">Desktop sclang remains the scheduling, transport and loaded-definition authority.</p>
+              </> : <>
+                <div className="runtimeButtons">
+                  <button disabled={ sc.audioContextState === 'running' || sc.status === 'loading' || sc.status === 'booting' }
+                    onClick={ () => sc.isBooted ? sc.resumeAudio() : sc.boot() }>{ sc.audioContextState === 'running' ? 'Audio running' : sc.isBooted ? 'Resume audio' : 'Start audio' }</button>
+                  <button disabled={ sclang.isAttached || sclang.status === 'attaching' }
+                    onClick={ sclang.attach }>{ sclang.isAttached ? 'sclang attached' : 'Attach sclang' }</button>
+                  <button disabled={ sc.status === 'loading' || sc.status === 'booting' }
+                    onClick={ () => prepareStandalone() }>Load revision</button>
+                  <button disabled={ !sc.isBooted } onClick={ () => { standaloneExecutor.stop(); sc.shutdown(); } }>Quit</button>
+                </div>
+                <dl className="identity compact"><dt>Status</dt><dd>{ standalone.status }</dd><dt>Audio</dt><dd>{ standaloneReadiness.engine } / { standaloneReadiness.audio }</dd><dt>Playback</dt><dd>{ standaloneReadiness.canPlay ? 'ready' : standaloneReadiness.reason }</dd><dt>Loaded</dt><dd>{ standalone.scoreID ? `${ standalone.scoreID } r${ standalone.revision }` : 'not loaded' }</dd><dt>Nodes</dt><dd>{ standalone.liveCount }</dd></dl>
+                { standaloneMessage && <p className={ standalone.status === 'failed' ? 'error' : 'fileMessage' }>{ standaloneMessage }</p> }
+                <p className="boundaryNote">The browser owns only nodes created by this standalone run. Seeking remains event-boundary seeking in this slice.</p>
+                { ( sc.error || sclang.error ) && <p className="error">{ sc.error || sclang.error }</p> }
+              </> }
+            </section>
+          </> } /> }
+        centre={ <>
+          <nav className="viewTabs">
+            <button className={ session.view === 'score' ? 'active' : '' }
+              onClick={ () => dispatch( { type: 'SET_VIEW', view: 'score' } ) }>Score</button>
+            <button className={ session.view === 'instruments' ? 'active' : '' }
+              onClick={ () => dispatch( { type: 'SET_VIEW', view: 'instruments' } ) }>Instruments</button>
+            <button className={ session.view === 'console' ? 'active' : '' }
+              onClick={ () => dispatch( { type: 'SET_VIEW', view: 'console' } ) }>Console</button>
+          </nav>
+          { session.view === 'score' ? <div className="scoreWorkspace">
             <section className="transportStrip" aria-label="Score transport">
               <div className="transportControls">
                 <button disabled={ session.mode === MODES.HOSTED
@@ -693,84 +736,34 @@ export default function App( { host, createHostedClient } ) {
                   : 'Load the selected executor before playback.' }</p>
             </section>
             <ScoreTimeline session={ session } dispatch={ dispatch } onSeek={ seekTransport } />
-          </div>
-          : session.view === 'instruments'
+          </div> : session.view === 'instruments'
             ? <InstrumentWorkspace sc={ sc } mode={ session.mode }
               hostedClient={ hostedClient } hostedState={ hosted } />
-            : <ConsoleWorkspace sc={ sc } sclang={ sclang } workingDocument={ session.workingDocument } mode={ session.mode } /> }
-      </main>
-
-      <aside className="inspector">
-        <section>
-          <h2>{ session.mode === MODES.HOSTED ? 'Hosted runtime' : 'Standalone runtime' }</h2>
-          { session.mode === MODES.HOSTED ? (
-            <>
-              <label>WebSocket endpoint<input value={ endpoint } placeholder="Waiting for the frozen host endpoint"
-                onChange={ ( event ) => setEndpoint( event.target.value ) } /></label>
-              <div className="runtimeButtons hostedConnection">
-                <button disabled={ !endpoint || hosted.status === 'connecting' || connected }
-                  onClick={ () => hostedAction( () => hostedClient.connect( endpoint ), 'Connected to desktop sclang.' ) }>Connect</button>
-                <button disabled={ !connected } onClick={ () => hostedClient.disconnect() }>Disconnect</button>
-                <button disabled={ !connected }
-                  onClick={ () => hostedAction( () => hostedClient.installDocument( session.document ),
-                    `Revision ${ session.document.revision } installed atomically.` ) }>Load revision</button>
-                <button disabled={ !connected }
-                  onClick={ () => hostedAction( () => hostedClient.command( session.document, 'state' ) ) }>State</button>
-                <button disabled={ !connected } onClick={ openHostedDocument }>Open SC document</button>
+            : <ConsoleWorkspace sc={ sc } sclang={ sclang }
+              workingDocument={ session.workingDocument } mode={ session.mode } /> }
+        </> }
+        right={ <ScoreRuntimeRail
+          instrumentPanel={ <InstrumentPanel document={ session.document } mode={ session.mode }
+            hostedSynthDefs={ hosted.synthDefContext }
+            standaloneDefinitions={ definitionsCurrent ? standaloneDefinitions : {
+              scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
+            } } /> }
+          realizationsPanel={ ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 ) && <section className="realizations">
+            <h2>Realizations</h2>
+            { ( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ).length
+              ? [ ...( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ) ].reverse().slice( 0, 8 ).map( ( realization ) => (
+              <div className="realization" key={ realization.realizationID ?? realization.nodeID }>
+                <strong>{ realization.entryID }</strong><span>{ realization.state }</span>
+                <small>{ realization.nodeIDs?.length ? `nodes ${ realization.nodeIDs.join( ', ' ) }`
+                  : realization.nodeID ? `node ${ realization.nodeID }` : 'no server nodes' }</small>
               </div>
-              <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>SynthDefs</dt><dd>{ hosted.synthDefContext.inventory ? `${ hosted.synthDefContext.inventory.length } in desktop context` : hosted.synthDefContext.status }</dd><dt>Audio</dt><dd>{ hosted.readiness.engine }</dd><dt>Playback</dt><dd>{ hostedCanPlay ? 'ready' : hosted.readiness.reason }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
-              { ( hostedMessage || hosted.error ) && <p className={ hosted.error ? 'error' : 'fileMessage' }>{ hostedMessage || hosted.error }</p> }
-              <p className="boundaryNote">The local WebSocket sidecar forwards the timeline and read-only SynthDef-context protocols. Desktop sclang remains the scheduling, transport and loaded-definition authority.</p>
-            </>
-          ) : (
-            <>
-              <div className="runtimeButtons">
-                <button disabled={ sc.audioContextState === 'running' || sc.status === 'loading' || sc.status === 'booting' }
-                  onClick={ () => sc.isBooted ? sc.resumeAudio() : sc.boot() }>{ sc.audioContextState === 'running' ? 'Audio running' : sc.isBooted ? 'Resume audio' : 'Start audio' }</button>
-                <button disabled={ sclang.isAttached || sclang.status === 'attaching' }
-                  onClick={ sclang.attach }>{ sclang.isAttached ? 'sclang attached' : 'Attach sclang' }</button>
-                <button disabled={ sc.status === 'loading' || sc.status === 'booting' }
-                  onClick={ () => prepareStandalone() }>Load revision</button>
-                <button disabled={ !sc.isBooted } onClick={ () => {
-                  standaloneExecutor.stop();
-                  sc.shutdown();
-                } }>Quit</button>
-              </div>
-              <dl className="identity compact"><dt>Status</dt><dd>{ standalone.status }</dd><dt>Audio</dt><dd>{ standaloneReadiness.engine } / { standaloneReadiness.audio }</dd><dt>Playback</dt><dd>{ standaloneReadiness.canPlay ? 'ready' : standaloneReadiness.reason }</dd><dt>Loaded</dt><dd>{ standalone.scoreID ? `${ standalone.scoreID } r${ standalone.revision }` : 'not loaded' }</dd><dt>Nodes</dt><dd>{ standalone.liveCount }</dd></dl>
-              { standaloneMessage && <p className={ standalone.status === 'failed' ? 'error' : 'fileMessage' }>{ standaloneMessage }</p> }
-              <p className="boundaryNote">The browser schedules canonical events against absolute score time and owns only the nodes created by this standalone run. Seeking starts at the next event boundary; it does not reconstruct sustaining state.</p>
-              { ( sc.error || sclang.error ) && <p className="error">{ sc.error || sclang.error }</p> }
-            </>
-          ) }
-        </section>
-
-        <InstrumentPanel document={ session.document } mode={ session.mode }
-          hostedSynthDefs={ hosted.synthDefContext }
-          standaloneDefinitions={ definitionsCurrent ? standaloneDefinitions : {
-            scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
-          } } />
-
-        { ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 ) && <section className="realizations">
-          <h2>Realizations</h2>
-          { ( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ).length
-            ? [ ...( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ) ].reverse().slice( 0, 8 ).map( ( realization ) => (
-            <div className="realization" key={ realization.realizationID ?? realization.nodeID }>
-              <strong>{ realization.entryID }</strong><span>{ realization.state }</span>
-              <small>{ realization.nodeIDs?.length
-                ? `nodes ${ realization.nodeIDs.join( ', ' ) }`
-                : realization.nodeID ? `node ${ realization.nodeID }` : 'no server nodes' }</small>
-            </div>
-          ) ) : <p className="emptyCopy">No runtime realizations reported.</p> }
-        </section> }
-
-        <section className="eventInspector">
-          <h2>Event</h2>
-          { selectedEntry
-            ? <EventEditor key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
-              entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry } />
-            : <p className="emptyCopy">Select an event to inspect its authored payload.</p> }
-        </section>
-      </aside>
+            ) ) : <p className="emptyCopy">No runtime realizations reported.</p> }
+          </section> } /> }
+        bottom={ <ScoreFocusPanel selectedEntry={ selectedEntry }>
+          { selectedEntry && <EventEditor
+            key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
+            entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry } /> }
+        </ScoreFocusPanel> } />
     </div>
   );
 }

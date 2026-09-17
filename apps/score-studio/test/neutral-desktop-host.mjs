@@ -33,6 +33,8 @@ assert.deepEqual( calls.slice( 0, 2 ).map( ( call ) => call[ 0 ] ), [
 ] );
 assert.equal( host.hostedLaunchContext().toolSessionID, 'tool-1' );
 assert.deepEqual( host.capabilities.executionModes, [ 'hosted' ] );
+assert.deepEqual( host.capabilities.documentIngress,
+  { new: false, open: false, demo: false, browse: false } );
 const saved = await host.saveCanonical( opened.document, { handle, expectedHash: opened.hash } );
 assert.equal( saved.handle.grantID, 'file-1' );
 assert.equal( calls.at( -1 )[ 0 ], 'filesystem.save-file' ); assert.equal( calls.at( -1 )[ 1 ].expectedText, text );

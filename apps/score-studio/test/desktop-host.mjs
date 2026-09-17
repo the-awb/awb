@@ -42,6 +42,8 @@ const host = createDesktopHost( {
 assert.equal( host.kind, 'desktop' );
 assert.equal( host.capabilities.nativeWindowFocus, true );
 assert.equal( host.capabilities.downloadFallback, false );
+assert.deepEqual( host.capabilities.documentIngress,
+  { new: true, open: true, demo: true, browse: true } );
 assert.equal( host.hostedLaunchContext().toolSessionID, 'tool-1' );
 const opened = await host.initialScore();
 assert.equal( opened.document.scoreID, 'sonic-attunement-01' );
