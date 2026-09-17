@@ -196,6 +196,21 @@ try {
   const closestTicks = Math.min( ...tickPositions.slice( 1 ).map( ( position, index ) => position - tickPositions[ index ] ) );
   if ( closestTicks < 68 ) failures.push( `adaptive ruler labels are only ${ closestTicks }px apart` );
   await page.locator( '.synthBar' ).first().click();
+  const frequencyInput = page.getByLabel( 'Payload freqA', { exact: true } );
+  await frequencyInput.fill( '' );
+  await frequencyInput.pressSequentially( '155.5', { delay: 20 } );
+  await page.waitForTimeout( 100 );
+  if ( Number( await frequencyInput.inputValue() ) !== 155.5 ) {
+    failures.push( 'typed event control reverted before commit' );
+  }
+  const frequencyRaw = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
+  if ( frequencyRaw.freqA !== 155.5 ) failures.push( 'typed event control did not update raw event data' );
+  await page.getByRole( 'heading', { name: 'Event', exact: true } ).click();
+  await page.locator( '.synthBar' ).nth( 1 ).click();
+  await page.locator( '.synthBar' ).first().click();
+  if ( Number( await page.getByLabel( 'Payload freqA', { exact: true } ).inputValue() ) !== 155.5 ) {
+    failures.push( 'typed event control was not committed across blur and reselection' );
+  }
   const releaseWidthBeforeRawEdit = await page.locator( '.synthEnvelope .envelopeRelease' ).first()
     .evaluate( ( element ) => element.getBoundingClientRect().width );
   const rawEvent = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
@@ -250,4 +265,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 51/51 pass' );
+console.log( 'score-studio-browser: 54/54 pass' );
