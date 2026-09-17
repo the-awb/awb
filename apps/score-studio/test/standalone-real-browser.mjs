@@ -43,7 +43,10 @@ try {
       bubbles: true, clientX: rect.left, clientY: rect.bottom + 2
     } ) );
   } );
-  await page.getByText( '773.000 s', { exact: true } ).waitFor();
+  await page.waitForFunction( () => {
+    const cursor = document.querySelectorAll( '.transportPosition strong' )[ 1 ];
+    return cursor && Math.abs( Number.parseFloat( cursor.textContent ) - 773 ) < 1;
+  } );
   passed += 1;
   await page.getByRole( 'button', { name: 'Play', exact: true } ).click();
   await page.waitForFunction( () => document.querySelectorAll( '.realization' ).length === 4 );
