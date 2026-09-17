@@ -879,8 +879,22 @@ async function handleToolOperation( sender, operation, payload ) {
     if ( !source?.isFile() ) {
       return { status: 'notProvided', sourceName: null };
     }
-    const result = await nativeSession.service.loadScoreSynthDefs( nativeSession.sessionID, sourcePath );
-    return { ...result, sourcePath: undefined };
+    let result = await nativeSession.service.loadScoreSynthDefs( nativeSession.sessionID, sourcePath );
+    if ( result.status === 'confirmationRequired' ) {
+      const previousProject = result.previousSourcePath
+        ? path.basename( path.dirname( result.previousSourcePath ) ) : 'another open tool';
+      const incomingProject = path.basename( path.dirname( sourcePath ) );
+      const confirmation = await dialog.showMessageBox( window, {
+        type: 'warning', buttons: [ 'Keep current definition', 'Load new definition' ],
+        defaultId: 0, cancelId: 0, noLink: true,
+        title: 'Replace the active SynthDef set?',
+        message: `${ incomingProject } defines SynthDefs while ${ previousProject } already owns the active set.`,
+        detail: 'Loading continues with normal SuperCollider semantics: same-named definitions are replaced process-wide for new nodes. Existing nodes keep the graph they already use.'
+      } );
+      if ( confirmation.response !== 1 ) return { status: 'cancelled', sourceName: result.sourceName };
+      result = await nativeSession.service.loadScoreSynthDefs( nativeSession.sessionID, sourcePath, true );
+    }
+    return { ...result, sourcePath: undefined, previousSourcePath: undefined };
   }
   if ( operation === 'native-audio.devices' ) {
     requireCapability( tool, 'media', 'native-audio' );

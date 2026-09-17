@@ -1,3 +1,5 @@
+import { formatScSymbol } from '../engine/scValueSyntax.js';
+
 export default function ScoreFocusPanel( { focus, children } ) {
   const event = focus?.kind === 'scoreEvent';
   const synthDef = focus?.kind === 'synthDef';
@@ -5,7 +7,7 @@ export default function ScoreFocusPanel( { focus, children } ) {
     <div className="focusPanelContent">
       <header>
         <div><h2>{ event ? 'Event' : synthDef ? 'SynthDef' : 'Focus' }</h2>
-          <strong>{ event ? focus.entry.id : synthDef ? `\\${ focus.name }` : 'No selection' }</strong></div>
+          <strong>{ event ? focus.entry.id : synthDef ? formatScSymbol( focus.name ) : 'No selection' }</strong></div>
         { event && <small>{ focus.entry.event?.type ?? 'event' } at { focus.entry.time } s</small> }
         { synthDef && <small>{ focus.stale
           ? 'hosted context changed · refreshing exact interface'

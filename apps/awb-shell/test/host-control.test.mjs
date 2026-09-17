@@ -46,10 +46,19 @@ test( 'host control loads score-owned SynthDefs into a named Score Studio sessio
   const pending = host.loadScoreSynthDefs( 'scoreArranger:shell-a', '/tmp/piece/synths.scd' );
   const request = sent.at( -1 );
   assert.equal( request.address, '/awb/host/score/synthdefs' );
-  assert.deepEqual( request.args.slice( 2, -1 ), [ 'scoreArranger:shell-a', '/tmp/piece/synths.scd' ] );
+  assert.deepEqual( request.args.slice( 2, -1 ), [ 'scoreArranger:shell-a', '/tmp/piece/synths.scd', 0 ] );
   host.receive( { address: '/awb/host/score/synthdefs/status', args: [ host.clientID,
-    request.args[ 1 ], 'loaded', 'scoreArranger:shell-a', 'synths.scd' ] } );
-  assert.deepEqual( await pending, { status: 'loaded', sessionID: 'scoreArranger:shell-a', sourceName: 'synths.scd' } );
+    request.args[ 1 ], 'loaded', 'scoreArranger:shell-a', 'synths.scd', '' ] } );
+  assert.deepEqual( await pending, { status: 'loaded', sessionID: 'scoreArranger:shell-a',
+    sourceName: 'synths.scd', previousSourcePath: '' } );
+  const override = host.loadScoreSynthDefs( 'scoreArranger:shell-a', '/tmp/other/synths.scd', true );
+  const overrideRequest = sent.at( -1 );
+  assert.deepEqual( overrideRequest.args.slice( 2, -1 ), [
+    'scoreArranger:shell-a', '/tmp/other/synths.scd', 1
+  ] );
+  host.receive( { address: '/awb/host/score/synthdefs/status', args: [ host.clientID,
+    overrideRequest.args[ 1 ], 'loaded', 'scoreArranger:shell-a', 'synths.scd', '/tmp/piece/synths.scd' ] } );
+  assert.equal( ( await override ).previousSourcePath, '/tmp/piece/synths.scd' );
   host.close();
 } );
 

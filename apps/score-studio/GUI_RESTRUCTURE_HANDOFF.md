@@ -1,8 +1,16 @@
 # Score Studio GUI restructure and smart-seek handoff
 
-Status: Slices A and B implemented on `codex/score-studio-gui-slice-a`; Slices C and D remain open.
-The old all-instrument rack remains available only to the browser host while Slice C replaces it
-with properly owned audition voices. It is not exposed by the hosted-only shell.
+Status: Slices A and B are on `main`; Slice C is implemented on
+`codex/score-studio-audition`; Slice D remains open. The old all-instrument rack remains available
+only to the browser host as a compatibility surface. It is not exposed by the hosted-only shell.
+
+Definition-library policy: desktop sclang/scsynth has one active process-global SynthDef library.
+Tools and scores may legitimately provide different compiled graphs under the same visible symbol.
+Loading the most recent tool or score therefore replaces that symbol after an explicit user warning;
+it is not rejected and hidden server aliases are not introduced. A successful replacement advances
+the host definition generation, invalidates cached interface models and makes the newly loaded graph
+authoritative for subsequent score and audition realizations. Existing nodes keep the graph with
+which they were created, as scsynth normally does.
 
 This document describes the next Score Studio interface slice after commits `00004b1` and
 `bac870e`. It is a layout and interaction refactor over the existing score, instrument and host
@@ -387,13 +395,18 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 
 ### Slice C — isolated audition
 
-- register the shell-wide `synthdef-audition` tool/service and its dedicated ToolSession/transport
+- register the shell-wide `\synthdefAudition` tool/service and its dedicated ToolSession/transport
   contract;
 - add `AuditionController` and requester-scoped identity model;
 - Play creates fresh hosted audition realizations, or browser-standalone realizations only when the
   browser host explicitly enables that mode;
-- begin with one SynthDef instance per request, while modelling one realization as owning one or
-  more resulting nodes;
+- apply ordinary SuperCollider multichannel expansion on Play: square-bracket arrays expand,
+  scalars broadcast and shorter arrays wrap; `Ref([...])` denotes one literal array control;
+- keep the compact bracket expression canonical in the editor; an expanded voice list is optional
+  inspection, not the primary editing surface;
+- display symbols with one source-level prefix such as `\substrate`; JSON/transport escaping must
+  never appear as a second visible backslash;
+- one Play owns every SynthDef node produced by that expansion as one realization;
 - Stop frees only the current draft's audition realizations and their member nodes;
 - integrate the compact `envArray` editor where authorised;
 - project hosted audition nodes through NodeManager with explicit origin metadata.
@@ -423,7 +436,7 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 - Applying an event draft creates exactly one document revision; auditioning creates none.
 - Every audition Play has a fresh runtime identity; Stop cannot free score nodes or other tools'
   nodes.
-- Hosted audition runs under the dedicated `synthdef-audition` tool identity; its NodeManager
+- Hosted audition runs under the dedicated `\synthdefAudition` tool identity; its NodeManager
   projection retains the requesting tool/view provenance and is never attributed to Score Studio's
   score ToolSession.
 - Every node owned by the audition service belongs to an explicit audition realization. Unrelated

@@ -15,10 +15,12 @@ import ScoreRuntimeRail from './components/ScoreRuntimeRail.jsx';
 import ScoreStudioLeftRail from './components/ScoreStudioLeftRail.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import SynthDefDraftEditor from './components/SynthDefDraftEditor.jsx';
+import { createAuditionController, createStandaloneAuditionAdapter } from './engine/AuditionController.js';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
+import { formatScSymbol } from './engine/scValueSyntax.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
 import { isHostedSynthDefFocusStale } from './engine/instrumentInventory.js';
-import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
+import { loadStandaloneSynthDef, loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
 import { generateLocalScProjection, SC_PROJECTION_KINDS } from './engine/localScProjection.js';
 import { readLocalProjection, storeLocalProjection } from './engine/localProjectionStore.js';
 import { scoreInstruments } from './engine/scoreInstruments.js';
@@ -33,7 +35,7 @@ export default function App( { host, createHostedClient } ) {
   const executionModes = host.capabilities.executionModes ?? Object.values( MODES );
   const documentIngress = host.capabilities.documentIngress
     ?? { new: true, open: true, demo: true, browse: true };
-  const { endpoint: launchedEndpoint, toolSessionID } = launchContext;
+  const { endpoint: launchedEndpoint, toolSessionID, viewID = '', toolID = 'score-studio' } = launchContext;
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
   const [ file, setFile ] = useState( {
     handle: null, name: null, hash: null, savedRevision: null,
@@ -56,8 +58,8 @@ export default function App( { host, createHostedClient } ) {
   const sclang = useScLang( sc, { importSclang, locateFile: locateSclangFile, exposeDevGlobals: import.meta.env.DEV } );
   const hostedClient = useMemo( () => createHostedClient( {
     clientID: toolSessionID ? `score-tool-${ toolSessionID }` : undefined,
-    toolSessionID
-  } ), [ createHostedClient, toolSessionID ] );
+    toolSessionID, viewID, requestingToolID: toolID
+  } ), [ createHostedClient, toolID, toolSessionID, viewID ] );
   const hosted = useSyncExternalStore( hostedClient.subscribe, hostedClient.getState, hostedClient.getState );
   const referencedSynthDefs = useMemo(
     () => scoreInstruments( session.document ).map( ( instrument ) => instrument.definition ),
@@ -72,6 +74,21 @@ export default function App( { host, createHostedClient } ) {
     } );
   }
   const standaloneExecutor = standaloneExecutorRef.current;
+  const auditionControllerRef = useRef( null );
+  if ( auditionControllerRef.current === null ) {
+    auditionControllerRef.current = createAuditionController( {
+      hostedClient,
+      standaloneAdapter: createStandaloneAuditionAdapter( {
+        sendOsc: sc.sendOsc,
+        subscribeOscReply: sc.subscribeOscReply,
+        parseOsc: ( bytes ) => sc.getEngine()?.parseOscMessage( bytes )
+      } )
+    } );
+  }
+  const auditionController = auditionControllerRef.current;
+  const audition = useSyncExternalStore(
+    auditionController.subscribe, auditionController.getState, auditionController.getState
+  );
   const launchState = useRef( { scoreLoaded: false, installed: '' } );
   const standalone = useSyncExternalStore(
     standaloneExecutor.subscribe, standaloneExecutor.getState, standaloneExecutor.getState
@@ -650,6 +667,25 @@ export default function App( { host, createHostedClient } ) {
     } );
   }
 
+  async function auditionDraft( draft, focusScope = displayedFocus ) {
+    if ( focusScope.signalKind && focusScope.signalKind !== 'audio' ) {
+      throw new Error( `A ${ focusScope.signalKind } SynthDef is not an audible audition target.` );
+    }
+    if ( session.mode === MODES.STANDALONE ) {
+      if ( sc.isBooted ) await sc.resumeAudio(); else await sc.boot();
+      await loadStandaloneSynthDef( sc, draft.definition );
+    }
+    return auditionController.play( {
+      mode: session.mode, definition: draft.definition, params: draft.params,
+      model: draft.model, contextID: `${ focusScope.kind }:${ focusScope.entryID ?? focusScope.name ?? 'draft' }`,
+      draftID: focusScope.draftID,
+      contextGeneration: focusScope.contextGeneration ?? 0,
+      fingerprint: focusScope.description?.fingerprint ?? '',
+      description: focusScope.description ?? null,
+      signalKind: focusScope.signalKind ?? 'audio'
+    } );
+  }
+
   return (
     <div className="appShell">
       <header className="topbar">
@@ -737,6 +773,17 @@ export default function App( { host, createHostedClient } ) {
             standaloneDefinitions={ definitionsCurrent ? standaloneDefinitions : {
               scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
             } } /> }
+          auditionPanel={ <AuditionRuntimePanel realizations={ audition.realizations }
+            onFocus={ ( realization ) => {
+              if ( realization.definition ) {
+                const description = realization.description
+                  ?? hosted.synthDefContext.definitions[ realization.definition ];
+                focusSynthDef( { name: realization.definition, description,
+                  contextGeneration: description?.contextGeneration ?? 0,
+                  signalKind: realization.signalKind ?? 'unknown', source: 'audition runtime' } );
+              }
+            } }
+            onCommand={ ( id, action ) => auditionController.command( id, action ) } /> }
           realizationsPanel={ ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 ) && <section className="realizations">
             <h2>Realizations</h2>
             { ( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ).length
@@ -751,14 +798,23 @@ export default function App( { host, createHostedClient } ) {
         bottom={ <ScoreFocusPanel focus={ displayedFocus }>
           { focus.kind === 'scoreEvent' && selectedEntry && <EventEditor
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
-            entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry } /> }
-          { focus.kind === 'synthDef' && <SynthDefDraftEditor key={ focus.draftID } focus={ displayedFocus } /> }
+            entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry }
+            onAudition={ ( event ) => auditionDraft( {
+              definition: event.def ?? event.instrument, params: event, model: null
+            }, displayedFocus ) }
+            onStopAudition={ () => auditionController.stopDraft( focus.draftID ) }
+            auditionCount={ audition.realizations.filter( ( item ) => item.draftID === focus.draftID && item.state !== 'ended' ).length } /> }
+          { focus.kind === 'synthDef' && <SynthDefDraftEditor key={ focus.draftID } focus={ displayedFocus }
+            onAudition={ ( draft ) => auditionDraft( draft, displayedFocus ) }
+            onStopAudition={ () => auditionController.stopDraft( focus.draftID ) }
+            auditionCount={ audition.realizations.filter( ( item ) => item.draftID === focus.draftID && item.state !== 'ended' ).length } /> }
+          { audition.error && <p className="error">{ audition.error }</p> }
         </ScoreFocusPanel> } />
     </div>
   );
 }
 
-function EventEditor( { entry, onPreview, onCommit } ) {
+function EventEditor( { entry, onPreview, onCommit, onAudition, onStopAudition, auditionCount = 0 } ) {
   const [ time, setTime ] = useState( String( entry.time ) );
   const [ path, setPath ] = useState( () => entry.path.join( '/' ) );
   const [ eventText, setEventText ] = useState( () => JSON.stringify( entry.event, null, 2 ) );
@@ -826,7 +882,30 @@ function EventEditor( { entry, onPreview, onCommit } ) {
           } } /></label>
       </div>
       { error && <p className="error">{ error }</p> }
-      <button onClick={ commit }>Apply event</button>
+      <div className="focusAuditionActions"><button onClick={ commit }>Apply event</button>
+        <button disabled={ !parsedEvent || parsedEvent.type !== 'note' || !( parsedEvent.def ?? parsedEvent.instrument ) }
+          onClick={ () => onAudition( parsedEvent ) }>Play copy</button>
+        <button disabled={ auditionCount === 0 } onClick={ onStopAudition }>Stop copy ({ auditionCount })</button></div>
     </div>
   );
+}
+
+function AuditionRuntimePanel( { realizations, onFocus, onCommand } ) {
+  const active = realizations.filter( ( item ) => item.state !== 'ended' ).reverse();
+  return <section className="auditionRuntime"><h2>Auditions</h2>
+    { active.length ? active.map( ( realization ) => <div className="realization auditionVoice" key={ realization.realizationID }>
+      <button className="realizationFocus" onClick={ () => onFocus( realization ) }>
+        <strong>{ formatScSymbol( realization.definition ) }</strong><span>{ realization.state }</span>
+        <small>{ realization.nodeIDs.length } voice{ realization.nodeIDs.length === 1 ? '' : 's' }</small>
+      </button>
+      { ![ 'starting', 'failed' ].includes( realization.state ) && <div className="realizationActions">
+        { realization.state === 'paused'
+          ? <button onClick={ () => onCommand( realization.realizationID, 'resume' ) }>Resume</button>
+          : <button onClick={ () => onCommand( realization.realizationID, 'pause' ) }>Pause</button> }
+        <button onClick={ () => onCommand( realization.realizationID, 'release' ) }>Release</button>
+        <button onClick={ () => onCommand( realization.realizationID, 'free' ) }>Free</button>
+      </div> }
+      { realization.error && <small className="error">{ realization.error }</small> }
+    </div> ) : <p className="emptyCopy">No audition voices.</p> }
+  </section>;
 }

@@ -13,10 +13,14 @@ export function payloadFields( event ) {
   const instrument = typeForSynthDef( event.def ?? event.instrument );
   const fields = instrument ? [
     ...instrumentFields( instrument.key ).map( ( field ) => ( {
-      name: field.path[ 0 ], kind: 'number', ...field, declared: true
+      name: field.path[ 0 ], ...field,
+      kind: event[ field.path[ 0 ] ] !== undefined && scalarKind( event[ field.path[ 0 ] ] ) === 'json'
+        ? 'json' : 'number', declared: true
     } ) ),
     ...instrumentBooleanFields( instrument.key ).map( ( field ) => ( {
-      name: field.path[ 0 ], kind: 'boolean', ...field, declared: true
+      name: field.path[ 0 ], ...field,
+      kind: event[ field.path[ 0 ] ] !== undefined && scalarKind( event[ field.path[ 0 ] ] ) === 'json'
+        ? 'json' : 'boolean', declared: true
     } ) )
   ] : [];
   const declared = new Set( fields.map( ( field ) => field.name ) );
@@ -38,6 +42,7 @@ export function updatePayloadField( event, name, value, kind ) {
     if ( !Number.isFinite( number ) ) throw new Error( `${ name } must be a finite number.` );
     next[ name ] = number;
   } else if ( kind === 'boolean' ) next[ name ] = Boolean( value );
+  else if ( kind === 'json' ) next[ name ] = value;
   else next[ name ] = value;
   return next;
 }

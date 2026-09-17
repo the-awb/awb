@@ -6,6 +6,7 @@ import {
 import { scoreInstruments } from '../engine/scoreInstruments.js';
 import { synthDefManifestUrl } from '../engine/scAssets.js';
 import { describeStandaloneSynthDef } from '../engine/standaloneSynthDefs.js';
+import { formatScSymbol } from '../engine/scValueSyntax.js';
 
 export default function InstrumentInventory( {
   document, focusedContextGeneration, focusedName, focusedSource,
@@ -165,7 +166,7 @@ export default function InstrumentInventory( {
           <button role="option" aria-selected={ focusedName === row.name }
             className={ focusedName === row.name ? 'selected' : '' }
             onClick={ () => select( row ) }>
-            <span><code>\\{ row.name }</code><small>{ row.category === 'available' ? 'system / context' : row.category }</small></span>
+            <span><code>{ formatScSymbol( row.name ) }</code><small>{ row.category === 'available' ? 'system / context' : row.category }</small></span>
             <span className="inventoryBadges">
               { loading === row.name && <em>loading</em> }
               { row.modelled && <em>modelled</em> }

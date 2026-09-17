@@ -60,6 +60,10 @@ export async function loadEnvelopeLabSynthDef( sc, options ) {
   return loadNamedSynthDefs( sc, [ 'awbEnvelopeLab' ], options );
 }
 
+export async function loadStandaloneSynthDef( sc, name, options ) {
+  return loadNamedSynthDefs( sc, [ name ], options );
+}
+
 export async function describeStandaloneSynthDef( name, manifest, {
   assetBase = `${ base() }synthdefs/`
 } = {} ) {

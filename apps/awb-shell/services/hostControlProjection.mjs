@@ -59,7 +59,7 @@ export class HostControlProjection {
       if ( pending ) {
         clearTimeout( pending.timer ); this.pending.delete( requestID );
         pending.resolve( Object.freeze( { status: `${ args[ 2 ] }`, sessionID: `${ args[ 3 ] }`,
-          sourceName: `${ args[ 4 ] }` } ) );
+          sourceName: `${ args[ 4 ] }`, previousSourcePath: `${ args[ 5 ] ?? '' }` } ) );
       }
       return true;
     }
@@ -107,8 +107,8 @@ export class HostControlProjection {
     return this.request( '/awb/host/tool/close', [ toolID, sessionID ] );
   }
 
-  loadScoreSynthDefs( sessionID, sourcePath ) {
-    return this.request( '/awb/host/score/synthdefs', [ sessionID, sourcePath ], 15000 );
+  loadScoreSynthDefs( sessionID, sourcePath, allowOverride = false ) {
+    return this.request( '/awb/host/score/synthdefs', [ sessionID, sourcePath, allowOverride ? 1 : 0 ], 15000 );
   }
 
   audioProbe( { frequency = 440, duration = 0.35, amplitude = 0.08 } = {} ) {
