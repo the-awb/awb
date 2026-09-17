@@ -48,7 +48,8 @@ explicitly performs a future insertion action.
   `scsynth.wasm`; hosted controls must never fall back silently to it.
 - Hosted audition is a shell service with its own stable tool identity, provisionally
   `synthdef-audition`; it is not an extra role of `score-studio`, `PTimelineOSCBridge` or a
-  score-owning ToolSession. Any authorised shell tool may request a client-scoped audition session.
+  score-owning ToolSession. Any authorised shell tool may submit an explicit audition request to a
+  client-scoped audition session. The service must never discover or adopt unrelated shell voices.
 
 Relevant implementation surfaces:
 
@@ -219,33 +220,44 @@ The shell grants a requesting view a separate audition ToolSession and records t
 client of this contract; other shell tools must be able to use the same service without borrowing
 Score Studio's player or session.
 
+This is not a catch-all container for every shell node that lacks another owner. The service owns
+only realizations created in response to explicit audition requests. A voice that is neither score
+playback, tool-owned nor the result of such a request remains visibly unowned/orphaned in
+NodeManager. The audition service must not adopt it, hide it or clean it up.
+
 An audition request is admissible only after the service has inspected the exact compiled graph.
 Audio-output SynthDefs may continue to the routing and lifecycle checks. Control-output,
 utility/no-output and unknown definitions are inspectable or usable by their owning tools, but the
 generic service must reject them as audible audition targets with a concrete reason.
 
-Every press of Play creates a fresh audition realization:
+Every press of Play submits one request and creates one fresh audition realization:
 
 ```text
-auditionContextID + draftID + auditionRunID + realizationID
+requestingToolID + viewID + auditionContextID + draftID + auditionRunID + realizationID
 ```
 
-This identity is separate from `scoreID + revision + runID + score-entry realizationID`. Multiple
-audition voices may coexist. The panel should display how many it owns and provide:
+This identity is separate from `scoreID + revision + runID + score-entry realizationID`. An
+audition realization is the lifecycle result of one explicit request, not necessarily one node or
+one musical note. The first implementation may create one SynthDef instance per request. Array
+expansion, a chord or another explicitly supported event expansion may later create several nodes;
+all resulting node IDs remain members of the same owned realization. Multiple audition
+realizations may coexist. The panel should display how many it owns and provide:
 
 - **Play** — create another realization from the current draft;
 - **Stop** — immediately free all audition realizations owned by this panel scope.
 
 Do not target `@all`, do not reuse the score event ID as the node owner, and do not let Stop touch
-score playback, rack nodes, another view, or another audition draft. Hosted audition nodes belong
-to the dedicated audition ToolSession with explicit requester and draft metadata so NodeManager can
-observe them without confusing them with score or tool-native realizations. Browser-standalone
-nodes require the same logical ownership even though their server node IDs are browser-local; the
-shell never exposes this path.
+score playback, rack nodes, another view, another audition draft or unowned nodes. Hosted audition
+nodes belong to the dedicated audition ToolSession only through their explicit realization
+membership, with requester, view, draft and realization metadata so NodeManager can observe them
+without confusing them with score or tool-native realizations. Browser-standalone nodes require the
+same logical ownership even though their server node IDs are browser-local; the shell never exposes
+this path.
 
-Natural node completion removes that realization from the audition controller. Changing focus must
-not orphan still-running audition nodes: retain their ownership record until completion or an
-explicit stop. Closing the Score Studio view frees every audition node owned by that view.
+Natural node completion removes that node from its realization. The realization completes only
+when all of its member nodes have ended. Changing focus must not orphan still-running audition
+nodes: retain their ownership record until completion or an explicit stop. Closing the Score Studio
+view frees every audition realization requested by that view and only those realizations.
 
 Changing a control after Play affects the draft. Whether it also updates already-running audition
 voices must be explicit. Recommended first slice: send safe scalar changes to every live voice
@@ -370,7 +382,9 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 - add `AuditionController` and requester-scoped identity model;
 - Play creates fresh hosted audition realizations, or browser-standalone realizations only when the
   browser host explicitly enables that mode;
-- Stop frees only the current draft's audition nodes;
+- begin with one SynthDef instance per request, while modelling one realization as owning one or
+  more resulting nodes;
+- Stop frees only the current draft's audition realizations and their member nodes;
 - integrate the compact `envArray` editor where authorised;
 - project hosted audition nodes through NodeManager with explicit origin metadata.
 
@@ -401,6 +415,10 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 - Hosted audition runs under the dedicated `synthdef-audition` tool identity; its NodeManager
   projection retains the requesting tool/view provenance and is never attributed to Score Studio's
   score ToolSession.
+- Every node owned by the audition service belongs to an explicit audition realization. Unrelated
+  unowned voices remain visible as unowned/orphaned in NodeManager and are never adopted.
+- One realization may own several nodes; it remains active until every member node ends or that
+  realization is explicitly stopped.
 - Natural completion, focus changes and view closure leave no unowned audition nodes.
 - Envelope UI matches `envArray`/`parametric`/`inspectOnly` capability and never offers a control
   that cannot reach the selected SynthDef.
@@ -435,3 +453,5 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
     reset safely and never block opening a score.
 11. **Do not disguise audition as a score command.** The shell-wide audition ToolSession owns its
     disposable voices; `PTimelineOSCBridge` and the score ToolSession do not.
+12. **Do not turn audition into an orphan bucket.** Ownership starts with an explicit audition
+    request and extends only to the nodes created for that realization.
