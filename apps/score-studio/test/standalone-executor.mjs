@@ -81,6 +81,24 @@ assert.equal( sent.filter( ( message ) => message.address === '/s_new' ).length,
 executor.stop();
 
 executor.load( document );
+executor.play();
+advance( 0 );
+advance( 100 );
+executor.pause();
+const beforePausedSeekFrees = sent.filter( ( message ) => message.address === '/n_free' ).length;
+executor.seek( 0.5 );
+assert.equal( executor.getState().status, 'stopped', 'seeking while paused prepares a fresh stopped run' );
+assert.equal( executor.getState().liveCount, 0, 'seeking while paused frees suspended nodes' );
+assert.equal( sent.filter( ( message ) => message.address === '/n_free' ).length, beforePausedSeekFrees + 2 );
+
+executor.load( document );
+executor.play();
+advance( 0 );
+advance( 100 );
+executor.stop();
+assert.equal( executor.getState().position, 0.1, 'first stop preserves the transport position' );
+
+executor.load( document );
 executor.seek( 0.25 );
 assert.equal( executor.getState().status, 'stopped' );
 const beforeSeekPlay = sent.length;

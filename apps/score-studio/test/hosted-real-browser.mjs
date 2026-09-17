@@ -148,13 +148,12 @@ try {
   await page.locator( '.synthBar' ).last().evaluate( ( finalBar ) => {
     const lane = finalBar.closest( '.synthLane' );
     const rect = finalBar.getBoundingClientRect();
-    lane.dispatchEvent( new MouseEvent( 'click', {
+    lane.dispatchEvent( new MouseEvent( 'dblclick', {
       bubbles: true, clientX: rect.left, clientY: rect.bottom + 2
     } ) );
   } );
-  await page.getByRole( 'button', { name: 'Seek here', exact: true } ).click();
   await page.getByText( '773.000 s', { exact: true } ).waitFor();
-  await page.locator( '.transport .boundaryNote' ).filter( { hasText: 'stopped' } ).waitFor();
+  await page.locator( '.transportStrip p' ).filter( { hasText: 'stopped' } ).waitFor();
   passed += 2;
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 1;

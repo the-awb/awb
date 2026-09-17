@@ -209,7 +209,7 @@ export function createStandaloneScoreExecutor( {
     if ( cursor < 0 ) cursor = entries.length;
     anchorScore = position;
     anchorWall = now();
-    const nextStatus = playing ? 'playing' : state.status === 'paused' ? 'paused' : 'stopped';
+    const nextStatus = playing ? 'playing' : 'stopped';
     publish( { position, status: nextStatus, error: null } );
     if ( playing ) { wake(); }
   };
@@ -238,10 +238,12 @@ export function createStandaloneScoreExecutor( {
     return true;
   };
   const stop = () => {
+    const position = estimatePosition();
     clearWake();
     hardFreeAll();
-    cursor = 0;
-    publish( { status: document ? 'stopped' : 'empty', position: 0, runID: null, error: null } );
+    cursor = entries.findIndex( ( entry ) => entry.time >= position );
+    if ( cursor < 0 ) cursor = entries.length;
+    publish( { status: document ? 'stopped' : 'empty', position, runID: null, error: null } );
   };
   const offOsc = subscribeOscReply( ( bytes ) => {
     const message = parseOsc( bytes );

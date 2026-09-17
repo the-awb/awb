@@ -241,7 +241,7 @@ try {
       failures.push( 'duration handle did not update canonical dur' );
     }
   }
-  const releaseHandle = page.getByRole( 'button', { name: 'Adjust rinse-01 release', exact: true } );
+  const releaseHandle = page.getByRole( 'button', { name: 'Adjust rinse-01 Amplitude release', exact: true } );
   await releaseHandle.scrollIntoViewIfNeeded();
   const releaseHandleBox = await releaseHandle.boundingBox();
   if ( !releaseHandleBox ) failures.push( 'could not locate release envelope handle' );
@@ -257,6 +257,21 @@ try {
       failures.push( 'release envelope handle did not update the canonical SynthDef control' );
     }
   }
+  await page.getByRole( 'button', { name: 'Expand rinse-01', exact: true } ).click();
+  const tremoloHandle = page.getByRole( 'button', { name: 'Adjust rinse-01 Tremolo depth attack', exact: true } );
+  await tremoloHandle.scrollIntoViewIfNeeded();
+  const tremoloHandleBox = await tremoloHandle.boundingBox();
+  if ( !tremoloHandleBox ) failures.push( 'could not locate non-amplitude envelope handle' );
+  else {
+    await page.mouse.move( tremoloHandleBox.x + 2, tremoloHandleBox.y + 2 );
+    await page.mouse.down();
+    await page.mouse.move( tremoloHandleBox.x + 24, tremoloHandleBox.y + 2, { steps: 4 } );
+    await page.mouse.up();
+    const tremoloEvent = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
+    if ( !( tremoloEvent.tremA > 0 ) ) {
+      failures.push( 'non-amplitude envelope handle did not update its SynthDef control' );
+    }
+  }
 } finally {
   await browser.close();
 }
@@ -265,4 +280,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 54/54 pass' );
+console.log( 'score-studio-browser: 55/55 pass' );

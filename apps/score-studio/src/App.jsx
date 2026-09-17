@@ -39,6 +39,7 @@ export default function App( { host, createHostedClient } ) {
   const [ localProjection, setLocalProjection ] = useState( null );
   const [ scoreFolder, setScoreFolder ] = useState( { handle: null, name: '', files: [], message: '' } );
   const inputRef = useRef( null );
+  const stopArmedRef = useRef( false );
   const sc = useSuperCollider( { importScsynth } );
   const sclang = useScLang( sc, { importSclang, locateFile: locateSclangFile, exposeDevGlobals: import.meta.env.DEV } );
   const hostedClient = useMemo( () => createHostedClient( {
@@ -217,6 +218,10 @@ export default function App( { host, createHostedClient } ) {
   const hostedCanPlay = loadedRevision && hosted.readiness.canPlay;
   const standaloneLoaded = standalone.scoreID === session.document.scoreID
     && standalone.revision === session.document.revision;
+  const transportPlaying = session.mode === MODES.HOSTED
+    ? hosted.transport?.state === 'playing'
+    : standalone.status === 'playing';
+  const transportLoaded = session.mode === MODES.HOSTED ? loadedRevision : standaloneLoaded;
   const definitionsCurrent = standaloneDefinitions.scoreID === session.document.scoreID
     && standaloneDefinitions.revision === session.document.revision;
   const standaloneReadiness = createPlaybackReadiness( {
@@ -263,6 +268,7 @@ export default function App( { host, createHostedClient } ) {
   }
 
   async function playStandalone() {
+    stopArmedRef.current = false;
     if ( standalone.status === 'paused' && standaloneLoaded ) {
       if ( sc.audioContextState !== 'running' ) await sc.resumeAudio();
       standaloneExecutor.play();
@@ -275,12 +281,46 @@ export default function App( { host, createHostedClient } ) {
   }
 
   async function playHosted() {
+    stopArmedRef.current = false;
     if ( hosted.transport?.state === 'paused' ) {
       await hostedClient.command( session.document, 'resume' );
       return;
     }
     await hostedClient.command( session.document, 'seek', session.cursorTime );
     await hostedClient.command( session.document, 'play' );
+  }
+
+  async function seekTransport( time ) {
+    stopArmedRef.current = false;
+    if ( session.mode === MODES.HOSTED ) {
+      if ( loadedRevision ) await hostedAction( () => hostedClient.command( session.document, 'seek', time ) );
+    } else if ( standaloneLoaded ) standaloneExecutor.seek( time );
+  }
+
+  async function toggleTransport() {
+    stopArmedRef.current = false;
+    if ( session.mode === MODES.HOSTED ) {
+      if ( transportPlaying ) await hostedAction( () => hostedClient.command( session.document, 'pause' ) );
+      else await hostedAction( playHosted );
+    } else if ( transportPlaying ) standaloneExecutor.pause();
+    else await playStandalone();
+  }
+
+  async function stopTransport() {
+    if ( stopArmedRef.current ) {
+      dispatch( { type: 'SET_CURSOR', time: 0 } );
+      await seekTransport( 0 );
+      return;
+    }
+    if ( session.mode === MODES.HOSTED ) {
+      if ( loadedRevision ) await hostedAction( () => hostedClient.command( session.document, 'stop' ) );
+    } else if ( standaloneLoaded ) standaloneExecutor.stop();
+    stopArmedRef.current = true;
+  }
+
+  async function returnToStart() {
+    dispatch( { type: 'SET_CURSOR', time: 0 } );
+    await seekTransport( 0 );
   }
 
   async function acceptOpen( result ) {
@@ -630,7 +670,30 @@ export default function App( { host, createHostedClient } ) {
             onClick={ () => dispatch( { type: 'SET_VIEW', view: 'console' } ) }>Console</button>
         </nav>
         { session.view === 'score'
-          ? <ScoreTimeline session={ session } dispatch={ dispatch } />
+          ? <div className="scoreWorkspace">
+            <section className="transportStrip" aria-label="Score transport">
+              <div className="transportControls">
+                <button disabled={ session.mode === MODES.HOSTED
+                  ? ( transportPlaying ? !loadedRevision : !hostedCanPlay )
+                  : ( !transportPlaying && ( sc.status === 'loading' || sc.status === 'booting' ) ) }
+                  className={ transportPlaying ? 'active' : '' }
+                  onClick={ toggleTransport }>{ transportPlaying ? 'Pause' : 'Play' }</button>
+                <button disabled={ !transportLoaded } onClick={ stopTransport }>Stop</button>
+                <button disabled={ !transportLoaded } aria-label="Return to start"
+                  title="Return to start" onClick={ returnToStart }>&#8612;</button>
+              </div>
+              <div className="transportPosition">
+                <strong>{ session.playhead.toFixed( 3 ) } s</strong><span>playhead</span>
+                <strong>{ session.cursorTime.toFixed( 3 ) } s</strong><span>cursor</span>
+              </div>
+              <p>{ session.mode === MODES.HOSTED && hosted.transport
+                ? `${ hosted.transport.state } · run ${ hosted.transport.runID || '—' } · host-clock anchor`
+                : session.mode === MODES.STANDALONE && standaloneLoaded
+                  ? `${ standalone.status } · run ${ standalone.runID || '—' } · browser absolute-time anchor`
+                  : 'Load the selected executor before playback.' }</p>
+            </section>
+            <ScoreTimeline session={ session } dispatch={ dispatch } onSeek={ seekTransport } />
+          </div>
           : session.view === 'instruments'
             ? <InstrumentWorkspace sc={ sc } mode={ session.mode }
               hostedClient={ hostedClient } hostedState={ hosted } />
@@ -651,6 +714,9 @@ export default function App( { host, createHostedClient } ) {
                 <button disabled={ !connected }
                   onClick={ () => hostedAction( () => hostedClient.installDocument( session.document ),
                     `Revision ${ session.document.revision } installed atomically.` ) }>Load revision</button>
+                <button disabled={ !connected }
+                  onClick={ () => hostedAction( () => hostedClient.command( session.document, 'state' ) ) }>State</button>
+                <button disabled={ !connected } onClick={ openHostedDocument }>Open SC document</button>
               </div>
               <dl className="identity compact"><dt>Status</dt><dd>{ hosted.status }</dd><dt>Protocol</dt><dd>{ hosted.protocolVersion ?? '—' }</dd><dt>SynthDefs</dt><dd>{ hosted.synthDefContext.inventory ? `${ hosted.synthDefContext.inventory.length } in desktop context` : hosted.synthDefContext.status }</dd><dt>Audio</dt><dd>{ hosted.readiness.engine }</dd><dt>Playback</dt><dd>{ hostedCanPlay ? 'ready' : hosted.readiness.reason }</dd><dt>Remote</dt><dd>{ hosted.scoreID ? `${ hosted.scoreID } r${ hosted.remoteRevision }` : 'not loaded' }</dd></dl>
               { ( hostedMessage || hosted.error ) && <p className={ hosted.error ? 'error' : 'fileMessage' }>{ hostedMessage || hosted.error }</p> }
@@ -683,38 +749,6 @@ export default function App( { host, createHostedClient } ) {
           standaloneDefinitions={ definitionsCurrent ? standaloneDefinitions : {
             scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
           } } />
-
-        <section className="transport">
-          <h2>Transport</h2>
-          { session.mode === MODES.HOSTED ? (
-            <div className="runtimeButtons">
-              <button disabled={ !hostedCanPlay || hosted.transport?.state === 'playing' }
-                onClick={ () => hostedAction( playHosted ) }>{ hosted.transport?.state === 'paused' ? 'Resume' : 'Play from cursor' }</button>
-              <button disabled={ !loadedRevision || hosted.transport?.state !== 'playing' }
-                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'pause' ) ) }>Pause</button>
-              <button disabled={ !loadedRevision }
-                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'stop' ) ) }>Stop</button>
-              <button disabled={ !loadedRevision }
-                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'seek', session.cursorTime ) ) }>Seek to cursor</button>
-              <button disabled={ !connected }
-                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'state' ) ) }>State</button>
-              <button disabled={ !connected } onClick={ openHostedDocument }>Open SC document</button>
-            </div>
-          ) : <div className="runtimeButtons">
-            <button disabled={ sc.status === 'loading' || sc.status === 'booting' || standalone.status === 'playing' }
-              onClick={ playStandalone }>{ standalone.status === 'paused' ? 'Resume' : 'Play from cursor' }</button>
-            <button disabled={ standalone.status !== 'playing' } onClick={ standaloneExecutor.pause }>Pause</button>
-            <button disabled={ !standaloneLoaded } onClick={ standaloneExecutor.stop }>Stop</button>
-            <button disabled={ !standaloneLoaded } onClick={ () => standaloneExecutor.seek( session.cursorTime ) }>Seek to cursor</button>
-          </div> }
-          <p className="timeLarge">{ session.playhead.toFixed( 3 ) } s <small>playhead</small></p>
-          <p className="cursorReadout">{ session.cursorTime.toFixed( 3 ) } s cursor</p>
-          <p className="boundaryNote">{ session.mode === MODES.HOSTED && hosted.transport
-            ? `${ hosted.transport.state } · run ${ hosted.transport.runID || '—' } · host-clock anchor`
-            : session.mode === MODES.STANDALONE && standaloneLoaded
-              ? `${ standalone.status } · run ${ standalone.runID || '—' } · browser absolute-time anchor`
-              : 'Controls stay disabled until their selected executor is loaded.' }</p>
-        </section>
 
         { ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 ) && <section className="realizations">
           <h2>Realizations</h2>

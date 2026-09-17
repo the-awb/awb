@@ -29,23 +29,21 @@ try {
   passed += 1;
   await page.getByRole( 'button', { name: 'Demo score', exact: true } ).click();
   await page.getByText( 'Opened sonic-attunement-01.score.json', { exact: true } ).waitFor();
-  if ( await page.locator( '.scoreEvent' ).count() !== 11 ) throw new Error( 'browser did not load all eleven events' );
+  if ( await page.locator( '.synthBar' ).count() !== 11 ) throw new Error( 'browser did not load all eleven events' );
   passed += 1;
 
   await page.getByRole( 'button', { name: 'standalone', exact: true } ).click();
   await page.getByRole( 'button', { name: 'Load revision', exact: true } ).click();
   await page.getByText( 'Revision 1 ready · 2 SynthDefs.', { exact: true } ).waitFor( { timeout: 60000 } );
   passed += 1;
-  await page.locator( '.timelineScroll' ).evaluate( ( scroll, time ) => {
-    scroll.scrollLeft = time * 22;
-    const lane = scroll.querySelector( '.lane' );
-    const rect = lane.getBoundingClientRect();
-    lane.dispatchEvent( new MouseEvent( 'click', {
-      bubbles: true, clientX: rect.left + 92 + time * 22, clientY: rect.top + 30
+  await page.locator( '.synthBar' ).last().evaluate( ( finalBar ) => {
+    const lane = finalBar.closest( '.synthLane' );
+    const rect = finalBar.getBoundingClientRect();
+    lane.dispatchEvent( new MouseEvent( 'dblclick', {
+      bubbles: true, clientX: rect.left, clientY: rect.bottom + 2
     } ) );
-  }, 773 );
+  } );
   await page.getByText( '773.000 s', { exact: true } ).waitFor();
-  await page.getByRole( 'button', { name: 'Seek here', exact: true } ).click();
   passed += 1;
   await page.getByRole( 'button', { name: 'Play', exact: true } ).click();
   await page.waitForFunction( () => document.querySelectorAll( '.realization' ).length === 4 );
