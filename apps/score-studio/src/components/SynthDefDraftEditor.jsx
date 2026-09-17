@@ -65,6 +65,7 @@ export default function SynthDefDraftEditor( { focus } ) {
   const defaults = useMemo( () => Object.fromEntries( ( model?.controls ?? [] )
     .map( ( control ) => [ control.name, control.default ] ) ), [ model ] );
   const [ values, setValues ] = useState( defaults );
+  if ( focus.stale ) return <p className="emptyCopy">The hosted SynthDef context changed. Refreshing this exact interface before it can be inspected or auditioned.</p>;
   if ( focus.error ) return <p className="error">{ focus.error }</p>;
   if ( !model ) return <p className="emptyCopy">Loading the exact compiled SynthDef interface…</p>;
 

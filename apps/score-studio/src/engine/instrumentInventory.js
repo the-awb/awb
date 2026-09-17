@@ -12,6 +12,20 @@ export function synthDefSignalKind( description ) {
   return 'utility';
 }
 
+export function isHostedSynthDefFocusStale( focus, mode, contextGeneration ) {
+  return focus?.kind === 'synthDef' && mode === 'hosted'
+    && ( focus.source !== 'hosted context' || focus.contextGeneration !== contextGeneration );
+}
+
+export function shouldRefreshHostedSynthDefFocus( {
+  focusedName = '', focusedSource = '', focusedContextGeneration = null, hostedContext = null
+} = {} ) {
+  return Boolean( focusedName ) && hostedContext?.status === 'connected'
+    && Array.isArray( hostedContext.inventory )
+    && ( focusedSource !== 'hosted context'
+      || focusedContextGeneration !== hostedContext.generation );
+}
+
 export function buildInstrumentInventory( {
   scoreDefinitions = [], admittedDefinitions = {}, availableNames = []
 } = {} ) {

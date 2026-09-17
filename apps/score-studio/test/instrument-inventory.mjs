@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
-import { buildInstrumentInventory, synthDefSignalKind } from '../src/engine/instrumentInventory.js';
+import {
+  buildInstrumentInventory, isHostedSynthDefFocusStale,
+  shouldRefreshHostedSynthDefFocus, synthDefSignalKind
+} from '../src/engine/instrumentInventory.js';
 
 const rows = buildInstrumentInventory( {
   scoreDefinitions: [ 'scoreOnly', 'shared' ],
@@ -28,5 +31,24 @@ assert.equal( synthDefSignalKind( description( [ 'audio' ] ) ), 'audio' );
 assert.equal( synthDefSignalKind( description( [ 'control' ] ) ), 'control' );
 assert.equal( synthDefSignalKind( description( [] ) ), 'utility' );
 assert.equal( synthDefSignalKind( null ), 'unknown' );
+
+const hostedFocus = {
+  kind: 'synthDef', name: 'shared', source: 'hosted context', contextGeneration: 1
+};
+assert.equal( isHostedSynthDefFocusStale( hostedFocus, 'hosted', 1 ), false );
+assert.equal( isHostedSynthDefFocusStale( hostedFocus, 'hosted', 2 ), true );
+assert.equal( isHostedSynthDefFocusStale( hostedFocus, 'standalone', 2 ), false );
+assert.equal( shouldRefreshHostedSynthDefFocus( {
+  focusedName: 'shared', focusedSource: 'hosted context', focusedContextGeneration: 1,
+  hostedContext: { status: 'connected', generation: 2, inventory: [ 'shared' ] }
+} ), true );
+assert.equal( shouldRefreshHostedSynthDefFocus( {
+  focusedName: 'shared', focusedSource: 'hosted context', focusedContextGeneration: 2,
+  hostedContext: { status: 'connected', generation: 2, inventory: [ 'shared' ] }
+} ), false );
+assert.equal( shouldRefreshHostedSynthDefFocus( {
+  focusedName: 'shared', focusedSource: 'hosted context', focusedContextGeneration: 1,
+  hostedContext: { status: 'connected', generation: 2, inventory: null }
+} ), false );
 
 console.log( 'instrument-inventory: pass' );

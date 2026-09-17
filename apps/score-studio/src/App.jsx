@@ -17,6 +17,7 @@ import ScoreTimeline from './components/ScoreTimeline.jsx';
 import SynthDefDraftEditor from './components/SynthDefDraftEditor.jsx';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
+import { isHostedSynthDefFocusStale } from './engine/instrumentInventory.js';
 import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
 import { generateLocalScProjection, SC_PROJECTION_KINDS } from './engine/localScProjection.js';
 import { readLocalProjection, storeLocalProjection } from './engine/localProjectionStore.js';
@@ -81,6 +82,10 @@ export default function App( { host, createHostedClient } ) {
     () => inspectedEntries.find( ( entry ) => entry.id === session.selected[ 0 ] ) ?? null,
     [ inspectedEntries, session.selected ]
   );
+  const focusIsStale = isHostedSynthDefFocusStale(
+    focus, session.mode, hosted.synthDefContext.generation
+  );
+  const displayedFocus = focusIsStale ? { ...focus, stale: true } : focus;
 
   useEffect( () => {
     if ( !selectedEntry ) {
@@ -684,6 +689,8 @@ export default function App( { host, createHostedClient } ) {
           instrumentPanel={ <InstrumentInventory document={ session.document } mode={ session.mode }
             hostedClient={ hostedClient } hostedContext={ hosted.synthDefContext }
             focusedName={ focus.kind === 'synthDef' ? focus.name : '' }
+            focusedSource={ focus.kind === 'synthDef' ? focus.source : '' }
+            focusedContextGeneration={ focus.kind === 'synthDef' ? focus.contextGeneration : null }
             onFocus={ focusSynthDef } /> } /> }
         centre={ <>
           <nav className="viewTabs">
@@ -741,11 +748,11 @@ export default function App( { host, createHostedClient } ) {
               </div>
             ) ) : <p className="emptyCopy">No runtime realizations reported.</p> }
           </section> } /> }
-        bottom={ <ScoreFocusPanel focus={ focus }>
+        bottom={ <ScoreFocusPanel focus={ displayedFocus }>
           { focus.kind === 'scoreEvent' && selectedEntry && <EventEditor
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
             entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry } /> }
-          { focus.kind === 'synthDef' && <SynthDefDraftEditor key={ focus.draftID } focus={ focus } /> }
+          { focus.kind === 'synthDef' && <SynthDefDraftEditor key={ focus.draftID } focus={ displayedFocus } /> }
         </ScoreFocusPanel> } />
     </div>
   );

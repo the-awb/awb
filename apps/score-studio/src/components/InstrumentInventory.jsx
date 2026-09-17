@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { loadSynthDefManifest } from '@awb/sc-wasm/core';
-import { buildInstrumentInventory, synthDefSignalKind } from '../engine/instrumentInventory.js';
+import {
+  buildInstrumentInventory, shouldRefreshHostedSynthDefFocus, synthDefSignalKind
+} from '../engine/instrumentInventory.js';
 import { scoreInstruments } from '../engine/scoreInstruments.js';
 import { synthDefManifestUrl } from '../engine/scAssets.js';
 import { describeStandaloneSynthDef } from '../engine/standaloneSynthDefs.js';
 
 export default function InstrumentInventory( {
-  document, focusedName, hostedClient, hostedContext, mode, onFocus
+  document, focusedContextGeneration, focusedName, focusedSource,
+  hostedClient, hostedContext, mode, onFocus
 } ) {
   const [ query, setQuery ] = useState( '' );
   const [ manifest, setManifest ] = useState( null );
@@ -63,6 +66,26 @@ export default function InstrumentInventory( {
     }
     if ( nextChanged.size !== changed.size ) setChanged( nextChanged );
   }, [ admittedDefinitions, changed ] );
+
+  useEffect( () => {
+    if ( !hosted || !shouldRefreshHostedSynthDefFocus( {
+      focusedName, focusedSource, focusedContextGeneration, hostedContext
+    } ) ) return;
+    if ( !hostedContext.inventory.includes( focusedName ) ) {
+      selectionRequest.current += 1;
+      setLoading( '' );
+      const message = `SynthDef \\${ focusedName } is missing from the refreshed hosted context.`;
+      setError( message );
+      onFocus( {
+        name: focusedName, description: null,
+        contextGeneration: hostedContext.generation,
+        signalKind: 'unknown', source: 'hosted context', error: message
+      } );
+      return;
+    }
+    select( { name: focusedName }, true );
+  }, [ focusedContextGeneration, focusedName, focusedSource, hosted,
+    hostedContext?.generation, hostedContext?.inventory, hostedContext?.status ] );
 
   async function select( row, force = false ) {
     const request = ++selectionRequest.current;
