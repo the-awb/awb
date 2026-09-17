@@ -27,4 +27,17 @@ assert.ok( substrate2.controls.every( ( control ) => ![ 'difF', 'difFTime' ].inc
   'multichannel controls are not misrepresented as scalar inputs' );
 assert.equal( substrate2.controls.find( ( control ) => control.name === 'flip' ).editor.kind, 'boolean' );
 
-console.log( 'live-instrument-library: 10/10 pass' );
+const hostedLibrary = liveInstrumentLibrary( manifest, {
+  hostedDefinitions: {
+    substrate: { interface: { controls: [
+      { name: 'out', default: 0 }, { name: 'gate', default: 1 },
+      { name: 'freqA', default: 60, roles: [ 'frequency' ] }
+    ] } },
+    resonantBassEnv2: { interface: { controls: [ { name: 'freq', default: 50, roles: [ 'frequency' ] } ] } }
+  }
+} );
+assert.deepEqual( hostedLibrary.find( ( instrument ) => instrument.definition === 'substrate' )
+  .controls.map( ( control ) => control.name ), [ 'freqA' ],
+  'hosted controls come from the score-loaded desktop definition, not the browser bundle' );
+
+console.log( 'live-instrument-library: 11/11 pass' );

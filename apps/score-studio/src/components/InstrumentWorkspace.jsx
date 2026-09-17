@@ -11,8 +11,10 @@ export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedSta
   const [busy, setBusy] = useState( '' );
   const [message, setMessage] = useState( '' );
   const [error, setError] = useState( '' );
-  const instruments = useMemo( () => manifest ? liveInstrumentLibrary( manifest ) : [], [ manifest ] );
   const hosted = mode === 'hosted';
+  const instruments = useMemo( () => manifest ? liveInstrumentLibrary( manifest, hosted ? {
+    hostedDefinitions: hostedState?.synthDefContext?.definitions
+  } : {} ) : [], [ hosted, hostedState?.synthDefContext?.definitions, manifest ] );
   const hostedNodes = hostedState?.liveInstruments ?? {};
   const rackNodeCount = hosted
     ? Object.keys( hostedNodes ).length
@@ -88,7 +90,10 @@ export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedSta
   }
 
   async function startInstrument( instrument ) {
-    const values = params[ instrument.definition ] ?? initialLiveInstrumentParams( instrument );
+    const current = params[ instrument.definition ] ?? initialLiveInstrumentParams( instrument );
+    const values = Object.fromEntries( instrument.controls.map( ( control ) => [
+      control.name, current[ control.name ] ?? control.default
+    ] ) );
     if ( hosted ) return hostedClient.instrumentCommand( 'start', instrument.key, instrument.definition, values );
     await prepare();
     sc.playSynth( instrument.definition, values );

@@ -14,6 +14,7 @@ const bridge = {
     calls.push( [ operation, payload ] );
     if ( operation === 'filesystem.initial-file' || operation === 'filesystem.open-file'
       || operation === 'filesystem.read-file' ) return { handle, name: handle.name, text };
+    if ( operation === 'score.load-synthdefs' ) return { status: 'loaded', sourceName: 'synths.scd' };
     if ( operation === 'artifact.read-text' ) return { handle: null, name: payload.name, text };
     if ( operation === 'filesystem.open-directory' || operation === 'filesystem.list-directory' ) return { handle: { kind: 'desktop-directory', grantID: 'dir-1', name: 'scores' }, name: 'scores', files: [] };
     if ( operation === 'filesystem.save-file' ) return { handle: payload.handle ?? { ...handle, grantID: 'saved-1' }, name: payload.suggestedName };
@@ -27,6 +28,9 @@ const host = createNeutralDesktopHost( { bridge, storage: { setItem: ( key, valu
 const opened = await host.initialScore();
 assert.equal( opened.document.scoreID, 'sonic-attunement-01' );
 assert.equal( opened.handle.grantID, 'file-1' ); assert.equal( opened.handle.path, undefined );
+assert.deepEqual( calls.slice( 0, 2 ).map( ( call ) => call[ 0 ] ), [
+  'filesystem.initial-file', 'score.load-synthdefs'
+] );
 assert.equal( host.hostedLaunchContext().toolSessionID, 'tool-1' );
 assert.deepEqual( host.capabilities.executionModes, [ 'hosted' ] );
 const saved = await host.saveCanonical( opened.document, { handle, expectedHash: opened.hash } );

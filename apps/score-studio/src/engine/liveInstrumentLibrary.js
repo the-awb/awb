@@ -1,13 +1,19 @@
 import { INSTRUMENT_CATALOG, instrumentControls } from '@awb/instruments';
-import { settableControls } from '@awb/sc-wasm/core';
+import { RESERVED_CONTROLS, settableControls } from '@awb/sc-wasm/core';
 
-export function liveInstrumentLibrary( manifest ) {
+function hostedControls( definition ) {
+  return ( definition?.interface?.controls ?? [] )
+    .filter( ( control ) => !RESERVED_CONTROLS.has( control.name ) && ( control.numChannels ?? 1 ) === 1 );
+}
+
+export function liveInstrumentLibrary( manifest, { hostedDefinitions = null } = {} ) {
   return Object.entries( INSTRUMENT_CATALOG ).map( ( [ key, descriptor ] ) => {
     const definition = manifest.get( descriptor.synthDef );
+    const hostedDefinition = hostedDefinitions?.[ descriptor.synthDef ];
     const catalogControls = new Map(
       instrumentControls( key ).map( ( control ) => [ control.name, control ] )
     );
-    const controls = settableControls( definition ).map( ( control ) => {
+    const controls = ( hostedDefinition ? hostedControls( hostedDefinition ) : settableControls( definition ) ).map( ( control ) => {
       const catalog = catalogControls.get( control.name );
       return Object.freeze( {
         name: control.name,
@@ -24,7 +30,7 @@ export function liveInstrumentLibrary( manifest ) {
       definition: descriptor.synthDef,
       note: descriptor.note ?? '',
       controls: Object.freeze( controls ),
-      available: Boolean( definition )
+      available: Boolean( hostedDefinition ?? definition )
     } );
   } );
 }

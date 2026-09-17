@@ -54,6 +54,15 @@ export class HostControlProjection {
       }
       return true;
     }
+    if ( address === '/awb/host/score/synthdefs/status' ) {
+      const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
+      if ( pending ) {
+        clearTimeout( pending.timer ); this.pending.delete( requestID );
+        pending.resolve( Object.freeze( { status: `${ args[ 2 ] }`, sessionID: `${ args[ 3 ] }`,
+          sourceName: `${ args[ 4 ] }` } ) );
+      }
+      return true;
+    }
     if ( address === '/awb/host/audio/probe/status' ) {
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) {
@@ -71,11 +80,11 @@ export class HostControlProjection {
     return true;
   }
 
-  request( address, args ) {
+  request( address, args, timeoutMs = 2500 ) {
     if ( this.status !== 'ready' ) return Promise.reject( new Error( 'SuperCollider host control is unavailable.' ) );
     const requestID = crypto.randomUUID();
     return new Promise( ( resolve, reject ) => {
-      const timer = setTimeout( () => { this.pending.delete( requestID ); reject( new Error( 'SuperCollider host control timed out.' ) ); }, 2500 );
+      const timer = setTimeout( () => { this.pending.delete( requestID ); reject( new Error( 'SuperCollider host control timed out.' ) ); }, timeoutMs );
       timer.unref?.(); this.pending.set( requestID, { resolve, reject, timer } );
       this.sendOsc( address, [ this.clientID, requestID, ...args, this.token ] );
     } );
@@ -96,6 +105,10 @@ export class HostControlProjection {
 
   closeToolSession( toolID, sessionID ) {
     return this.request( '/awb/host/tool/close', [ toolID, sessionID ] );
+  }
+
+  loadScoreSynthDefs( sessionID, sourcePath ) {
+    return this.request( '/awb/host/score/synthdefs', [ sessionID, sourcePath ], 15000 );
   }
 
   audioProbe( { frequency = 440, duration = 0.35, amplitude = 0.08 } = {} ) {

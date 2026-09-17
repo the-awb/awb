@@ -21,7 +21,7 @@ Current first slice:
   with recoverable partial success;
 - explicit hosted/standalone mode surfaces in the browser and hosted-only execution in Electron;
 - a token-protected localhost WebSocket-to-OSC sidecar for hosted desktop execution;
-- browser-owned standalone playback through scsynth.wasm, with app-owned compiled SynthDefs;
+- browser-owned standalone playback through scsynth.wasm, with score-distributed compiled SynthDefs;
 - the extracted `@awb/sc-console` editor and post window;
 - a read-only slot for generated SC working documents, with desktop-score and browser-Pseq targets
   retained in local app data by score ID, revision and projection kind.
@@ -33,6 +33,19 @@ not duplicate those responsibilities. The app-owned sidecar forwards the frozen
 and local OSC; it contains no score, instrument or scheduling policy. The AWB shell provides the
 same manifest-bounded relay for installed tool views. Standalone scheduling stays in the browser;
 Electron uses either the attached IDE host or the shell-owned headless native sclang/scsynth host.
+
+Every score owns its SynthDefs. In the desktop shell, a canonical `*.score.json` file must have a
+`synths.scd` sibling. The shell resolves that fixed sibling from its opaque file grant, and the
+named Score Studio ToolSession executes it and synchronizes the active server before the document
+is accepted. Same-named definitions already present in the global language context are not treated
+as substitutes. The browser build may package compiled copies for WebAssembly execution, but those
+assets remain dependencies of the score that supplied them, not an application-wide definition
+authority.
+
+The current native host has one process-global SynthDef namespace. It therefore accepts multiple
+views of the same score dependency set but refuses simultaneous sessions backed by different
+`synths.scd` files. Supporting concurrent scores with colliding definition names requires explicit
+definition namespacing or separate server contexts; last-writer-wins replacement is not allowed.
 
 The hosted Instruments view lists the complete `SynthDescLib.global` inventory. It refreshes on
 open, window focus and a bounded interval, but requests compiled graph bytes and builds an
@@ -55,11 +68,11 @@ Standalone mode exposes the same readiness meaning from its different evidence. 
 means that the selected host can accept and realize the score; it is not proof that an external
 audio device or loudspeaker is producing sound.
 
-Desktop definition checking currently uses `SynthDescLib`: it proves that sclang knows the
-definition, while the bridge separately proves that the server is running. scsynth has no
-side-effect-free “is this SynthDef installed?” query. A server restarted outside the normal
-definition-restoration path can therefore invalidate that inference; an eventual score-project
-dependency loader should own sending the definitions and `/sync`, then report stronger evidence.
+Desktop definition checking uses `SynthDescLib`: it proves that sclang knows the definition, while
+the bridge separately proves that the server is running. The score dependency loader now executes
+the score-local `synths.scd` and waits for `/sync` before accepting the document. A server restarted
+outside that load path can still invalidate the inference because scsynth has no side-effect-free
+“is this SynthDef installed?” query; reopening the score restores its definitions.
 
 ## Timeline views and editing
 
@@ -149,7 +162,9 @@ bounded, idempotent start, set, pause, resume, release and free commands to the 
 desktop Score Studio ToolSession. Desktop sclang creates the Synths on desktop scsynth and the
 ToolSession owns them, so NodeManager can project them when tracking is enabled. Losing the desktop
 connection disables hosted controls rather than silently changing execution engine. Switching to
-Hosted also stops standalone score playback and shuts down the browser engine.
+Hosted also stops standalone score playback and shuts down the browser engine. Hosted controls are
+derived from the exact loaded desktop SynthDef interface; browser-manifest-only controls are never
+sent to a different same-named desktop definition.
 
 ## Score files and demo
 

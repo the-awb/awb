@@ -34,6 +34,9 @@ export function createNeutralDesktopHost( {
   const request = ( operation, payload = {} ) => bridge.request( operation, payload );
   const validatedScore = async ( record ) => {
     const result = await scoreResult( record );
+    if ( result?.handle && capabilities.hostedLaunch ) {
+      await request( 'score.load-synthdefs', { handle: result.handle } );
+    }
     if ( result?.handle ) bridge.reportDetailedState?.( { validatedDocumentKindID: 'score' } );
     return result;
   };

@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import path from 'node:path';
 import process from 'node:process';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { grantedCapabilities, publicManifest, SHELL_PROTOCOL } from '../src/contract.mjs';
@@ -554,6 +554,7 @@ async function runFieldSmoke() {
 
 async function runHeadlessScSmoke() {
   smokeRunning = true;
+  const scorePath = option( process.argv, 'smoke-score' );
   await startHeadlessHost();
   await waitFor( () => services.firstService( ( service ) => {
     const host = service.hostSnapshot?.(); return host?.control?.status === 'ready'
@@ -569,12 +570,14 @@ async function runHeadlessScSmoke() {
   }
   await setNodeManager( 'enable' );
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'ready' ), 5000 );
-  const launched = await launchFromHome( { toolID: 'score-studio', profileID: 'headless', launchOrigin: 'desktop' } );
+  const launched = await launchFromHome( { toolID: 'score-studio', profileID: 'headless', launchOrigin: 'desktop',
+    payload: scorePath ? { scorePath: path.resolve( scorePath ) } : {} } );
   if ( launched.status !== 'accepted' ) throw new Error( `Native Score Studio launch failed: ${ JSON.stringify( launched ) }` );
   await waitFor( () => {
     const view = registry.get( launched.viewID );
     return view?.lifecycle === 'ready' && view.sessionState?.mode === 'hosted'
-      && view.sessionState?.connection === 'connected';
+      && view.sessionState?.connection === 'connected'
+      && ( !scorePath || view.sessionState?.scoreID === 'sonic-attunement-01' );
   }, 25000 );
   if ( !nativeToolSessions.has( launched.viewID ) ) throw new Error( 'Native Score Studio view has no owned sclang ToolSession.' );
   const executionModes = await windows.get( launched.viewID ).webContents.executeJavaScript(
@@ -813,6 +816,22 @@ async function handleToolOperation( sender, operation, payload ) {
   if ( operation === 'artifact.read-text' ) {
     const target = safeArtifactPath( tool, payload.path );
     return { name: payload.name ?? path.basename( target ), text: await readFile( target, 'utf8' ), handle: null };
+  }
+  if ( operation === 'score.load-synthdefs' ) {
+    if ( tool.id !== 'score-studio' ) throw new Error( 'Only Score Studio may load score SynthDefs.' );
+    const nativeSession = nativeToolSessions.get( view.viewID );
+    if ( !nativeSession || nativeSession.toolID !== 'score-studio' ) {
+      throw new Error( 'Score SynthDefs require a shell-owned native Score Studio session.' );
+    }
+    const score = fileGrants.resolve( view.viewID, payload.handle, 'file' );
+    if ( !score.name.endsWith( '.score.json' ) ) throw new Error( 'Score SynthDefs require a canonical .score.json file.' );
+    const sourcePath = path.join( path.dirname( score.path ), 'synths.scd' );
+    const source = await stat( sourcePath ).catch( () => null );
+    if ( !source?.isFile() ) {
+      throw new Error( `Score dependency is missing: ${ path.basename( sourcePath ) } must sit beside ${ score.name }.` );
+    }
+    const result = await nativeSession.service.loadScoreSynthDefs( nativeSession.sessionID, sourcePath );
+    return { ...result, sourcePath: undefined };
   }
   if ( operation === 'native-audio.devices' ) {
     requireCapability( tool, 'media', 'native-audio' );

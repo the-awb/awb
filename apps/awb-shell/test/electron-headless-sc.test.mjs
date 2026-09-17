@@ -12,6 +12,10 @@ import { fileURLToPath } from 'node:url';
 const require = createRequire( import.meta.url );
 const electron = require( 'electron' );
 const appRoot = fileURLToPath( new URL( '..', import.meta.url ) );
+const colliderRoot = process.env.AWB_COLLIDER_ROOT
+  ?? '/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider';
+const scorePath = path.join( colliderRoot,
+  'examples/score-projects/sonic-attunement-01/attunement-01.score.json' );
 const sclang = process.env.AWB_SCLANG_PATH ?? '/Applications/SuperCollider.app/Contents/MacOS/sclang';
 
 async function availableUdpPort() {
@@ -30,7 +34,7 @@ test( 'Electron owns and cleanly stops an optional native sclang/scsynth host', 
   delete env.ELECTRON_RUN_AS_NODE;
   let output = '';
   const child = spawn( electron, [ path.join( appRoot, 'shell/main.mjs' ), '--smoke-headless-sc',
-    `--osc-port=${ oscPort }`, `--user-data-dir=${ userData }` ],
+    `--osc-port=${ oscPort }`, `--smoke-score=${ scorePath }`, `--user-data-dir=${ userData }` ],
   { cwd: appRoot, env, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
   child.stdout.on( 'data', ( chunk ) => { output += chunk; } );
   child.stderr.on( 'data', ( chunk ) => { output += chunk; } );
