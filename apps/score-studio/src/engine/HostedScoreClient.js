@@ -136,6 +136,10 @@ export class HostedScoreClient {
       pending.reject( error );
     }
     this.pending.clear();
+    this.clearSynthDefPending( error );
+  }
+
+  clearSynthDefPending( error ) {
     for ( const pending of this.synthDefPending.values() ) {
       clearTimeout( pending.timer );
       pending.reject( error );
@@ -167,9 +171,11 @@ export class HostedScoreClient {
       this.resolveConnect = null;
       this.rejectConnect = null;
     } else if ( address === '/awb/synthdef/connected' && args[ 0 ] === this.clientID ) {
+      this.clearSynthDefPending( new Error( 'SynthDef context generation changed' ) );
       this.synthDefGeneration += 1;
       this.publishSynthDefContext( {
-        status: 'connected', protocolVersion: args[ 1 ], generation: this.synthDefGeneration, error: ''
+        status: 'connected', protocolVersion: args[ 1 ], generation: this.synthDefGeneration,
+        inventory: null, definitions: Object.freeze( {} ), error: ''
       } );
     } else if ( address.startsWith( '/awb/synthdef/' ) && args[ 0 ] === this.clientID ) {
       this.receiveSynthDefFrame( address, args );
@@ -243,6 +249,10 @@ export class HostedScoreClient {
     const id = args[ 1 ];
     const pending = this.synthDefPending.get( id );
     if ( !pending ) return;
+    if ( pending.generation !== this.state.synthDefContext.generation ) {
+      this.rejectSynthDefRequest( id, 'context generation changed' );
+      return;
+    }
     if ( address === '/awb/synthdef/error' ) {
       this.rejectSynthDefRequest( id, `${ args[ 2 ] }: ${ args[ 3 ] }` );
       return;
@@ -315,6 +325,9 @@ export class HostedScoreClient {
 
   async finishSynthDefDescription( id, pending ) {
     try {
+      if ( pending.generation !== this.state.synthDefContext.generation ) {
+        throw new Error( 'context generation changed' );
+      }
       const hex = Array.from( { length: pending.begin.chunkCount }, ( _, index ) => pending.chunks.get( index ) );
       if ( hex.some( ( chunk ) => typeof chunk !== 'string' ) ) throw new Error( 'graph indexes are not contiguous' );
       const bytes = Uint8Array.from( hex.join( '' ).match( /.{2}/g ) ?? [], ( pair ) => Number.parseInt( pair, 16 ) );
@@ -326,8 +339,12 @@ export class HostedScoreClient {
         specs: Object.fromEntries( pending.specs )
       } );
       const result = Object.freeze( {
-        name: pending.name, fingerprint: await synthDefFingerprint( bytes ), interface: interfaceModel
+        name: pending.name, fingerprint: await synthDefFingerprint( bytes ),
+        contextGeneration: pending.generation, interface: interfaceModel
       } );
+      if ( pending.generation !== this.state.synthDefContext.generation ) {
+        throw new Error( 'context generation changed' );
+      }
       this.resolveSynthDefRequest( id, result );
       this.publishSynthDefContext( {
         definitions: Object.freeze( { ...this.state.synthDefContext.definitions, [ pending.name ]: result } ),
@@ -376,14 +393,15 @@ export class HostedScoreClient {
   listSynthDefs() {
     const id = requestID( 'synthdefs' );
     return this.synthDefRequest( '/awb/synthdef/list', [ this.clientID, id ], {
-      kind: 'list', count: null, items: new Map()
+      kind: 'list', generation: this.state.synthDefContext.generation, count: null, items: new Map()
     } );
   }
 
   describeSynthDef( name ) {
     const id = requestID( 'synthdef' );
     return this.synthDefRequest( '/awb/synthdef/describe', [ this.clientID, id, name ], {
-      kind: 'description', name, begin: null, chunks: new Map(), specs: new Map()
+      kind: 'description', generation: this.state.synthDefContext.generation,
+      name, begin: null, chunks: new Map(), specs: new Map()
     } );
   }
 

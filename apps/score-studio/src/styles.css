@@ -44,6 +44,7 @@ input, textarea { border: 1px solid var(--line); border-radius: 5px; background:
 .activityRail button.active::before { content: ''; position: absolute; top: 5px; bottom: 5px; left: -6px; width: 2px; background: var(--accent); }
 .activityRail .spacer { flex: 1; }
 .railPanel { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.railPanel[hidden], .railScroll > [hidden] { display: none; }
 .railPanel > header { flex: 0 0 39px; display: flex; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--line); }
 .railPanel > header h2 { margin: 0; }
 .railScroll { min-height: 0; overflow: auto; padding: 14px; }

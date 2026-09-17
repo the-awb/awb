@@ -135,8 +135,21 @@ try {
   assert.ok( context.definitions.fieldBasic.interface.controls
     .find( ( control ) => control.name === 'freqL' ).roles.includes( 'oscillatorFrequency' ) );
   assert.match( context.definitions.fieldBasic.fingerprint, /^sha256:[0-9a-f]{64}$/ );
+  assert.equal( context.definitions.fieldBasic.contextGeneration, 1 );
   assert.equal( received.filter( ( message ) => message.address === '/awb/synthdef/describe' ).length, 1,
     'inventory refresh does not eagerly request unselected definition graphs' );
+  client.onMessage( JSON.stringify( {
+    address: '/awb/synthdef/connected', args: [ 'score-browser-test', 1 ]
+  } ) );
+  assert.equal( client.getState().synthDefContext.generation, 2 );
+  assert.equal( client.getState().synthDefContext.inventory, null,
+    'a new context generation invalidates the old inventory' );
+  assert.deepEqual( client.getState().synthDefContext.definitions, {},
+    'a new context generation invalidates same-named compiled models' );
+  const refreshedContext = await client.loadSynthDefContext( [ 'fieldBasic' ] );
+  assert.equal( refreshedContext.definitions.fieldBasic.contextGeneration, 2 );
+  assert.equal( received.filter( ( message ) => message.address === '/awb/synthdef/describe' ).length, 2,
+    'a same-named definition is lazily described again after a context generation change' );
   synthDefInventory = [ 'unmodelled' ];
   await client.listSynthDefs();
   assert.equal( client.getState().synthDefContext.definitions.fieldBasic, undefined,

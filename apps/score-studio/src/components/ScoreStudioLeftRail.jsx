@@ -22,14 +22,13 @@ export default function ScoreStudioLeftRail( {
           title={ collapsed ? 'Expand left panel' : 'Collapse left panel' }
           onClick={ onToggleCollapsed }>{ collapsed ? '\u203a' : '\u2039' }</button>
       </nav>
-      { !collapsed && <div className="railPanel">
+      <div className="railPanel" hidden={ collapsed }>
         <header><h2>{ tab === 'document' ? 'Document' : 'Instruments' }</h2></header>
         <div className="railScroll">
-          { tab === 'document' ? documentPanel : (
-            instrumentPanel
-          ) }
+          <div hidden={ tab !== 'document' }>{ documentPanel }</div>
+          <div hidden={ tab !== 'instruments' }>{ instrumentPanel }</div>
         </div>
-      </div> }
+      </div>
     </div>
   );
 }

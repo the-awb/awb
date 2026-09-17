@@ -289,29 +289,38 @@ At target score time `T`:
 
 1. fold all deterministic note/set/release/free entries before `T` into a logical runtime state;
 2. discard notes already released/freed/completed before `T`;
-3. for each note logically alive at `T` with an exact state adapter, create a new realization with a
-   fresh realization ID; report every other logically alive note as skipped;
+3. for each note logically alive at `T` whose remaining lifetime and essential state are known,
+   create a new realization with a fresh realization ID and classify its reconstruction quality;
+   report every other logically alive note as skipped;
 4. apply the latest deterministic control values that should be in force at `T`;
 5. calculate remaining gate, release, free and event-duration boundaries relative to `T`;
 6. schedule future authored entries from `T` normally.
 
 The authored event and original realization are never reused. Reconstructed nodes belong to the
-new run and must be reported as `reconstruction: exact` in runtime metadata.
+new run and must report `reconstruction: exact` or `reconstruction: lifecycleCorrect` in runtime
+metadata. If an original 30-second note has 3 seconds remaining at `T`, its reconstruction must end
+in 3 seconds. It must never restart with a fresh 30-second lifetime.
 
 ### 5.1 Reconstruction capability levels
 
-Smart seek cannot honestly be universal. Reconstruction is binary for this workflow:
+Smart seek cannot honestly be universal. Temporal correctness is mandatory; acoustic-state
+fidelity is graded:
 
-- **exact state adapter** — the instrument exposes enough controls to restore oscillator/sample
-  phase, envelope position, effective controls and remaining lifetime;
-- **unsupported** — the note is omitted from reconstruction and reported as skipped.
+- **exact reconstruction** — the adapter restores the correct remaining lifetime, deterministic
+  controls and internal audible state, including declared envelope/oscillator/sample position;
+- **lifecycle-correct reconstruction** — the adapter restores the correct remaining lifetime and
+  deterministic controls, while explicitly reported envelope position, oscillator phase or other
+  non-essential audible state may restart or be approximated;
+- **unsupported** — remaining lifetime or essential state cannot be determined, so the note is
+  omitted from reconstruction and reported as skipped.
 
 The planner may fold deterministic note/set/release/free history to identify notes logically alive
-at `T`, but it must emit a reconstruction only when an exact adapter can restore that note's audible
-state. A shorter duration, a fresh baked EnvGen, a short anti-click attack or a phase-reset oscillator
-is a restart, not reconstruction, and must therefore be excluded. For an editable `envArray`, an
-exact adapter may evaluate the envelope at `elapsed` and construct the remaining envelope beginning
-at that level, but it must also restore every other audible state the instrument declares relevant.
+at `T`. It may emit a lifecycle-correct reconstruction with a fresh baked EnvGen, short anti-click
+attack or phase-reset oscillator only when the remaining gate/release/free boundaries and current
+deterministic control values remain correct. Those approximations must be named in the report. For
+an editable `envArray`, an exact adapter may evaluate the envelope at `elapsed` and construct the
+remaining envelope beginning at that level. In both quality levels, release/free boundaries and all
+future authored events retain their original score times relative to `T`.
 
 Seeking while paused must continue to free the suspended nodes before reconstruction. Seeking
 while playing should atomically replace the old run: stop/free old owned nodes, install the new
@@ -327,18 +336,19 @@ anchor and reconstruction plan, then resume. No old `/n_end` may attach to the n
 - reconstructing notes whose lifetime contract is unknown.
 
 The UI should distinguish ordinary boundary seek from smart seek until the latter's supported
-surface is well understood. It should report skipped notes and the missing exact-state capability;
-it must not offer or label approximate reconstruction.
+surface is well understood. It should distinguish exact, lifecycle-correct and skipped notes,
+report every acoustic approximation, and name the missing lifetime or essential-state capability
+for every skipped note.
 
 ### 5.3 Planner and executor ownership
 
 `buildSeekReconstructionPlan(document, target, capabilities)` is a pure JS/domain function. It
-folds authored deterministic state and returns exact reconstructions, skipped-note diagnostics and
-future authored boundaries; it does not create nodes or own a clock. In both headless-hosted and
-connected-hosted shell contexts, `PTimelinePlayer`/`PScoreTimelinePlayer` remains the authoritative
-scheduler and atomically applies the plan to a fresh run. Only an explicit browser-standalone host
-uses `StandaloneScoreExecutor` to apply the same plan. The React tool selects seek mode and displays
-the report; it never performs reconstruction itself.
+folds authored deterministic state and returns exact/lifecycle-correct reconstructions, skipped-note
+diagnostics and future authored boundaries; it does not create nodes or own a clock. In both
+headless-hosted and connected-hosted shell contexts, `PTimelinePlayer`/`PScoreTimelinePlayer`
+remains the authoritative scheduler and atomically applies the plan to a fresh run. Only an
+explicit browser-standalone host uses `StandaloneScoreExecutor` to apply the same plan. The React
+tool selects seek mode and displays the report; it never performs reconstruction itself.
 
 ## 6. State and component boundaries
 
@@ -388,11 +398,12 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 - integrate the compact `envArray` editor where authorised;
 - project hosted audition nodes through NodeManager with explicit origin metadata.
 
-### Slice D — smart-seek plan and exact reconstruction
+### Slice D — smart-seek plan and temporally correct reconstruction
 
 - implement and fixture-test the pure reconstruction planner first;
 - add the hosted execution adapter over the plan, plus the optional browser-standalone adapter;
-- reconstruct only through exact state adapters and expose skipped-note reports;
+- reconstruct only when remaining lifetime and essential state are known; classify exact versus
+  lifecycle-correct results and expose approximation/skipped-note reports;
 - validate run/realization isolation against late lifecycle messages.
 
 ## 8. Acceptance criteria
@@ -423,8 +434,9 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 - Envelope UI matches `envArray`/`parametric`/`inspectOnly` capability and never offers a control
   that cannot reach the selected SynthDef.
 - Left, right and bottom panels collapse independently; resizing does not touch canonical data.
-- Smart seek never mutates authored entries, never reuses old realization IDs, excludes every note
-  without an exact state adapter and reports each skipped note honestly.
+- Smart seek never mutates authored entries, never reuses old realization IDs or changes remaining
+  note/event timing. It classifies exact and lifecycle-correct reconstruction, reports acoustic
+  approximations, and skips notes whose remaining lifetime or essential state is unknown.
 - Existing hosted readiness, save, transport, typed/raw event editing, browser smoke and real hosted
   sclang gates remain green. Browser-standalone gates remain green for the web host; the shell must
   not expose that mode.
@@ -439,8 +451,9 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
    parsing every compiled graph is not.
 4. **Do not make the envelope picture promise editability.** Graph capability decides which
    controls exist.
-5. **Do not reconstruct without an exact adapter.** Restarting an oscillator or baked EnvGen with a
-   shorter duration does not restore its phase or envelope position and must be reported as skipped.
+5. **Temporal correctness outranks acoustic exactness.** A lifecycle-correct reconstruction may
+   restart or approximate phase/envelope state, but it must preserve remaining lifetime, control
+   state and future boundaries. If it cannot, skip it; never restart the original full duration.
 6. **Keep draft and canonical state separate.** Raw JSON, typed controls, envelope controls and
    audition must share one focus draft; only Apply changes the score.
 7. **Guard focus changes.** A late hosted reply, SynthDef inventory refresh or score revision must

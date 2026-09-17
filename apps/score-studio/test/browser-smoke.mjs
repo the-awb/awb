@@ -22,6 +22,10 @@ const { chromium } = await import( playwright );
 const browser = await chromium.launch();
 const page = await browser.newPage( { viewport: { width: 1440, height: 900 } } );
 const failures = [];
+await page.route( '**/synthdefs/awbEnvelopeLab.scsyndef', async ( route ) => {
+  await new Promise( ( resolve ) => setTimeout( resolve, 350 ) );
+  await route.continue();
+} );
 await page.addInitScript( () => {
   Object.defineProperty( window, 'showSaveFilePicker', { value: undefined, configurable: true } );
 } );
@@ -47,7 +51,7 @@ try {
   await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
   await page.getByRole( 'button', { name: 'Collapse left panel', exact: true } ).click();
   if ( await page.locator( '.panelLayout.leftCollapsed' ).count() !== 1 ) failures.push( 'left panel did not collapse independently' );
-  if ( !( await page.locator( '.activityRail' ).isVisible() ) || await page.locator( '.railPanel' ).count() !== 0 ) {
+  if ( !( await page.locator( '.activityRail' ).isVisible() ) || await page.locator( '.railPanel' ).isVisible() ) {
     failures.push( 'left collapse did not preserve the activity rail while hiding its content panel' );
   }
   await page.getByRole( 'button', { name: 'Expand left panel', exact: true } ).click();
@@ -87,6 +91,13 @@ try {
     failures.push( 'browser system SynthDefs were not available in the instrument inventory' );
   }
   const inventorySearch = page.getByLabel( 'Search instruments', { exact: true } );
+  await inventory.getByRole( 'option', { name: /awbEnvelopeLab/ } ).click();
+  await inventory.getByRole( 'option', { name: /awbSchedulerPulse/ } ).click();
+  await page.getByLabel( 'Draft freq', { exact: true } ).waitFor();
+  await page.waitForTimeout( 450 );
+  if ( await page.locator( '.focusPanelContent > header strong' ).textContent() !== '\\awbSchedulerPulse' ) {
+    failures.push( 'a late SynthDef description replaced the newer instrument focus' );
+  }
   await inventorySearch.fill( 'SchedulerPulse' );
   if ( await inventory.getByRole( 'option' ).count() !== 1 ) failures.push( 'instrument inventory search did not filter rows' );
   await inventory.getByRole( 'option', { name: /awbSchedulerPulse/ } ).click();
@@ -97,6 +108,17 @@ try {
   }
   if ( await page.locator( '.bottomPanel' ).getByText( 'browser bundle', { exact: false } ).count() === 0 ) {
     failures.push( 'selected system SynthDef did not create a visibly sourced bottom-panel draft' );
+  }
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'Collapse left panel', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'Expand left panel', exact: true } ).click();
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  const persistedInstrument = inventory.getByRole( 'option', { name: /awbSchedulerPulse/ } );
+  if ( await inventorySearch.inputValue() !== 'SchedulerPulse'
+    || !( await persistedInstrument.isVisible() )
+    || !( await persistedInstrument.getByText( 'modelled', { exact: true } ).isVisible() )
+    || !( await persistedInstrument.getByText( 'loaded', { exact: true } ).isVisible() ) ) {
+    failures.push( 'instrument search and admitted model state did not survive tab/collapse changes' );
   }
   await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
   if ( await page.locator( '.liveInstrument' ).count() !== 4 ) failures.push( 'live instrument tab did not expose the four catalogued instruments' );

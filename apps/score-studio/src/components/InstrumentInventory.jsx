@@ -15,6 +15,7 @@ export default function InstrumentInventory( {
   const [ error, setError ] = useState( '' );
   const [ changed, setChanged ] = useState( new Set() );
   const fingerprints = useRef( new Map() );
+  const selectionRequest = useRef( 0 );
   const hosted = mode === 'hosted';
   const scoreDefinitions = useMemo(
     () => scoreInstruments( document ).map( ( instrument ) => instrument.definition ), [ document ]
@@ -40,8 +41,18 @@ export default function InstrumentInventory( {
 
   useEffect( () => {
     if ( !hosted || hostedContext?.status !== 'connected' ) return;
-    hostedClient.listSynthDefs().then( () => setError( '' ), ( nextError ) => setError( nextError.message ) );
+    let live = true;
+    hostedClient.listSynthDefs().then(
+      () => { if ( live ) setError( '' ); },
+      ( nextError ) => { if ( live ) setError( nextError.message ); }
+    );
+    return () => { live = false; };
   }, [ hosted, hostedClient, hostedContext?.generation, hostedContext?.status ] );
+
+  useEffect( () => {
+    selectionRequest.current += 1;
+    setLoading( '' );
+  }, [ hosted, hostedContext?.generation ] );
 
   useEffect( () => {
     const nextChanged = new Set( changed );
@@ -54,6 +65,10 @@ export default function InstrumentInventory( {
   }, [ admittedDefinitions, changed ] );
 
   async function select( row, force = false ) {
+    const request = ++selectionRequest.current;
+    const isCurrent = () => selectionRequest.current === request;
+    const startingGeneration = hosted
+      ? hostedClient.getState().synthDefContext.generation : 0;
     setLoading( row.name );
     setError( '' );
     try {
@@ -61,34 +76,42 @@ export default function InstrumentInventory( {
       let contextGeneration;
       if ( hosted ) {
         if ( hostedContext?.status !== 'connected' ) throw new Error( 'The hosted SynthDef context is not connected.' );
-        if ( !hostedClient.getState().synthDefContext.inventory?.includes( row.name ) ) {
+        const startingContext = hostedClient.getState().synthDefContext;
+        contextGeneration = startingContext.generation;
+        if ( !startingContext.inventory?.includes( row.name ) ) {
           throw new Error( `SynthDef \\${ row.name } is missing from the hosted context.` );
         }
-        description = !force && hostedClient.getState().synthDefContext.definitions[ row.name ]
-          ? hostedClient.getState().synthDefContext.definitions[ row.name ]
+        const cached = startingContext.definitions[ row.name ];
+        description = !force && cached?.contextGeneration === contextGeneration
+          ? cached
           : await hostedClient.describeSynthDef( row.name );
-        contextGeneration = hostedClient.getState().synthDefContext.generation;
+        if ( !isCurrent() ) return;
+        if ( hostedClient.getState().synthDefContext.generation !== contextGeneration ) return;
       } else {
         if ( !manifest ) throw new Error( 'The browser SynthDef manifest is not ready.' );
         description = !force && localDefinitions[ row.name ]
           ? localDefinitions[ row.name ]
           : await describeStandaloneSynthDef( row.name, manifest );
+        if ( !isCurrent() ) return;
         contextGeneration = 0;
         setLocalDefinitions( ( current ) => ( { ...current, [ row.name ]: description } ) );
       }
+      if ( !isCurrent() ) return;
       onFocus( {
         name: row.name, description, contextGeneration,
         signalKind: synthDefSignalKind( description ),
         source: hosted ? 'hosted context' : 'browser bundle'
       } );
     } catch ( nextError ) {
+      if ( !isCurrent() ) return;
+      if ( hosted && hostedClient.getState().synthDefContext.generation !== startingGeneration ) return;
       setError( nextError.message );
       onFocus( {
         name: row.name, description: null,
-        contextGeneration: hostedContext?.generation ?? 0,
+        contextGeneration: hosted ? startingGeneration : 0,
         signalKind: 'unknown', source: hosted ? 'hosted context' : 'browser bundle', error: nextError.message
       } );
-    } finally { setLoading( '' ); }
+    } finally { if ( isCurrent() ) setLoading( '' ); }
   }
 
   async function refresh() {
