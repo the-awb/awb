@@ -15,7 +15,8 @@
   },
   "launchProfiles": [
     { "id": "standalone", "label": "New analytic field" },
-    { "id": "attached", "label": "Attach to score session" }
+    { "id": "attached", "label": "Use SuperCollider IDE" },
+    { "id": "headless", "label": "Use headless SuperCollider" }
   ],
   "capabilities": {
     "filesystem": ["open-file", "save-file"],
@@ -31,7 +32,8 @@
         "/awb/field/snapshot/component", "/awb/field/snapshot/end",
         "/awb/timeline/hello", "/awb/timeline/connected", "/awb/timeline/observe",
         "/awb/timeline/result", "/awb/timeline/runtime", "/awb/timeline/transport",
-        "/awb/timeline/realization", "/awb/timeline/ping", "/awb/timeline/pong",
+        "/awb/timeline/realization", "/awb/timeline/instrument",
+        "/awb/timeline/instrument/state", "/awb/timeline/ping", "/awb/timeline/pong",
         "/awb/timeline/disconnect"
       ],
       "clientIdentityAddresses": ["/awb/timeline/hello", "/awb/synthdef/hello"],

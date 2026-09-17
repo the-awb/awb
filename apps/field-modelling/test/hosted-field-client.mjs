@@ -63,3 +63,27 @@ test( 'requests and atomically commits a scheduled relative-phase snapshot', () 
   assert.equal( client.getState().phaseSnapshot.components[ 1 ].relativePhase, 1.25 );
   client.disconnect();
 } );
+
+test( 'connects a Field ToolSession and controls its owned instruments without a score', async () => {
+  const client = new HostedFieldClient( { WebSocketImpl: FakeSocket, heartbeatMs: 100000 } );
+  client.connect( 'ws://fixture', { toolSessionID: 'fieldModelling:fixture' } );
+  const socket = client.socket;
+  socket.emit( '/awb/bridge/ready', [ 60001 ] );
+  assert.deepEqual( socket.sent[ 0 ], { address: '/awb/timeline/hello',
+    args: [ client.clientID, 60001, 'fieldModelling:fixture' ] } );
+  socket.emit( '/awb/timeline/connected', [ client.clientID, 1 ] );
+  assert.equal( client.getState().status, 'connected' );
+  assert.equal( socket.sent.some( ( frame ) => frame.address === '/awb/timeline/observe' ), false );
+
+  const started = client.instrumentCommand( 'start', 'inst-1', 'substrate', { freqA: 36, active: true } );
+  const command = socket.sent.findLast( ( frame ) => frame.address === '/awb/timeline/instrument' );
+  assert.deepEqual( command.args.slice( 2 ), [ 'start', 'inst-1', 'substrate', 'freqA', 36, 'active', 1 ] );
+  socket.emit( '/awb/timeline/instrument/state', [ client.clientID, 'inst-1', 'running', 1201 ] );
+  socket.emit( '/awb/timeline/result', [ client.clientID, command.args[ 1 ], 1,
+    'start', 'inst-1', 0, 'applied', '' ] );
+  await started;
+  assert.deepEqual( client.getState().liveInstruments[ 'inst-1' ], {
+    instrumentID: 'inst-1', state: 'running', nodeID: 1201
+  } );
+  client.disconnect();
+} );

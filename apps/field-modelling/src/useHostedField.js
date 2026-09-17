@@ -1,19 +1,21 @@
 import { useEffect, useMemo, useSyncExternalStore } from 'react';
 import { HostedFieldClient } from './engine/HostedFieldClient.js';
 import { projectScoreRealizations } from './engine/scoreProjection.js';
+import { useHostedInstrumentVoices } from './useHostedInstrumentVoices.js';
 
 const EMPTY_VOICES = Object.freeze( { external: Object.freeze( [] ),
   voicesRef: Object.freeze( { current: new Map() } ), isSounding: () => false } );
 
-export function useHostedField( { context, document, speakers, enabled } ) {
+export function useHostedField( { context, document, speakers, instruments, dispatch, timeFactor, enabled } ) {
   const client = useMemo( () => new HostedFieldClient(), [] );
   const runtime = useSyncExternalStore( client.subscribe, client.getState, client.getState );
   useEffect( () => {
-    if ( !enabled || !document || !context.connections?.endpoint ) return undefined;
-    client.connect( context.connections.endpoint, { scoreID: document.scoreID,
-      revision: document.revision, runID: context.payload.runID } );
+    if ( !enabled || !context.connections?.endpoint ) return undefined;
+    client.connect( context.connections.endpoint, { scoreID: document?.scoreID ?? null,
+      revision: document?.revision ?? null, runID: context.payload?.runID ?? null,
+      toolSessionID: context.toolSessionID ?? '' } );
     return () => client.disconnect();
-  }, [ client, context.connections?.endpoint, context.payload?.runID, document, enabled ] );
+  }, [ client, context.connections?.endpoint, context.payload?.runID, context.toolSessionID, document, enabled ] );
   const projection = useMemo( () => projectScoreRealizations( document, runtime, speakers ),
     [ document, runtime.realizations, speakers ] );
   useEffect( () => {
@@ -42,9 +44,13 @@ export function useHostedField( { context, document, speakers, enabled } ) {
       referenceFrequency: runtime.phaseSnapshot.referenceFrequency,
       corrections: Object.freeze( corrections ) } );
   }, [ projection.instruments, runtime.phaseSnapshot, speakers ] );
-  const voices = useMemo( () => enabled ? Object.freeze( { external: projection.instruments,
-    voicesRef: Object.freeze( { current: new Map() } ), isSounding: () => false,
-    phaseSnapshot } ) : EMPTY_VOICES,
-  [ enabled, phaseSnapshot, projection.instruments ] );
-  return Object.freeze( { runtime, projection, voices } );
+  const authored = useHostedInstrumentVoices( {
+    client, runtime, instruments, enabled: enabled && !document, dispatch, timeFactor
+  } );
+  const voices = useMemo( () => enabled ? Object.freeze( {
+    external: projection.instruments, voicesRef: authored.voicesRef,
+    isSounding: authored.isSounding, phaseSnapshot
+  } ) : EMPTY_VOICES,
+  [ authored.isSounding, authored.voicesRef, enabled, phaseSnapshot, projection.instruments ] );
+  return Object.freeze( { runtime, projection, voices, authored } );
 }

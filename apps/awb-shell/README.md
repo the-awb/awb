@@ -152,6 +152,12 @@ have separate sessions and `PScoreTimelinePlayer` instances while sharing the se
 server host. The Electron renderer exposes hosted execution only; it cannot silently boot
 scsynth.wasm. Browser Score Studio retains its standalone WASM mode.
 
+Field Modelling follows the same ownership boundary. **New analytic field** needs no audio host;
+**Use SuperCollider IDE** and **Use headless SuperCollider** ask the selected native sclang host to
+create a named `fieldModelling:*` ToolSession. Authored Field instruments are then created and
+controlled through that session. A Field view opened from a score project instead observes the
+named score run and does not duplicate it with a second authored-instrument playback path.
+
 ## Lissajous config documents
 
 The hosted Lissajous tool declares `lissajous-config` as a first-class document kind. These JSON

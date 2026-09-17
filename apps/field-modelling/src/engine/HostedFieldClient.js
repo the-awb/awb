@@ -1,6 +1,6 @@
 const EMPTY = Object.freeze( { status: 'disconnected', error: '', transport: null,
   realizations: Object.freeze( [] ), discarded: 0, clockOffset: null,
-  phaseStatus: 'idle', phaseSnapshot: null } );
+  phaseStatus: 'idle', phaseSnapshot: null, liveInstruments: Object.freeze( {} ) } );
 
 const nowSeconds = () => performance.now() / 1000;
 const LIVE_STATES = new Set( [ 'started', 'released' ] );
@@ -11,7 +11,8 @@ export class HostedFieldClient {
     this.WebSocketImpl = WebSocketImpl; this.clientID = clientID; this.heartbeatMs = heartbeatMs;
     this.observationMs = observationMs; this.listeners = new Set(); this.state = EMPTY;
     this.nonce = 0; this.phaseNonce = 0; this.socket = null; this.pings = new Map();
-    this.phasePending = new Map(); this.observedNodeIDs = Object.freeze( [] );
+    this.phasePending = new Map(); this.pending = new Map();
+    this.observedNodeIDs = Object.freeze( [] );
   }
   subscribe = ( listener ) => { this.listeners.add( listener ); return () => this.listeners.delete( listener ); };
   getState = () => this.state;
@@ -20,8 +21,8 @@ export class HostedFieldClient {
     if ( this.socket?.readyState !== this.WebSocketImpl.OPEN ) throw new Error( 'Hosted Field bridge is not connected.' );
     this.socket.send( JSON.stringify( { address, args } ) );
   }
-  connect( endpoint, { scoreID, revision, runID } ) {
-    this.disconnect(); this.binding = Object.freeze( { scoreID, revision, runID } );
+  connect( endpoint, { scoreID = null, revision = null, runID = null, toolSessionID = '' } = {} ) {
+    this.disconnect(); this.binding = Object.freeze( { scoreID, revision, runID, toolSessionID } );
     this.publish( { ...EMPTY, status: 'connecting' } );
     const socket = new this.WebSocketImpl( endpoint ); this.socket = socket;
     socket.addEventListener( 'message', ( event ) => this.receive( event.data ) );
@@ -38,20 +39,30 @@ export class HostedFieldClient {
     catch { this.publish( { error: 'Hosted Field bridge sent invalid JSON.' } ); return; }
     const { address, args = [] } = frame;
     if ( address === '/awb/bridge/ready' ) {
-      this.send( '/awb/timeline/hello', [ this.clientID, args[ 0 ], '' ] );
+      this.send( '/awb/timeline/hello', [ this.clientID, args[ 0 ], this.binding.toolSessionID ] );
     } else if ( address === '/awb/timeline/connected' && args[ 0 ] === this.clientID ) {
-      this.observeID = `observe-${ crypto.randomUUID() }`;
-      this.send( '/awb/timeline/observe', [ this.clientID, this.observeID,
-        this.binding.scoreID, this.binding.revision ] );
+      if ( this.binding.scoreID ) {
+        this.observeID = `observe-${ crypto.randomUUID() }`;
+        this.send( '/awb/timeline/observe', [ this.clientID, this.observeID,
+          this.binding.scoreID, this.binding.revision ] );
+      } else this.publish( { status: 'connected', error: '' } );
       clearInterval( this.heartbeat );
       this.heartbeat = setInterval( () => {
         if ( this.socket?.readyState === this.WebSocketImpl.OPEN ) this.ping();
       }, this.heartbeatMs );
       this.ping();
-    } else if ( address === '/awb/timeline/result' && args[ 0 ] === this.clientID && args[ 1 ] === this.observeID ) {
-      this.publish( args[ 2 ] ? { status: 'observing', error: '' }
-        : { status: 'error', error: `${ args[ 6 ] }: ${ args[ 7 ] }` } );
-      if ( args[ 2 ] ) this.startObservingPhase();
+    } else if ( address === '/awb/timeline/result' && args[ 0 ] === this.clientID ) {
+      if ( args[ 1 ] === this.observeID ) {
+        this.publish( args[ 2 ] ? { status: 'observing', error: '' }
+          : { status: 'error', error: `${ args[ 6 ] }: ${ args[ 7 ] }` } );
+        if ( args[ 2 ] ) this.startObservingPhase();
+      }
+      const pending = this.pending.get( `${ args[ 1 ] }` );
+      if ( pending ) {
+        clearTimeout( pending.timer ); this.pending.delete( `${ args[ 1 ] }` );
+        if ( args[ 2 ] ) pending.resolve( Object.freeze( { action: args[ 3 ], code: args[ 6 ] } ) );
+        else pending.reject( new Error( `${ args[ 6 ] }: ${ args[ 7 ] }` ) );
+      }
     } else if ( address === '/awb/timeline/transport' && args[ 0 ] === this.clientID ) {
       const transport = { scoreID: args[ 1 ], revision: args[ 2 ], runID: args[ 3 ], state: args[ 4 ],
         scorePosition: args[ 5 ], hostMonotonicTime: args[ 6 ], rate: args[ 7 ], currentIndex: args[ 8 ] };
@@ -64,6 +75,14 @@ export class HostedFieldClient {
       if ( !this.accepts( realization ) ) { this.publish( { discarded: this.state.discarded + 1 } ); return; }
       this.publish( { realizations: Object.freeze( [ ...this.state.realizations.filter(
         ( item ) => item.realizationID !== realization.realizationID ), Object.freeze( realization ) ].slice( -256 ) ) } );
+    } else if ( address === '/awb/timeline/instrument/state' && args[ 0 ] === this.clientID ) {
+      const instrumentID = `${ args[ 1 ] }`; const state = `${ args[ 2 ] }`;
+      const liveInstruments = { ...this.state.liveInstruments };
+      if ( state === 'ended' ) delete liveInstruments[ instrumentID ];
+      else liveInstruments[ instrumentID ] = Object.freeze( {
+        instrumentID, state, nodeID: Number( args[ 3 ] )
+      } );
+      this.publish( { liveInstruments: Object.freeze( liveInstruments ) } );
     } else if ( address === '/awb/timeline/pong' && args[ 0 ] === this.clientID ) {
       const sent = this.pings.get( args[ 1 ] );
       if ( sent !== undefined ) {
@@ -141,10 +160,39 @@ export class HostedFieldClient {
   }
   accepts( message ) { return message.scoreID === this.binding.scoreID
     && message.revision === this.binding.revision && message.runID === this.binding.runID; }
+  request( address, args, requestID ) {
+    return new Promise( ( resolve, reject ) => {
+      const timer = setTimeout( () => {
+        this.pending.delete( requestID ); reject( new Error( `Timed out waiting for ${ requestID }` ) );
+      }, 1500 );
+      this.pending.set( requestID, { resolve, reject, timer } );
+      try { this.send( address, args ); }
+      catch ( error ) { clearTimeout( timer ); this.pending.delete( requestID ); reject( error ); }
+    } );
+  }
+  instrumentCommand( command, instrumentID, definition = '', params = {} ) {
+    if ( ![ 'start', 'set', 'pause', 'resume', 'release', 'free' ].includes( command ) ) {
+      throw new Error( `Unknown hosted instrument command: ${ command }` );
+    }
+    const controls = Object.entries( params ).flatMap( ( [ name, value ] ) => {
+      const numeric = typeof value === 'boolean' ? ( value ? 1 : 0 ) : value;
+      if ( typeof numeric !== 'number' || !Number.isFinite( numeric ) ) {
+        throw new Error( `Hosted instrument control ${ name } must be numeric` );
+      }
+      return [ name, numeric ];
+    } );
+    const requestID = `instrument-${ command }-${ crypto.randomUUID() }`;
+    return this.request( '/awb/timeline/instrument', [ this.clientID, requestID,
+      command, instrumentID, definition, ...controls ], requestID );
+  }
   disconnect() {
     clearInterval( this.heartbeat ); this.heartbeat = null;
     clearInterval( this.phaseTimer ); this.phaseTimer = null;
     this.pings.clear(); this.phasePending.clear(); this.observedNodeIDs = Object.freeze( [] );
+    for ( const pending of this.pending.values() ) {
+      clearTimeout( pending.timer ); pending.reject( new Error( 'Hosted Field bridge disconnected.' ) );
+    }
+    this.pending.clear();
     if ( this.socket ) { const socket = this.socket; this.socket = null; socket.close(); }
     this.state = EMPTY;
   }

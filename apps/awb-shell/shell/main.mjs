@@ -232,14 +232,19 @@ async function nativeHostForProfile( profileID ) {
 }
 
 async function launchFromHome( rawRequest ) {
-  if ( rawRequest.toolID !== 'score-studio'
-    || ![ 'attached', 'headless' ].includes( rawRequest.profileID )
+  const nativeTool = rawRequest.toolID === 'score-studio'
+    ? { sessionPrefix: 'scoreArranger', profiles: [ 'attached', 'headless' ] }
+    : rawRequest.toolID === 'field-modelling'
+      ? { sessionPrefix: 'fieldModelling', profiles: [ 'attached', 'headless' ] }
+      : null;
+  if ( !nativeTool
+    || !nativeTool.profiles.includes( rawRequest.profileID )
     || rawRequest.toolSessionID
     || rawRequest.connections?.oscPort ) return router.launch( rawRequest );
 
   const native = await nativeHostForProfile( rawRequest.profileID );
-  const sessionID = `scoreArranger:${ crypto.randomUUID() }`;
-  await native.service.openToolSession( 'score-studio', sessionID );
+  const sessionID = `${ nativeTool.sessionPrefix }:${ crypto.randomUUID() }`;
+  await native.service.openToolSession( rawRequest.toolID, sessionID );
   const request = { ...rawRequest, toolSessionID: sessionID,
     connections: { ...( rawRequest.connections ?? {} ), oscHost: native.configuration.oscHost,
       oscPort: native.configuration.oscPort } };
@@ -247,13 +252,13 @@ async function launchFromHome( rawRequest ) {
   try {
     result = await router.launch( request );
     if ( result.status === 'accepted' ) {
-      nativeToolSessions.set( result.viewID, { service: native.service, toolID: 'score-studio', sessionID } );
+      nativeToolSessions.set( result.viewID, { service: native.service, toolID: rawRequest.toolID, sessionID } );
       return result;
     }
     return result;
   } finally {
     if ( result?.status !== 'accepted' ) {
-      await native.service.closeToolSession( 'score-studio', sessionID ).catch( () => {} );
+      await native.service.closeToolSession( rawRequest.toolID, sessionID ).catch( () => {} );
     }
   }
 }

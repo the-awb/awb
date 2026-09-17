@@ -3,7 +3,8 @@
 Field Modelling owns authored instrument configuration and Field-specific presentation. It does not
 discover desktop synths, query scsynth or infer runtime ownership.
 
-`App` accepts an `instrumentRuntime` projection from its composition root:
+`App` accepts an `instrumentRuntime` projection from its composition root for externally owned
+NodeManager entries:
 
 ```js
 {
@@ -28,6 +29,21 @@ On desktop, the native-SC integration should construct this projection from Node
 shared SynthDef-context analysis. On the web, a WASM adapter may construct the equivalent projection
 from its local runtime. The Field application consumes the same shape in either case.
 
+Authored Field instruments use a narrower path in a hosted desktop session. The shell creates one
+named `fieldModelling:*` ToolSession and grants the renderer the bounded timeline instrument
+protocol. The renderer sends semantic `start`, `set`, `pause`, `resume`, `release` and `free`
+commands; sclang creates and owns the Synths, validates controls against `SynthDescLib`, and reports
+their node IDs and lifecycle. Those synths are associated with the Field ToolSession and therefore
+remain visible to NodeManager without making the browser a second node allocator.
+
+This path is deliberately disabled when the Field view is attached to a score. In that mode the
+score's realizations are the sounding source and Field Modelling only projects them. It must not
+also start the field configuration's seed instruments and double the sound.
+
+Natural completion or an external free reconciles the authored instrument back to `Play`; it is
+not silently respawned. A bridge disconnect does not make the same claim—the synth may still exist
+in scsynth—so reconnect recovers the ToolSession state instead of changing authored play state.
+
 Active externally-owned nodes whose SynthDefs have a declared `@awb/instruments` field mapping are
 projected into the shared Field renderer. Owned nodes remain represented by the saved Field
 instruments and `voicesRef`; appending them again would draw the same sound twice. Unknown SynthDefs
@@ -46,4 +62,6 @@ exists.
 
 The desktop artifact intentionally contains no embedded sclang/JavaScript console, WASM manifest
 loader, direct `/g_queryTree` client or browser-owned server lifecycle. Those belong to the runtime
-adapter or, for authoring, native SuperCollider tooling.
+adapter or, for authoring, native SuperCollider tooling. Standalone analytic Field mode remains
+usable without SuperCollider; choosing either native profile is an explicit request for the
+attached IDE or shell-owned headless sclang/scsynth path.

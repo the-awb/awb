@@ -1,6 +1,6 @@
 # Field Modelling tool import
 
-**Status:** proposed implementation handoff · **Written:** 16 September 2026
+**Status:** imported; hosted instrument and phase integration in progress · **Updated:** 17 September 2026
 
 **Target:** `~/awb` desktop toolkit and reusable packages
 
@@ -43,20 +43,26 @@ to put them behind the current AWB document, host and session boundaries—not r
    arbitrary compiled graph, but it cannot infer a defensible acoustic-field decomposition from
    one. Unknown SynthDefs remain audible and visible as unsupported; the renderer does not invent
    components for them.
-6. **The Field Tool is an observed premaster submix.** Supported realizations write to private
-   internal stereo buses. A stable score-session mixer sums them to the listening outputs. The
-   Field Tool attaches observation/capture nodes before that master mix.
-7. **Closing a renderer must not stop or mute sound.** The browser window does not own the final
-   mixer. Releasing a Field view removes its capture/observation layer and leaves the score audio
-   path intact.
-8. **Phase is measured from waveform data.** The first desktop implementation reuses the existing
-   validated JavaScript joint-stereo phase fitter. SC-side phase estimation is a possible later
-   optimisation, not a shortcut in the first migration.
-9. **Physical output count is not realization identity.** Private audio buses and server buffers
-   may exceed the hardware output count. Only the final listening mix is required on physical
-   outputs.
+6. **Field observation does not reroute audio.** Supported SynthDefs expose dormant observer
+   controls inside their existing graphs. Observation reads their component signals in place; it
+   adds no private buses, mixers or output interception.
+7. **Closing a renderer must not stop or mute score sound.** A Field view observes a concrete score
+   run but does not own that run's realization lifecycle. A non-score hosted Field view does own
+   its explicitly authored instruments through its ToolSession and releases them when that session
+   closes.
+8. **Phase is measured inside the running synth graph.** Each supported component corrects a local
+   phase accumulator at positive-going zero crossings. sclang schedules one trigger bundle for all
+   observed synths and returns a compact relative-phase snapshot. The browser advances that anchor
+   analytically between observations.
+9. **Physical output count is irrelevant to observation identity.** The protocol addresses
+   realization node IDs and component indices, not hardware channels. This is why no arbitrary
+   collection of physical outputs is required.
 10. **Live and offline rendering share a renderer, not a lifecycle.** The live ToolSession and the
     deterministic render scheduler are separate adapters around common Field renderer state.
+11. **Hosted authored instruments belong to sclang.** A non-score Field session sends semantic
+    instrument commands to its named `fieldModelling:*` ToolSession. It does not allocate node IDs
+    or send raw `/s_new` from the renderer. Score-attached Field views project the score and do not
+    also start the Field document's authored seed instruments.
 
 ## 3. What exists today
 
@@ -97,8 +103,8 @@ configuration:
 - camera and display state;
 - field-supported instrument mappings and deliberate overrides;
 - phase-lock policy such as resynchronisation interval;
-- premaster route presentation such as mute/solo/display inclusion, where these are Field-tool
-  concerns rather than score authorship.
+- instrument presentation such as mute/solo/display inclusion, where these are Field-tool concerns
+  rather than score authorship.
 
 It excludes:
 
@@ -152,7 +158,7 @@ projectID + scoreID + bindingID
 scoreSessionID + runID + toolViewID + toolSessionID
 ```
 
-Several scores and several Field views may coexist. Every message and sample capture carries enough
+Several scores and several Field views may coexist. Every message and phase snapshot carries enough
 identity to reject cross-session and late-run data.
 
 ## 5. Runtime ownership
@@ -167,17 +173,16 @@ AWB shell
 
 desktop sclang / scsynth
   |- PScoreTimelinePlayer: score execution and transport
-  |- ScoreAudioSession: groups, private buses and fail-safe master mixer
   `- FieldModellingTool ToolSession
-       |- associates routes with realization/node identity
-       |- installs/removes capture nodes
-       `- produces bounded, simultaneous sample windows
+       |- owns explicitly authored hosted instruments
+       |- associates score realizations with node identity
+       `- schedules bounded simultaneous phase observations
 
 Field renderer
   |- field config and camera/display state
   |- score transport and realization projection
   |- instrument-specific field component expansion
-  |- phase fitting and refusal
+  |- relative-phase anchor application and refusal
   `- live Three.js or deterministic render adapter
 ```
 
@@ -185,116 +190,46 @@ NodeManager remains optional for ordinary tool operation. Advanced hosted realiz
 and tracking depend on it. Disabling Track changes projection/recording visibility; it never stops
 sound or tears down the score-session mixer.
 
-## 6. SuperCollider audio topology
+The first hosted authored-instrument slice does not require NodeManager in order to sound. The
+ToolSession still owns the Synth lifecycle, while NodeManager adds shared visibility, inspection
+and tracking when enabled.
 
-The required ordering is explicit:
+## 6. SuperCollider observation topology
 
-```text
-root
-  score source group
-    realization synths -> allocated private stereo buses
-  field observation group
-    capture/monitor synths read those buses
-  score master group
-    mixer sums private buses -> hardware output 0/1
-```
+The observer is compiled into each explicitly supported SynthDef but remains inert during ordinary
+playback. It reads component signals before their final stereo combination and exposes four named
+controls: observer identity, request identity, trigger and amplitude threshold. It neither changes
+`Out` nor allocates a bus or buffer.
 
-`ScoreAudioSession` owns the source and master groups and survives Field view closure. The Field
-Tool owns only its observation nodes and associated buffers.
+Only SynthDefs whose compiled `SynthDesc` contains the observer controls are phase-observable.
+Others remain audible and may still have a declared analytic Field projection, but the UI must call
+their phase status unsupported rather than imply a lock. The browser/WASM build omits the observer
+graph to stay within that engine's graph limits; hosted desktop definitions opt in when compiled.
 
-### 6.1 Reroutability
+## 7. Scheduled phase snapshots
 
-Before creating a private route, inspect the exact compiled SynthDef interface. Send an output-bus
-argument only when the SynthDef declares one. scsynth silently ignores unknown controls, so
-blindly sending `out` is forbidden.
+sclang resolves the requested node IDs against the exact score revision and run, validates their
+SynthDefs and schedules one future OSC bundle containing every observer trigger. Every reply
+therefore refers to one server block rather than to the arrival time of separate language messages.
 
-Classify every realization as:
-
-- `isolated`: routed to its own private stereo bus;
-- `shared`: intentionally shares a declared route with other realizations;
-- `master-only`: audible in the final mix but not isolatable;
-- `unsupported`: no defensible Field projection.
-
-Fixed-output legacy SynthDefs may continue to play. They must not be presented as isolated or
-phase-verified. Refactoring them to accept an output bus is separate, named work.
-
-### 6.2 Resource policy
-
-Audio-bus allocation is internal to scsynth and independent of physical output count, but it is
-still bounded. Allocation failure must be visible and recoverable. The first implementation may
-set a conservative maximum number of simultaneous isolated routes; it must never alias two routes
-silently.
-
-## 7. Phase observation and sample transfer
-
-The current fitter solves all known components jointly against synchronised left/right samples,
-tests conditioning, rejects contamination and applies one coherent phase correction. Preserve
-those semantics.
-
-### 7.1 Capture behaviour
-
-- All channels in one capture share the same start/end sample boundary.
-- Capture occurs before the final hardware output.
-- Begin with the complete stereo premaster mix. Add separated private routes only when the joint
-  fit reports unresolved components or excessive residual.
-- Capture is armed when the component signature changes and periodically while visual sync is on.
-- Start with the shortest useful window and grow only when the fit says it is unresolved.
-- Capture/transfer happens off the audio thread; the server writes to buffers and completion is
-  reported asynchronously.
-
-### 7.2 Logical protocol
-
-The transport may use bounded OSC chunks relayed through the shell or a later local binary service,
-but the semantic framing is fixed:
+The snapshot protocol is bounded and compact:
 
 ```text
-request:
-  clientID requestID toolSessionID scoreSessionID runID
-  routingGeneration requestedSeconds
-
-begin:
-  requestID captureID scoreSessionID runID routingGeneration
-  sampleRate frameCount routeCount chunkCount
-
-route metadata:
-  captureID routeID channelCount realizationCount realizationIDs...
-
-chunks:
-  captureID routeID channel chunkIndex values...
-
-end:
-  captureID frameCount routeCount chunkCount
+request: clientID requestID scoreID revision runID nodeCount nodeIDs...
+result:  requestID scheduled observationHostTime expectedComponentCount
+begin:   score/run identity, reference node/component/frequency, componentCount
+item:    nodeID componentIndex frequency relativePhase amplitude valid
+end:     requestID componentCount
 ```
 
-Requirements:
+The bridge publishes only a complete set, times out partial requests and rejects stale run identity,
+unknown nodes, unsupported definitions and invalid component amplitudes. The browser converts the
+scheduled host time through its measured clock offset, applies the complete relative snapshot
+atomically, then advances component phase from frequency differences between anchors.
 
-- bounded frames, routes, chunks and total bytes;
-- idempotent request IDs;
-- complete-snapshot retry after a missing or malformed chunk;
-- atomic publication only after every chunk and identity field validates;
-- stale `runID` or `routingGeneration` captures are discarded;
-- no unbounded float arrays in JSON lifecycle IPC;
-- sample payloads do not pass through Electron main-process state snapshots.
-
-The first transport spike must measure a representative 0.5 s stereo capture and an eight-stereo-
-route capture before fixing chunk sizes or resynchronisation cadence.
-
-### 7.3 Phase-fit package
-
-The earlier extraction plan correctly left `phaseFit.js`/`phaseLock.js` application-local because
-there was only one consumer. That condition has now changed. During cutover both the existing app
-and the AWB Field tool require the same validated fitter, and deterministic Field rendering needs
-the same phase-anchor interpretation.
-
-Extract a React-free `@awb/phase-fit` package without changing the maths. Preserve the existing
-phase-fit, phase-lock and headed real-audio gates before adding desktop capture support.
-
-### 7.4 SC-side calculation
-
-Do not replace the fitter with independent FFT bins, `Pitch`, or one demodulator per frequency.
-Those do not preserve the joint stereo conditioning which separates close components. An SC-side
-implementation is acceptable later only if it reproduces the existing fixtures, refusal cases,
-residual measure and shared time reference.
+This is intentionally not the Lissajous sample stream and not a BusRecorder take. Raw waveform
+capture remains useful for diagnostics and independent visual tools, but it is not required for
+the Field renderer's routine phase lock.
 
 ## 8. Score and NodeManager projection
 
@@ -409,8 +344,8 @@ hidden inside the visual producer.
 
 The live adapter and analytic export producer now use the same React-free Three.js/WebGL controller
 in `@awb/field-renderer`. The Electron parity gate checks repeat stability, phase advancement and
-live/export pixels at landmark frames. This does not widen the current analytic-only claim or add
-the future phase-observation contract.
+live/export pixels at landmark frames. Offline jobs remain explicitly analytic unless a future job
+schema carries a validated phase artifact; live hosted rendering may apply scheduled observations.
 
 ## 11. Migration slices
 
@@ -452,22 +387,24 @@ the future phase-observation contract.
 - Show unsupported and master-only realizations honestly.
 - Prove two simultaneous score sessions cannot cross-attach.
 
-### F5 — score audio session and routing
+### F5 — hosted instrument ownership
 
-- Add ordered source/observation/master groups.
-- Add private stereo-bus allocation for explicitly reroutable SynthDefs.
-- Add the fail-safe master mixer.
-- Prove attaching, detaching or crashing the Field renderer does not interrupt the listening mix.
-- Measure resource limits and expose allocation failure.
+- Create one named `fieldModelling:*` ToolSession per hosted Field view.
+- Route authored `start`/`set`/`pause`/`resume`/`release`/`free` commands through sclang.
+- Associate created Synths with that ToolSession and expose them to NodeManager when tracking is
+  enabled.
+- Reconcile natural completion and external frees without silently respawning the instrument.
+- Keep score-attached Field views observational so they cannot duplicate score audio.
 
-### F6 — sample capture and phase lock
+### F6 — scheduled phase lock
 
-- Implement simultaneous premaster `RecordBuf` capture.
-- Implement bounded recoverable transfer through the shell.
-- Extract `@awb/phase-fit` unchanged, then adapt it to captured desktop windows.
-- Preserve signature-change debounce, silence/envelope/splice refusal, residual reporting and
-  periodic resynchronisation.
-- Add separated routes only after the master-mix fit demonstrates a real failure case.
+- Compile the dormant observer into each supported desktop SynthDef without changing its output.
+- Validate node/run identity and schedule all requested triggers in one future OSC bundle.
+- Publish only complete bounded relative-phase snapshots; reject silence, stale runs and malformed
+  component sets.
+- Apply each snapshot atomically in `@awb/field-renderer` and advance from frequency differences
+  between anchors.
+- Prove the real hosted definitions expose the observer controls before claiming phase lock.
 
 ### F7 — deterministic rendering
 
@@ -494,24 +431,25 @@ The import is not complete merely because the tool opens.
 - A score project reopens the same score, Field config and Lissajous config using relative paths.
 - Saving a visual config does not change the score revision.
 - Two open scores with two Field views retain distinct session/run identity.
-- A stale capture from a previous run is rejected visibly.
+- A stale phase snapshot from a previous run is rejected visibly.
 
 ### Audio safety
 
-- With no Field view open, the score plays through the ordinary master path.
-- Attaching and detaching the Field Tool produces no silence, duplicate mix or level jump.
-- Closing or crashing the renderer leaves sound playing.
-- Unknown or fixed-output SynthDefs are never falsely labelled isolated.
-- Bus exhaustion fails explicitly and does not alias routes.
+- With no Field view open, the score plays through its ordinary path.
+- Attaching and detaching an observational Field Tool produces no silence, duplicate synth or
+  level jump.
+- Closing an observational score-attached renderer leaves the score sound playing.
+- A non-score hosted Field session owns and cleans up only its own authored synths.
+- Unknown or non-observer SynthDefs are never falsely labelled phase-locked.
 
 ### Field fidelity
 
 - Package projection/probe tests remain unchanged.
 - Two saved source configurations match numeric probe readings after import.
 - WebGL landmark frames match the source application within an agreed image tolerance.
-- The real headed phase gate passes against desktop SC audio, not only synthetic fixtures.
-- Phase correction refuses silence, unstable envelopes, contaminated residuals and malformed
-  captures rather than applying confident bad locks.
+- The real hosted phase gate passes against desktop SC synths, not only protocol fixtures.
+- Phase correction refuses silence, incomplete replies and malformed component sets rather than
+  applying confident bad locks.
 - A long run demonstrates bounded phase drift with periodic resynchronisation.
 
 ### Render fidelity
@@ -529,9 +467,9 @@ The import is not complete merely because the tool opens.
 - Turning the Field Tool into a general DAW mixer.
 - Streaming continuous raw audio over the timeline or NodeManager OSC protocols.
 - Making physical output channels correspond one-to-one with score voices.
-- Rewriting the phase algorithm during extraction.
+- Replacing the existing browser waveform fitter; it remains valid for standalone/WASM audio.
 - Body solver integration, room-measurement acquisition or automation recording.
-- Replacing Lissajous's continuous native-audio path with Field's sparse phase captures.
+- Replacing Lissajous's continuous native-audio path with Field's compact phase snapshots.
 - Packaging/signing or remote rendering beyond the shared pipeline interfaces already defined.
 
 ## 14. Handoff boundaries
@@ -542,11 +480,12 @@ This work can be split without conflicting ownership:
   tool launch UI.
 - **Field renderer lane:** Three.js extraction, live adapter, deterministic producer and parity
   gates.
-- **awbCollider lane:** `ScoreAudioSession`, groups, bus allocation, fail-safe mixer,
-  `FieldModellingTool` and sample capture.
-- **Transport lane:** bounded sample protocol and shell broker, with real volume/recovery tests.
-- **Integration lane:** score realization projection, phase-fit adapter, two-score isolation and
-  long-run audio/visual verification.
+- **awbCollider lane:** `FieldModellingTool`, ToolSession-owned instrument commands and scheduled
+  observer requests.
+- **Transport lane:** bounded phase-snapshot protocol and shell relay, with stale/partial recovery
+  tests.
+- **Integration lane:** score realization projection, relative-phase application, two-score
+  isolation and long-run audio/visual verification.
 
 No lane should silently change the canonical score schema, the SynthDefs, the existing Field maths
 or the shared render-job contract. Any required change to one of those is a named prerequisite with

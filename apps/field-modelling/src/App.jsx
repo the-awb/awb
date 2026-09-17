@@ -39,6 +39,7 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
   const [ readings, setReadings ] = useState( {} );
   const stateRef = useRef( state ); stateRef.current = state;
   const attached = Boolean( context.payload?.scoreSessionID && context.payload?.runID );
+  const hostedConnection = Boolean( context.connections?.endpoint && context.toolSessionID );
   const runtime = useMemo( () => ( {
     ...EMPTY_INSTRUMENT_RUNTIME,
     ...instrumentRuntime,
@@ -57,8 +58,9 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
       .map( ( instrument ) => [ instrument.id, { startedAt: 0, releasedAt: null } ] ) ) },
     isSounding: ( id ) => state.instruments.some( ( instrument ) => instrument.id === id && instrument.playing !== false )
   } ), [ state.instruments ] );
-  const hosted = useHostedField( { context, document: scoreDocument,
-    speakers: state.room.speakers, enabled: attached } );
+  const hosted = useHostedField( { context, document: attached ? scoreDocument : null,
+    speakers: state.room.speakers, instruments: state.instruments, dispatch,
+    timeFactor: state.timeFactor, enabled: hostedConnection } );
   const runtimeExternals = useMemo( () => drawableRuntimeInstruments(
     runtime.externalNodes, state.room.speakers
   ), [ runtime.externalNodes, state.room.speakers ] );
@@ -66,8 +68,8 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
     ...( runtime.voices ?? analyticVoices ),
     external: runtimeExternals
   } ), [ runtime.voices, runtimeExternals, analyticVoices ] );
-  const voices = attached ? hosted.voices : runtimeVoices;
-  const mode = attached ? 'attached' : ( runtime.voices == null ? 'analytic' : 'live' );
+  const voices = hostedConnection ? hosted.voices : runtimeVoices;
+  const mode = attached ? 'attached' : ( hostedConnection || runtime.voices != null ? 'live' : 'analytic' );
 
   useEffect( () => {
     let live = true;
@@ -167,7 +169,7 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
         <InstrumentsPanel instruments={ state.instruments } speakers={ state.room.speakers }
           selectedId={ state.selectedInstrumentId } dispatch={ dispatch }
           selectedNodeId={ state.selectedNodeId }
-          isSounding={ runtime.isSounding ?? analyticVoices.isSounding }
+          isSounding={ hostedConnection ? hosted.authored.isSounding : ( runtime.isSounding ?? analyticVoices.isSounding ) }
           runtimeNodes={ runtime.externalNodes }
           onRuntimeCommand={ runtime.command } />
       </div> : <div className="dockContent"><div className="splitPane settingsPane">
