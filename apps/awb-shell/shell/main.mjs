@@ -586,6 +586,30 @@ async function runHeadlessScSmoke() {
   if ( executionModes.length !== 1 || executionModes[ 0 ] !== 'hosted' ) {
     throw new Error( `Desktop Score Studio exposed non-native execution modes: ${ JSON.stringify( executionModes ) }` );
   }
+  if ( scorePath ) {
+    await windows.get( launched.viewID ).webContents.executeJavaScript( `new Promise((resolve, reject) => {
+      const started = Date.now();
+      const check = () => {
+        const play = [ ...document.querySelectorAll('section.transport button') ]
+          .find((button) => button.textContent.trim() === 'Play');
+        if (play && !play.disabled) { play.click(); resolve(true); }
+        else if (Date.now() - started > 10000) reject(new Error(
+          'Hosted score never became playable: ' + document.body.innerText.slice(0, 1200)));
+        else setTimeout(check, 25);
+      }; check();
+    })` );
+    await waitFor( () => registry.get( launched.viewID )?.sessionState?.transport === 'playing', 5000 );
+    await windows.get( launched.viewID ).webContents.executeJavaScript( `new Promise((resolve, reject) => {
+      const started = Date.now();
+      const check = () => {
+        const realized = document.querySelector('.realizations .realization');
+        if (realized) resolve(realized.innerText);
+        else if (Date.now() - started > 5000) reject(new Error(
+          'Hosted score played but reported no runtime realization: ' + document.body.innerText.slice(0, 1200)));
+        else setTimeout(check, 25);
+      }; check();
+    })` );
+  }
   await closeToolView( launched.viewID );
   await waitFor( () => !registry.get( launched.viewID ) && !nativeToolSessions.has( launched.viewID ), 5000 );
   const field = await launchFromHome( { toolID: 'field-modelling', profileID: 'headless', launchOrigin: 'desktop' } );
@@ -610,7 +634,7 @@ async function runHeadlessScSmoke() {
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'disabled' ), 5000 );
   await stopHeadlessHost();
   await waitFor( () => nativeScHost.snapshot().state === 'stopped', 8000 );
-  console.log( 'AWB_SHELL_HEADLESS_SC_READY engine=native audioProbe=sent scoreStudio=hosted fieldModelling=hosted toolSession=owned nodeManager=toggleable shutdown=owned' );
+  console.log( `AWB_SHELL_HEADLESS_SC_READY engine=native audioProbe=sent scoreStudio=hosted${ scorePath ? ' scorePlayback=realized' : '' } fieldModelling=hosted toolSession=owned nodeManager=toggleable shutdown=owned` );
   app.quit();
 }
 
