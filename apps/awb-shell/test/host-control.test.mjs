@@ -39,6 +39,21 @@ test( 'host control creates and closes named native tool sessions', async () => 
   assert.equal( ( await closed ).status, 'closed' ); host.close();
 } );
 
+test( 'host control requests a bounded audible server probe', async () => {
+  const sent = []; const host = new HostControlProjection( { token: 'secret',
+    sendOsc: ( address, args ) => sent.push( { address, args } ) } );
+  host.receive( { address: '/awb/host/status', args: [ host.clientID, '', 1,
+    'headless', 'ready', 'whenNeeded', 'ready', 123 ] } );
+  const pending = host.audioProbe( { frequency: 440, duration: 0.35, amplitude: 0.08 } );
+  const request = sent.findLast( ( message ) => message.address === '/awb/host/audio/probe' );
+  assert.deepEqual( request.args.slice( 2 ), [ 440, 0.35, 0.08, 'secret' ] );
+  host.receive( { address: '/awb/host/audio/probe/status', args: [ host.clientID,
+    request.args[ 1 ], 'played', 440, 0.35, 0.08, 'awbHeadless' ] } );
+  assert.deepEqual( await pending, { status: 'played', frequency: 440,
+    duration: 0.35, amplitude: 0.08, server: 'awbHeadless' } );
+  host.close();
+} );
+
 test( 'NodeManager projection stops retrying while the host reports it disabled', () => {
   const sent = []; const projection = new NodeManagerProjection( { sendOsc: ( address, args ) => sent.push( { address, args } ) } );
   projection.connect(); projection.setHostStatus( 'disabled' );

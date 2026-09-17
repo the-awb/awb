@@ -54,6 +54,15 @@ export class HostControlProjection {
       }
       return true;
     }
+    if ( address === '/awb/host/audio/probe/status' ) {
+      const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
+      if ( pending ) {
+        clearTimeout( pending.timer ); this.pending.delete( requestID );
+        pending.resolve( Object.freeze( { status: `${ args[ 2 ] }`, frequency: Number( args[ 3 ] ),
+          duration: Number( args[ 4 ] ), amplitude: Number( args[ 5 ] ), server: `${ args[ 6 ] }` } ) );
+      }
+      return true;
+    }
     if ( address === '/awb/host/error' ) {
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) { clearTimeout( pending.timer ); this.pending.delete( requestID ); pending.reject( new Error( `${ args[ 2 ] }` ) ); }
@@ -87,6 +96,10 @@ export class HostControlProjection {
 
   closeToolSession( toolID, sessionID ) {
     return this.request( '/awb/host/tool/close', [ toolID, sessionID ] );
+  }
+
+  audioProbe( { frequency = 440, duration = 0.35, amplitude = 0.08 } = {} ) {
+    return this.request( '/awb/host/audio/probe', [ frequency, duration, amplitude ] );
   }
 
   snapshot() {

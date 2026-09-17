@@ -559,6 +559,14 @@ async function runHeadlessScSmoke() {
     const host = service.hostSnapshot?.(); return host?.control?.status === 'ready'
       && host.control.mode === 'headless' && host.scsynth.status === 'ready';
   } ), 30000 );
+  const audioProbeService = services.firstService( ( service ) => {
+    const host = service.hostSnapshot?.(); return host?.control?.status === 'ready'
+      && host.control.mode === 'headless' && host.scsynth.status === 'ready';
+  } );
+  const audioProbe = await audioProbeService.audioProbe( { frequency: 440, duration: 0.35, amplitude: 0.08 } );
+  if ( audioProbe.status !== 'played' || audioProbe.frequency !== 440 ) {
+    throw new Error( `Native audio probe failed: ${ JSON.stringify( audioProbe ) }` );
+  }
   await setNodeManager( 'enable' );
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'ready' ), 5000 );
   const launched = await launchFromHome( { toolID: 'score-studio', profileID: 'headless', launchOrigin: 'desktop' } );
@@ -599,7 +607,7 @@ async function runHeadlessScSmoke() {
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'disabled' ), 5000 );
   await stopHeadlessHost();
   await waitFor( () => nativeScHost.snapshot().state === 'stopped', 8000 );
-  console.log( 'AWB_SHELL_HEADLESS_SC_READY engine=native scoreStudio=hosted fieldModelling=hosted toolSession=owned nodeManager=toggleable shutdown=owned' );
+  console.log( 'AWB_SHELL_HEADLESS_SC_READY engine=native audioProbe=sent scoreStudio=hosted fieldModelling=hosted toolSession=owned nodeManager=toggleable shutdown=owned' );
   app.quit();
 }
 
@@ -949,6 +957,11 @@ function registerIPC() {
       if ( request.operation === 'shell.open-supercollider' ) return openSuperColliderIDE();
       if ( request.operation === 'shell.start-headless-sc' ) return startHeadlessHost();
       if ( request.operation === 'shell.stop-headless-sc' ) return stopHeadlessHost();
+      if ( request.operation === 'shell.audio-probe' ) {
+        const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.status === 'ready' );
+        if ( !service ) throw new Error( 'No AWB-enabled SuperCollider host is available.' );
+        return service.audioProbe( { frequency: 440, duration: 0.35, amplitude: 0.08 } );
+      }
       if ( request.operation === 'shell.nodemanager' ) return setNodeManager( payload.action );
       if ( request.operation === 'render.cancel' ) {
         return requestRenderCancellation( payload.renderID );

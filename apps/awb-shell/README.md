@@ -119,6 +119,12 @@ The Home status strip reports sclang attachment, scsynth readiness, SynthDef-con
 NodeManager connectivity separately. A ready language context is not presented as proof that a
 definition is installed on the active server.
 
+When sclang and scsynth are ready, **Test tone** asks that exact host to compile and play a short
+440 Hz sine on hardware outputs 0 and 1. It deliberately bypasses Score Studio, the instrument
+library, NodeManager and tool sessions. Hearing it proves the shell-to-sclang-to-scsynth output
+path; the acknowledgement alone proves only that scsynth accepted the synchronized definition and
+node request, not that the selected hardware outputs are audible.
+
 Tools without a SuperCollider host or canonical document must still launch normally; unavailable
 hosted, tracking or file actions are shown as capabilities, not treated as application failures.
 
