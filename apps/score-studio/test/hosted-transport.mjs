@@ -41,6 +41,25 @@ osc.on( 'message', ( packet, rinfo ) => {
     reply( rinfo, '/awb/timeline/runtime', [ args[ 0 ], 'ready', 'notApplicable', 'notLoaded', 'unknown', '', 0 ] );
   } else if ( message.address === '/awb/synthdef/hello' ) {
     reply( rinfo, '/awb/synthdef/connected', [ args[ 0 ], 1 ] );
+  } else if ( message.address === '/awb/audition/hello' ) {
+    reply( rinfo, '/awb/audition/connected', [ args[ 0 ], 1, 'audition-session-test' ] );
+  } else if ( message.address === '/awb/audition/play' ) {
+    const voices = JSON.parse( args[ 9 ] );
+    reply( rinfo, '/awb/audition/state', [
+      args[ 0 ], args[ 2 ], 'running', args[ 3 ], args[ 4 ], args[ 5 ], args[ 6 ],
+      voices.length, ...voices.map( ( _, index ) => 1400 + index )
+    ] );
+    reply( rinfo, '/awb/audition/result', [
+      args[ 0 ], args[ 1 ], 1, 'play', args[ 2 ], 'started', ''
+    ] );
+  } else if ( message.address === '/awb/audition/command' ) {
+    reply( rinfo, '/awb/audition/state', [
+      args[ 0 ], args[ 3 ], args[ 2 ] === 'pause' ? 'paused' : 'running',
+      'fieldBasic', 'instrument:fieldBasic', 'draft-test', 'run-test', 2, 1400, 1401
+    ] );
+    reply( rinfo, '/awb/audition/result', [
+      args[ 0 ], args[ 1 ], 1, args[ 2 ], args[ 3 ], 'applied', ''
+    ] );
   } else if ( message.address === '/awb/synthdef/list' ) {
     reply( rinfo, '/awb/synthdef/list/begin', [ args[ 0 ], args[ 1 ], synthDefInventory.length ] );
     synthDefInventory.forEach( ( name, index ) => {
@@ -109,6 +128,7 @@ osc.on( 'message', ( packet, rinfo ) => {
 const bridge = await createHostedBridge( { port: 0, oscPort } );
 const client = new HostedScoreClient( {
   clientID: 'score-browser-test', toolSessionID: 'score-session-test',
+  requestingToolID: 'score-studio', viewID: 'view-test',
   WebSocketImpl: WebSocket, requestTimeoutMs: 80
 } );
 const waitFor = async ( predicate, timeout = 2000 ) => {
@@ -126,6 +146,10 @@ try {
   assert.equal( client.getState().readiness.canPlay, false );
   const hello = received.find( ( message ) => message.address === '/awb/timeline/hello' );
   assert.equal( hello.args[ 2 ], 'score-session-test', 'hosted hello carries its ToolSession identity' );
+  await waitFor( () => client.getState().audition.status === 'connected' );
+  const auditionHello = received.find( ( message ) => message.address === '/awb/audition/hello' );
+  assert.deepEqual( auditionHello.args.slice( 2 ), [ 'score-studio', 'view-test', 'score-session-test' ] );
+  assert.equal( client.getState().audition.sessionID, 'audition-session-test' );
   await waitFor( () => client.getState().synthDefContext.status === 'connected' );
   assert.equal( client.getState().synthDefContext.generation, 1 );
   const context = await client.loadSynthDefContext( [ 'fieldBasic', 'missingFromDesktop' ] );
@@ -171,6 +195,19 @@ try {
   } );
   await client.instrumentCommand( 'free', 'basic', 'fieldBasic' );
   await waitFor( () => !client.getState().liveInstruments.basic );
+
+  await client.auditionPlay( {
+    realizationID: 'audition-realization-test', definition: 'fieldBasic',
+    contextID: 'instrument:fieldBasic', draftID: 'draft-test', runID: 'run-test',
+    voices: [ { freqL: 60 }, { freqL: 90 } ], contextGeneration: 2,
+    fingerprint: 'sha256:test'
+  } );
+  await waitFor( () => client.getState().audition.realizations.length === 1 );
+  assert.deepEqual( client.getState().audition.realizations[ 0 ].nodeIDs, [ 1400, 1401 ] );
+  const auditionPlay = received.find( ( message ) => message.address === '/awb/audition/play' );
+  assert.equal( JSON.parse( auditionPlay.args[ 9 ] ).length, 2 );
+  await client.auditionCommand( 'audition-realization-test', 'pause' );
+  await waitFor( () => client.getState().audition.realizations[ 0 ].state === 'paused' );
 
   await client.loadDocument( fixture );
   assert.equal( endCount, 2, 'missing chunks restart the complete snapshot' );
@@ -221,8 +258,12 @@ try {
     message.address === '/awb/synthdef/disconnect'
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
+  await waitFor( () => received.some( ( message ) => (
+    message.address === '/awb/audition/disconnect'
+      && message.args[ 0 ] === 'score-browser-test'
+  ) ) );
 
-  console.log( 'hosted-transport: 35/35 pass' );
+  console.log( 'hosted-transport: 42/42 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

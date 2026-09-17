@@ -125,6 +125,18 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .transportPosition strong { color: var(--accent); font-size: 11px; }
 .transportPosition span { color: var(--muted); }
 .transportStrip p { min-width: 0; margin: 0 0 0 auto; overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+
+.focusAuditionActions { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.focusAuditionActions span { color: var(--muted); font-size: 10px; }
+.payloadScValue input, .draftArrayControl input { width: 100%; font-family: ui-monospace, monospace; }
+.draftArrayControl { display: grid; grid-template-columns: minmax(130px, .55fr) 1fr; gap: 8px; align-items: center; }
+.draftArrayControl > span { display: grid; }
+.compactEnvelopeEditor .envelopeEditor { max-width: 720px; }
+.compactEnvelopeEditor .envelopeCurveEditor svg { max-height: 130px; }
+.auditionVoice { display: grid; gap: 5px; }
+.realizationFocus { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; width: 100%; text-align: left; }
+.realizationFocus small { grid-column: 1 / -1; }
+.realizationActions { display: flex; gap: 4px; }
 .viewTabs, .subtabs { display: flex; gap: 4px; align-items: center; padding: 8px; border-bottom: 1px solid var(--line); background: #151513; }
 .viewTabs button, .subtabs button { border-color: transparent; background: transparent; }.viewTabs button.active, .subtabs button.active { color: var(--accent); border-color: var(--line); background: var(--panel-2); }
 .subtabs span { color: var(--muted); font-size: 10px; }.spacer { flex: 1; }

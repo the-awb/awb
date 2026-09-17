@@ -3,6 +3,8 @@ export const SC_PROJECTION_KINDS = Object.freeze( {
   BROWSER_PSEQ: 'browser-pseq'
 } );
 
+const SC_REF_TAG = '$sc.ref';
+
 function scString( value ) {
   return JSON.stringify( value )
     .replaceAll( '\u2028', '\\u2028' )
@@ -25,6 +27,9 @@ function scValue( value, path ) {
     return `[ ${ value.map( ( child, index ) => scValue( child, `${ path }[${ index }]` ) ).join( ', ' ) } ]`;
   }
   if ( value && Object.getPrototypeOf( value ) === Object.prototype ) {
+    if ( Object.keys( value ).length === 1 && Array.isArray( value[ SC_REF_TAG ] ) ) {
+      return `Ref(${ scValue( value[ SC_REF_TAG ], `${ path }.${ SC_REF_TAG }` ) })`;
+    }
     return `( ${ Object.entries( value ).map( ( [ key, child ] ) => (
       `${ scSymbol( key ) }: ${ scValue( child, `${ path }.${ key }` ) }`
     ) ).join( ', ' ) } )`;

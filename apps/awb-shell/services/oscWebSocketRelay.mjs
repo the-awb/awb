@@ -115,7 +115,9 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     setNodeManager: ( action ) => hostControl.setNodeManager( action ),
     openToolSession: ( toolID, sessionID ) => hostControl.openToolSession( toolID, sessionID ),
     closeToolSession: ( toolID, sessionID ) => hostControl.closeToolSession( toolID, sessionID ),
-    loadScoreSynthDefs: ( sessionID, sourcePath ) => hostControl.loadScoreSynthDefs( sessionID, sourcePath ),
+    loadScoreSynthDefs: ( sessionID, sourcePath, allowOverride = false ) => (
+      hostControl.loadScoreSynthDefs( sessionID, sourcePath, allowOverride )
+    ),
     audioProbe: ( options ) => hostControl.audioProbe( options ),
     shutdownHost: () => hostControl.shutdown(),
     nodeManagerView: ( binding ) => nodeManager.viewForBinding( binding ),

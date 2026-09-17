@@ -1,4 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { scEnvAsControlArray, scEnvFromControlArray } from '@awb/sc-envelope';
+import EnvelopeEditor from './EnvelopeEditor.jsx';
+import { formatScValue, parseScValue } from '../engine/scValueSyntax.js';
+import { scRef, unwrapScRef } from '../engine/scEventSemantics.js';
 
 const formatNumber = ( value ) => Number.isFinite( value ) ? Number( value.toPrecision( 7 ) ) : value;
 
@@ -60,17 +64,33 @@ function EnvelopeProjection( { envelope, values } ) {
   </div>;
 }
 
-export default function SynthDefDraftEditor( { focus } ) {
+export default function SynthDefDraftEditor( {
+  focus, onAudition, onStopAudition, auditionCount = 0
+} ) {
   const model = focus.description?.interface;
   const defaults = useMemo( () => Object.fromEntries( ( model?.controls ?? [] )
     .map( ( control ) => [ control.name, control.default ] ) ), [ model ] );
   const [ values, setValues ] = useState( defaults );
+  const [ error, setError ] = useState( '' );
   if ( focus.stale ) return <p className="emptyCopy">The hosted SynthDef context changed. Refreshing this exact interface before it can be inspected or auditioned.</p>;
   if ( focus.error ) return <p className="error">{ focus.error }</p>;
   if ( !model ) return <p className="emptyCopy">Loading the exact compiled SynthDef interface…</p>;
 
   function updateScalar( name, value ) {
     setValues( ( current ) => ( { ...current, [ name ]: value } ) );
+  }
+
+  const editableEnvelope = model.envelopes.find( ( envelope ) => envelope.editor.kind === 'envArray' );
+  let envelopeValue = null;
+  if ( editableEnvelope ) {
+    try { envelopeValue = scEnvFromControlArray( values[ editableEnvelope.editor.control ] ); }
+    catch { /* an invalid draft remains editable through its raw array field */ }
+  }
+
+  async function play() {
+    setError( '' );
+    try { await onAudition( { definition: focus.name, params: values, model } ); }
+    catch ( nextError ) { setError( nextError.message ); }
   }
 
   return <div className="synthDefDraft">
@@ -88,15 +108,48 @@ export default function SynthDefDraftEditor( { focus } ) {
               const next = Number( event.target.value );
               if ( Number.isFinite( next ) ) updateScalar( control.name, next );
             } } /></label>
-        : <div className="draftArrayControl" key={ control.name }><span><code>{ control.name }</code>
-          <small>{ control.numChannels } values · structural changes apply on a future audition</small></span>
-          <code>{ JSON.stringify( values[ control.name ] ) }</code></div> ) }
+        : <DraftArrayControl key={ control.name } control={ control } value={ values[ control.name ] }
+          onChange={ ( value ) => setValues( ( current ) => ( { ...current, [ control.name ]: value } ) ) } /> ) }
     </div>
     <div className="synthDraftEnvelopes">
+      { editableEnvelope && envelopeValue && <div className="compactEnvelopeEditor"><EnvelopeEditor
+        value={ envelopeValue } maxSegments={ editableEnvelope.editor.maxSegments }
+        onAudition={ play }
+        onChange={ ( envelope ) => updateScalar( editableEnvelope.editor.control,
+          [ ...scEnvAsControlArray( envelope, editableEnvelope.editor.maxSegments ) ] ) } /></div> }
       { model.envelopes.length ? model.envelopes.map( ( envelope ) => <EnvelopeProjection
         key={ envelope.ugenIndex } envelope={ envelope } values={ values } /> )
         : <p className="emptyCopy">No EnvGen envelope found in the compiled graph.</p> }
     </div>
-    <p className="boundaryNote">Draft only. Slice C adds isolated Play and Stop for audio definitions with a safe lifecycle and routing contract; changing these controls does not create or modify a score event.</p>
+    <div className="focusAuditionActions">
+      <button disabled={ focus.signalKind !== 'audio' || !onAudition } onClick={ play }>Play</button>
+      <button disabled={ auditionCount === 0 } onClick={ onStopAudition }>Stop ({ auditionCount })</button>
+      <span>Each Play creates a fresh owned realization.</span>
+    </div>
+    { error && <p className="error">{ error }</p> }
+    <p className="boundaryNote">Draft only. Auditioning does not create or modify a score event.</p>
   </div>;
+}
+
+function DraftArrayControl( { control, value, onChange } ) {
+  const [ text, setText ] = useState( () => formatScValue( scRef( value ) ) );
+  const [ error, setError ] = useState( '' );
+  useEffect( () => setText( formatScValue( scRef( value ) ) ), [ value ] );
+  function commit() {
+    try {
+      const parsed = unwrapScRef( parseScValue( text ) );
+      if ( !Array.isArray( parsed ) || parsed.length !== control.numChannels
+        || parsed.some( ( item ) => !Number.isFinite( item ) ) ) {
+        throw new Error( `Ref array must contain ${ control.numChannels } finite numbers.` );
+      }
+      onChange( parsed ); setError( '' );
+    } catch ( nextError ) { setError( nextError.message ); }
+  }
+  return <label className="draftArrayControl"><span><code>{ control.name }</code>
+    <small>{ control.numChannels } literal values</small></span>
+    <input aria-label={ `Draft ${ control.name }` } value={ text }
+      onChange={ ( event ) => setText( event.target.value ) } onBlur={ commit }
+      onKeyDown={ ( event ) => { if ( event.key === 'Enter' ) { event.preventDefault(); commit(); } } } />
+    { error && <small className="error">{ error }</small> }
+  </label>;
 }

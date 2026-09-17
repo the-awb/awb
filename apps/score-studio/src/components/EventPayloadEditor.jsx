@@ -1,5 +1,7 @@
 import { INSTRUMENT_CATALOG } from '@awb/instruments';
+import { useEffect, useState } from 'react';
 import { payloadFields, updatePayloadField } from '../engine/eventPayloadFields.js';
+import { formatScValue, parseScValue } from '../engine/scValueSyntax.js';
 
 const COMMON_TYPES = [ 'note', 'set', 'release', 'free' ];
 
@@ -38,7 +40,8 @@ export default function EventPayloadEditor( { event, onChange } ) {
             { field.label }
           </label>
           : field.kind === 'json'
-            ? <p key={ field.name } className="payloadJsonOnly"><strong>{ field.name }</strong> — edit in raw JSON</p>
+            ? <ScValueField key={ field.name } name={ field.name } value={ event[ field.name ] }
+              onChange={ ( value ) => update( field.name, value, 'json' ) } />
             : <label key={ field.name }>{ field.label }{ field.unit ?? '' }
               <input aria-label={ `Payload ${ field.name }` } type={ field.kind }
                 min={ field.min } max={ field.max } step={ field.step }
@@ -49,4 +52,21 @@ export default function EventPayloadEditor( { event, onChange } ) {
       </div>
     </fieldset>
   );
+}
+
+function ScValueField( { name, value, onChange } ) {
+  const [ text, setText ] = useState( () => formatScValue( value ) );
+  const [ error, setError ] = useState( '' );
+  useEffect( () => setText( formatScValue( value ) ), [ value ] );
+  function commit() {
+    try { onChange( parseScValue( text ) ); setError( '' ); }
+    catch ( nextError ) { setError( nextError.message ); }
+  }
+  return <label className="payloadScValue">{ name }
+    <input aria-label={ `Payload ${ name }` } value={ text }
+      onChange={ ( event ) => setText( event.target.value ) }
+      onBlur={ commit }
+      onKeyDown={ ( event ) => { if ( event.key === 'Enter' ) { event.preventDefault(); commit(); } } } />
+    { error && <small className="error">{ error }</small> }
+  </label>;
 }

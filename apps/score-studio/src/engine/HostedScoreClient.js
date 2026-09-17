@@ -7,10 +7,16 @@ const EMPTY_SYNTHDEF_CONTEXT = Object.freeze( {
   definitions: Object.freeze( {} ), error: ''
 } );
 
+const EMPTY_AUDITION = Object.freeze( {
+  status: 'disconnected', protocolVersion: null, sessionID: '',
+  realizations: Object.freeze( [] ), error: ''
+} );
+
 const EMPTY_STATE = Object.freeze( {
   status: 'disconnected', protocolVersion: null, error: '', scoreID: null,
   remoteRevision: null, transport: null, realizations: [], clockOffset: null,
   liveInstruments: Object.freeze( {} ),
+  audition: EMPTY_AUDITION,
   readiness: createPlaybackReadiness( { hostKind: 'desktop' } ),
   synthDefContext: EMPTY_SYNTHDEF_CONTEXT
 } );
@@ -49,11 +55,14 @@ export class HostedScoreClient {
   constructor( {
     clientID = `score-web-${ crypto.randomUUID() }`, WebSocketImpl = globalThis.WebSocket,
     toolSessionID = '',
+    requestingToolID = 'score-studio', viewID = '',
     requestTimeoutMs = 1500, maxProjectionCharacters = 4 * 1024 * 1024,
     maxProjectionChunks = 4096
   } = {} ) {
     this.clientID = clientID;
     this.toolSessionID = toolSessionID;
+    this.requestingToolID = requestingToolID;
+    this.viewID = viewID || clientID;
     this.WebSocketImpl = WebSocketImpl;
     this.requestTimeoutMs = requestTimeoutMs;
     this.maxProjectionCharacters = maxProjectionCharacters;
@@ -163,6 +172,8 @@ export class HostedScoreClient {
       this.replyPort = args[ 0 ];
       this.send( '/awb/timeline/hello', [ this.clientID, this.replyPort, this.toolSessionID ] );
       this.send( '/awb/synthdef/hello', [ this.clientID, this.replyPort ] );
+      this.send( '/awb/audition/hello', [ this.clientID, this.replyPort,
+        this.requestingToolID, this.viewID, this.toolSessionID ] );
     } else if ( address === '/awb/bridge/error' ) {
       this.publish( { error: `${ args[ 0 ] }: ${ args[ 1 ] }` } );
     } else if ( address === '/awb/timeline/connected' && args[ 0 ] === this.clientID ) {
@@ -177,6 +188,29 @@ export class HostedScoreClient {
         status: 'connected', protocolVersion: args[ 1 ], generation: this.synthDefGeneration,
         inventory: null, definitions: Object.freeze( {} ), error: ''
       } );
+    } else if ( address === '/awb/audition/connected' && args[ 0 ] === this.clientID ) {
+      this.publish( { audition: Object.freeze( { ...this.state.audition,
+        status: 'connected', protocolVersion: args[ 1 ], sessionID: `${ args[ 2 ] }`, error: '' } ) } );
+    } else if ( address === '/awb/audition/result' && args[ 0 ] === this.clientID ) {
+      const result = { clientID: args[ 0 ], requestID: args[ 1 ], ok: Boolean( args[ 2 ] ),
+        action: args[ 3 ], realizationID: args[ 4 ], code: args[ 5 ], detail: args[ 6 ] };
+      const pending = this.pending.get( result.requestID );
+      if ( pending ) {
+        clearTimeout( pending.timer ); this.pending.delete( result.requestID );
+        if ( result.ok ) pending.resolve( result );
+        else pending.reject( new HostedProtocolError( result ) );
+      }
+    } else if ( address === '/awb/audition/state' && args[ 0 ] === this.clientID ) {
+      const realization = Object.freeze( {
+        realizationID: `${ args[ 1 ] }`, state: `${ args[ 2 ] }`, definition: `${ args[ 3 ] }`,
+        contextID: `${ args[ 4 ] }`, draftID: `${ args[ 5 ] }`, runID: `${ args[ 6 ] }`,
+        mode: 'hosted', nodeIDs: Object.freeze( args.slice( 8, 8 + Number( args[ 7 ] ) ) )
+      } );
+      const realizations = Object.freeze( [
+        ...this.state.audition.realizations.filter( ( item ) => item.realizationID !== realization.realizationID ),
+        realization
+      ].slice( -200 ) );
+      this.publish( { audition: Object.freeze( { ...this.state.audition, realizations } ) } );
     } else if ( address.startsWith( '/awb/synthdef/' ) && args[ 0 ] === this.clientID ) {
       this.receiveSynthDefFrame( address, args );
     } else if ( address === '/awb/timeline/runtime' && args[ 0 ] === this.clientID ) {
@@ -614,6 +648,29 @@ export class HostedScoreClient {
     return this.request( '/awb/timeline/instrument', [
       this.clientID, id, 'setn', instrumentID, definition, control, values.length, ...values
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
+  }
+
+  auditionPlay( { realizationID, definition, contextID, draftID, runID, voices,
+    contextGeneration = 0, fingerprint = '' } ) {
+    if ( this.state.audition.status !== 'connected' ) {
+      return Promise.reject( new Error( 'Hosted audition service is not connected.' ) );
+    }
+    assertJsonlibSafe( voices, 'audition.voices' );
+    const payload = JSON.stringify( voices );
+    if ( new TextEncoder().encode( payload ).length > 48 * 1024 ) {
+      return Promise.reject( new Error( 'Audition payload exceeds the safe OSC frame size.' ) );
+    }
+    const id = requestID( 'audition-play' );
+    return this.request( '/awb/audition/play', [ this.clientID, id, realizationID,
+      definition, contextID, draftID, runID, contextGeneration, fingerprint, payload ], id, 0 );
+  }
+
+  auditionCommand( realizationID, action ) {
+    if ( ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) {
+      throw new Error( `Unknown audition command: ${ action }` );
+    }
+    const id = requestID( `audition-${ action }` );
+    return this.request( '/awb/audition/command', [ this.clientID, id, action, realizationID ], id, 0 );
   }
 
   async installDocument( document, options = {} ) {

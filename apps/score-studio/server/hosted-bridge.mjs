@@ -6,7 +6,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { WebSocket, WebSocketServer } from 'ws';
 import { decodeOscPacket, encodeOscMessage } from './osc-codec.mjs';
 
-const ALLOWED_PREFIXES = [ '/awb/timeline/', '/awb/synthdef/' ];
+const ALLOWED_PREFIXES = [ '/awb/timeline/', '/awb/synthdef/', '/awb/audition/' ];
 const MAX_FRAME_BYTES = 64 * 1024;
 
 function sendFrame( socket, address, args = [] ) {
@@ -41,11 +41,13 @@ export async function createHostedBridge( {
       try { client.udp.close(); } catch {}
     };
     if ( notify && client.clientID ) {
-      let remaining = 2;
+      let remaining = 3;
       const sent = () => { remaining -= 1; if ( remaining === 0 ) finish(); };
       client.udp.send( encodeOscMessage( '/awb/timeline/disconnect', [ client.clientID ] ),
         oscPort, oscHost, sent );
       client.udp.send( encodeOscMessage( '/awb/synthdef/disconnect', [ client.clientID ] ),
+        oscPort, oscHost, sent );
+      client.udp.send( encodeOscMessage( '/awb/audition/disconnect', [ client.clientID ] ),
         oscPort, oscHost, sent );
     } else finish();
   };
@@ -73,7 +75,7 @@ export async function createHostedBridge( {
     browser.on( 'message', ( data ) => {
       try {
         const frame = parseFrame( data );
-        if ( [ '/awb/timeline/hello', '/awb/synthdef/hello' ].includes( frame.address )
+        if ( [ '/awb/timeline/hello', '/awb/synthdef/hello', '/awb/audition/hello' ].includes( frame.address )
           && typeof frame.args[ 0 ] === 'string' ) client.clientID = frame.args[ 0 ];
         udp.send( encodeOscMessage( frame.address, frame.args ), oscPort, oscHost );
       } catch ( error ) {
