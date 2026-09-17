@@ -32,11 +32,11 @@ try {
   await page.getByText( 'AWB', { exact: true } ).waitFor();
   if ( await page.locator( '.instrumentCard' ).count() !== 1 ) failures.push( 'seed score instrument panel did not deduplicate SynthDefs' );
   const seedInstrument = page.locator( '.instrumentCard' ).first();
-  if ( !( await seedInstrument.getByText( '\\awbTestTone', { exact: true } ).isVisible() ) ) {
+  if ( !( await seedInstrument.getByText( '\\substrate', { exact: true } ).isVisible() ) ) {
     failures.push( 'seed score instrument panel did not name its SynthDef' );
   }
   await seedInstrument.locator( 'summary' ).click();
-  await seedInstrument.getByText( 'freq=220', { exact: true } ).waitFor( { timeout: 5000 } )
+  await seedInstrument.getByText( 'freqA=60', { exact: true } ).waitFor( { timeout: 5000 } )
     .catch( () => failures.push( 'instrument panel did not disclose compiled SynthDef controls' ) );
   await page.getByRole( 'button', { name: 'Instruments', exact: true } ).click();
   if ( !( await page.getByRole( 'heading', { name: 'Hosted instruments', exact: true } ).isVisible() ) ) failures.push( 'hosted instrument boundary is missing' );
@@ -115,13 +115,13 @@ try {
   }
 
   if ( !( await page.locator( '.eventJson' ).isVisible() ) ) failures.push( 'event inspector did not open' );
-  const frequencyControl = page.getByLabel( 'Payload freq', { exact: true } );
+  const frequencyControl = page.getByLabel( 'Payload freqA', { exact: true } );
   if ( !( await frequencyControl.isVisible() ) ) failures.push( 'typed frequency payload control did not render' );
   else {
     await frequencyControl.fill( '440' );
     await page.getByRole( 'button', { name: 'Apply event', exact: true } ).click();
     const payload = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
-    if ( payload.freq !== 440 ) failures.push( 'typed payload edit did not reach raw JSON and canonical entry' );
+    if ( payload.freqA !== 440 ) failures.push( 'typed payload edit did not reach raw JSON and canonical entry' );
   }
   await page.getByLabel( 'Event time' ).fill( '4.5' );
   await page.getByLabel( 'Event path' ).fill( 'phrase/low' );
@@ -196,6 +196,20 @@ try {
   const closestTicks = Math.min( ...tickPositions.slice( 1 ).map( ( position, index ) => position - tickPositions[ index ] ) );
   if ( closestTicks < 68 ) failures.push( `adaptive ruler labels are only ${ closestTicks }px apart` );
   await page.locator( '.synthBar' ).first().click();
+  const releaseWidthBeforeRawEdit = await page.locator( '.synthEnvelope .envelopeRelease' ).first()
+    .evaluate( ( element ) => element.getBoundingClientRect().width );
+  const rawEvent = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
+  rawEvent.releaseT = 36;
+  await page.getByLabel( 'Event payload' ).fill( JSON.stringify( rawEvent, null, 2 ) );
+  if ( Number( await page.getByLabel( 'Payload releaseT', { exact: true } ).inputValue() ) !== 36 ) {
+    failures.push( 'raw event JSON did not preview into typed payload controls' );
+  }
+  const releaseWidthAfterRawEdit = await page.locator( '.synthEnvelope .envelopeRelease' ).first()
+    .evaluate( ( element ) => element.getBoundingClientRect().width );
+  if ( releaseWidthAfterRawEdit <= releaseWidthBeforeRawEdit ) {
+    failures.push( 'raw event JSON did not update the envelope projection' );
+  }
+  await page.getByRole( 'heading', { name: 'Event', exact: true } ).click();
   const durationHandle = page.getByRole( 'button', { name: 'Adjust rinse-01 duration', exact: true } );
   await durationHandle.scrollIntoViewIfNeeded();
   const durationHandleBox = await durationHandle.boundingBox();

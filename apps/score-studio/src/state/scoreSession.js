@@ -7,9 +7,9 @@ export function seedDocument( scoreID = 'untitled-score' ) {
     scoreID,
     meta: { title: 'Untitled score', description: '', tags: [] },
     entries: sortScore( [
-      makeEvent( 0, { type: 'note', def: 'awbTestTone', freq: 220, amp: 0.08, dur: 0.4 }, { id: 'n1', path: [ 'opening' ] } ),
-      makeEvent( 0.5, { type: 'note', def: 'awbTestTone', freq: 330, amp: 0.08, dur: 0.4 }, { id: 'n2', path: [ 'answer' ] } ),
-      makeEvent( 1, { type: 'release', target: '@all' }, { id: 'n3', path: [] } )
+      makeEvent( 0, { type: 'note', def: 'substrate', freqA: 36, amp: 0.25, dur: 8 }, { id: 'n1', path: [ 'opening' ] } ),
+      makeEvent( 2, { type: 'note', def: 'substrate', freqA: 54, amp: 0.2, dur: 8 }, { id: 'n2', path: [ 'answer' ] } ),
+      makeEvent( 5, { type: 'release', target: '@all' }, { id: 'n3', path: [] } )
     ] )
   } );
 }
@@ -27,6 +27,7 @@ export function createSessionState( document = seedDocument() ) {
     mode: MODES.HOSTED,
     view: 'score',
     playhead: 0,
+    cursorTime: 0,
     workingDocument: '',
     hosted: { status: 'disconnected', endpoint: '', anchor: null, realizations: [] }
   };
@@ -40,10 +41,16 @@ export function scoreSessionReducer( state, action ) {
       return { ...state, view: action.view };
     case 'SET_PLAYHEAD':
       return { ...state, playhead: Math.max( 0, action.time ) };
+    case 'SET_CURSOR':
+      return { ...state, cursorTime: Math.max( 0, action.time ) };
     case 'SET_SELECTED':
       return { ...state, selected: action.ids };
     case 'PREVIEW_ENTRIES':
-      return { ...state, previewEntries: action.entries, previewVersion: state.previewVersion + 1 };
+      return {
+        ...state,
+        previewEntries: action.entries,
+        previewVersion: action.preserveEditor ? state.previewVersion : state.previewVersion + 1
+      };
     case 'COMMIT_PREVIEW': {
       const entries = action.entries ?? state.previewEntries;
       if ( !entries ) return state;

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore 
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
 import { createPlaybackReadiness } from '@awb/sc-runtime';
-import { hashScoreDocument, sortScore } from '@awb/score';
+import { hashScoreDocument, reviseScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
 import InstrumentPanel from './components/InstrumentPanel.jsx';
@@ -63,7 +63,7 @@ export default function App( { host, createHostedClient } ) {
   const standalone = useSyncExternalStore(
     standaloneExecutor.subscribe, standaloneExecutor.getState, standaloneExecutor.getState
   );
-  const dirty = file.savedRevision !== session.document.revision;
+  const dirty = session.previewEntries !== null || file.savedRevision !== session.document.revision;
   const inspectedEntries = session.previewEntries ?? session.document.entries;
   const selectedEntry = useMemo(
     () => inspectedEntries.find( ( entry ) => entry.id === session.selected[ 0 ] ) ?? null,
@@ -244,7 +244,7 @@ export default function App( { host, createHostedClient } ) {
       else await sc.boot();
       const definitions = await loadStandaloneSynthDefs( sc, session.document );
       if ( !standaloneLoaded ) standaloneExecutor.load( session.document );
-      if ( atPlayhead ) standaloneExecutor.seek( session.playhead );
+      if ( atPlayhead ) standaloneExecutor.seek( session.cursorTime );
       setStandaloneDefinitions( {
         scoreID: session.document.scoreID, revision: session.document.revision,
         state: 'ready', missing: [], detail: ''
@@ -270,9 +270,17 @@ export default function App( { host, createHostedClient } ) {
     }
     if ( standalone.status === 'ended' ) dispatch( { type: 'SET_PLAYHEAD', time: 0 } );
     if ( await prepareStandalone( { atPlayhead: true } ) ) {
-      if ( standalone.status === 'ended' ) standaloneExecutor.seek( 0 );
       standaloneExecutor.play();
     }
+  }
+
+  async function playHosted() {
+    if ( hosted.transport?.state === 'paused' ) {
+      await hostedClient.command( session.document, 'resume' );
+      return;
+    }
+    await hostedClient.command( session.document, 'seek', session.cursorTime );
+    await hostedClient.command( session.document, 'play' );
   }
 
   async function acceptOpen( result ) {
@@ -370,17 +378,22 @@ export default function App( { host, createHostedClient } ) {
   }
 
   async function saveDocument( saveAs = false ) {
+    const document = session.previewEntries
+      ? reviseScoreDocument( session.document, session.previewEntries )
+      : session.document;
+    if ( session.previewEntries ) dispatch( { type: 'COMMIT_PREVIEW', entries: session.previewEntries } );
     try {
       if ( session.mode === MODES.HOSTED && connected ) {
         const result = await saveScorePair( {
-          document: session.document,
-          saveCanonical: () => host.saveCanonical( session.document, {
+          document,
+          saveCanonical: () => host.saveCanonical( document, {
             handle: file.handle, expectedHash: file.hash, saveAs
           } ),
-          requestProjection: requestHostedProjection,
+          requestProjection: ( identity ) => requestHostedProjection( identity, document ),
           saveProjection: ( text, identity ) => host.saveProjection( text, {
             scoreID: identity.scoreID,
             handle: file.projectionHandle,
+            canonicalHandle: identity.canonicalHandle,
             expectedText: file.projectionText,
             saveAs
           } )
@@ -390,7 +403,7 @@ export default function App( { host, createHostedClient } ) {
           handle: result.canonical.handle,
           name: result.canonical.handle?.name ?? `${ session.document.scoreID }.score.json`,
           hash: result.canonical.hash,
-          savedRevision: session.document.revision,
+          savedRevision: document.revision,
           projectionHandle: result.projectionResult?.handle ?? current.projectionHandle,
           projectionText: result.projection?.text ?? current.projectionText,
           pendingIdentity: result.status === 'partial' ? result.identity : null,
@@ -401,14 +414,14 @@ export default function App( { host, createHostedClient } ) {
         } ) );
         return;
       }
-      const result = await host.saveCanonical( session.document, {
+      const result = await host.saveCanonical( document, {
         handle: file.handle, expectedHash: file.hash, saveAs
       } );
       setFile( {
         handle: result.handle,
         name: result.handle?.name ?? `${ session.document.scoreID }.score.json`,
         hash: result.hash,
-        savedRevision: session.document.revision,
+        savedRevision: document.revision,
         projectionHandle: file.projectionHandle,
         projectionText: file.projectionText,
         pendingIdentity: null,
@@ -422,15 +435,15 @@ export default function App( { host, createHostedClient } ) {
     }
   }
 
-  async function ensureHostedRevision() {
+  async function ensureHostedRevision( document = session.document ) {
     if ( !connected ) throw new Error( 'Connect to the hosted bridge before requesting an SC projection.' );
-    if ( hosted.scoreID !== session.document.scoreID || hosted.remoteRevision !== session.document.revision ) {
-      await hostedClient.installDocument( session.document );
+    if ( hosted.scoreID !== document.scoreID || hosted.remoteRevision !== document.revision ) {
+      await hostedClient.installDocument( document );
     }
   }
 
-  async function requestHostedProjection( identity ) {
-    await ensureHostedRevision();
+  async function requestHostedProjection( identity, document = session.document ) {
+    await ensureHostedRevision( document );
     const projection = await hostedClient.requestProjection( identity );
     dispatch( { type: 'SET_WORKING_DOCUMENT', text: projection.text } );
     return projection;
@@ -539,6 +552,14 @@ export default function App( { host, createHostedClient } ) {
     ) ) );
     dispatch( { type: 'EDIT_ENTRIES', entries } );
     setFile( ( current ) => ( { ...current, message: '' } ) );
+  }
+
+  function previewSelectedEntry( patch ) {
+    if ( !selectedEntry ) return;
+    const entries = sortScore( session.document.entries.map( ( entry ) => (
+      entry.id === selectedEntry.id ? { ...entry, ...patch } : entry
+    ) ) );
+    dispatch( { type: 'PREVIEW_ENTRIES', entries, preserveEditor: true } );
   }
 
   return (
@@ -668,26 +689,26 @@ export default function App( { host, createHostedClient } ) {
           { session.mode === MODES.HOSTED ? (
             <div className="runtimeButtons">
               <button disabled={ !hostedCanPlay || hosted.transport?.state === 'playing' }
-                onClick={ () => hostedAction( () => hostedClient.command( session.document,
-                  hosted.transport?.state === 'paused' ? 'resume' : 'play' ) ) }>{ hosted.transport?.state === 'paused' ? 'Resume' : 'Play' }</button>
+                onClick={ () => hostedAction( playHosted ) }>{ hosted.transport?.state === 'paused' ? 'Resume' : 'Play from cursor' }</button>
               <button disabled={ !loadedRevision || hosted.transport?.state !== 'playing' }
                 onClick={ () => hostedAction( () => hostedClient.command( session.document, 'pause' ) ) }>Pause</button>
               <button disabled={ !loadedRevision }
                 onClick={ () => hostedAction( () => hostedClient.command( session.document, 'stop' ) ) }>Stop</button>
               <button disabled={ !loadedRevision }
-                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'seek', session.playhead ) ) }>Seek here</button>
+                onClick={ () => hostedAction( () => hostedClient.command( session.document, 'seek', session.cursorTime ) ) }>Seek to cursor</button>
               <button disabled={ !connected }
                 onClick={ () => hostedAction( () => hostedClient.command( session.document, 'state' ) ) }>State</button>
               <button disabled={ !connected } onClick={ openHostedDocument }>Open SC document</button>
             </div>
           ) : <div className="runtimeButtons">
             <button disabled={ sc.status === 'loading' || sc.status === 'booting' || standalone.status === 'playing' }
-              onClick={ playStandalone }>{ standalone.status === 'paused' ? 'Resume' : 'Play' }</button>
+              onClick={ playStandalone }>{ standalone.status === 'paused' ? 'Resume' : 'Play from cursor' }</button>
             <button disabled={ standalone.status !== 'playing' } onClick={ standaloneExecutor.pause }>Pause</button>
             <button disabled={ !standaloneLoaded } onClick={ standaloneExecutor.stop }>Stop</button>
-            <button disabled={ !standaloneLoaded } onClick={ () => standaloneExecutor.seek( session.playhead ) }>Seek here</button>
+            <button disabled={ !standaloneLoaded } onClick={ () => standaloneExecutor.seek( session.cursorTime ) }>Seek to cursor</button>
           </div> }
-          <p className="timeLarge">{ session.playhead.toFixed( 3 ) } s</p>
+          <p className="timeLarge">{ session.playhead.toFixed( 3 ) } s <small>playhead</small></p>
+          <p className="cursorReadout">{ session.cursorTime.toFixed( 3 ) } s cursor</p>
           <p className="boundaryNote">{ session.mode === MODES.HOSTED && hosted.transport
             ? `${ hosted.transport.state } · run ${ hosted.transport.runID || '—' } · host-clock anchor`
             : session.mode === MODES.STANDALONE && standaloneLoaded
@@ -712,7 +733,7 @@ export default function App( { host, createHostedClient } ) {
           <h2>Event</h2>
           { selectedEntry
             ? <EventEditor key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
-              entry={ selectedEntry } onCommit={ updateSelectedEntry } />
+              entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry } />
             : <p className="emptyCopy">Select an event to inspect its authored payload.</p> }
         </section>
       </aside>
@@ -720,7 +741,7 @@ export default function App( { host, createHostedClient } ) {
   );
 }
 
-function EventEditor( { entry, onCommit } ) {
+function EventEditor( { entry, onPreview, onCommit } ) {
   const [ time, setTime ] = useState( String( entry.time ) );
   const [ path, setPath ] = useState( () => entry.path.join( '/' ) );
   const [ eventText, setEventText ] = useState( () => JSON.stringify( entry.event, null, 2 ) );
@@ -731,8 +752,24 @@ function EventEditor( { entry, onCommit } ) {
     if ( parsed && typeof parsed === 'object' && !Array.isArray( parsed ) ) parsedEvent = parsed;
   } catch { /* raw editor reports syntax errors on Apply */ }
 
+  function draftPatch( next = {} ) {
+    const nextTime = Number( next.time ?? time );
+    const nextPath = next.path ?? path;
+    const nextText = next.eventText ?? eventText;
+    let event;
+    try { event = JSON.parse( nextText ); } catch { return; }
+    if ( !Number.isFinite( nextTime ) || nextTime < 0 || !event || typeof event !== 'object' || Array.isArray( event ) ) return;
+    onPreview( {
+      time: nextTime,
+      path: nextPath.split( '/' ).map( ( segment ) => segment.trim() ).filter( Boolean ),
+      event
+    } );
+  }
+
   function updatePayload( event ) {
-    setEventText( JSON.stringify( event, null, 2 ) );
+    const text = JSON.stringify( event, null, 2 );
+    setEventText( text );
+    draftPatch( { eventText: text } );
     setError( '' );
   }
 
@@ -755,19 +792,24 @@ function EventEditor( { entry, onCommit } ) {
   }
 
   return (
-    <>
+    <div onBlur={ ( blurEvent ) => {
+      if ( !blurEvent.currentTarget.contains( blurEvent.relatedTarget ) ) commit();
+    } }>
       <dl className="identity compact"><dt>ID</dt><dd>{ entry.id }</dd></dl>
       <div className="entryFields">
         <label>Time (seconds)<input aria-label="Event time" type="number" min="0" step="0.001"
-          value={ time } onChange={ ( event ) => setTime( event.target.value ) } /></label>
+          value={ time } onChange={ ( event ) => { setTime( event.target.value ); draftPatch( { time: event.target.value } ); } } /></label>
         <label>Path <input aria-label="Event path" value={ path } placeholder="section/voice"
-          onChange={ ( event ) => setPath( event.target.value ) } /></label>
+          onChange={ ( event ) => { setPath( event.target.value ); draftPatch( { path: event.target.value } ); } } /></label>
         <EventPayloadEditor event={ parsedEvent } onChange={ updatePayload } />
         <label>Raw event JSON<textarea aria-label="Event payload" className="eventJson" value={ eventText }
-          onChange={ ( event ) => setEventText( event.target.value ) } /></label>
+          onChange={ ( event ) => { setEventText( event.target.value ); draftPatch( { eventText: event.target.value } ); } }
+          onKeyDown={ ( event ) => {
+            if ( ( event.metaKey || event.ctrlKey ) && event.key === 'Enter' ) { event.preventDefault(); commit(); }
+          } } /></label>
       </div>
       { error && <p className="error">{ error }</p> }
       <button onClick={ commit }>Apply event</button>
-    </>
+    </div>
   );
 }

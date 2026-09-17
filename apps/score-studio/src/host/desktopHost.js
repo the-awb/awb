@@ -87,10 +87,13 @@ export function createDesktopHost( {
     },
 
     async saveProjection( text, {
-      scoreID, handle = null, expectedText = null, saveAs = false
+      scoreID, handle = null, canonicalHandle = null, expectedText = null, saveAs = false
     } ) {
+      const derivedPath = !handle && !saveAs && canonicalHandle?.path
+        ? canonicalHandle.path.replace( /\.score\.json$/i, '.score.scd' )
+        : null;
       const result = await bridge.saveProjection( {
-        path: handle?.path ?? null,
+        path: handle?.path ?? derivedPath,
         suggestedName: `${ scoreID }.score.scd`,
         text,
         expectedText,

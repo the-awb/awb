@@ -96,11 +96,15 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .scoreEvent.dragging, .synthBar.dragging, .expandedTrigger.dragging { cursor: grabbing; opacity: .78; }
 .playhead { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--accent); pointer-events: none; }
 .playhead::before { content: ''; position: absolute; top: 0; left: -4px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 7px solid var(--accent); }
+.timelineCursor { position: absolute; top: 0; bottom: 0; width: 1px; border-left: 1px dashed #f0b466; pointer-events: none; }
+.timelineCursor::before { content: ''; position: absolute; top: 0; left: -4px; width: 7px; height: 7px; border: 1px solid #f0b466; background: #11110f; transform: rotate(45deg); }
 .inspector section + section { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); }
 .inspector label { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 11px; }.inspector label input { width: 100%; }
 .hostedConnection { margin-top: 8px; }
 .identity.compact { margin: 12px 0; }
 .timeLarge { font: 24px ui-monospace, monospace; color: var(--accent); }
+.timeLarge small { color: var(--muted); font: 10px ui-monospace, monospace; }
+.cursorReadout { margin: -8px 0 12px; color: #f0b466; font: 11px ui-monospace, monospace; }
 .realization { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 8px; padding: 7px 0; border-bottom: 1px solid #2b2b27; font-size: 11px; }
 .realization strong { overflow: hidden; text-overflow: ellipsis; }.realization span { color: var(--accent); }.realization small { grid-column: 1 / -1; color: var(--muted); }
 .instrumentCard { border-top: 1px solid #2b2b27; }

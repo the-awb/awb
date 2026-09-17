@@ -950,6 +950,15 @@ async function handleToolOperation( sender, operation, payload ) {
     requireCapability( tool, 'filesystem', 'save-file' );
     let target; let handle = payload.saveAs ? null : payload.handle;
     if ( handle ) target = fileGrants.resolve( view.viewID, handle, 'file' ).path;
+    else if ( payload.deriveFromHandle && !payload.saveAs ) {
+      const source = fileGrants.resolve( view.viewID, payload.deriveFromHandle, 'file' ).path;
+      if ( payload.replaceSuffix !== '.score.json' || payload.derivedSuffix !== '.score.scd'
+        || !source.toLowerCase().endsWith( payload.replaceSuffix ) ) {
+        throw new Error( 'Derived save target is invalid.' );
+      }
+      target = `${ source.slice( 0, -payload.replaceSuffix.length ) }${ payload.derivedSuffix }`;
+      handle = fileGrants.grant( view.viewID, target, 'file' );
+    }
     else {
       const result = await dialog.showSaveDialog( window, { defaultPath: payload.suggestedName, filters: payload.filters ?? [] } );
       if ( result.canceled ) return null;

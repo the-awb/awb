@@ -64,15 +64,16 @@ export default function ScoreTimeline( { session, dispatch } ) {
   const lifecycleEnd = synthLanes.reduce( ( latest, lane ) => Math.max(
     latest, lane.endTime ?? 0, lane.durationTime ?? 0, ...lane.events.map( ( event ) => event.time )
   ), 0 );
-  const total = Math.max( 30, duration( visibleEntries ) + 12, lifecycleEnd + 12, session.playhead + 12 );
+  const total = Math.max( 30, duration( visibleEntries ) + 12, lifecycleEnd + 12,
+    session.playhead + 12, session.cursorTime + 12 );
   const width = LEFT + total * pxPerSecond + 40;
   const ruler = timelineTicks( total, pxPerSecond );
   const sharedGroup = commonGroup( entries, selected );
 
-  const placePlayhead = ( event ) => {
+  const placeCursor = ( event ) => {
     if ( event.target !== event.currentTarget ) return;
     const rect = event.currentTarget.getBoundingClientRect();
-    dispatch( { type: 'SET_PLAYHEAD', time: Math.max( 0, ( event.clientX - rect.left - LEFT ) / pxPerSecond ) } );
+    dispatch( { type: 'SET_CURSOR', time: Math.max( 0, ( event.clientX - rect.left - LEFT ) / pxPerSecond ) } );
     dispatch( { type: 'SET_SELECTED', ids: [] } );
   };
 
@@ -234,7 +235,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
   } );
   const add = () => {
     const entry = makeEvent(
-      session.playhead,
+      session.cursorTime,
       { type: 'note', def: 'substrate', freqA: 36, dur: 8 },
       { path: [] }
     );
@@ -246,7 +247,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
     <section className="scoreView">
       <div className="scoreToolbars">
         <div className="scoreToolbar">
-          <span className="timeReadout">{ formatTimelineTime( session.playhead, 0.001 ) }</span>
+          <span className="timeReadout" title="Timeline cursor">{ formatTimelineTime( session.cursorTime, 0.001 ) }</span>
           <div className="layoutSwitch" aria-label="Timeline layout">
             <button className={ layout === 'structure' ? 'active' : '' }
               onClick={ () => setLayout( 'structure' ) }>Structure</button>
@@ -273,8 +274,8 @@ export default function ScoreTimeline( { session, dispatch } ) {
             onClick={ () => apply( nudge( entries, selected, -step ) ) }>Earlier</button>
           <button disabled={ !selected.size }
             onClick={ () => apply( nudge( entries, selected, step ) ) }>Later</button>
-          <button onClick={ () => apply( rippleFrom( entries, session.playhead, -step ) ) }>Ripple −</button>
-          <button onClick={ () => apply( rippleFrom( entries, session.playhead, step ) ) }>Ripple +</button>
+          <button onClick={ () => apply( rippleFrom( entries, session.cursorTime, -step ) ) }>Ripple −</button>
+          <button onClick={ () => apply( rippleFrom( entries, session.cursorTime, step ) ) }>Ripple +</button>
         </div>
         <div className="scoreToolbar structuralToolbar">
           <label>Gap <input aria-label="Gap seconds" type="number" min="0" step="0.25" value={ gap }
@@ -302,12 +303,12 @@ export default function ScoreTimeline( { session, dispatch } ) {
           <div className="ruler">
             { ruler.values.map( ( time ) => (
               <button key={ time } className="tick" style={ { left: LEFT + time * pxPerSecond } }
-                onClick={ () => dispatch( { type: 'SET_PLAYHEAD', time } ) }>{ formatTimelineTime( time, ruler.step ) }</button>
+                onClick={ () => dispatch( { type: 'SET_CURSOR', time } ) }>{ formatTimelineTime( time, ruler.step ) }</button>
             ) ) }
           </div>
           { layout === 'structure'
             ? structureLanes.map( ( lane ) => (
-              <div key={ lane } className="lane" onClick={ placePlayhead }>
+              <div key={ lane } className="lane" onClick={ placeCursor }>
                 <span className="laneName">{ lane }</span>
                 { visibleEntries.filter( ( entry ) => ( entry.path[ 0 ] ?? 'ungrouped' ) === lane ).map( ( entry ) => (
                   <button key={ entry.id }
@@ -336,7 +337,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
               const triggers = lane.events.filter( ( marker ) => marker.role !== 'create' );
               return (
                 <div key={ lane.id } className={ `lane synthLane${ expanded ? ' expanded' : '' }` }
-                  style={ { height: laneHeight } } onClick={ placePlayhead }>
+                  style={ { height: laneHeight } } onClick={ placeCursor }>
                   <span className="laneName synthLaneName" title={ lane.path.join( '/' ) }>
                     { !unassigned && <button className="synthDisclosure" aria-label={ `${ expanded ? 'Collapse' : 'Expand' } ${ lane.id }` }
                       onClick={ ( event ) => { event.stopPropagation(); toggleSynth( lane.id ); } }>{ expanded ? '▾' : '▸' }</button> }
@@ -420,6 +421,7 @@ export default function ScoreTimeline( { session, dispatch } ) {
               );
             } ) }
           <div className="playhead" style={ { left: LEFT + session.playhead * pxPerSecond } } />
+          <div className="timelineCursor" style={ { left: LEFT + session.cursorTime * pxPerSecond } } />
         </div>
       </div>
     </section>

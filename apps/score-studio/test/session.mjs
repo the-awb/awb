@@ -8,6 +8,10 @@ assert.notEqual( state.document, state.hosted, 'authored and runtime state are s
 
 state = scoreSessionReducer( state, { type: 'SET_MODE', mode: MODES.STANDALONE } );
 assert.equal( state.mode, MODES.STANDALONE );
+state = scoreSessionReducer( state, { type: 'SET_CURSOR', time: 4.25 } );
+state = scoreSessionReducer( state, { type: 'SET_PLAYHEAD', time: 1.5 } );
+assert.equal( state.cursorTime, 4.25, 'the editorial cursor is independent of hosted transport');
+assert.equal( state.playhead, 1.5, 'transport reports update only the playhead');
 
 const moved = state.document.entries.map( ( entry ) => entry.id === 'n2' ? { ...entry, time: 10 } : entry );
 state = scoreSessionReducer( state, { type: 'EDIT_ENTRIES', entries: moved } );
@@ -19,7 +23,7 @@ assert.equal( state.document.revision, 1, 'runtime reports do not mutate authore
 
 state = scoreSessionReducer( state, { type: 'UNDO' } );
 assert.equal( state.document.revision, 2, 'undo creates a new revision rather than reviving an old one' );
-assert.equal( state.document.entries.find( ( entry ) => entry.id === 'n2' ).time, 0.5 );
+assert.equal( state.document.entries.find( ( entry ) => entry.id === 'n2' ).time, 2 );
 assert.equal( state.redo.length, 1 );
 
 state = scoreSessionReducer( state, { type: 'REDO' } );

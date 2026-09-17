@@ -9,11 +9,16 @@ const document = createScoreDocument( {
 } );
 const order = [];
 let savedIdentity;
+const canonicalHandle = { grantID: 'canonical-score' };
 const complete = await saveScorePair( {
   document,
-  saveCanonical: async ( value, identity ) => { order.push( 'canonical' ); return { hash: identity.contentHash, value }; },
+  saveCanonical: async ( value, identity ) => { order.push( 'canonical' ); return { hash: identity.contentHash, value, handle: canonicalHandle }; },
   requestProjection: async ( identity ) => { order.push( 'request' ); savedIdentity = identity; return { ...identity, text: '// generated\n' }; },
-  saveProjection: async ( text ) => { order.push( 'projection' ); return { text }; }
+  saveProjection: async ( text, identity ) => {
+    order.push( 'projection' );
+    assert.equal( identity.canonicalHandle, canonicalHandle );
+    return { text };
+  }
 } );
 assert.equal( complete.status, 'complete' );
 assert.deepEqual( order, [ 'canonical', 'request', 'projection' ] );

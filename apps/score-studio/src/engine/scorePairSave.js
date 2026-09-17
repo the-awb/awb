@@ -24,9 +24,11 @@ export function validateProjection( projection, identity ) {
   return projection;
 }
 
-async function projectionStage( { document, identity, requestProjection, saveProjection, kind } ) {
+async function projectionStage( { document, identity, canonical = null, requestProjection, saveProjection, kind } ) {
   const projection = validateProjection( await requestProjection( { ...identity, kind } ), identity );
-  const saved = await saveProjection( projection.text, { ...identity, kind } );
+  const saved = await saveProjection( projection.text, {
+    ...identity, kind, canonicalHandle: canonical?.handle ?? null
+  } );
   return { projection, saved };
 }
 
@@ -51,7 +53,7 @@ export async function saveScorePair( {
 
   try {
     const { projection, saved } = await projectionStage( {
-      document, identity, requestProjection, saveProjection, kind
+      document, identity, canonical, requestProjection, saveProjection, kind
     } );
     return Object.freeze( {
       status: 'complete', canonicalSaved: true, projectionSaved: true,

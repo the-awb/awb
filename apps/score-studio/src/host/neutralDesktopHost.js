@@ -78,10 +78,14 @@ export function createNeutralDesktopHost( {
       if ( !result ) abort();
       return { handle: result.handle, hash: await hashScoreDocument( document ), downloaded: false };
     },
-    async saveProjection( text, { scoreID, handle = null, expectedText = null, saveAs = false } ) {
+    async saveProjection( text, {
+      scoreID, handle = null, canonicalHandle = null, expectedText = null, saveAs = false
+    } ) {
       const result = await request( 'filesystem.save-file', { handle, suggestedName: `${ scoreID }.score.scd`,
         filters: [ { name: 'SuperCollider score projection', extensions: [ 'scd' ] } ], text,
-        expectedText: saveAs ? null : expectedText, saveAs } );
+        expectedText: saveAs ? null : expectedText, saveAs,
+        deriveFromHandle: !handle && !saveAs ? canonicalHandle : null,
+        replaceSuffix: '.score.json', derivedSuffix: '.score.scd' } );
       if ( !result ) abort(); return { handle: result.handle, text, downloaded: false };
     },
     storeRecovery( document ) {
