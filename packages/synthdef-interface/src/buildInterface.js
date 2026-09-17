@@ -155,6 +155,17 @@ function reachesOutputGain( definition, envelopeIndex ) {
 
 function analyseEnvelopes( definition, context ) {
   return definition.ugens.filter( ( ugen ) => ugen.className === 'EnvGen' ).map( ( ugen ) => {
+    const envelopeBindings = ugen.inputs.slice( 5 ).map( ( input ) => context.controlForRef( input ) );
+    const arrayBinding = envelopeBindings[ 0 ];
+    const serializedControl = arrayBinding
+      && envelopeBindings.every( ( binding, index ) => binding
+        && binding.control === arrayBinding.control && binding.channel === index )
+      && arrayBinding.control.numChannels >= 8
+      ? {
+        kind: 'envArray', control: arrayBinding.control.name,
+        maxSegments: Math.floor( ( arrayBinding.control.numChannels - 4 ) / 4 )
+      }
+      : null;
     const stageCount = constantValue( ugen.inputs[ 6 ] );
     const stages = Number.isInteger( stageCount ) && stageCount >= 0
       ? Array.from( { length: stageCount }, ( _, index ) => {
@@ -170,6 +181,11 @@ function analyseEnvelopes( definition, context ) {
     const doneCode = constantValue( ugen.inputs[ 4 ] );
     const endpointRoles = endpointRolesFrom( definition, ugen.index );
     const outputGain = reachesOutputGain( definition, ugen.index );
+    const parametric = serializedControl ? [] : [
+      expressionFor( definition, context, ugen.inputs[ 0 ] ),
+      expressionFor( definition, context, ugen.inputs[ 3 ] ),
+      ...stages.flatMap( ( stage ) => [ stage.target, stage.duration, stage.shape, stage.curve ] )
+    ].some( ( expression ) => expression.kind !== 'constant' );
     return {
       ugenIndex: ugen.index,
       rate: ugen.rate,
@@ -188,7 +204,8 @@ function analyseEnvelopes( definition, context ) {
       targets: [ ...new Set( [ ...( outputGain ? [ 'outputGain' ] : [] ),
         ...endpointRoles.filter( ( role ) => role !== 'outputSignal' ) ] ) ].sort(),
       reachesOutput: endpointRoles.includes( 'outputSignal' ),
-      freesNode: doneCode === 2
+      freesNode: doneCode === 2,
+      editor: serializedControl ?? { kind: parametric ? 'parametric' : 'inspectOnly' }
     };
   } );
 }

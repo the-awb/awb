@@ -21,7 +21,10 @@ and curve arrays wrap to the required segment count, familiar aliases such as `l
 and `welch` become stable short names, and numeric curvature remains numeric.
 
 `scEnvAsArray()` reproduces `Env#asArray`, including SC's curve shape numbers and `-99` sentinel
-for absent release/loop nodes. `scEnvFromArray()` reverses that representation. `scEnvValueAt()`
+for absent release/loop nodes. `scEnvFromArray()` reverses that representation.
+`scEnvAsControlArray()` pads that serialization to a SynthDef's fixed maximum segment count;
+the active stage count stays in the Env header and the unused tail is inert. Its inverse,
+`scEnvFromControlArray()`, reads only the active stages. `scEnvValueAt()`
 matches `Env#at` for the fixed segment sequence and all nine curve forms; it deliberately does not
 simulate an `EnvGen` gate, release loop, control-rate stepping or done action.
 

@@ -63,6 +63,14 @@ const phaseEnvelope = bass.model.envelopes.find( ( envelope ) => envelope.target
 assert.ok( phaseEnvelope && !phaseEnvelope.freesNode );
 assert.equal( control( bass.model, 'dur' ).roles.includes( 'envelopeTime' ), true );
 
+const envelopeLab = await fixture( 'awbEnvelopeLab' );
+assert.equal( envelopeLab.model.envelopes.length, 1 );
+assert.deepEqual( envelopeLab.model.envelopes[ 0 ].editor, {
+  kind: 'envArray', control: 'env', maxSegments: 4
+} );
+assert.equal( envelopeLab.model.envelopes[ 0 ].freesNode, true );
+assert.ok( envelopeLab.model.envelopes[ 0 ].targets.includes( 'outputGain' ) );
+
 const suppliedSpecs = { freqL: { min: 20, max: 1000, warp: 'exp', step: 0.1, unit: 'Hz' } };
 const specified = buildSynthDefInterface( basic.definition, { specs: suppliedSpecs } );
 assert.deepEqual( control( specified, 'freqL' ).spec, { min: 20, max: 1000, warp: 'exp', step: 0.1, unit: 'Hz' } );
@@ -74,4 +82,4 @@ const fingerprint = await synthDefFingerprint( basic.bytes );
 assert.match( fingerprint, /^sha256:[0-9a-f]{64}$/ );
 assert.throws( () => parseSynthDef( new Uint8Array( [ 0, 1, 2, 3 ] ) ), /invalid magic/ );
 
-console.log( 'synthdef-interface: pass (4 arbitrary compiled graph fixtures)' );
+console.log( 'synthdef-interface: pass (5 arbitrary compiled graph fixtures)' );

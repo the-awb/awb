@@ -294,6 +294,21 @@ export function createScEngine( { importScsynth } = {} ) {
     return true;
   };
 
+  const setSynthArray = ( name, control, values ) => {
+    const node = state.nodes[ name ];
+    if ( !node || node.released ) return false;
+    if ( typeof control !== 'string' || !control.length || !Array.isArray( values )
+      || values.length === 0 || values.some( ( value ) => !Number.isFinite( value ) ) ) {
+      throw new Error( 'setSynthArray requires a control name and finite numeric values' );
+    }
+    sendOsc( '/n_setn', [ node.id, control, values.length, ...values ] );
+    setNodes( ( prev ) => ( {
+      ...prev,
+      [ name ]: { ...prev[ name ], params: { ...prev[ name ].params, [ control ]: [ ...values ] } }
+    } ) );
+    return true;
+  };
+
   const releaseSynth = ( name ) => {
     const node = state.nodes[ name ];
     if ( !node || node.released ) return false;
@@ -666,7 +681,7 @@ export function createScEngine( { importScsynth } = {} ) {
   return {
     boot, resumeAudio, stop, shutdown, dispose, setMonitoring,
     drainNewSamples, readRecentSamples, sendOsc, sync, loadSynthDef, reloadSynthDefs,
-    playSynth, setSynth, releaseSynth, pauseSynth, resumeSynth, freeSynth, freeAll,
+    playSynth, setSynth, setSynthArray, releaseSynth, pauseSynth, resumeSynth, freeSynth, freeAll,
     subscribeOscReply, subscribePrint, subscribe, getState, getEngine, getBootOptions
   };
 }

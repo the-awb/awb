@@ -30,6 +30,13 @@ Every control-role conclusion retains structural evidence (`ugen`, `ugenIndex`, 
 every envelope names its source `EnvGen`. Control names may be useful to a human but are not
 treated as proof of function.
 
+Each envelope also reports its honest editor capability. `envArray` means the EnvGen graph is fed
+by one contiguous multichannel control in SC's serialized Env layout and identifies that control
+and its maximum stage count. `parametric` means named scalar controls influence the compiled
+envelope expression. `inspectOnly` means the shape is baked into the graph. Only `envArray`
+authorises a general curve editor; the other categories must not be presented as though arbitrary
+point changes can reach the running Synth.
+
 ## Controls and specs are the primary interface
 
 Controls, defaults and rates come from the compiled SynthDef. Author-supplied `ControlSpec` data,
@@ -48,8 +55,9 @@ the graph proves.
 - A score projects the definitions it references against the selected context's inventory.
 - Same-named definitions are distinguished with `synthDefFingerprint()` over their exact bytes.
 
-The included tests use the current Basic, Substrate, Substrate 2 and Resobass2 binaries as demanding
-fixtures. They are examples of arbitrary graphs, not hard-coded package knowledge.
+The included tests use the current Basic, Substrate, Substrate 2, Resobass2 and explicit Env-array
+lab binaries as demanding fixtures. They are examples of arbitrary graphs, not hard-coded package
+knowledge.
 
 The UGen knowledge table is intentionally extensible. An unrecognised UGen remains present in the
 graph and interface rather than receiving invented semantics.

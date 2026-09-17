@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@awb/instruments": "0.1.0",
+    "@awb/sc-envelope": "0.1.0",
     "@awb/sc-console": "0.1.0",
     "@awb/sc-runtime": "0.1.0",
     "@awb/sc-wasm": "0.1.0",

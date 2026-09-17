@@ -44,6 +44,14 @@ try {
   await page.getByRole( 'button', { name: 'standalone', exact: true } ).click();
   if ( await page.locator( '.liveInstrument' ).count() !== 4 ) failures.push( 'live instrument tab did not expose the four catalogued instruments' );
   if ( !( await page.getByRole( 'heading', { name: 'Live instruments', exact: true } ).isVisible() ) ) failures.push( 'live instrument workspace heading is missing' );
+  if ( !( await page.getByRole( 'heading', { name: 'Envelope lab', exact: true } ).isVisible() ) ) failures.push( 'editable envelope instrument is missing' );
+  if ( await page.locator( '.envelopeCurveEditor circle' ).count() !== 4 ) failures.push( 'default ADSR did not render four editable points' );
+  await page.locator( '.envelopeEditorTabs' ).getByRole( 'button', { name: 'segments', exact: true } ).click();
+  if ( await page.locator( '.envelopeSegment' ).count() !== 3 ) failures.push( 'segment editor did not expose the ADSR stages' );
+  await page.getByLabel( 'Envelope form', { exact: true } ).selectOption( 'triangle' );
+  if ( await page.locator( '.envelopeSegment' ).count() !== 2 ) failures.push( 'envelope template did not replace the editable structure' );
+  await page.locator( '.envelopeEditorTabs' ).getByRole( 'button', { name: 'raw', exact: true } ).click();
+  if ( !( await page.getByLabel( 'Envelope JSON', { exact: true } ).isVisible() ) ) failures.push( 'raw envelope editor mode is missing' );
   if ( await page.getByLabel( 'Live freqL', { exact: true } ).inputValue() !== '60' ) failures.push( 'live Basic GUI did not use the compiled frequency default' );
   if ( Number( await page.getByLabel( 'Live amp', { exact: true } ).first().inputValue() ) !== 1 ) failures.push( 'live instrument gain did not preserve the SynthDef default' );
   if ( !( await page.getByText( 'Amplitude envelope: 2s attack · 4s release', { exact: true } ).isVisible() ) ) failures.push( 'live instrument did not disclose its audible envelope timing' );
@@ -228,4 +236,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 46/46 pass' );
+console.log( 'score-studio-browser: 51/51 pass' );

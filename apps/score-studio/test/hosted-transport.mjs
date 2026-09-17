@@ -145,6 +145,16 @@ try {
   await waitFor( () => client.getState().liveInstruments.basic?.nodeID === 1200 );
   const instrumentStart = received.find( ( message ) => message.address === '/awb/timeline/instrument' );
   assert.deepEqual( instrumentStart.args.slice( 2 ), [ 'start', 'basic', 'fieldBasic', 'freqL', 60, 'amp', 1 ] );
+  const envelopeArray = [ 0, 1, -99, -99, 1, 0.1, 1, 0 ];
+  await client.instrumentArrayCommand( 'basic', 'fieldBasic', 'env', envelopeArray );
+  const instrumentSetn = received.find( ( message ) => message.address === '/awb/timeline/instrument'
+    && message.args[ 2 ] === 'setn' );
+  assert.deepEqual( instrumentSetn.args.slice( 2, 7 ), [
+    'setn', 'basic', 'fieldBasic', 'env', envelopeArray.length
+  ] );
+  instrumentSetn.args.slice( 7 ).forEach( ( value, index ) => {
+    assert.ok( Math.abs( value - envelopeArray[ index ] ) < 1e-6, 'setn preserves each numeric value' );
+  } );
   await client.instrumentCommand( 'free', 'basic', 'fieldBasic' );
   await waitFor( () => !client.getState().liveInstruments.basic );
 
@@ -198,7 +208,7 @@ try {
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
 
-  console.log( 'hosted-transport: 34/34 pass' );
+  console.log( 'hosted-transport: 35/35 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

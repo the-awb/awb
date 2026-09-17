@@ -1,9 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { instrumentEnvelopes } from '@awb/instruments';
+import { normalizeScEnv, scEnvAsControlArray } from '@awb/sc-envelope';
 import { loadSynthDefManifest } from '@awb/sc-wasm/core';
+import EnvelopeEditor from './EnvelopeEditor.jsx';
 import { liveInstrumentLibrary, initialLiveInstrumentParams } from '../engine/liveInstrumentLibrary.js';
 import { synthDefManifestUrl } from '../engine/scAssets.js';
-import { loadInstrumentLibrarySynthDefs } from '../engine/standaloneSynthDefs.js';
+import { loadEnvelopeLabSynthDef, loadInstrumentLibrarySynthDefs } from '../engine/standaloneSynthDefs.js';
+
+const defaultEditableEnvelope = normalizeScEnv( {
+  levels: [ 0, 1, 0.65, 0 ], times: [ 0.08, 0.2, 0.5 ],
+  curves: [ 'sin', 'sin', 'sin' ], releaseNode: 2
+} );
 
 export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedState } ) {
   const [ manifest, setManifest ] = useState( null );
@@ -126,6 +133,8 @@ export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedSta
     { message && <p className="liveRackMessage">{ message }</p> }
     { ( error || ( !hosted && sc.error ) ) && <p className="error">{ error || sc.error }</p> }
     { hosted && <HostedSynthDefLibrary hostedClient={ hostedClient } hostedState={ hostedState } /> }
+    <EnvelopeLab sc={ sc } hosted={ hosted } hostedClient={ hostedClient }
+      hostedState={ hostedState } prepareAudio={ prepare } />
     { hosted && <h2 className="instrumentSectionTitle">Curated instruments</h2> }
     { !manifest && !error
       ? <p className="emptyState">Reading the compiled instrument library…</p>
@@ -152,6 +161,65 @@ export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedSta
           onChange={ ( control, value ) => updateParam( instrument, control, value ) } />;
       } ) }</div> }
   </div>;
+}
+
+function EnvelopeLab( { sc, hosted, hostedClient, hostedState, prepareAudio } ) {
+  const [ envelope, setEnvelope ] = useState( defaultEditableEnvelope );
+  const [ freq, setFreq ] = useState( 220 );
+  const [ amp, setAmp ] = useState( 0.1 );
+  const [ busy, setBusy ] = useState( false );
+  const [ error, setError ] = useState( '' );
+  const definition = 'awbEnvelopeLab';
+  const instrumentID = 'envelope-lab';
+  const hostedNode = hostedState?.liveInstruments?.[ instrumentID ];
+  const standaloneNode = sc.nodes[ definition ];
+  const node = hosted ? hostedNode : standaloneNode;
+  const available = hosted
+    ? hostedState?.synthDefContext?.inventory?.includes( definition )
+    : true;
+
+  async function stop() {
+    if ( hostedNode ) await hostedClient.instrumentCommand( 'free', instrumentID, definition );
+    else if ( standaloneNode ) sc.freeSynth( definition );
+  }
+
+  async function audition() {
+    setBusy( true );
+    setError( '' );
+    try {
+      await stop();
+      const array = [ ...scEnvAsControlArray( envelope, 4 ) ];
+      if ( hosted ) {
+        if ( !available ) throw new Error( 'The editable envelope SynthDef is not installed in desktop SuperCollider.' );
+        await hostedClient.instrumentCommand( 'start', instrumentID, definition, { gate: 0, freq, amp } );
+        await hostedClient.instrumentArrayCommand( instrumentID, definition, 'env', array );
+        await hostedClient.instrumentCommand( 'set', instrumentID, definition, { gate: 1 } );
+      } else {
+        await prepareAudio();
+        await loadEnvelopeLabSynthDef( sc );
+        sc.playSynth( definition, { gate: 0, freq, amp } );
+        sc.setSynthArray( definition, 'env', array );
+        sc.setSynth( definition, { gate: 1 } );
+      }
+    } catch ( nextError ) { setError( nextError.message ); }
+    finally { setBusy( false ); }
+  }
+
+  return <section className="envelopeLab">
+    <header><div><h2>Envelope lab</h2><p>Explicit four-stage Env-array instrument · changes are auditioned on a fresh Synth.</p></div>
+      <div className="envelopeLabTone">
+        <label>frequency<input type="number" min="20" max="20000" step="1" value={ freq }
+          onChange={ ( event ) => setFreq( Number( event.target.value ) ) } /></label>
+        <label>amplitude<input type="number" min="0" max="0.5" step="0.01" value={ amp }
+          onChange={ ( event ) => setAmp( Number( event.target.value ) ) } /></label>
+        <button disabled={ !node || busy } onClick={ () => stop().catch( ( nextError ) => setError( nextError.message ) ) }>Stop</button>
+      </div>
+    </header>
+    <EnvelopeEditor value={ envelope } onChange={ setEnvelope } maxSegments={ 4 }
+      disabled={ busy || ( hosted && !available ) } onAudition={ audition } auditioning={ Boolean( node ) } />
+    { hosted && !available && <p className="boundaryNote">Reopen Score Studio from desktop SuperCollider after recompiling its class library so the support SynthDef is installed.</p> }
+    { error && <p className="error">{ error }</p> }
+  </section>;
 }
 
 function HostedSynthDefLibrary( { hostedClient, hostedState } ) {

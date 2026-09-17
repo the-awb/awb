@@ -1,6 +1,68 @@
 {
   "patches": [
     {
+      "source": "awb-envelope-lab.scd",
+      "defs": [
+        {
+          "name": "awbEnvelopeLab",
+          "file": "awbEnvelopeLab.scsyndef",
+          "controls": [
+            {
+              "name": "out",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "gate",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0
+            },
+            {
+              "name": "freq",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 220
+            },
+            {
+              "name": "amp",
+              "rate": "control",
+              "numChannels": 1,
+              "default": 0.10000000149012
+            },
+            {
+              "name": "env",
+              "rate": "control",
+              "numChannels": 20,
+              "default": [
+                0,
+                4,
+                3,
+                -99,
+                1,
+                0.079999998211861,
+                3,
+                0,
+                0.64999997615814,
+                0.20000000298023,
+                3,
+                0,
+                0.64999997615814,
+                0,
+                3,
+                0,
+                0,
+                0.5,
+                3,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "source": "basic_synthdefs.sc",
       "defs": [
         {

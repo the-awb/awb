@@ -165,6 +165,33 @@ export function scEnvAsArray( envelope ) {
   return Object.freeze( array );
 }
 
+// A SynthDef control array has a fixed width even when the authored Env uses fewer stages.
+// EnvGen reads the stage count from the header and ignores the padded tail. This lets one
+// explicitly-capable SynthDef accept ASR, ADSR, percussion and custom shapes without recompiling.
+export function scEnvAsControlArray( envelope, maxSegments = 4 ) {
+  assertScEnv( envelope );
+  if ( !Number.isInteger( maxSegments ) || maxSegments < 1 ) {
+    throw new Error( 'maxSegments must be a positive integer' );
+  }
+  if ( envelope.times.length > maxSegments ) {
+    throw new Error( `Envelope has ${ envelope.times.length } segments; control accepts ${ maxSegments }` );
+  }
+  const result = [ ...scEnvAsArray( envelope ) ];
+  while ( result.length < 4 + maxSegments * 4 ) {
+    result.push( envelope.levels.at( -1 ), 0, CURVE_SHAPES.hold, 0 );
+  }
+  return Object.freeze( result );
+}
+
+export function scEnvFromControlArray( array, options ) {
+  if ( !Array.isArray( array ) || !Number.isInteger( array[ 1 ] ) || array[ 1 ] < 0 ) {
+    throw new Error( 'SC Env control array has an invalid segment count' );
+  }
+  const usedLength = 4 + array[ 1 ] * 4;
+  if ( array.length < usedLength ) throw new Error( 'SC Env control array is shorter than its stage count' );
+  return scEnvFromArray( array.slice( 0, usedLength ), options );
+}
+
 export function scEnvFromArray( array, { offset = 0 } = {} ) {
   if ( !Array.isArray( array ) || array.length < 4 ) throw new Error( 'SC Env array must contain a four-value header' );
   const segmentCount = array[ 1 ];

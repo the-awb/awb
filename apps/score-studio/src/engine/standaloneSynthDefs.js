@@ -53,3 +53,7 @@ export async function loadInstrumentLibrarySynthDefs( sc, options ) {
     .filter( Boolean ) ) ];
   return loadNamedSynthDefs( sc, wanted, options );
 }
+
+export async function loadEnvelopeLabSynthDef( sc, options ) {
+  return loadNamedSynthDefs( sc, [ 'awbEnvelopeLab' ], options );
+}

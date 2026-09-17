@@ -168,6 +168,15 @@ Hosted also stops standalone score playback and shuts down the browser engine. H
 derived from the exact loaded desktop SynthDef interface; browser-manifest-only controls are never
 sent to a different same-named desktop definition.
 
+The **Envelope lab** is the first deliberately editable envelope instrument. Its compiled
+`\awbEnvelopeLab` definition exposes a fixed-width four-segment `env` control in SC's
+`Env#asArray` format. The rack offers ASR, ADSR, percussion and triangle starting forms, a point
+curve editor, per-segment curve/time/level controls and the canonical `sc.env/1` JSON. Auditioning
+creates a fresh Synth with `gate=0`, installs the complete array with `/n_setn`, then raises the
+gate, in both standalone and hosted modes. Existing instruments are not falsely upgraded to this
+editor: scalar-driven envelopes remain parametric and envelopes baked into a SynthDef are
+inspect-only. An editable curve requires an explicit array control in the actual definition.
+
 ## Score files and demo
 
 **Demo score** opens a bundled canonical snapshot of the real eleven-event, fourteen-minute Sonic

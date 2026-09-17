@@ -5,8 +5,10 @@ export {
   createScEnv,
   normalizeScEnv,
   scEnvAsArray,
+  scEnvAsControlArray,
   scEnvDuration,
   scEnvFromArray,
+  scEnvFromControlArray,
   scEnvReleaseDuration,
   scEnvValueAt,
   validateScEnv

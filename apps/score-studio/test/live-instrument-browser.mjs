@@ -49,6 +49,7 @@ try {
   await page.goto( url, { waitUntil: 'domcontentloaded' } );
   await page.getByText( 'AWB', { exact: true } ).waitFor();
   await page.getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  await page.getByRole( 'button', { name: 'standalone', exact: true } ).click();
   passed += 1;
   const checks = [
     { label: 'Basic', definition: 'fieldBasic', prepare: [ [ 'attackT', 0.05 ], [ 'releaseT', 0.05 ] ], threshold: 0.05 },
@@ -78,6 +79,21 @@ try {
   }
   passed += 4;
 
+  await page.getByRole( 'button', { name: 'Audition', exact: true } ).click();
+  const envelopePeak = await waitForAudibleOutput( 0.05 );
+  if ( envelopePeak < 0.05 ) {
+    throw new Error( `editable envelope instrument remained inaudible (peak ${ envelopePeak.toFixed( 6 ) })` );
+  }
+  const installedEnvelope = await page.evaluate( () => window.__scoreSc?.nodes?.awbEnvelopeLab?.params?.env ?? null );
+  if ( !Array.isArray( installedEnvelope ) || installedEnvelope.length !== 20
+    || installedEnvelope[ 1 ] !== 3 ) {
+    throw new Error( `editable Env array did not reach /n_setn: ${ JSON.stringify( installedEnvelope ) }` );
+  }
+  peaks.awbEnvelopeLab = envelopePeak;
+  passed += 2;
+  await page.locator( '.envelopeLab' ).getByRole( 'button', { name: 'Stop', exact: true } ).click();
+  await page.waitForFunction( () => !window.__scoreSc?.nodes?.awbEnvelopeLab );
+
   await page.getByRole( 'button', { name: 'Start Basic', exact: true } ).click();
   await page.locator( '.liveInstrument.running' ).filter( { hasText: 'fieldBasic' } )
     .waitFor( { timeout: 60000 } );
@@ -102,10 +118,10 @@ try {
   passed += 1;
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 1;
-  console.log( `live-instrument-browser: ${ passed }/10 pass (${ Object.entries( peaks )
+  console.log( `live-instrument-browser: ${ passed }/12 pass (${ Object.entries( peaks )
     .map( ( [ definition, peak ] ) => `${ definition } ${ peak.toFixed( 4 ) }` ).join( ', ' ) }; live n_set, gated release)` );
 } catch ( error ) {
-  console.error( `live-instrument-browser: FAIL after ${ passed }/10: ${ error.message }` );
+  console.error( `live-instrument-browser: FAIL after ${ passed }/12: ${ error.message }` );
   process.exitCode = 1;
 } finally {
   await browser.close();

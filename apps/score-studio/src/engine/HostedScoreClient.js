@@ -581,6 +581,19 @@ export class HostedScoreClient {
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
   }
 
+  instrumentArrayCommand( instrumentID, definition, control, values ) {
+    if ( typeof instrumentID !== 'string' || !instrumentID.length
+      || typeof control !== 'string' || !control.length || !Array.isArray( values )
+      || values.length < 1 || values.length > 256
+      || values.some( ( value ) => typeof value !== 'number' || !Number.isFinite( value ) ) ) {
+      throw new Error( 'Hosted instrument array command requires bounded finite numeric values' );
+    }
+    const id = requestID( 'instrument-setn' );
+    return this.request( '/awb/timeline/instrument', [
+      this.clientID, id, 'setn', instrumentID, definition, control, values.length, ...values
+    ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
+  }
+
   async installDocument( document, options = {} ) {
     let expectedRevision = -1;
     if ( this.state.scoreID === document.scoreID && Number.isInteger( this.state.remoteRevision ) ) {

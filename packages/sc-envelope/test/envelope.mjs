@@ -7,8 +7,10 @@ import {
   createScEnv,
   normalizeScEnv,
   scEnvAsArray,
+  scEnvAsControlArray,
   scEnvDuration,
   scEnvFromArray,
+  scEnvFromControlArray,
   scEnvReleaseDuration,
   scEnvValueAt,
   validateScEnv
@@ -32,6 +34,10 @@ assert.doesNotThrow( () => JSON.stringify( mixed ) );
 const mixedArray = [ 0, 3, 2, -99, 1, 0.1, 1, 0, 0.25, 0.2, 3, 0, 0, 0.3, 5, -4 ];
 assert.deepEqual( scEnvAsArray( mixed ), mixedArray );
 assert.deepEqual( scEnvFromArray( mixedArray ), mixed );
+const padded = scEnvAsControlArray( mixed, 4 );
+assert.equal( padded.length, 20 );
+assert.deepEqual( padded.slice( 16 ), [ 0, 0, 8, 0 ] );
+assert.deepEqual( scEnvFromControlArray( padded ), mixed );
 close( scEnvDuration( mixed ), 0.6, 'duration' );
 close( scEnvReleaseDuration( mixed ), 0.3, 'release duration' );
 
@@ -86,5 +92,6 @@ assert.throws( () => normalizeScEnv( {
 assert.throws( () => normalizeScEnv( {
   levels: [ -1, -0.25 ], times: 1, curves: 'sqr'
 } ), /requires non-negative levels/ );
+assert.throws( () => scEnvAsControlArray( mixed, 2 ), /control accepts 2/ );
 
 console.log( 'sc-envelope: pass (SuperCollider 3.12.2 conformance fixtures)' );
