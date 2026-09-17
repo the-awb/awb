@@ -1,7 +1,9 @@
 import { INSTRUMENT_CATALOG } from '@awb/instruments';
+import { buildSynthDefInterface, parseSynthDef, synthDefFingerprint } from '@awb/synthdef-interface';
 
 const base = () => import.meta.env.BASE_URL || '/';
 const loadedByEngine = new WeakMap();
+const descriptions = new Map();
 
 function scoreDefNames( document ) {
   return [ ...new Set( document.entries
@@ -56,4 +58,26 @@ export async function loadInstrumentLibrarySynthDefs( sc, options ) {
 
 export async function loadEnvelopeLabSynthDef( sc, options ) {
   return loadNamedSynthDefs( sc, [ 'awbEnvelopeLab' ], options );
+}
+
+export async function describeStandaloneSynthDef( name, manifest, {
+  assetBase = `${ base() }synthdefs/`
+} = {} ) {
+  const definition = manifest?.get( name );
+  if ( !definition?.file ) throw new Error( `SynthDef \\${ name } is not installed in this browser context.` );
+  const key = `${ assetBase }${ definition.file }`;
+  if ( !descriptions.has( key ) ) descriptions.set( key, ( async () => {
+    const response = await fetch( key );
+    if ( !response.ok ) throw new Error( `Could not load ${ definition.file } (${ response.status }).` );
+    const bytes = new Uint8Array( await response.arrayBuffer() );
+    const parsed = parseSynthDef( bytes );
+    const parsedDefinition = parsed.definitions.find( ( item ) => item.name === name );
+    if ( !parsedDefinition ) throw new Error( `Compiled graph did not contain SynthDef \\${ name }.` );
+    return Object.freeze( {
+      name,
+      fingerprint: await synthDefFingerprint( bytes ),
+      interface: buildSynthDefInterface( parsedDefinition )
+    } );
+  } )().catch( ( error ) => { descriptions.delete( key ); throw error; } ) );
+  return descriptions.get( key );
 }

@@ -3,7 +3,7 @@ import { createPlaybackReadiness } from '@awb/sc-runtime';
 import { buildSynthDefInterface, parseSynthDef, synthDefFingerprint } from '@awb/synthdef-interface';
 
 const EMPTY_SYNTHDEF_CONTEXT = Object.freeze( {
-  status: 'disconnected', protocolVersion: null, inventory: null,
+  status: 'disconnected', protocolVersion: null, generation: 0, inventory: null,
   definitions: Object.freeze( {} ), error: ''
 } );
 
@@ -62,6 +62,7 @@ export class HostedScoreClient {
     this.listeners = new Set();
     this.pending = new Map();
     this.synthDefPending = new Map();
+    this.synthDefGeneration = 0;
     this.pings = new Map();
     this.nonce = 1;
     this.replyPort = null;
@@ -166,7 +167,10 @@ export class HostedScoreClient {
       this.resolveConnect = null;
       this.rejectConnect = null;
     } else if ( address === '/awb/synthdef/connected' && args[ 0 ] === this.clientID ) {
-      this.publishSynthDefContext( { status: 'connected', protocolVersion: args[ 1 ], error: '' } );
+      this.synthDefGeneration += 1;
+      this.publishSynthDefContext( {
+        status: 'connected', protocolVersion: args[ 1 ], generation: this.synthDefGeneration, error: ''
+      } );
     } else if ( address.startsWith( '/awb/synthdef/' ) && args[ 0 ] === this.clientID ) {
       this.receiveSynthDefFrame( address, args );
     } else if ( address === '/awb/timeline/runtime' && args[ 0 ] === this.clientID ) {

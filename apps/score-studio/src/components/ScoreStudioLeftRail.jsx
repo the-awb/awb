@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function ScoreStudioLeftRail( {
-  collapsed, documentPanel, onOpenInstrumentWorkspace, onToggleCollapsed
+  collapsed, documentPanel, instrumentPanel, onToggleCollapsed
 } ) {
   const [ tab, setTab ] = useState( 'document' );
 
@@ -26,10 +26,7 @@ export default function ScoreStudioLeftRail( {
         <header><h2>{ tab === 'document' ? 'Document' : 'Instruments' }</h2></header>
         <div className="railScroll">
           { tab === 'document' ? documentPanel : (
-            <section className="instrumentTabPlaceholder">
-              <p className="boundaryNote">The existing instrument rack remains available while the compact, lazy inventory is built in Slice B.</p>
-              <button onClick={ onOpenInstrumentWorkspace }>Open instrument workspace</button>
-            </section>
+            instrumentPanel
           ) }
         </div>
       </div> }

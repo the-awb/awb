@@ -1,12 +1,17 @@
-export default function ScoreFocusPanel( { selectedEntry, children } ) {
+export default function ScoreFocusPanel( { focus, children } ) {
+  const event = focus?.kind === 'scoreEvent';
+  const synthDef = focus?.kind === 'synthDef';
   return (
     <div className="focusPanelContent">
       <header>
-        <div><h2>Event</h2><strong>{ selectedEntry?.id ?? 'No selection' }</strong></div>
-        { selectedEntry && <small>{ selectedEntry.event?.type ?? 'event' } at { selectedEntry.time } s</small> }
+        <div><h2>{ event ? 'Event' : synthDef ? 'SynthDef' : 'Focus' }</h2>
+          <strong>{ event ? focus.entry.id : synthDef ? `\\${ focus.name }` : 'No selection' }</strong></div>
+        { event && <small>{ focus.entry.event?.type ?? 'event' } at { focus.entry.time } s</small> }
+        { synthDef && <small>{ focus.source } · { focus.signalKind } · { focus.description?.fingerprint ?? 'interface unavailable' }</small> }
       </header>
       <div className="focusPanelScroll">
-        { selectedEntry ? children : <p className="emptyCopy">Select an authored event to edit its payload.</p> }
+        { event || synthDef ? children
+          : <p className="emptyCopy">Select an authored event or an instrument definition.</p> }
       </div>
     </div>
   );

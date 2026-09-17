@@ -1,6 +1,8 @@
 # Score Studio GUI restructure and smart-seek handoff
 
-Status: approved next GUI direction; implementation not started here.
+Status: Slices A and B implemented on `codex/score-studio-gui-slice-a`; Slices C and D remain open.
+The old all-instrument rack remains available only to the browser host while Slice C replaces it
+with properly owned audition voices. It is not exposed by the hosted-only shell.
 
 This document describes the next Score Studio interface slice after commits `00004b1` and
 `bac870e`. It is a layout and interaction refactor over the existing score, instrument and host
@@ -44,6 +46,9 @@ explicitly performs a future insertion action.
 - The shell exposes only `hosted` execution. Headless versus connected is hosted topology reported
   by the host, not a score execution mode. Browser hosts may separately advertise standalone
   `scsynth.wasm`; hosted controls must never fall back silently to it.
+- Hosted audition is a shell service with its own stable tool identity, provisionally
+  `synthdef-audition`; it is not an extra role of `score-studio`, `PTimelineOSCBridge` or a
+  score-owning ToolSession. Any authorised shell tool may request a client-scoped audition session.
 
 Relevant implementation surfaces:
 
@@ -132,6 +137,14 @@ runtime lifecycle can be driven safely. If it cannot be auditioned, keep it visi
 specific missing control, routing or lifecycle capability. Browser-standalone mode may offer only
 system definitions whose exact compiled binary is installed in that browser context.
 
+Availability does not imply audible audition. Classify the transferred graph by its actual output
+rate: **audio** has an audio-rate `Out`/`ReplaceOut`/`OffsetOut`; **control** has only control-rate
+output; **utility** has no audio/control output path; **unknown** has not been modelled yet. Keep all
+four visible because control and utility SynthDefs may still belong in a score. Only audio definitions
+may proceed to the audition capability check, and audio output alone is not sufficient: routing and
+lifecycle must also be safe. Never give a control or utility SynthDef a Play action that implies it
+will produce sound.
+
 Clicking an instrument row puts a SynthDef audition draft into the bottom panel. It does not start
 a node and does not alter the score.
 
@@ -198,6 +211,19 @@ It never uses the authored entry ID as runtime identity.
 
 ### 4.3 Audition lifecycle and identity
 
+Hosted audition must use a distinct shell-wide ToolDefinition/tool ID, provisionally
+`synthdef-audition`, and a transport namespace owned by that service such as `/awb/audition/*`.
+The service is headless: it does not create another renderer view or appear as a score executor.
+The shell grants a requesting view a separate audition ToolSession and records the requesting
+`toolID`, `viewID` and, when present, parent `toolSessionID` as provenance. Score Studio is one
+client of this contract; other shell tools must be able to use the same service without borrowing
+Score Studio's player or session.
+
+An audition request is admissible only after the service has inspected the exact compiled graph.
+Audio-output SynthDefs may continue to the routing and lifecycle checks. Control-output,
+utility/no-output and unknown definitions are inspectable or usable by their owning tools, but the
+generic service must reject them as audible audition targets with a concrete reason.
+
 Every press of Play creates a fresh audition realization:
 
 ```text
@@ -212,10 +238,10 @@ audition voices may coexist. The panel should display how many it owns and provi
 
 Do not target `@all`, do not reuse the score event ID as the node owner, and do not let Stop touch
 score playback, rack nodes, another view, or another audition draft. Hosted audition nodes belong
-to the Score Studio ToolContext/ToolSession with explicit audition metadata so NodeManager can
-observe them without confusing them with score realizations. Browser-standalone nodes require the
-same logical ownership even though their server node IDs are browser-local; the shell never exposes
-this path.
+to the dedicated audition ToolSession with explicit requester and draft metadata so NodeManager can
+observe them without confusing them with score or tool-native realizations. Browser-standalone
+nodes require the same logical ownership even though their server node IDs are browser-local; the
+shell never exposes this path.
 
 Natural node completion removes that realization from the audition controller. Changing focus must
 not orphan still-running audition nodes: retain their ownership record until completion or an
@@ -339,7 +365,9 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 
 ### Slice C — isolated audition
 
-- add `AuditionController` and identity model;
+- register the shell-wide `synthdef-audition` tool/service and its dedicated ToolSession/transport
+  contract;
+- add `AuditionController` and requester-scoped identity model;
 - Play creates fresh hosted audition realizations, or browser-standalone realizations only when the
   browser host explicitly enables that mode;
 - Stop frees only the current draft's audition nodes;
@@ -362,11 +390,17 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
   search.
 - System/context SynthDefs can be admitted and auditioned when their exact compiled interface and
   runtime lifecycle support it; unsupported definitions remain visible with a concrete reason.
+- Inventory rows distinguish audio, control, utility and not-yet-modelled definitions from the
+  compiled graph; control/utility definitions remain usable in scores but are not presented as
+  audible audition targets.
 - Selecting one instrument builds only that detailed interface model.
 - Event selection and SynthDef selection produce the correct, visibly named bottom-panel scope.
 - Applying an event draft creates exactly one document revision; auditioning creates none.
 - Every audition Play has a fresh runtime identity; Stop cannot free score nodes or other tools'
   nodes.
+- Hosted audition runs under the dedicated `synthdef-audition` tool identity; its NodeManager
+  projection retains the requesting tool/view provenance and is never attributed to Score Studio's
+  score ToolSession.
 - Natural completion, focus changes and view closure leave no unowned audition nodes.
 - Envelope UI matches `envArray`/`parametric`/`inspectOnly` capability and never offers a control
   that cannot reach the selected SynthDef.
@@ -399,3 +433,5 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
    engine as a surprise fallback.
 10. **Treat panel persistence as disposable UI state.** Corrupt or stale layout preferences should
     reset safely and never block opening a score.
+11. **Do not disguise audition as a score command.** The shell-wide audition ToolSession owns its
+    disposable voices; `PTimelineOSCBridge` and the score ToolSession do not.

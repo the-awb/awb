@@ -133,6 +133,17 @@ try {
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 2;
 
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  const systemDefinition = page.getByRole( 'listbox', { name: 'Instrument inventory', exact: true } )
+    .getByRole( 'option', { name: /awbEnvelopeLab/ } );
+  await systemDefinition.waitFor();
+  await systemDefinition.click();
+  await page.getByLabel( 'Draft freq', { exact: true } ).waitFor();
+  if ( !( await page.locator( '.bottomPanel' ).getByText( 'hosted context', { exact: false } ).isVisible() ) ) {
+    throw new Error( 'unreferenced hosted system SynthDef did not become an admitted audition draft' );
+  }
+  passed += 2;
+
   await browser.close();
   browser = null;
   await waitFor( () => scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_DISCONNECTED' ) );
@@ -143,7 +154,7 @@ try {
   await waitFor( () => scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_FIXTURE_STOPPED' ) );
   passed += 1;
 
-  console.log( `launched-hosted-real-browser: ${ passed }/7 pass (SC ToolSession, source score, handshake, revision install and disconnect)` );
+  console.log( `launched-hosted-real-browser: ${ passed }/9 pass (SC ToolSession, source score, system SynthDef admission, handshake, revision install and disconnect)` );
 } catch ( error ) {
   console.error( `launched-hosted-real-browser: FAIL after ${ passed }/7: ${ error.message }` );
   console.error( `HOSTED OUTPUT:\n${ hostedOutput }` );

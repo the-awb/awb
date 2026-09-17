@@ -127,6 +127,7 @@ try {
   const hello = received.find( ( message ) => message.address === '/awb/timeline/hello' );
   assert.equal( hello.args[ 2 ], 'score-session-test', 'hosted hello carries its ToolSession identity' );
   await waitFor( () => client.getState().synthDefContext.status === 'connected' );
+  assert.equal( client.getState().synthDefContext.generation, 1 );
   const context = await client.loadSynthDefContext( [ 'fieldBasic', 'missingFromDesktop' ] );
   assert.deepEqual( context.inventory, [ 'fieldBasic', 'unmodelled' ] );
   assert.deepEqual( context.missing, [ 'missingFromDesktop' ] );

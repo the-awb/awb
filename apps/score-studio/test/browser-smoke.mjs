@@ -40,8 +40,9 @@ try {
     failures.push( 'browser document ingress controls are missing' );
   }
   await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
-  if ( !( await page.getByRole( 'button', { name: 'Open instrument workspace', exact: true } ).isVisible() ) ) {
-    failures.push( 'left instrument tab did not preserve access to the existing workspace' );
+  if ( !( await page.getByRole( 'listbox', { name: 'Instrument inventory', exact: true } ).isVisible() )
+    || await page.getByRole( 'option', { name: /substrate/ } ).count() !== 1 ) {
+    failures.push( 'left instrument tab did not show its pinned score inventory' );
   }
   await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
   await page.getByRole( 'button', { name: 'Collapse left panel', exact: true } ).click();
@@ -79,6 +80,25 @@ try {
   if ( !( await page.getByRole( 'heading', { name: 'Hosted instruments', exact: true } ).isVisible() ) ) failures.push( 'hosted instrument boundary is missing' );
   if ( await page.getByRole( 'button', { name: 'Prepare audio', exact: true } ).count() ) failures.push( 'hosted mode exposed browser audio preparation' );
   await page.getByRole( 'button', { name: 'standalone', exact: true } ).click();
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  const inventory = page.getByRole( 'listbox', { name: 'Instrument inventory', exact: true } );
+  await inventory.getByRole( 'option', { name: /awbSchedulerPulse/ } ).waitFor();
+  if ( await inventory.getByText( 'system / context', { exact: true } ).count() === 0 ) {
+    failures.push( 'browser system SynthDefs were not available in the instrument inventory' );
+  }
+  const inventorySearch = page.getByLabel( 'Search instruments', { exact: true } );
+  await inventorySearch.fill( 'SchedulerPulse' );
+  if ( await inventory.getByRole( 'option' ).count() !== 1 ) failures.push( 'instrument inventory search did not filter rows' );
+  await inventory.getByRole( 'option', { name: /awbSchedulerPulse/ } ).click();
+  await page.getByRole( 'heading', { name: 'SynthDef', exact: true } ).waitFor();
+  await page.getByLabel( 'Draft freq', { exact: true } ).waitFor();
+  if ( !( await inventory.getByRole( 'option', { name: /awbSchedulerPulse.*audio/ } ).isVisible() ) ) {
+    failures.push( 'modelled SynthDef did not disclose its audio/control/utility classification' );
+  }
+  if ( await page.locator( '.bottomPanel' ).getByText( 'browser bundle', { exact: false } ).count() === 0 ) {
+    failures.push( 'selected system SynthDef did not create a visibly sourced bottom-panel draft' );
+  }
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
   if ( await page.locator( '.liveInstrument' ).count() !== 4 ) failures.push( 'live instrument tab did not expose the four catalogued instruments' );
   if ( !( await page.getByRole( 'heading', { name: 'Live instruments', exact: true } ).isVisible() ) ) failures.push( 'live instrument workspace heading is missing' );
   if ( !( await page.getByRole( 'heading', { name: 'Envelope lab', exact: true } ).isVisible() ) ) failures.push( 'editable envelope instrument is missing' );
@@ -318,4 +338,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 64/64 pass' );
+console.log( 'score-studio-browser: 70/70 pass' );

@@ -5,6 +5,7 @@ import { createPlaybackReadiness } from '@awb/sc-runtime';
 import { hashScoreDocument, reviseScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
+import InstrumentInventory from './components/InstrumentInventory.jsx';
 import InstrumentPanel from './components/InstrumentPanel.jsx';
 import InstrumentWorkspace from './components/InstrumentWorkspace.jsx';
 import PanelLayout from './components/PanelLayout.jsx';
@@ -12,6 +13,7 @@ import ScoreFocusPanel from './components/ScoreFocusPanel.jsx';
 import ScoreRuntimeRail from './components/ScoreRuntimeRail.jsx';
 import ScoreStudioLeftRail from './components/ScoreStudioLeftRail.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
+import SynthDefDraftEditor from './components/SynthDefDraftEditor.jsx';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
 import { loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
@@ -22,6 +24,7 @@ import { retryScoreProjection, saveScorePair, validateProjection } from './engin
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
+const freshDraftID = () => `draft-${ globalThis.crypto.randomUUID() }`;
 
 export default function App( { host, createHostedClient } ) {
   const launchContext = useMemo( () => host.hostedLaunchContext(), [ host ] );
@@ -44,6 +47,7 @@ export default function App( { host, createHostedClient } ) {
   const [ projectionKind, setProjectionKind ] = useState( SC_PROJECTION_KINDS.DESKTOP_SCORE );
   const [ localProjection, setLocalProjection ] = useState( null );
   const [ scoreFolder, setScoreFolder ] = useState( { handle: null, name: '', files: [], message: '' } );
+  const [ focus, setFocus ] = useState( { kind: 'none', draftID: freshDraftID() } );
   const inputRef = useRef( null );
   const stopArmedRef = useRef( false );
   const sc = useSuperCollider( { importScsynth } );
@@ -76,6 +80,29 @@ export default function App( { host, createHostedClient } ) {
     () => inspectedEntries.find( ( entry ) => entry.id === session.selected[ 0 ] ) ?? null,
     [ inspectedEntries, session.selected ]
   );
+
+  useEffect( () => {
+    if ( !selectedEntry ) {
+      setFocus( ( current ) => current.kind === 'scoreEvent'
+        ? { kind: 'none', draftID: freshDraftID() } : current );
+      return;
+    }
+    setFocus( ( current ) => {
+      const sameSource = current.kind === 'scoreEvent'
+        && current.scoreID === session.document.scoreID
+        && current.documentRevision === session.document.revision
+        && current.entryID === selectedEntry.id;
+      return sameSource ? { ...current, entry: selectedEntry } : {
+        kind: 'scoreEvent', scoreID: session.document.scoreID,
+        documentRevision: session.document.revision, entryID: selectedEntry.id,
+        draftID: freshDraftID(), entry: selectedEntry
+      };
+    } );
+  }, [ selectedEntry, session.document.revision, session.document.scoreID ] );
+
+  useEffect( () => {
+    setFocus( { kind: 'none', draftID: freshDraftID() } );
+  }, [ session.documentEpoch ] );
 
   useEffect( () => {
     if ( !executionModes.includes( session.mode ) ) {
@@ -608,6 +635,15 @@ export default function App( { host, createHostedClient } ) {
     dispatch( { type: 'PREVIEW_ENTRIES', entries, preserveEditor: true } );
   }
 
+  function focusSynthDef( { name, description, contextGeneration, signalKind, source, error = '' } ) {
+    dispatch( { type: 'SET_SELECTED', ids: [] } );
+    setFocus( {
+      kind: 'synthDef', contextGeneration, synthDefName: name, name,
+      fingerprint: description?.fingerprint ?? null,
+      draftID: freshDraftID(), description, signalKind, source, error
+    } );
+  }
+
   return (
     <div className="appShell">
       <header className="topbar">
@@ -621,7 +657,6 @@ export default function App( { host, createHostedClient } ) {
       </header>
       <PanelLayout
         left={ <ScoreStudioLeftRail
-          onOpenInstrumentWorkspace={ () => dispatch( { type: 'SET_VIEW', view: 'instruments' } ) }
           documentPanel={ <>
             <section className="documentSummary filePanel">
               <h2>Score document</h2>
@@ -703,13 +738,18 @@ export default function App( { host, createHostedClient } ) {
                 { ( sc.error || sclang.error ) && <p className="error">{ sc.error || sclang.error }</p> }
               </> }
             </section>
-          </> } /> }
+          </> }
+          instrumentPanel={ <InstrumentInventory document={ session.document } mode={ session.mode }
+            hostedClient={ hostedClient } hostedContext={ hosted.synthDefContext }
+            focusedName={ focus.kind === 'synthDef' ? focus.name : '' }
+            onFocus={ focusSynthDef } /> } /> }
         centre={ <>
           <nav className="viewTabs">
             <button className={ session.view === 'score' ? 'active' : '' }
               onClick={ () => dispatch( { type: 'SET_VIEW', view: 'score' } ) }>Score</button>
-            <button className={ session.view === 'instruments' ? 'active' : '' }
-              onClick={ () => dispatch( { type: 'SET_VIEW', view: 'instruments' } ) }>Instruments</button>
+            { executionModes.includes( MODES.STANDALONE ) && <button
+              className={ session.view === 'instruments' ? 'active' : '' }
+              onClick={ () => dispatch( { type: 'SET_VIEW', view: 'instruments' } ) }>Instruments</button> }
             <button className={ session.view === 'console' ? 'active' : '' }
               onClick={ () => dispatch( { type: 'SET_VIEW', view: 'console' } ) }>Console</button>
           </nav>
@@ -759,10 +799,11 @@ export default function App( { host, createHostedClient } ) {
               </div>
             ) ) : <p className="emptyCopy">No runtime realizations reported.</p> }
           </section> } /> }
-        bottom={ <ScoreFocusPanel selectedEntry={ selectedEntry }>
-          { selectedEntry && <EventEditor
+        bottom={ <ScoreFocusPanel focus={ focus }>
+          { focus.kind === 'scoreEvent' && selectedEntry && <EventEditor
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
             entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry } /> }
+          { focus.kind === 'synthDef' && <SynthDefDraftEditor key={ focus.draftID } focus={ focus } /> }
         </ScoreFocusPanel> } />
     </div>
   );
