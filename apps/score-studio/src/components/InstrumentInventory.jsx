@@ -9,7 +9,7 @@ import { describeStandaloneSynthDef } from '../engine/standaloneSynthDefs.js';
 import { formatScSymbol } from '../engine/scValueSyntax.js';
 
 export default function InstrumentInventory( {
-  document, focusedContextGeneration, focusedName, focusedSource,
+  document, focusedContextGeneration, focusedInitialValues, focusedName, focusedSource,
   hostedClient, hostedContext, mode, onFocus
 } ) {
   const [ query, setQuery ] = useState( '' );
@@ -84,11 +84,11 @@ export default function InstrumentInventory( {
       } );
       return;
     }
-    select( { name: focusedName }, true );
-  }, [ focusedContextGeneration, focusedName, focusedSource, hosted,
+    select( { name: focusedName }, true, focusedInitialValues );
+  }, [ focusedContextGeneration, focusedInitialValues, focusedName, focusedSource, hosted,
     hostedContext?.generation, hostedContext?.inventory, hostedContext?.status ] );
 
-  async function select( row, force = false ) {
+  async function select( row, force = false, initialValues = null ) {
     const request = ++selectionRequest.current;
     const isCurrent = () => selectionRequest.current === request;
     const startingGeneration = hosted
@@ -124,7 +124,7 @@ export default function InstrumentInventory( {
       onFocus( {
         name: row.name, description, contextGeneration,
         signalKind: synthDefSignalKind( description ),
-        source: hosted ? 'hosted context' : 'browser bundle'
+        source: hosted ? 'hosted context' : 'browser bundle', initialValues
       } );
     } catch ( nextError ) {
       if ( !isCurrent() ) return;

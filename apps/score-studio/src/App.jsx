@@ -729,6 +729,7 @@ export default function App( { host, createHostedClient } ) {
             hostedClient={ hostedClient } hostedContext={ hosted.synthDefContext }
             focusedName={ focus.kind === 'synthDef' ? focus.name : '' }
             focusedSource={ focus.kind === 'synthDef' ? focus.source : '' }
+            focusedInitialValues={ focus.kind === 'synthDef' ? focus.initialValues : null }
             focusedContextGeneration={ focus.kind === 'synthDef' ? focus.contextGeneration : null }
             onFocus={ focusSynthDef } /> } /> }
         centre={ <>
@@ -804,6 +805,8 @@ export default function App( { host, createHostedClient } ) {
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
             entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry }
             inheritedDefinition={ lifecycleDefinitionsForEntry( inspectedEntries, selectedEntry.id )[ 0 ] ?? null }
+            availableSynthDefs={ session.mode === MODES.HOSTED
+              ? hosted.synthDefContext.inventory ?? [] : [] }
             onAudition={ ( event ) => auditionDraft( {
               definition: event.def ?? event.instrument, params: event, model: null
             }, displayedFocus ) }
@@ -820,7 +823,8 @@ export default function App( { host, createHostedClient } ) {
 }
 
 function EventEditor( {
-  entry, inheritedDefinition, onPreview, onCommit, onAudition, onStopAudition, auditionCount = 0
+  entry, inheritedDefinition, availableSynthDefs = [], onPreview, onCommit,
+  onAudition, onStopAudition, auditionCount = 0
 } ) {
   const [ time, setTime ] = useState( String( entry.time ) );
   const [ path, setPath ] = useState( () => entry.path.join( '/' ) );
@@ -872,22 +876,33 @@ function EventEditor( {
   }
 
   return (
-    <div onBlur={ ( blurEvent ) => {
+    <div className="eventDetailEditor" onBlur={ ( blurEvent ) => {
       if ( !blurEvent.currentTarget.contains( blurEvent.relatedTarget ) ) commit();
     } }>
-      <dl className="identity compact"><dt>ID</dt><dd>{ entry.id }</dd></dl>
-      <div className="entryFields">
-        <label>Time (seconds)<input aria-label="Event time" type="number" min="0" step="0.001"
-          value={ time } onChange={ ( event ) => { setTime( event.target.value ); draftPatch( { time: event.target.value } ); } } /></label>
-        <label>Path <input aria-label="Event path" value={ path } placeholder="section/voice"
-          onChange={ ( event ) => { setPath( event.target.value ); draftPatch( { path: event.target.value } ); } } /></label>
-        <EventPayloadEditor event={ parsedEvent } inheritedDefinition={ inheritedDefinition }
-          onChange={ updatePayload } />
-        <label>Raw event JSON<textarea aria-label="Event payload" className="eventJson" value={ eventText }
-          onChange={ ( event ) => { setEventText( event.target.value ); draftPatch( { eventText: event.target.value } ); } }
-          onKeyDown={ ( event ) => {
-            if ( ( event.metaKey || event.ctrlKey ) && event.key === 'Enter' ) { event.preventDefault(); commit(); }
+      <div className="eventMetaBar">
+        <span><small>Event ID</small><code>{ entry.id }</code></span>
+        <label><small>Time</small><span><input aria-label="Event time" type="number" min="0" step="0.001"
+          value={ time } onChange={ ( event ) => { setTime( event.target.value ); draftPatch( { time: event.target.value } ); } } />
+          <em>s</em></span></label>
+        <label className="eventPathField"><small>Path</small><input aria-label="Event path" value={ path }
+          placeholder="section/voice" onChange={ ( event ) => {
+            setPath( event.target.value ); draftPatch( { path: event.target.value } );
           } } /></label>
+      </div>
+      <div className="eventEditorGrid">
+        <section className="eventEditorCard"><header><strong>Musical event</strong>
+          <small>Structured controls update the score immediately.</small></header>
+          <EventPayloadEditor event={ parsedEvent } inheritedDefinition={ inheritedDefinition }
+            availableSynthDefs={ availableSynthDefs } onChange={ updatePayload } />
+        </section>
+        <section className="eventEditorCard rawEventCard"><header><strong>Raw event</strong>
+          <small>JSON view of the same authored payload.</small></header>
+          <textarea aria-label="Event payload" className="eventJson" value={ eventText }
+            onChange={ ( event ) => { setEventText( event.target.value ); draftPatch( { eventText: event.target.value } ); } }
+            onKeyDown={ ( event ) => {
+              if ( ( event.metaKey || event.ctrlKey ) && event.key === 'Enter' ) { event.preventDefault(); commit(); }
+            } } />
+        </section>
       </div>
       { error && <p className="error">{ error }</p> }
       <div className="focusAuditionActions"><button onClick={ commit }>Apply event</button>

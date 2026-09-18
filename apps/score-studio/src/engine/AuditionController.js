@@ -26,6 +26,12 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
     listeners.forEach( ( listener ) => listener() );
   };
   const merge = ( realization ) => {
+    if ( realization.state === 'ended' ) {
+      publish( { realizations: Object.freeze( state.realizations.filter(
+        ( item ) => item.realizationID !== realization.realizationID
+      ) ), error: '' } );
+      return;
+    }
     const previous = state.realizations.find( ( item ) => item.realizationID === realization.realizationID );
     const next = freezeRealization( { ...previous, ...realization } );
     publish( { realizations: Object.freeze( [

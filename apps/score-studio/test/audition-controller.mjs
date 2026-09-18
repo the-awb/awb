@@ -57,5 +57,9 @@ reply( { address: '/n_end', arguments: [ 9000 ] } );
 assert.equal( controller.getState().realizations.at( -1 ).nodeIDs.length, 2 );
 await controller.stopDraft( 'draft-1' );
 assert.equal( sent.filter( ( message ) => message.address === '/n_free' ).length, 2 );
+reply( { address: '/n_end', arguments: [ 9001 ] } );
+reply( { address: '/n_end', arguments: [ 9002 ] } );
+assert.equal( controller.getState().realizations.length, 0,
+  'completed auditions leave the live audition panel' );
 
 console.log( 'audition-controller: pass' );

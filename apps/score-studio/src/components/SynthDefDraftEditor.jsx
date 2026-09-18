@@ -99,7 +99,9 @@ export default function SynthDefDraftEditor( {
       { focus.signalKind === 'control'
         ? 'This graph writes control-rate output. It is available for inspection and composition, but it is not an audible audition target.'
         : 'This utility graph has no audio/control output path. It is available for inspection and composition, but Play will remain unavailable.' }</p> }
-    <div className="synthDraftControls">
+    <section className="synthDraftSection"><header><strong>Controls</strong>
+      <small>Audition values for the selected definition or playing voice.</small></header>
+      <div className="synthDraftControls">
       { model.controls.map( ( control ) => control.numChannels === 1 && !Array.isArray( values[ control.name ] )
         ? <label key={ control.name }><span><code>{ control.name }</code>
           <small>{ control.roles.join( ', ' ) || control.rate }{ control.spec?.unit ? ` · ${ control.spec.unit }` : '' }</small></span>
@@ -114,8 +116,11 @@ export default function SynthDefDraftEditor( {
             onChange={ ( value ) => setValues( ( current ) => ( { ...current, [ control.name ]: value } ) ) } />
           : <DraftArrayControl key={ control.name } control={ control } value={ values[ control.name ] }
             onChange={ ( value ) => setValues( ( current ) => ( { ...current, [ control.name ]: value } ) ) } /> ) }
-    </div>
-    <div className="synthDraftEnvelopes">
+      </div>
+    </section>
+    <section className="synthDraftSection"><header><strong>Envelopes</strong>
+      <small>Compiled envelope projections and editable controls where supported.</small></header>
+      <div className="synthDraftEnvelopes">
       { editableEnvelope && envelopeValue && <div className="compactEnvelopeEditor"><EnvelopeEditor
         value={ envelopeValue } maxSegments={ editableEnvelope.editor.maxSegments }
         onAudition={ play }
@@ -124,7 +129,8 @@ export default function SynthDefDraftEditor( {
       { model.envelopes.length ? model.envelopes.map( ( envelope ) => <EnvelopeProjection
         key={ envelope.ugenIndex } envelope={ envelope } values={ values } /> )
         : <p className="emptyCopy">No EnvGen envelope found in the compiled graph.</p> }
-    </div>
+      </div>
+    </section>
     <div className="focusAuditionActions">
       <button disabled={ focus.signalKind !== 'audio' || !onAudition } onClick={ play }>Play</button>
       <button disabled={ auditionCount === 0 } onClick={ onStopAudition }>Stop ({ auditionCount })</button>
