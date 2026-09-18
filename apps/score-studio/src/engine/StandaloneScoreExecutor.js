@@ -105,8 +105,12 @@ export function createStandaloneScoreExecutor( {
       const addAction = Number.isInteger( event.addAction ) ? event.addAction : 1;
       const group = Number.isInteger( event.group ) ? event.group : 0;
       const instrument = instrumentFor( definition );
-      const lifecycle = instrument ? instrumentNoteLifecycle( instrument.key, event ) : null;
-      if ( event.dur !== undefined && ( !Number.isFinite( Number( event.dur ) ) || Number( event.dur ) < 0 ) ) {
+      if ( event.dur === undefined ) {
+        throw new Error( `Standalone note ${ entry.id } must declare a finite dur or "inf".` );
+      }
+      const openEnded = event.dur === 'inf';
+      const lifecycle = instrument && !openEnded ? instrumentNoteLifecycle( instrument.key, event ) : null;
+      if ( !openEnded && ( !Number.isFinite( Number( event.dur ) ) || Number( event.dur ) < 0 ) ) {
         throw new Error( `Standalone note ${ entry.id } has an invalid duration.` );
       }
       const created = [];
@@ -189,6 +193,16 @@ export function createStandaloneScoreExecutor( {
     assertScoreDocument( nextDocument );
     const report = checkScore( nextDocument.entries, [ RENDERER ] );
     if ( !report.complete ) throw new Error( describeCheck( report ) || 'The score contains unsupported standalone events.' );
+    for ( const entry of nextDocument.entries ) {
+      if ( entry.event?.type !== 'note' ) continue;
+      const value = entry.event.dur;
+      if ( value === undefined ) {
+        throw new Error( `Standalone note ${ entry.id } must declare a finite dur or "inf".` );
+      }
+      if ( value !== 'inf' && ( !Number.isFinite( Number( value ) ) || Number( value ) < 0 ) ) {
+        throw new Error( `Standalone note ${ entry.id } has an invalid duration.` );
+      }
+    }
     clearWake();
     hardFreeAll();
     document = nextDocument;

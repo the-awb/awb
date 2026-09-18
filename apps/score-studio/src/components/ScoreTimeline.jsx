@@ -69,6 +69,10 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
   const width = LEFT + total * pxPerSecond + 40;
   const ruler = timelineTicks( total, pxPerSecond );
   const sharedGroup = commonGroup( entries, selected );
+  const selectedLifecycleLanes = synthLanes.filter( ( lane ) => lane.id !== '__unassigned__'
+    && lane.events.some( ( marker ) => selected.has( marker.entry.id ) ) );
+  const commandLane = selectedLifecycleLanes.length === 1 ? selectedLifecycleLanes[ 0 ] : null;
+  const canAddLifecycle = commandLane && session.cursorTime >= commandLane.startTime;
 
   const placeCursor = ( event ) => {
     if ( event.target !== event.currentTarget ) return;
@@ -240,13 +244,22 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
     else next.add( laneID );
     return next;
   } );
-  const add = () => {
+  const addNote = ( openEnded = false ) => {
     const entry = makeEvent(
       session.cursorTime,
-      { type: 'note', def: 'substrate', freqA: 36, dur: 8 },
+      { type: 'note', def: 'substrate', freqA: 36, dur: openEnded ? 'inf' : 8 },
       { path: [] }
     );
     apply( sortScore( [ ...entries, entry ] ) );
+    dispatch( { type: 'SET_SELECTED', ids: [ entry.id ] } );
+  };
+  const addLifecycle = ( type ) => {
+    if ( !canAddLifecycle ) return;
+    const entry = makeEvent( session.cursorTime, { type, target: commandLane.id }, {
+      path: commandLane.path
+    } );
+    apply( sortScore( [ ...entries, entry ] ) );
+    setExpandedSynths( ( current ) => new Set( [ ...current, commandLane.id ] ) );
     dispatch( { type: 'SET_SELECTED', ids: [ entry.id ] } );
   };
 
@@ -261,7 +274,13 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
             <button className={ layout === 'synths' ? 'active' : '' }
               onClick={ () => setLayout( 'synths' ) }>Synth lifecycle</button>
           </div>
-          <button onClick={ add }>+ note</button>
+          <div className="eventCommandPalette" aria-label="Add score event">
+            <button onClick={ () => addNote( false ) }>+ note</button>
+            <button onClick={ () => addNote( true ) }>+ synth</button>
+            <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'set' ) }>+ set</button>
+            <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'release' ) }>+ release</button>
+            <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'free' ) }>+ free</button>
+          </div>
           <button disabled={ !selected.size }
             onClick={ () => apply( entries.filter( ( entry ) => !selected.has( entry.id ) ) ) }>Delete</button>
           <button disabled={ !session.undo.length } onClick={ () => dispatch( { type: 'UNDO' } ) }>Undo</button>
@@ -333,7 +352,9 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
               const fallbackEnd = Math.max( lane.startTime + 1, lifecycleEnd );
               const shownGate = lane.gateReleaseTime;
               const shownDuration = durationDrag?.laneID === lane.id ? durationDrag.time : lane.durationTime;
-              const shownEnd = shownDuration ?? lane.endTime ?? fallbackEnd;
+              const shownEnd = shownDuration ?? lane.endTime ?? ( lane.openEnded ? total : fallbackEnd );
+              const openLabelEnd = lane.openEnded
+                ? Math.min( shownEnd, lane.startTime + Math.max( 2, 140 / pxPerSecond ) ) : shownEnd;
               const envelopeRows = expanded ? lane.envelopes : lane.envelope ? [ lane.envelope ] : [];
               const triggerTop = expanded ? 45 + envelopeRows.length * 14 : 7;
               const laneHeight = expanded ? Math.max( 82, triggerTop + 27 ) : 52;
@@ -350,14 +371,18 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
                     </span>
                   </span>
                   { !unassigned && <button
-                    className={ `synthBar${ selected.has( lane.id ) ? ' selected' : '' }${ drag?.ids.includes( lane.id ) ? ' dragging' : '' }` }
+                    className={ `synthBar${ lane.openEnded ? ' openEnded' : '' }${ selected.has( lane.id ) ? ' selected' : '' }${ drag?.ids.includes( lane.id ) ? ' dragging' : '' }` }
                     style={ {
                       left: LEFT + lane.startTime * pxPerSecond,
-                      width: Math.max( 12, ( shownEnd - lane.startTime ) * pxPerSecond )
+                      width: Math.max( 12, ( openLabelEnd - lane.startTime ) * pxPerSecond )
                     } }
                     title={ `${ lane.id } · event ${ lane.startTime }s to ${ shownDuration ?? 'open'} · predicted node completion ${ lane.endTime ?? 'unknown'} · gate ${ shownGate ?? 'unknown'} · drag to move create` }
                     { ...dragProps( lane.id ) }
                   >{ lane.definition }{ lane.expansionCount > 1 ? ` ×${ lane.expansionCount }` : '' }</button> }
+                  { !unassigned && lane.openEnded && <span className="synthOpenContinuation" style={ {
+                    left: LEFT + openLabelEnd * pxPerSecond,
+                    width: Math.max( 10, ( shownEnd - openLabelEnd ) * pxPerSecond )
+                  } } title="Open-ended synth continues beyond the score horizon until release or free" /> }
                   { !unassigned && shownDuration !== null && <button className="durationHandle"
                     aria-label={ `Adjust ${ lane.id } duration` }
                     style={ { left: LEFT + shownDuration * pxPerSecond } }

@@ -5,7 +5,7 @@ import { PairSaveError, retryScoreProjection, saveScorePair } from '../src/engin
 
 const document = createScoreDocument( {
   scoreID: 'pair-save-test', revision: 3,
-  entries: [ { id: 'entry-a', time: 0, path: [], event: { type: 'note', def: 'default' } } ]
+  entries: [ { id: 'entry-a', time: 0, path: [], event: { type: 'note', def: 'default', dur: 1 } } ]
 } );
 const order = [];
 let savedIdentity;

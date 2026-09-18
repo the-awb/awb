@@ -140,23 +140,34 @@ try {
   }
   if ( await page.locator( '.synthLane' ).count() !== 2 ) failures.push( 'expected one lifecycle lane per authored synth create' );
   if ( await page.locator( '.synthBar' ).count() !== 2 ) failures.push( 'lifecycle view did not render one bar per synth' );
-  if ( await page.locator( '.synthTriggerTick.release' ).count() !== 2 ) failures.push( '@all release was not projected onto both synth bars' );
-  await page.getByRole( 'button', { name: /Expand/ } ).first().click();
+  if ( await page.locator( '.expandedTrigger.release' ).count() !== 0 ) failures.push( 'seed score still contains an authored release' );
+  if ( await page.locator( '.synthTriggerTick.auto-release' ).count() !== 2 ) failures.push( 'finite seed notes lost their derived release boundaries' );
+  for ( const label of [ '+ note', '+ synth', '+ set', '+ release', '+ free' ] ) {
+    if ( await page.getByRole( 'button', { name: label, exact: true } ).count() !== 1 ) {
+      failures.push( `score command palette is missing ${ label }` );
+    }
+  }
+  const firstBar = page.locator( '.synthBar' ).first();
+  await page.locator( '.tick' ).nth( 1 ).click();
+  await firstBar.click();
+  await page.getByRole( 'button', { name: '+ release', exact: true } ).click();
+  if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'authored release was not projected as a child of its parent synth lane' );
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'expanded synth did not disclose its release trigger' );
   const releaseTrigger = page.locator( '.expandedTrigger.release' ).first();
   const releaseBox = await releaseTrigger.boundingBox();
   if ( !releaseBox ) failures.push( 'could not locate expanded release trigger for drag test' );
   else {
+    const releaseTimeBeforeDrag = Number( await page.getByLabel( 'Event time' ).inputValue() );
     await page.mouse.move( releaseBox.x + 5, releaseBox.y + 5 );
     await page.mouse.down();
     await page.mouse.move( releaseBox.x + 27, releaseBox.y + 5, { steps: 3 } );
     await page.mouse.up();
-    if ( Number( await page.getByLabel( 'Event time' ).inputValue() ) <= 1 ) {
+    if ( Number( await page.getByLabel( 'Event time' ).inputValue() ) <= releaseTimeBeforeDrag ) {
       failures.push( 'expanded lifecycle trigger drag did not edit its canonical entry' );
     }
   }
+  await page.getByRole( 'button', { name: 'Delete', exact: true } ).click();
   const synthOrder = await page.locator( '.synthLaneName strong' ).allTextContents();
-  const firstBar = page.locator( '.synthBar' ).first();
   const barBox = await firstBar.boundingBox();
   if ( !barBox ) failures.push( 'could not locate synth bar for drag test' );
   else {
@@ -172,7 +183,7 @@ try {
     }
   }
   await page.getByRole( 'button', { name: 'Structure', exact: true } ).click();
-  if ( await page.locator( '.scoreEvent' ).count() !== 3 ) failures.push( 'expected three seeded score events' );
+  if ( await page.locator( '.scoreEvent' ).count() !== 2 ) failures.push( 'expected two seeded score events' );
 
   const widthBeforeZoom = await page.locator( '.timeline' ).evaluate( ( element ) => element.getBoundingClientRect().width );
   await page.getByRole( 'button', { name: 'Zoom in', exact: true } ).click();

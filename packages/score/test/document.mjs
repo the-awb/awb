@@ -45,8 +45,8 @@ assert.equal( revised.entries[1].time, 5 );
 const sameTime = createScoreDocument( {
   scoreID: 'same-time',
   entries: [
-    { id: 'b', time: 0, path: [], event: { type: 'note' } },
-    { id: 'a', time: 0, path: [], event: { type: 'note' } },
+    { id: 'b', time: 0, path: [], event: { type: 'note', dur: 1 } },
+    { id: 'a', time: 0, path: [], event: { type: 'note', dur: 1 } },
   ]
 } );
 assert.deepEqual( sameTime.entries.map( ( entry ) => entry.id ), [ 'b', 'a' ] );
@@ -66,5 +66,6 @@ assert.ok( invalid.errors.some( ( error ) => error.includes( 'duplicates x' ) ) 
 assert.ok( invalid.errors.some( ( error ) => error.includes( 'non-negative finite' ) ) );
 assert.ok( invalid.errors.some( ( error ) => error.includes( 'array of strings' ) ) );
 assert.ok( invalid.errors.some( ( error ) => error.includes( 'undefined' ) ) );
+assert.ok( invalid.errors.some( ( error ) => error.includes( 'event.dur' ) ) );
 
-console.log( `score-document: 21/21 pass (${ hash })` );
+console.log( `score-document: 22/22 pass (${ hash })` );

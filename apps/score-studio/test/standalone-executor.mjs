@@ -122,6 +122,25 @@ assert.equal( resobassArgs.includes( 'sustain' ), false,
   'standalone execution does not manufacture sustain from modulation duration' );
 executor.stop();
 
+executor.load( createScoreDocument( {
+  scoreID: 'open-synth', entries: [
+    makeEvent( 0, { type: 'note', def: 'awbTestTone', freq: 110, amp: 0.01, dur: 'inf' }, { id: 'open-1' } ),
+    makeEvent( 0.25, { type: 'set', target: 'open-1', freq: 165 }, { id: 'open-set' } )
+  ]
+} ) );
+executor.play();
+advance( 0 );
+advance( 300 );
+assert.equal( executor.getState().status, 'playing', 'infinite synth keeps transport live after finite score entries end' );
+assert.equal( executor.getState().liveCount, 1, 'infinite synth remains live beyond the event horizon' );
+executor.stop();
+
+assert.throws( () => executor.load( createScoreDocument( {
+  scoreID: 'missing-duration', entries: [
+    makeEvent( 0, { type: 'note', def: 'awbTestTone' }, { id: 'missing-dur' } )
+  ]
+} ) ), /finite dur or "inf"/ );
+
 assert.throws( () => executor.load( createScoreDocument( {
   scoreID: 'unsupported', entries: [ makeEvent( 0, { type: 'visual' } ) ]
 } ) ), /unhandled|unsupported/i );
