@@ -932,7 +932,9 @@ function AuditionRuntimePanel( { realizations, onFocus, onCommand } ) {
       return <div className="realization auditionVoice" key={ realization.realizationID }>
       <button className="realizationFocus" onClick={ () => onFocus( realization ) }>
         <strong>{ formatScSymbol( realization.definition ) }</strong>
-        <small>{ realization.nodeIDs.length } voice{ realization.nodeIDs.length === 1 ? '' : 's' }</small>
+        <small>{ realization.nodeIDs.length
+          ? `primary synth ${ realization.nodeIDs[ 0 ] } · ${ realization.nodeIDs.length } voice${ realization.nodeIDs.length === 1 ? '' : 's' }`
+          : 'primary synth pending' }</small>
       </button>
       <div className="realizationActions">
         <button disabled={ !live } onClick={ () => live
@@ -953,6 +955,7 @@ function ScoreRealizationPanel( { document, realizations, onFocus, onCommand } )
     { visible.length ? visible.map( ( realization ) => {
       const entry = document.entries.find( ( candidate ) => candidate.id === realization.entryID );
       const definition = realization.definition ?? entry?.event?.def ?? entry?.event?.instrument ?? 'unknown';
+      const nodeIDs = realization.nodeIDs?.length ? realization.nodeIDs : [ realization.nodeID ];
       const running = [ 'started', 'running' ].includes( realization.state );
       const paused = realization.state === 'paused';
       const releasable = running || paused;
@@ -960,8 +963,7 @@ function ScoreRealizationPanel( { document, realizations, onFocus, onCommand } )
       return <div className="realization runtimeVoice" key={ realization.realizationID ?? realization.nodeID }>
         <button className="realizationFocus" onClick={ () => onFocus( realization ) }>
           <strong>{ formatScSymbol( definition ) }</strong>
-          <small>{ realization.entryID } · { realization.nodeIDs?.length
-            ? `${ realization.nodeIDs.length } nodes` : `node ${ realization.nodeID }` }</small>
+          <small>primary synth { nodeIDs[ 0 ] } · { realization.entryID } · { nodeIDs.length } node{ nodeIDs.length === 1 ? '' : 's' }</small>
         </button>
         <div className="realizationActions">
           <button disabled={ !( running || paused ) }
