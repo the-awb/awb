@@ -35,11 +35,11 @@ const envelopeLane = projectSynthLifecycleLanes( [
   makeEvent( 10, { type: 'note', def: 'substrate', dur: 20, attackT: 3, releaseT: 5 }, { id: 'env' } ),
   makeEvent( 20, { type: 'set', target: 'env', releaseT: 7 }, { id: 'env-set' } )
 ] )[ 0 ];
-assert.equal( envelopeLane.gateReleaseTime, 25, 'known total duration places gate release before the tail' );
+assert.equal( envelopeLane.gateReleaseTime, 26, 'default legato places gate-off independently of release time' );
 assert.equal( envelopeLane.gateMarker.role, 'auto-release' );
 assert.equal( envelopeLane.gateMarker.synthetic, true );
 assert.equal( envelopeLane.durationTime, 30, 'duration handle marks authored total duration' );
-assert.equal( envelopeLane.endTime, 32, 'a later set changes the actual release tail without rewriting dur' );
+assert.equal( envelopeLane.endTime, 33, 'a later set changes the release tail without rewriting dur or gate-off' );
 assert.equal( envelopeLane.envelopes.length, 3, 'substrate exposes amplitude, beat and tremolo envelopes' );
 assert.deepEqual( envelopeLane.envelopes.map( ( envelope ) => envelope.id ), [ 'amplitude', 'beat', 'tremolo' ] );
 assert.equal( envelopeLane.envelope.completionAction, 'freeNode' );
@@ -56,15 +56,22 @@ assert.deepEqual( sharedPolyEnvelopeLane.voiceEnvelopes, [ [], [] ] );
 
 const expandedPolyEnvelopeLane = projectSynthLifecycleLanes( [
   makeEvent( 0, { type: 'note', def: 'substrate', freqA: [ 36, 48 ], dur: 20,
-    attackT: [ 1, 1 ], releaseT: 5 }, { id: 'expanded-poly-env' } )
+    attackT: [ 1, 2 ], releaseT: [ 5, 7 ] }, { id: 'expanded-poly-env' } )
 ] )[ 0 ];
-assert.deepEqual( expandedPolyEnvelopeLane.sharedEnvelopes.map( ( envelope ) => envelope.id ), [ 'tremolo' ],
-  'only envelopes with identical voice projections remain on the parent' );
+assert.deepEqual( expandedPolyEnvelopeLane.sharedEnvelopes, [],
+  'release arrays make every dependent envelope voice-specific' );
 assert.deepEqual( expandedPolyEnvelopeLane.voiceEnvelopes.map( ( envelopes ) =>
   envelopes.map( ( envelope ) => [ envelope.id, envelope.attack ] ) ), [
-  [ [ 'amplitude', 1 ], [ 'beat', 0.5 ] ],
-  [ [ 'amplitude', 1 ], [ 'beat', 0.5 ] ]
-], 'array-authored envelopes attach to their expanded voice children even when values match' );
+  [ [ 'amplitude', 1 ], [ 'beat', 0.5 ], [ 'tremolo', 0 ] ],
+  [ [ 'amplitude', 2 ], [ 'beat', 1 ], [ 'tremolo', 0 ] ]
+], 'array-authored envelopes attach to their expanded voice children' );
+assert.deepEqual( expandedPolyEnvelopeLane.voiceEnvelopes.map( ( envelopes ) =>
+  envelopes.find( ( envelope ) => envelope.id === 'amplitude' )?.release ), [ 5, 7 ],
+  'each polyphonic child retains its own release handle value' );
+assert.deepEqual( expandedPolyEnvelopeLane.voiceGateReleaseTimes, [ 16, 16 ],
+  'release duration does not move the common gate-off time' );
+assert.equal( expandedPolyEnvelopeLane.endTime, 23,
+  'the lane remains visible through the longest independent release tail' );
 
 const coupledLane = projectSynthLifecycleLanes( [
   makeEvent( 0, { type: 'note', def: 'resonantBassEnv2', dur: 20, ampEnvRatio: 0.25 }, { id: 'coupled' } )

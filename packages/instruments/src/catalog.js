@@ -63,7 +63,7 @@ const RAW_CATALOG = {
     synthDef: 'fieldBasic',
     gainControl: 'amp',
     primaryFrequency: { kind: 'speakerControl', prefix: 'freq', speakerIndex: 0 },
-    noteLifecycle: { kind: 'gatedTotalDuration', durationKey: 'dur' },
+    noteLifecycle: { kind: 'gatedEvent', durationKey: 'dur', defaultLegato: 0.8 },
     envelopes: [ amplitudeAsr( controlValue( 'attackT', 2 ), controlValue( 'releaseT', 4 ) ) ],
     controls: {
       amp: { role: 'continuousGain' },
@@ -89,7 +89,7 @@ const RAW_CATALOG = {
     synthDef: 'substrate',
     gainControl: 'amp',
     primaryFrequency: { kind: 'control', name: 'freqA' },
-    noteLifecycle: { kind: 'gatedTotalDuration', durationKey: 'dur' },
+    noteLifecycle: { kind: 'gatedEvent', durationKey: 'dur', defaultLegato: 0.8 },
     envelopes: substrateEnvelopes( 12, 12 ),
     controls: {
       freqA: { role: 'frequency', scalesWithTime: true, initial: 60, editor: numberEditor( 'Freq', 20, 25000, 0.1, 1, ' Hz' ) },
@@ -110,7 +110,7 @@ const RAW_CATALOG = {
     synthDef: 'substrate2',
     gainControl: 'amp',
     primaryFrequency: { kind: 'control', name: 'freq' },
-    noteLifecycle: { kind: 'gatedTotalDuration', durationKey: 'dur' },
+    noteLifecycle: { kind: 'gatedEvent', durationKey: 'dur', defaultLegato: 0.8 },
     envelopes: substrateEnvelopes( 30, 30 ),
     editorOrder: [ 'freq', 'beat', 'slowBeat', 'slowBeatBlend', 'beatBlend', 'freqQ', 'movement' ],
     frequencyOrder: [ 'freq', 'beat', 'slowBeat', 'freqQ', 'tremF', 'difF' ],
@@ -352,7 +352,7 @@ export function instrumentNoteLifecycle( key, params = {} ) {
   const contract = descriptor?.noteLifecycle;
   const envelope = instrumentEnvelopes( key, params ).find( ( item ) =>
     item.completionAction === 'freeNode' );
-  if ( contract?.kind !== 'gatedTotalDuration' || !envelope || envelope.release === null ) return null;
+  if ( contract?.kind !== 'gatedEvent' || !envelope || envelope.release === null ) return null;
   const duration = Number( params[ contract.durationKey ] );
   if ( !Number.isFinite( duration ) || duration < 0 ) return null;
 
@@ -365,13 +365,13 @@ export function instrumentNoteLifecycle( key, params = {} ) {
     gateDuration = duration * Number( params.legato );
     gateSource = 'legato';
   } else {
-    gateDuration = Math.max( 0, duration - envelope.release );
-    gateSource = 'instrument';
+    gateDuration = duration * Number( contract.defaultLegato ?? 0.8 );
+    gateSource = 'defaultLegato';
   }
   if ( !Number.isFinite( gateDuration ) || gateDuration < 0 ) return null;
   return Object.freeze( {
     duration,
-    totalDuration: gateSource === 'instrument' ? duration : gateDuration + envelope.release,
+    totalDuration: gateDuration + envelope.release,
     gateDuration, gateSource, attack: envelope.attack, release: envelope.release
   } );
 }

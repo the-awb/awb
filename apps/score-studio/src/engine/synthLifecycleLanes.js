@@ -39,7 +39,9 @@ function expressionControls( value, names = new Set() ) {
 }
 
 function projectVoiceEnvelopes( instrument, voices = [], params ) {
-  if ( !instrument ) return { representative: [], shared: [], byVoice: voices.map( () => [] ) };
+  if ( !instrument ) return {
+    representative: [], shared: [], byVoice: voices.map( () => [] ), allByVoice: voices.map( () => [] )
+  };
   let expanded = voices.length ? voices : [ {} ];
   try { expanded = expandScEventParams( params ); } catch { /* retain the known create expansion */ }
   const projected = expanded.map( ( voice ) => instrumentEnvelopes( instrument.key, { ...params, ...voice } ) );
@@ -55,7 +57,8 @@ function projectVoiceEnvelopes( instrument, voices = [], params ) {
   return {
     representative,
     shared: representative.filter( ( envelope ) => sharedIDs.has( envelope.id ) ),
-    byVoice: projected.map( ( items ) => items.filter( ( envelope ) => !sharedIDs.has( envelope.id ) ) )
+    byVoice: projected.map( ( items ) => items.filter( ( envelope ) => !sharedIDs.has( envelope.id ) ) ),
+    allByVoice: projected
   };
 }
 
@@ -86,10 +89,20 @@ export function projectSynthLifecycleLanes( score ) {
         instrument: instrumentFor( event.def ?? event.instrument ),
         events: [ { entry, role: 'create', time: entry.time, synthetic: false } ]
       };
-      const lifecycle = lane.instrument ? instrumentNoteLifecycle( lane.instrument.key, event ) : null;
-      if ( lifecycle ) {
-        lane.events.push( {
-          entry, role: 'auto-release', time: entry.time + lifecycle.gateDuration, synthetic: true
+      lane.voiceLifecycles = lane.instrument ? ( voices.length ? voices : [ {} ] ).map( ( voice ) =>
+        instrumentNoteLifecycle( lane.instrument.key, { ...event, ...voice } )
+      ) : [];
+      const gateDurations = lane.voiceLifecycles.map( ( lifecycle ) => lifecycle?.gateDuration ?? null );
+      const sharedGate = gateDurations.length && gateDurations.every( ( value ) => value !== null
+        && value === gateDurations[ 0 ] );
+      if ( sharedGate ) {
+        lane.events.push( { entry, role: 'auto-release', time: entry.time + gateDurations[ 0 ],
+          voiceIndex: null, synthetic: true } );
+      } else {
+        gateDurations.forEach( ( gateDuration, voiceIndex ) => {
+          if ( gateDuration !== null ) lane.events.push( {
+            entry, role: 'auto-release', time: entry.time + gateDuration, voiceIndex, synthetic: true
+          } );
         } );
       }
       lanes.push( lane );
@@ -139,25 +152,43 @@ export function projectSynthLifecycleLanes( score ) {
     const startTime = events.find( ( event ) => event.role === 'create' )?.time ?? events[ 0 ]?.time ?? 0;
     const terminal = events.filter( ( event ) => [ 'release', 'free', 'auto-release' ].includes( event.role )
       && event.time >= startTime );
-    const releaseMarker = terminal.find( ( marker ) => [ 'release', 'auto-release' ].includes( marker.role ) );
+    const explicitRelease = terminal.find( ( marker ) => marker.role === 'release' );
+    const releaseMarker = explicitRelease ?? terminal.find( ( marker ) => marker.role === 'auto-release' );
     const freeTime = terminal.find( ( marker ) => marker.role === 'free' )?.time ?? null;
     const createParams = effectiveParamsAt( { ...lane, events }, startTime );
     const initialProjection = projectVoiceEnvelopes( lane.instrument, lane.voices, createParams );
     const initialEnvelopes = initialProjection.representative;
-    const noteLifecycle = lane.instrument ? instrumentNoteLifecycle( lane.instrument.key, createParams ) : null;
+    const noteLifecycle = lane.voiceLifecycles?.[ 0 ]
+      ?? ( lane.instrument ? instrumentNoteLifecycle( lane.instrument.key, createParams ) : null );
     const releaseParams = releaseMarker ? effectiveParamsAt( { ...lane, events }, releaseMarker.time ) : null;
     const releaseProjection = releaseParams
       ? projectVoiceEnvelopes( lane.instrument, lane.voices, releaseParams )
-      : { representative: [], shared: [], byVoice: ( lane.voices ?? [] ).map( () => [] ) };
+      : {
+        representative: [], shared: [],
+        byVoice: ( lane.voices ?? [] ).map( () => [] ),
+        allByVoice: ( lane.voices ?? [] ).map( () => [] )
+      };
     const releaseEnvelopes = releaseProjection.representative;
-    const completionEnvelope = releaseEnvelopes.find( ( envelope ) => envelope.completionAction === 'freeNode' );
-    const naturalEnd = releaseMarker && completionEnvelope && completionEnvelope.release !== null
-      ? releaseMarker.time + completionEnvelope.release
-      : null;
+    const voiceGateReleaseTimes = ( lane.voices?.length ? lane.voices : [ {} ] ).map( ( _, voiceIndex ) => {
+      const marker = explicitRelease ?? terminal.find( ( item ) => item.role === 'auto-release'
+        && ( item.voiceIndex === null || item.voiceIndex === voiceIndex ) );
+      return marker && ( freeTime === null || marker.time < freeTime ) ? marker.time : null;
+    } );
+    const naturalVoiceEnds = voiceGateReleaseTimes.map( ( gateTime, voiceIndex ) => {
+      if ( gateTime === null ) return null;
+      const completionEnvelope = releaseProjection.allByVoice[ voiceIndex ]
+        ?.find( ( envelope ) => envelope.completionAction === 'freeNode' );
+      return completionEnvelope && completionEnvelope.release !== null
+        ? gateTime + completionEnvelope.release : null;
+    } );
+    const finiteNaturalEnds = naturalVoiceEnds.filter( Number.isFinite );
+    const naturalEnd = finiteNaturalEnds.length === naturalVoiceEnds.length && finiteNaturalEnds.length
+      ? Math.max( ...finiteNaturalEnds ) : null;
     const endTime = freeTime === null ? naturalEnd
       : naturalEnd === null ? freeTime : Math.min( freeTime, naturalEnd );
-    const gateReleaseTime = releaseMarker && ( freeTime === null || releaseMarker.time < freeTime )
-      ? releaseMarker.time : null;
+    const gateReleaseTime = voiceGateReleaseTimes.length
+      && voiceGateReleaseTimes.every( ( value ) => value === voiceGateReleaseTimes[ 0 ] )
+      ? voiceGateReleaseTimes[ 0 ] : null;
     const authoredDuration = Number( createParams.dur );
     const durationTime = Number.isFinite( authoredDuration ) && authoredDuration >= 0
       ? startTime + authoredDuration : null;
@@ -176,7 +207,8 @@ export function projectSynthLifecycleLanes( score ) {
     const amplitudeEnvelope = envelopes.find( ( envelope ) => envelope.role === 'amplitude' ) ?? null;
     const openEnded = createParams.dur === 'inf' && releaseMarker === undefined && freeTime === null;
     return {
-      ...lane, events, startTime, endTime, gateReleaseTime, gateMarker: releaseMarker ?? null, freeTime,
+      ...lane, events, startTime, endTime, gateReleaseTime, voiceGateReleaseTimes,
+      gateMarker: releaseMarker ?? null, freeTime,
       durationTime, durationControl: durationTime === null ? null : 'dur', noteLifecycle,
       openEnded, envelopes, envelope: amplitudeEnvelope, sharedEnvelopes, voiceEnvelopes
     };

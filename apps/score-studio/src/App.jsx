@@ -758,6 +758,21 @@ export default function App( { host, createHostedClient } ) {
     } );
   }
 
+  async function auditionScoreEvent( event, focusScope = displayedFocus ) {
+    if ( session.mode !== MODES.HOSTED ) {
+      throw new Error( 'Native Event audition requires hosted sclang.' );
+    }
+    const definition = event.def ?? event.instrument;
+    const description = hosted.synthDefContext.definitions[ definition ] ?? null;
+    return auditionController.playEvent( {
+      mode: session.mode, event,
+      contextID: `scoreEvent:${ focusScope.entryID ?? 'draft' }`, draftID: focusScope.draftID,
+      contextGeneration: description?.contextGeneration ?? 0,
+      fingerprint: description?.fingerprint ?? '', description,
+      signalKind: description ? synthDefSignalKind( description ) : 'audio'
+    } );
+  }
+
   async function auditionRuntimeCopy( realization, voice, entry = null ) {
     const definition = realization.definition ?? entry?.event?.def ?? entry?.event?.instrument;
     if ( !definition ) throw new Error( 'The selected voice has no SynthDef identity.' );
@@ -904,6 +919,8 @@ export default function App( { host, createHostedClient } ) {
             onAudition={ ( event ) => auditionDraft( {
               definition: event.def ?? event.instrument, params: event, model: null
             }, displayedFocus ) }
+            onPlayEvent={ ( event ) => auditionScoreEvent( event, displayedFocus ) }
+            eventPlaybackAvailable={ session.mode === MODES.HOSTED && hosted.audition.status === 'connected' }
             onStopAudition={ () => auditionController.stopDraft( focus.draftID ) }
             auditionCount={ audition.realizations.filter( ( item ) => item.draftID === focus.draftID && item.state !== 'ended' ).length } /> }
           { focus.kind === 'synthDef' && <SynthDefDraftEditor key={ focus.draftID } focus={ displayedFocus }
@@ -934,7 +951,8 @@ export default function App( { host, createHostedClient } ) {
 
 function EventEditor( {
   entry, inheritedDefinition, inheritedValues, availableSynthDefs = [], onPreview, onCommit,
-  onAudition, onStopAudition, auditionCount = 0, voiceIndex = null
+  onAudition, onPlayEvent, eventPlaybackAvailable = false, onStopAudition,
+  auditionCount = 0, voiceIndex = null
 } ) {
   const [ time, setTime ] = useState( String( entry.time ) );
   const [ path, setPath ] = useState( () => entry.path.join( '/' ) );
@@ -944,7 +962,7 @@ function EventEditor( {
   try {
     const parsed = JSON.parse( eventText );
     if ( parsed && typeof parsed === 'object' && !Array.isArray( parsed ) ) parsedEvent = parsed;
-  } catch { /* raw editor reports syntax errors on Apply */ }
+  } catch { /* invalid raw text remains local until the next commit boundary reports it */ }
   let structuredEvent = parsedEvent;
   let voiceCount = 1;
   if ( parsedEvent && voiceIndex !== null ) {
@@ -1047,9 +1065,14 @@ function EventEditor( {
         </section>
       </div>
       { error && <p className="error">{ error }</p> }
-      <div className="focusAuditionActions"><button onClick={ commit }>Apply event</button>
+      <div className="focusAuditionActions">
         <button disabled={ !structuredEvent || structuredEvent.type !== 'note' || !( structuredEvent.def ?? structuredEvent.instrument ) }
-          onClick={ () => onAudition( structuredEvent ) }>Play copy</button>
+          onClick={ () => onAudition( structuredEvent ) }>Play synth copy</button>
+        <button disabled={ !eventPlaybackAvailable || !parsedEvent || parsedEvent.type !== 'note'
+          || !( parsedEvent.def ?? parsedEvent.instrument ) }
+          title={ eventPlaybackAvailable ? 'Play this draft through native SuperCollider Event semantics'
+            : 'Connect hosted sclang to play native SuperCollider Events' }
+          onClick={ () => onPlayEvent( parsedEvent ) }>Play event</button>
         <button disabled={ auditionCount === 0 } onClick={ onStopAudition }>Stop copy ({ auditionCount })</button></div>
     </div>
   );
