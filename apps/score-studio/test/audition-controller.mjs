@@ -4,6 +4,7 @@ import {
 } from '../src/engine/AuditionController.js';
 import { expandScEventParams, scRef } from '../src/engine/scEventSemantics.js';
 import { formatScSymbol, formatScValue, parseScValue } from '../src/engine/scValueSyntax.js';
+import { synthDefDraftValues } from '../src/engine/synthDefDraftValues.js';
 
 const expanded = expandScEventParams( {
   freq: [ 55, 82.5, 110 ], pan: [ -1, 1 ], amp: 0.1,
@@ -39,6 +40,12 @@ const result = await controller.play( {
   model: { controls: [ { name: 'env', numChannels: 3 } ] }
 } );
 assert.deepEqual( result.nodeIDs, [ 9000, 9001, 9002 ] );
+assert.deepEqual( controller.getState().realizations.at( -1 ).params.freq, [ 55, 82.5, 110 ] );
+assert.deepEqual( synthDefDraftValues( {
+  controls: [ { name: 'freq', default: 440 }, { name: 'amp', default: 0.5 } ]
+}, controller.getState().realizations.at( -1 ).params ), {
+  freq: [ 55, 82.5, 110 ], amp: 0.1
+} );
 assert.equal( sent.filter( ( message ) => message.address === '/s_new' ).length, 3 );
 assert.equal( sent.filter( ( message ) => message.address === '/n_setn' ).length, 3 );
 assert.deepEqual( sent.filter( ( message ) => message.address === '/s_new' )[ 2 ].args.slice( 4 ),

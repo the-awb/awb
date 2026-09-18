@@ -658,12 +658,14 @@ export default function App( { host, createHostedClient } ) {
     dispatch( { type: 'PREVIEW_ENTRIES', entries, preserveEditor: true } );
   }
 
-  function focusSynthDef( { name, description, contextGeneration, signalKind, source, error = '' } ) {
+  function focusSynthDef( {
+    name, description, contextGeneration, signalKind, source, initialValues = null, error = ''
+  } ) {
     dispatch( { type: 'SET_SELECTED', ids: [] } );
     setFocus( {
       kind: 'synthDef', contextGeneration, synthDefName: name, name,
       fingerprint: description?.fingerprint ?? null,
-      draftID: freshDraftID(), description, signalKind, source, error
+      draftID: freshDraftID(), description, signalKind, source, initialValues, error
     } );
   }
 
@@ -780,7 +782,8 @@ export default function App( { host, createHostedClient } ) {
                   ?? hosted.synthDefContext.definitions[ realization.definition ];
                 focusSynthDef( { name: realization.definition, description,
                   contextGeneration: description?.contextGeneration ?? 0,
-                  signalKind: realization.signalKind ?? 'unknown', source: 'audition runtime' } );
+                  signalKind: realization.signalKind ?? 'unknown', source: 'audition runtime',
+                  initialValues: realization.params } );
               }
             } }
             onCommand={ ( id, action ) => auditionController.command( id, action ) } /> }
@@ -891,21 +894,29 @@ function EventEditor( { entry, onPreview, onCommit, onAudition, onStopAudition, 
 }
 
 function AuditionRuntimePanel( { realizations, onFocus, onCommand } ) {
-  const active = realizations.filter( ( item ) => item.state !== 'ended' ).reverse();
+  const visible = [ ...realizations ].reverse().slice( 0, 8 );
   return <section className="auditionRuntime"><h2>Auditions</h2>
-    { active.length ? active.map( ( realization ) => <div className="realization auditionVoice" key={ realization.realizationID }>
+    { visible.length ? visible.map( ( realization ) => {
+      const running = realization.state === 'running';
+      const paused = realization.state === 'paused';
+      const live = running || paused;
+      const stateLabel = running ? 'Pause' : paused ? 'Play'
+        : [ 'releasing', 'ending' ].includes( realization.state ) ? 'Finishing'
+          : realization.state === 'ended' ? 'Finished'
+            : realization.state === 'starting' ? 'Starting' : 'Unavailable';
+      return <div className="realization auditionVoice" key={ realization.realizationID }>
       <button className="realizationFocus" onClick={ () => onFocus( realization ) }>
-        <strong>{ formatScSymbol( realization.definition ) }</strong><span>{ realization.state }</span>
+        <strong>{ formatScSymbol( realization.definition ) }</strong>
         <small>{ realization.nodeIDs.length } voice{ realization.nodeIDs.length === 1 ? '' : 's' }</small>
       </button>
-      { ![ 'starting', 'failed' ].includes( realization.state ) && <div className="realizationActions">
-        { realization.state === 'paused'
-          ? <button onClick={ () => onCommand( realization.realizationID, 'resume' ) }>Resume</button>
-          : <button onClick={ () => onCommand( realization.realizationID, 'pause' ) }>Pause</button> }
-        <button onClick={ () => onCommand( realization.realizationID, 'release' ) }>Release</button>
-        <button onClick={ () => onCommand( realization.realizationID, 'free' ) }>Free</button>
-      </div> }
+      <div className="realizationActions">
+        <button disabled={ !live } onClick={ () => live
+          && onCommand( realization.realizationID, paused ? 'resume' : 'pause' ) }>{ stateLabel }</button>
+        { live && <button onClick={ () => onCommand( realization.realizationID, 'release' ) }>Release</button> }
+        { live && <button onClick={ () => onCommand( realization.realizationID, 'free' ) }>Free</button> }
+      </div>
       { realization.error && <small className="error">{ realization.error }</small> }
-    </div> ) : <p className="emptyCopy">No audition voices.</p> }
+    </div>;
+    } ) : <p className="emptyCopy">No audition voices.</p> }
   </section>;
 }

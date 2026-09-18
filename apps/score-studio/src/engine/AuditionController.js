@@ -1,6 +1,13 @@
 import { expandScEventParams } from './scEventSemantics.js';
 
 const ACTIVE_STATES = new Set( [ 'running', 'paused', 'releasing', 'ending' ] );
+const freezeSnapshot = ( value ) => {
+  if ( Array.isArray( value ) ) return Object.freeze( value.map( freezeSnapshot ) );
+  if ( value && typeof value === 'object' ) return Object.freeze( Object.fromEntries(
+    Object.entries( value ).map( ( [ key, item ] ) => [ key, freezeSnapshot( item ) ] )
+  ) );
+  return value;
+};
 const freezeRealization = ( value ) => Object.freeze( {
   ...value, nodeIDs: Object.freeze( [ ...( value.nodeIDs ?? [] ) ] )
 } );
@@ -36,7 +43,8 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
     const realizationID = `audition-${ crypto.randomUUID() }`;
     const runID = `audition-run-${ serial++ }`;
     const voices = expandScEventParams( params, { literalControls: literalControlsFor( model ) } );
-    const request = { realizationID, runID, definition, contextID, draftID, voices,
+    const request = { realizationID, runID, definition, contextID, draftID,
+      params: freezeSnapshot( params ), voices,
       contextGeneration, fingerprint, description, signalKind };
     merge( { ...request, mode, state: 'starting', nodeIDs: [] } );
     try {
