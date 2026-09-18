@@ -201,7 +201,10 @@ export class HostedScoreClient {
         else pending.reject( new HostedProtocolError( result ) );
       }
     } else if ( address === '/awb/audition/state' && args[ 0 ] === this.clientID ) {
-      const realization = Object.freeze( {
+      const previous = this.state.audition.realizations.find(
+        ( item ) => item.realizationID === `${ args[ 1 ] }`
+      );
+      const realization = Object.freeze( { ...previous,
         realizationID: `${ args[ 1 ] }`, state: `${ args[ 2 ] }`, definition: `${ args[ 3 ] }`,
         contextID: `${ args[ 4 ] }`, draftID: `${ args[ 5 ] }`, runID: `${ args[ 6 ] }`,
         mode: 'hosted', nodeIDs: Object.freeze( args.slice( 8, 8 + Number( args[ 7 ] ) ) )
@@ -248,7 +251,10 @@ export class HostedScoreClient {
       } );
       this.publish( { scoreID: transport.scoreID, remoteRevision: transport.revision, transport } );
     } else if ( address === '/awb/timeline/realization' && args[ 0 ] === this.clientID ) {
-      const realization = Object.freeze( {
+      const previous = this.state.realizations.find(
+        ( item ) => item.realizationID === `${ args[ 5 ] }`
+      );
+      const realization = Object.freeze( { ...previous,
         scoreID: args[ 1 ], revision: args[ 2 ], runID: args[ 3 ], entryID: args[ 4 ],
         realizationID: args[ 5 ], state: args[ 6 ], scoreIndex: args[ 7 ], scoreTime: args[ 8 ],
         nodeIDs: Object.freeze( args.slice( 10, 10 + args[ 9 ] ) )
@@ -632,6 +638,28 @@ export class HostedScoreClient {
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
   }
 
+  realizationSet( document, realization, control, value, controlWidth = 1 ) {
+    const values = Array.isArray( value ) ? value : [ value ];
+    if ( !realization?.realizationID || !realization.runID
+      || typeof control !== 'string' || !control.length
+      || !Number.isInteger( controlWidth ) || controlWidth < 1 || controlWidth > 256
+      || values.length < 1 || values.length > 256
+      || values.some( ( item ) => !Number.isFinite( item ) ) ) {
+      throw new Error( 'Invalid live score control update' );
+    }
+    const id = requestID( 'realization-set' );
+    return this.request( '/awb/timeline/realization/set', [
+      this.clientID, id, document.scoreID, document.revision,
+      realization.runID, realization.realizationID, control, controlWidth,
+      values.length, ...values
+    ], id ).then( ( result ) => {
+      const realizations = this.state.realizations.map( ( item ) => item.realizationID === realization.realizationID
+        ? Object.freeze( { ...item, params: Object.freeze( { ...( item.params ?? {} ), [ control ]: value } ) } ) : item );
+      this.publish( { realizations: Object.freeze( realizations ) } );
+      return result;
+    } ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
+  }
+
   instrumentCommand( command, instrumentID, definition = '', params = {} ) {
     if ( ![ 'start', 'set', 'pause', 'resume', 'release', 'free' ].includes( command ) ) {
       throw new Error( `Unknown hosted instrument command: ${ command }` );
@@ -685,6 +713,19 @@ export class HostedScoreClient {
     }
     const id = requestID( `audition-${ action }` );
     return this.request( '/awb/audition/command', [ this.clientID, id, action, realizationID ], id, 0 );
+  }
+
+  auditionSet( realizationID, control, value, controlWidth = 1 ) {
+    const values = Array.isArray( value ) ? value : [ value ];
+    if ( !realizationID || typeof control !== 'string' || !control.length
+      || !Number.isInteger( controlWidth ) || controlWidth < 1 || controlWidth > 256
+      || values.length < 1 || values.length > 256
+      || values.some( ( item ) => !Number.isFinite( item ) ) ) {
+      throw new Error( 'Invalid live audition control update' );
+    }
+    const id = requestID( 'audition-set' );
+    return this.request( '/awb/audition/set', [ this.clientID, id, realizationID,
+      control, controlWidth, values.length, ...values ], id, 0 );
   }
 
   async installDocument( document, options = {} ) {

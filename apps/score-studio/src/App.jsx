@@ -2,6 +2,7 @@ import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore 
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
 import { createPlaybackReadiness } from '@awb/sc-runtime';
+import { loadSynthDefManifest } from '@awb/sc-wasm/core';
 import { hashScoreDocument, reviseScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
 import EventPayloadEditor from './components/EventPayloadEditor.jsx';
@@ -17,11 +18,11 @@ import ScoreTimeline from './components/ScoreTimeline.jsx';
 import SynthDefDraftEditor from './components/SynthDefDraftEditor.jsx';
 import { createAuditionController, createStandaloneAuditionAdapter } from './engine/AuditionController.js';
 import { lifecycleDefinitionsForEntry } from './engine/synthLifecycleLanes.js';
-import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
+import { importSclang, importScsynth, locateSclangFile, synthDefManifestUrl } from './engine/scAssets.js';
 import { formatScSymbol } from './engine/scValueSyntax.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
-import { isHostedSynthDefFocusStale } from './engine/instrumentInventory.js';
-import { loadStandaloneSynthDef, loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
+import { isHostedSynthDefFocusStale, synthDefSignalKind } from './engine/instrumentInventory.js';
+import { describeStandaloneSynthDef, loadStandaloneSynthDef, loadStandaloneSynthDefs } from './engine/standaloneSynthDefs.js';
 import { generateLocalScProjection, SC_PROJECTION_KINDS } from './engine/localScProjection.js';
 import { readLocalProjection, storeLocalProjection } from './engine/localProjectionStore.js';
 import { scoreInstruments } from './engine/scoreInstruments.js';
@@ -104,7 +105,23 @@ export default function App( { host, createHostedClient } ) {
   const focusIsStale = isHostedSynthDefFocusStale(
     focus, session.mode, hosted.synthDefContext.generation
   );
-  const displayedFocus = focusIsStale ? { ...focus, stale: true } : focus;
+  let currentRuntimeTarget = focus.runtimeTarget ?? null;
+  if ( currentRuntimeTarget?.kind === 'audition' ) {
+    const current = audition.realizations.find(
+      ( item ) => item.realizationID === currentRuntimeTarget.realizationID
+    );
+    currentRuntimeTarget = current ? { ...currentRuntimeTarget, realization: current, state: current.state }
+      : { ...currentRuntimeTarget, realization: null, state: 'ended' };
+  } else if ( currentRuntimeTarget?.kind === 'score' ) {
+    const candidates = session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations;
+    const current = candidates.find( ( item ) => session.mode === MODES.HOSTED
+      ? item.realizationID === currentRuntimeTarget.realizationID
+      : item.nodeID === currentRuntimeTarget.nodeID );
+    currentRuntimeTarget = current ? { ...currentRuntimeTarget, realization: current, state: current.state }
+      : { ...currentRuntimeTarget, realization: null, state: 'ended' };
+  }
+  const liveFocus = currentRuntimeTarget ? { ...focus, runtimeTarget: currentRuntimeTarget } : focus;
+  const displayedFocus = focusIsStale ? { ...liveFocus, stale: true } : liveFocus;
 
   useEffect( () => {
     if ( !selectedEntry ) {
@@ -376,15 +393,38 @@ export default function App( { host, createHostedClient } ) {
     stopArmedRef.current = true;
   }
 
-  function focusScoreRealization( realization ) {
+  async function focusScoreRealization( realization ) {
     const entry = session.document.entries.find( ( candidate ) => candidate.id === realization.entryID );
-    if ( entry ) dispatch( { type: 'SET_SELECTED', ids: [ entry.id ] } );
+    if ( !entry ) return;
+    const name = realization.definition ?? entry.event.def ?? entry.event.instrument;
+    let description = hosted.synthDefContext.definitions[ name ];
+    let error = '';
+    if ( session.mode === MODES.STANDALONE && !description ) {
+      try {
+        const manifest = await loadSynthDefManifest( synthDefManifestUrl() );
+        description = await describeStandaloneSynthDef( name, manifest );
+      } catch ( nextError ) { error = nextError.message; }
+    }
+    focusSynthDef( {
+      name, description, contextGeneration: description?.contextGeneration ?? 0,
+      signalKind: description ? synthDefSignalKind( description ) : 'unknown',
+      source: 'score realization', initialValues: realization.params ?? entry.event,
+      error, runtimeTarget: { kind: 'score', realizationID: realization.realizationID,
+        nodeID: realization.nodeID, state: realization.state }
+    } );
   }
 
   async function commandScoreRealization( realization, action ) {
     if ( session.mode === MODES.HOSTED ) {
       await hostedAction( () => hostedClient.realizationCommand( session.document, realization, action ) );
     } else standaloneExecutor.commandRealization( realization.nodeID, action );
+  }
+
+  async function setScoreRealization( realization, control, value, controlWidth ) {
+    if ( session.mode === MODES.HOSTED ) {
+      return hostedClient.realizationSet( session.document, realization, control, value, controlWidth );
+    }
+    return standaloneExecutor.setRealization( realization.nodeID, control, value, controlWidth );
   }
 
   async function returnToStart() {
@@ -672,13 +712,14 @@ export default function App( { host, createHostedClient } ) {
   }
 
   function focusSynthDef( {
-    name, description, contextGeneration, signalKind, source, initialValues = null, error = ''
+    name, description, contextGeneration, signalKind, source, initialValues = null, error = '',
+    runtimeTarget = null
   } ) {
     dispatch( { type: 'SET_SELECTED', ids: [] } );
     setFocus( {
       kind: 'synthDef', contextGeneration, synthDefName: name, name,
       fingerprint: description?.fingerprint ?? null,
-      draftID: freshDraftID(), description, signalKind, source, initialValues, error
+      draftID: freshDraftID(), description, signalKind, source, initialValues, error, runtimeTarget
     } );
   }
 
@@ -796,7 +837,9 @@ export default function App( { host, createHostedClient } ) {
                 focusSynthDef( { name: realization.definition, description,
                   contextGeneration: description?.contextGeneration ?? 0,
                   signalKind: realization.signalKind ?? 'unknown', source: 'audition runtime',
-                  initialValues: realization.params } );
+                  initialValues: realization.params,
+                  runtimeTarget: { kind: 'audition', realizationID: realization.realizationID,
+                    state: realization.state } } );
               }
             } }
             onCommand={ ( id, action ) => auditionController.command( id, action ) } /> }
@@ -820,6 +863,14 @@ export default function App( { host, createHostedClient } ) {
           { focus.kind === 'synthDef' && <SynthDefDraftEditor key={ focus.draftID } focus={ displayedFocus }
             onAudition={ ( draft ) => auditionDraft( draft, displayedFocus ) }
             onStopAudition={ () => auditionController.stopDraft( focus.draftID ) }
+            onRuntimeSet={ ( control, value, width ) => displayedFocus.runtimeTarget?.kind === 'audition'
+              ? auditionController.setControl( displayedFocus.runtimeTarget.realizationID, control, value, width )
+              : displayedFocus.runtimeTarget?.realization
+                ? setScoreRealization( displayedFocus.runtimeTarget.realization, control, value, width ) : false }
+            onRuntimeCommand={ ( action ) => displayedFocus.runtimeTarget?.kind === 'audition'
+              ? auditionController.command( displayedFocus.runtimeTarget.realizationID, action )
+              : displayedFocus.runtimeTarget?.realization
+                ? commandScoreRealization( displayedFocus.runtimeTarget.realization, action ) : false }
             auditionCount={ audition.realizations.filter( ( item ) => item.draftID === focus.draftID && item.state !== 'ended' ).length } /> }
           { audition.error && <p className="error">{ audition.error }</p> }
         </ScoreFocusPanel> } />

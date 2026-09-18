@@ -60,6 +60,10 @@ osc.on( 'message', ( packet, rinfo ) => {
     reply( rinfo, '/awb/audition/result', [
       args[ 0 ], args[ 1 ], 1, args[ 2 ], args[ 3 ], 'applied', ''
     ] );
+  } else if ( message.address === '/awb/audition/set' ) {
+    reply( rinfo, '/awb/audition/result', [
+      args[ 0 ], args[ 1 ], 1, 'set', args[ 2 ], 'applied', ''
+    ] );
   } else if ( message.address === '/awb/synthdef/list' ) {
     reply( rinfo, '/awb/synthdef/list/begin', [ args[ 0 ], args[ 1 ], synthDefInventory.length ] );
     synthDefInventory.forEach( ( name, index ) => {
@@ -110,6 +114,8 @@ osc.on( 'message', ( packet, rinfo ) => {
       args[ 0 ], args[ 2 ], args[ 3 ], args[ 4 ], 'n1', args[ 5 ], state, 0, 0, 2, 1001, 1002
     ] );
     result( rinfo, args, true, args[ 6 ], args[ 2 ], args[ 3 ], 'applied' );
+  } else if ( message.address === '/awb/timeline/realization/set' ) {
+    result( rinfo, args, true, 'set', args[ 2 ], args[ 3 ], 'applied' );
   } else if ( message.address === '/awb/timeline/instrument' ) {
     result( rinfo, args, true, args[ 2 ], args[ 3 ], 0, 'applied' );
     reply( rinfo, '/awb/timeline/instrument/state', [
@@ -214,6 +220,11 @@ try {
   assert.equal( JSON.parse( auditionPlay.args[ 9 ] ).length, 2 );
   await client.auditionCommand( 'audition-realization-test', 'pause' );
   await waitFor( () => client.getState().audition.realizations[ 0 ].state === 'paused' );
+  await client.auditionSet( 'audition-realization-test', 'freqL', [ 70, 95 ], 1 );
+  const auditionSet = received.find( ( message ) => message.address === '/awb/audition/set' );
+  assert.deepEqual( auditionSet.args.slice( 2 ), [
+    'audition-realization-test', 'freqL', 1, 2, 70, 95
+  ] );
 
   await client.loadDocument( fixture );
   assert.equal( endCount, 2, 'missing chunks restart the complete snapshot' );
@@ -225,6 +236,12 @@ try {
   await waitFor( () => client.getState().realizations.length === 1 );
   assert.equal( client.getState().transport.runID, 'run-1' );
   assert.deepEqual( client.getState().realizations[ 0 ].nodeIDs, [ 1001, 1002 ] );
+  await client.realizationSet( fixture, client.getState().realizations[ 0 ], 'freq', [ 220, 330 ], 1 );
+  const realizationSet = received.find( ( message ) => message.address === '/awb/timeline/realization/set' );
+  assert.deepEqual( realizationSet.args.slice( 4 ), [
+    'run-1', 'realization-1', 'freq', 1, 2, 220, 330
+  ] );
+  assert.deepEqual( client.getState().realizations[ 0 ].params.freq, [ 220, 330 ] );
   await client.realizationCommand( fixture, client.getState().realizations[ 0 ], 'pause' );
   await waitFor( () => client.getState().realizations[ 0 ].state === 'paused' );
   await client.realizationCommand( fixture, client.getState().realizations[ 0 ], 'resume' );
@@ -277,7 +294,7 @@ try {
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
 
-  console.log( 'hosted-transport: 45/45 pass' );
+  console.log( 'hosted-transport: 49/49 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

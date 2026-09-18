@@ -66,7 +66,8 @@ function EnvelopeProjection( { envelope, values } ) {
 }
 
 export default function SynthDefDraftEditor( {
-  focus, onAudition, onStopAudition, auditionCount = 0
+  focus, onAudition, onStopAudition, auditionCount = 0,
+  onRuntimeSet, onRuntimeCommand
 } ) {
   const model = focus.description?.interface;
   const defaults = useMemo( () => synthDefDraftValues( model, focus.initialValues ),
@@ -77,8 +78,13 @@ export default function SynthDefDraftEditor( {
   if ( focus.error ) return <p className="error">{ focus.error }</p>;
   if ( !model ) return <p className="emptyCopy">Loading the exact compiled SynthDef interface…</p>;
 
-  function updateScalar( name, value ) {
+  function updateControl( name, value, controlWidth = 1 ) {
     setValues( ( current ) => ( { ...current, [ name ]: value } ) );
+    if ( focus.runtimeTarget && onRuntimeSet ) {
+      Promise.resolve( onRuntimeSet( name, value, controlWidth ) )
+        .then( ( applied ) => { if ( applied === false ) setError( 'That playing instance is no longer active.' ); } )
+        .catch( ( nextError ) => setError( nextError.message ) );
+    }
   }
 
   const editableEnvelope = model.envelopes.find( ( envelope ) => envelope.editor.kind === 'envArray' );
@@ -94,6 +100,15 @@ export default function SynthDefDraftEditor( {
     catch ( nextError ) { setError( nextError.message ); }
   }
 
+  async function runtimeCommand( action ) {
+    setError( '' );
+    try { await onRuntimeCommand( action ); }
+    catch ( nextError ) { setError( nextError.message ); }
+  }
+
+  const runtimeState = focus.runtimeTarget?.state;
+  const runtimeLive = [ 'running', 'started', 'paused', 'releasing', 'released', 'ending' ].includes( runtimeState );
+
   return <div className="synthDefDraft">
     { focus.signalKind !== 'audio' && <p className="nonAudioNotice"><strong>{ focus.signalKind } SynthDef</strong>
       { focus.signalKind === 'control'
@@ -106,42 +121,54 @@ export default function SynthDefDraftEditor( {
         ? <label key={ control.name }><span><code>{ control.name }</code>
           <small>{ control.roles.join( ', ' ) || control.rate }{ control.spec?.unit ? ` · ${ control.spec.unit }` : '' }</small></span>
           <input aria-label={ `Draft ${ control.name }` } type="number" value={ values[ control.name ] }
+            disabled={ Boolean( focus.runtimeTarget ) && !runtimeLive }
             min={ control.spec?.min } max={ control.spec?.max } step={ control.spec?.step || 'any' }
             onChange={ ( event ) => {
               const next = Number( event.target.value );
-              if ( Number.isFinite( next ) ) updateScalar( control.name, next );
+              if ( Number.isFinite( next ) ) updateControl( control.name, next, control.numChannels );
             } } /></label>
         : control.numChannels === 1
           ? <DraftExpandedControl key={ control.name } control={ control } value={ values[ control.name ] }
-            onChange={ ( value ) => setValues( ( current ) => ( { ...current, [ control.name ]: value } ) ) } />
+            disabled={ Boolean( focus.runtimeTarget ) && !runtimeLive }
+            onChange={ ( value ) => updateControl( control.name, value, control.numChannels ) } />
           : <DraftArrayControl key={ control.name } control={ control } value={ values[ control.name ] }
-            onChange={ ( value ) => setValues( ( current ) => ( { ...current, [ control.name ]: value } ) ) } /> ) }
+            disabled={ Boolean( focus.runtimeTarget ) && !runtimeLive }
+            onChange={ ( value ) => updateControl( control.name, value, control.numChannels ) } /> ) }
       </div>
     </section>
     <section className="synthDraftSection"><header><strong>Envelopes</strong>
       <small>Compiled envelope projections and editable controls where supported.</small></header>
       <div className="synthDraftEnvelopes">
-      { editableEnvelope && envelopeValue && <div className="compactEnvelopeEditor"><EnvelopeEditor
+      { editableEnvelope && envelopeValue && ( !focus.runtimeTarget || runtimeLive ) && <div className="compactEnvelopeEditor"><EnvelopeEditor
         value={ envelopeValue } maxSegments={ editableEnvelope.editor.maxSegments }
         onAudition={ play }
-        onChange={ ( envelope ) => updateScalar( editableEnvelope.editor.control,
-          [ ...scEnvAsControlArray( envelope, editableEnvelope.editor.maxSegments ) ] ) } /></div> }
+        onChange={ ( envelope ) => updateControl( editableEnvelope.editor.control,
+          [ ...scEnvAsControlArray( envelope, editableEnvelope.editor.maxSegments ) ],
+          model.controls.find( ( control ) => control.name === editableEnvelope.editor.control )?.numChannels ?? 1 ) } /></div> }
       { model.envelopes.length ? model.envelopes.map( ( envelope ) => <EnvelopeProjection
         key={ envelope.ugenIndex } envelope={ envelope } values={ values } /> )
         : <p className="emptyCopy">No EnvGen envelope found in the compiled graph.</p> }
       </div>
     </section>
-    <div className="focusAuditionActions">
+    { focus.runtimeTarget ? <div className="focusAuditionActions">
+      <button disabled={ !runtimeLive || [ 'releasing', 'released', 'ending' ].includes( runtimeState ) }
+        onClick={ () => runtimeCommand( runtimeState === 'paused' ? 'resume' : 'pause' ) }>
+        { runtimeState === 'paused' ? 'Play' : 'Pause' }</button>
+      <button disabled={ !runtimeLive } onClick={ () => runtimeCommand( 'free' ) }>Stop</button>
+      <span>Editing the existing { focus.runtimeTarget.kind } realization · { runtimeState ?? 'ended' }.</span>
+    </div> : <div className="focusAuditionActions">
       <button disabled={ focus.signalKind !== 'audio' || !onAudition } onClick={ play }>Play</button>
       <button disabled={ auditionCount === 0 } onClick={ onStopAudition }>Stop ({ auditionCount })</button>
       <span>Each Play creates a fresh owned realization.</span>
-    </div>
+    </div> }
     { error && <p className="error">{ error }</p> }
-    <p className="boundaryNote">Draft only. Auditioning does not create or modify a score event.</p>
+    <p className="boundaryNote">{ focus.runtimeTarget
+      ? 'Live edit. Control changes are sent to the selected running node; they do not rewrite the authored score event.'
+      : 'Draft only. Auditioning does not create or modify a score event.' }</p>
   </div>;
 }
 
-function DraftExpandedControl( { control, value, onChange } ) {
+function DraftExpandedControl( { control, value, onChange, disabled = false } ) {
   const [ text, setText ] = useState( () => formatScValue( value ) );
   const [ error, setError ] = useState( '' );
   useEffect( () => setText( formatScValue( value ) ), [ value ] );
@@ -157,14 +184,14 @@ function DraftExpandedControl( { control, value, onChange } ) {
   }
   return <label className="draftArrayControl"><span><code>{ control.name }</code>
     <small>{ value.length } expanded voices</small></span>
-    <input aria-label={ `Draft ${ control.name }` } value={ text }
+    <input aria-label={ `Draft ${ control.name }` } value={ text } disabled={ disabled }
       onChange={ ( event ) => setText( event.target.value ) } onBlur={ commit }
       onKeyDown={ ( event ) => { if ( event.key === 'Enter' ) { event.preventDefault(); commit(); } } } />
     { error && <small className="error">{ error }</small> }
   </label>;
 }
 
-function DraftArrayControl( { control, value, onChange } ) {
+function DraftArrayControl( { control, value, onChange, disabled = false } ) {
   const [ text, setText ] = useState( () => formatScValue( scRef( value ) ) );
   const [ error, setError ] = useState( '' );
   useEffect( () => setText( formatScValue( scRef( value ) ) ), [ value ] );
@@ -180,7 +207,7 @@ function DraftArrayControl( { control, value, onChange } ) {
   }
   return <label className="draftArrayControl"><span><code>{ control.name }</code>
     <small>{ control.numChannels } literal values</small></span>
-    <input aria-label={ `Draft ${ control.name }` } value={ text }
+    <input aria-label={ `Draft ${ control.name }` } value={ text } disabled={ disabled }
       onChange={ ( event ) => setText( event.target.value ) } onBlur={ commit }
       onKeyDown={ ( event ) => { if ( event.key === 'Enter' ) { event.preventDefault(); commit(); } } } />
     { error && <small className="error">{ error }</small> }
