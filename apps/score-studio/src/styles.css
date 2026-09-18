@@ -25,8 +25,8 @@ input, textarea { border: 1px solid var(--line); border-radius: 5px; background:
 .saveState { color: var(--muted); font-size: 11px; }.saveState.dirty { color: #f0b466; }
 .modeSwitch { margin-left: auto; display: flex; padding: 2px; border: 1px solid var(--line); border-radius: 8px; }
 .modeSwitch button { border: 0; background: transparent; text-transform: capitalize; }.modeSwitch button.active { background: var(--panel-2); color: var(--accent); }
-.panelLayout { --bottom-panel-height: 300px; flex: 1; min-height: 0; display: grid; grid-template-columns: 300px minmax(420px, 1fr) 280px; grid-template-rows: minmax(0, 1fr) var(--bottom-panel-height); }
-.panelLayout.leftCollapsed { grid-template-columns: 52px minmax(420px, 1fr) 280px; }
+.panelLayout { --bottom-panel-height: 300px; flex: 1; min-height: 0; display: grid; grid-template-columns: 300px minmax(420px, 1fr) 320px; grid-template-rows: minmax(0, 1fr) var(--bottom-panel-height); }
+.panelLayout.leftCollapsed { grid-template-columns: 52px minmax(420px, 1fr) 320px; }
 .panelLayout.rightCollapsed { grid-template-columns: 300px minmax(420px, 1fr) 32px; }
 .panelLayout.leftCollapsed.rightCollapsed { grid-template-columns: 52px minmax(420px, 1fr) 32px; }
 .panelLayout.bottomCollapsed { grid-template-rows: minmax(0, 1fr) 31px; }
@@ -133,9 +133,9 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .draftArrayControl > span { display: grid; }
 .compactEnvelopeEditor .envelopeEditor { max-width: 720px; }
 .compactEnvelopeEditor .envelopeCurveEditor svg { max-height: 130px; }
-.auditionVoice { display: grid; gap: 5px; }
-.realizationFocus { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; width: 100%; text-align: left; }
-.realizationFocus small { grid-column: 1 / -1; }
+.auditionVoice { display: grid; grid-template-columns: minmax(0, 1fr); gap: 5px; }
+.realizationFocus { display: grid; gap: 2px; width: 100%; min-width: 0; text-align: left; }
+.realizationFocus strong { white-space: nowrap; }
 .realizationActions { display: flex; gap: 4px; }
 .viewTabs, .subtabs { display: flex; gap: 4px; align-items: center; padding: 8px; border-bottom: 1px solid var(--line); background: #151513; }
 .viewTabs button, .subtabs button { border-color: transparent; background: transparent; }.viewTabs button.active, .subtabs button.active { color: var(--accent); border-color: var(--line); background: var(--panel-2); }

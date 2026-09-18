@@ -3,6 +3,7 @@ import { scEnvAsControlArray, scEnvFromControlArray } from '@awb/sc-envelope';
 import EnvelopeEditor from './EnvelopeEditor.jsx';
 import { formatScValue, parseScValue } from '../engine/scValueSyntax.js';
 import { scRef, unwrapScRef } from '../engine/scEventSemantics.js';
+import { synthDefDraftValues } from '../engine/synthDefDraftValues.js';
 
 const formatNumber = ( value ) => Number.isFinite( value ) ? Number( value.toPrecision( 7 ) ) : value;
 
@@ -68,8 +69,8 @@ export default function SynthDefDraftEditor( {
   focus, onAudition, onStopAudition, auditionCount = 0
 } ) {
   const model = focus.description?.interface;
-  const defaults = useMemo( () => Object.fromEntries( ( model?.controls ?? [] )
-    .map( ( control ) => [ control.name, control.default ] ) ), [ model ] );
+  const defaults = useMemo( () => synthDefDraftValues( model, focus.initialValues ),
+    [ focus.initialValues, model ] );
   const [ values, setValues ] = useState( defaults );
   const [ error, setError ] = useState( '' );
   if ( focus.stale ) return <p className="emptyCopy">The hosted SynthDef context changed. Refreshing this exact interface before it can be inspected or auditioned.</p>;
@@ -99,7 +100,7 @@ export default function SynthDefDraftEditor( {
         ? 'This graph writes control-rate output. It is available for inspection and composition, but it is not an audible audition target.'
         : 'This utility graph has no audio/control output path. It is available for inspection and composition, but Play will remain unavailable.' }</p> }
     <div className="synthDraftControls">
-      { model.controls.map( ( control ) => control.numChannels === 1
+      { model.controls.map( ( control ) => control.numChannels === 1 && !Array.isArray( values[ control.name ] )
         ? <label key={ control.name }><span><code>{ control.name }</code>
           <small>{ control.roles.join( ', ' ) || control.rate }{ control.spec?.unit ? ` · ${ control.spec.unit }` : '' }</small></span>
           <input aria-label={ `Draft ${ control.name }` } type="number" value={ values[ control.name ] }
@@ -108,8 +109,11 @@ export default function SynthDefDraftEditor( {
               const next = Number( event.target.value );
               if ( Number.isFinite( next ) ) updateScalar( control.name, next );
             } } /></label>
-        : <DraftArrayControl key={ control.name } control={ control } value={ values[ control.name ] }
-          onChange={ ( value ) => setValues( ( current ) => ( { ...current, [ control.name ]: value } ) ) } /> ) }
+        : control.numChannels === 1
+          ? <DraftExpandedControl key={ control.name } control={ control } value={ values[ control.name ] }
+            onChange={ ( value ) => setValues( ( current ) => ( { ...current, [ control.name ]: value } ) ) } />
+          : <DraftArrayControl key={ control.name } control={ control } value={ values[ control.name ] }
+            onChange={ ( value ) => setValues( ( current ) => ( { ...current, [ control.name ]: value } ) ) } /> ) }
     </div>
     <div className="synthDraftEnvelopes">
       { editableEnvelope && envelopeValue && <div className="compactEnvelopeEditor"><EnvelopeEditor
@@ -129,6 +133,29 @@ export default function SynthDefDraftEditor( {
     { error && <p className="error">{ error }</p> }
     <p className="boundaryNote">Draft only. Auditioning does not create or modify a score event.</p>
   </div>;
+}
+
+function DraftExpandedControl( { control, value, onChange } ) {
+  const [ text, setText ] = useState( () => formatScValue( value ) );
+  const [ error, setError ] = useState( '' );
+  useEffect( () => setText( formatScValue( value ) ), [ value ] );
+  function commit() {
+    try {
+      const parsed = parseScValue( text );
+      if ( !Array.isArray( parsed ) || parsed.length === 0
+        || parsed.some( ( item ) => !Number.isFinite( item ) ) ) {
+        throw new Error( 'Voice array must contain one or more finite numbers.' );
+      }
+      onChange( parsed ); setError( '' );
+    } catch ( nextError ) { setError( nextError.message ); }
+  }
+  return <label className="draftArrayControl"><span><code>{ control.name }</code>
+    <small>{ value.length } expanded voices</small></span>
+    <input aria-label={ `Draft ${ control.name }` } value={ text }
+      onChange={ ( event ) => setText( event.target.value ) } onBlur={ commit }
+      onKeyDown={ ( event ) => { if ( event.key === 'Enter' ) { event.preventDefault(); commit(); } } } />
+    { error && <small className="error">{ error }</small> }
+  </label>;
 }
 
 function DraftArrayControl( { control, value, onChange } ) {
