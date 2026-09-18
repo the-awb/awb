@@ -1,8 +1,9 @@
 # Score Studio GUI restructure and smart-seek handoff
 
-Status: Slices A, B, C and C.1 are on `main`; Slice D is implemented on `codex/smart-seek` pending
-merge and live UI acceptance. The old all-instrument rack remains available
-only to the browser host as a compatibility surface. It is not exposed by the hosted-only shell.
+Status: Slices A, B, C, C.1 and D are present in the current integration history. Smart seek and
+the restructured UI still require continuing live acceptance. The old all-instrument rack remains
+available only to the browser host as a compatibility surface. It is not exposed by the hosted-only
+shell.
 
 Definition-library policy: desktop sclang/scsynth has one active process-global SynthDef library.
 Tools and scores may legitimately provide different compiled graphs under the same visible symbol.
@@ -363,6 +364,53 @@ remains the authoritative scheduler and atomically applies the plan to a fresh r
 explicit browser-standalone host uses `StandaloneScoreExecutor` to apply the same plan. The React
 tool selects seek mode and displays the report; it never performs reconstruction itself.
 
+### 5.4 Live editing during playback
+
+Editing the open score while it plays must not install the new revision by stopping the player and
+starting over. It must not clear realization UI before the engine reports those nodes ended. The
+editor may be on a newer authored revision than the running projection and should show that fact
+literally, for example `editing r16 / playing r15`.
+
+The transport model distinguishes:
+
+- **audible position** — the engine-authoritative playhead;
+- **committed frontier** — the next boundary after all events already evaluated and dispatched;
+- **editable future** — entries not yet pulled by the current executor.
+
+In hosted SuperCollider, `EventStreamPlayer` pulls an event only at its clock wake-up. It then plays
+that event and schedules its next wake-up from the returned delta. The server command for the
+pulled event may already be timestamped ahead by latency or event timing offsets, so that event is
+committed even if its sound has not yet reached the output. Replacing the player's stream changes
+the next pull; it cannot retract the already dispatched event. The browser executor must model the
+same frontier explicitly rather than using UI render time as a substitute.
+
+An explicit `replaceFuture(newDocument, frontier)` operation should:
+
+1. preserve the current run ID, clock anchor and every existing realization;
+2. retain the already scheduled wake-up at `frontier`;
+3. build a replacement stream/schedule only from entries at or after that frontier;
+4. preserve an exact initial rest when the first replacement entry occurs later;
+5. reject or defer newly moved entries that now fall before the frontier;
+6. tag newly created realizations with the source revision/generation that supplied them.
+
+Future replacement never invokes smart seek. Smart seek is reserved for an explicit transport
+move and may reconcile and reconstruct nodes. A future edit merely replaces material that has not
+started; it must neither duplicate an overlapping live note nor alter its existing node identity.
+Later authored `set`, `release` and `free` commands may still target that live realization by stable
+run/realization identity.
+
+Only one replacement tail is pending at a time. Several document revisions accepted before the
+next stream pull simply replace that tail repeatedly; the latest accepted revision wins. Requests
+use expected execution generation and frontier guards. If the player pulls an Event between two
+requests, that Event is committed from the earlier revision and the next replacement begins at the
+new frontier rather than attempting to undo it.
+
+Hosted NodeManager and the browser-local node registry are alternative lifecycle authorities, not
+parallel registries. If NodeManager is deliberately disabled, ordinary desktop playback may
+continue untracked; the player does not restore its own lifecycle registry as a fallback. The
+selected registry pushes start, pause, release, end and membership changes. The player may cache a
+derived projection for UI, while snapshot queries remain recovery/inspection operations.
+
 ## 6. State and component boundaries
 
 Do not make `App.jsx` larger. This refactor is the right moment to extract:
@@ -455,6 +503,17 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
   skipped counts; a richer hosted report/details surface remains UI polish rather than scheduler
   work.
 
+### Slice E — live future replacement
+
+- separate authored/editor revision from the running projection revision in UI and adapter state;
+- stop automatic whole-player replacement when an edit arrives during playback or pause;
+- expose the executor's committed frontier and replace only its unconsumed score tail;
+- preserve the current run and live NodeManager/browser-registry realizations across replacement;
+- carry a source revision/generation on realizations created after the swap;
+- keep smart-seek reconstruction disabled for ordinary future replacement;
+- reconcile natural completion only when the source stream has ended and the lifecycle authority
+  reports no live realizations for the run.
+
 ## 8. Acceptance criteria
 
 - Left Document and Instruments tabs work in the shared renderer without desktop/browser forks.
@@ -487,6 +546,10 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 - Smart seek never mutates authored entries, never reuses old realization IDs or changes remaining
   note/event timing. It classifies exact and lifecycle-correct reconstruction, reports acoustic
   approximations, and skips notes whose remaining lifetime or essential state is unknown.
+- Editing during playback changes only the uncommitted future. It does not reset transport, replace
+  the run, recreate live notes, clear lifecycle state or replay an entry moved into the past.
+- Hosted and standalone executors report equivalent audible-position and committed-frontier
+  semantics despite using different schedulers and lifecycle registries.
 - Existing hosted readiness, save, transport, typed/raw event editing, browser smoke and real hosted
   sclang gates remain green. Browser-standalone gates remain green for the web host; the shell must
   not expose that mode.
@@ -519,3 +582,6 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
     disposable voices; `PTimelineOSCBridge` and the score ToolSession do not.
 12. **Do not turn audition into an orphan bucket.** Ownership starts with an explicit audition
     request and extends only to the nodes created for that realization.
+13. **Do not confuse audible time with editable time.** Server latency and event timing offsets may
+    commit an event before it is heard; only entries beyond the executor's reported frontier are
+    safe to replace.

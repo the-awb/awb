@@ -11,6 +11,51 @@ request semantics, transport state or clocks. Pair-save ordering, canonical vali
 identity checks and external-change guards also remain outside the contract or are passed into its
 save operations as data.
 
+## Live revision and execution frontier
+
+The open editor document and a running execution projection may legitimately have different
+revisions. A document edit must not implicitly stop playback, clear runtime realizations, reset the
+playhead or install a whole new player. The execution adapter reports both revisions when they
+differ, for example `editing r16 / playing r15`.
+
+An executor exposes three separate positions:
+
+1. **audible position** — the latest authoritative transport position;
+2. **committed frontier** — the first boundary after every event already evaluated and dispatched;
+3. **editable future** — authored material at or beyond that frontier which has not been pulled.
+
+For desktop SuperCollider, `EventStreamPlayer` evaluates one event at a clock wake-up, calls
+`Event.play`, and uses that event's delta to schedule its next wake-up. `Event.play` may already
+have sent a timestamped server bundle using server latency, timing offset, lag or strum. A stream
+replacement can therefore change the next unevaluated event, but cannot retract the event whose
+OSC command is already committed. Browser execution must expose the equivalent boundary even
+though its scheduler is implemented in JavaScript.
+
+Two operations must remain distinct:
+
+- **replace future** preserves the run, clock and existing nodes, swaps only unconsumed material,
+  and performs no smart-seek reconstruction;
+- **seek** changes transport time, reconciles nodes belonging to the old execution position, and
+  may reconstruct authored notes logically alive at the requested target.
+
+If the first event in a replacement occurs after the committed frontier, the executor preserves
+that exact gap rather than snapping it to the frontier. Edits moved into the committed past are
+deferred to a later run or explicitly rejected; they are never replayed into the current run.
+Existing nodes may still receive future identity-bound `set`, `release` or `free` commands.
+
+There is one pending future projection, not a queue of revisions. If revisions 16, 17 and 18 are
+accepted before the player reaches its next pull boundary, each replacement supersedes the previous
+tail and revision 18 is what the player reads. Every request uses compare-and-swap execution
+generation/frontier guards. If a wake-up occurs between replacements, any Event already pulled from
+the earlier accepted revision is committed; the next request must use the newly reported frontier.
+
+Each engine has exactly one realization-lifecycle authority. Hosted tracked execution uses
+NodeManager; browser standalone uses its local node registry. When NodeManager is deliberately
+disabled, ordinary desktop playback may continue untracked, but it must not revive a hidden
+self-tracking registry inside the player. Normal lifecycle is pushed to the player and UI. Queries
+are reserved for initial snapshots, reconnect/gap recovery and inspection, never a second
+competing registry inside the player.
+
 ## Remaining browser-only assumptions
 
 - The file-input element used when File System Access is unavailable.

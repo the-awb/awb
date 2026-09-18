@@ -66,6 +66,33 @@ into the authored document. `createScoreDocument()`, `reviseScoreDocument()`, va
 canonical serialization and SHA-256 hashing live here because hosted and standalone modes must
 agree on exactly what was loaded.
 
+Authored revision and execution revision are deliberately separate. Editing an open document may
+advance its revision while an older projection is still playing. That does not reset transport,
+stop realized nodes or make the new revision retroactively true of the current run. An executor may
+adopt the unconsumed future of a newer revision at an explicit execution frontier, but this package
+neither chooses that frontier nor mutates runtime state.
+
+Three times must therefore remain distinguishable in an editor/executor integration:
+
+- the audible transport position reported by the engine;
+- the committed frontier through which events have already been evaluated and dispatched;
+- the editable future, whose entries have not yet been pulled by the executor.
+
+This package owns only the authored entries. Player clocks, committed-event bookkeeping and live
+node registries belong to execution adapters.
+
+### Composite-score compatibility boundary, not a roadmap item
+
+`awb.score/1` remains one deterministic flat timeline. The current architecture does not exclude a
+larger score from coordinating several such timelines alongside finite or nondeterministic native
+streams without flattening their internal timing into this format. If that is ever needed, the
+outer model would need source, player/run, local time-domain and capability identity. A native
+Pattern may have a known launch cue but no statically authored internal chronology.
+
+This is an extension boundary, not planned graph-format work. Do not expand this schema unless a
+real workflow requires and tests that model. In particular, do not invent absolute entries for
+events emitted by a nondeterministic Pattern.
+
 Canonical JSON uses recursively sorted object keys, two-space indentation and one trailing LF.
 Array order is retained: same-time entry order is semantic. The shared connector fixture is in
 `fixtures/connector-v1/`; its manifest pins the canonical hash, expected SC normalization and the
