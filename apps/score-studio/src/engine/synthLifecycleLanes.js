@@ -137,3 +137,34 @@ export function lifecycleDefinitionsForEntry( score, entryID ) {
       && lane.events.some( ( marker ) => marker.entry.id === entryID ) )
     .map( ( lane ) => lane.definition ) ) ];
 }
+
+function sameValue( left, right ) {
+  if ( Object.is( left, right ) ) return true;
+  if ( left === undefined || right === undefined ) return false;
+  try { return JSON.stringify( left ) === JSON.stringify( right ); }
+  catch { return false; }
+}
+
+export function lifecycleInheritedValuesForEntry( score, entryID ) {
+  const parentStates = projectSynthLifecycleLanes( score )
+    .filter( ( lane ) => lane.id !== '__unassigned__'
+      && lane.events.some( ( marker ) => marker.entry.id === entryID && marker.role === 'set' ) )
+    .map( ( lane ) => {
+      const state = {};
+      for ( const marker of lane.events ) {
+        if ( marker.entry.id === entryID && marker.role === 'set' ) break;
+        if ( marker.role === 'create' || marker.role === 'set' ) {
+          for ( const [ name, value ] of Object.entries( marker.entry.event ) ) {
+            if ( ![ 'type', 'target', 'def', 'instrument' ].includes( name ) ) state[ name ] = value;
+          }
+        }
+      }
+      return state;
+    } );
+  if ( !parentStates.length ) return null;
+  const shared = { ...parentStates[ 0 ] };
+  for ( const name of Object.keys( shared ) ) {
+    if ( !parentStates.every( ( state ) => sameValue( state[ name ], shared[ name ] ) ) ) delete shared[ name ];
+  }
+  return Object.freeze( shared );
+}

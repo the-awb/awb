@@ -7,10 +7,10 @@ import { formatScValue, parseScValue } from '../engine/scValueSyntax.js';
 const COMMON_TYPES = [ 'note', 'set', 'release', 'free' ];
 
 export default function EventPayloadEditor( {
-  event, inheritedDefinition = null, availableSynthDefs = [], onChange
+  event, inheritedDefinition = null, inheritedValues = null, availableSynthDefs = [], onChange
 } ) {
   if ( !event ) return <p className="typedPayloadUnavailable">Fix the raw JSON to use typed controls.</p>;
-  const fields = payloadFields( event, inheritedDefinition );
+  const fields = payloadFields( event, inheritedDefinition, inheritedValues );
   const selectedSynthDef = event.def ?? event.instrument ?? '';
   const synthDefs = mergeSynthDefNames(
     Object.values( INSTRUMENT_CATALOG ).map( ( descriptor ) => descriptor.synthDef ),
@@ -42,12 +42,16 @@ export default function EventPayloadEditor( {
       <div className="payloadFieldGrid">
         { fields.map( ( field ) => field.kind === 'boolean'
           ? <label key={ field.name } className="payloadBoolean">
-            <input aria-label={ `Payload ${ field.name }` } type="checkbox" checked={ event[ field.name ] ?? false }
+            <input aria-label={ `Payload ${ field.name }` } type="checkbox"
+              className={ event[ field.name ] === undefined && field.defaultValue !== undefined
+                ? 'payloadInheritedDefault' : undefined }
+              checked={ event[ field.name ] ?? field.defaultValue ?? false }
               onChange={ ( change ) => update( field.name, change.target.checked, 'boolean' ) } />
             { field.label }
           </label>
           : field.kind === 'json'
             ? <ScValueField key={ field.name } name={ field.name } value={ event[ field.name ] }
+              inheritedValue={ field.defaultValue }
               onChange={ ( value ) => update( field.name, value, 'json' ) } />
             : <label key={ field.name }>{ field.label }{ field.unit ?? '' }
               <input aria-label={ `Payload ${ field.name }` } type={ field.kind }
@@ -63,7 +67,7 @@ export default function EventPayloadEditor( {
   );
 }
 
-function ScValueField( { name, value, onChange } ) {
+function ScValueField( { name, value, inheritedValue, onChange } ) {
   const [ text, setText ] = useState( () => formatScValue( value ) );
   const [ error, setError ] = useState( '' );
   useEffect( () => setText( formatScValue( value ) ), [ value ] );
@@ -73,6 +77,8 @@ function ScValueField( { name, value, onChange } ) {
   }
   return <label className="payloadScValue">{ name }
     <input aria-label={ `Payload ${ name }` } value={ text }
+      className={ value === undefined && inheritedValue !== undefined ? 'payloadInheritedDefault' : undefined }
+      placeholder={ inheritedValue === undefined ? undefined : formatScValue( inheritedValue ) }
       onChange={ ( event ) => setText( event.target.value ) }
       onBlur={ commit }
       onKeyDown={ ( event ) => { if ( event.key === 'Enter' ) { event.preventDefault(); commit(); } } } />

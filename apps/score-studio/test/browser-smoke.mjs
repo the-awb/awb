@@ -155,6 +155,26 @@ try {
   const firstBar = page.locator( '.synthBar' ).first();
   await page.locator( '.tick' ).nth( 1 ).click();
   await firstBar.click();
+  await page.getByRole( 'button', { name: '+ set', exact: true } ).click();
+  const inheritedFreq = page.getByLabel( 'Payload freqA', { exact: true } );
+  const inheritedAmp = page.getByLabel( 'Payload amp', { exact: true } );
+  if ( await inheritedFreq.inputValue() !== '' || await inheritedFreq.getAttribute( 'placeholder' ) !== '36' ) {
+    failures.push( 'set editor did not show the parent frequency as a non-authored default' );
+  }
+  if ( await inheritedAmp.inputValue() !== '' || await inheritedAmp.getAttribute( 'placeholder' ) !== '0.25' ) {
+    failures.push( 'set editor did not expose a non-catalogued parent control as an inherited default' );
+  }
+  const sparseSetBefore = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
+  if ( sparseSetBefore.freqA !== undefined || sparseSetBefore.amp !== undefined ) {
+    failures.push( 'inherited set defaults leaked into the authored payload' );
+  }
+  await inheritedAmp.fill( '0.5' );
+  const sparseSetAfter = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
+  if ( sparseSetAfter.amp !== 0.5 || sparseSetAfter.freqA !== undefined ) {
+    failures.push( 'set editor did not serialize only the explicitly changed control' );
+  }
+  await page.getByRole( 'button', { name: 'Delete', exact: true } ).click();
+  await firstBar.click();
   await page.getByRole( 'button', { name: '+ release', exact: true } ).click();
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'authored release was not projected as a child of its parent synth lane' );
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'expanded synth did not disclose its release trigger' );
@@ -389,4 +409,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 74/74 pass' );
+console.log( 'score-studio-browser: 78/78 pass' );
