@@ -325,6 +325,9 @@ try {
   if ( await page.locator( '.instrumentCard' ).count() !== 2 ) failures.push( 'real demo instrument panel did not show its two SynthDefs' );
   const polyLane = page.locator( '.synthLane' ).filter( { has: page.locator( '.synthLaneName small' ).filter( { hasText: '×' } ) } ).first();
   if ( await polyLane.count() ) {
+    if ( await polyLane.locator( '.synthVoiceChild' ).count() !== 0 ) {
+      failures.push( 'polyphonic score event expanded its derived voices by default' );
+    }
     await polyLane.locator( '.synthDisclosure' ).click();
     if ( await polyLane.locator( '.synthVoiceChild' ).count() < 2 ) failures.push( 'polyphonic score event did not expose derived voice children' );
     else {

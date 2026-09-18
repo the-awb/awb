@@ -428,7 +428,12 @@ export default function App( { host, createHostedClient } ) {
   async function commandScoreRealization( realization, action, nodeID = null ) {
     if ( session.mode === MODES.HOSTED ) {
       await hostedAction( () => hostedClient.realizationCommand( session.document, realization, action, nodeID ) );
-    } else standaloneExecutor.commandRealization( nodeID ?? realization.nodeID, action );
+    } else {
+      const targets = nodeID === null
+        ? realization.nodeIDs ?? [ realization.nodeID ].filter( ( value ) => value !== undefined )
+        : [ nodeID ];
+      for ( const target of targets ) standaloneExecutor.commandRealization( target, action );
+    }
   }
 
   async function setScoreRealization( realization, control, value, controlWidth, nodeID = null ) {
@@ -1055,14 +1060,12 @@ function AuditionRuntimePanel( { realizations, onFocus, onCommand, onAuditionCop
   return <section className="auditionRuntime"><h2>Auditions</h2>
     { visible.length ? visible.map( ( realization ) => {
       const voices = voicesForRealization( realization );
-      return <div className="runtimeRealizationGroup" key={ realization.realizationID }>
-        <header><strong>{ formatScSymbol( realization.definition ) }</strong>
-          <small>{ voices.length } voice{ voices.length === 1 ? '' : 's' }</small></header>
-        { voices.map( ( voice ) => <RuntimeVoiceRow key={ voice.nodeID } realization={ realization }
-          voice={ voice } onFocus={ onFocus } onCommand={ ( item, action, nodeID ) => onCommand( item.realizationID, action, nodeID ) }
-          onAuditionCopy={ onAuditionCopy } /> ) }
+      return <RuntimeRealizationGroup key={ realization.realizationID } realization={ realization }
+        voices={ voices } definition={ realization.definition } onFocus={ onFocus }
+        onCommand={ ( item, action, nodeID ) => onCommand( item.realizationID, action, nodeID ) }
+        onAuditionCopy={ onAuditionCopy }>
         { realization.error && <small className="error">{ realization.error }</small> }
-      </div>;
+      </RuntimeRealizationGroup>;
     } ) : <p className="emptyCopy">No audition voices.</p> }
   </section>;
 }
@@ -1075,14 +1078,48 @@ function ScoreRealizationPanel( { document, realizations, onFocus, onCommand, on
       const entry = document.entries.find( ( candidate ) => candidate.id === realization.entryID );
       const definition = realization.definition ?? entry?.event?.def ?? entry?.event?.instrument ?? 'unknown';
       const voices = voicesForRealization( realization, entry?.event );
-      return <div className="runtimeRealizationGroup" key={ realization.realizationID ?? realization.nodeID }>
-        <header><strong>{ formatScSymbol( definition ) }</strong><small>{ realization.entryID }</small></header>
-        { voices.map( ( voice ) => <RuntimeVoiceRow key={ voice.nodeID } realization={ realization }
-          voice={ voice } entry={ entry } onFocus={ onFocus } onCommand={ onCommand }
-          onAuditionCopy={ onAuditionCopy } /> ) }
-      </div>;
+      return <RuntimeRealizationGroup key={ realization.realizationID ?? realization.nodeID }
+        realization={ realization } voices={ voices } definition={ definition } detail={ realization.entryID }
+        entry={ entry } onFocus={ onFocus } onCommand={ onCommand } onAuditionCopy={ onAuditionCopy } />;
     } ) : <p className="emptyCopy">No score voices currently playing.</p> }
   </section>;
+}
+
+function RuntimeRealizationGroup( {
+  realization, voices, definition, detail = '', entry = null, onFocus, onCommand, onAuditionCopy, children
+} ) {
+  const [ expanded, setExpanded ] = useState( false );
+  const polyphonic = voices.length > 1;
+  const running = voices.some( ( voice ) => [ 'started', 'running' ].includes( voice.state ) );
+  const paused = !running && voices.some( ( voice ) => voice.state === 'paused' );
+  const live = running || paused;
+  const finishing = voices.some( ( voice ) => [ 'releasing', 'released', 'ending' ].includes( voice.state ) );
+  const label = polyphonic ? `${ voices.length } voices` : voices[ 0 ]?.label ?? 'voice';
+  return <div className="runtimeRealizationGroup">
+    <header className="runtimeRealizationSummary">
+      { polyphonic && <button className="runtimeDisclosure"
+        aria-label={ `${ expanded ? 'Collapse' : 'Expand' } ${ formatScSymbol( definition ) } voices` }
+        onClick={ () => setExpanded( !expanded ) }>{ expanded ? '▾' : '▸' }</button> }
+      <button className="realizationFocus" disabled={ !voices.length }
+        onClick={ () => polyphonic ? setExpanded( !expanded ) : onFocus( realization, voices[ 0 ] ) }>
+        <strong>{ formatScSymbol( definition ) }</strong><small>{ label }{ detail ? ` · ${ detail }` : '' }</small>
+      </button>
+      <div className="realizationActions aggregateActions">
+        <button disabled={ !live } onClick={ () => onCommand( realization, paused ? 'resume' : 'pause', null ) }>
+          { paused ? 'Resume' : running ? 'Pause' : 'Unavailable' }</button>
+        <button disabled={ !live } onClick={ () => onCommand( realization, 'release', null ) }>Release</button>
+        <button disabled={ !( live || finishing ) } onClick={ () => onCommand( realization, 'free', null ) }>Free</button>
+        { !polyphonic && voices[ 0 ] && <button
+          onClick={ () => onAuditionCopy( realization, voices[ 0 ], entry ) }>Audition copy</button> }
+      </div>
+    </header>
+    { polyphonic && expanded && <div className="runtimeVoiceChildren">
+      { voices.map( ( voice ) => <RuntimeVoiceRow key={ voice.nodeID } realization={ realization }
+        voice={ voice } entry={ entry } onFocus={ onFocus } onCommand={ onCommand }
+        onAuditionCopy={ onAuditionCopy } /> ) }
+    </div> }
+    { children }
+  </div>;
 }
 
 function RuntimeVoiceRow( { realization, voice, entry = null, onFocus, onCommand, onAuditionCopy } ) {
