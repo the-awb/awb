@@ -28,10 +28,12 @@ const standalone = createStandaloneAuditionAdapter( {
   nodeIDStart: 9000
 } );
 const hostedState = { audition: { realizations: [] } };
+const hostedEventRequests = [];
 const hosted = {
   subscribe: () => () => {}, getState: () => hostedState,
   auditionPlay: () => { throw new Error( 'not used' ); }, auditionCommand: () => { throw new Error( 'not used' ); },
-  auditionSet: () => { throw new Error( 'not used' ); }
+  auditionSet: () => { throw new Error( 'not used' ); },
+  auditionEvent: async ( request ) => { hostedEventRequests.push( request ); return { ok: true }; }
 };
 const controller = createAuditionController( { hostedClient: hosted, standaloneAdapter: standalone } );
 const result = await controller.play( {
@@ -83,5 +85,19 @@ reply( { address: '/n_end', arguments: [ 9001 ] } );
 reply( { address: '/n_end', arguments: [ 9002 ] } );
 assert.equal( controller.getState().realizations.length, 0,
   'completed auditions leave the live audition panel' );
+
+await controller.playEvent( {
+  mode: 'hosted', contextID: 'scoreEvent:ev-1', draftID: 'event:ev-1',
+  event: { type: 'note', def: 'test', midinote: 69, dur: 2, legato: 0.5 },
+  contextGeneration: 4, fingerprint: 'test-fingerprint'
+} );
+assert.deepEqual( hostedEventRequests[ 0 ].event,
+  { type: 'note', def: 'test', midinote: 69, dur: 2, legato: 0.5 },
+  'native Event audition preserves the complete authored event payload' );
+assert.equal( controller.getState().realizations.at( -1 ).kind, 'event' );
+await assert.rejects( controller.playEvent( {
+  mode: 'standalone', contextID: 'scoreEvent:ev-1', draftID: 'event:ev-1',
+  event: { type: 'note', def: 'test', dur: 1 }
+} ), /requires hosted sclang/ );
 
 console.log( 'audition-controller: pass' );

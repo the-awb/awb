@@ -108,9 +108,15 @@ assert.deepEqual(
 check( 'plural envelopes retain role, target, shape and lifecycle authority' );
 
 assert.deepEqual( instrumentNoteLifecycle( 'substrate', { dur: 300, attackT: 20, releaseT: 24 } ), {
-  duration: 300, totalDuration: 300, gateDuration: 276,
-  gateSource: 'instrument', attack: 20, release: 24
+  duration: 300, totalDuration: 264, gateDuration: 240,
+  gateSource: 'defaultLegato', attack: 20, release: 24
 } );
+assert.deepEqual( instrumentNoteLifecycle( 'substrate', {
+  dur: 300, sustain: 100, attackT: 20, releaseT: 24
+} ), {
+  duration: 300, totalDuration: 124, gateDuration: 100,
+  gateSource: 'sustain', attack: 20, release: 24
+}, 'release duration remains independent of event duration and sustain' );
 assert.equal( instrumentNoteLifecycle( 'resobass2', { dur: 20, sustain: 4 } ), null );
 assert.equal( instrumentNoteLifecycle( 'missing', { dur: 10 } ), null );
 check( 'only an explicit instrument contract derives note lifecycle' );

@@ -52,6 +52,15 @@ osc.on( 'message', ( packet, rinfo ) => {
     reply( rinfo, '/awb/audition/result', [
       args[ 0 ], args[ 1 ], 1, 'play', args[ 2 ], 'started', ''
     ] );
+  } else if ( message.address === '/awb/audition/event' ) {
+    const event = JSON.parse( args[ 8 ] );
+    reply( rinfo, '/awb/audition/state', [
+      args[ 0 ], args[ 2 ], 'running', event.def ?? event.instrument,
+      args[ 3 ], args[ 4 ], args[ 5 ], 1, 1450, 'running'
+    ] );
+    reply( rinfo, '/awb/audition/result', [
+      args[ 0 ], args[ 1 ], 1, 'event', args[ 2 ], 'started', ''
+    ] );
   } else if ( message.address === '/awb/audition/command' ) {
     const targetNodeID = Number( args[ 4 ] ?? -1 );
     const nextState = args[ 2 ] === 'pause' ? 'paused' : 'running';
@@ -222,6 +231,16 @@ try {
   assert.deepEqual( client.getState().audition.realizations[ 0 ].nodeIDs, [ 1400, 1401 ] );
   const auditionPlay = received.find( ( message ) => message.address === '/awb/audition/play' );
   assert.equal( JSON.parse( auditionPlay.args[ 9 ] ).length, 2 );
+  await client.auditionEvent( {
+    realizationID: 'event-realization-test', contextID: 'scoreEvent:event-test',
+    draftID: 'event-draft-test', runID: 'event-run-test', contextGeneration: 2,
+    fingerprint: 'sha256:test',
+    event: { type: 'note', def: 'fieldBasic', midinote: 69, dur: 2, legato: 0.5 }
+  } );
+  const auditionEvent = received.find( ( message ) => message.address === '/awb/audition/event' );
+  assert.deepEqual( JSON.parse( auditionEvent.args[ 8 ] ),
+    { type: 'note', def: 'fieldBasic', midinote: 69, dur: 2, legato: 0.5 },
+    'native Event audition transports the complete authored event' );
   await client.auditionCommand( 'audition-realization-test', 'pause' );
   await waitFor( () => client.getState().audition.realizations[ 0 ].state === 'paused' );
   await client.auditionCommand( 'audition-realization-test', 'resume' );
@@ -311,7 +330,7 @@ try {
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
 
-  console.log( 'hosted-transport: 49/49 pass' );
+  console.log( 'hosted-transport: 50/50 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

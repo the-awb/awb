@@ -200,13 +200,18 @@ uncommitted score edits, prompt or preserve it; never silently apply it to anoth
 - Seed the draft from the selected canonical event.
 - Show time, path, event kind, SynthDef/target and typed payload controls.
 - Raw JSON and typed controls remain two editors over one draft, as they are now.
-- Apply creates one canonical score revision and one undo step. Revert restores the current
-  canonical event.
+- Valid typed edits and valid raw JSON update the open working score immediately. There is no
+  redundant Apply button. Blur, Command/Ctrl-Enter, Save or a focus transition seals the current
+  edit as one canonical revision and one undo step; invalid JSON remains visibly local and cannot
+  enter the score.
 - If the document changes externally while the draft is open, compare its source revision and
   entry identity before applying. Do not overwrite a newer event silently.
 
-Audition uses a copy of the draft, including unapplied values if that is made visually explicit.
-It never uses the authored entry ID as runtime identity.
+Audition uses a copy of the current working event. It never uses the authored entry ID as runtime
+identity. **Play synth copy** instantiates the resolved SynthDef controls directly. **Play event**
+passes the complete payload through native sclang Event semantics, so pitch, scale, sustain,
+legato and other Event keys are interpreted by SuperCollider. Native Event audition is hosted-only
+until a standalone adapter can honestly implement the same contract.
 
 ### 4.2 SynthDef focus
 
@@ -416,6 +421,9 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 - remove the authored release command from the seed score; finite notes retain only their derived
   lifecycle boundary;
 - expose `+ note`, `+ synth`, `+ set`, `+ release` and `+ free` in the score command palette;
+- expose Duplicate for exactly one selected authored entry; it preserves time, path and payload,
+  assigns a fresh entry identity and selects the copy (a duplicated note therefore owns a new
+  lifecycle row rather than another reference to the source);
 - require every note to declare `dur`; an indefinitely sustained synth is represented explicitly as
   `dur: "inf"`, never by an absent duration;
 - project `set`, `release` and `free` as editable child markers of their targeted synth lane while
@@ -424,6 +432,9 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
   the infinite tail does not affect Fit, while finite child-command positions do;
 - map `"inf"` to native sclang `inf` in generated projections and suppress Event's automatic gate
   message without hiding the realized SynthDef's actual gate capability;
+- preserve native Event timing: `dur` is event duration/spacing, gate-off is explicit `sustain` or
+  `dur * legato` (default legato 0.8), and the SynthDef envelope release remains an independent tail
+  after gate-off; multichannel envelope controls retain per-voice attack and release projections;
 - apply authored set controls directly to every realized voice, broadcasting scalars and wrapping
   shorter arrays using ordinary SuperCollider multichannel semantics.
 
@@ -449,7 +460,8 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
   audible audition targets.
 - Selecting one instrument builds only that detailed interface model.
 - Event selection and SynthDef selection produce the correct, visibly named bottom-panel scope.
-- Applying an event draft creates exactly one document revision; auditioning creates none.
+- A valid event edit reaches the open working document without an Apply action and seals as one
+  document revision at the stated commit boundary; auditioning creates no document revision.
 - Every audition Play has a fresh runtime identity; Stop cannot free score nodes or other tools'
   nodes.
 - Hosted audition runs under the dedicated `\synthdefAudition` tool identity; its NodeManager
@@ -483,8 +495,9 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 5. **Temporal correctness outranks acoustic exactness.** A lifecycle-correct reconstruction may
    restart or approximate phase/envelope state, but it must preserve remaining lifetime, control
    state and future boundaries. If it cannot, skip it; never restart the original full duration.
-6. **Keep draft and canonical state separate.** Raw JSON, typed controls, envelope controls and
-   audition must share one focus draft; only Apply changes the score.
+6. **Keep invalid text separate from canonical state.** Raw JSON, typed controls, envelope controls
+   and audition share one focus draft. Valid changes update the open working score immediately;
+   invalid text remains local until corrected and must never replace the last valid event.
 7. **Guard focus changes.** A late hosted reply, SynthDef inventory refresh or score revision must
    not write into a newly selected draft.
 8. **Keep ownership narrow.** Stop/free operations need view, draft and realization scope; broad

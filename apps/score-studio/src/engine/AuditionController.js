@@ -71,6 +71,31 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
     }
   }
 
+  async function playEvent( { mode, event, contextID, draftID,
+    contextGeneration = 0, fingerprint = '', description = null, signalKind = 'audio' } ) {
+    if ( mode !== 'hosted' ) {
+      throw new Error( 'Native Event audition requires hosted sclang.' );
+    }
+    const definition = event?.def ?? event?.instrument;
+    if ( event?.type !== 'note' || typeof definition !== 'string' || !definition.length ) {
+      throw new Error( 'Event audition requires a note event with a SynthDef.' );
+    }
+    const realizationID = `audition-${ crypto.randomUUID() }`;
+    const runID = `audition-run-${ serial++ }`;
+    const request = { realizationID, runID, definition, contextID, draftID,
+      params: freezeSnapshot( event ), event: freezeSnapshot( event ),
+      contextGeneration, fingerprint, description, signalKind, kind: 'event' };
+    merge( { ...request, mode, state: 'starting', nodeIDs: [], voices: [] } );
+    try {
+      const result = await hostedClient.auditionEvent( request );
+      return result;
+    } catch ( error ) {
+      merge( { ...request, mode, state: 'failed', nodeIDs: [], error: error.message } );
+      publish( { error: error.message } );
+      throw error;
+    }
+  }
+
   async function command( realizationID, action, nodeID = null ) {
     const realization = state.realizations.find( ( item ) => item.realizationID === realizationID );
     if ( !realization || !ACTIVE_STATES.has( realization.state ) ) return false;
@@ -115,7 +140,7 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
   }
 
   return {
-    play, command, setControl, stopDraft,
+    play, playEvent, command, setControl, stopDraft,
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     getState: () => state,
     dispose: () => { offHosted(); offStandalone(); standaloneAdapter.dispose(); listeners.clear(); }

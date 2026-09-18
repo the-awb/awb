@@ -739,6 +739,21 @@ export class HostedScoreClient {
       definition, contextID, draftID, runID, contextGeneration, fingerprint, payload ], id, 0 );
   }
 
+  auditionEvent( { realizationID, contextID, draftID, runID, event,
+    contextGeneration = 0, fingerprint = '' } ) {
+    if ( this.state.audition.status !== 'connected' ) {
+      return Promise.reject( new Error( 'Hosted audition service is not connected.' ) );
+    }
+    assertJsonlibSafe( event, 'audition.event' );
+    const payload = JSON.stringify( event );
+    if ( new TextEncoder().encode( payload ).length > 48 * 1024 ) {
+      return Promise.reject( new Error( 'Event audition payload exceeds the safe OSC frame size.' ) );
+    }
+    const id = requestID( 'audition-event' );
+    return this.request( '/awb/audition/event', [ this.clientID, id, realizationID,
+      contextID, draftID, runID, contextGeneration, fingerprint, payload ], id, 0 );
+  }
+
   auditionCommand( realizationID, action, nodeID = null ) {
     if ( ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) {
       throw new Error( `Unknown audition command: ${ action }` );

@@ -272,6 +272,16 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
     setExpandedSynths( ( current ) => new Set( [ ...current, commandLane.id ] ) );
     dispatch( { type: 'SET_SELECTED', ids: [ entry.id ] } );
   };
+  const duplicateSelected = () => {
+    if ( session.selected.length !== 1 ) return;
+    const source = entries.find( ( entry ) => entry.id === session.selected[ 0 ] );
+    if ( !source ) return;
+    const duplicate = makeEvent( source.time, structuredClone( source.event ), {
+      path: [ ...source.path ]
+    } );
+    apply( sortScore( [ ...entries, duplicate ] ) );
+    dispatch( { type: 'SET_SELECTED', ids: [ duplicate.id ] } );
+  };
   const chooseAddCommand = ( event, action ) => {
     event.currentTarget.closest( 'details' )?.removeAttribute( 'open' );
     action();
@@ -300,6 +310,7 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
                 onClick={ ( event ) => chooseAddCommand( event, () => addLifecycle( 'free' ) ) }>+ free</button>
             </div>
           </details>
+          <button disabled={ selected.size !== 1 } onClick={ duplicateSelected }>Duplicate</button>
           <button disabled={ !selected.size }
             onClick={ () => apply( entries.filter( ( entry ) => !selected.has( entry.id ) ) ) }>Delete</button>
           <button disabled={ !session.undo.length } onClick={ () => dispatch( { type: 'UNDO' } ) }>Undo</button>
@@ -447,14 +458,16 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
                     const release = activeDrag?.edge === 'release' ? activeDrag.value : envelope.release ?? 0;
                     const envelopeDuration = activeDrag?.edge === 'duration'
                       ? activeDrag.value : envelope.duration;
+                    const rowGate = voiceIndex === null ? shownGate
+                      : lane.voiceGateReleaseTimes?.[ voiceIndex ] ?? shownGate;
                     const fixedEnd = envelopeDuration === null ? shownEnd : lane.startTime + envelopeDuration;
                     const rowEnd = envelope.shape === 'gatedAsr'
-                      ? shownGate === null ? shownEnd : shownGate + release
+                      ? rowGate === null ? shownEnd : rowGate + release
                       : fixedEnd;
                     const clippedEnd = lane.freeTime === null ? rowEnd : Math.min( rowEnd, lane.freeTime );
                     const attackEnd = Math.min( clippedEnd, lane.startTime + attack );
                     const releaseStart = envelope.shape === 'gatedAsr'
-                      ? shownGate === null ? clippedEnd : Math.min( clippedEnd, shownGate )
+                      ? rowGate === null ? clippedEnd : Math.min( clippedEnd, rowGate )
                       : envelope.shape === 'triangle'
                         ? lane.startTime + ( envelopeDuration ?? 0 ) / 2
                         : attackEnd;
@@ -466,7 +479,7 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
                         left: LEFT + lane.startTime * pxPerSecond + ( voiceIndex === null ? 0 : 20 ),
                         width: Math.max( 12, ( clippedEnd - lane.startTime ) * pxPerSecond - ( voiceIndex === null ? 0 : 20 ) )
                       } }
-                      title={ `${ envelope.label } → ${ target }; ${ envelope.shape }; ${ envelope.completionAction === 'freeNode' ? 'frees node' : 'does not own node lifetime' }${ shownGate === null && envelope.shape === 'gatedAsr' ? '; gate timing unresolved' : '' }` }>
+                      title={ `${ envelope.label } → ${ target }; ${ envelope.shape }; ${ envelope.completionAction === 'freeNode' ? 'frees node' : 'does not own node lifetime' }${ rowGate === null && envelope.shape === 'gatedAsr' ? '; gate timing unresolved' : '' }` }>
                       <span className="envelopeAttack" style={ { width: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ) } } />
                       <span className="envelopeHold" style={ {
                         left: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ),
@@ -482,7 +495,7 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
                         style={ { left: Math.max( 0, ( attackEnd - lane.startTime ) * pxPerSecond ) } }
                         onClick={ ( clickEvent ) => clickEvent.stopPropagation() }
                         onPointerDown={ ( pointerEvent ) => beginEnvelopeDrag( pointerEvent, lane, envelope, 'attack', voiceIndex ) } /> }
-                      { envelope.releaseControl && shownGate !== null && <button
+                      { envelope.releaseControl && <button
                         className="envelopeHandle release" aria-label={ `Adjust ${ lane.id } ${ envelope.label } release` }
                         style={ { left: Math.max( 0, ( clippedEnd - lane.startTime ) * pxPerSecond ) } }
                         onClick={ ( clickEvent ) => clickEvent.stopPropagation() }

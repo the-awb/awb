@@ -220,6 +220,19 @@ try {
   }
   await page.getByRole( 'button', { name: 'Structure', exact: true } ).click();
   if ( await page.locator( '.scoreEvent' ).count() !== 2 ) failures.push( 'expected two seeded score events' );
+  const duplicateSource = page.locator( '.scoreEvent' ).first();
+  await duplicateSource.click();
+  await page.getByRole( 'button', { name: 'Duplicate', exact: true } ).click();
+  if ( await page.locator( '.scoreEvent' ).count() !== 3 ) {
+    failures.push( 'Duplicate did not create one independent authored event' );
+  }
+  if ( await page.locator( '.scoreEvent.selected' ).count() !== 1 ) {
+    failures.push( 'Duplicate did not select only the fresh event identity' );
+  }
+  await page.getByRole( 'button', { name: 'Delete', exact: true } ).click();
+  if ( await page.locator( '.scoreEvent' ).count() !== 2 ) {
+    failures.push( 'deleting the selected duplicate changed its source event' );
+  }
 
   const widthBeforeZoom = await page.locator( '.timeline' ).evaluate( ( element ) => element.getBoundingClientRect().width );
   await page.getByRole( 'button', { name: 'Zoom in', exact: true } ).click();
@@ -259,13 +272,17 @@ try {
   if ( !( await frequencyControl.isVisible() ) ) failures.push( 'typed frequency payload control did not render' );
   else {
     await frequencyControl.fill( '440' );
-    await page.getByRole( 'button', { name: 'Apply event', exact: true } ).click();
     const payload = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
     if ( payload.freqA !== 440 ) failures.push( 'typed payload edit did not reach raw JSON and canonical entry' );
   }
   await page.getByLabel( 'Event time' ).fill( '4.5' );
   await page.getByLabel( 'Event path' ).fill( 'phrase/low' );
-  await page.getByRole( 'button', { name: 'Apply event', exact: true } ).click();
+  if ( await page.getByRole( 'button', { name: 'Apply event', exact: true } ).count() ) {
+    failures.push( 'event editor still exposes a redundant Apply event button' );
+  }
+  if ( await page.getByRole( 'button', { name: 'Play event', exact: true } ).count() !== 1 ) {
+    failures.push( 'event editor does not expose native Event audition separately from synth-copy audition' );
+  }
   if ( !( await page.locator( '.laneName' ).filter( { hasText: 'phrase' } ).isVisible() ) ) {
     failures.push( 'time/path event edit did not reach the canonical document' );
   }
@@ -341,6 +358,16 @@ try {
       const childEdit = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() ).freqA;
       if ( childEdit[ 0 ] !== 300 || childEdit[ 1 ] !== siblingBefore ) {
         failures.push( 'editing one polyphonic child did not update only its parent array slot' );
+      }
+      const polyPayload = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
+      polyPayload.attackT = [ 1, 2 ];
+      polyPayload.releaseT = [ 5, 7 ];
+      await page.getByLabel( 'Event payload' ).fill( JSON.stringify( polyPayload, null, 2 ) );
+      if ( await polyLane.locator( '.voiceEnvelope .envelopeHandle.attack' ).count() < 2 ) {
+        failures.push( 'polyphonic child envelopes did not expose per-voice attack handles' );
+      }
+      if ( await polyLane.locator( '.voiceEnvelope .envelopeHandle.release' ).count() !== 2 ) {
+        failures.push( 'polyphonic child envelopes did not expose both per-voice release handles' );
       }
     }
   }
