@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { makeEvent } from '@awb/score';
-import { projectSynthLifecycleLanes } from '../src/engine/synthLifecycleLanes.js';
+import {
+  lifecycleInheritedValuesForEntry, projectSynthLifecycleLanes
+} from '../src/engine/synthLifecycleLanes.js';
 
 const lanes = projectSynthLifecycleLanes( [
   makeEvent( 0, { type: 'note', def: 'a', freq: 100, dur: 10 }, { id: 'n1', path: [ 'opening' ] } ),
@@ -61,5 +63,16 @@ const openLane = projectSynthLifecycleLanes( [
 assert.equal( openLane.openEnded, true, 'dur inf remains open without release or free' );
 assert.equal( openLane.durationTime, null, 'infinite duration never becomes a finite drag handle' );
 assert.equal( openLane.events.at( -1 ).time, 12, 'open lane retains finite child-event extent' );
+
+const inheritedScore = [
+  makeEvent( 0, { type: 'note', def: 'substrate', freqA: 36, amp: 0.2, dur: 'inf' }, { id: 'parent' } ),
+  makeEvent( 1, { type: 'set', target: 'parent', amp: 0.3 }, { id: 'earlier-set' } ),
+  makeEvent( 2, { type: 'set', target: 'parent', freqA: 48 }, { id: 'edited-set' } )
+];
+assert.deepEqual( lifecycleInheritedValuesForEntry( inheritedScore, 'edited-set' ), {
+  freqA: 36, amp: 0.3, dur: 'inf'
+}, 'set editor inheritance reflects the parent after earlier child sets but before its own payload' );
+assert.equal( lifecycleInheritedValuesForEntry( inheritedScore, 'earlier-set' ).amp, 0.2,
+  'a set does not inherit its own authored override' );
 
 console.log( 'synth-lifecycle-lanes: pass' );

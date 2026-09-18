@@ -9,30 +9,45 @@ function scalarKind( value ) {
   return 'json';
 }
 
-export function payloadFields( event, inheritedDefinition = null ) {
+export function payloadFields( event, inheritedDefinition = null, inheritedValues = null ) {
   const instrument = typeForSynthDef( event.def ?? event.instrument ?? inheritedDefinition );
   const fields = instrument ? [
-    ...instrumentFields( instrument.key ).map( ( field ) => ( {
-      name: field.path[ 0 ], ...field,
-      kind: event[ field.path[ 0 ] ] !== undefined && scalarKind( event[ field.path[ 0 ] ] ) === 'json'
-        ? 'json' : 'number', declared: true
-    } ) ),
-    ...instrumentBooleanFields( instrument.key ).map( ( field ) => ( {
-      name: field.path[ 0 ], ...field,
-      kind: event[ field.path[ 0 ] ] !== undefined && scalarKind( event[ field.path[ 0 ] ] ) === 'json'
-        ? 'json' : 'boolean', declared: true
-    } ) )
+    ...instrumentFields( instrument.key ).map( ( field ) => {
+      const name = field.path[ 0 ];
+      const inherited = inheritedValues?.[ name ];
+      const effective = event[ name ] ?? inherited;
+      return {
+        name, ...field,
+        kind: effective !== undefined && scalarKind( effective ) === 'json' ? 'json' : 'number',
+        declared: true, synthDefaultValue: field.defaultValue,
+        defaultValue: inherited ?? field.defaultValue
+      };
+    } ),
+    ...instrumentBooleanFields( instrument.key ).map( ( field ) => {
+      const name = field.path[ 0 ];
+      const inherited = inheritedValues?.[ name ];
+      const effective = event[ name ] ?? inherited;
+      return {
+        name, ...field,
+        kind: effective !== undefined && scalarKind( effective ) === 'json' ? 'json' : 'boolean',
+        declared: true, synthDefaultValue: field.defaultValue,
+        defaultValue: inherited ?? field.defaultValue
+      };
+    } )
   ] : [];
   const declared = new Set( fields.map( ( field ) => field.name ) );
-  for ( const [ name, value ] of Object.entries( event ) ) {
+  for ( const [ name, value ] of Object.entries( { ...( inheritedValues ?? {} ), ...event } ) ) {
     if ( CORE_KEYS.has( name ) || declared.has( name ) ) continue;
-    fields.push( { name, label: name, kind: scalarKind( value ), declared: false } );
+    fields.push( {
+      name, label: name, kind: scalarKind( value ), declared: false,
+      defaultValue: event[ name ] === undefined ? inheritedValues?.[ name ] : undefined
+    } );
   }
   return fields;
 }
 
 export function payloadFieldPlaceholder( field ) {
-  if ( !field.declared || field.defaultValue === undefined ) return undefined;
+  if ( field.defaultValue === undefined ) return undefined;
   return String( field.defaultValue );
 }
 

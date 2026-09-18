@@ -17,9 +17,17 @@ assert.equal( payloadFields( { type: 'set', target: '@all', curve: [ 1, 2 ] } )
 assert.equal( payloadFields( { type: 'set', target: 'n1' }, 'substrate' )
   .find( ( field ) => field.name === 'freqA' )?.defaultValue, 60,
 'targeted lifecycle children inherit their parent SynthDef editor fields' );
+const inheritedSetFields = payloadFields( { type: 'set', target: 'n1' }, 'substrate', {
+  freqA: 36, amp: 0.2
+} );
+assert.equal( inheritedSetFields.find( ( field ) => field.name === 'freqA' )?.defaultValue, 36,
+  'parent note value replaces the SynthDef default in a set editor' );
+assert.equal( inheritedSetFields.find( ( field ) => field.name === 'amp' )?.defaultValue, 0.2 );
+assert.deepEqual( updatePayloadField( { type: 'set', target: 'n1' }, 'freqA', '', 'number' ),
+  { type: 'set', target: 'n1' }, 'clearing an inherited field keeps the set payload sparse' );
 assert.equal( updatePayloadField( substrate, 'freqA', '40.5', 'number' ).freqA, 40.5 );
 assert.equal( updatePayloadField( substrate, 'flip', true, 'boolean' ).flip, true );
 assert.equal( updatePayloadField( substrate, 'dur', '', 'number' ).dur, undefined );
 assert.throws( () => updatePayloadField( substrate, 'freqA', 'nope', 'number' ), /finite number/ );
 
-console.log( 'event-payload-fields: 12/12 pass' );
+console.log( 'event-payload-fields: 15/15 pass' );

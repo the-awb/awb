@@ -17,7 +17,9 @@ import ScoreStudioLeftRail from './components/ScoreStudioLeftRail.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import SynthDefDraftEditor from './components/SynthDefDraftEditor.jsx';
 import { createAuditionController, createStandaloneAuditionAdapter } from './engine/AuditionController.js';
-import { lifecycleDefinitionsForEntry } from './engine/synthLifecycleLanes.js';
+import {
+  lifecycleDefinitionsForEntry, lifecycleInheritedValuesForEntry
+} from './engine/synthLifecycleLanes.js';
 import { importSclang, importScsynth, locateSclangFile, synthDefManifestUrl } from './engine/scAssets.js';
 import { formatScSymbol } from './engine/scValueSyntax.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
@@ -853,6 +855,7 @@ export default function App( { host, createHostedClient } ) {
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
             entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry }
             inheritedDefinition={ lifecycleDefinitionsForEntry( inspectedEntries, selectedEntry.id )[ 0 ] ?? null }
+            inheritedValues={ lifecycleInheritedValuesForEntry( inspectedEntries, selectedEntry.id ) }
             availableSynthDefs={ session.mode === MODES.HOSTED
               ? Object.keys( hosted.synthDefContext.definitions ?? {} ) : [] }
             onAudition={ ( event ) => auditionDraft( {
@@ -879,7 +882,7 @@ export default function App( { host, createHostedClient } ) {
 }
 
 function EventEditor( {
-  entry, inheritedDefinition, availableSynthDefs = [], onPreview, onCommit,
+  entry, inheritedDefinition, inheritedValues, availableSynthDefs = [], onPreview, onCommit,
   onAudition, onStopAudition, auditionCount = 0
 } ) {
   const [ time, setTime ] = useState( String( entry.time ) );
@@ -949,6 +952,7 @@ function EventEditor( {
         <section className="eventEditorCard"><header><strong>Musical event</strong>
           <small>Structured controls update the score immediately.</small></header>
           <EventPayloadEditor event={ parsedEvent } inheritedDefinition={ inheritedDefinition }
+            inheritedValues={ inheritedValues }
             availableSynthDefs={ availableSynthDefs } onChange={ updatePayload } />
         </section>
         <section className="eventEditorCard rawEventCard"><header><strong>Raw event</strong>
