@@ -4,6 +4,7 @@ import {
 } from '@awb/score';
 import { projectSynthLifecycleLanes } from '../engine/synthLifecycleLanes.js';
 import { formatTimelineTime, timelineTicks } from '../engine/timelineScale.js';
+import { musicalVoiceLabel } from '../engine/runtimeVoices.js';
 
 const LEFT = 92;
 const MIN_ZOOM = 0.1;
@@ -18,7 +19,7 @@ function retainLaneOrder( orderRef, names ) {
   return orderRef.current;
 }
 
-export default function ScoreTimeline( { session, dispatch, onSeek } ) {
+export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelect } ) {
   const [ layout, setLayout ] = useState( 'synths' );
   const [ step, setStep ] = useState( 1 );
   const [ gap, setGapValue ] = useState( 1 );
@@ -92,6 +93,7 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
     if ( event.button !== 0 ) return;
     event.preventDefault();
     event.stopPropagation();
+    onVoiceSelect?.( entryID, null );
     const additive = event.shiftKey || event.metaKey;
     let ids;
     if ( additive ) {
@@ -262,6 +264,10 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
     setExpandedSynths( ( current ) => new Set( [ ...current, commandLane.id ] ) );
     dispatch( { type: 'SET_SELECTED', ids: [ entry.id ] } );
   };
+  const chooseAddCommand = ( event, action ) => {
+    event.currentTarget.closest( 'details' )?.removeAttribute( 'open' );
+    action();
+  };
 
   return (
     <section className="scoreView">
@@ -276,11 +282,14 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
           <details className="eventCommandPalette">
             <summary>Add</summary>
             <div aria-label="Add score event">
-              <button onClick={ () => addNote( false ) }>+ note</button>
-              <button onClick={ () => addNote( true ) }>+ synth</button>
-              <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'set' ) }>+ set</button>
-              <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'release' ) }>+ release</button>
-              <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'free' ) }>+ free</button>
+              <button onClick={ ( event ) => chooseAddCommand( event, () => addNote( false ) ) }>+ note</button>
+              <button onClick={ ( event ) => chooseAddCommand( event, () => addNote( true ) ) }>+ synth</button>
+              <button disabled={ !canAddLifecycle }
+                onClick={ ( event ) => chooseAddCommand( event, () => addLifecycle( 'set' ) ) }>+ set</button>
+              <button disabled={ !canAddLifecycle }
+                onClick={ ( event ) => chooseAddCommand( event, () => addLifecycle( 'release' ) ) }>+ release</button>
+              <button disabled={ !canAddLifecycle }
+                onClick={ ( event ) => chooseAddCommand( event, () => addLifecycle( 'free' ) ) }>+ free</button>
             </div>
           </details>
           <button disabled={ !selected.size }
@@ -357,8 +366,11 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
               const shownEnd = shownDuration ?? lane.endTime ?? ( lane.openEnded ? total : fallbackEnd );
               const openLabelEnd = lane.openEnded
                 ? Math.min( shownEnd, lane.startTime + Math.max( 2, 140 / pxPerSecond ) ) : shownEnd;
+              const voiceRows = expanded && lane.expansionCount > 1 ? lane.voices : [];
+              const voiceRowsHeight = voiceRows.length * 22;
               const envelopeRows = expanded ? lane.envelopes : lane.envelope ? [ lane.envelope ] : [];
-              const triggerTop = expanded ? 45 + envelopeRows.length * 14 : 7;
+              const envelopeTop = 39 + voiceRowsHeight;
+              const triggerTop = expanded ? envelopeTop + 6 + envelopeRows.length * 14 : 7;
               const laneHeight = expanded ? Math.max( 82, triggerTop + 27 ) : 52;
               const triggers = lane.events.filter( ( marker ) => marker.role !== 'create' );
               return (
@@ -391,6 +403,20 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
                     title="Drag the bar end to adjust total event duration"
                     onClick={ ( clickEvent ) => clickEvent.stopPropagation() }
                     onPointerDown={ ( pointerEvent ) => beginDurationDrag( pointerEvent, lane ) } /> }
+                  { voiceRows.map( ( voice, voiceIndex ) => <button
+                    key={ `${ lane.id }:voice:${ voiceIndex }` }
+                    className="synthVoiceChild"
+                    style={ {
+                      top: 39 + voiceIndex * 22,
+                      left: LEFT + lane.startTime * pxPerSecond,
+                      width: Math.max( 56, ( openLabelEnd - lane.startTime ) * pxPerSecond )
+                    } }
+                    title={ `Voice ${ voiceIndex + 1 } of ${ lane.id }` }
+                    onClick={ ( event ) => {
+                      event.stopPropagation();
+                      dispatch( { type: 'SET_SELECTED', ids: [ lane.id ] } );
+                      onVoiceSelect?.( lane.id, voiceIndex );
+                    } }>{ musicalVoiceLabel( voice ) ?? `voice ${ voiceIndex + 1 }` }</button> ) }
                   { !unassigned && envelopeRows.map( ( envelope, envelopeIndex ) => {
                     const activeDrag = envelopeDrag?.laneID === lane.id
                       && envelopeDrag.envelopeID === envelope.id ? envelopeDrag : null;
@@ -413,7 +439,7 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
                     return <div key={ envelope.id }
                       className={ `synthEnvelope ${ envelope.role } ${ envelope.shape }` }
                       style={ {
-                        top: 39 + envelopeIndex * 14,
+                        top: envelopeTop + envelopeIndex * 14,
                         left: LEFT + lane.startTime * pxPerSecond,
                         width: Math.max( 12, ( clippedEnd - lane.startTime ) * pxPerSecond )
                       } }

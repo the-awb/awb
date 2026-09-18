@@ -33,14 +33,18 @@ export function projectSynthLifecycleLanes( score ) {
     const event = entry.event ?? {};
     if ( event.type === 'note' ) {
       let expansionCount = 1;
+      let voices = [];
       let projectionError = null;
-      try { expansionCount = expandScEventParams( event ).length; }
+      try {
+        voices = expandScEventParams( event );
+        expansionCount = voices.length;
+      }
       catch ( error ) { projectionError = error.message; }
       const lane = {
         id: entry.id,
         definition: event.def ?? event.instrument ?? 'unnamed',
         path: entry.path,
-        expansionCount,
+        expansionCount, voices,
         projectionError,
         instrument: instrumentFor( event.def ?? event.instrument ),
         events: [ { entry, role: 'create', time: entry.time, synthetic: false } ]

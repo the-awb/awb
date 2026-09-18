@@ -67,7 +67,7 @@ function EnvelopeProjection( { envelope, values } ) {
 
 export default function SynthDefDraftEditor( {
   focus, onAudition, onStopAudition, auditionCount = 0,
-  onRuntimeSet, onRuntimeCommand
+  onRuntimeSet, onRuntimeCommand, onRuntimeCopy
 } ) {
   const model = focus.description?.interface;
   const defaults = useMemo( () => synthDefDraftValues( model, focus.initialValues ),
@@ -150,12 +150,16 @@ export default function SynthDefDraftEditor( {
         : <p className="emptyCopy">No EnvGen envelope found in the compiled graph.</p> }
       </div>
     </section>
-    { focus.runtimeTarget ? <div className="focusAuditionActions">
+    { focus.runtimeTarget ? <div className="liveVoiceActions">
+      <span className="liveVoiceBadge"><strong>Live voice</strong>
+        synth { focus.runtimeTarget.nodeID } · { runtimeState ?? 'ended' }</span>
       <button disabled={ !runtimeLive || [ 'releasing', 'released', 'ending' ].includes( runtimeState ) }
         onClick={ () => runtimeCommand( runtimeState === 'paused' ? 'resume' : 'pause' ) }>
-        { runtimeState === 'paused' ? 'Play' : 'Pause' }</button>
-      <button disabled={ !runtimeLive } onClick={ () => runtimeCommand( 'free' ) }>Stop</button>
-      <span>Editing the existing { focus.runtimeTarget.kind } realization · { runtimeState ?? 'ended' }.</span>
+        { runtimeState === 'paused' ? 'Resume' : 'Pause' }</button>
+      <button disabled={ !runtimeLive || [ 'releasing', 'released', 'ending' ].includes( runtimeState ) }
+        onClick={ () => runtimeCommand( 'release' ) }>Release</button>
+      <button disabled={ !runtimeLive } onClick={ () => runtimeCommand( 'free' ) }>Free</button>
+      <button disabled={ !onRuntimeCopy } onClick={ onRuntimeCopy }>Audition copy</button>
     </div> : <div className="focusAuditionActions">
       <button disabled={ focus.signalKind !== 'audio' || !onAudition } onClick={ play }>Play</button>
       <button disabled={ auditionCount === 0 } onClick={ onStopAudition }>Stop ({ auditionCount })</button>
@@ -163,7 +167,7 @@ export default function SynthDefDraftEditor( {
     </div> }
     { error && <p className="error">{ error }</p> }
     <p className="boundaryNote">{ focus.runtimeTarget
-      ? 'Live edit. Control changes are sent to the selected running node; they do not rewrite the authored score event.'
+      ? 'Live instance. Control changes and lifecycle commands address this synth node only; they do not rewrite the authored score event.'
       : 'Draft only. Auditioning does not create or modify a score event.' }</p>
   </div>;
 }

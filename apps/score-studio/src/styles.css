@@ -132,30 +132,39 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .fileMessage, .error { padding: 9px; border: 1px solid #5f5134; border-radius: 6px; color: #efc87c; font-size: 11px; line-height: 1.45; }
 .boundaryNote, .emptyCopy { color: var(--muted); font-size: 11px; line-height: 1.55; }
 .workspace { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
-.scoreWorkspace { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.transportStrip { display: flex; flex: 0 0 auto; align-items: center; gap: 14px; min-height: 48px; padding: 7px 9px; border-bottom: 1px solid var(--line); background: #181816; }
+.scoreWorkspace { --score-overlay-height: 132px; position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.transportStrip { position: absolute; z-index: 30; top: 0; right: 0; left: 0; display: flex; align-items: center; gap: 14px; min-height: 48px; padding: 7px 9px; border-bottom: 1px solid var(--line); background: #181816f5; box-shadow: 0 4px 12px #0005; }
 .transportControls { display: flex; gap: 5px; }
 .transportControls button.active { color: var(--accent); }
 .transportPosition { min-width: 76px; font: 600 12px ui-monospace, monospace; }
 .transportPosition strong { color: var(--accent); }
 .transportStrip p { min-width: 0; margin: 0 0 0 auto; overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 
-.focusAuditionActions { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.focusAuditionActions, .liveVoiceActions { display: flex; grid-column: 1 / -1; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
 .focusAuditionActions span { color: var(--muted); font-size: 10px; }
+.liveVoiceActions { padding: 8px; border: 1px solid #52634c; border-radius: 7px; background: #192019; }
+.liveVoiceBadge { display: grid; min-width: 145px; margin-right: auto; color: var(--muted); font-size: 10px; }
+.liveVoiceBadge strong { color: var(--accent); font-size: 11px; }
 .payloadScValue input, .draftArrayControl input { width: 100%; font-family: ui-monospace, monospace; }
 .draftArrayControl { display: grid; grid-template-columns: minmax(130px, .55fr) 1fr; gap: 8px; align-items: center; }
 .draftArrayControl > span { display: grid; }
 .compactEnvelopeEditor .envelopeEditor { max-width: 720px; }
 .compactEnvelopeEditor .envelopeCurveEditor svg { max-height: 130px; }
-.auditionVoice { display: grid; grid-template-columns: minmax(0, 1fr); gap: 5px; }
 .realizationFocus { display: grid; gap: 2px; width: 100%; min-width: 0; text-align: left; }
 .realizationFocus strong { white-space: nowrap; }
-.realizationActions { display: flex; gap: 4px; }
+.realizationActions { display: flex; flex-wrap: wrap; gap: 4px; }
+.runtimeRealizationGroup { display: grid; gap: 3px; margin: 7px 0; padding: 6px; border: 1px solid var(--line); border-radius: 7px; background: #171715; }
+.runtimeRealizationGroup > header { display: flex; align-items: baseline; justify-content: space-between; gap: 7px; padding: 1px 3px 5px; }
+.runtimeRealizationGroup > header small { overflow: hidden; color: var(--muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.runtimeVoiceRow { display: grid; grid-template-columns: minmax(86px, .65fr) minmax(0, 1fr); gap: 5px; align-items: center; padding: 5px; border-top: 1px solid #292925; }
+.runtimeVoiceRow .realizationFocus { border-color: transparent; background: transparent; }
+.runtimeVoiceRow .realizationFocus strong { color: var(--accent); }
+.runtimeVoiceRow .realizationActions button { padding: 4px 6px; font-size: 9px; }
 .viewTabs, .subtabs { display: flex; gap: 4px; align-items: center; padding: 8px; border-bottom: 1px solid var(--line); background: #151513; }
 .viewTabs button, .subtabs button { border-color: transparent; background: transparent; }.viewTabs button.active, .subtabs button.active { color: var(--accent); border-color: var(--line); background: var(--panel-2); }
 .subtabs span { color: var(--muted); font-size: 10px; }.spacer { flex: 1; }
-.scoreView, .consoleWorkspace { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.scoreToolbars { overflow-x: auto; border-bottom: 1px solid var(--line); background: #151513; }
+.scoreView, .consoleWorkspace { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.scoreToolbars { position: absolute; z-index: 25; top: 48px; right: 0; left: 0; height: 84px; overflow-x: clip; overflow-y: visible; border-bottom: 1px solid var(--line); background: #151513f5; box-shadow: 0 5px 12px #0004; }
 .scoreToolbar { display: flex; min-width: max-content; gap: 6px; align-items: center; padding: 7px 9px; }
 .scoreToolbar + .scoreToolbar { border-top: 1px solid #292925; }
 .scoreToolbar label { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 11px; }.scoreToolbar input { width: 62px; }
@@ -169,8 +178,8 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .zoomControls output { min-width: 48px; color: var(--muted); font: 10px ui-monospace, monospace; text-align: right; }
 .timeReadout { min-width: 56px; font: 600 12px ui-monospace, monospace; color: var(--accent); }
 .timelineScroll { flex: 1; min-height: 0; overflow: auto; background: #11110f; }
-.timeline { position: relative; min-height: 100%; padding-top: 32px; }
-.ruler { position: absolute; inset: 0 0 auto; height: 32px; border-bottom: 1px solid var(--line); }
+.timeline { position: relative; min-height: 100%; padding-top: var(--score-overlay-height); }
+.ruler { position: sticky; z-index: 20; top: var(--score-overlay-height); height: 32px; border-bottom: 1px solid var(--line); background: #11110ff5; box-shadow: 0 3px 7px #0005; }
 .tick { position: absolute; top: 7px; transform: translateX(-50%); padding: 0; border: 0; background: transparent; color: #737168; font: 10px ui-monospace, monospace; }
 .lane { position: relative; height: 52px; border-bottom: 1px solid #252522; }
 .laneName { position: sticky; left: 0; z-index: 3; display: inline-flex; width: 82px; height: 100%; align-items: center; padding-left: 12px; background: linear-gradient(90deg, #181816 82%, transparent); color: var(--muted); font-size: 10px; }
@@ -185,6 +194,8 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .scoreEvent.set { border-color: #75643b; background: #3d3524; color: #f0d99b; }.scoreEvent.release { border-color: #72494f; background: #3c282b; color: #f2b6bd; }
 .synthBar { position: absolute; top: 11px; height: 25px; min-width: 12px; overflow: hidden; padding: 3px 7px; border-color: #61578a; border-radius: 4px; background: #312c49; color: #ddd6ff; font-size: 10px; text-align: left; text-overflow: ellipsis; white-space: nowrap; cursor: grab; touch-action: none; }
 .synthBar.openEnded { border-right: 0; border-radius: 4px 0 0 4px; background: linear-gradient(to right, #312c49 0%, #312c49 62%, rgba(49, 44, 73, .16) 100%); }
+.synthVoiceChild { position: absolute; z-index: 3; height: 18px; min-width: 56px; overflow: hidden; padding: 1px 7px 1px 16px; border-color: #4b4567; border-radius: 3px; background: #242132; color: #cfc8ef; font: 9px ui-monospace, monospace; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.synthVoiceChild::before { position: absolute; top: 50%; left: 6px; width: 6px; border-top: 1px solid #766e9d; content: ''; }
 .synthOpenContinuation { position: absolute; z-index: 1; top: 23px; height: 1px; background: linear-gradient(to right, rgba(169, 144, 255, .32), #a990ff); pointer-events: none; }
 .synthOpenContinuation::after { position: absolute; top: -3px; right: -1px; width: 0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 7px solid #a990ff; content: ''; }
 .durationHandle { position: absolute; z-index: 3; top: 11px; width: 7px; height: 25px; min-width: 0; padding: 0; transform: translateX(-3px); border: 1px solid #f0d99b; border-radius: 3px; background: #26221a; cursor: ew-resize; touch-action: none; }
@@ -210,7 +221,7 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .eventCommandPalette summary::-webkit-details-marker { display: none; }
 .eventCommandPalette summary::after { margin-left: 7px; color: var(--muted); content: '▾'; }
 .eventCommandPalette[open] summary::after { content: '▴'; }
-.eventCommandPalette > div { position: absolute; z-index: 12; top: calc(100% + 4px); left: 0; display: grid; min-width: 112px; gap: 3px; padding: 5px; border: 1px solid var(--line); border-radius: 6px; background: #20201d; box-shadow: 0 7px 20px #0009; }
+.eventCommandPalette > div { position: absolute; z-index: 40; top: calc(100% + 4px); left: 0; display: grid; min-width: 112px; gap: 3px; padding: 5px; border: 1px solid var(--line); border-radius: 6px; background: #20201d; box-shadow: 0 7px 20px #0009; }
 .eventCommandPalette > div button { width: 100%; text-align: left; }
 .playhead { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--accent); pointer-events: none; }
 .playhead::before { content: ''; position: absolute; top: 0; left: -4px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 7px solid var(--accent); }

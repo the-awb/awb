@@ -9,7 +9,10 @@ const freezeSnapshot = ( value ) => {
   return value;
 };
 const freezeRealization = ( value ) => Object.freeze( {
-  ...value, nodeIDs: Object.freeze( [ ...( value.nodeIDs ?? [] ) ] )
+  ...value, nodeIDs: Object.freeze( [ ...( value.nodeIDs ?? [] ) ] ),
+  voices: Object.freeze( [ ...( value.voices ?? [] ) ].map( freezeSnapshot ) ),
+  voiceStates: freezeSnapshot( value.voiceStates ?? {} ),
+  voiceParams: freezeSnapshot( value.voiceParams ?? {} )
 } );
 
 function literalControlsFor( model ) {
@@ -34,9 +37,11 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
     }
     const previous = state.realizations.find( ( item ) => item.realizationID === realization.realizationID );
     const next = freezeRealization( { ...previous, ...realization } );
-    publish( { realizations: Object.freeze( [
-      ...state.realizations.filter( ( item ) => item.realizationID !== next.realizationID ), next
-    ].slice( -200 ) ), error: '' } );
+    const index = state.realizations.findIndex( ( item ) => item.realizationID === next.realizationID );
+    const realizations = [ ...state.realizations ];
+    if ( index < 0 ) realizations.push( next );
+    else realizations[ index ] = next;
+    publish( { realizations: Object.freeze( realizations.slice( -200 ) ), error: '' } );
   };
   const syncHosted = () => {
     for ( const realization of hostedClient.getState().audition.realizations ) merge( realization );
@@ -66,28 +71,37 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
     }
   }
 
-  async function command( realizationID, action ) {
+  async function command( realizationID, action, nodeID = null ) {
     const realization = state.realizations.find( ( item ) => item.realizationID === realizationID );
     if ( !realization || !ACTIVE_STATES.has( realization.state ) ) return false;
     try {
-      if ( realization.mode === 'hosted' ) await hostedClient.auditionCommand( realizationID, action );
-      else await standaloneAdapter.command( realizationID, action );
+      if ( realization.mode === 'hosted' ) await hostedClient.auditionCommand( realizationID, action, nodeID );
+      else await standaloneAdapter.command( realizationID, action, nodeID );
+      if ( nodeID !== null && action !== 'free' ) {
+        merge( { ...realization, voiceStates: { ...( realization.voiceStates ?? {} ),
+          [ nodeID ]: action === 'pause' ? 'paused' : action === 'resume' ? 'running'
+            : action === 'release' ? 'releasing' : 'ending' } } );
+      }
       return true;
     } catch ( error ) {
       publish( { error: error.message } ); throw error;
     }
   }
 
-  async function setControl( realizationID, control, value, controlWidth = 1 ) {
+  async function setControl( realizationID, control, value, controlWidth = 1, nodeID = null ) {
     const realization = state.realizations.find( ( item ) => item.realizationID === realizationID );
     if ( !realization || !ACTIVE_STATES.has( realization.state ) ) return false;
     try {
       if ( realization.mode === 'hosted' ) {
-        await hostedClient.auditionSet( realizationID, control, value, controlWidth );
-      } else await standaloneAdapter.setControl( realizationID, control, value, controlWidth );
-      merge( { ...realization, params: freezeSnapshot( {
-        ...( realization.params ?? {} ), [ control ]: value
-      } ) } );
+        await hostedClient.auditionSet( realizationID, control, value, controlWidth, nodeID );
+      } else await standaloneAdapter.setControl( realizationID, control, value, controlWidth, nodeID );
+      const voiceParams = nodeID === null ? realization.voiceParams : {
+        ...( realization.voiceParams ?? {} ),
+        [ nodeID ]: { ...( realization.voiceParams?.[ nodeID ] ?? {} ), [ control ]: value }
+      };
+      merge( { ...realization,
+        params: nodeID === null ? freezeSnapshot( { ...( realization.params ?? {} ), [ control ]: value } ) : realization.params,
+        voiceParams } );
       return true;
     } catch ( error ) {
       publish( { error: error.message } ); throw error;
@@ -133,39 +147,47 @@ export function createStandaloneAuditionAdapter( {
       if ( arrays.length && gateIndex >= 0 ) sendOsc( '/n_set', [ nodeID, 'gate', desiredGate ] );
       nodeIDs.push( nodeID ); nodeOwners.set( nodeID, request.realizationID );
     }
-    const record = { ...request, mode: 'standalone', state: 'running', nodeIDs };
+    const record = { ...request, mode: 'standalone', state: 'running', nodeIDs,
+      voiceStates: Object.fromEntries( nodeIDs.map( ( nodeID ) => [ nodeID, 'running' ] ) ), voiceParams: {} };
     records.set( request.realizationID, record ); emit( record );
     return record;
   }
 
-  async function command( realizationID, action ) {
+  async function command( realizationID, action, targetNodeID = null ) {
     const record = records.get( realizationID );
     if ( !record ) throw new Error( `Unknown audition realization: ${ realizationID }` );
     const address = action === 'pause' || action === 'resume' ? '/n_run'
       : action === 'release' ? '/n_set' : action === 'free' ? '/n_free' : null;
     if ( !address ) throw new Error( `Unknown audition command: ${ action }` );
-    for ( const nodeID of record.nodeIDs ) {
+    const targets = targetNodeID === null ? record.nodeIDs : record.nodeIDs.filter( ( id ) => id === Number( targetNodeID ) );
+    if ( !targets.length ) throw new Error( `Unknown audition node: ${ targetNodeID }` );
+    for ( const nodeID of targets ) {
       if ( action === 'pause' ) sendOsc( address, [ nodeID, 0 ] );
       else if ( action === 'resume' ) sendOsc( address, [ nodeID, 1 ] );
       else if ( action === 'release' ) sendOsc( address, [ nodeID, 'gate', 0 ] );
       else sendOsc( address, [ nodeID ] );
+      record.voiceStates[ nodeID ] = action === 'pause' ? 'paused' : action === 'resume' ? 'running'
+        : action === 'release' ? 'releasing' : 'ending';
     }
-    record.state = action === 'pause' ? 'paused' : action === 'resume' ? 'running'
+    if ( targetNodeID === null ) record.state = action === 'pause' ? 'paused' : action === 'resume' ? 'running'
       : action === 'release' ? 'releasing' : 'ending';
     emit( record ); return record;
   }
 
-  async function setControl( realizationID, control, value, controlWidth = 1 ) {
+  async function setControl( realizationID, control, value, controlWidth = 1, targetNodeID = null ) {
     const record = records.get( realizationID );
     if ( !record ) throw new Error( `Unknown audition realization: ${ realizationID }` );
     const values = Array.isArray( value ) ? value : [ value ];
+    const targets = targetNodeID === null ? record.nodeIDs : record.nodeIDs.filter( ( id ) => id === Number( targetNodeID ) );
+    if ( !targets.length ) throw new Error( `Unknown audition node: ${ targetNodeID }` );
     if ( controlWidth > 1 ) {
       if ( values.length !== controlWidth ) throw new Error( `${ control } requires ${ controlWidth } values` );
-      record.nodeIDs.forEach( ( nodeID ) => sendOsc( '/n_setn', [ nodeID, control, values.length, ...values ] ) );
+      targets.forEach( ( nodeID ) => sendOsc( '/n_setn', [ nodeID, control, values.length, ...values ] ) );
     } else {
-      record.nodeIDs.forEach( ( nodeID, index ) => sendOsc( '/n_set', [ nodeID, control, values[ index % values.length ] ] ) );
+      targets.forEach( ( nodeID, index ) => sendOsc( '/n_set', [ nodeID, control, values[ index % values.length ] ] ) );
     }
-    record.params = { ...( record.params ?? {} ), [ control ]: value };
+    if ( targetNodeID === null ) record.params = { ...( record.params ?? {} ), [ control ]: value };
+    else record.voiceParams[ targetNodeID ] = { ...( record.voiceParams[ targetNodeID ] ?? {} ), [ control ]: value };
     emit( record ); return record;
   }
 
@@ -179,6 +201,8 @@ export function createStandaloneAuditionAdapter( {
     const record = records.get( realizationID );
     if ( !record ) return;
     record.nodeIDs = record.nodeIDs.filter( ( id ) => id !== nodeID );
+    delete record.voiceStates[ nodeID ];
+    delete record.voiceParams[ nodeID ];
     record.state = record.nodeIDs.length ? record.state : 'ended';
     emit( record );
   } );

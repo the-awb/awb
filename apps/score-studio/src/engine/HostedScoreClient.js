@@ -204,15 +204,22 @@ export class HostedScoreClient {
       const previous = this.state.audition.realizations.find(
         ( item ) => item.realizationID === `${ args[ 1 ] }`
       );
+      const nodeCount = Number( args[ 7 ] );
+      const nodeIDs = args.slice( 8, 8 + nodeCount );
+      const reportedStates = args.slice( 8 + nodeCount, 8 + ( nodeCount * 2 ) );
+      const voiceStates = Object.freeze( Object.fromEntries( nodeIDs.map( ( nodeID, index ) => [
+        nodeID, `${ reportedStates[ index ] ?? args[ 2 ] }`
+      ] ) ) );
       const realization = Object.freeze( { ...previous,
         realizationID: `${ args[ 1 ] }`, state: `${ args[ 2 ] }`, definition: `${ args[ 3 ] }`,
         contextID: `${ args[ 4 ] }`, draftID: `${ args[ 5 ] }`, runID: `${ args[ 6 ] }`,
-        mode: 'hosted', nodeIDs: Object.freeze( args.slice( 8, 8 + Number( args[ 7 ] ) ) )
+        mode: 'hosted', nodeIDs: Object.freeze( nodeIDs ), voiceStates
       } );
-      const realizations = Object.freeze( [
-        ...this.state.audition.realizations.filter( ( item ) => item.realizationID !== realization.realizationID ),
-        realization
-      ].slice( -200 ) );
+      const nextRealizations = [ ...this.state.audition.realizations ];
+      const realizationIndex = nextRealizations.findIndex( ( item ) => item.realizationID === realization.realizationID );
+      if ( realizationIndex < 0 ) nextRealizations.push( realization );
+      else nextRealizations[ realizationIndex ] = realization;
+      const realizations = Object.freeze( nextRealizations.slice( -200 ) );
       this.publish( { audition: Object.freeze( { ...this.state.audition, realizations } ) } );
     } else if ( address.startsWith( '/awb/synthdef/' ) && args[ 0 ] === this.clientID ) {
       this.receiveSynthDefFrame( address, args );
@@ -254,13 +261,22 @@ export class HostedScoreClient {
       const previous = this.state.realizations.find(
         ( item ) => item.realizationID === `${ args[ 5 ] }`
       );
+      const nodeCount = Number( args[ 9 ] );
+      const nodeIDs = args.slice( 10, 10 + nodeCount );
+      const reportedStates = args.slice( 10 + nodeCount, 10 + ( nodeCount * 2 ) );
+      const voiceStates = Object.freeze( Object.fromEntries( nodeIDs.map( ( nodeID, index ) => [
+        nodeID, `${ reportedStates[ index ] ?? args[ 6 ] }`
+      ] ) ) );
       const realization = Object.freeze( { ...previous,
         scoreID: args[ 1 ], revision: args[ 2 ], runID: args[ 3 ], entryID: args[ 4 ],
         realizationID: args[ 5 ], state: args[ 6 ], scoreIndex: args[ 7 ], scoreTime: args[ 8 ],
-        nodeIDs: Object.freeze( args.slice( 10, 10 + args[ 9 ] ) )
+        nodeIDs: Object.freeze( nodeIDs ), voiceStates
       } );
-      const realizations = [ ...this.state.realizations.filter( ( item ) => item.realizationID !== realization.realizationID ), realization ].slice( -100 );
-      this.publish( { realizations: Object.freeze( realizations ) } );
+      const realizations = [ ...this.state.realizations ];
+      const realizationIndex = realizations.findIndex( ( item ) => item.realizationID === realization.realizationID );
+      if ( realizationIndex < 0 ) realizations.push( realization );
+      else realizations[ realizationIndex ] = realization;
+      this.publish( { realizations: Object.freeze( realizations.slice( -100 ) ) } );
     } else if ( address === '/awb/timeline/instrument/state' && args[ 0 ] === this.clientID ) {
       const instrumentID = `${ args[ 1 ] }`;
       const state = `${ args[ 2 ] }`;
@@ -624,7 +640,7 @@ export class HostedScoreClient {
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
   }
 
-  realizationCommand( document, realization, action ) {
+  realizationCommand( document, realization, action, nodeID = null ) {
     if ( ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) {
       throw new Error( `Unknown score realization command: ${ action }` );
     }
@@ -634,11 +650,22 @@ export class HostedScoreClient {
     const id = requestID( `realization-${ action }` );
     return this.request( '/awb/timeline/realization/command', [
       this.clientID, id, document.scoreID, document.revision,
-      realization.runID, realization.realizationID, action, 0
-    ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
+      realization.runID, realization.realizationID, action, 0, nodeID ?? -1
+    ], id ).then( ( result ) => {
+      if ( nodeID !== null && action !== 'free' ) {
+        const voiceState = action === 'pause' ? 'paused' : action === 'resume' ? 'running'
+          : action === 'release' ? 'releasing' : 'ending';
+        const realizations = this.state.realizations.map( ( item ) => item.realizationID === realization.realizationID
+          ? Object.freeze( { ...item, voiceStates: Object.freeze( {
+            ...( item.voiceStates ?? {} ), [ nodeID ]: voiceState
+          } ) } ) : item );
+        this.publish( { realizations: Object.freeze( realizations ) } );
+      }
+      return result;
+    } ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
   }
 
-  realizationSet( document, realization, control, value, controlWidth = 1 ) {
+  realizationSet( document, realization, control, value, controlWidth = 1, nodeID = null ) {
     const values = Array.isArray( value ) ? value : [ value ];
     if ( !realization?.realizationID || !realization.runID
       || typeof control !== 'string' || !control.length
@@ -651,10 +678,15 @@ export class HostedScoreClient {
     return this.request( '/awb/timeline/realization/set', [
       this.clientID, id, document.scoreID, document.revision,
       realization.runID, realization.realizationID, control, controlWidth,
-      values.length, ...values
+      values.length, ...values, nodeID ?? -1
     ], id ).then( ( result ) => {
       const realizations = this.state.realizations.map( ( item ) => item.realizationID === realization.realizationID
-        ? Object.freeze( { ...item, params: Object.freeze( { ...( item.params ?? {} ), [ control ]: value } ) } ) : item );
+        ? nodeID === null
+          ? Object.freeze( { ...item, params: Object.freeze( { ...( item.params ?? {} ), [ control ]: value } ) } )
+          : Object.freeze( { ...item, voiceParams: Object.freeze( {
+            ...( item.voiceParams ?? {} ),
+            [ nodeID ]: Object.freeze( { ...( item.voiceParams?.[ nodeID ] ?? {} ), [ control ]: value } )
+          } ) } ) : item );
       this.publish( { realizations: Object.freeze( realizations ) } );
       return result;
     } ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
@@ -707,15 +739,15 @@ export class HostedScoreClient {
       definition, contextID, draftID, runID, contextGeneration, fingerprint, payload ], id, 0 );
   }
 
-  auditionCommand( realizationID, action ) {
+  auditionCommand( realizationID, action, nodeID = null ) {
     if ( ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) {
       throw new Error( `Unknown audition command: ${ action }` );
     }
     const id = requestID( `audition-${ action }` );
-    return this.request( '/awb/audition/command', [ this.clientID, id, action, realizationID ], id, 0 );
+    return this.request( '/awb/audition/command', [ this.clientID, id, action, realizationID, nodeID ?? -1 ], id, 0 );
   }
 
-  auditionSet( realizationID, control, value, controlWidth = 1 ) {
+  auditionSet( realizationID, control, value, controlWidth = 1, nodeID = null ) {
     const values = Array.isArray( value ) ? value : [ value ];
     if ( !realizationID || typeof control !== 'string' || !control.length
       || !Number.isInteger( controlWidth ) || controlWidth < 1 || controlWidth > 256
@@ -725,7 +757,7 @@ export class HostedScoreClient {
     }
     const id = requestID( 'audition-set' );
     return this.request( '/awb/audition/set', [ this.clientID, id, realizationID,
-      control, controlWidth, values.length, ...values ], id, 0 );
+      control, controlWidth, values.length, ...values, nodeID ?? -1 ], id, 0 );
   }
 
   async installDocument( document, options = {} ) {
