@@ -139,7 +139,7 @@ assert.throws( () => executor.load( createScoreDocument( {
   scoreID: 'missing-duration', entries: [
     makeEvent( 0, { type: 'note', def: 'awbTestTone' }, { id: 'missing-dur' } )
   ]
-} ) ), /finite dur or "inf"/ );
+} ) ), /finite (?:dur|number) or "inf"/ );
 
 assert.throws( () => executor.load( createScoreDocument( {
   scoreID: 'unsupported', entries: [ makeEvent( 0, { type: 'visual' } ) ]
