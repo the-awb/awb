@@ -32,7 +32,7 @@ export default function EventPayloadEditor( {
       { event.type === 'note' && <label>SynthDef
         <select aria-label="Event SynthDef" value={ selectedSynthDef }
           onChange={ ( change ) => update( event.def !== undefined ? 'def' : 'instrument', change.target.value ) }>
-          { synthDefs.map( ( synthDef ) => <option key={ synthDef } value={ synthDef } /> ) }
+          { synthDefs.map( ( synthDef ) => <option key={ synthDef } value={ synthDef }>{ synthDef }</option> ) }
         </select>
       </label> }
       { [ 'set', 'release', 'free' ].includes( event.type ) && !Array.isArray( event.target ) && <label>Target

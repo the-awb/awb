@@ -618,6 +618,20 @@ export class HostedScoreClient {
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
   }
 
+  realizationCommand( document, realization, action ) {
+    if ( ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) {
+      throw new Error( `Unknown score realization command: ${ action }` );
+    }
+    if ( !realization?.realizationID || !realization.runID ) {
+      throw new Error( 'Score realization command requires run and realization identities' );
+    }
+    const id = requestID( `realization-${ action }` );
+    return this.request( '/awb/timeline/realization/command', [
+      this.clientID, id, document.scoreID, document.revision,
+      realization.runID, realization.realizationID, action, 0
+    ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
+  }
+
   instrumentCommand( command, instrumentID, definition = '', params = {} ) {
     if ( ![ 'start', 'set', 'pause', 'resume', 'release', 'free' ].includes( command ) ) {
       throw new Error( `Unknown hosted instrument command: ${ command }` );

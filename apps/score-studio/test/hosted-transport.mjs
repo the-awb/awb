@@ -104,6 +104,12 @@ osc.on( 'message', ( packet, rinfo ) => {
       reply( rinfo, '/awb/timeline/transport', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'playing', 0, hostTime, 1, 0 ] );
       reply( rinfo, '/awb/timeline/realization', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'n1', 'realization-1', 'started', 0, 0, 2, 1001, 1002 ] );
     }
+  } else if ( message.address === '/awb/timeline/realization/command' ) {
+    const state = { pause: 'paused', resume: 'running', release: 'released', free: 'ending' }[ args[ 6 ] ];
+    reply( rinfo, '/awb/timeline/realization', [
+      args[ 0 ], args[ 2 ], args[ 3 ], args[ 4 ], 'n1', args[ 5 ], state, 0, 0, 2, 1001, 1002
+    ] );
+    result( rinfo, args, true, args[ 6 ], args[ 2 ], args[ 3 ], 'applied' );
   } else if ( message.address === '/awb/timeline/instrument' ) {
     result( rinfo, args, true, args[ 2 ], args[ 3 ], 0, 'applied' );
     reply( rinfo, '/awb/timeline/instrument/state', [
@@ -219,6 +225,14 @@ try {
   await waitFor( () => client.getState().realizations.length === 1 );
   assert.equal( client.getState().transport.runID, 'run-1' );
   assert.deepEqual( client.getState().realizations[ 0 ].nodeIDs, [ 1001, 1002 ] );
+  await client.realizationCommand( fixture, client.getState().realizations[ 0 ], 'pause' );
+  await waitFor( () => client.getState().realizations[ 0 ].state === 'paused' );
+  await client.realizationCommand( fixture, client.getState().realizations[ 0 ], 'resume' );
+  await waitFor( () => client.getState().realizations[ 0 ].state === 'running' );
+  const realizationCommands = received.filter( ( message ) => message.address === '/awb/timeline/realization/command' );
+  assert.deepEqual( realizationCommands.map( ( message ) => message.args.slice( 4, 7 ) ), [
+    [ 'run-1', 'realization-1', 'pause' ], [ 'run-1', 'realization-1', 'resume' ]
+  ], 'realization commands retain run and realization identity' );
 
   await client.command( fixture, 'state' );
   const stateMessages = received.filter( ( message ) => message.address === '/awb/timeline/command' && message.args[ 4 ] === 'state' );
@@ -263,7 +277,7 @@ try {
       && message.args[ 0 ] === 'score-browser-test'
   ) ) );
 
-  console.log( 'hosted-transport: 42/42 pass' );
+  console.log( 'hosted-transport: 45/45 pass' );
 } finally {
   client.disconnect();
   await bridge.close();

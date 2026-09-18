@@ -135,6 +135,10 @@ try {
   if ( Number( await page.getByLabel( 'Live amp', { exact: true } ).first().inputValue() ) !== 1 ) failures.push( 'live instrument gain did not preserve the SynthDef default' );
   if ( !( await page.getByText( 'Amplitude envelope: 2s attack · 4s release', { exact: true } ).isVisible() ) ) failures.push( 'live instrument did not disclose its audible envelope timing' );
   await page.getByRole( 'button', { name: 'Score', exact: true } ).click();
+  if ( await page.locator( '.transportPosition strong' ).count() !== 1
+    || await page.locator( '.scoreToolbar .timeReadout' ).count() !== 0 ) {
+    failures.push( 'transport and timeline strips did not reduce to one authoritative time display' );
+  }
   if ( !( await page.getByRole( 'button', { name: 'Synth lifecycle', exact: true } ).evaluate( ( button ) => button.classList.contains( 'active' ) ) ) ) {
     failures.push( 'synth lifecycle is not the default score layout' );
   }
@@ -142,6 +146,7 @@ try {
   if ( await page.locator( '.synthBar' ).count() !== 2 ) failures.push( 'lifecycle view did not render one bar per synth' );
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 0 ) failures.push( 'seed score still contains an authored release' );
   if ( await page.locator( '.synthTriggerTick.auto-release' ).count() !== 2 ) failures.push( 'finite seed notes lost their derived release boundaries' );
+  await page.locator( '.eventCommandPalette summary' ).click();
   for ( const label of [ '+ note', '+ synth', '+ set', '+ release', '+ free' ] ) {
     if ( await page.getByRole( 'button', { name: label, exact: true } ).count() !== 1 ) {
       failures.push( `score command palette is missing ${ label }` );
@@ -211,6 +216,9 @@ try {
     || await eventSynthDef.locator( 'option[value="resonantBassEnv2"]' ).count() !== 1 ) {
     failures.push( 'event SynthDef picker did not expose explicit active instrument choices' );
   } else {
+    if ( await eventSynthDef.locator( 'option[value="resonantBassEnv2"]' ).textContent() !== 'resonantBassEnv2' ) {
+      failures.push( 'event SynthDef picker exposed an empty label for an active instrument' );
+    }
     await eventSynthDef.selectOption( 'resonantBassEnv2' );
     const switchedPayload = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
     if ( switchedPayload.def !== 'resonantBassEnv2' ) failures.push( 'event SynthDef choice did not update the payload' );
@@ -381,4 +389,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 72/72 pass' );
+console.log( 'score-studio-browser: 74/74 pass' );
