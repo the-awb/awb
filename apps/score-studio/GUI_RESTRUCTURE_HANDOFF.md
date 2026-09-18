@@ -1,7 +1,7 @@
 # Score Studio GUI restructure and smart-seek handoff
 
-Status: Slices A, B and C are on `main`; the lifecycle-command authoring slice is implemented on
-`codex/score-lifecycle-commands`; Slice D remains open. The old all-instrument rack remains available
+Status: Slices A, B, C and C.1 are on `main`; Slice D is implemented on `codex/smart-seek` pending
+merge and live UI acceptance. The old all-instrument rack remains available
 only to the browser host as a compatibility surface. It is not exposed by the hosted-only shell.
 
 Definition-library policy: desktop sclang/scsynth has one active process-global SynthDef library.
@@ -440,11 +440,20 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 
 ### Slice D — smart-seek plan and temporally correct reconstruction
 
-- implement and fixture-test the pure reconstruction planner first;
-- add the hosted execution adapter over the plan, plus the optional browser-standalone adapter;
-- reconstruct only when remaining lifetime and essential state are known; classify exact versus
-  lifecycle-correct results and expose approximation/skipped-note reports;
-- validate run/realization isolation against late lifecycle messages.
+- implemented `scoreSeekPlan.js` as the shared, data-only reconstruction planner;
+- the hosted adapter sends one revision-bound JSON plan to `PScoreTimelinePlayer`; browser
+  standalone applies the same plan directly;
+- deterministic `set` history, SuperCollider-style wrapped voices, remaining gate time and
+  remaining release tails are folded before reconstruction;
+- current adapters emit `lifecycleCorrect` realizations and name their acoustic approximations;
+  unknown finite lifetimes and unreconstructable release tails are skipped;
+- stopped/paused seeks retain a pending exact-position plan; seeking during playback frees the old
+  owned run and creates a fresh run/realization identity;
+- smart seek anchors at the requested timestamp without snapping to an authored boundary; when no
+  note needs reconstruction, the scheduler preserves the exact gap to the next authored entry;
+- boundary seek remains available as an explicit UI fallback. Standalone shows reconstructed and
+  skipped counts; a richer hosted report/details surface remains UI polish rather than scheduler
+  work.
 
 ## 8. Acceptance criteria
 

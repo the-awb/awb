@@ -262,6 +262,16 @@ try {
   assert.equal( client.getState().readiness.canPlay, true );
   assert.ok( received.some( ( message ) => message.address === '/awb/timeline/snapshot/chunk' ) );
 
+  const seekPlan = {
+    version: 1, scoreID: fixture.scoreID, revision: fixture.revision, target: 0.5,
+    reconstructions: [], skipped: [], futureEntryIDs: fixture.entries.map( ( entry ) => entry.id )
+  };
+  await client.smartSeek( fixture, seekPlan );
+  const smartSeek = received.find( ( message ) => message.address === '/awb/timeline/command'
+    && message.args[ 4 ] === 'smartSeek' );
+  assert.deepEqual( JSON.parse( smartSeek.args[ 5 ] ), seekPlan,
+    'smart seek sends one revision-bound data-only reconstruction plan' );
+
   await client.command( fixture, 'play' );
   await waitFor( () => client.getState().realizations.length === 1 );
   assert.equal( client.getState().transport.runID, 'run-1' );

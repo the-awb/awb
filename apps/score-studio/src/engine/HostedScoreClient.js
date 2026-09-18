@@ -640,6 +640,15 @@ export class HostedScoreClient {
     ], id ).catch( ( error ) => { this.publish( { error: error.message } ); throw error; } );
   }
 
+  smartSeek( document, plan ) {
+    const payload = JSON.stringify( plan );
+    assertJsonlibSafe( plan, 'smartSeek' );
+    if ( new TextEncoder().encode( payload ).length > 24 * 1024 ) {
+      throw new Error( 'Smart-seek reconstruction exceeds the safe OSC payload limit.' );
+    }
+    return this.command( document, 'smartSeek', payload );
+  }
+
   realizationCommand( document, realization, action, nodeID = null ) {
     if ( ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) {
       throw new Error( `Unknown score realization command: ${ action }` );

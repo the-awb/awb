@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createScoreDocument, makeEvent } from '@awb/score';
 import { createStandaloneScoreExecutor } from '../src/engine/StandaloneScoreExecutor.js';
+import { buildSeekReconstructionPlan } from '../src/engine/scoreSeekPlan.js';
 
 let nowMs = 0;
 let nextTimer = 1;
@@ -106,6 +107,36 @@ executor.play();
 advance( 0 );
 assert.equal( sent.slice( beforeSeekPlay ).some( ( message ) => message.address === '/s_new' ), false,
   'event-boundary seek does not reconstruct a note that began earlier' );
+
+const smartDocument = createScoreDocument( {
+  scoreID: 'smart-seek', entries: [
+    makeEvent( 0, { type: 'note', def: 'fieldBasic', freqL: 220,
+      attackT: 0.1, releaseT: 2, dur: 10 }, { id: 'smart-note' } ),
+    makeEvent( 12, { type: 'note', def: 'fieldBasic', freqL: 330,
+      attackT: 0.1, releaseT: 1, dur: 1 }, { id: 'future-note' } )
+  ]
+} );
+executor.load( smartDocument );
+executor.smartSeek( buildSeekReconstructionPlan( smartDocument, 4 ) );
+assert.equal( executor.getState().status, 'stopped' );
+assert.deepEqual( executor.getState().seekReport, {
+  mode: 'smart', target: 4, reconstructed: 1, skipped: 0, skippedEntries: []
+} );
+const beforeSmartPlay = sent.length;
+executor.play();
+advance( 0 );
+const smartMessages = sent.slice( beforeSmartPlay );
+assert.equal( smartMessages.filter( ( message ) => message.address === '/s_new' ).length, 1,
+  'smart play reconstructs the still-live note' );
+assert.equal( smartMessages.find( ( message ) => message.address === '/s_new' ).args.includes( 'sustain' ), false,
+  'sustain is Event scheduling metadata rather than a SynthDef control for fieldBasic' );
+advance( 4000 );
+assert.equal( sent.slice( beforeSmartPlay ).filter( ( message ) => message.address === '/n_set'
+  && message.args.includes( 'gate' ) ).length, 1, 'reconstructed note gates off after only its remaining gate' );
+executor.smartSeek( buildSeekReconstructionPlan( smartDocument, 5 ) );
+assert.match( executor.getState().runID, /^browser-run-/,
+  'smart seek during playback creates a fresh run identity' );
+executor.stop();
 
 executor.load( createScoreDocument( {
   scoreID: 'synth-event-overlap', entries: [
