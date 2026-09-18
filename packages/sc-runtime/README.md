@@ -28,3 +28,8 @@ containers are only stable semantic scopes for cross-tool discovery and control.
 has no NodeManager GUI model, language-object inspection, tool catalogue or attempt to discover
 nodes it did not create. Several tools share it only when their browser host injects the same
 registry instance; separate windows/processes still require a host broker.
+
+Application host contracts should expose the stable registry they own rather than letting each
+tool construct one privately. Score Studio calls this host seam `engineNodeRegistry()`. The method
+name belongs to the application contract, not this package; the registry itself remains independent
+of React, Electron and any particular tool.

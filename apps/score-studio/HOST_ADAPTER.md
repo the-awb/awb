@@ -66,6 +66,11 @@ when one browser host injects the same registry into several tools. It does not 
 NodeManager's language-object inspection, GUI model, tool catalogue or discovery of externally
 created nodes. Separate windows or processes still require a host broker to share this authority.
 
+The host contract exposes that authority through `engineNodeRegistry()`. A standalone-capable host
+must return one stable registry object; Score Studio passes it to score and audition executors with
+different owner IDs. Hosted-only desktop adapters return `null` because NodeManager is authoritative
+for their execution. This is dependency injection within one JavaScript realm, not an IPC protocol.
+
 ## Remaining browser-only assumptions
 
 - The file-input element used when File System Access is unavailable.

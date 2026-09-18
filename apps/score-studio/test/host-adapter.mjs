@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { assertScoreStudioHost } from '../src/host/hostContract.js';
 import { createBrowserHost } from '../src/host/browserHost.js';
+import { createNodeRegistry } from '@awb/sc-runtime';
 
 const scoreText = await readFile(
   new URL( '../public/examples/sonic-attunement-01.score.json', import.meta.url ), 'utf8'
@@ -19,6 +20,7 @@ const browserDocument = {
   }
 };
 const browser = { confirm: ( message ) => message === 'discard?' };
+const sharedRegistry = createNodeRegistry();
 const host = createBrowserHost( {
   browser,
   browserDocument,
@@ -28,6 +30,7 @@ const host = createBrowserHost( {
     createObjectURL: () => `blob:test-${ downloads.length }`,
     revokeObjectURL: ( url ) => revoked.push( url )
   },
+  nodeRegistry: sharedRegistry,
   launch: {
     endpoint: 'ws://127.0.0.1:1234/token',
     initialScoreURL: '/__awb/hosted-score',
@@ -38,6 +41,8 @@ const host = createBrowserHost( {
 
 assert.equal( assertScoreStudioHost( host ), host );
 assert.equal( host.kind, 'browser' );
+assert.equal( host.engineNodeRegistry(), sharedRegistry,
+  'the browser host exposes the injected engine lifecycle authority by identity' );
 assert.deepEqual( host.capabilities, {
   filePicker: false,
   fileInputFallback: true,
@@ -81,6 +86,8 @@ assert.deepEqual( downloads, [ 'sonic-attunement-01.score.json', 'sonic-attuneme
 await new Promise( ( resolve ) => setTimeout( resolve, 0 ) );
 assert.equal( revoked.length, 2 );
 assert.throws( () => assertScoreStudioHost( { kind: 'broken', capabilities: {} } ), /initialScore/ );
+assert.throws( () => createBrowserHost( { browser, browserDocument, nodeRegistry: {} } ),
+  /engine node registry/ );
 
 const writes = [];
 const scoreHandle = {

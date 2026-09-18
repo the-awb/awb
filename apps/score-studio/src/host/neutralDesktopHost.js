@@ -14,7 +14,8 @@ async function scoreResult( record ) {
 }
 
 export function createNeutralDesktopHost( {
-  bridge = globalThis.awbHost, storage = globalThis.localStorage, confirm = globalThis.confirm
+  bridge = globalThis.awbHost, storage = globalThis.localStorage, confirm = globalThis.confirm,
+  nodeRegistry = null
 } = {} ) {
   if ( !bridge ) throw new TypeError( 'Neutral desktop host bridge is unavailable.' );
   const launch = bridge.initialLaunchContext();
@@ -94,6 +95,7 @@ export function createNeutralDesktopHost( {
       storage.setItem( `awb.score.draft.${ document.scoreID }`, serializeScoreDocument( document ) ); return true;
     },
     confirmDiscard( message ) { return confirm( message ); },
+    engineNodeRegistry() { return nodeRegistry; },
     hostedLaunchContext() { return { endpoint: launch.connections?.endpoint ?? '',
       toolSessionID: launch.toolSessionID ?? '', viewID: launch.viewID ?? '', toolID: launch.tool?.id ?? 'score-studio',
       scorePath: null, ownerPID: launch.owner?.pid ?? 0 }; },

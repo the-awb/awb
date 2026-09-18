@@ -45,6 +45,7 @@ assert.equal( host.capabilities.downloadFallback, false );
 assert.deepEqual( host.capabilities.documentIngress,
   { new: true, open: true, demo: true, browse: true } );
 assert.deepEqual( host.capabilities.executionModes, [ 'hosted' ] );
+assert.equal( host.engineNodeRegistry(), null );
 assert.equal( host.hostedLaunchContext().toolSessionID, 'tool-1' );
 const opened = await host.initialScore();
 assert.equal( opened.document.scoreID, 'sonic-attunement-01' );

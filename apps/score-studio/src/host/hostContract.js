@@ -10,6 +10,7 @@ const REQUIRED_METHODS = Object.freeze( [
   'saveProjection',
   'storeRecovery',
   'confirmDiscard',
+  'engineNodeRegistry',
   'hostedLaunchContext',
   'reportSessionState',
   'shellState',

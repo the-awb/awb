@@ -24,7 +24,8 @@ async function scoreResult( record, { retainHandle = true } = {} ) {
 export function createDesktopHost( {
   bridge = globalThis.awbDesktopHost,
   storage = globalThis.localStorage,
-  confirm = globalThis.confirm
+  confirm = globalThis.confirm,
+  nodeRegistry = null
 } = {} ) {
   if ( !bridge ) throw new TypeError( 'Desktop host bridge is unavailable.' );
   const capabilities = Object.freeze( {
@@ -116,6 +117,7 @@ export function createDesktopHost( {
     },
 
     confirmDiscard( message ) { return confirm( message ); },
+    engineNodeRegistry() { return nodeRegistry; },
     hostedLaunchContext() { return bridge.launchContext(); },
     reportSessionState( state ) { bridge.reportSessionState( state ); },
     shellState() { return bridge.shellState(); },

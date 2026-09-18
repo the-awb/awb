@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
-import { createNodeRegistry, createPlaybackReadiness } from '@awb/sc-runtime';
+import { createPlaybackReadiness } from '@awb/sc-runtime';
 import { loadSynthDefManifest } from '@awb/sc-wasm/core';
 import { hashScoreDocument, reviseScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
@@ -75,9 +75,10 @@ export default function App( { host, createHostedClient } ) {
     () => scoreInstruments( session.document ).map( ( instrument ) => instrument.definition ),
     [ session.document ]
   );
-  const browserNodeRegistryRef = useRef( null );
-  if ( browserNodeRegistryRef.current === null ) browserNodeRegistryRef.current = createNodeRegistry();
-  const browserNodeRegistry = browserNodeRegistryRef.current;
+  const browserNodeRegistry = useMemo( () => host.engineNodeRegistry(), [ host ] );
+  if ( executionModes.includes( MODES.STANDALONE ) && !browserNodeRegistry ) {
+    throw new Error( 'The standalone host did not provide an engine node registry.' );
+  }
   const runtimeOwnerPrefix = `${ toolID }:${ viewID || toolSessionID || 'browser' }`;
   const standaloneExecutorRef = useRef( null );
   if ( standaloneExecutorRef.current === null ) {

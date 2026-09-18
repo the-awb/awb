@@ -33,6 +33,7 @@ assert.deepEqual( calls.slice( 0, 2 ).map( ( call ) => call[ 0 ] ), [
 ] );
 assert.equal( host.hostedLaunchContext().toolSessionID, 'tool-1' );
 assert.deepEqual( host.capabilities.executionModes, [ 'hosted' ] );
+assert.equal( host.engineNodeRegistry(), null );
 assert.deepEqual( host.capabilities.documentIngress,
   { new: false, open: false, demo: false, browse: false } );
 const saved = await host.saveCanonical( opened.document, { handle, expectedHash: opened.hash } );

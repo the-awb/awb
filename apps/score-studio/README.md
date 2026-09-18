@@ -29,6 +29,8 @@ Current first slice:
 - one shared `@awb/sc-runtime` node registry for standalone score and audition execution, with
   owner-scoped control and lightweight semantic containers; hosted execution uses NodeManager
   instead of running a parallel browser registry;
+- explicit host injection of that engine registry through `engineNodeRegistry()`, allowing other
+  tools in the same browser realm to share it without making Score Studio the service owner;
 - the extracted `@awb/sc-console` editor and post window;
 - a read-only slot for generated SC working documents, with desktop-score and browser-Pseq targets
   retained in local app data by score ID, revision and projection kind.

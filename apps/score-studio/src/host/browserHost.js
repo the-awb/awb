@@ -1,4 +1,5 @@
 import { hashScoreDocument, serializeScoreDocument } from '@awb/score';
+import { createNodeRegistry } from '@awb/sc-runtime';
 import {
   listScoreDirectory, loadBundledScore, readScoreFile, readScoreHandle
 } from '../engine/scoreFiles.js';
@@ -32,8 +33,13 @@ export function createBrowserHost( {
   storage = globalThis.localStorage,
   fetchImpl = globalThis.fetch,
   urlAPI = globalThis.URL,
+  nodeRegistry = createNodeRegistry(),
   launch = {}
 } = {} ) {
+  if ( !nodeRegistry || typeof nodeRegistry.register !== 'function'
+    || typeof nodeRegistry.subscribe !== 'function' ) {
+    throw new TypeError( 'Browser hosts require an engine node registry.' );
+  }
   const launchContext = Object.freeze( {
     endpoint: launch.endpoint ?? '',
     initialScoreURL: launch.initialScoreURL ?? '',
@@ -137,6 +143,7 @@ export function createBrowserHost( {
     },
 
     confirmDiscard( message ) { return browser.confirm( message ); },
+    engineNodeRegistry() { return nodeRegistry; },
     hostedLaunchContext() { return launchContext; },
     reportSessionState() {},
     shellState() {

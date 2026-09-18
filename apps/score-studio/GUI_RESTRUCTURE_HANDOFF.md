@@ -410,8 +410,9 @@ parallel registries. If NodeManager is deliberately disabled, ordinary desktop p
 continue untracked; the player does not restore its own lifecycle registry as a fallback. The
 selected registry pushes start, pause, release, end and membership changes. The player may cache a
 derived projection for UI, while snapshot queries remain recovery/inspection operations. The
-browser authority is `createNodeRegistry()` from `@awb/sc-runtime`; Score Studio injects one
-instance into standalone score and audition execution, with different owner IDs. Consequently one
+browser authority is `createNodeRegistry()` from `@awb/sc-runtime`; the browser host exposes one
+stable instance through `engineNodeRegistry()`, and Score Studio passes it into standalone score
+and audition execution with different owner IDs. Consequently one
 tool cannot stop or dispose another tool's nodes. A browser host may inject the same instance into
 other tools to share lightweight semantic containers. Cross-window/process sharing remains a host
 broker concern.
