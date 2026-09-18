@@ -54,11 +54,12 @@ export function createStandaloneScoreExecutor( {
   let anchorScore = 0;
   let nextNodeID = nodeIDStart;
   let nextRunID = 1;
+  let pendingSeekPlan = null;
   const live = new Map();
   const listeners = new Set();
   let state = freezeState( {
     status: 'empty', scoreID: null, revision: null, runID: null,
-    position: 0, liveCount: 0, realizations: [], error: null
+    position: 0, liveCount: 0, realizations: [], seekReport: null, error: null
   } );
 
   const publish = ( patch ) => {
@@ -97,7 +98,7 @@ export function createStandaloneScoreExecutor( {
     return [ ...live.values() ].filter( ( node ) => targets.has( node.entryID ) || targets.has( String( node.nodeID ) ) );
   };
 
-  const execute = ( entry ) => {
+  const execute = ( entry, reconstruction = null ) => {
     const event = entry.event;
     if ( event.type === 'note' ) {
       const definition = event.def ?? event.instrument;
@@ -123,7 +124,13 @@ export function createStandaloneScoreExecutor( {
         };
         live.set( nodeID, node );
         created.push( Object.freeze( { entryID: entry.id, nodeID, definition,
-          params: Object.freeze( { ...params } ), state: 'started' } ) );
+          params: Object.freeze( { ...params } ), state: 'started',
+          ...( reconstruction ? {
+            reconstructionQuality: reconstruction.quality,
+            reconstructionPhase: reconstruction.phase,
+            sourceTime: reconstruction.sourceTime,
+            voiceIndex: reconstruction.voiceIndex
+          } : {} ) } ) );
       }
       publish( { realizations: [ ...state.realizations, ...created ].slice( -200 ), liveCount: live.size } );
       return;
@@ -144,6 +151,22 @@ export function createStandaloneScoreExecutor( {
       for ( const node of targets ) {
         sendOsc( '/n_free', [ node.nodeID ] );
         dropNode( node.nodeID, true );
+      }
+    }
+  };
+
+  const executeReconstructionPlan = ( plan ) => {
+    for ( const reconstruction of plan.reconstructions ) {
+      const before = new Set( live.keys() );
+      execute( { id: reconstruction.entryID, time: plan.target, event: reconstruction.event }, reconstruction );
+      if ( reconstruction.phase === 'release' ) {
+        for ( const node of live.values() ) {
+          if ( before.has( node.nodeID ) ) continue;
+          sendOsc( '/n_set', [ node.nodeID, 'gate', 0 ] );
+          node.released = true;
+          node.releaseAt = null;
+          realization( node.nodeID, { state: 'released' } );
+        }
       }
     }
   };
@@ -207,11 +230,12 @@ export function createStandaloneScoreExecutor( {
     clearWake();
     hardFreeAll();
     document = nextDocument;
+    pendingSeekPlan = null;
     entries = sortScore( nextDocument.entries );
     cursor = 0;
     publish( {
       status: 'ready', scoreID: document.scoreID, revision: document.revision, runID: null,
-      position: 0, realizations: [], error: null
+      position: 0, realizations: [], seekReport: null, error: null
     } );
   };
   const seek = ( seconds ) => {
@@ -220,13 +244,46 @@ export function createStandaloneScoreExecutor( {
     const playing = state.status === 'playing';
     clearWake();
     hardFreeAll();
+    pendingSeekPlan = null;
     cursor = entries.findIndex( ( entry ) => entry.time >= position );
     if ( cursor < 0 ) cursor = entries.length;
     anchorScore = position;
     anchorWall = now();
     const nextStatus = playing ? 'playing' : 'stopped';
-    publish( { position, status: nextStatus, error: null } );
+    publish( { position, status: nextStatus, seekReport: null, error: null } );
     if ( playing ) { wake(); }
+  };
+  const smartSeek = ( plan ) => {
+    if ( !document ) throw new Error( 'Load a score before seeking.' );
+    if ( !plan || plan.version !== 1 || plan.scoreID !== document.scoreID
+      || plan.revision !== document.revision || !Number.isFinite( plan.target ) ) {
+      throw new Error( 'Smart-seek plan does not match the loaded score revision.' );
+    }
+    const playing = state.status === 'playing';
+    clearWake();
+    hardFreeAll();
+    cursor = entries.findIndex( ( entry ) => entry.time >= plan.target );
+    if ( cursor < 0 ) cursor = entries.length;
+    anchorScore = plan.target;
+    anchorWall = now();
+    const seekReport = Object.freeze( {
+      mode: 'smart', target: plan.target,
+      reconstructed: plan.reconstructions.length,
+      skipped: plan.skipped.length,
+      skippedEntries: plan.skipped
+    } );
+    pendingSeekPlan = playing ? null : plan;
+    publish( {
+      position: plan.target,
+      status: playing ? 'playing' : 'stopped',
+      runID: playing ? `browser-run-${ nextRunID++ }` : null,
+      seekReport,
+      error: null
+    } );
+    if ( playing ) {
+      executeReconstructionPlan( plan );
+      wake();
+    }
   };
   const play = () => {
     if ( !document ) throw new Error( 'Load a score before playing.' );
@@ -242,6 +299,11 @@ export function createStandaloneScoreExecutor( {
       status: 'playing', runID: state.status === 'paused' ? state.runID : `browser-run-${ nextRunID++ }`,
       error: null
     } );
+    if ( pendingSeekPlan ) {
+      const plan = pendingSeekPlan;
+      pendingSeekPlan = null;
+      executeReconstructionPlan( plan );
+    }
     wake();
   };
   const pause = () => {
@@ -302,7 +364,7 @@ export function createStandaloneScoreExecutor( {
   } );
 
   return {
-    load, play, pause, stop, seek, commandRealization, setRealization, estimatePosition,
+    load, play, pause, stop, seek, smartSeek, commandRealization, setRealization, estimatePosition,
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     getState: () => state,
     dispose: () => { stop(); offOsc(); listeners.clear(); }

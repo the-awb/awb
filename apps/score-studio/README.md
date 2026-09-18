@@ -220,12 +220,14 @@ default `legato`. That leaves `resonantBassEnv2` incomplete: its `dur` is both E
 intentionally matching modulation control, while its freeing amplitude EnvGen is based on
 Event-resolved `sustain`. Reproducing that Event-to-SynthDef mapping is the next lifecycle adapter
 correction; the current player still requires an authored release/free boundary for this def.
-Pause uses `/n_run`; stop and event-boundary seek hard-free only nodes belonging to this execution
-session.
-
-This is intentionally not full state-reconstructing seek: a note that began before the target is
-not recreated. Array-expanded `set` controls and path/group targeting are also refused or absent
-rather than guessed. Unsupported event types fail score loading instead of disappearing silently.
+Pause uses `/n_run`; stop and either seek mode hard-free only nodes belonging to this execution
+session. Boundary seek resumes at the next authored entry. Smart seek folds deterministic
+note/set/release/free history and recreates only notes whose remaining lifetime is known. It
+preserves remaining gate or release-tail time, expands wrapped voices, uses fresh runtime
+identities and reports skipped notes rather than replaying an unsafe full duration. Current
+reconstructions are lifecycle-correct rather than acoustically exact: attack, oscillator phase or
+the release shape may restart while the terminal boundary remains correct. Unsupported event types
+still fail score loading instead of disappearing silently.
 
 Compiled assets live under `public/synthdefs/`, with provenance recorded beside them. They are
 host assets, like `public/scsynth/` and `public/sclang/`; neither `@awb/score` nor `@awb/sc-wasm`

@@ -32,6 +32,7 @@ import { scoreInstruments } from './engine/scoreInstruments.js';
 import { retryScoreProjection, saveScorePair, validateProjection } from './engine/scorePairSave.js';
 import { formatTimelineTime } from './engine/timelineScale.js';
 import { voicesForRealization } from './engine/runtimeVoices.js';
+import { buildSeekReconstructionPlan } from './engine/scoreSeekPlan.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
@@ -60,6 +61,7 @@ export default function App( { host, createHostedClient } ) {
   const [ scoreFolder, setScoreFolder ] = useState( { handle: null, name: '', files: [], message: '' } );
   const [ focus, setFocus ] = useState( { kind: 'none', draftID: freshDraftID() } );
   const [ voiceSelection, setVoiceSelection ] = useState( null );
+  const [ smartSeeking, setSmartSeeking ] = useState( true );
   const inputRef = useRef( null );
   const stopArmedRef = useRef( false );
   const sc = useSuperCollider( { importScsynth } );
@@ -335,7 +337,12 @@ export default function App( { host, createHostedClient } ) {
       else await sc.boot();
       const definitions = await loadStandaloneSynthDefs( sc, session.document );
       if ( !standaloneLoaded ) standaloneExecutor.load( session.document );
-      if ( atPlayhead ) standaloneExecutor.seek( session.cursorTime );
+      if ( atPlayhead ) {
+        if ( smartSeeking ) standaloneExecutor.smartSeek(
+          buildSeekReconstructionPlan( session.document, session.cursorTime )
+        );
+        else standaloneExecutor.seek( session.cursorTime );
+      }
       setStandaloneDefinitions( {
         scoreID: session.document.scoreID, revision: session.document.revision,
         state: 'ready', missing: [], detail: ''
@@ -372,15 +379,23 @@ export default function App( { host, createHostedClient } ) {
       await hostedClient.command( session.document, 'resume' );
       return;
     }
-    await hostedClient.command( session.document, 'seek', session.cursorTime );
+    const plan = smartSeeking ? buildSeekReconstructionPlan( session.document, session.cursorTime ) : null;
+    if ( plan ) await hostedClient.smartSeek( session.document, plan );
+    else await hostedClient.command( session.document, 'seek', session.cursorTime );
     await hostedClient.command( session.document, 'play' );
   }
 
   async function seekTransport( time ) {
     stopArmedRef.current = false;
+    const plan = smartSeeking ? buildSeekReconstructionPlan( session.document, time ) : null;
     if ( session.mode === MODES.HOSTED ) {
-      if ( loadedRevision ) await hostedAction( () => hostedClient.command( session.document, 'seek', time ) );
-    } else if ( standaloneLoaded ) standaloneExecutor.seek( time );
+      if ( loadedRevision ) await hostedAction( () => plan
+        ? hostedClient.smartSeek( session.document, plan )
+        : hostedClient.command( session.document, 'seek', time ) );
+    } else if ( standaloneLoaded ) {
+      if ( plan ) standaloneExecutor.smartSeek( plan );
+      else standaloneExecutor.seek( time );
+    }
   }
 
   async function toggleTransport() {
@@ -860,6 +875,11 @@ export default function App( { host, createHostedClient } ) {
                 <button disabled={ !transportLoaded } onClick={ stopTransport }>Stop</button>
                 <button disabled={ !transportLoaded } aria-label="Return to start"
                   title="Return to start" onClick={ returnToStart }>&#8612;</button>
+                <button className={ smartSeeking ? 'active' : '' }
+                  title="Double-click seeking reconstructs notes that should still be alive"
+                  onClick={ () => setSmartSeeking( ( value ) => !value ) }>
+                  { smartSeeking ? 'Smart seek' : 'Boundary seek' }
+                </button>
               </div>
               <div className="transportPosition">
                 <strong>{ formatTimelineTime( session.playhead, 0.001 ) }</strong>
@@ -869,6 +889,12 @@ export default function App( { host, createHostedClient } ) {
                 : session.mode === MODES.STANDALONE && standaloneLoaded
                   ? `${ standalone.status } · run ${ standalone.runID || '—' } · browser absolute-time anchor`
                   : 'Load the selected executor before playback.' }</p>
+              { session.mode === MODES.STANDALONE && standalone.seekReport && <span
+                className="seekReport" title={ standalone.seekReport.skippedEntries
+                  .map( ( item ) => `${ item.entryID }: ${ item.reason }` ).join( '\n' ) }>
+                { standalone.seekReport.reconstructed } reconstructed
+                { standalone.seekReport.skipped ? ` · ${ standalone.seekReport.skipped } skipped` : '' }
+              </span> }
             </section>
             <ScoreTimeline session={ session } dispatch={ dispatch } onSeek={ seekTransport }
               onVoiceSelect={ ( entryID, voiceIndex ) => setVoiceSelection(
