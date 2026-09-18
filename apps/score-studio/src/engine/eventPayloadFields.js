@@ -9,8 +9,8 @@ function scalarKind( value ) {
   return 'json';
 }
 
-export function payloadFields( event ) {
-  const instrument = typeForSynthDef( event.def ?? event.instrument );
+export function payloadFields( event, inheritedDefinition = null ) {
+  const instrument = typeForSynthDef( event.def ?? event.instrument ?? inheritedDefinition );
   const fields = instrument ? [
     ...instrumentFields( instrument.key ).map( ( field ) => ( {
       name: field.path[ 0 ], ...field,

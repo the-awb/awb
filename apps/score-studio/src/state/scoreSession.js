@@ -8,8 +8,7 @@ export function seedDocument( scoreID = 'untitled-score' ) {
     meta: { title: 'Untitled score', description: '', tags: [] },
     entries: sortScore( [
       makeEvent( 0, { type: 'note', def: 'substrate', freqA: 36, amp: 0.25, dur: 8 }, { id: 'n1', path: [ 'opening' ] } ),
-      makeEvent( 2, { type: 'note', def: 'substrate', freqA: 54, amp: 0.2, dur: 8 }, { id: 'n2', path: [ 'answer' ] } ),
-      makeEvent( 5, { type: 'release', target: '@all' }, { id: 'n3', path: [] } )
+      makeEvent( 2, { type: 'note', def: 'substrate', freqA: 54, amp: 0.2, dur: 8 }, { id: 'n2', path: [ 'answer' ] } )
     ] )
   } );
 }

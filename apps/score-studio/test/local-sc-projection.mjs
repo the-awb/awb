@@ -9,7 +9,7 @@ const document = createScoreDocument( {
   meta: { title: 'Local projection', description: '', tags: [] },
   entries: [
     { id: 'later', time: 2, path: [ 'part-one' ], event: { type: 'set', target: '@all', controls: { amp: 0.2 } } },
-    { id: 'note-1', time: 0, path: [ 'part-one' ], event: { type: 'note', def: 'substrate', freqA: [ 36, 54 ], enabled: true } }
+    { id: 'note-1', time: 0, path: [ 'part-one' ], event: { type: 'note', def: 'substrate', freqA: [ 36, 54 ], enabled: true, dur: 'inf' } }
   ]
 } );
 const text = generateLocalScProjection( document );
@@ -22,6 +22,7 @@ assert.doesNotMatch( text, /'def':/ );
 assert.match( text, /'type': 'note'/ );
 assert.match( text, /'path': \[ 'part-one' \]/ );
 assert.match( text, /'freqA': \[ 36, 54 \]/ );
+assert.match( text, /'dur': inf/ );
 assert.match( text, /'controls': \( 'amp': 0\.2 \)/ );
 assert.ok( text.indexOf( 'note-1' ) < text.indexOf( 'later' ), 'entries are stably sorted by absolute time' );
 assert.equal( generateLocalScProjection( document ), text, 'projection is deterministic' );
@@ -36,7 +37,7 @@ const pseqDocument = createScoreDocument( {
   entries: [
     { id: 'first', time: 2, path: [], event: { type: 'note', def: 'substrate', freqA: 36, dur: 10, legato: 0.5 } },
     { id: 'release-all', time: 4, path: [], event: { type: 'release', target: '@all' } },
-    { id: 'second', time: 7, path: [], event: { type: 'note', def: 'substrate2', freq: 40, sustain: 3 } }
+    { id: 'second', time: 7, path: [], event: { type: 'note', def: 'substrate2', freq: 40, dur: 4, sustain: 3 } }
   ]
 } );
 const pseq = generateLocalScProjection( pseqDocument, { kind: SC_PROJECTION_KINDS.BROWSER_PSEQ } );

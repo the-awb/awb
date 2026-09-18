@@ -1,7 +1,7 @@
 # Score Studio GUI restructure and smart-seek handoff
 
-Status: Slices A and B are on `main`; Slice C is implemented on
-`codex/score-studio-audition`; Slice D remains open. The old all-instrument rack remains available
+Status: Slices A, B and C are on `main`; the lifecycle-command authoring slice is implemented on
+`codex/score-lifecycle-commands`; Slice D remains open. The old all-instrument rack remains available
 only to the browser host as a compatibility surface. It is not exposed by the hosted-only shell.
 
 Definition-library policy: desktop sclang/scsynth has one active process-global SynthDef library.
@@ -410,6 +410,22 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 - Stop frees only the current draft's audition realizations and their member nodes;
 - integrate the compact `envArray` editor where authorised;
 - project hosted audition nodes through NodeManager with explicit origin metadata.
+
+### Slice C.1 — authored synth lifecycle commands
+
+- remove the authored release command from the seed score; finite notes retain only their derived
+  lifecycle boundary;
+- expose `+ note`, `+ synth`, `+ set`, `+ release` and `+ free` in the score command palette;
+- require every note to declare `dur`; an indefinitely sustained synth is represented explicitly as
+  `dur: "inf"`, never by an absent duration;
+- project `set`, `release` and `free` as editable child markers of their targeted synth lane while
+  retaining flat, absolute-time canonical score entries linked by `event.target`;
+- render an unclosed `dur: "inf"` synth as a finite label followed by a gradient continuation arrow;
+  the infinite tail does not affect Fit, while finite child-command positions do;
+- map `"inf"` to native sclang `inf` in generated projections and suppress Event's automatic gate
+  message without hiding the realized SynthDef's actual gate capability;
+- apply authored set controls directly to every realized voice, broadcasting scalars and wrapping
+  shorter arrays using ordinary SuperCollider multichannel semantics.
 
 ### Slice D — smart-seek plan and temporally correct reconstruction
 

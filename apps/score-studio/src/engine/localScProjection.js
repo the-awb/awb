@@ -43,9 +43,10 @@ function eventCode( source, path ) {
     if ( key === 'def' && source.instrument === undefined ) {
       fields.push( `${ scSymbol( 'instrument' ) }: ${ scSymbol( value ) }` );
     } else if ( key !== 'def' ) {
-      const encoded = [ 'instrument', 'type' ].includes( key ) && typeof value === 'string'
-        ? scSymbol( value )
-        : scValue( value, `${ path }.${ key }` );
+      const encoded = key === 'dur' && value === 'inf' ? 'inf'
+        : [ 'instrument', 'type' ].includes( key ) && typeof value === 'string'
+          ? scSymbol( value )
+          : scValue( value, `${ path }.${ key }` );
       fields.push( `${ scSymbol( key ) }: ${ encoded }` );
     }
   }
@@ -105,7 +106,9 @@ function pseqEventCode( entry, index, delta ) {
   fields.push( `${ scSymbol( 'delta' ) }: ${ String( delta ) }` );
   for ( const [ key, value ] of Object.entries( source ) ) {
     if ( [ 'type', 'def', 'instrument', 'target', 'delta' ].includes( key ) ) continue;
-    fields.push( `${ scSymbol( key ) }: ${ scValue( value, `score[${ index }].event.${ key }` ) }` );
+    const encoded = key === 'dur' && value === 'inf'
+      ? 'inf' : scValue( value, `score[${ index }].event.${ key }` );
+    fields.push( `${ scSymbol( key ) }: ${ encoded }` );
   }
   return `( ${ fields.join( ', ' ) } )`;
 }

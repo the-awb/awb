@@ -14,9 +14,12 @@ assert.equal( payloadFieldPlaceholder( fields.find( ( field ) => field.name === 
 assert.equal( payloadFieldPlaceholder( fields.find( ( field ) => field.name === 'dur' ) ), undefined );
 assert.equal( payloadFields( { type: 'set', target: '@all', curve: [ 1, 2 ] } )
   .find( ( field ) => field.name === 'curve' )?.kind, 'json' );
+assert.equal( payloadFields( { type: 'set', target: 'n1' }, 'substrate' )
+  .find( ( field ) => field.name === 'freqA' )?.defaultValue, 60,
+'targeted lifecycle children inherit their parent SynthDef editor fields' );
 assert.equal( updatePayloadField( substrate, 'freqA', '40.5', 'number' ).freqA, 40.5 );
 assert.equal( updatePayloadField( substrate, 'flip', true, 'boolean' ).flip, true );
 assert.equal( updatePayloadField( substrate, 'dur', '', 'number' ).dur, undefined );
 assert.throws( () => updatePayloadField( substrate, 'freqA', 'nope', 'number' ), /finite number/ );
 
-console.log( 'event-payload-fields: 11/11 pass' );
+console.log( 'event-payload-fields: 12/12 pass' );

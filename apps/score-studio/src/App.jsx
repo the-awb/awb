@@ -16,6 +16,7 @@ import ScoreStudioLeftRail from './components/ScoreStudioLeftRail.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import SynthDefDraftEditor from './components/SynthDefDraftEditor.jsx';
 import { createAuditionController, createStandaloneAuditionAdapter } from './engine/AuditionController.js';
+import { lifecycleDefinitionsForEntry } from './engine/synthLifecycleLanes.js';
 import { importSclang, importScsynth, locateSclangFile } from './engine/scAssets.js';
 import { formatScSymbol } from './engine/scValueSyntax.js';
 import { createStandaloneScoreExecutor } from './engine/StandaloneScoreExecutor.js';
@@ -802,6 +803,7 @@ export default function App( { host, createHostedClient } ) {
           { focus.kind === 'scoreEvent' && selectedEntry && <EventEditor
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
             entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry }
+            inheritedDefinition={ lifecycleDefinitionsForEntry( inspectedEntries, selectedEntry.id )[ 0 ] ?? null }
             onAudition={ ( event ) => auditionDraft( {
               definition: event.def ?? event.instrument, params: event, model: null
             }, displayedFocus ) }
@@ -817,7 +819,9 @@ export default function App( { host, createHostedClient } ) {
   );
 }
 
-function EventEditor( { entry, onPreview, onCommit, onAudition, onStopAudition, auditionCount = 0 } ) {
+function EventEditor( {
+  entry, inheritedDefinition, onPreview, onCommit, onAudition, onStopAudition, auditionCount = 0
+} ) {
   const [ time, setTime ] = useState( String( entry.time ) );
   const [ path, setPath ] = useState( () => entry.path.join( '/' ) );
   const [ eventText, setEventText ] = useState( () => JSON.stringify( entry.event, null, 2 ) );
@@ -877,7 +881,8 @@ function EventEditor( { entry, onPreview, onCommit, onAudition, onStopAudition, 
           value={ time } onChange={ ( event ) => { setTime( event.target.value ); draftPatch( { time: event.target.value } ); } } /></label>
         <label>Path <input aria-label="Event path" value={ path } placeholder="section/voice"
           onChange={ ( event ) => { setPath( event.target.value ); draftPatch( { path: event.target.value } ); } } /></label>
-        <EventPayloadEditor event={ parsedEvent } onChange={ updatePayload } />
+        <EventPayloadEditor event={ parsedEvent } inheritedDefinition={ inheritedDefinition }
+          onChange={ updatePayload } />
         <label>Raw event JSON<textarea aria-label="Event payload" className="eventJson" value={ eventText }
           onChange={ ( event ) => { setEventText( event.target.value ); draftPatch( { eventText: event.target.value } ); } }
           onKeyDown={ ( event ) => {

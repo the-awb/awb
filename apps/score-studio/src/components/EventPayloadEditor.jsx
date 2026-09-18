@@ -5,9 +5,9 @@ import { formatScValue, parseScValue } from '../engine/scValueSyntax.js';
 
 const COMMON_TYPES = [ 'note', 'set', 'release', 'free' ];
 
-export default function EventPayloadEditor( { event, onChange } ) {
+export default function EventPayloadEditor( { event, inheritedDefinition = null, onChange } ) {
   if ( !event ) return <p className="typedPayloadUnavailable">Fix the raw JSON to use typed controls.</p>;
-  const fields = payloadFields( event );
+  const fields = payloadFields( event, inheritedDefinition );
   const synthDefs = Object.values( INSTRUMENT_CATALOG ).map( ( descriptor ) => descriptor.synthDef );
   const update = ( name, value, kind = 'text' ) => onChange( updatePayloadField( event, name, value, kind ) );
 

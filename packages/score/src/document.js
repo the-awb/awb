@@ -64,7 +64,18 @@ export function validateScoreDocument( value ) {
         errors.push( `${ path }.path must be an array of strings` );
       }
       if ( !isObject( entry.event ) ) errors.push( `${ path }.event must be an object` );
-      else checkJsonValue( entry.event, `${ path }.event`, errors );
+      else {
+        checkJsonValue( entry.event, `${ path }.event`, errors );
+        if ( entry.event.type === 'note' ) {
+          const noteDuration = entry.event.dur;
+          if ( noteDuration === undefined ) {
+            errors.push( `${ path }.event.dur must be a non-negative finite number or "inf"` );
+          } else if ( noteDuration !== 'inf'
+            && ( typeof noteDuration !== 'number' || !Number.isFinite( noteDuration ) || noteDuration < 0 ) ) {
+            errors.push( `${ path }.event.dur must be a non-negative finite number or "inf"` );
+          }
+        }
+      }
     } );
   }
   return { ok: errors.length === 0, errors };

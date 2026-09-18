@@ -122,10 +122,18 @@ export function projectSynthLifecycleLanes( score ) {
       return { ...envelope, release: atRelease?.release ?? envelope.release };
     } );
     const amplitudeEnvelope = envelopes.find( ( envelope ) => envelope.role === 'amplitude' ) ?? null;
+    const openEnded = createParams.dur === 'inf' && releaseMarker === undefined && freeTime === null;
     return {
       ...lane, events, startTime, endTime, gateReleaseTime, gateMarker: releaseMarker ?? null, freeTime,
       durationTime, durationControl: durationTime === null ? null : 'dur', noteLifecycle,
-      envelopes, envelope: amplitudeEnvelope
+      openEnded, envelopes, envelope: amplitudeEnvelope
     };
   } );
+}
+
+export function lifecycleDefinitionsForEntry( score, entryID ) {
+  return [ ...new Set( projectSynthLifecycleLanes( score )
+    .filter( ( lane ) => lane.id !== '__unassigned__'
+      && lane.events.some( ( marker ) => marker.entry.id === entryID ) )
+    .map( ( lane ) => lane.definition ) ) ];
 }
