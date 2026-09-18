@@ -45,6 +45,27 @@ assert.deepEqual( envelopeLane.envelopes.map( ( envelope ) => envelope.id ), [ '
 assert.equal( envelopeLane.envelope.completionAction, 'freeNode' );
 assert.equal( envelopeLane.envelope.releaseControl, 'releaseT' );
 
+const sharedPolyEnvelopeLane = projectSynthLifecycleLanes( [
+  makeEvent( 0, { type: 'note', def: 'substrate', freqA: [ 36, 48 ], dur: 20,
+    attackT: 2, releaseT: 5 }, { id: 'shared-poly-env' } )
+] )[ 0 ];
+assert.equal( sharedPolyEnvelopeLane.expansionCount, 2 );
+assert.deepEqual( sharedPolyEnvelopeLane.sharedEnvelopes.map( ( envelope ) => envelope.id ),
+  [ 'amplitude', 'beat', 'tremolo' ], 'scalar envelopes remain attached to the authored parent' );
+assert.deepEqual( sharedPolyEnvelopeLane.voiceEnvelopes, [ [], [] ] );
+
+const expandedPolyEnvelopeLane = projectSynthLifecycleLanes( [
+  makeEvent( 0, { type: 'note', def: 'substrate', freqA: [ 36, 48 ], dur: 20,
+    attackT: [ 1, 1 ], releaseT: 5 }, { id: 'expanded-poly-env' } )
+] )[ 0 ];
+assert.deepEqual( expandedPolyEnvelopeLane.sharedEnvelopes.map( ( envelope ) => envelope.id ), [ 'tremolo' ],
+  'only envelopes with identical voice projections remain on the parent' );
+assert.deepEqual( expandedPolyEnvelopeLane.voiceEnvelopes.map( ( envelopes ) =>
+  envelopes.map( ( envelope ) => [ envelope.id, envelope.attack ] ) ), [
+  [ [ 'amplitude', 1 ], [ 'beat', 0.5 ] ],
+  [ [ 'amplitude', 1 ], [ 'beat', 0.5 ] ]
+], 'array-authored envelopes attach to their expanded voice children even when values match' );
+
 const coupledLane = projectSynthLifecycleLanes( [
   makeEvent( 0, { type: 'note', def: 'resonantBassEnv2', dur: 20, ampEnvRatio: 0.25 }, { id: 'coupled' } )
 ] )[ 0 ];

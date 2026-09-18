@@ -22,6 +22,43 @@ function effectiveParamsAt( lane, time ) {
   return params;
 }
 
+function envelopeSignature( envelope ) {
+  return JSON.stringify( [
+    envelope.attack, envelope.release, envelope.duration, envelope.shape,
+    envelope.gateControl, envelope.completionAction
+  ] );
+}
+
+function expressionControls( value, names = new Set() ) {
+  if ( Array.isArray( value ) ) value.forEach( ( item ) => expressionControls( item, names ) );
+  else if ( value && typeof value === 'object' ) {
+    if ( value.kind === 'control' && value.name ) names.add( value.name );
+    Object.values( value ).forEach( ( item ) => expressionControls( item, names ) );
+  }
+  return names;
+}
+
+function projectVoiceEnvelopes( instrument, voices = [], params ) {
+  if ( !instrument ) return { representative: [], shared: [], byVoice: voices.map( () => [] ) };
+  let expanded = voices.length ? voices : [ {} ];
+  try { expanded = expandScEventParams( params ); } catch { /* retain the known create expansion */ }
+  const projected = expanded.map( ( voice ) => instrumentEnvelopes( instrument.key, { ...params, ...voice } ) );
+  const representative = projected[ 0 ] ?? [];
+  const multichannelIDs = new Set( ( instrument.descriptor?.envelopes ?? [] )
+    .filter( ( envelope ) => [ ...expressionControls( envelope ) ]
+      .some( ( control ) => Array.isArray( params[ control ] ) && params[ control ].length > 1 ) )
+    .map( ( envelope ) => envelope.id ) );
+  const sharedIDs = new Set( representative.filter( ( envelope, index ) =>
+    !multichannelIDs.has( envelope.id ) && projected.every( ( items ) => items[ index ]
+      && envelopeSignature( items[ index ] ) === envelopeSignature( envelope ) )
+  ).map( ( envelope ) => envelope.id ) );
+  return {
+    representative,
+    shared: representative.filter( ( envelope ) => sharedIDs.has( envelope.id ) ),
+    byVoice: projected.map( ( items ) => items.filter( ( envelope ) => !sharedIDs.has( envelope.id ) ) )
+  };
+}
+
 export function projectSynthLifecycleLanes( score ) {
   const entries = sortScore( score );
   const lanes = [];
@@ -105,11 +142,14 @@ export function projectSynthLifecycleLanes( score ) {
     const releaseMarker = terminal.find( ( marker ) => [ 'release', 'auto-release' ].includes( marker.role ) );
     const freeTime = terminal.find( ( marker ) => marker.role === 'free' )?.time ?? null;
     const createParams = effectiveParamsAt( { ...lane, events }, startTime );
-    const initialEnvelopes = lane.instrument ? instrumentEnvelopes( lane.instrument.key, createParams ) : [];
+    const initialProjection = projectVoiceEnvelopes( lane.instrument, lane.voices, createParams );
+    const initialEnvelopes = initialProjection.representative;
     const noteLifecycle = lane.instrument ? instrumentNoteLifecycle( lane.instrument.key, createParams ) : null;
-    const releaseEnvelopes = releaseMarker && lane.instrument
-      ? instrumentEnvelopes( lane.instrument.key, effectiveParamsAt( { ...lane, events }, releaseMarker.time ) )
-      : [];
+    const releaseParams = releaseMarker ? effectiveParamsAt( { ...lane, events }, releaseMarker.time ) : null;
+    const releaseProjection = releaseParams
+      ? projectVoiceEnvelopes( lane.instrument, lane.voices, releaseParams )
+      : { representative: [], shared: [], byVoice: ( lane.voices ?? [] ).map( () => [] ) };
+    const releaseEnvelopes = releaseProjection.representative;
     const completionEnvelope = releaseEnvelopes.find( ( envelope ) => envelope.completionAction === 'freeNode' );
     const naturalEnd = releaseMarker && completionEnvelope && completionEnvelope.release !== null
       ? releaseMarker.time + completionEnvelope.release
@@ -125,12 +165,20 @@ export function projectSynthLifecycleLanes( score ) {
       const atRelease = releaseEnvelopes.find( ( item ) => item.id === envelope.id );
       return { ...envelope, release: atRelease?.release ?? envelope.release };
     } );
+    const sharedEnvelopes = initialProjection.shared.map( ( envelope ) => {
+      const atRelease = releaseProjection.shared.find( ( item ) => item.id === envelope.id );
+      return { ...envelope, release: atRelease?.release ?? envelope.release };
+    } );
+    const voiceEnvelopes = initialProjection.byVoice.map( ( items, voiceIndex ) => items.map( ( envelope ) => {
+      const atRelease = releaseProjection.byVoice[ voiceIndex ]?.find( ( item ) => item.id === envelope.id );
+      return { ...envelope, release: atRelease?.release ?? envelope.release };
+    } ) );
     const amplitudeEnvelope = envelopes.find( ( envelope ) => envelope.role === 'amplitude' ) ?? null;
     const openEnded = createParams.dur === 'inf' && releaseMarker === undefined && freeTime === null;
     return {
       ...lane, events, startTime, endTime, gateReleaseTime, gateMarker: releaseMarker ?? null, freeTime,
       durationTime, durationControl: durationTime === null ? null : 'dur', noteLifecycle,
-      openEnded, envelopes, envelope: amplitudeEnvelope
+      openEnded, envelopes, envelope: amplitudeEnvelope, sharedEnvelopes, voiceEnvelopes
     };
   } );
 }

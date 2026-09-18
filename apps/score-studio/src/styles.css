@@ -154,8 +154,12 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .realizationFocus strong { white-space: nowrap; }
 .realizationActions { display: flex; flex-wrap: wrap; gap: 4px; }
 .runtimeRealizationGroup { display: grid; gap: 3px; margin: 7px 0; padding: 6px; border: 1px solid var(--line); border-radius: 7px; background: #171715; }
-.runtimeRealizationGroup > header { display: flex; align-items: baseline; justify-content: space-between; gap: 7px; padding: 1px 3px 5px; }
+.runtimeRealizationGroup > header { display: flex; align-items: center; gap: 5px; padding: 1px 3px 5px; }
 .runtimeRealizationGroup > header small { overflow: hidden; color: var(--muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.runtimeRealizationSummary .realizationFocus { flex: 1; border-color: transparent; background: transparent; }
+.runtimeDisclosure { flex: 0 0 20px; min-width: 20px; padding: 3px; border-color: transparent; background: transparent; color: var(--muted); }
+.aggregateActions { justify-content: flex-end; }
+.runtimeVoiceChildren { margin-left: 10px; border-left: 1px solid #3a3933; padding-left: 5px; }
 .runtimeVoiceRow { display: grid; grid-template-columns: minmax(86px, .65fr) minmax(0, 1fr); gap: 5px; align-items: center; padding: 5px; border-top: 1px solid #292925; }
 .runtimeVoiceRow .realizationFocus { border-color: transparent; background: transparent; }
 .runtimeVoiceRow .realizationFocus strong { color: var(--accent); }
@@ -200,6 +204,7 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .synthOpenContinuation::after { position: absolute; top: -3px; right: -1px; width: 0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 7px solid #a990ff; content: ''; }
 .durationHandle { position: absolute; z-index: 3; top: 11px; width: 7px; height: 25px; min-width: 0; padding: 0; transform: translateX(-3px); border: 1px solid #f0d99b; border-radius: 3px; background: #26221a; cursor: ew-resize; touch-action: none; }
 .synthEnvelope { position: absolute; top: 39px; height: 7px; min-width: 12px; background: #29282e; }
+.synthEnvelope.voiceEnvelope::before { position: absolute; top: 3px; left: -11px; width: 8px; border-top: 1px solid #4b4567; content: ''; }
 .synthEnvelope > span { position: absolute; top: 0; bottom: 0; pointer-events: none; }
 .envelopeAttack { left: 0; background: #5e7ea0; }
 .envelopeHold { background: #53506d; }
