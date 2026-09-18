@@ -5,6 +5,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { grantedCapabilities, publicManifest, SHELL_PROTOCOL } from '../src/contract.mjs';
+import { activeNativeHostMode, canonicalNativeToolProfile } from '../src/nativeHostProfile.mjs';
 import { LaunchRouter } from '../src/launchRouter.mjs';
 import { loadToolArtifacts } from '../src/manifestLoader.mjs';
 import { ViewRegistry } from '../src/viewRegistry.mjs';
@@ -182,7 +183,7 @@ async function openFieldForScore( scoreViewID ) {
   const owned = nativeToolSessions.get( scoreViewID );
   if ( !owned ) throw new Error( 'The selected score is not using a shell-owned native session.' );
   const mode = owned.service.hostSnapshot?.().control?.mode;
-  const profileID = mode === 'headless' ? 'headless' : mode === 'ide' ? 'attached' : null;
+  const profileID = mode === 'headless' || mode === 'ide' ? 'hosted' : null;
   if ( !profileID ) throw new Error( 'The selected score no longer has a native SuperCollider host.' );
   return launchFromHome( { toolID: 'field-modelling', profileID, launchOrigin: 'desktop', payload: {
     documentKindID: 'score', scorePath,
@@ -236,6 +237,13 @@ async function setNodeManager( action ) {
 async function nativeHostForProfile( profileID ) {
   const configuration = hostConfigurationFromArgs( process.argv.slice( 1 ) );
   const service = await ensureHost( configuration );
+  if ( profileID === 'hosted' ) {
+    const activeMode = activeNativeHostMode( service.hostSnapshot() );
+    if ( !activeMode ) {
+      throw new Error( 'No native SuperCollider host is available. Open SuperCollider or start the headless host first.' );
+    }
+    profileID = activeMode;
+  }
   if ( profileID === 'headless' ) {
     await startHeadlessHost();
     await waitFor( () => service.hostSnapshot().control?.status === 'ready'
@@ -255,19 +263,22 @@ async function nativeHostForProfile( profileID ) {
 
 async function launchFromHome( rawRequest ) {
   const nativeTool = rawRequest.toolID === 'score-studio'
-    ? { sessionPrefix: 'scoreArranger', profiles: [ 'attached', 'headless' ] }
+    ? { sessionPrefix: 'scoreArranger', profiles: [ 'hosted', 'attached', 'headless' ] }
     : rawRequest.toolID === 'field-modelling'
-      ? { sessionPrefix: 'fieldModelling', profiles: [ 'attached', 'headless' ] }
+      ? { sessionPrefix: 'fieldModelling', profiles: [ 'hosted', 'attached', 'headless' ] }
       : null;
+  const routedRequest = nativeTool
+    ? { ...rawRequest, profileID: canonicalNativeToolProfile( rawRequest.profileID ) }
+    : rawRequest;
   if ( !nativeTool
     || !nativeTool.profiles.includes( rawRequest.profileID )
     || rawRequest.toolSessionID
-    || rawRequest.connections?.oscPort ) return router.launch( rawRequest );
+    || rawRequest.connections?.oscPort ) return router.launch( routedRequest );
 
   const native = await nativeHostForProfile( rawRequest.profileID );
   const sessionID = `${ nativeTool.sessionPrefix }:${ crypto.randomUUID() }`;
   await native.service.openToolSession( rawRequest.toolID, sessionID );
-  const request = { ...rawRequest, toolSessionID: sessionID,
+  const request = { ...routedRequest, toolSessionID: sessionID,
     connections: { ...( rawRequest.connections ?? {} ), oscHost: native.configuration.oscHost,
       oscPort: native.configuration.oscPort } };
   let result;
@@ -363,12 +374,28 @@ async function runHomeSmoke() {
       const scoreActions = document.querySelectorAll('[data-document-tool="score-studio"]').length;
       const lissajousActions = document.querySelectorAll('[data-document-tool="lissajous"]').length;
       const hostFacts = document.querySelectorAll('.host-fact').length;
-      if (scoreActions === 2 && lissajousActions === 2 && hostFacts === 4) resolve({ scoreActions, lissajousActions, hostFacts });
+      const toolButtons = [...document.querySelectorAll('button[data-tool]')].map((button) => ({
+        tool: button.dataset.tool,
+        profile: button.dataset.profile,
+        label: button.textContent.trim()
+      }));
+      const scoreProfiles = toolButtons.filter((button) => button.tool === 'score-studio');
+      const fieldProfiles = toolButtons.filter((button) => button.tool === 'field-modelling');
+      const obsoleteProfiles = [...scoreProfiles, ...fieldProfiles]
+        .filter((button) => button.profile === 'attached' || button.profile === 'headless');
+      const profilesReady = scoreProfiles.length === 1
+        && scoreProfiles[0].profile === 'hosted'
+        && scoreProfiles[0].label === 'Open hosted'
+        && fieldProfiles.length === 2
+        && fieldProfiles.some((button) => button.profile === 'standalone' && button.label === 'New analytic field')
+        && fieldProfiles.some((button) => button.profile === 'hosted' && button.label === 'Open hosted')
+        && obsoleteProfiles.length === 0;
+      if (scoreActions === 2 && lissajousActions === 2 && hostFacts === 4 && profilesReady) resolve({ scoreActions, lissajousActions, hostFacts, scoreProfiles, fieldProfiles });
       else if (Date.now() - started > 5000) reject(new Error('Toolkit Home document and host facts did not render: score=' + scoreActions + ' lissajous=' + lissajousActions + ' host=' + hostFacts));
       else setTimeout(check, 25);
     }; check();
   })` );
-  console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions + result.lissajousActions } hostFacts=${ result.hostFacts } hostServices=${ services.snapshot().length }` ); app.quit();
+  console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions + result.lissajousActions } hostFacts=${ result.hostFacts } hostServices=${ services.snapshot().length } profiles=hosted-public` ); app.quit();
 }
 
 async function runMultiviewSmoke() {
@@ -399,7 +426,7 @@ async function runMultiviewSmoke() {
 
 async function runMultitoolSmoke() {
   smokeRunning = true;
-  const score = await router.launch( { toolID: 'score-studio', profileID: 'headless',
+  const score = await router.launch( { toolID: 'score-studio', profileID: 'hosted',
     toolSessionID: 'multitool-score', launchOrigin: 'desktop' } );
   const lissajous = await router.launch( { toolID: 'lissajous', profileID: 'standalone',
     toolSessionID: 'multitool-lissajous', launchOrigin: 'desktop' } );
@@ -453,9 +480,9 @@ async function runOwnerLossSmoke() {
   const ownerB = positivePID( option( process.argv, 'owner-b' ) );
   if ( !ownerA || !ownerB ) throw new Error( 'Owner-loss smoke requires two owner PIDs.' );
   const scorePath = option( process.argv, 'smoke-score' );
-  const first = await router.launch( { toolID: 'score-studio', profileID: 'attached', toolSessionID: 'owner-a',
+  const first = await router.launch( { toolID: 'score-studio', profileID: 'hosted', toolSessionID: 'owner-a',
     launchOrigin: 'supercollider', owner: { kind: 'attached-process', pid: ownerA }, payload: { scorePath } } );
-  const second = await router.launch( { toolID: 'score-studio', profileID: 'attached', toolSessionID: 'owner-b',
+  const second = await router.launch( { toolID: 'score-studio', profileID: 'hosted', toolSessionID: 'owner-b',
     launchOrigin: 'supercollider', owner: { kind: 'attached-process', pid: ownerB }, payload: { scorePath } } );
   await waitFor( () => registry.list().length === 2 && registry.list().every( ( view ) => view.lifecycle === 'ready' ) );
   console.log( 'AWB_SHELL_OWNER_VIEWS_READY' );
@@ -592,7 +619,7 @@ async function runHeadlessScSmoke() {
   }
   await setNodeManager( 'enable' );
   await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().nodeManager?.status === 'ready' ), 5000 );
-  const launched = await launchFromHome( { toolID: 'score-studio', profileID: 'headless', launchOrigin: 'desktop',
+  const launched = await launchFromHome( { toolID: 'score-studio', profileID: 'hosted', launchOrigin: 'desktop',
     payload: scorePath ? { scorePath: path.resolve( scorePath ) } : {} } );
   if ( launched.status !== 'accepted' ) throw new Error( `Native Score Studio launch failed: ${ JSON.stringify( launched ) }` );
   await waitFor( () => {
@@ -605,14 +632,14 @@ async function runHeadlessScSmoke() {
   const executionModes = await windows.get( launched.viewID ).webContents.executeJavaScript(
     `[ ...document.querySelectorAll('.modeSwitch button') ].map((button) => button.textContent.trim())`
   );
-  if ( executionModes.length !== 1 || executionModes[ 0 ] !== 'hosted' ) {
-    throw new Error( `Desktop Score Studio exposed non-native execution modes: ${ JSON.stringify( executionModes ) }` );
+  if ( executionModes.length !== 0 ) {
+    throw new Error( `Desktop Score Studio exposed per-tool execution modes: ${ JSON.stringify( executionModes ) }` );
   }
   if ( scorePath ) {
     await windows.get( launched.viewID ).webContents.executeJavaScript( `new Promise((resolve, reject) => {
       const started = Date.now();
       const check = () => {
-        const play = [ ...document.querySelectorAll('section.transport button') ]
+        const play = [ ...document.querySelectorAll('section.transportStrip button') ]
           .find((button) => button.textContent.trim() === 'Play');
         if (play && !play.disabled) { play.click(); resolve(true); }
         else if (Date.now() - started > 10000) reject(new Error(
@@ -633,7 +660,7 @@ async function runHeadlessScSmoke() {
     })` );
   }
   const field = scorePath ? await openFieldForScore( launched.viewID )
-    : await launchFromHome( { toolID: 'field-modelling', profileID: 'headless', launchOrigin: 'desktop' } );
+    : await launchFromHome( { toolID: 'field-modelling', profileID: 'hosted', launchOrigin: 'desktop' } );
   if ( field.status !== 'accepted' ) throw new Error( `Native Field launch failed: ${ JSON.stringify( field ) }` );
   await waitFor( () => registry.get( field.viewID )?.lifecycle === 'ready'
     && ( !scorePath || registry.get( field.viewID )?.sessionState?.mode === 'attached' ), 25000 );

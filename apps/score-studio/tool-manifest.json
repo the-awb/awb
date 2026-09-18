@@ -14,8 +14,7 @@
     "allowMultiple": true
   },
   "launchProfiles": [
-    { "id": "attached", "label": "Use SuperCollider IDE" },
-    { "id": "headless", "label": "Use headless SuperCollider" }
+    { "id": "hosted", "label": "Open hosted" }
   ],
   "capabilities": {
     "filesystem": ["open-file", "open-directory", "save-file"],
@@ -34,6 +33,6 @@
   },
   "documentKinds": [
     { "id": "score", "label": "Score", "extensions": ["score.json"],
-      "actions": ["new", "recent", "browse"], "profileID": "headless" }
+      "actions": ["new", "recent", "browse"], "profileID": "hosted" }
   ]
 }

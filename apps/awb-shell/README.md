@@ -158,21 +158,23 @@ and subscriptions but never stops, releases or frees sound objects. A ToolSessio
 reactivates the manager and its external bridge under `when needed`; `manual` refuses implicit
 activation.
 
-Score Studio's desktop launch profiles are now literal: **Use SuperCollider IDE** requires an
-attached `AWBHostControl`, while **Use headless SuperCollider** starts the shell-owned native host.
-In either case the shell asks sclang to create a named `ToolSession`, supplies that identity to the
-renderer, and closes only that shell-owned session with the view. Multiple score views therefore
-have separate sessions and `PScoreTimelinePlayer` instances while sharing the selected language and
-server host. The Electron renderer exposes hosted execution only; it cannot silently boot
-scsynth.wasm. Browser Score Studio retains its standalone WASM mode.
+Score Studio exposes one **Open hosted** action. Attached IDE versus shell-owned headless is a
+shell-level host choice, selected in Toolkit Home rather than repeated on each tool card. A hosted
+launch reuses whichever native host is active and asks its sclang to create a named `ToolSession`;
+if no host exists, it reports that the user must open SuperCollider or start the headless host.
+The shell supplies the session identity to the renderer and closes only that shell-owned session
+with the view. Multiple score views therefore have separate sessions and `PScoreTimelinePlayer`
+instances while sharing the selected language and server host. The Electron renderer exposes
+hosted execution only; it cannot silently boot scsynth.wasm. Browser Score Studio retains its
+standalone WASM mode.
 
 Field Modelling follows the same ownership boundary. **New analytic field** needs no audio host;
-**Use SuperCollider IDE** and **Use headless SuperCollider** ask the selected native sclang host to
-create a named `fieldModelling:*` ToolSession. Authored Field instruments are then created and
-controlled through that session. An active hosted Score Studio card exposes **Open Field for this
-score**. That view observes the score's current and subsequent runs while retaining its separate
-Field ToolSession: score realizations and Field-authored instruments can therefore coexist without
-confusing their ownership or lifecycle.
+**Open hosted** reuses the shell's active native host and creates a named `fieldModelling:*`
+ToolSession. Authored Field instruments are then created and controlled through that session. An
+active hosted Score Studio card exposes **Open Field for this score**. That view observes the
+score's current and subsequent runs while retaining its separate Field ToolSession: score
+realizations and Field-authored instruments can therefore coexist without confusing their
+ownership or lifecycle.
 
 ## Lissajous config documents
 

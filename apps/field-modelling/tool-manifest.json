@@ -15,8 +15,7 @@
   },
   "launchProfiles": [
     { "id": "standalone", "label": "New analytic field" },
-    { "id": "attached", "label": "Use SuperCollider IDE" },
-    { "id": "headless", "label": "Use headless SuperCollider" }
+    { "id": "hosted", "label": "Open hosted" }
   ],
   "capabilities": {
     "filesystem": ["open-file", "save-file"],
@@ -56,7 +55,7 @@
       "label": "Score Project",
       "extensions": ["awb-project.json"],
       "actions": ["recent", "browse"],
-      "profileID": "attached"
+      "profileID": "hosted"
     }
   ]
 }
