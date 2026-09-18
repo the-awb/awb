@@ -268,6 +268,20 @@ export function createStandaloneScoreExecutor( {
     }
     return true;
   };
+  const setRealization = ( nodeID, control, value, controlWidth = 1 ) => {
+    const id = Number( nodeID );
+    const node = live.get( id );
+    if ( !node || typeof control !== 'string' || !control.length ) return false;
+    const values = Array.isArray( value ) ? value : [ value ];
+    if ( controlWidth > 1 ) {
+      if ( values.length !== controlWidth ) return false;
+      sendOsc( '/n_setn', [ id, control, values.length, ...values ] );
+    } else sendOsc( '/n_set', [ id, control, values[ 0 ] ] );
+    realization( id, { params: Object.freeze( {
+      ...( state.realizations.find( ( item ) => item.nodeID === id )?.params ?? {} ), [ control ]: value
+    } ) } );
+    return true;
+  };
   const stop = () => {
     const position = estimatePosition();
     clearWake();
@@ -288,7 +302,7 @@ export function createStandaloneScoreExecutor( {
   } );
 
   return {
-    load, play, pause, stop, seek, commandRealization, estimatePosition,
+    load, play, pause, stop, seek, commandRealization, setRealization, estimatePosition,
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     getState: () => state,
     dispose: () => { stop(); offOsc(); listeners.clear(); }

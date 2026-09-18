@@ -30,7 +30,8 @@ const standalone = createStandaloneAuditionAdapter( {
 const hostedState = { audition: { realizations: [] } };
 const hosted = {
   subscribe: () => () => {}, getState: () => hostedState,
-  auditionPlay: () => { throw new Error( 'not used' ); }, auditionCommand: () => { throw new Error( 'not used' ); }
+  auditionPlay: () => { throw new Error( 'not used' ); }, auditionCommand: () => { throw new Error( 'not used' ); },
+  auditionSet: () => { throw new Error( 'not used' ); }
 };
 const controller = createAuditionController( { hostedClient: hosted, standaloneAdapter: standalone } );
 const result = await controller.play( {
@@ -50,6 +51,16 @@ assert.equal( sent.filter( ( message ) => message.address === '/s_new' ).length,
 assert.equal( sent.filter( ( message ) => message.address === '/n_setn' ).length, 3 );
 assert.deepEqual( sent.filter( ( message ) => message.address === '/s_new' )[ 2 ].args.slice( 4 ),
   [ 'freq', 110, 'pan', -1, 'amp', 0.1, 'gate', 0 ] );
+
+await controller.setControl( result.realizationID, 'freq', [ 60, 90 ], 1 );
+assert.deepEqual( sent.filter( ( message ) => message.address === '/n_set' ).slice( -3 ).map(
+  ( message ) => message.args
+), [ [ 9000, 'freq', 60 ], [ 9001, 'freq', 90 ], [ 9002, 'freq', 60 ] ],
+'scalar controls wrap across the existing voices' );
+await controller.setControl( result.realizationID, 'env', [ 0, 0.5, 0 ], 3 );
+assert.equal( sent.filter( ( message ) => message.address === '/n_setn' ).length, 6,
+  'literal array controls update every existing voice with n_setn' );
+assert.deepEqual( controller.getState().realizations.at( -1 ).params.freq, [ 60, 90 ] );
 
 await controller.command( result.realizationID, 'pause' );
 assert.equal( sent.filter( ( message ) => message.address === '/n_run' && message.args[ 1 ] === 0 ).length, 3 );

@@ -78,6 +78,22 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
     }
   }
 
+  async function setControl( realizationID, control, value, controlWidth = 1 ) {
+    const realization = state.realizations.find( ( item ) => item.realizationID === realizationID );
+    if ( !realization || !ACTIVE_STATES.has( realization.state ) ) return false;
+    try {
+      if ( realization.mode === 'hosted' ) {
+        await hostedClient.auditionSet( realizationID, control, value, controlWidth );
+      } else await standaloneAdapter.setControl( realizationID, control, value, controlWidth );
+      merge( { ...realization, params: freezeSnapshot( {
+        ...( realization.params ?? {} ), [ control ]: value
+      } ) } );
+      return true;
+    } catch ( error ) {
+      publish( { error: error.message } ); throw error;
+    }
+  }
+
   async function stopDraft( draftID ) {
     const owned = state.realizations.filter( ( item ) => item.draftID === draftID && ACTIVE_STATES.has( item.state ) );
     await Promise.all( owned.map( ( item ) => command( item.realizationID, 'free' ) ) );
@@ -85,7 +101,7 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
   }
 
   return {
-    play, command, stopDraft,
+    play, command, setControl, stopDraft,
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     getState: () => state,
     dispose: () => { offHosted(); offStandalone(); standaloneAdapter.dispose(); listeners.clear(); }
@@ -139,6 +155,20 @@ export function createStandaloneAuditionAdapter( {
     emit( record ); return record;
   }
 
+  async function setControl( realizationID, control, value, controlWidth = 1 ) {
+    const record = records.get( realizationID );
+    if ( !record ) throw new Error( `Unknown audition realization: ${ realizationID }` );
+    const values = Array.isArray( value ) ? value : [ value ];
+    if ( controlWidth > 1 ) {
+      if ( values.length !== controlWidth ) throw new Error( `${ control } requires ${ controlWidth } values` );
+      record.nodeIDs.forEach( ( nodeID ) => sendOsc( '/n_setn', [ nodeID, control, values.length, ...values ] ) );
+    } else {
+      record.nodeIDs.forEach( ( nodeID, index ) => sendOsc( '/n_set', [ nodeID, control, values[ index % values.length ] ] ) );
+    }
+    record.params = { ...( record.params ?? {} ), [ control ]: value };
+    emit( record ); return record;
+  }
+
   const offOsc = subscribeOscReply( ( bytes ) => {
     const message = parseOsc( bytes );
     if ( message?.address !== '/n_end' ) return;
@@ -154,7 +184,7 @@ export function createStandaloneAuditionAdapter( {
   } );
 
   return {
-    play, command,
+    play, command, setControl,
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     dispose: () => {
       for ( const record of records.values() ) if ( ACTIVE_STATES.has( record.state ) ) {
