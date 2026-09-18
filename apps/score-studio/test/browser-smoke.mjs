@@ -146,15 +146,25 @@ try {
   if ( await page.locator( '.synthBar' ).count() !== 2 ) failures.push( 'lifecycle view did not render one bar per synth' );
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 0 ) failures.push( 'seed score still contains an authored release' );
   if ( await page.locator( '.synthTriggerTick.auto-release' ).count() !== 2 ) failures.push( 'finite seed notes lost their derived release boundaries' );
+  const toolbarHeightClosed = await page.locator( '.scoreToolbars' ).evaluate( ( element ) => element.getBoundingClientRect().height );
   await page.locator( '.eventCommandPalette summary' ).click();
+  const paletteGeometry = await page.locator( '.scoreToolbars' ).evaluate( ( element ) => ( {
+    toolbarHeight: element.getBoundingClientRect().height,
+    toolbarBottom: element.getBoundingClientRect().bottom,
+    menuBottom: element.querySelector( '.eventCommandPalette > div' ).getBoundingClientRect().bottom
+  } ) );
+  if ( paletteGeometry.toolbarHeight !== toolbarHeightClosed ) failures.push( 'opening Add changed the fixed toolbar height' );
+  if ( paletteGeometry.menuBottom <= paletteGeometry.toolbarBottom ) failures.push( 'Add menu did not overlay the score below the toolbar' );
   for ( const label of [ '+ note', '+ synth', '+ set', '+ release', '+ free' ] ) {
     if ( await page.getByRole( 'button', { name: label, exact: true } ).count() !== 1 ) {
       failures.push( `score command palette is missing ${ label }` );
     }
   }
+  await page.locator( '.eventCommandPalette summary' ).click();
   const firstBar = page.locator( '.synthBar' ).first();
   await page.locator( '.tick' ).nth( 1 ).click();
   await firstBar.click();
+  await page.locator( '.eventCommandPalette summary' ).click();
   await page.getByRole( 'button', { name: '+ set', exact: true } ).click();
   const inheritedFreq = page.getByLabel( 'Payload freqA', { exact: true } );
   const inheritedAmp = page.getByLabel( 'Payload amp', { exact: true } );
@@ -175,6 +185,7 @@ try {
   }
   await page.getByRole( 'button', { name: 'Delete', exact: true } ).click();
   await firstBar.click();
+  await page.locator( '.eventCommandPalette summary' ).click();
   await page.getByRole( 'button', { name: '+ release', exact: true } ).click();
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'authored release was not projected as a child of its parent synth lane' );
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'expanded synth did not disclose its release trigger' );
@@ -312,6 +323,24 @@ try {
   if ( await page.locator( '.titleInput' ).inputValue() !== 'Sonic Attunement 01' ) failures.push( 'bundled demo metadata did not load' );
   if ( await page.locator( '.synthEnvelope' ).count() !== 11 ) failures.push( 'real demo did not render one envelope strip per synth row' );
   if ( await page.locator( '.instrumentCard' ).count() !== 2 ) failures.push( 'real demo instrument panel did not show its two SynthDefs' );
+  const polyLane = page.locator( '.synthLane' ).filter( { has: page.locator( '.synthLaneName small' ).filter( { hasText: '×' } ) } ).first();
+  if ( await polyLane.count() ) {
+    await polyLane.locator( '.synthDisclosure' ).click();
+    if ( await polyLane.locator( '.synthVoiceChild' ).count() < 2 ) failures.push( 'polyphonic score event did not expose derived voice children' );
+    else {
+      await polyLane.locator( '.synthVoiceChild' ).first().click();
+      if ( !( await page.locator( '.eventMetaBar' ).textContent() ).includes( 'Voice 1 of ' ) ) {
+        failures.push( 'selecting a polyphonic child did not scope the event editor to that voice' );
+      }
+      const childFrequency = page.getByLabel( 'Payload freqA', { exact: true } );
+      const siblingBefore = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() ).freqA[ 1 ];
+      await childFrequency.fill( '300' );
+      const childEdit = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() ).freqA;
+      if ( childEdit[ 0 ] !== 300 || childEdit[ 1 ] !== siblingBefore ) {
+        failures.push( 'editing one polyphonic child did not update only its parent array slot' );
+      }
+    }
+  }
   await page.waitForTimeout( 250 );
   const fittedSize = await page.locator( '.timelineScroll' ).evaluate( ( scroll ) => ( {
     viewport: scroll.clientWidth,
@@ -324,6 +353,11 @@ try {
     ticks.map( ( tick ) => tick.getBoundingClientRect().x ) );
   const closestTicks = Math.min( ...tickPositions.slice( 1 ).map( ( position, index ) => position - tickPositions[ index ] ) );
   if ( closestTicks < 68 ) failures.push( `adaptive ruler labels are only ${ closestTicks }px apart` );
+  const rulerTop = await page.locator( '.ruler' ).evaluate( ( element ) => element.getBoundingClientRect().top );
+  await page.locator( '.timelineScroll' ).evaluate( ( scroll ) => { scroll.scrollTop = 320; } );
+  await page.waitForTimeout( 50 );
+  const pinnedRulerTop = await page.locator( '.ruler' ).evaluate( ( element ) => element.getBoundingClientRect().top );
+  if ( Math.abs( rulerTop - pinnedRulerTop ) > 2 ) failures.push( 'timeline ruler scrolled out of its pinned position' );
   await page.locator( '.synthBar' ).first().click();
   const frequencyInput = page.getByLabel( 'Payload freqA', { exact: true } );
   await frequencyInput.fill( '' );

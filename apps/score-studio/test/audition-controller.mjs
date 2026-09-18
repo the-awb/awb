@@ -62,8 +62,19 @@ assert.equal( sent.filter( ( message ) => message.address === '/n_setn' ).length
   'literal array controls update every existing voice with n_setn' );
 assert.deepEqual( controller.getState().realizations.at( -1 ).params.freq, [ 60, 90 ] );
 
+const allocationOrder = controller.getState().realizations.map( ( item ) => item.realizationID );
+await controller.setControl( result.realizationID, 'freq', 123, 1, 9001 );
+assert.deepEqual( sent.filter( ( message ) => message.address === '/n_set' ).at( -1 ).args,
+  [ 9001, 'freq', 123 ], 'a selected voice receives its own set message' );
+await controller.command( result.realizationID, 'pause', 9001 );
+assert.deepEqual( sent.filter( ( message ) => message.address === '/n_run' ).at( -1 ).args,
+  [ 9001, 0 ], 'a selected voice receives its own lifecycle command' );
+assert.deepEqual( controller.getState().realizations.map( ( item ) => item.realizationID ), allocationOrder,
+  'voice state changes preserve realization allocation order' );
+assert.equal( controller.getState().realizations.at( -1 ).voiceStates[ 9001 ], 'paused' );
+
 await controller.command( result.realizationID, 'pause' );
-assert.equal( sent.filter( ( message ) => message.address === '/n_run' && message.args[ 1 ] === 0 ).length, 3 );
+assert.equal( sent.filter( ( message ) => message.address === '/n_run' && message.args[ 1 ] === 0 ).length, 4 );
 reply( { address: '/n_end', arguments: [ 9000 ] } );
 assert.equal( controller.getState().realizations.at( -1 ).nodeIDs.length, 2 );
 await controller.stopDraft( 'draft-1' );

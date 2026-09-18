@@ -17,6 +17,7 @@ import ScoreStudioLeftRail from './components/ScoreStudioLeftRail.jsx';
 import ScoreTimeline from './components/ScoreTimeline.jsx';
 import SynthDefDraftEditor from './components/SynthDefDraftEditor.jsx';
 import { createAuditionController, createStandaloneAuditionAdapter } from './engine/AuditionController.js';
+import { expandScEventParams, SC_EVENT_RESERVED_KEYS } from './engine/scEventSemantics.js';
 import {
   lifecycleDefinitionsForEntry, lifecycleInheritedValuesForEntry
 } from './engine/synthLifecycleLanes.js';
@@ -30,6 +31,7 @@ import { readLocalProjection, storeLocalProjection } from './engine/localProject
 import { scoreInstruments } from './engine/scoreInstruments.js';
 import { retryScoreProjection, saveScorePair, validateProjection } from './engine/scorePairSave.js';
 import { formatTimelineTime } from './engine/timelineScale.js';
+import { voicesForRealization } from './engine/runtimeVoices.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
@@ -57,6 +59,7 @@ export default function App( { host, createHostedClient } ) {
   const [ localProjection, setLocalProjection ] = useState( null );
   const [ scoreFolder, setScoreFolder ] = useState( { handle: null, name: '', files: [], message: '' } );
   const [ focus, setFocus ] = useState( { kind: 'none', draftID: freshDraftID() } );
+  const [ voiceSelection, setVoiceSelection ] = useState( null );
   const inputRef = useRef( null );
   const stopArmedRef = useRef( false );
   const sc = useSuperCollider( { importScsynth } );
@@ -112,14 +115,16 @@ export default function App( { host, createHostedClient } ) {
     const current = audition.realizations.find(
       ( item ) => item.realizationID === currentRuntimeTarget.realizationID
     );
-    currentRuntimeTarget = current ? { ...currentRuntimeTarget, realization: current, state: current.state }
+    currentRuntimeTarget = current ? { ...currentRuntimeTarget, realization: current,
+      state: current.voiceStates?.[ currentRuntimeTarget.nodeID ] ?? current.state }
       : { ...currentRuntimeTarget, realization: null, state: 'ended' };
   } else if ( currentRuntimeTarget?.kind === 'score' ) {
     const candidates = session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations;
     const current = candidates.find( ( item ) => session.mode === MODES.HOSTED
       ? item.realizationID === currentRuntimeTarget.realizationID
       : item.nodeID === currentRuntimeTarget.nodeID );
-    currentRuntimeTarget = current ? { ...currentRuntimeTarget, realization: current, state: current.state }
+    currentRuntimeTarget = current ? { ...currentRuntimeTarget, realization: current,
+      state: current.voiceStates?.[ currentRuntimeTarget.nodeID ] ?? current.state }
       : { ...currentRuntimeTarget, realization: null, state: 'ended' };
   }
   const liveFocus = currentRuntimeTarget ? { ...focus, runtimeTarget: currentRuntimeTarget } : focus;
@@ -143,6 +148,10 @@ export default function App( { host, createHostedClient } ) {
       };
     } );
   }, [ selectedEntry, session.document.revision, session.document.scoreID ] );
+
+  useEffect( () => {
+    if ( voiceSelection && voiceSelection.entryID !== selectedEntry?.id ) setVoiceSelection( null );
+  }, [ selectedEntry?.id, voiceSelection ] );
 
   useEffect( () => {
     setFocus( { kind: 'none', draftID: freshDraftID() } );
@@ -395,7 +404,7 @@ export default function App( { host, createHostedClient } ) {
     stopArmedRef.current = true;
   }
 
-  async function focusScoreRealization( realization ) {
+  async function focusScoreRealization( realization, voice ) {
     const entry = session.document.entries.find( ( candidate ) => candidate.id === realization.entryID );
     if ( !entry ) return;
     const name = realization.definition ?? entry.event.def ?? entry.event.instrument;
@@ -410,23 +419,23 @@ export default function App( { host, createHostedClient } ) {
     focusSynthDef( {
       name, description, contextGeneration: description?.contextGeneration ?? 0,
       signalKind: description ? synthDefSignalKind( description ) : 'unknown',
-      source: 'score realization', initialValues: realization.params ?? entry.event,
+      source: `live score voice ${ voice.nodeID }`, initialValues: voice.params,
       error, runtimeTarget: { kind: 'score', realizationID: realization.realizationID,
-        nodeID: realization.nodeID, state: realization.state }
+        nodeID: voice.nodeID, voiceIndex: voice.voiceIndex, entryID: entry.id, state: voice.state }
     } );
   }
 
-  async function commandScoreRealization( realization, action ) {
+  async function commandScoreRealization( realization, action, nodeID = null ) {
     if ( session.mode === MODES.HOSTED ) {
-      await hostedAction( () => hostedClient.realizationCommand( session.document, realization, action ) );
-    } else standaloneExecutor.commandRealization( realization.nodeID, action );
+      await hostedAction( () => hostedClient.realizationCommand( session.document, realization, action, nodeID ) );
+    } else standaloneExecutor.commandRealization( nodeID ?? realization.nodeID, action );
   }
 
-  async function setScoreRealization( realization, control, value, controlWidth ) {
+  async function setScoreRealization( realization, control, value, controlWidth, nodeID = null ) {
     if ( session.mode === MODES.HOSTED ) {
-      return hostedClient.realizationSet( session.document, realization, control, value, controlWidth );
+      return hostedClient.realizationSet( session.document, realization, control, value, controlWidth, nodeID );
     }
-    return standaloneExecutor.setRealization( realization.nodeID, control, value, controlWidth );
+    return standaloneExecutor.setRealization( nodeID ?? realization.nodeID, control, value, controlWidth );
   }
 
   async function returnToStart() {
@@ -744,6 +753,29 @@ export default function App( { host, createHostedClient } ) {
     } );
   }
 
+  async function auditionRuntimeCopy( realization, voice, entry = null ) {
+    const definition = realization.definition ?? entry?.event?.def ?? entry?.event?.instrument;
+    if ( !definition ) throw new Error( 'The selected voice has no SynthDef identity.' );
+    const description = realization.description ?? hosted.synthDefContext.definitions[ definition ] ?? null;
+    return auditionDraft( { definition, params: voice.params, model: description?.interface ?? null }, {
+      kind: 'runtimeCopy', entryID: entry?.id, name: definition, draftID: freshDraftID(),
+      description, contextGeneration: description?.contextGeneration ?? 0,
+      signalKind: realization.signalKind ?? ( description ? synthDefSignalKind( description ) : 'audio' )
+    } );
+  }
+
+  function focusedRuntimeVoice() {
+    const target = displayedFocus.runtimeTarget;
+    if ( !target?.realization ) return null;
+    const entry = target.kind === 'score'
+      ? session.document.entries.find( ( candidate ) => candidate.id === target.entryID ) ?? null : null;
+    const voice = voicesForRealization( target.realization, entry?.event )
+      .find( ( candidate ) => candidate.nodeID === target.nodeID );
+    return voice ? { realization: target.realization, voice: {
+      ...voice, params: { ...( displayedFocus.initialValues ?? {} ), ...( voice.params ?? {} ) }
+    }, entry } : null;
+  }
+
   return (
     <div className="appShell">
       <header className="topbar">
@@ -818,7 +850,10 @@ export default function App( { host, createHostedClient } ) {
                   ? `${ standalone.status } · run ${ standalone.runID || '—' } · browser absolute-time anchor`
                   : 'Load the selected executor before playback.' }</p>
             </section>
-            <ScoreTimeline session={ session } dispatch={ dispatch } onSeek={ seekTransport } />
+            <ScoreTimeline session={ session } dispatch={ dispatch } onSeek={ seekTransport }
+              onVoiceSelect={ ( entryID, voiceIndex ) => setVoiceSelection(
+                voiceIndex === null ? null : { entryID, voiceIndex }
+              ) } />
           </div> : session.view === 'instruments'
             ? <InstrumentWorkspace sc={ sc } mode={ session.mode }
               hostedClient={ hostedClient } hostedState={ hosted } />
@@ -832,28 +867,31 @@ export default function App( { host, createHostedClient } ) {
               scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
             } } /> }
           auditionPanel={ <AuditionRuntimePanel realizations={ audition.realizations }
-            onFocus={ ( realization ) => {
+            onFocus={ ( realization, voice ) => {
               if ( realization.definition ) {
                 const description = realization.description
                   ?? hosted.synthDefContext.definitions[ realization.definition ];
                 focusSynthDef( { name: realization.definition, description,
                   contextGeneration: description?.contextGeneration ?? 0,
-                  signalKind: realization.signalKind ?? 'unknown', source: 'audition runtime',
-                  initialValues: realization.params,
+                  signalKind: realization.signalKind ?? 'unknown', source: `live audition voice ${ voice.nodeID }`,
+                  initialValues: voice.params,
                   runtimeTarget: { kind: 'audition', realizationID: realization.realizationID,
-                    state: realization.state } } );
+                    nodeID: voice.nodeID, voiceIndex: voice.voiceIndex, state: voice.state } } );
               }
             } }
-            onCommand={ ( id, action ) => auditionController.command( id, action ) } /> }
+            onCommand={ ( id, action, nodeID ) => auditionController.command( id, action, nodeID ) }
+            onAuditionCopy={ auditionRuntimeCopy } /> }
           realizationsPanel={ ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 )
             && <ScoreRealizationPanel
               document={ session.document }
               realizations={ session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations }
-              onFocus={ focusScoreRealization } onCommand={ commandScoreRealization } /> } /> }
+              onFocus={ focusScoreRealization } onCommand={ commandScoreRealization }
+              onAuditionCopy={ auditionRuntimeCopy } /> } /> }
         bottom={ <ScoreFocusPanel focus={ displayedFocus }>
           { focus.kind === 'scoreEvent' && selectedEntry && <EventEditor
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
             entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry }
+            voiceIndex={ voiceSelection?.entryID === selectedEntry.id ? voiceSelection.voiceIndex : null }
             inheritedDefinition={ lifecycleDefinitionsForEntry( inspectedEntries, selectedEntry.id )[ 0 ] ?? null }
             inheritedValues={ lifecycleInheritedValuesForEntry( inspectedEntries, selectedEntry.id ) }
             availableSynthDefs={ session.mode === MODES.HOSTED
@@ -867,13 +905,21 @@ export default function App( { host, createHostedClient } ) {
             onAudition={ ( draft ) => auditionDraft( draft, displayedFocus ) }
             onStopAudition={ () => auditionController.stopDraft( focus.draftID ) }
             onRuntimeSet={ ( control, value, width ) => displayedFocus.runtimeTarget?.kind === 'audition'
-              ? auditionController.setControl( displayedFocus.runtimeTarget.realizationID, control, value, width )
+              ? auditionController.setControl( displayedFocus.runtimeTarget.realizationID, control, value, width,
+                displayedFocus.runtimeTarget.nodeID )
               : displayedFocus.runtimeTarget?.realization
-                ? setScoreRealization( displayedFocus.runtimeTarget.realization, control, value, width ) : false }
+                ? setScoreRealization( displayedFocus.runtimeTarget.realization, control, value, width,
+                  displayedFocus.runtimeTarget.nodeID ) : false }
             onRuntimeCommand={ ( action ) => displayedFocus.runtimeTarget?.kind === 'audition'
-              ? auditionController.command( displayedFocus.runtimeTarget.realizationID, action )
+              ? auditionController.command( displayedFocus.runtimeTarget.realizationID, action,
+                displayedFocus.runtimeTarget.nodeID )
               : displayedFocus.runtimeTarget?.realization
-                ? commandScoreRealization( displayedFocus.runtimeTarget.realization, action ) : false }
+                ? commandScoreRealization( displayedFocus.runtimeTarget.realization, action,
+                  displayedFocus.runtimeTarget.nodeID ) : false }
+            onRuntimeCopy={ () => {
+              const scoped = focusedRuntimeVoice();
+              return scoped ? auditionRuntimeCopy( scoped.realization, scoped.voice, scoped.entry ) : false;
+            } }
             auditionCount={ audition.realizations.filter( ( item ) => item.draftID === focus.draftID && item.state !== 'ended' ).length } /> }
           { audition.error && <p className="error">{ audition.error }</p> }
         </ScoreFocusPanel> } />
@@ -883,7 +929,7 @@ export default function App( { host, createHostedClient } ) {
 
 function EventEditor( {
   entry, inheritedDefinition, inheritedValues, availableSynthDefs = [], onPreview, onCommit,
-  onAudition, onStopAudition, auditionCount = 0
+  onAudition, onStopAudition, auditionCount = 0, voiceIndex = null
 } ) {
   const [ time, setTime ] = useState( String( entry.time ) );
   const [ path, setPath ] = useState( () => entry.path.join( '/' ) );
@@ -894,6 +940,15 @@ function EventEditor( {
     const parsed = JSON.parse( eventText );
     if ( parsed && typeof parsed === 'object' && !Array.isArray( parsed ) ) parsedEvent = parsed;
   } catch { /* raw editor reports syntax errors on Apply */ }
+  let structuredEvent = parsedEvent;
+  let voiceCount = 1;
+  if ( parsedEvent && voiceIndex !== null ) {
+    try {
+      const voices = expandScEventParams( parsedEvent );
+      voiceCount = voices.length;
+      structuredEvent = { ...parsedEvent, ...( voices[ voiceIndex ] ?? {} ) };
+    } catch { structuredEvent = parsedEvent; }
+  }
 
   function draftPatch( next = {} ) {
     const nextTime = Number( next.time ?? time );
@@ -910,7 +965,28 @@ function EventEditor( {
   }
 
   function updatePayload( event ) {
-    const text = JSON.stringify( event, null, 2 );
+    let nextEvent = event;
+    if ( parsedEvent && voiceIndex !== null ) {
+      const reserved = new Set( SC_EVENT_RESERVED_KEYS );
+      nextEvent = { ...parsedEvent };
+      for ( const [ name, value ] of Object.entries( event ) ) {
+        if ( reserved.has( name ) ) {
+          nextEvent[ name ] = value;
+          continue;
+        }
+        const original = parsedEvent[ name ];
+        if ( original === undefined ) {
+          nextEvent[ name ] = value;
+          continue;
+        }
+        const expanded = Array.isArray( original )
+          ? Array.from( { length: voiceCount }, ( _, index ) => original[ index % original.length ] )
+          : Array( voiceCount ).fill( original );
+        expanded[ voiceIndex ] = value;
+        nextEvent[ name ] = expanded;
+      }
+    }
+    const text = JSON.stringify( nextEvent, null, 2 );
     setEventText( text );
     draftPatch( { eventText: text } );
     setError( '' );
@@ -939,7 +1015,8 @@ function EventEditor( {
       if ( !blurEvent.currentTarget.contains( blurEvent.relatedTarget ) ) commit();
     } }>
       <div className="eventMetaBar">
-        <span><small>Event ID</small><code>{ entry.id }</code></span>
+        <span><small>{ voiceIndex === null ? 'Event ID' : `Voice ${ voiceIndex + 1 } of ${ voiceCount }` }</small>
+          <code>{ entry.id }{ voiceIndex === null ? '' : ` [${ voiceIndex }]` }</code></span>
         <label><small>Time</small><span><input aria-label="Event time" type="number" min="0" step="0.001"
           value={ time } onChange={ ( event ) => { setTime( event.target.value ); draftPatch( { time: event.target.value } ); } } />
           <em>s</em></span></label>
@@ -951,7 +1028,7 @@ function EventEditor( {
       <div className="eventEditorGrid">
         <section className="eventEditorCard"><header><strong>Musical event</strong>
           <small>Structured controls update the score immediately.</small></header>
-          <EventPayloadEditor event={ parsedEvent } inheritedDefinition={ inheritedDefinition }
+          <EventPayloadEditor event={ structuredEvent } inheritedDefinition={ inheritedDefinition }
             inheritedValues={ inheritedValues }
             availableSynthDefs={ availableSynthDefs } onChange={ updatePayload } />
         </section>
@@ -966,71 +1043,63 @@ function EventEditor( {
       </div>
       { error && <p className="error">{ error }</p> }
       <div className="focusAuditionActions"><button onClick={ commit }>Apply event</button>
-        <button disabled={ !parsedEvent || parsedEvent.type !== 'note' || !( parsedEvent.def ?? parsedEvent.instrument ) }
-          onClick={ () => onAudition( parsedEvent ) }>Play copy</button>
+        <button disabled={ !structuredEvent || structuredEvent.type !== 'note' || !( structuredEvent.def ?? structuredEvent.instrument ) }
+          onClick={ () => onAudition( structuredEvent ) }>Play copy</button>
         <button disabled={ auditionCount === 0 } onClick={ onStopAudition }>Stop copy ({ auditionCount })</button></div>
     </div>
   );
 }
 
-function AuditionRuntimePanel( { realizations, onFocus, onCommand } ) {
-  const visible = [ ...realizations ].reverse().slice( 0, 8 );
+function AuditionRuntimePanel( { realizations, onFocus, onCommand, onAuditionCopy } ) {
+  const visible = realizations.slice( -8 );
   return <section className="auditionRuntime"><h2>Auditions</h2>
     { visible.length ? visible.map( ( realization ) => {
-      const running = realization.state === 'running';
-      const paused = realization.state === 'paused';
-      const live = running || paused;
-      const stateLabel = running ? 'Pause' : paused ? 'Play'
-        : [ 'releasing', 'ending' ].includes( realization.state ) ? 'Finishing'
-          : realization.state === 'ended' ? 'Finished'
-            : realization.state === 'starting' ? 'Starting' : 'Unavailable';
-      return <div className="realization auditionVoice" key={ realization.realizationID }>
-      <button className="realizationFocus" onClick={ () => onFocus( realization ) }>
-        <strong>{ formatScSymbol( realization.definition ) }</strong>
-        <small>{ realization.nodeIDs.length
-          ? `primary synth ${ realization.nodeIDs[ 0 ] } · ${ realization.nodeIDs.length } voice${ realization.nodeIDs.length === 1 ? '' : 's' }`
-          : 'primary synth pending' }</small>
-      </button>
-      <div className="realizationActions">
-        <button disabled={ !live } onClick={ () => live
-          && onCommand( realization.realizationID, paused ? 'resume' : 'pause' ) }>{ stateLabel }</button>
-        { live && <button onClick={ () => onCommand( realization.realizationID, 'release' ) }>Release</button> }
-        { live && <button onClick={ () => onCommand( realization.realizationID, 'free' ) }>Free</button> }
-      </div>
-      { realization.error && <small className="error">{ realization.error }</small> }
-    </div>;
+      const voices = voicesForRealization( realization );
+      return <div className="runtimeRealizationGroup" key={ realization.realizationID }>
+        <header><strong>{ formatScSymbol( realization.definition ) }</strong>
+          <small>{ voices.length } voice{ voices.length === 1 ? '' : 's' }</small></header>
+        { voices.map( ( voice ) => <RuntimeVoiceRow key={ voice.nodeID } realization={ realization }
+          voice={ voice } onFocus={ onFocus } onCommand={ ( item, action, nodeID ) => onCommand( item.realizationID, action, nodeID ) }
+          onAuditionCopy={ onAuditionCopy } /> ) }
+        { realization.error && <small className="error">{ realization.error }</small> }
+      </div>;
     } ) : <p className="emptyCopy">No audition voices.</p> }
   </section>;
 }
 
-function ScoreRealizationPanel( { document, realizations, onFocus, onCommand } ) {
+function ScoreRealizationPanel( { document, realizations, onFocus, onCommand, onAuditionCopy } ) {
   const visible = realizations.filter( ( realization ) => realization.state !== 'ended'
     && ( realization.nodeIDs?.length || realization.nodeID ) ).reverse().slice( 0, 12 );
   return <section className="realizations"><h2>Playing score voices</h2>
     { visible.length ? visible.map( ( realization ) => {
       const entry = document.entries.find( ( candidate ) => candidate.id === realization.entryID );
       const definition = realization.definition ?? entry?.event?.def ?? entry?.event?.instrument ?? 'unknown';
-      const nodeIDs = realization.nodeIDs?.length ? realization.nodeIDs : [ realization.nodeID ];
-      const running = [ 'started', 'running' ].includes( realization.state );
-      const paused = realization.state === 'paused';
-      const releasable = running || paused;
-      const stoppable = ![ 'ended', 'ending' ].includes( realization.state );
-      return <div className="realization runtimeVoice" key={ realization.realizationID ?? realization.nodeID }>
-        <button className="realizationFocus" onClick={ () => onFocus( realization ) }>
-          <strong>{ formatScSymbol( definition ) }</strong>
-          <small>primary synth { nodeIDs[ 0 ] } · { realization.entryID } · { nodeIDs.length } node{ nodeIDs.length === 1 ? '' : 's' }</small>
-        </button>
-        <div className="realizationActions">
-          <button disabled={ !( running || paused ) }
-            onClick={ () => onCommand( realization, paused ? 'resume' : 'pause' ) }>
-            { paused ? 'Play' : 'Pause' }
-          </button>
-          <button disabled={ !releasable }
-            onClick={ () => onCommand( realization, 'release' ) }>Release</button>
-          <button disabled={ !stoppable }
-            onClick={ () => onCommand( realization, 'free' ) }>Stop</button>
-        </div>
+      const voices = voicesForRealization( realization, entry?.event );
+      return <div className="runtimeRealizationGroup" key={ realization.realizationID ?? realization.nodeID }>
+        <header><strong>{ formatScSymbol( definition ) }</strong><small>{ realization.entryID }</small></header>
+        { voices.map( ( voice ) => <RuntimeVoiceRow key={ voice.nodeID } realization={ realization }
+          voice={ voice } entry={ entry } onFocus={ onFocus } onCommand={ onCommand }
+          onAuditionCopy={ onAuditionCopy } /> ) }
       </div>;
     } ) : <p className="emptyCopy">No score voices currently playing.</p> }
   </section>;
+}
+
+function RuntimeVoiceRow( { realization, voice, entry = null, onFocus, onCommand, onAuditionCopy } ) {
+  const running = [ 'started', 'running' ].includes( voice.state );
+  const paused = voice.state === 'paused';
+  const live = running || paused;
+  const finishing = [ 'releasing', 'released', 'ending' ].includes( voice.state );
+  return <div className="runtimeVoiceRow">
+    <button className="realizationFocus" onClick={ () => onFocus( realization, voice ) }>
+      <strong>{ voice.label }</strong><small>synth { voice.nodeID } · { voice.state }</small>
+    </button>
+    <div className="realizationActions">
+      <button disabled={ !live } onClick={ () => onCommand( realization, paused ? 'resume' : 'pause', voice.nodeID ) }>
+        { paused ? 'Resume' : running ? 'Pause' : 'Unavailable' }</button>
+      <button disabled={ !live } onClick={ () => onCommand( realization, 'release', voice.nodeID ) }>Release</button>
+      <button disabled={ !( live || finishing ) } onClick={ () => onCommand( realization, 'free', voice.nodeID ) }>Free</button>
+      <button onClick={ () => onAuditionCopy( realization, voice, entry ) }>Audition copy</button>
+    </div>
+  </div>;
 }

@@ -47,15 +47,19 @@ osc.on( 'message', ( packet, rinfo ) => {
     const voices = JSON.parse( args[ 9 ] );
     reply( rinfo, '/awb/audition/state', [
       args[ 0 ], args[ 2 ], 'running', args[ 3 ], args[ 4 ], args[ 5 ], args[ 6 ],
-      voices.length, ...voices.map( ( _, index ) => 1400 + index )
+      voices.length, ...voices.map( ( _, index ) => 1400 + index ), ...voices.map( () => 'running' )
     ] );
     reply( rinfo, '/awb/audition/result', [
       args[ 0 ], args[ 1 ], 1, 'play', args[ 2 ], 'started', ''
     ] );
   } else if ( message.address === '/awb/audition/command' ) {
+    const targetNodeID = Number( args[ 4 ] ?? -1 );
+    const nextState = args[ 2 ] === 'pause' ? 'paused' : 'running';
     reply( rinfo, '/awb/audition/state', [
-      args[ 0 ], args[ 3 ], args[ 2 ] === 'pause' ? 'paused' : 'running',
-      'fieldBasic', 'instrument:fieldBasic', 'draft-test', 'run-test', 2, 1400, 1401
+      args[ 0 ], args[ 3 ], targetNodeID < 0 ? nextState : 'running',
+      'fieldBasic', 'instrument:fieldBasic', 'draft-test', 'run-test', 2, 1400, 1401,
+      targetNodeID < 0 || targetNodeID === 1400 ? nextState : 'running',
+      targetNodeID < 0 || targetNodeID === 1401 ? nextState : 'running'
     ] );
     reply( rinfo, '/awb/audition/result', [
       args[ 0 ], args[ 1 ], 1, args[ 2 ], args[ 3 ], 'applied', ''
@@ -110,7 +114,7 @@ osc.on( 'message', ( packet, rinfo ) => {
     }
   } else if ( message.address === '/awb/timeline/realization/command' ) {
     const state = { pause: 'paused', resume: 'running', release: 'released', free: 'ending' }[ args[ 6 ] ];
-    reply( rinfo, '/awb/timeline/realization', [
+    if ( Number( args[ 8 ] ?? -1 ) < 0 ) reply( rinfo, '/awb/timeline/realization', [
       args[ 0 ], args[ 2 ], args[ 3 ], args[ 4 ], 'n1', args[ 5 ], state, 0, 0, 2, 1001, 1002
     ] );
     result( rinfo, args, true, args[ 6 ], args[ 2 ], args[ 3 ], 'applied' );
@@ -220,11 +224,18 @@ try {
   assert.equal( JSON.parse( auditionPlay.args[ 9 ] ).length, 2 );
   await client.auditionCommand( 'audition-realization-test', 'pause' );
   await waitFor( () => client.getState().audition.realizations[ 0 ].state === 'paused' );
+  await client.auditionCommand( 'audition-realization-test', 'resume' );
+  await client.auditionCommand( 'audition-realization-test', 'pause', 1401 );
+  await waitFor( () => client.getState().audition.realizations[ 0 ].voiceStates[ 1401 ] === 'paused' );
+  assert.equal( client.getState().audition.realizations[ 0 ].voiceStates[ 1400 ], 'running',
+    'a targeted audition command does not change its sibling voice' );
   await client.auditionSet( 'audition-realization-test', 'freqL', [ 70, 95 ], 1 );
   const auditionSet = received.find( ( message ) => message.address === '/awb/audition/set' );
   assert.deepEqual( auditionSet.args.slice( 2 ), [
-    'audition-realization-test', 'freqL', 1, 2, 70, 95
+    'audition-realization-test', 'freqL', 1, 2, 70, 95, -1
   ] );
+  await client.auditionSet( 'audition-realization-test', 'freqL', 123, 1, 1401 );
+  assert.equal( received.filter( ( message ) => message.address === '/awb/audition/set' ).at( -1 ).args.at( -1 ), 1401 );
 
   await client.loadDocument( fixture );
   assert.equal( endCount, 2, 'missing chunks restart the complete snapshot' );
@@ -239,17 +250,23 @@ try {
   await client.realizationSet( fixture, client.getState().realizations[ 0 ], 'freq', [ 220, 330 ], 1 );
   const realizationSet = received.find( ( message ) => message.address === '/awb/timeline/realization/set' );
   assert.deepEqual( realizationSet.args.slice( 4 ), [
-    'run-1', 'realization-1', 'freq', 1, 2, 220, 330
+    'run-1', 'realization-1', 'freq', 1, 2, 220, 330, -1
   ] );
   assert.deepEqual( client.getState().realizations[ 0 ].params.freq, [ 220, 330 ] );
   await client.realizationCommand( fixture, client.getState().realizations[ 0 ], 'pause' );
   await waitFor( () => client.getState().realizations[ 0 ].state === 'paused' );
   await client.realizationCommand( fixture, client.getState().realizations[ 0 ], 'resume' );
   await waitFor( () => client.getState().realizations[ 0 ].state === 'running' );
+  await client.realizationCommand( fixture, client.getState().realizations[ 0 ], 'pause', 1002 );
+  assert.equal( client.getState().realizations[ 0 ].voiceStates[ 1002 ], 'paused' );
+  await client.realizationSet( fixture, client.getState().realizations[ 0 ], 'freq', 444, 1, 1002 );
+  assert.equal( client.getState().realizations[ 0 ].voiceParams[ 1002 ].freq, 444 );
   const realizationCommands = received.filter( ( message ) => message.address === '/awb/timeline/realization/command' );
-  assert.deepEqual( realizationCommands.map( ( message ) => message.args.slice( 4, 7 ) ), [
+  assert.deepEqual( realizationCommands.slice( 0, 2 ).map( ( message ) => message.args.slice( 4, 7 ) ), [
     [ 'run-1', 'realization-1', 'pause' ], [ 'run-1', 'realization-1', 'resume' ]
   ], 'realization commands retain run and realization identity' );
+  assert.equal( realizationCommands.at( -1 ).args.at( -1 ), 1002,
+    'a score voice command carries the selected node identity' );
 
   await client.command( fixture, 'state' );
   const stateMessages = received.filter( ( message ) => message.address === '/awb/timeline/command' && message.args[ 4 ] === 'state' );
