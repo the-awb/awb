@@ -43,10 +43,22 @@ try {
     || await page.getByRole( 'button', { name: 'Demo score', exact: true } ).count() !== 1 ) {
     failures.push( 'browser document ingress controls are missing' );
   }
-  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
+  const instrumentRailButton = page.locator( '.activityRail' )
+    .getByRole( 'button', { name: 'Instruments', exact: true } );
+  await instrumentRailButton.click();
   if ( !( await page.getByRole( 'listbox', { name: 'Instrument inventory', exact: true } ).isVisible() )
     || await page.getByRole( 'option', { name: /substrate/ } ).count() !== 1 ) {
     failures.push( 'left instrument tab did not show its pinned score inventory' );
+  }
+  await instrumentRailButton.click();
+  if ( await page.locator( '.panelLayout.leftCollapsed' ).count() !== 1
+    || await page.locator( '.railPanel' ).isVisible() ) {
+    failures.push( 'clicking the active left-rail icon did not collapse its pane' );
+  }
+  await instrumentRailButton.click();
+  if ( await page.locator( '.panelLayout.leftCollapsed' ).count() !== 0
+    || !( await page.getByRole( 'listbox', { name: 'Instrument inventory', exact: true } ).isVisible() ) ) {
+    failures.push( 'clicking the active left-rail icon again did not restore its pane' );
   }
   await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
   await page.getByRole( 'button', { name: 'Collapse left panel', exact: true } ).click();

@@ -6,7 +6,7 @@ export default function ScoreStudioLeftRail( {
   const [ tab, setTab ] = useState( 'document' );
 
   function chooseTab( nextTab ) {
-    if ( collapsed ) onToggleCollapsed();
+    if ( collapsed || tab === nextTab ) onToggleCollapsed();
     setTab( nextTab );
   }
 
@@ -14,8 +14,10 @@ export default function ScoreStudioLeftRail( {
     <div className="leftRailContent">
       <nav className="activityRail" aria-label="Score Studio context">
         <button aria-label="Document" title="Document" className={ tab === 'document' ? 'active' : '' }
+          aria-pressed={ tab === 'document' } aria-expanded={ tab === 'document' && !collapsed }
           onClick={ () => chooseTab( 'document' ) }>▤</button>
         <button aria-label="Instruments" title="Instruments" className={ tab === 'instruments' ? 'active' : '' }
+          aria-pressed={ tab === 'instruments' } aria-expanded={ tab === 'instruments' && !collapsed }
           onClick={ () => chooseTab( 'instruments' ) }>♫</button>
         <span className="spacer" />
         <button aria-label={ collapsed ? 'Expand left panel' : 'Collapse left panel' }
