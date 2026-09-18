@@ -1,9 +1,12 @@
 # Score Studio GUI restructure and smart-seek handoff
 
-Status: Slices A, B, C, C.1 and D are present in the current integration history. Smart seek and
-the restructured UI still require continuing live acceptance. The old all-instrument rack remains
-available only to the browser host as a compatibility surface. It is not exposed by the hosted-only
-shell.
+Status: Slices A, B, C, C.1, D and E are present in the current integration history. Smart seek is
+temporally correct but not yet acoustically position-aware: a reconstructed sustain-phase note is
+a fresh Synth and therefore currently restarts its authored attack and oscillator phase. This is
+audible as an unintended soft fade when seeking into the middle of a long note. Slice F below is
+the remaining envelope-aware reconstruction stage. The restructured UI still requires continuing
+live acceptance. The old all-instrument rack remains available only to the browser host as a
+compatibility surface. It is not exposed by the hosted-only shell.
 
 Definition-library policy: desktop sclang/scsynth has one active process-global SynthDef library.
 Tools and scores may legitimately provide different compiled graphs under the same visible symbol.
@@ -336,6 +339,14 @@ an editable `envArray`, an exact adapter may evaluate the envelope at `elapsed` 
 remaining envelope beginning at that level. In both quality levels, release/free boundaries and all
 future authored events retain their original score times relative to `T`.
 
+Current implementation boundary: the planner preserves the original note controls, replaces
+`sustain` with the remaining gate time and names `attack and oscillator phase restart at the seek
+point` as an approximation. Because the executor creates a fresh Synth, its EnvGen begins at its
+initial level and runs the original attack again. Release-phase reconstruction likewise creates a
+fresh envelope and immediately releases it using the correct remaining release lifetime rather
+than restoring the original EnvGen's instantaneous state. This is lifecycle-correct, but the long
+restarted attack is not the desired final listening behaviour.
+
 Seeking while paused must continue to free the suspended nodes before reconstruction. Seeking
 while playing should atomically replace the old run: stop/free old owned nodes, install the new
 anchor and reconstruction plan, then resume. No old `/n_end` may attach to the new run.
@@ -364,7 +375,30 @@ remains the authoritative scheduler and atomically applies the plan to a fresh r
 explicit browser-standalone host uses `StandaloneScoreExecutor` to apply the same plan. The React
 tool selects seek mode and displays the report; it never performs reconstruction itself.
 
-### 5.4 Live editing during playback
+### 5.4 Envelope-aware acoustic reconstruction
+
+The next stage refines the reconstruction event without weakening the temporal contract:
+
+1. calculate the note's elapsed authored time, logical envelope phase and expected amplitude level
+   at `T` from the declared instrument-envelope contract and folded control history;
+2. for an editable `envArray`, build a residual envelope whose initial level is the calculated level
+   and whose remaining segments retain their authored timing; classify this as exact only when the
+   adapter can also account for every audible state it claims to restore;
+3. for a parametric or baked envelope that cannot start at an arbitrary internal position, replace
+   the original long attack with a configurable short anti-click attack and, where safe, apply the
+   calculated level through a declared gain control. Keep the result `lifecycleCorrect` and report
+   the substituted attack and any phase reset;
+4. reconstruct a release-phase note from its calculated current level and remaining release time
+   where the interface permits it; otherwise use the same bounded anti-click approximation or skip
+   it if doing so would falsify its terminal timing;
+5. apply the same adapter and report schema in hosted and browser-standalone execution.
+
+Do not mutate the authored event to achieve this. Envelope overrides belong only to the ephemeral
+reconstruction event. Do not claim exactness merely because the initial amplitude is close: an
+oscillator, filter, modulation envelope or sample cursor that restarts still makes the audible state
+an approximation.
+
+### 5.5 Live editing during playback
 
 Editing the open score while it plays must not install the new revision by stopping the player and
 starting over. It must not clear realization UI before the engine reports those nodes ended. The
@@ -530,6 +564,21 @@ lightweight semantic containers and membership, and remains deliberately smaller
 there is no language-object inspection, GUI model, tool catalogue or discovery of nodes the JS host
 did not create.
 
+### Slice F — envelope-aware smart-seek reconstruction
+
+Not yet implemented:
+
+- add elapsed note/envelope position and expected amplitude to the data-only seek plan;
+- add capability-specific residual-envelope adapters rather than a SynthDef-name special case;
+- reconstruct editable `envArray` envelopes from the calculated level and remaining segments;
+- substitute a short, configurable anti-click attack for parametric/baked envelopes instead of
+  replaying their original long attack;
+- preserve the already-correct remaining gate, release, free and future-event boundaries;
+- include the chosen envelope strategy, calculated source phase and every acoustic approximation
+  in runtime metadata and the hosted/standalone seek report;
+- cover sustain-phase, attack-phase and release-phase seeks, polyphonic wrapped voices, explicit
+  `set` history and `dur: "inf"` notes with shared planner fixtures and both executor gates.
+
 ## 8. Acceptance criteria
 
 - Left Document and Instruments tabs work in the shared renderer without desktop/browser forks.
@@ -562,6 +611,11 @@ did not create.
 - Smart seek never mutates authored entries, never reuses old realization IDs or changes remaining
   note/event timing. It classifies exact and lifecycle-correct reconstruction, reports acoustic
   approximations, and skips notes whose remaining lifetime or essential state is unknown.
+- A sustain-phase smart seek must not replay an authored multi-second attack. An `envArray` adapter
+  begins from its calculated residual level; other supported envelopes use the declared bounded
+  anti-click strategy and remain labelled `lifecycleCorrect` unless all audible state is restored.
+- Hosted and standalone smart seek must produce the same envelope strategy and terminal boundaries
+  from the same reconstruction plan, even though node creation and lifecycle reporting differ.
 - Editing during playback changes only the uncommitted future. It does not reset transport, replace
   the run, recreate live notes, clear lifecycle state or replay an entry moved into the past.
 - Hosted and standalone executors report equivalent audible-position and committed-frontier
@@ -582,7 +636,9 @@ did not create.
    controls exist.
 5. **Temporal correctness outranks acoustic exactness.** A lifecycle-correct reconstruction may
    restart or approximate phase/envelope state, but it must preserve remaining lifetime, control
-   state and future boundaries. If it cannot, skip it; never restart the original full duration.
+   state and future boundaries. The present implementation also replays the original attack; that
+   is a known interim behaviour, not the target anti-click reconstruction. If timing cannot be
+   preserved, skip the note; never restart the original full duration.
 6. **Keep invalid text separate from canonical state.** Raw JSON, typed controls, envelope controls
    and audition share one focus draft. Valid changes update the open working score immediately;
    invalid text remains local until corrected and must never replace the last valid event.

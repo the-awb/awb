@@ -231,8 +231,13 @@ note/set/release/free history and recreates only notes whose remaining lifetime 
 preserves remaining gate or release-tail time, expands wrapped voices, uses fresh runtime
 identities and reports skipped notes rather than replaying an unsafe full duration. Current
 reconstructions are lifecycle-correct rather than acoustically exact: attack, oscillator phase or
-the release shape may restart while the terminal boundary remains correct. Unsupported event types
-still fail score loading instead of disappearing silently.
+the release shape may restart while the terminal boundary remains correct. In particular, seeking
+into the sustain portion currently creates a fresh Synth with the original attack controls, so a
+long attack is audibly replayed as a soft fade. The next reconstruction slice will evaluate the
+declared envelope at the target time: editable `envArray` instruments can receive a residual
+envelope, while parametric/baked envelopes will use a short anti-click attack and remain explicitly
+labelled `lifecycleCorrect`. Unsupported event types still fail score loading instead of
+disappearing silently.
 
 Compiled assets live under `public/synthdefs/`, with provenance recorded beside them. They are
 host assets, like `public/scsynth/` and `public/sclang/`; neither `@awb/score` nor `@awb/sc-wasm`

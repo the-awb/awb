@@ -38,6 +38,22 @@ Two operations must remain distinct:
 - **seek** changes transport time, reconciles nodes belonging to the old execution position, and
   may reconstruct authored notes logically alive at the requested target.
 
+Smart-seek reconstruction currently guarantees the logical state and terminal timing, not the
+instantaneous DSP state. The shared planner folds deterministic note/set/release/free history and
+computes remaining gate or release lifetime. Both executors then create fresh nodes. A
+sustain-phase reconstruction therefore currently restarts the original amplitude attack and
+oscillator phase; a release-phase reconstruction starts a fresh envelope, immediately gates it off
+and gives it the correct remaining release time. Runtime metadata correctly classifies these as
+`lifecycleCorrect` and names the approximation.
+
+The next adapter stage is envelope-aware. The plan will carry elapsed envelope position and the
+calculated level at the seek target. An editable `envArray` may be replaced ephemerally with its
+remaining segments beginning at that level. A parametric or baked envelope that cannot restore an
+internal EnvGen position must use a bounded short anti-click attack, preserve the calculated
+terminal boundaries, and remain `lifecycleCorrect`. This reconstruction data never mutates the
+canonical score. Hosted and standalone adapters must consume the same strategy; host-specific code
+only creates and tracks the resulting nodes.
+
 If the first event in a replacement occurs after the committed frontier, the executor preserves
 that exact gap rather than snapping it to the frontier. Edits moved into the committed past are
 deferred to a later run or explicitly rejected; they are never replayed into the current run.
