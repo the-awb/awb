@@ -65,7 +65,7 @@ try {
     clientID: 'score-browser-real', WebSocketImpl: WebSocket, requestTimeoutMs: 1200
   } );
   await client.connect( bridge.endpoint );
-  if ( client.getState().protocolVersion !== 1 ) throw new Error( 'desktop did not negotiate protocol v1' );
+  if ( client.getState().protocolVersion !== 2 ) throw new Error( 'desktop did not negotiate protocol v2' );
   passed += 1;
 
   await waitFor( () => client.getState().synthDefContext.status === 'connected' );

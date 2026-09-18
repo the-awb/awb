@@ -3,6 +3,7 @@ import {
   instrumentControls, instrumentNoteLifecycle, instrumentType, typeForSynthDef
 } from '@awb/instruments';
 import { expandScEventParams } from './scEventSemantics.js';
+import { createBrowserNodeRegistry } from './BrowserNodeRegistry.js';
 
 const HANDLES = Object.freeze( {
   note: { required: [ 'def' ] },
@@ -12,6 +13,43 @@ const HANDLES = Object.freeze( {
 } );
 const RENDERER = defineRenderer( { name: 'standalone-scsynth', handles: HANDLES } );
 const EPSILON = 0.002;
+
+function validateDocument( document ) {
+  assertScoreDocument( document );
+  const report = checkScore( document.entries, [ RENDERER ] );
+  if ( !report.complete ) throw new Error( describeCheck( report ) || 'The score contains unsupported standalone events.' );
+  for ( const entry of document.entries ) {
+    if ( entry.event?.type !== 'note' ) continue;
+    const value = entry.event.dur;
+    if ( value === undefined ) throw new Error( `Standalone note ${ entry.id } must declare a finite dur or "inf".` );
+    if ( value !== 'inf' && ( !Number.isFinite( Number( value ) ) || Number( value ) < 0 ) ) {
+      throw new Error( `Standalone note ${ entry.id } has an invalid duration.` );
+    }
+  }
+}
+
+function finalFrontier( entry ) {
+  if ( !entry ) return 0;
+  const duration = entry.event?.dur === 'inf' ? 1 : Number( entry.event?.delta ?? entry.event?.dur ?? 0 );
+  return entry.time + ( Number.isFinite( duration ) ? Math.max( 0, duration ) : 0 );
+}
+
+function executionEntries( document, generation ) {
+  const sorted = sortScore( document.entries );
+  return sorted.map( ( entry, index ) => Object.freeze( {
+    ...entry,
+    __sourceRevision: document.revision,
+    __executionGeneration: generation,
+    __nextFrontier: sorted[ index + 1 ]?.time ?? finalFrontier( entry )
+  } ) );
+}
+
+function executionConflict( code, message, detail = {} ) {
+  const error = new Error( message );
+  error.code = code;
+  Object.assign( error, detail );
+  return error;
+}
 
 function freezeState( state ) {
   return Object.freeze( {
@@ -47,6 +85,7 @@ export function createStandaloneScoreExecutor( {
 } = {} ) {
   if ( typeof sendOsc !== 'function' ) throw new Error( 'createStandaloneScoreExecutor: sendOsc is required' );
   let document = null;
+  let canonicalEntries = [];
   let entries = [];
   let cursor = 0;
   let timer = null;
@@ -54,12 +93,14 @@ export function createStandaloneScoreExecutor( {
   let anchorScore = 0;
   let nextNodeID = nodeIDStart;
   let nextRunID = 1;
+  let executionGeneration = 0;
   let pendingSeekPlan = null;
-  const live = new Map();
+  const live = createBrowserNodeRegistry();
   const listeners = new Set();
   let state = freezeState( {
     status: 'empty', scoreID: null, revision: null, runID: null,
-    position: 0, liveCount: 0, realizations: [], seekReport: null, error: null
+    position: 0, committedFrontier: 0, executionGeneration: 0,
+    liveCount: 0, realizations: [], seekReport: null, error: null
   } );
 
   const publish = ( patch ) => {
@@ -99,6 +140,7 @@ export function createStandaloneScoreExecutor( {
   };
 
   const execute = ( entry, reconstruction = null ) => {
+    if ( entry.__frontierOnly ) return;
     const event = entry.event;
     if ( event.type === 'note' ) {
       const definition = event.def ?? event.instrument;
@@ -125,6 +167,8 @@ export function createStandaloneScoreExecutor( {
         live.set( nodeID, node );
         created.push( Object.freeze( { entryID: entry.id, nodeID, definition,
           params: Object.freeze( { ...params } ), state: 'started',
+          sourceRevision: entry.__sourceRevision ?? document.revision,
+          executionGeneration: entry.__executionGeneration ?? executionGeneration,
           ...( reconstruction ? {
             reconstructionQuality: reconstruction.quality,
             reconstructionPhase: reconstruction.phase,
@@ -144,7 +188,7 @@ export function createStandaloneScoreExecutor( {
     } else if ( event.type === 'release' ) {
       for ( const node of targets ) {
         sendOsc( '/n_set', [ node.nodeID, 'gate', 0 ] );
-        node.released = true;
+        live.update( node.nodeID, { released: true }, 'released' );
         realization( node.nodeID, { state: 'released' } );
       }
     } else if ( event.type === 'free' ) {
@@ -163,8 +207,7 @@ export function createStandaloneScoreExecutor( {
         for ( const node of live.values() ) {
           if ( before.has( node.nodeID ) ) continue;
           sendOsc( '/n_set', [ node.nodeID, 'gate', 0 ] );
-          node.released = true;
-          node.releaseAt = null;
+          live.update( node.nodeID, { released: true, releaseAt: null }, 'released' );
           realization( node.nodeID, { state: 'released' } );
         }
       }
@@ -175,7 +218,7 @@ export function createStandaloneScoreExecutor( {
     for ( const node of live.values() ) {
       if ( node.released || node.releaseAt === null || node.releaseAt > position + EPSILON ) continue;
       sendOsc( '/n_set', [ node.nodeID, 'gate', 0 ] );
-      node.released = true;
+      live.update( node.nodeID, { released: true }, 'released' );
       realization( node.nodeID, { state: 'released' } );
     }
   };
@@ -202,9 +245,16 @@ export function createStandaloneScoreExecutor( {
     if ( state.status !== 'playing' ) return;
     const position = estimatePosition();
     try {
-      while ( cursor < entries.length && entries[ cursor ].time <= position + EPSILON ) execute( entries[ cursor++ ] );
+      let lastCommitted = null;
+      while ( cursor < entries.length && entries[ cursor ].time <= position + EPSILON ) {
+        lastCommitted = entries[ cursor++ ];
+        execute( lastCommitted );
+      }
       releaseDue( position );
-      publish( { position } );
+      publish( {
+        position,
+        ...( lastCommitted ? { committedFrontier: lastCommitted.__nextFrontier } : {} )
+      } );
       schedule();
     } catch ( error ) {
       clearWake();
@@ -214,28 +264,83 @@ export function createStandaloneScoreExecutor( {
   };
 
   const load = ( nextDocument ) => {
-    assertScoreDocument( nextDocument );
-    const report = checkScore( nextDocument.entries, [ RENDERER ] );
-    if ( !report.complete ) throw new Error( describeCheck( report ) || 'The score contains unsupported standalone events.' );
-    for ( const entry of nextDocument.entries ) {
-      if ( entry.event?.type !== 'note' ) continue;
-      const value = entry.event.dur;
-      if ( value === undefined ) {
-        throw new Error( `Standalone note ${ entry.id } must declare a finite dur or "inf".` );
-      }
-      if ( value !== 'inf' && ( !Number.isFinite( Number( value ) ) || Number( value ) < 0 ) ) {
-        throw new Error( `Standalone note ${ entry.id } has an invalid duration.` );
-      }
-    }
+    validateDocument( nextDocument );
     clearWake();
     hardFreeAll();
     document = nextDocument;
     pendingSeekPlan = null;
-    entries = sortScore( nextDocument.entries );
+    executionGeneration += 1;
+    canonicalEntries = executionEntries( nextDocument, executionGeneration );
+    entries = canonicalEntries;
     cursor = 0;
     publish( {
       status: 'ready', scoreID: document.scoreID, revision: document.revision, runID: null,
-      position: 0, realizations: [], seekReport: null, error: null
+      position: 0, committedFrontier: entries[ 0 ]?.time ?? 0,
+      executionGeneration, realizations: [], seekReport: null, error: null
+    } );
+  };
+  const replaceFuture = ( nextDocument, {
+    expectedGeneration = state.executionGeneration,
+    expectedFrontier = state.committedFrontier
+  } = {} ) => {
+    validateDocument( nextDocument );
+    if ( !document ) { load( nextDocument ); return Object.freeze( { code: 'loaded' } ); }
+    if ( nextDocument.scoreID !== document.scoreID ) {
+      throw executionConflict( 'scoreConflict', 'Future replacement belongs to a different score.' );
+    }
+    if ( nextDocument.revision < document.revision ) {
+      throw executionConflict( 'staleRevision', 'An older score revision cannot replace the active future.' );
+    }
+    if ( nextDocument.revision === document.revision ) {
+      return Object.freeze( {
+        code: 'alreadyCurrent', revision: document.revision,
+        executionGeneration, committedFrontier: state.committedFrontier
+      } );
+    }
+    if ( expectedGeneration !== executionGeneration ) {
+      throw executionConflict( 'generationConflict', 'The executor generation changed before the future replacement.', {
+        expectedGeneration, actualGeneration: executionGeneration
+      } );
+    }
+    if ( Math.abs( Number( expectedFrontier ) - Number( state.committedFrontier ) ) > 1e-6 ) {
+      throw executionConflict( 'frontierConflict', 'The committed frontier moved before the future replacement.', {
+        expectedFrontier, actualFrontier: state.committedFrontier
+      } );
+    }
+    if ( ![ 'playing', 'paused' ].includes( state.status ) ) {
+      load( nextDocument );
+      return Object.freeze( { code: 'loaded', revision: nextDocument.revision } );
+    }
+
+    const frontier = state.committedFrontier;
+    const previousRevision = document.revision;
+    executionGeneration += 1;
+    document = nextDocument;
+    canonicalEntries = executionEntries( nextDocument, executionGeneration );
+    const future = Number.isFinite( frontier )
+      ? canonicalEntries.filter( ( entry ) => entry.time >= frontier - 1e-6 )
+      : [];
+    const deferredPastCount = canonicalEntries.length - future.length;
+    const firstTime = future[ 0 ]?.time;
+    const gap = Number.isFinite( frontier )
+      && ( firstTime === undefined || firstTime > frontier + 1e-6 )
+      ? [ Object.freeze( {
+        id: `__frontier-${ executionGeneration }`, time: frontier,
+        event: Object.freeze( { type: 'rest' } ), __frontierOnly: true,
+        __sourceRevision: nextDocument.revision, __executionGeneration: executionGeneration,
+        __nextFrontier: firstTime ?? frontier
+      } ) ] : [];
+    entries = [ ...gap, ...future ];
+    cursor = 0;
+    clearWake();
+    publish( {
+      revision: nextDocument.revision, executionGeneration,
+      committedFrontier: frontier, error: null
+    } );
+    if ( state.status === 'playing' ) schedule();
+    return Object.freeze( {
+      code: 'futureReplaced', previousRevision, revision: nextDocument.revision,
+      executionGeneration, committedFrontier: frontier, deferredPastCount
     } );
   };
   const seek = ( seconds ) => {
@@ -245,12 +350,17 @@ export function createStandaloneScoreExecutor( {
     clearWake();
     hardFreeAll();
     pendingSeekPlan = null;
+    entries = canonicalEntries;
     cursor = entries.findIndex( ( entry ) => entry.time >= position );
     if ( cursor < 0 ) cursor = entries.length;
     anchorScore = position;
     anchorWall = now();
     const nextStatus = playing ? 'playing' : 'stopped';
-    publish( { position, status: nextStatus, seekReport: null, error: null } );
+    publish( {
+      position, status: nextStatus,
+      committedFrontier: entries[ cursor ]?.time ?? finalFrontier( entries.at( -1 ) ),
+      seekReport: null, error: null
+    } );
     if ( playing ) { wake(); }
   };
   const smartSeek = ( plan ) => {
@@ -262,6 +372,7 @@ export function createStandaloneScoreExecutor( {
     const playing = state.status === 'playing';
     clearWake();
     hardFreeAll();
+    entries = canonicalEntries;
     cursor = entries.findIndex( ( entry ) => entry.time >= plan.target );
     if ( cursor < 0 ) cursor = entries.length;
     anchorScore = plan.target;
@@ -277,6 +388,7 @@ export function createStandaloneScoreExecutor( {
       position: plan.target,
       status: playing ? 'playing' : 'stopped',
       runID: playing ? `browser-run-${ nextRunID++ }` : null,
+      committedFrontier: entries[ cursor ]?.time ?? finalFrontier( entries.at( -1 ) ),
       seekReport,
       error: null
     } );
@@ -288,7 +400,10 @@ export function createStandaloneScoreExecutor( {
   const play = () => {
     if ( !document ) throw new Error( 'Load a score before playing.' );
     if ( state.status === 'paused' ) {
-      for ( const node of live.values() ) sendOsc( '/n_run', [ node.nodeID, 1 ] );
+      for ( const node of live.values() ) {
+        sendOsc( '/n_run', [ node.nodeID, 1 ] );
+        live.update( node.nodeID, {}, 'resumed' );
+      }
     } else if ( state.status === 'ended' ) {
       seek( 0 );
     }
@@ -310,7 +425,10 @@ export function createStandaloneScoreExecutor( {
     if ( state.status !== 'playing' ) return false;
     const position = estimatePosition();
     clearWake();
-    for ( const node of live.values() ) sendOsc( '/n_run', [ node.nodeID, 0 ] );
+    for ( const node of live.values() ) {
+      sendOsc( '/n_run', [ node.nodeID, 0 ] );
+      live.update( node.nodeID, {}, 'paused' );
+    }
     publish( { status: 'paused', position } );
     return true;
   };
@@ -319,11 +437,11 @@ export function createStandaloneScoreExecutor( {
     const node = live.get( id );
     if ( !node || ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) return false;
     if ( action === 'pause' ) {
-      sendOsc( '/n_run', [ id, 0 ] ); realization( id, { state: 'paused' } );
+      sendOsc( '/n_run', [ id, 0 ] ); live.update( id, {}, 'paused' ); realization( id, { state: 'paused' } );
     } else if ( action === 'resume' ) {
-      sendOsc( '/n_run', [ id, 1 ] ); realization( id, { state: 'running' } );
+      sendOsc( '/n_run', [ id, 1 ] ); live.update( id, {}, 'resumed' ); realization( id, { state: 'running' } );
     } else if ( action === 'release' ) {
-      sendOsc( '/n_set', [ id, 'gate', 0 ] ); node.released = true;
+      sendOsc( '/n_set', [ id, 'gate', 0 ] ); live.update( id, { released: true }, 'released' );
       realization( id, { state: 'released' } );
     } else {
       sendOsc( '/n_free', [ id ] ); dropNode( id, true );
@@ -339,6 +457,7 @@ export function createStandaloneScoreExecutor( {
       if ( values.length !== controlWidth ) return false;
       sendOsc( '/n_setn', [ id, control, values.length, ...values ] );
     } else sendOsc( '/n_set', [ id, control, values[ 0 ] ] );
+    live.update( id, {}, 'set' );
     realization( id, { params: Object.freeze( {
       ...( state.realizations.find( ( item ) => item.nodeID === id )?.params ?? {} ), [ control ]: value
     } ) } );
@@ -348,9 +467,14 @@ export function createStandaloneScoreExecutor( {
     const position = estimatePosition();
     clearWake();
     hardFreeAll();
+    entries = canonicalEntries;
     cursor = entries.findIndex( ( entry ) => entry.time >= position );
     if ( cursor < 0 ) cursor = entries.length;
-    publish( { status: document ? 'stopped' : 'empty', position, runID: null, error: null } );
+    publish( {
+      status: document ? 'stopped' : 'empty', position, runID: null,
+      committedFrontier: entries[ cursor ]?.time ?? finalFrontier( entries.at( -1 ) ),
+      error: null
+    } );
   };
   const offOsc = subscribeOscReply( ( bytes ) => {
     const message = parseOsc( bytes );
@@ -364,7 +488,8 @@ export function createStandaloneScoreExecutor( {
   } );
 
   return {
-    load, play, pause, stop, seek, smartSeek, commandRealization, setRealization, estimatePosition,
+    load, replaceFuture, play, pause, stop, seek, smartSeek,
+    commandRealization, setRealization, estimatePosition,
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     getState: () => state,
     dispose: () => { stop(); offOsc(); listeners.clear(); }

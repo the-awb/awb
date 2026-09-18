@@ -28,7 +28,7 @@ const normalizeHash = ( hash ) => `${ hash }`.replace( /^sha256:/, '' );
 
 function assertJsonlibSafe( value, path ) {
   if ( typeof value === 'string' && numericString.test( value ) ) {
-    throw new Error( `${ path } is a numeric-looking string; protocol v1 requires a non-numeric prefix` );
+    throw new Error( `${ path } is a numeric-looking string; the hosted protocol requires a non-numeric prefix` );
   }
   if ( Array.isArray( value ) ) value.forEach( ( item, index ) => assertJsonlibSafe( item, `${ path }[${ index }]` ) );
   else if ( value && typeof value === 'object' ) {
@@ -254,7 +254,9 @@ export class HostedScoreClient {
       const transport = Object.freeze( {
         scoreID: args[ 1 ], revision: args[ 2 ], runID: args[ 3 ], state: args[ 4 ],
         scorePosition: args[ 5 ], hostMonotonicTime: args[ 6 ], rate: args[ 7 ], currentIndex: args[ 8 ],
-        clockClass: args[ 9 ] ?? null, scheduledStartHostTime: args[ 10 ] ?? -1
+        clockClass: args[ 9 ] ?? null, scheduledStartHostTime: args[ 10 ] ?? -1,
+        executionGeneration: Number( args[ 11 ] ?? 0 ),
+        committedFrontier: Number( args[ 12 ] ?? -1 )
       } );
       this.publish( { scoreID: transport.scoreID, remoteRevision: transport.revision, transport } );
     } else if ( address === '/awb/timeline/realization' && args[ 0 ] === this.clientID ) {
@@ -264,13 +266,14 @@ export class HostedScoreClient {
       const nodeCount = Number( args[ 9 ] );
       const nodeIDs = args.slice( 10, 10 + nodeCount );
       const reportedStates = args.slice( 10 + nodeCount, 10 + ( nodeCount * 2 ) );
+      const executionGeneration = Number( args[ 10 + ( nodeCount * 2 ) ] ?? 0 );
       const voiceStates = Object.freeze( Object.fromEntries( nodeIDs.map( ( nodeID, index ) => [
         nodeID, `${ reportedStates[ index ] ?? args[ 6 ] }`
       ] ) ) );
       const realization = Object.freeze( { ...previous,
         scoreID: args[ 1 ], revision: args[ 2 ], runID: args[ 3 ], entryID: args[ 4 ],
         realizationID: args[ 5 ], state: args[ 6 ], scoreIndex: args[ 7 ], scoreTime: args[ 8 ],
-        nodeIDs: Object.freeze( nodeIDs ), voiceStates
+        nodeIDs: Object.freeze( nodeIDs ), voiceStates, executionGeneration
       } );
       const realizations = [ ...this.state.realizations ];
       const realizationIndex = realizations.findIndex( ( item ) => item.realizationID === realization.realizationID );
@@ -593,7 +596,10 @@ export class HostedScoreClient {
     } );
   }
 
-  async loadDocument( document, { expectedRevision = -1, maxChunkBytes = 24000 } = {} ) {
+  async loadDocument( document, {
+    expectedRevision = -1, expectedGeneration = -1,
+    expectedFrontier = -1, maxChunkBytes = 24000
+  } = {} ) {
     document.entries.forEach( ( entry, index ) => assertJsonlibSafe( entry, `entries[${ index }]` ) );
     const encoded = document.entries.map( ( entry ) => JSON.stringify( entry ) );
     const chunks = [];
@@ -614,7 +620,8 @@ export class HostedScoreClient {
       const beginID = requestID( 'begin' );
       await this.request( '/awb/timeline/snapshot/begin', [
         this.clientID, beginID, snapshotID, document.scoreID, document.revision,
-        expectedRevision, document.entries.length, contentHash
+        expectedRevision, document.entries.length, contentHash,
+        expectedGeneration, expectedFrontier
       ], beginID );
       for ( let index = 0; index < chunks.length; index += 1 ) {
         const id = requestID( 'chunk' );
@@ -796,7 +803,26 @@ export class HostedScoreClient {
         if ( error.result?.code !== 'unknownScore' ) throw error;
       }
     }
-    return this.loadDocument( document, { ...options, expectedRevision } );
+    for ( let attempt = 0; attempt < 3; attempt += 1 ) {
+      const transport = this.state.transport?.scoreID === document.scoreID
+        ? this.state.transport : null;
+      try {
+        return await this.loadDocument( document, {
+          ...options,
+          expectedRevision,
+          expectedGeneration: transport?.executionGeneration ?? -1,
+          expectedFrontier: transport?.committedFrontier ?? -1
+        } );
+      } catch ( error ) {
+        const code = error.result?.code;
+        if ( attempt >= 2 || ![ 'generationConflict', 'frontierConflict', 'revisionConflict' ].includes( code ) ) throw error;
+        const remote = await this.command( document, 'state', 0, -1 );
+        expectedRevision = remote.revision;
+        if ( document.revision <= expectedRevision ) throw error;
+        await new Promise( ( resolve ) => setTimeout( resolve, 0 ) );
+      }
+    }
+    throw new Error( 'Unable to install score revision after execution advanced.' );
   }
 
   requestProjection( { scoreID, revision, contentHash, kind = 'timeline' } ) {

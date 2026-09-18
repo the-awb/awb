@@ -1,7 +1,18 @@
 import assert from 'node:assert/strict';
 import { createScoreDocument, makeEvent } from '@awb/score';
 import { createStandaloneScoreExecutor } from '../src/engine/StandaloneScoreExecutor.js';
+import { createBrowserNodeRegistry } from '../src/engine/BrowserNodeRegistry.js';
 import { buildSeekReconstructionPlan } from '../src/engine/scoreSeekPlan.js';
+
+const registry = createBrowserNodeRegistry();
+const registryChanges = [];
+const unsubscribeRegistry = registry.subscribe( ( change ) => registryChanges.push( change ) );
+registry.set( 41, { entryID: 'registry-note' } );
+assert.equal( registry.snapshot()[ 0 ].nodeID, 41 );
+registry.update( 41, { released: true }, 'released' );
+registry.delete( 41 );
+assert.deepEqual( registryChanges.map( ( change ) => change.type ), [ 'started', 'released', 'ended' ] );
+unsubscribeRegistry();
 
 let nowMs = 0;
 let nextTimer = 1;
@@ -189,6 +200,58 @@ assert.throws( () => executor.load( createScoreDocument( {
 assert.throws( () => executor.load( createScoreDocument( {
   scoreID: 'unsupported', entries: [ makeEvent( 0, { type: 'visual' } ) ]
 } ) ), /unhandled|unsupported/i );
+
+const futureV10 = createScoreDocument( {
+  scoreID: 'future-replacement', revision: 10, entries: [
+    makeEvent( 0, { type: 'note', def: 'awbTestTone', freq: 220, amp: 0.01, dur: 2 }, { id: 'live-note' } ),
+    makeEvent( 1, { type: 'note', def: 'awbTestTone', freq: 330, amp: 0.01, dur: 0.2 }, { id: 'old-future' } )
+  ]
+} );
+executor.load( futureV10 );
+executor.play();
+advance( 0 );
+const futureRunID = executor.getState().runID;
+const futureNodeID = executor.getState().realizations.at( -1 ).nodeID;
+const initialGeneration = executor.getState().executionGeneration;
+assert.equal( executor.getState().committedFrontier, 1 );
+const futureV11 = createScoreDocument( {
+  scoreID: 'future-replacement', revision: 11, entries: [
+    makeEvent( 0, { type: 'note', def: 'awbTestTone', freq: 999, amp: 0.01, dur: 2 }, { id: 'live-note' } ),
+    makeEvent( 1.5, { type: 'note', def: 'awbTestTone', freq: 550, amp: 0.01, dur: 0.2 }, { id: 'future-11' } )
+  ]
+} );
+const replacement11 = executor.replaceFuture( futureV11, {
+  expectedGeneration: initialGeneration, expectedFrontier: 1
+} );
+assert.equal( replacement11.code, 'futureReplaced' );
+assert.equal( executor.getState().runID, futureRunID, 'future replacement preserves the run' );
+assert.equal( executor.getState().liveCount, 1, 'future replacement preserves live nodes' );
+assert.equal( executor.getState().realizations.at( -1 ).nodeID, futureNodeID );
+const futureV12 = createScoreDocument( {
+  scoreID: 'future-replacement', revision: 12, entries: [
+    makeEvent( 0, { type: 'note', def: 'awbTestTone', freq: 999, amp: 0.01, dur: 2 }, { id: 'live-note' } ),
+    makeEvent( 1.5, { type: 'note', def: 'awbTestTone', freq: 660, amp: 0.01, dur: 0.2 }, { id: 'future-12' } )
+  ]
+} );
+executor.replaceFuture( futureV12, {
+  expectedGeneration: executor.getState().executionGeneration,
+  expectedFrontier: executor.getState().committedFrontier
+} );
+assert.throws( () => executor.replaceFuture( futureV11, {
+  expectedGeneration: initialGeneration, expectedFrontier: 1
+} ), ( error ) => error.code === 'staleRevision' );
+const beforeFuture = sent.length;
+advance( 1000 );
+assert.equal( executor.getState().committedFrontier, 1.5,
+  'the retained boundary commits an exact replacement gap' );
+assert.equal( sent.slice( beforeFuture ).some( ( message ) => message.address === '/s_new' ), false );
+advance( 500 );
+const replacementStarts = sent.slice( beforeFuture ).filter( ( message ) => message.address === '/s_new' );
+assert.equal( replacementStarts.length, 1 );
+assert.equal( replacementStarts[ 0 ].args[ replacementStarts[ 0 ].args.indexOf( 'freq' ) + 1 ], 660,
+  'only the latest pending future revision realizes' );
+assert.equal( executor.getState().realizations.at( -1 ).sourceRevision, 12 );
+executor.stop();
 executor.dispose();
 assert.equal( oscListeners.size, 0 );
 

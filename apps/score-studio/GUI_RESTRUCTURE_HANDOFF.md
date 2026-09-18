@@ -505,14 +505,22 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 
 ### Slice E — live future replacement
 
-- separate authored/editor revision from the running projection revision in UI and adapter state;
-- stop automatic whole-player replacement when an edit arrives during playback or pause;
-- expose the executor's committed frontier and replace only its unconsumed score tail;
-- preserve the current run and live NodeManager/browser-registry realizations across replacement;
-- carry a source revision/generation on realizations created after the swap;
-- keep smart-seek reconstruction disabled for ordinary future replacement;
-- reconcile natural completion only when the source stream has ended and the lifecycle authority
-  reports no live realizations for the run.
+Implemented in the native and browser executors:
+
+- authored revision, execution generation and committed frontier are separate adapter state;
+- edits during playback or pause replace only the unconsumed tail and preserve the run and live
+  NodeManager/browser-registry realizations;
+- compare-and-swap generation/frontier guards reject a replacement raced by a stream pull;
+- several edits before the next boundary collapse to one pending tail, with the latest revision
+  winning and an exact Rest preserving any gap;
+- new realizations carry their source revision/generation, while existing voices retain theirs;
+- ordinary future replacement does not invoke smart-seek reconstruction;
+- protocol v2 reports the generation/frontier and extends realization notifications without
+  changing the frozen v1 contract.
+
+Natural completion still requires both source exhaustion and zero live realizations. The browser
+registry now pushes start, pause/resume, release, set and end transitions; it remains deliberately
+smaller than NodeManager and has no container or GUI model.
 
 ## 8. Acceptance criteria
 

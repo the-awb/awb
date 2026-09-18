@@ -1,8 +1,8 @@
 # AWB Score Studio
 
-The approved next GUI, contextual audition and smart-seek work is specified in
-[`GUI_RESTRUCTURE_HANDOFF.md`](./GUI_RESTRUCTURE_HANDOFF.md). It is not part of the completed
-runtime described below.
+The GUI, contextual audition, smart-seek and live-future-replacement work is specified and tracked
+in [`GUI_RESTRUCTURE_HANDOFF.md`](./GUI_RESTRUCTURE_HANDOFF.md). The handoff marks implemented
+slices explicitly; later polish and acceptance gates remain separate from completed runtime work.
 
 A clean development host for the canonical AWB score. It deliberately has no source or runtime
 dependency on `field_modelling`: that application may consume finished score packages and

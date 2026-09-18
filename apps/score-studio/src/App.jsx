@@ -200,6 +200,7 @@ export default function App( { host, createHostedClient } ) {
 
   useEffect( () => {
     if ( !toolSessionID || !file.name || hosted.status !== 'connected' ) return;
+    let cancelled = false;
     const identity = `${ session.document.scoreID }:${ session.document.revision }`;
     if ( launchState.current.installed === identity ) return;
     if ( hosted.scoreID === session.document.scoreID
@@ -209,11 +210,15 @@ export default function App( { host, createHostedClient } ) {
     }
     launchState.current.installed = identity;
     hostedClient.installDocument( session.document )
-      .then( () => setHostedMessage( `Revision ${ session.document.revision } installed atomically.` ) )
+      .then( () => {
+        if ( !cancelled ) setHostedMessage( `Revision ${ session.document.revision } installed atomically.` );
+      } )
       .catch( ( error ) => {
+        if ( cancelled ) return;
         launchState.current.installed = '';
         setHostedMessage( error.message );
       } );
+    return () => { cancelled = true; };
   }, [ file.name, hosted.remoteRevision, hosted.scoreID, hosted.status,
     hostedClient, session.document ] );
 
@@ -265,9 +270,47 @@ export default function App( { host, createHostedClient } ) {
     const currentRevision = standalone.scoreID === session.document.scoreID
       && standalone.revision === session.document.revision;
     if ( currentRevision || ( standalone.status !== 'playing' && standalone.status !== 'paused' ) ) return;
-    standaloneExecutor.stop();
-    setStandaloneMessage( 'Playback stopped because the authored score revision changed.' );
-  }, [ session.document.revision, session.document.scoreID, standalone.revision, standalone.scoreID,
+    let cancelled = false;
+    const replace = async () => {
+      setStandaloneDefinitions( {
+        scoreID: session.document.scoreID, revision: session.document.revision,
+        state: 'loading', missing: [], detail: ''
+      } );
+      try {
+        const definitions = await loadStandaloneSynthDefs( sc, session.document );
+        for ( let attempt = 0; attempt < 2; attempt += 1 ) {
+          if ( cancelled ) return;
+          const guard = standaloneExecutor.getState();
+          try {
+            standaloneExecutor.replaceFuture( session.document, {
+              expectedGeneration: guard.executionGeneration,
+              expectedFrontier: guard.committedFrontier
+            } );
+            break;
+          } catch ( error ) {
+            if ( attempt === 0 && [ 'generationConflict', 'frontierConflict' ].includes( error.code ) ) continue;
+            throw error;
+          }
+        }
+        if ( cancelled ) return;
+        setStandaloneDefinitions( {
+          scoreID: session.document.scoreID, revision: session.document.revision,
+          state: 'ready', missing: [], detail: ''
+        } );
+        setStandaloneMessage( `Future updated to revision ${ session.document.revision } · ${ definitions.length } SynthDef${ definitions.length === 1 ? '' : 's' } ready.` );
+      } catch ( error ) {
+        if ( cancelled || error.code === 'staleRevision' ) return;
+        setStandaloneDefinitions( {
+          scoreID: session.document.scoreID, revision: session.document.revision,
+          state: error.code === 'missingSynthDefs' ? 'missing' : 'failed',
+          missing: error.missingDefinitions ?? [], detail: error.message
+        } );
+        setStandaloneMessage( `Future revision not installed: ${ error.message }` );
+      }
+    };
+    replace();
+    return () => { cancelled = true; };
+  }, [ sc, session.document, standalone.revision, standalone.scoreID,
     standalone.status, standaloneExecutor ] );
 
   useEffect( () => {

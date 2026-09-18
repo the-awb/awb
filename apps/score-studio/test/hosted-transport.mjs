@@ -37,7 +37,7 @@ osc.on( 'message', ( packet, rinfo ) => {
   received.push( message );
   const args = message.args;
   if ( message.address === '/awb/timeline/hello' ) {
-    reply( rinfo, '/awb/timeline/connected', [ args[ 0 ], 1 ] );
+    reply( rinfo, '/awb/timeline/connected', [ args[ 0 ], 2 ] );
     reply( rinfo, '/awb/timeline/runtime', [ args[ 0 ], 'ready', 'notApplicable', 'notLoaded', 'unknown', '', 0 ] );
   } else if ( message.address === '/awb/synthdef/hello' ) {
     reply( rinfo, '/awb/synthdef/connected', [ args[ 0 ], 1 ] );
@@ -107,7 +107,7 @@ osc.on( 'message', ( packet, rinfo ) => {
     } else {
       result( rinfo, args, true, 'snapshotEnd', fixture.scoreID, fixture.revision, 'installed' );
       reply( rinfo, '/awb/timeline/runtime', [ args[ 0 ], 'ready', 'notApplicable', 'ready', 'ready', '', 0 ] );
-      reply( rinfo, '/awb/timeline/transport', [ args[ 0 ], fixture.scoreID, fixture.revision, '', 'stopped', 0, performance.now() / 1000 + 100, 0, 0 ] );
+      reply( rinfo, '/awb/timeline/transport', [ args[ 0 ], fixture.scoreID, fixture.revision, '', 'stopped', 0, performance.now() / 1000 + 100, 0, 0, 'TempoClock', -1, 4, 0 ] );
     }
   } else if ( message.address === '/awb/timeline/command' ) {
     const command = args[ 4 ];
@@ -118,13 +118,13 @@ osc.on( 'message', ( packet, rinfo ) => {
     result( rinfo, args, true, command, fixture.scoreID, fixture.revision, 'ok' );
     if ( command === 'play' ) {
       const hostTime = performance.now() / 1000 + 100;
-      reply( rinfo, '/awb/timeline/transport', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'playing', 0, hostTime, 1, 0 ] );
-      reply( rinfo, '/awb/timeline/realization', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'n1', 'realization-1', 'started', 0, 0, 2, 1001, 1002 ] );
+      reply( rinfo, '/awb/timeline/transport', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'playing', 0, hostTime, 1, 0, 'TempoClock', -1, 5, 1 ] );
+      reply( rinfo, '/awb/timeline/realization', [ args[ 0 ], fixture.scoreID, fixture.revision, 'run-1', 'n1', 'realization-1', 'started', 0, 0, 2, 1001, 1002, 'started', 'started', 5 ] );
     }
   } else if ( message.address === '/awb/timeline/realization/command' ) {
     const state = { pause: 'paused', resume: 'running', release: 'released', free: 'ending' }[ args[ 6 ] ];
     if ( Number( args[ 8 ] ?? -1 ) < 0 ) reply( rinfo, '/awb/timeline/realization', [
-      args[ 0 ], args[ 2 ], args[ 3 ], args[ 4 ], 'n1', args[ 5 ], state, 0, 0, 2, 1001, 1002
+      args[ 0 ], args[ 2 ], args[ 3 ], args[ 4 ], 'n1', args[ 5 ], state, 0, 0, 2, 1001, 1002, state, state, 5
     ] );
     result( rinfo, args, true, args[ 6 ], args[ 2 ], args[ 3 ], 'applied' );
   } else if ( message.address === '/awb/timeline/realization/set' ) {
@@ -167,7 +167,7 @@ const waitFor = async ( predicate, timeout = 2000 ) => {
 try {
   await client.connect( bridge.endpoint );
   assert.equal( client.getState().status, 'connected' );
-  assert.equal( client.getState().protocolVersion, 1 );
+  assert.equal( client.getState().protocolVersion, 2 );
   assert.equal( client.getState().readiness.canPlay, false );
   const hello = received.find( ( message ) => message.address === '/awb/timeline/hello' );
   assert.equal( hello.args[ 2 ], 'score-session-test', 'hosted hello carries its ToolSession identity' );
@@ -261,6 +261,11 @@ try {
   assert.equal( client.getState().remoteRevision, fixture.revision );
   assert.equal( client.getState().readiness.canPlay, true );
   assert.ok( received.some( ( message ) => message.address === '/awb/timeline/snapshot/chunk' ) );
+  const snapshotBegin = received.find( ( message ) => message.address === '/awb/timeline/snapshot/begin' );
+  assert.deepEqual( snapshotBegin.args.slice( -2 ), [ -1, -1 ],
+    'unguarded initial load explicitly omits an execution generation/frontier guard' );
+  assert.equal( client.getState().transport.executionGeneration, 4 );
+  assert.equal( client.getState().transport.committedFrontier, 0 );
 
   const seekPlan = {
     version: 1, scoreID: fixture.scoreID, revision: fixture.revision, target: 0.5,
@@ -275,7 +280,10 @@ try {
   await client.command( fixture, 'play' );
   await waitFor( () => client.getState().realizations.length === 1 );
   assert.equal( client.getState().transport.runID, 'run-1' );
+  assert.equal( client.getState().transport.executionGeneration, 5 );
+  assert.equal( client.getState().transport.committedFrontier, 1 );
   assert.deepEqual( client.getState().realizations[ 0 ].nodeIDs, [ 1001, 1002 ] );
+  assert.equal( client.getState().realizations[ 0 ].executionGeneration, 5 );
   await client.realizationSet( fixture, client.getState().realizations[ 0 ], 'freq', [ 220, 330 ], 1 );
   const realizationSet = received.find( ( message ) => message.address === '/awb/timeline/realization/set' );
   assert.deepEqual( realizationSet.args.slice( 4 ), [
