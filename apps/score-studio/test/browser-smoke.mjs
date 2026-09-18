@@ -206,6 +206,16 @@ try {
 
   if ( !( await page.locator( '.eventJson' ).isVisible() ) ) failures.push( 'event inspector did not open' );
   if ( await page.locator( '.bottomPanel .eventJson' ).count() !== 1 ) failures.push( 'event editor was not relocated to the bottom focus panel' );
+  const eventSynthDef = page.getByLabel( 'Event SynthDef', { exact: true } );
+  if ( await eventSynthDef.evaluate( ( element ) => element.tagName ) !== 'SELECT'
+    || await eventSynthDef.locator( 'option[value="resonantBassEnv2"]' ).count() !== 1 ) {
+    failures.push( 'event SynthDef picker did not expose explicit active instrument choices' );
+  } else {
+    await eventSynthDef.selectOption( 'resonantBassEnv2' );
+    const switchedPayload = JSON.parse( await page.getByLabel( 'Event payload' ).inputValue() );
+    if ( switchedPayload.def !== 'resonantBassEnv2' ) failures.push( 'event SynthDef choice did not update the payload' );
+    await eventSynthDef.selectOption( 'substrate' );
+  }
   const frequencyControl = page.getByLabel( 'Payload freqA', { exact: true } );
   if ( !( await frequencyControl.isVisible() ) ) failures.push( 'typed frequency payload control did not render' );
   else {
@@ -371,4 +381,4 @@ if ( failures.length ) {
   failures.forEach( ( failure ) => console.error( `FAIL ${ failure }` ) );
   process.exit( 1 );
 }
-console.log( 'score-studio-browser: 70/70 pass' );
+console.log( 'score-studio-browser: 72/72 pass' );

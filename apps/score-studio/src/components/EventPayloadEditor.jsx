@@ -11,9 +11,11 @@ export default function EventPayloadEditor( {
 } ) {
   if ( !event ) return <p className="typedPayloadUnavailable">Fix the raw JSON to use typed controls.</p>;
   const fields = payloadFields( event, inheritedDefinition );
+  const selectedSynthDef = event.def ?? event.instrument ?? '';
   const synthDefs = mergeSynthDefNames(
     Object.values( INSTRUMENT_CATALOG ).map( ( descriptor ) => descriptor.synthDef ),
-    availableSynthDefs
+    availableSynthDefs,
+    selectedSynthDef
   );
   const update = ( name, value, kind = 'text' ) => onChange( updatePayloadField( event, name, value, kind ) );
 
@@ -28,11 +30,10 @@ export default function EventPayloadEditor( {
         </datalist>
       </label>
       { event.type === 'note' && <label>SynthDef
-        <input aria-label="Event SynthDef" list="score-synthdefs" value={ event.def ?? event.instrument ?? '' }
-          onChange={ ( change ) => update( event.def !== undefined ? 'def' : 'instrument', change.target.value ) } />
-        <datalist id="score-synthdefs">
+        <select aria-label="Event SynthDef" value={ selectedSynthDef }
+          onChange={ ( change ) => update( event.def !== undefined ? 'def' : 'instrument', change.target.value ) }>
           { synthDefs.map( ( synthDef ) => <option key={ synthDef } value={ synthDef } /> ) }
-        </datalist>
+        </select>
       </label> }
       { [ 'set', 'release', 'free' ].includes( event.type ) && !Array.isArray( event.target ) && <label>Target
         <input aria-label="Event target" value={ event.target ?? '' }
