@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 import {
-  buildInstrumentInventory, isHostedSynthDefFocusStale,
+  buildInstrumentInventory, isHostedSynthDefFocusStale, mergeSynthDefNames,
   shouldRefreshHostedSynthDefFocus, synthDefSignalKind
 } from '../src/engine/instrumentInventory.js';
 
@@ -22,6 +22,8 @@ assert.equal( rows.find( ( row ) => row.name === 'scoreOnly' ).available, false 
 assert.equal( rows.find( ( row ) => row.name === 'systemLoaded' ).modelled, true );
 assert.equal( rows.find( ( row ) => row.name === 'systemLoaded' ).fingerprint, 'sha256:system' );
 assert.ok( Object.isFrozen( rows ) && rows.every( Object.isFrozen ) );
+assert.deepEqual( mergeSynthDefNames( 'catalogued', [ 'loadedLater', 'catalogued' ] ),
+  [ 'catalogued', 'loadedLater' ], 'event pickers include the live host inventory' );
 
 const description = ( rates ) => ( { interface: {
   outputs: rates.map( ( _, ugenIndex ) => ( { ugenIndex } ) ),

@@ -3,6 +3,10 @@ function uniqueSorted( values ) {
     .sort( ( left, right ) => left.localeCompare( right ) );
 }
 
+export function mergeSynthDefNames( ...groups ) {
+  return uniqueSorted( groups.flat() );
+}
+
 export function synthDefSignalKind( description ) {
   const model = description?.interface;
   if ( !model ) return 'unknown';

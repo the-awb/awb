@@ -81,19 +81,34 @@ input, textarea { border: 1px solid var(--line); border-radius: 5px; background:
 .focusPanelContent > header h2 { margin: 0; }
 .focusPanelContent > header strong { font: 11px ui-monospace, monospace; }.focusPanelContent > header small { color: var(--muted); font-size: 10px; }
 .focusPanelScroll { min-height: 0; overflow: auto; padding: 12px 14px; }
-.focusPanelScroll .entryFields { grid-template-columns: minmax(130px, .45fr) minmax(180px, .65fr) minmax(340px, 1.5fr) minmax(280px, 1fr); align-items: start; }
-.focusPanelScroll .eventJson { min-height: 120px; }
+.eventDetailEditor { display: grid; gap: 10px; }
+.eventMetaBar { display: grid; grid-template-columns: minmax(180px, .8fr) 110px minmax(220px, 1.2fr); gap: 8px; }
+.eventMetaBar > span, .eventMetaBar > label { min-width: 0; display: grid; gap: 4px; padding: 7px 9px; border: 1px solid #2b2b27; border-radius: 6px; background: #11110f; }
+.eventMetaBar small { color: var(--muted); font-size: 8px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.eventMetaBar code { overflow: hidden; color: #cccac2; font: 10px ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.eventMetaBar label > span { display: flex; align-items: center; gap: 5px; }
+.eventMetaBar label > span input { width: 100%; min-width: 0; }
+.eventMetaBar em { color: var(--muted); font-size: 9px; font-style: normal; }
+.eventMetaBar input { min-width: 0; padding: 4px 6px; font-size: 10px; }
+.eventEditorGrid { display: grid; grid-template-columns: minmax(440px, 1.35fr) minmax(300px, .85fr); gap: 10px; align-items: start; }
+.eventEditorCard { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: #11110f; }
+.eventEditorCard > header, .synthDraftSection > header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 7px 10px; border-bottom: 1px solid #2b2b27; background: #191917; }
+.eventEditorCard > header strong, .synthDraftSection > header strong { color: #d0cec7; font-size: 10px; }
+.eventEditorCard > header small, .synthDraftSection > header small { color: var(--muted); font-size: 8px; }
+.eventEditorCard .typedPayload { border: 0; border-radius: 0; background: transparent; }
+.rawEventCard .eventJson { display: block; min-height: 150px; margin: 0; border: 0; border-radius: 0; background: #0d0d0c; }
 .synthDefDraft { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(300px, 1fr); gap: 14px; }
 .nonAudioNotice { grid-column: 1 / -1; margin: 0; padding: 8px 10px; border: 1px solid #62583c; border-radius: 6px; color: #cfc5a8; font-size: 10px; }
 .nonAudioNotice strong { margin-right: 7px; color: #e4c36b; text-transform: capitalize; }
-.synthDraftControls { display: grid; grid-template-columns: repeat(2, minmax(190px, 1fr)); gap: 6px; align-content: start; }
+.synthDraftSection { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: #11110f; }
+.synthDraftControls { display: grid; grid-template-columns: repeat(2, minmax(190px, 1fr)); gap: 6px; align-content: start; padding: 9px; }
 .synthDraftControls > label, .draftArrayControl { min-width: 0; display: grid; grid-template-columns: minmax(100px, 1fr) 92px; align-items: center; gap: 7px; padding: 6px 7px; border: 1px solid #2b2b27; border-radius: 5px; background: #181816; }
 .synthDraftControls span code, .synthDraftControls span small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .synthDraftControls span code { font-size: 10px; }.synthDraftControls span small { margin-top: 2px; color: var(--muted); font-size: 8px; }
 .synthDraftControls input { width: 100%; min-width: 0; padding: 4px 5px; font: 10px ui-monospace, monospace; }
 .draftArrayControl { grid-column: 1 / -1; grid-template-columns: minmax(150px, .7fr) minmax(220px, 1.3fr); }
 .draftArrayControl > code { overflow: hidden; color: var(--muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
-.synthDraftEnvelopes { display: grid; gap: 7px; align-content: start; }
+.synthDraftEnvelopes { display: grid; gap: 7px; align-content: start; padding: 9px; }
 .compactEnvelope { padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: #10110f; }
 .compactEnvelope header { display: flex; justify-content: space-between; gap: 8px; }
 .compactEnvelope header strong { color: #cfcdc5; font-size: 9px; }.compactEnvelope header span { color: var(--accent); font-size: 8px; }
@@ -322,7 +337,9 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
   .panelLayout.leftCollapsed { grid-template-columns: 52px minmax(360px, 1fr) 220px; }
   .panelLayout.rightCollapsed { grid-template-columns: 260px minmax(360px, 1fr) 32px; }
   .panelLayout.leftCollapsed.rightCollapsed { grid-template-columns: 52px minmax(360px, 1fr) 32px; }
-  .focusPanelScroll .entryFields { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+  .eventMetaBar { grid-template-columns: minmax(170px, 1fr) 100px; }
+  .eventPathField { grid-column: 1 / -1; }
+  .eventEditorGrid { grid-template-columns: 1fr; }
   .synthDefDraft { grid-template-columns: 1fr; }
   .synthDefDraft > .boundaryNote { grid-column: 1; }
   .instrumentGrid { grid-template-columns: 1fr; }

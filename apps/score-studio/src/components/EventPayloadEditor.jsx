@@ -1,14 +1,20 @@
 import { INSTRUMENT_CATALOG } from '@awb/instruments';
 import { useEffect, useState } from 'react';
 import { payloadFieldPlaceholder, payloadFields, updatePayloadField } from '../engine/eventPayloadFields.js';
+import { mergeSynthDefNames } from '../engine/instrumentInventory.js';
 import { formatScValue, parseScValue } from '../engine/scValueSyntax.js';
 
 const COMMON_TYPES = [ 'note', 'set', 'release', 'free' ];
 
-export default function EventPayloadEditor( { event, inheritedDefinition = null, onChange } ) {
+export default function EventPayloadEditor( {
+  event, inheritedDefinition = null, availableSynthDefs = [], onChange
+} ) {
   if ( !event ) return <p className="typedPayloadUnavailable">Fix the raw JSON to use typed controls.</p>;
   const fields = payloadFields( event, inheritedDefinition );
-  const synthDefs = Object.values( INSTRUMENT_CATALOG ).map( ( descriptor ) => descriptor.synthDef );
+  const synthDefs = mergeSynthDefNames(
+    Object.values( INSTRUMENT_CATALOG ).map( ( descriptor ) => descriptor.synthDef ),
+    availableSynthDefs
+  );
   const update = ( name, value, kind = 'text' ) => onChange( updatePayloadField( event, name, value, kind ) );
 
   return (
