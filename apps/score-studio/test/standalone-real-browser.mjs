@@ -43,13 +43,12 @@ try {
       bubbles: true, clientX: rect.left, clientY: rect.bottom + 2
     } ) );
   } );
-  await page.waitForFunction( () => {
-    const cursor = document.querySelectorAll( '.transportPosition strong' )[ 1 ];
-    return cursor && Math.abs( Number.parseFloat( cursor.textContent ) - 773 ) < 1;
-  } );
+  await page.waitForFunction( () => Math.abs(
+    Number( window.__standaloneScore?.getState().position ) - 773
+  ) < 1 );
   passed += 1;
   await page.getByRole( 'button', { name: 'Play', exact: true } ).click();
-  await page.waitForFunction( () => document.querySelectorAll( '.realization' ).length === 4 );
+  await page.waitForFunction( () => document.querySelectorAll( '.realizations .runtimeRealizationGroup' ).length === 4 );
   passed += 1;
   const failure = await page.evaluate( () => window.__scoreSc?.log.find( ( line ) => line.startsWith( 'FAIL ' ) ) ?? null );
   if ( failure ) throw new Error( failure );

@@ -2,8 +2,8 @@ import { assertScoreDocument, checkScore, defineRenderer, describeCheck, sortSco
 import {
   instrumentControls, instrumentNoteLifecycle, instrumentType, typeForSynthDef
 } from '@awb/instruments';
+import { createNodeRegistry } from '@awb/sc-runtime';
 import { expandScEventParams } from './scEventSemantics.js';
-import { createBrowserNodeRegistry } from './BrowserNodeRegistry.js';
 
 const HANDLES = Object.freeze( {
   note: { required: [ 'def' ] },
@@ -81,7 +81,9 @@ export function createStandaloneScoreExecutor( {
   now = () => performance.now(),
   setTimer = ( fn, delay ) => setTimeout( fn, delay ),
   clearTimer = ( timer ) => clearTimeout( timer ),
-  nodeIDStart = 2_000_000
+  nodeIDStart = 2_000_000,
+  nodeRegistry = null,
+  registryOwnerID = 'score-studio'
 } = {} ) {
   if ( typeof sendOsc !== 'function' ) throw new Error( 'createStandaloneScoreExecutor: sendOsc is required' );
   let document = null;
@@ -95,7 +97,11 @@ export function createStandaloneScoreExecutor( {
   let nextRunID = 1;
   let executionGeneration = 0;
   let pendingSeekPlan = null;
-  const live = createBrowserNodeRegistry();
+  let scoreContainerID = null;
+  let runContainerID = null;
+  const live = nodeRegistry ?? createNodeRegistry();
+  const ownedNodes = () => [ ...live.values() ].filter( ( node ) => node.ownerID === registryOwnerID );
+  const ownedNodeCount = () => ownedNodes().length;
   const listeners = new Set();
   let state = freezeState( {
     status: 'empty', scoreID: null, revision: null, runID: null,
@@ -116,27 +122,58 @@ export function createStandaloneScoreExecutor( {
     if ( timer !== null ) clearTimer( timer );
     timer = null;
   };
-  const realization = ( nodeID, patch ) => {
-    publish( { realizations: state.realizations.map( ( item ) => item.nodeID === nodeID ? { ...item, ...patch } : item ) } );
+  const applyRegistryChange = ( change ) => {
+    if ( change.type === 'snapshot' || !Object.hasOwn( change.record ?? {}, 'nodeID' )
+      || change.record.ownerID !== registryOwnerID ) return;
+    const record = change.record;
+    const index = state.realizations.findIndex( ( item ) => item.nodeID === record.nodeID );
+    const realizations = [ ...state.realizations ];
+    if ( index < 0 ) realizations.push( record );
+    else realizations[ index ] = record;
+    publish( { realizations: realizations.slice( -200 ), liveCount: ownedNodeCount() } );
   };
-  const dropNode = ( nodeID, ended = false ) => {
-    if ( !live.has( nodeID ) ) return false;
-    live.delete( nodeID );
-    if ( ended ) realization( nodeID, { state: 'ended' } );
-    publish( { liveCount: live.size } );
-    return true;
+  const offRegistry = live.subscribe( applyRegistryChange );
+  const removeRunContainer = () => {
+    if ( runContainerID !== null ) live.removeContainer( runContainerID );
+    runContainerID = null;
+  };
+  const removeScoreContainer = () => {
+    removeRunContainer();
+    if ( scoreContainerID !== null ) live.removeContainer( scoreContainerID );
+    scoreContainerID = null;
+  };
+  const ensureScoreContainer = () => {
+    scoreContainerID = `score:${ registryOwnerID }:${ document.scoreID }`;
+    live.upsertContainer( {
+      containerID: scoreContainerID, kind: 'score', name: document.title ?? document.scoreID,
+      ownerID: registryOwnerID, metadata: { scoreID: document.scoreID }
+    } );
+  };
+  const ensureRunContainer = () => {
+    if ( !state.runID ) return;
+    runContainerID = `scoreRun:${ registryOwnerID }:${ state.runID }`;
+    live.upsertContainer( {
+      containerID: runContainerID, kind: 'scoreRun', name: state.runID,
+      ownerID: registryOwnerID, parentID: scoreContainerID,
+      metadata: { scoreID: document.scoreID, runID: state.runID }
+    } );
+  };
+  const dropNode = ( nodeID, reason = 'ended' ) => {
+    const node = live.get( nodeID );
+    return node?.ownerID === registryOwnerID && live.end( nodeID, reason ) !== null;
   };
   const hardFreeAll = () => {
-    for ( const node of live.values() ) sendOsc( '/n_free', [ node.nodeID ] );
-    for ( const nodeID of live.keys() ) realization( nodeID, { state: 'ended' } );
-    live.clear();
-    publish( { liveCount: 0 } );
+    for ( const node of ownedNodes() ) {
+      sendOsc( '/n_free', [ node.nodeID ] );
+      live.end( node.nodeID, 'freed' );
+    }
   };
   const targetsFor = ( target ) => {
-    if ( target === '@all' ) return [ ...live.values() ];
-    if ( target === '@prev' ) return [ ...live.values() ].slice( -1 );
+    const owned = ownedNodes();
+    if ( target === '@all' ) return owned;
+    if ( target === '@prev' ) return owned.slice( -1 );
     const targets = Array.isArray( target ) ? new Set( target.map( String ) ) : new Set( [ String( target ) ] );
-    return [ ...live.values() ].filter( ( node ) => targets.has( node.entryID ) || targets.has( String( node.nodeID ) ) );
+    return owned.filter( ( node ) => targets.has( node.entryID ) || targets.has( String( node.nodeID ) ) );
   };
 
   const execute = ( entry, reconstruction = null ) => {
@@ -156,16 +193,15 @@ export function createStandaloneScoreExecutor( {
       if ( !openEnded && ( !Number.isFinite( Number( event.dur ) ) || Number( event.dur ) < 0 ) ) {
         throw new Error( `Standalone note ${ entry.id } has an invalid duration.` );
       }
-      const created = [];
       for ( const params of noteParams( event, definition ) ) {
         const nodeID = nextNodeID++;
         sendOsc( '/s_new', [ definition, nodeID, addAction, group, ...controlArgs( params ) ] );
-        const node = {
+        live.register( {
           nodeID, entryID: entry.id, released: false,
-          releaseAt: lifecycle === null ? null : entry.time + lifecycle.gateDuration
-        };
-        live.set( nodeID, node );
-        created.push( Object.freeze( { entryID: entry.id, nodeID, definition,
+          releaseAt: lifecycle === null ? null : entry.time + lifecycle.gateDuration,
+          realizationID: `${ state.runID }:${ entry.id }:${ nodeID }`,
+          runID: state.runID, ownerID: registryOwnerID, definition,
+          memberships: [ scoreContainerID, runContainerID ].filter( Boolean ),
           params: Object.freeze( { ...params } ), state: 'started',
           sourceRevision: entry.__sourceRevision ?? document.revision,
           executionGeneration: entry.__executionGeneration ?? executionGeneration,
@@ -174,9 +210,9 @@ export function createStandaloneScoreExecutor( {
             reconstructionPhase: reconstruction.phase,
             sourceTime: reconstruction.sourceTime,
             voiceIndex: reconstruction.voiceIndex
-          } : {} ) } ) );
+          } : {} )
+        } );
       }
-      publish( { realizations: [ ...state.realizations, ...created ].slice( -200 ), liveCount: live.size } );
       return;
     }
 
@@ -188,43 +224,40 @@ export function createStandaloneScoreExecutor( {
     } else if ( event.type === 'release' ) {
       for ( const node of targets ) {
         sendOsc( '/n_set', [ node.nodeID, 'gate', 0 ] );
-        live.update( node.nodeID, { released: true }, 'released' );
-        realization( node.nodeID, { state: 'released' } );
+        live.transition( node.nodeID, 'released', { released: true } );
       }
     } else if ( event.type === 'free' ) {
       for ( const node of targets ) {
         sendOsc( '/n_free', [ node.nodeID ] );
-        dropNode( node.nodeID, true );
+        dropNode( node.nodeID, 'freed' );
       }
     }
   };
 
   const executeReconstructionPlan = ( plan ) => {
     for ( const reconstruction of plan.reconstructions ) {
-      const before = new Set( live.keys() );
+      const before = new Set( ownedNodes().map( ( node ) => node.nodeID ) );
       execute( { id: reconstruction.entryID, time: plan.target, event: reconstruction.event }, reconstruction );
       if ( reconstruction.phase === 'release' ) {
-        for ( const node of live.values() ) {
+        for ( const node of ownedNodes() ) {
           if ( before.has( node.nodeID ) ) continue;
           sendOsc( '/n_set', [ node.nodeID, 'gate', 0 ] );
-          live.update( node.nodeID, { released: true, releaseAt: null }, 'released' );
-          realization( node.nodeID, { state: 'released' } );
+          live.transition( node.nodeID, 'released', { released: true, releaseAt: null } );
         }
       }
     }
   };
 
   const releaseDue = ( position ) => {
-    for ( const node of live.values() ) {
+    for ( const node of ownedNodes() ) {
       if ( node.released || node.releaseAt === null || node.releaseAt > position + EPSILON ) continue;
       sendOsc( '/n_set', [ node.nodeID, 'gate', 0 ] );
-      live.update( node.nodeID, { released: true }, 'released' );
-      realization( node.nodeID, { state: 'released' } );
+      live.transition( node.nodeID, 'released', { released: true } );
     }
   };
   const nextBoundary = () => {
     let next = entries[ cursor ]?.time ?? Infinity;
-    for ( const node of live.values() ) {
+    for ( const node of ownedNodes() ) {
       if ( !node.released && node.releaseAt !== null ) next = Math.min( next, node.releaseAt );
     }
     return next;
@@ -234,7 +267,10 @@ export function createStandaloneScoreExecutor( {
     if ( state.status !== 'playing' ) return;
     const boundary = nextBoundary();
     if ( boundary === Infinity ) {
-      if ( live.size === 0 ) publish( { status: 'ended', position: entries.at( -1 )?.time ?? state.position } );
+      if ( ownedNodeCount() === 0 ) {
+        publish( { status: 'ended', position: entries.at( -1 )?.time ?? state.position } );
+        removeRunContainer();
+      }
       return;
     }
     const delay = Math.max( 0, ( boundary - estimatePosition() ) * 1000 );
@@ -267,12 +303,14 @@ export function createStandaloneScoreExecutor( {
     validateDocument( nextDocument );
     clearWake();
     hardFreeAll();
+    removeScoreContainer();
     document = nextDocument;
     pendingSeekPlan = null;
     executionGeneration += 1;
     canonicalEntries = executionEntries( nextDocument, executionGeneration );
     entries = canonicalEntries;
     cursor = 0;
+    ensureScoreContainer();
     publish( {
       status: 'ready', scoreID: document.scoreID, revision: document.revision, runID: null,
       position: 0, committedFrontier: entries[ 0 ]?.time ?? 0,
@@ -400,9 +438,9 @@ export function createStandaloneScoreExecutor( {
   const play = () => {
     if ( !document ) throw new Error( 'Load a score before playing.' );
     if ( state.status === 'paused' ) {
-      for ( const node of live.values() ) {
+      for ( const node of ownedNodes() ) {
         sendOsc( '/n_run', [ node.nodeID, 1 ] );
-        live.update( node.nodeID, {}, 'resumed' );
+        live.transition( node.nodeID, 'running' );
       }
     } else if ( state.status === 'ended' ) {
       seek( 0 );
@@ -414,6 +452,7 @@ export function createStandaloneScoreExecutor( {
       status: 'playing', runID: state.status === 'paused' ? state.runID : `browser-run-${ nextRunID++ }`,
       error: null
     } );
+    ensureRunContainer();
     if ( pendingSeekPlan ) {
       const plan = pendingSeekPlan;
       pendingSeekPlan = null;
@@ -425,9 +464,9 @@ export function createStandaloneScoreExecutor( {
     if ( state.status !== 'playing' ) return false;
     const position = estimatePosition();
     clearWake();
-    for ( const node of live.values() ) {
+    for ( const node of ownedNodes() ) {
       sendOsc( '/n_run', [ node.nodeID, 0 ] );
-      live.update( node.nodeID, {}, 'paused' );
+      live.transition( node.nodeID, 'paused' );
     }
     publish( { status: 'paused', position } );
     return true;
@@ -435,38 +474,38 @@ export function createStandaloneScoreExecutor( {
   const commandRealization = ( nodeID, action ) => {
     const id = Number( nodeID );
     const node = live.get( id );
-    if ( !node || ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) return false;
+    if ( !node || node.ownerID !== registryOwnerID
+      || ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) return false;
     if ( action === 'pause' ) {
-      sendOsc( '/n_run', [ id, 0 ] ); live.update( id, {}, 'paused' ); realization( id, { state: 'paused' } );
+      sendOsc( '/n_run', [ id, 0 ] ); live.transition( id, 'paused' );
     } else if ( action === 'resume' ) {
-      sendOsc( '/n_run', [ id, 1 ] ); live.update( id, {}, 'resumed' ); realization( id, { state: 'running' } );
+      sendOsc( '/n_run', [ id, 1 ] ); live.transition( id, 'running' );
     } else if ( action === 'release' ) {
-      sendOsc( '/n_set', [ id, 'gate', 0 ] ); live.update( id, { released: true }, 'released' );
-      realization( id, { state: 'released' } );
+      sendOsc( '/n_set', [ id, 'gate', 0 ] ); live.transition( id, 'released', { released: true } );
     } else {
-      sendOsc( '/n_free', [ id ] ); dropNode( id, true );
+      sendOsc( '/n_free', [ id ] ); dropNode( id, 'freed' );
     }
     return true;
   };
   const setRealization = ( nodeID, control, value, controlWidth = 1 ) => {
     const id = Number( nodeID );
     const node = live.get( id );
-    if ( !node || typeof control !== 'string' || !control.length ) return false;
+    if ( !node || node.ownerID !== registryOwnerID || typeof control !== 'string' || !control.length ) return false;
     const values = Array.isArray( value ) ? value : [ value ];
     if ( controlWidth > 1 ) {
       if ( values.length !== controlWidth ) return false;
       sendOsc( '/n_setn', [ id, control, values.length, ...values ] );
     } else sendOsc( '/n_set', [ id, control, values[ 0 ] ] );
-    live.update( id, {}, 'set' );
-    realization( id, { params: Object.freeze( {
-      ...( state.realizations.find( ( item ) => item.nodeID === id )?.params ?? {} ), [ control ]: value
-    } ) } );
+    live.update( id, { params: Object.freeze( {
+      ...( node.params ?? {} ), [ control ]: value
+    } ) }, 'set' );
     return true;
   };
   const stop = () => {
     const position = estimatePosition();
     clearWake();
     hardFreeAll();
+    removeRunContainer();
     entries = canonicalEntries;
     cursor = entries.findIndex( ( entry ) => entry.time >= position );
     if ( cursor < 0 ) cursor = entries.length;
@@ -480,10 +519,11 @@ export function createStandaloneScoreExecutor( {
     const message = parseOsc( bytes );
     if ( message?.address !== '/n_end' ) return;
     const nodeID = Number( message.arguments[ 0 ] );
-    if ( !dropNode( nodeID, true ) ) return;
-    if ( cursor >= entries.length && live.size === 0 && state.status === 'playing' ) {
+    if ( !dropNode( nodeID, 'ended' ) ) return;
+    if ( cursor >= entries.length && ownedNodeCount() === 0 && state.status === 'playing' ) {
       clearWake();
       publish( { status: 'ended', position: estimatePosition() } );
+      removeRunContainer();
     }
   } );
 
@@ -492,6 +532,7 @@ export function createStandaloneScoreExecutor( {
     commandRealization, setRealization, estimatePosition,
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     getState: () => state,
-    dispose: () => { stop(); offOsc(); listeners.clear(); }
+    nodeRegistry: live,
+    dispose: () => { stop(); removeScoreContainer(); offOsc(); offRegistry(); listeners.clear(); }
   };
 }

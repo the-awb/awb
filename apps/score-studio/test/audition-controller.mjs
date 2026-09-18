@@ -5,6 +5,7 @@ import {
 import { expandScEventParams, scRef } from '../src/engine/scEventSemantics.js';
 import { formatScSymbol, formatScValue, parseScValue } from '../src/engine/scValueSyntax.js';
 import { synthDefDraftValues } from '../src/engine/synthDefDraftValues.js';
+import { createNodeRegistry } from '@awb/sc-runtime';
 
 const expanded = expandScEventParams( {
   freq: [ 55, 82.5, 110 ], pan: [ -1, 1 ], amp: 0.1,
@@ -21,11 +22,17 @@ assert.equal( formatScSymbol( '\\\\substrate' ), '\\substrate' );
 
 const sent = [];
 let reply;
+const sharedRuntime = createNodeRegistry();
+sharedRuntime.upsertContainer( { containerID: 'foreign-tool', kind: 'tool' } );
+sharedRuntime.register( { nodeID: 8000, ownerID: 'foreign', realizationID: 'foreign:1',
+  memberships: [ 'foreign-tool' ] } );
 const standalone = createStandaloneAuditionAdapter( {
   sendOsc: ( address, args ) => sent.push( { address, args } ),
   subscribeOscReply: ( listener ) => { reply = listener; return () => {}; },
   parseOsc: ( value ) => value,
-  nodeIDStart: 9000
+  nodeIDStart: 9000,
+  nodeRegistry: sharedRuntime,
+  registryOwnerID: 'audition-test'
 } );
 const hostedState = { audition: { realizations: [] } };
 const hostedEventRequests = [];
@@ -85,6 +92,8 @@ reply( { address: '/n_end', arguments: [ 9001 ] } );
 reply( { address: '/n_end', arguments: [ 9002 ] } );
 assert.equal( controller.getState().realizations.length, 0,
   'completed auditions leave the live audition panel' );
+assert.equal( sharedRuntime.has( 8000 ), true,
+  'audition lifecycle leaves another tool\'s registry member untouched' );
 
 await controller.playEvent( {
   mode: 'hosted', contextID: 'scoreEvent:ev-1', draftID: 'event:ev-1',

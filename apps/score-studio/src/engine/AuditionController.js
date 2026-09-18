@@ -1,4 +1,5 @@
 import { expandScEventParams } from './scEventSemantics.js';
+import { createNodeRegistry } from '@awb/sc-runtime';
 
 const ACTIVE_STATES = new Set( [ 'running', 'paused', 'releasing', 'ending' ] );
 const freezeSnapshot = ( value ) => {
@@ -148,11 +149,12 @@ export function createAuditionController( { hostedClient, standaloneAdapter } ) 
 }
 
 export function createStandaloneAuditionAdapter( {
-  sendOsc, subscribeOscReply = () => () => {}, parseOsc = () => null, nodeIDStart = 3_000_000
+  sendOsc, subscribeOscReply = () => () => {}, parseOsc = () => null, nodeIDStart = 3_000_000,
+  nodeRegistry = null, registryOwnerID = 'score-studio-audition'
 } ) {
   let nextNodeID = nodeIDStart;
   const records = new Map();
-  const nodeOwners = new Map();
+  const live = nodeRegistry ?? createNodeRegistry();
   const listeners = new Set();
   const emit = ( record ) => listeners.forEach( ( listener ) => listener( freezeRealization( record ) ) );
   const scalarArgs = ( voice ) => Object.entries( voice ).filter( ( [ , value ] ) => !Array.isArray( value ) )
@@ -170,11 +172,24 @@ export function createStandaloneAuditionAdapter( {
       sendOsc( '/s_new', [ request.definition, nodeID, 1, 0, ...args ] );
       arrays.forEach( ( [ name, values ] ) => sendOsc( '/n_setn', [ nodeID, name, values.length, ...values ] ) );
       if ( arrays.length && gateIndex >= 0 ) sendOsc( '/n_set', [ nodeID, 'gate', desiredGate ] );
-      nodeIDs.push( nodeID ); nodeOwners.set( nodeID, request.realizationID );
+      nodeIDs.push( nodeID );
     }
     const record = { ...request, mode: 'standalone', state: 'running', nodeIDs,
+      containerID: `audition:${ registryOwnerID }:${ request.realizationID }`,
       voiceStates: Object.fromEntries( nodeIDs.map( ( nodeID ) => [ nodeID, 'running' ] ) ), voiceParams: {} };
-    records.set( request.realizationID, record ); emit( record );
+    records.set( request.realizationID, record );
+    live.upsertContainer( {
+      containerID: record.containerID, kind: 'auditionRealization', name: request.definition,
+      ownerID: registryOwnerID,
+      metadata: { realizationID: request.realizationID, runID: request.runID, draftID: request.draftID }
+    } );
+    nodeIDs.forEach( ( nodeID, voiceIndex ) => live.register( {
+      nodeID, realizationID: request.realizationID, runID: request.runID,
+      ownerID: registryOwnerID, sourceID: request.draftID,
+      memberships: [ record.containerID ], definition: request.definition, voiceIndex,
+      params: request.voices[ voiceIndex ], state: 'running'
+    } ) );
+    emit( record );
     return record;
   }
 
@@ -184,15 +199,18 @@ export function createStandaloneAuditionAdapter( {
     const address = action === 'pause' || action === 'resume' ? '/n_run'
       : action === 'release' ? '/n_set' : action === 'free' ? '/n_free' : null;
     if ( !address ) throw new Error( `Unknown audition command: ${ action }` );
-    const targets = targetNodeID === null ? record.nodeIDs : record.nodeIDs.filter( ( id ) => id === Number( targetNodeID ) );
+    const targets = ( targetNodeID === null ? record.nodeIDs
+      : record.nodeIDs.filter( ( id ) => id === Number( targetNodeID ) ) ).filter( ( id ) => live.has( id ) );
     if ( !targets.length ) throw new Error( `Unknown audition node: ${ targetNodeID }` );
     for ( const nodeID of targets ) {
       if ( action === 'pause' ) sendOsc( address, [ nodeID, 0 ] );
       else if ( action === 'resume' ) sendOsc( address, [ nodeID, 1 ] );
       else if ( action === 'release' ) sendOsc( address, [ nodeID, 'gate', 0 ] );
       else sendOsc( address, [ nodeID ] );
-      record.voiceStates[ nodeID ] = action === 'pause' ? 'paused' : action === 'resume' ? 'running'
+      const state = action === 'pause' ? 'paused' : action === 'resume' ? 'running'
         : action === 'release' ? 'releasing' : 'ending';
+      live.transition( nodeID, state );
+      record.voiceStates[ nodeID ] = state;
     }
     if ( targetNodeID === null ) record.state = action === 'pause' ? 'paused' : action === 'resume' ? 'running'
       : action === 'release' ? 'releasing' : 'ending';
@@ -203,13 +221,23 @@ export function createStandaloneAuditionAdapter( {
     const record = records.get( realizationID );
     if ( !record ) throw new Error( `Unknown audition realization: ${ realizationID }` );
     const values = Array.isArray( value ) ? value : [ value ];
-    const targets = targetNodeID === null ? record.nodeIDs : record.nodeIDs.filter( ( id ) => id === Number( targetNodeID ) );
+    const targets = ( targetNodeID === null ? record.nodeIDs
+      : record.nodeIDs.filter( ( id ) => id === Number( targetNodeID ) ) ).filter( ( id ) => live.has( id ) );
     if ( !targets.length ) throw new Error( `Unknown audition node: ${ targetNodeID }` );
     if ( controlWidth > 1 ) {
       if ( values.length !== controlWidth ) throw new Error( `${ control } requires ${ controlWidth } values` );
-      targets.forEach( ( nodeID ) => sendOsc( '/n_setn', [ nodeID, control, values.length, ...values ] ) );
+      targets.forEach( ( nodeID ) => {
+        sendOsc( '/n_setn', [ nodeID, control, values.length, ...values ] );
+        const node = live.get( nodeID );
+        live.update( nodeID, { params: { ...( node.params ?? {} ), [ control ]: value } }, 'set' );
+      } );
     } else {
-      targets.forEach( ( nodeID, index ) => sendOsc( '/n_set', [ nodeID, control, values[ index % values.length ] ] ) );
+      targets.forEach( ( nodeID, index ) => {
+        const applied = values[ index % values.length ];
+        sendOsc( '/n_set', [ nodeID, control, applied ] );
+        const node = live.get( nodeID );
+        live.update( nodeID, { params: { ...( node.params ?? {} ), [ control ]: applied } }, 'set' );
+      } );
     }
     if ( targetNodeID === null ) record.params = { ...( record.params ?? {} ), [ control ]: value };
     else record.voiceParams[ targetNodeID ] = { ...( record.voiceParams[ targetNodeID ] ?? {} ), [ control ]: value };
@@ -220,15 +248,17 @@ export function createStandaloneAuditionAdapter( {
     const message = parseOsc( bytes );
     if ( message?.address !== '/n_end' ) return;
     const nodeID = Number( message.arguments[ 0 ] );
-    const realizationID = nodeOwners.get( nodeID );
-    if ( !realizationID ) return;
-    nodeOwners.delete( nodeID );
+    const node = live.get( nodeID );
+    if ( !node ) return;
+    const realizationID = node.realizationID;
+    live.end( nodeID, 'ended' );
     const record = records.get( realizationID );
     if ( !record ) return;
     record.nodeIDs = record.nodeIDs.filter( ( id ) => id !== nodeID );
     delete record.voiceStates[ nodeID ];
     delete record.voiceParams[ nodeID ];
     record.state = record.nodeIDs.length ? record.state : 'ended';
+    if ( record.state === 'ended' ) live.removeContainer( record.containerID );
     emit( record );
   } );
 
@@ -237,9 +267,17 @@ export function createStandaloneAuditionAdapter( {
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     dispose: () => {
       for ( const record of records.values() ) if ( ACTIVE_STATES.has( record.state ) ) {
-        record.nodeIDs.forEach( ( nodeID ) => sendOsc( '/n_free', [ nodeID ] ) );
+        record.nodeIDs.forEach( ( nodeID ) => {
+          const node = live.get( nodeID );
+          if ( node?.ownerID === registryOwnerID ) {
+            sendOsc( '/n_free', [ nodeID ] );
+            live.end( nodeID, 'disposed' );
+          }
+        } );
+        live.removeContainer( record.containerID );
       }
-      offOsc(); listeners.clear(); records.clear(); nodeOwners.clear();
-    }
+      offOsc(); listeners.clear(); records.clear();
+    },
+    nodeRegistry: live
   };
 }

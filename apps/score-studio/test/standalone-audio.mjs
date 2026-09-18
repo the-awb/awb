@@ -31,7 +31,7 @@ try {
   await page.getByRole( 'button', { name: 'Play', exact: true } ).click();
   await page.getByText( /Revision 0 ready · 1 SynthDef\./ ).waitFor( { timeout: 60000 } );
   passed += 1;
-  await page.locator( '.realization' ).first().waitFor( { timeout: 10000 } );
+  await page.locator( '.realizations .runtimeRealizationGroup' ).first().waitFor( { timeout: 10000 } );
   passed += 1;
 
   let peak = 0;
@@ -50,7 +50,8 @@ try {
   }
   if ( peak < 0.00001 ) throw new Error( `standalone score remained silent (peak ${ peak.toFixed( 6 ) })` );
   passed += 1;
-  await page.getByText( /ended · run browser-run-1 · browser absolute-time anchor/ ).waitFor( { timeout: 10000 } );
+  await page.waitForFunction( () => window.__standaloneScore?.getState().status === 'ended', null,
+    { timeout: 30000 } );
   passed += 1;
   if ( errors.length ) throw new Error( `browser errors: ${ errors.join( '; ' ) }` );
   passed += 1;

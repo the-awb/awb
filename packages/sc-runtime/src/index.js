@@ -5,3 +5,5 @@ export {
   SCORE_STATES,
   createPlaybackReadiness,
 } from './readiness.js';
+
+export { createNodeRegistry } from './nodeRegistry.js';

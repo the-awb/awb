@@ -50,7 +50,8 @@ generation/frontier guards. If a wake-up occurs between replacements, any Event 
 the earlier accepted revision is committed; the next request must use the newly reported frontier.
 
 Each engine has exactly one realization-lifecycle authority. Hosted tracked execution uses
-NodeManager; browser standalone uses `BrowserNodeRegistry`, its engine-local pushed node registry.
+NodeManager; browser standalone uses `createNodeRegistry()` from `@awb/sc-runtime`, its
+engine-local pushed node registry.
 When NodeManager is deliberately
 disabled, ordinary desktop playback may continue untracked, but it must not revive a hidden
 self-tracking registry inside the player. Normal lifecycle is pushed to the player and UI. Queries
@@ -59,8 +60,11 @@ competing registry inside the player.
 
 This contract is implemented by protocol v2 in the desktop adapter and by `replaceFuture()` in the
 standalone executor. Both use generation/frontier guards and latest-tail-wins replacement. The
-browser registry deliberately stops at node membership and lifecycle pushes; it does not imitate
-NodeManager containers, tool ownership or GUI state.
+browser registry deliberately stops at node lifecycle, explicit ownership and lightweight
+semantic containers/memberships. Those containers preserve cross-tool discovery and scoped control
+when one browser host injects the same registry into several tools. It does not imitate
+NodeManager's language-object inspection, GUI model, tool catalogue or discovery of externally
+created nodes. Separate windows or processes still require a host broker to share this authority.
 
 ## Remaining browser-only assumptions
 

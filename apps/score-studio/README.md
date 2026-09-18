@@ -26,6 +26,9 @@ Current first slice:
 - explicit hosted/standalone mode surfaces in the browser and hosted-only execution in Electron;
 - a token-protected localhost WebSocket-to-OSC sidecar for hosted desktop execution;
 - browser-owned standalone playback through scsynth.wasm, with score-distributed compiled SynthDefs;
+- one shared `@awb/sc-runtime` node registry for standalone score and audition execution, with
+  owner-scoped control and lightweight semantic containers; hosted execution uses NodeManager
+  instead of running a parallel browser registry;
 - the extracted `@awb/sc-console` editor and post window;
 - a read-only slot for generated SC working documents, with desktop-score and browser-Pseq targets
   retained in local app data by score ID, revision and projection kind.

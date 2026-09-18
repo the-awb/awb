@@ -1,16 +1,16 @@
 import assert from 'node:assert/strict';
 import { createScoreDocument, makeEvent } from '@awb/score';
 import { createStandaloneScoreExecutor } from '../src/engine/StandaloneScoreExecutor.js';
-import { createBrowserNodeRegistry } from '../src/engine/BrowserNodeRegistry.js';
+import { createNodeRegistry } from '@awb/sc-runtime';
 import { buildSeekReconstructionPlan } from '../src/engine/scoreSeekPlan.js';
 
-const registry = createBrowserNodeRegistry();
+const registry = createNodeRegistry();
 const registryChanges = [];
 const unsubscribeRegistry = registry.subscribe( ( change ) => registryChanges.push( change ) );
-registry.set( 41, { entryID: 'registry-note' } );
-assert.equal( registry.snapshot()[ 0 ].nodeID, 41 );
-registry.update( 41, { released: true }, 'released' );
-registry.delete( 41 );
+registry.register( { nodeID: 41, entryID: 'registry-note' } );
+assert.equal( registry.snapshot().records[ 0 ].nodeID, 41 );
+registry.transition( 41, 'released', { released: true } );
+registry.end( 41 );
 assert.deepEqual( registryChanges.map( ( change ) => change.type ), [ 'started', 'released', 'ended' ] );
 unsubscribeRegistry();
 
@@ -19,6 +19,10 @@ let nextTimer = 1;
 const timers = new Map();
 const sent = [];
 const oscListeners = new Set();
+const sharedRuntime = createNodeRegistry();
+sharedRuntime.upsertContainer( { containerID: 'foreign-tool', kind: 'tool' } );
+sharedRuntime.register( { nodeID: 8000, ownerID: 'foreign', realizationID: 'foreign:1',
+  memberships: [ 'foreign-tool' ] } );
 const setTimer = ( callback, delay ) => {
   const id = nextTimer++;
   timers.set( id, { at: nowMs + delay, callback } );
@@ -46,7 +50,9 @@ const executor = createStandaloneScoreExecutor( {
   now: () => nowMs,
   setTimer,
   clearTimer,
-  nodeIDStart: 9000
+  nodeIDStart: 9000,
+  nodeRegistry: sharedRuntime,
+  registryOwnerID: 'score-executor-test'
 } );
 const document = createScoreDocument( {
   scoreID: 'standalone-test',
@@ -65,6 +71,7 @@ advance( 0 );
 assert.equal( sent.filter( ( message ) => message.address === '/s_new' ).length, 2, 'array controls expand to two realizations' );
 assert.deepEqual( sent[ 0 ].args.slice( 0, 4 ), [ 'awbTestTone', 9000, 1, 0 ] );
 assert.equal( executor.getState().liveCount, 2 );
+assert.equal( sharedRuntime.size, 3, 'the shared registry contains score and foreign-tool nodes' );
 assert.match( executor.getState().runID, /^browser-run-/ );
 
 advance( 250 );
@@ -254,5 +261,7 @@ assert.equal( executor.getState().realizations.at( -1 ).sourceRevision, 12 );
 executor.stop();
 executor.dispose();
 assert.equal( oscListeners.size, 0 );
+assert.equal( sharedRuntime.has( 8000 ), true, 'score disposal leaves another tool\'s registry member alive' );
+assert.equal( sharedRuntime.size, 1 );
 
 console.log( 'standalone-executor: pass' );

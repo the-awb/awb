@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore } from 'react';
 import { useSuperCollider } from '@awb/sc-wasm/react';
 import { useScLang } from '@awb/sc-console/hook';
-import { createPlaybackReadiness } from '@awb/sc-runtime';
+import { createNodeRegistry, createPlaybackReadiness } from '@awb/sc-runtime';
 import { loadSynthDefManifest } from '@awb/sc-wasm/core';
 import { hashScoreDocument, reviseScoreDocument, sortScore } from '@awb/score';
 import ConsoleWorkspace from './components/ConsoleWorkspace.jsx';
@@ -75,12 +75,18 @@ export default function App( { host, createHostedClient } ) {
     () => scoreInstruments( session.document ).map( ( instrument ) => instrument.definition ),
     [ session.document ]
   );
+  const browserNodeRegistryRef = useRef( null );
+  if ( browserNodeRegistryRef.current === null ) browserNodeRegistryRef.current = createNodeRegistry();
+  const browserNodeRegistry = browserNodeRegistryRef.current;
+  const runtimeOwnerPrefix = `${ toolID }:${ viewID || toolSessionID || 'browser' }`;
   const standaloneExecutorRef = useRef( null );
   if ( standaloneExecutorRef.current === null ) {
     standaloneExecutorRef.current = createStandaloneScoreExecutor( {
       sendOsc: sc.sendOsc,
       subscribeOscReply: sc.subscribeOscReply,
-      parseOsc: ( bytes ) => sc.getEngine()?.parseOscMessage( bytes )
+      parseOsc: ( bytes ) => sc.getEngine()?.parseOscMessage( bytes ),
+      nodeRegistry: browserNodeRegistry,
+      registryOwnerID: `${ runtimeOwnerPrefix }:score`
     } );
   }
   const standaloneExecutor = standaloneExecutorRef.current;
@@ -91,7 +97,9 @@ export default function App( { host, createHostedClient } ) {
       standaloneAdapter: createStandaloneAuditionAdapter( {
         sendOsc: sc.sendOsc,
         subscribeOscReply: sc.subscribeOscReply,
-        parseOsc: ( bytes ) => sc.getEngine()?.parseOscMessage( bytes )
+        parseOsc: ( bytes ) => sc.getEngine()?.parseOscMessage( bytes ),
+        nodeRegistry: browserNodeRegistry,
+        registryOwnerID: `${ runtimeOwnerPrefix }:audition`
       } )
     } );
   }
