@@ -26,6 +26,7 @@ import { generateLocalScProjection, SC_PROJECTION_KINDS } from './engine/localSc
 import { readLocalProjection, storeLocalProjection } from './engine/localProjectionStore.js';
 import { scoreInstruments } from './engine/scoreInstruments.js';
 import { retryScoreProjection, saveScorePair, validateProjection } from './engine/scorePairSave.js';
+import { formatTimelineTime } from './engine/timelineScale.js';
 import { createSessionState, MODES, scoreSessionReducer, seedDocument } from './state/scoreSession.js';
 
 const freshID = () => `score-${ globalThis.crypto.randomUUID() }`;
@@ -373,6 +374,17 @@ export default function App( { host, createHostedClient } ) {
       if ( loadedRevision ) await hostedAction( () => hostedClient.command( session.document, 'stop' ) );
     } else if ( standaloneLoaded ) standaloneExecutor.stop();
     stopArmedRef.current = true;
+  }
+
+  function focusScoreRealization( realization ) {
+    const entry = session.document.entries.find( ( candidate ) => candidate.id === realization.entryID );
+    if ( entry ) dispatch( { type: 'SET_SELECTED', ids: [ entry.id ] } );
+  }
+
+  async function commandScoreRealization( realization, action ) {
+    if ( session.mode === MODES.HOSTED ) {
+      await hostedAction( () => hostedClient.realizationCommand( session.document, realization, action ) );
+    } else standaloneExecutor.commandRealization( realization.nodeID, action );
   }
 
   async function returnToStart() {
@@ -755,8 +767,7 @@ export default function App( { host, createHostedClient } ) {
                   title="Return to start" onClick={ returnToStart }>&#8612;</button>
               </div>
               <div className="transportPosition">
-                <strong>{ session.playhead.toFixed( 3 ) } s</strong><span>playhead</span>
-                <strong>{ session.cursorTime.toFixed( 3 ) } s</strong><span>cursor</span>
+                <strong>{ formatTimelineTime( session.playhead, 0.001 ) }</strong>
               </div>
               <p>{ session.mode === MODES.HOSTED && hosted.transport
                 ? `${ hosted.transport.state } · run ${ hosted.transport.runID || '—' } · host-clock anchor`
@@ -789,17 +800,11 @@ export default function App( { host, createHostedClient } ) {
               }
             } }
             onCommand={ ( id, action ) => auditionController.command( id, action ) } /> }
-          realizationsPanel={ ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 ) && <section className="realizations">
-            <h2>Realizations</h2>
-            { ( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ).length
-              ? [ ...( session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations ) ].reverse().slice( 0, 8 ).map( ( realization ) => (
-              <div className="realization" key={ realization.realizationID ?? realization.nodeID }>
-                <strong>{ realization.entryID }</strong><span>{ realization.state }</span>
-                <small>{ realization.nodeIDs?.length ? `nodes ${ realization.nodeIDs.join( ', ' ) }`
-                  : realization.nodeID ? `node ${ realization.nodeID }` : 'no server nodes' }</small>
-              </div>
-            ) ) : <p className="emptyCopy">No runtime realizations reported.</p> }
-          </section> } /> }
+          realizationsPanel={ ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 )
+            && <ScoreRealizationPanel
+              document={ session.document }
+              realizations={ session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations }
+              onFocus={ focusScoreRealization } onCommand={ commandScoreRealization } /> } /> }
         bottom={ <ScoreFocusPanel focus={ displayedFocus }>
           { focus.kind === 'scoreEvent' && selectedEntry && <EventEditor
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
@@ -938,5 +943,37 @@ function AuditionRuntimePanel( { realizations, onFocus, onCommand } ) {
       { realization.error && <small className="error">{ realization.error }</small> }
     </div>;
     } ) : <p className="emptyCopy">No audition voices.</p> }
+  </section>;
+}
+
+function ScoreRealizationPanel( { document, realizations, onFocus, onCommand } ) {
+  const visible = realizations.filter( ( realization ) => realization.state !== 'ended'
+    && ( realization.nodeIDs?.length || realization.nodeID ) ).reverse().slice( 0, 12 );
+  return <section className="realizations"><h2>Playing score voices</h2>
+    { visible.length ? visible.map( ( realization ) => {
+      const entry = document.entries.find( ( candidate ) => candidate.id === realization.entryID );
+      const definition = realization.definition ?? entry?.event?.def ?? entry?.event?.instrument ?? 'unknown';
+      const running = [ 'started', 'running' ].includes( realization.state );
+      const paused = realization.state === 'paused';
+      const releasable = running || paused;
+      const stoppable = ![ 'ended', 'ending' ].includes( realization.state );
+      return <div className="realization runtimeVoice" key={ realization.realizationID ?? realization.nodeID }>
+        <button className="realizationFocus" onClick={ () => onFocus( realization ) }>
+          <strong>{ formatScSymbol( definition ) }</strong>
+          <small>{ realization.entryID } · { realization.nodeIDs?.length
+            ? `${ realization.nodeIDs.length } nodes` : `node ${ realization.nodeID }` }</small>
+        </button>
+        <div className="realizationActions">
+          <button disabled={ !( running || paused ) }
+            onClick={ () => onCommand( realization, paused ? 'resume' : 'pause' ) }>
+            { paused ? 'Play' : 'Pause' }
+          </button>
+          <button disabled={ !releasable }
+            onClick={ () => onCommand( realization, 'release' ) }>Release</button>
+          <button disabled={ !stoppable }
+            onClick={ () => onCommand( realization, 'free' ) }>Stop</button>
+        </div>
+      </div>;
+    } ) : <p className="emptyCopy">No score voices currently playing.</p> }
   </section>;
 }

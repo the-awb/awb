@@ -122,7 +122,8 @@ export function createStandaloneScoreExecutor( {
           releaseAt: lifecycle === null ? null : entry.time + lifecycle.gateDuration
         };
         live.set( nodeID, node );
-        created.push( Object.freeze( { entryID: entry.id, nodeID, state: 'started' } ) );
+        created.push( Object.freeze( { entryID: entry.id, nodeID, definition,
+          params: Object.freeze( { ...params } ), state: 'started' } ) );
       }
       publish( { realizations: [ ...state.realizations, ...created ].slice( -200 ), liveCount: live.size } );
       return;
@@ -251,6 +252,22 @@ export function createStandaloneScoreExecutor( {
     publish( { status: 'paused', position } );
     return true;
   };
+  const commandRealization = ( nodeID, action ) => {
+    const id = Number( nodeID );
+    const node = live.get( id );
+    if ( !node || ![ 'pause', 'resume', 'release', 'free' ].includes( action ) ) return false;
+    if ( action === 'pause' ) {
+      sendOsc( '/n_run', [ id, 0 ] ); realization( id, { state: 'paused' } );
+    } else if ( action === 'resume' ) {
+      sendOsc( '/n_run', [ id, 1 ] ); realization( id, { state: 'running' } );
+    } else if ( action === 'release' ) {
+      sendOsc( '/n_set', [ id, 'gate', 0 ] ); node.released = true;
+      realization( id, { state: 'released' } );
+    } else {
+      sendOsc( '/n_free', [ id ] ); dropNode( id, true );
+    }
+    return true;
+  };
   const stop = () => {
     const position = estimatePosition();
     clearWake();
@@ -271,7 +288,7 @@ export function createStandaloneScoreExecutor( {
   } );
 
   return {
-    load, play, pause, stop, seek, estimatePosition,
+    load, play, pause, stop, seek, commandRealization, estimatePosition,
     subscribe: ( listener ) => { listeners.add( listener ); return () => listeners.delete( listener ); },
     getState: () => state,
     dispose: () => { stop(); offOsc(); listeners.clear(); }

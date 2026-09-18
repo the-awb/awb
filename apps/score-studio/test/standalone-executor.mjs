@@ -133,7 +133,18 @@ advance( 0 );
 advance( 300 );
 assert.equal( executor.getState().status, 'playing', 'infinite synth keeps transport live after finite score entries end' );
 assert.equal( executor.getState().liveCount, 1, 'infinite synth remains live beyond the event horizon' );
+const openNode = executor.getState().realizations.at( -1 );
+assert.equal( executor.commandRealization( openNode.nodeID, 'pause' ), true );
+assert.equal( executor.getState().realizations.at( -1 ).state, 'paused' );
+assert.equal( executor.commandRealization( openNode.nodeID, 'resume' ), true );
+assert.equal( executor.getState().realizations.at( -1 ).state, 'running' );
+assert.equal( executor.commandRealization( openNode.nodeID, 'release' ), true );
+assert.equal( executor.getState().realizations.at( -1 ).state, 'released' );
+const beforeInfiniteStopFrees = sent.filter( ( message ) => message.address === '/n_free' ).length;
 executor.stop();
+assert.equal( sent.filter( ( message ) => message.address === '/n_free' ).length,
+  beforeInfiniteStopFrees + 1, 'transport stop frees an open-ended synth' );
+assert.equal( executor.getState().realizations.at( -1 ).state, 'ended' );
 
 assert.throws( () => executor.load( createScoreDocument( {
   scoreID: 'missing-duration', entries: [

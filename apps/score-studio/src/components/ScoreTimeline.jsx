@@ -267,20 +267,22 @@ export default function ScoreTimeline( { session, dispatch, onSeek } ) {
     <section className="scoreView">
       <div className="scoreToolbars">
         <div className="scoreToolbar">
-          <span className="timeReadout" title="Timeline cursor">{ formatTimelineTime( session.cursorTime, 0.001 ) }</span>
           <div className="layoutSwitch" aria-label="Timeline layout">
             <button className={ layout === 'structure' ? 'active' : '' }
               onClick={ () => setLayout( 'structure' ) }>Structure</button>
             <button className={ layout === 'synths' ? 'active' : '' }
               onClick={ () => setLayout( 'synths' ) }>Synth lifecycle</button>
           </div>
-          <div className="eventCommandPalette" aria-label="Add score event">
-            <button onClick={ () => addNote( false ) }>+ note</button>
-            <button onClick={ () => addNote( true ) }>+ synth</button>
-            <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'set' ) }>+ set</button>
-            <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'release' ) }>+ release</button>
-            <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'free' ) }>+ free</button>
-          </div>
+          <details className="eventCommandPalette">
+            <summary>Add</summary>
+            <div aria-label="Add score event">
+              <button onClick={ () => addNote( false ) }>+ note</button>
+              <button onClick={ () => addNote( true ) }>+ synth</button>
+              <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'set' ) }>+ set</button>
+              <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'release' ) }>+ release</button>
+              <button disabled={ !canAddLifecycle } onClick={ () => addLifecycle( 'free' ) }>+ free</button>
+            </div>
+          </details>
           <button disabled={ !selected.size }
             onClick={ () => apply( entries.filter( ( entry ) => !selected.has( entry.id ) ) ) }>Delete</button>
           <button disabled={ !session.undo.length } onClick={ () => dispatch( { type: 'UNDO' } ) }>Undo</button>
