@@ -806,7 +806,7 @@ export default function App( { host, createHostedClient } ) {
             entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry }
             inheritedDefinition={ lifecycleDefinitionsForEntry( inspectedEntries, selectedEntry.id )[ 0 ] ?? null }
             availableSynthDefs={ session.mode === MODES.HOSTED
-              ? hosted.synthDefContext.inventory ?? [] : [] }
+              ? Object.keys( hosted.synthDefContext.definitions ?? {} ) : [] }
             onAudition={ ( event ) => auditionDraft( {
               definition: event.def ?? event.instrument, params: event, model: null
             }, displayedFocus ) }

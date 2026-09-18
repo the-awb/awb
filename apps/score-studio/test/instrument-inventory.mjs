@@ -24,6 +24,9 @@ assert.equal( rows.find( ( row ) => row.name === 'systemLoaded' ).fingerprint, '
 assert.ok( Object.isFrozen( rows ) && rows.every( Object.isFrozen ) );
 assert.deepEqual( mergeSynthDefNames( 'catalogued', [ 'loadedLater', 'catalogued' ] ),
   [ 'catalogued', 'loadedLater' ], 'event pickers include the live host inventory' );
+assert.deepEqual( mergeSynthDefNames( [ 'catalogued' ], [ 'loadedLater' ], 'missingCurrent' ),
+  [ 'catalogued', 'loadedLater', 'missingCurrent' ],
+  'event pickers retain a currently authored definition even when it is not active' );
 
 const description = ( rates ) => ( { interface: {
   outputs: rates.map( ( _, ugenIndex ) => ( { ugenIndex } ) ),
