@@ -29,10 +29,11 @@ h1 { font-size: 18px; font-weight: 600; margin: 0 0 12px; letter-spacing: -.01em
 .sub { font-size: 13px; color: var(--dim); margin: 0 0 14px; line-height: 1.45; }
 
 /* The canvas is the only thing that isn't UI chrome -- a fixed full-viewport
-   background. Title/description float on top of it; the files list docks to
-   the left; instruments/settings dock to the bottom. --dockH/--lhsW are set
-   inline from React state so the other floating/docked pieces can react to
-   collapse state without each needing their own JS-measured layout. */
+   background. Everything else floats over it: the host bar and title along the
+   top, the icon rail and its panel down the left, the instrument parameters
+   down the right. --railW/--panelW/--rhsW are set inline from React state so
+   the floating pieces can react to collapse state without each needing their
+   own JS-measured layout. */
 .appRoot { position: relative; height: 100vh; overflow: hidden; }
 #stage { position: fixed; inset: 0; background: var(--void); }
 #stage canvas { width: 100% !important; height: 100% !important; display: block; }
@@ -51,7 +52,7 @@ h1 { font-size: 18px; font-weight: 600; margin: 0 0 12px; letter-spacing: -.01em
 .fieldTool .floatingDescription { top: 111px; }
 
 .floatingTitle {
-  position: fixed; top: 16px; left: calc(var(--lhsW) + 16px); z-index: 9;
+  position: fixed; top: 16px; left: calc(var(--railW) + var(--panelW) + 16px); z-index: 9;
   font-size: 20px; font-weight: 600; letter-spacing: -.01em; color: var(--ink);
   background: none; border: none; padding: 4px 2px; max-width: 40vw;
   text-shadow: 0 1px 6px rgba(0,0,0,0.8);
@@ -119,41 +120,57 @@ h1 { font-size: 18px; font-weight: 600; margin: 0 0 12px; letter-spacing: -.01em
    the horizontal tab strip doesn't eat into the (deliberately minimized)
    vertical footprint. Each pane inside scrolls on its own -- the dock itself
    never scrolls as a whole. */
-.dock {
-  position: fixed; left: var(--lhsW); right: var(--rhsW); bottom: 0; z-index: 10; height: var(--dockH);
-  background: var(--panel-translucent); backdrop-filter: blur(10px);
-  border-top: 1px solid var(--line); border-left: 1px solid var(--line); border-right: 1px solid var(--line);
-  transition: height .15s ease, left .15s ease, right .15s ease;
+/* The rail and its panel. Fixed, full height, floating over the field the way the host bar does,
+   at the same 48px width the other tools in the shell use. */
+.fieldRail {
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 12; width: var(--railW);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 64px 0 8px;
+  background: var(--panel-translucent); backdrop-filter: blur(12px);
+  border-right: 1px solid var(--line);
+}
+.fieldRailSpacer { flex: 1; }
+.fieldRailButton {
+  position: relative; width: 34px; height: 34px; display: grid; place-items: center;
+  padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--dim);
+}
+.fieldRailButton:hover { background: var(--raised); color: var(--ink); }
+.fieldRailButton.isSelected { background: var(--raised); color: var(--accent); }
+.fieldRailButton.isSelected::before {
+  content: ''; position: absolute; top: 7px; bottom: 7px; left: -7px;
+  width: 2px; border-radius: 1px; background: var(--accent);
+}
+
+.fieldPanel {
+  position: fixed; top: 0; bottom: 0; left: var(--railW); z-index: 11; width: var(--panelW);
+  background: var(--panel-translucent); backdrop-filter: blur(12px);
+  border-right: 1px solid var(--line);
+  transition: width .15s ease;
   overflow: hidden;
 }
-.dockToggle { position: absolute; top: 6px; right: 10px; padding: 4px 10px; z-index: 1; }
-.dockCollapsedLabel {
-  height: 100%; display: flex; align-items: center; padding: 0 16px;
-  font-size: 13px; color: var(--dim);
+.fieldPanel[hidden] { display: none; }
+.fieldPanelBody { height: 100%; display: flex; flex-direction: column; }
+.fieldPanelHeader {
+  flex: 0 0 auto; padding: 62px 14px 10px;
+  color: var(--dim); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
 }
-.dockBody { height: 100%; display: flex; }
 
-.dockTabs {
-  flex: 0 0 130px; display: flex; flex-direction: column; gap: 6px;
-  padding: 40px 10px 10px; border-right: 1px solid var(--line); overflow-y: auto;
-}
-.dockTabs button { text-align: left; padding: 9px 10px; }
-
-.dockContent { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; padding: 14px; overflow: hidden; }
+.dockContent { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; padding: 14px; overflow-y: auto; }
 .dockContentHeader { flex: 0 0 auto; margin-bottom: 11px; }
 .hint { font-size: 12px; color: var(--dim); margin: 0 0 11px; line-height: 1.5; }
 
 /* Responsive panel layout used by Instruments and Settings. It stacks on
    narrow viewports. Each panel scrolls
    independently, since the dock height is fixed and deliberately small. */
-.splitPane { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.splitPane.settingsPane { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.splitPane { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.splitPane.settingsPane { grid-template-columns: minmax(0, 1fr); }
 @media (max-width: 760px) {
   .splitPane { grid-template-columns: 1fr; overflow-y: auto; }
   .splitPane.settingsPane { grid-template-columns: 1fr; }
   .splitPane > .panel { height: auto; }
 }
-.splitPane > .panel { height: 100%; overflow-y: auto; overflow-x: auto; margin-top: 0; }
+.splitPane > .panel { margin-top: 0; }
 
 .panel {
   background: var(--panel); border: 1px solid var(--line);

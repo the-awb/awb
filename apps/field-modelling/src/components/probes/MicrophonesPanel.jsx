@@ -6,8 +6,8 @@ import {
   sampleColorReadings
 } from '@awb/field-engine';
 
-export default function MicrophonesPanel({ microphones, bodySurface, instruments, externals, room, timeFactor, displayGain, liveReadings = {} }) {
-  const [position, setPosition] = useState({ x: 260, y: 112 });
+export default function MicrophonesPanel({ microphones, bodySurface, instruments, externals, room, timeFactor, displayGain, liveReadings = {}, defaultPosition = { x: 260, y: 112 } }) {
+  const [position, setPosition] = useState(defaultPosition);
   const [meterMode, setMeterMode] = useState('colors');
   const dragRef = useRef(null);
   const bodyMicrophones = useMemo(() => bodySiteMicrophones(bodySurface, room), [bodySurface, room]);

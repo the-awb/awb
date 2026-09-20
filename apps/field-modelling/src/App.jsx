@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { flattenChannels, slowestBeat } from '@awb/field-engine';
 import FieldCanvas from './components/FieldCanvas.jsx';
+import FieldRail from './components/FieldRail.jsx';
 import NumberSlider from './components/NumberSlider.jsx';
 import InstrumentsPanel from './components/instruments/InstrumentsPanel.jsx';
 import InstrumentParamsPanel from './components/instruments/InstrumentParamsPanel.jsx';
@@ -31,6 +32,8 @@ const EMPTY_INSTRUMENT_RUNTIME = Object.freeze( {
 export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) {
   const [ state, dispatch ] = useReducer( fieldReducer, undefined, initialFieldState );
   const [ tab, setTab ] = useState( 'instruments' );
+  const [ panelOpen, setPanelOpen ] = useState( true );
+  const [ microphonesOpen, setMicrophonesOpen ] = useState( true );
   const [ file, setFile ] = useState( null );
   const [ project, setProject ] = useState( null );
   const [ scoreDocument, setScoreDocument ] = useState( null );
@@ -127,7 +130,8 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
     ? runtime.synthDefFor( instrumentType( selected.type )?.synthDef ?? null )
     : null;
 
-  return <div className="appRoot fieldTool" style={{ '--dockH': '35vh', '--lhsW': '40px', '--rhsW': '400px' }}>
+  return <div className={ `appRoot fieldTool${ panelOpen ? '' : ' panelCollapsed' }` }
+    style={{ '--railW': '48px', '--panelW': panelOpen ? '400px' : '0px', '--rhsW': '400px' }}>
     <FieldCanvas state={ state } voices={ voices } readRecentSamples={ null }
       onMicrophoneReadings={ setReadings } analytic={ mode === 'analytic' } />
     <header className="fieldHostBar">
@@ -147,9 +151,10 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
       onChange={ ( event ) => dispatch( { type: 'SET_META', key: 'title', value: event.target.value } ) } />
     <textarea className="floatingDescription" value={ state.meta.description }
       onChange={ ( event ) => dispatch( { type: 'SET_META', key: 'description', value: event.target.value } ) } />
-    <MicrophonesPanel microphones={ state.microphones } bodySurface={ state.surfaces.body }
+    { microphonesOpen && <MicrophonesPanel microphones={ state.microphones } bodySurface={ state.surfaces.body }
       instruments={ state.instruments } externals={ voices?.external ?? [] } room={ state.room } timeFactor={ state.timeFactor }
-      displayGain={ state.display.gain } liveReadings={ readings } />
+      displayGain={ state.display.gain } liveReadings={ readings }
+      defaultPosition={ { x: ( panelOpen ? 448 : 48 ) + 16, y: 112 } } /> }
     <InstrumentParamsPanel open={ state.paramsOpen }
       onToggle={ () => dispatch( { type: 'SET_PARAMS_OPEN', open: !state.paramsOpen } ) }
       instrument={ selected } colorIndex={ selectedIndex } synthDefInterface={ selectedSynthDef }
@@ -157,11 +162,10 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
       selectedNodeId={ state.selectedNodeId } runtimeNode={ selectedRuntimeNode }
       onSetRuntimeControl={ runtime.setControl } onRuntimeCommand={ runtime.command }
       speakers={ state.room.speakers } dispatch={ dispatch } />
-    <div className="dock"><div className="dockBody">
-      <div className="dockTabs">
-        <button className={ tab === 'instruments' ? 'on' : '' } onClick={ () => setTab( 'instruments' ) }>Instruments</button>
-        <button className={ tab === 'settings' ? 'on' : '' } onClick={ () => setTab( 'settings' ) }>Room and display</button>
-      </div>
+    <FieldRail tab={ tab } onTab={ setTab } panelOpen={ panelOpen } onPanelOpen={ setPanelOpen }
+      microphonesOpen={ microphonesOpen } onMicrophones={ setMicrophonesOpen } />
+    <div className="fieldPanel" hidden={ !panelOpen }><div className="fieldPanelBody">
+      <header className="fieldPanelHeader">{ tab === 'instruments' ? 'Instruments' : 'Room and display' }</header>
       { tab === 'instruments' ? <div className="dockContent">
         <div className="dockContentHeader"><div className="hint">{ hint }</div>
           <NumberSlider label="Time factor" value={ state.timeFactor } min={ 0.05 } max={ 4 }
