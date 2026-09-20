@@ -1,7 +1,13 @@
 import { useState } from 'react';
 
+const TABS = [
+  { id: 'document', label: 'Document', glyph: '▤' },
+  { id: 'instruments', label: 'Instruments', glyph: '♫' },
+  { id: 'runtime', label: 'Runtime', glyph: '◉' }
+];
+
 export default function ScoreStudioLeftRail( {
-  collapsed, documentPanel, instrumentPanel, onToggleCollapsed
+  collapsed, documentPanel, instrumentPanel, runtimePanel, onToggleCollapsed
 } ) {
   const [ tab, setTab ] = useState( 'document' );
 
@@ -10,25 +16,29 @@ export default function ScoreStudioLeftRail( {
     setTab( nextTab );
   }
 
+  const active = TABS.find( ( entry ) => entry.id === tab ) ?? TABS[ 0 ];
+
   return (
     <div className="leftRailContent">
       <nav className="activityRail" aria-label="Score Studio context">
-        <button aria-label="Document" title="Document" className={ tab === 'document' ? 'active' : '' }
-          aria-pressed={ tab === 'document' } aria-expanded={ tab === 'document' && !collapsed }
-          onClick={ () => chooseTab( 'document' ) }>▤</button>
-        <button aria-label="Instruments" title="Instruments" className={ tab === 'instruments' ? 'active' : '' }
-          aria-pressed={ tab === 'instruments' } aria-expanded={ tab === 'instruments' && !collapsed }
-          onClick={ () => chooseTab( 'instruments' ) }>♫</button>
+        { TABS.map( ( entry ) => (
+          <button key={ entry.id } aria-label={ entry.label } title={ entry.label }
+            className={ tab === entry.id ? 'active' : '' }
+            aria-pressed={ tab === entry.id } aria-expanded={ tab === entry.id && !collapsed }
+            onClick={ () => chooseTab( entry.id ) }>{ entry.glyph }</button>
+        ) ) }
         <span className="spacer" />
         <button aria-label={ collapsed ? 'Expand left panel' : 'Collapse left panel' }
           title={ collapsed ? 'Expand left panel' : 'Collapse left panel' }
-          onClick={ onToggleCollapsed }>{ collapsed ? '\u203a' : '\u2039' }</button>
+          onClick={ onToggleCollapsed }>{ collapsed ? '›' : '‹' }</button>
       </nav>
       <div className="railPanel" hidden={ collapsed }>
-        <header><h2>{ tab === 'document' ? 'Document' : 'Instruments' }</h2></header>
+        <header><h2>{ active.label }</h2>
+          { tab === 'runtime' && <span className="railHeaderNote">projection</span> }</header>
         <div className="railScroll">
           <div hidden={ tab !== 'document' }>{ documentPanel }</div>
           <div hidden={ tab !== 'instruments' }>{ instrumentPanel }</div>
+          <div hidden={ tab !== 'runtime' }>{ runtimePanel }</div>
         </div>
       </div>
     </div>

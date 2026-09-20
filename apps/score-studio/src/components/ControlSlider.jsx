@@ -68,7 +68,7 @@ const display = ( value ) => Number.isFinite( value )
 export default function ControlSlider( {
   name, label = name, detail = '', value, fallback, placeholder,
   min, max, warp, step = 0, decimals, unit,
-  disabled = false, inherited = false, allowEmpty = false, numberClassName, onChange
+  disabled = false, inherited = false, allowEmpty = false, numberClassName, numberLabel, onChange
 } ) {
   const numeric = Number.isFinite( value ) ? value
     : value === '' || value === undefined || value === null ? undefined : Number( value );
@@ -89,7 +89,7 @@ export default function ControlSlider( {
         { detail && <small>{ detail }</small> }
       </span>
       <input className={ `controlSliderNumber${ numberClassName ? ` ${ numberClassName }` : '' }` }
-        aria-label={ `${ name } value` } type="number" value={ Number.isFinite( numeric ) ? display( numeric ) : '' }
+        aria-label={ numberLabel ?? `${ name } value` } type="number" value={ Number.isFinite( numeric ) ? display( numeric ) : '' }
         disabled={ disabled } step={ range.step || 'any' } placeholder={ placeholder }
         onChange={ ( event ) => {
           const text = event.target.value;

@@ -25,16 +25,18 @@ input, textarea { border: 1px solid var(--line); border-radius: 5px; background:
 .saveState { color: var(--muted); font-size: 11px; }.saveState.dirty { color: #f0b466; }
 .modeSwitch { margin-left: auto; display: flex; padding: 2px; border: 1px solid var(--line); border-radius: 8px; }
 .modeSwitch button { border: 0; background: transparent; text-transform: capitalize; }.modeSwitch button.active { background: var(--panel-2); color: var(--accent); }
-.panelLayout { --bottom-panel-height: 300px; flex: 1; min-height: 0; display: grid; grid-template-columns: 300px minmax(420px, 1fr) 320px; grid-template-rows: minmax(0, 1fr) var(--bottom-panel-height); }
-.panelLayout.leftCollapsed { grid-template-columns: 52px minmax(420px, 1fr) 320px; }
-.panelLayout.rightCollapsed { grid-template-columns: 300px minmax(420px, 1fr) 32px; }
-.panelLayout.leftCollapsed.rightCollapsed { grid-template-columns: 52px minmax(420px, 1fr) 32px; }
-.panelLayout.bottomCollapsed { grid-template-rows: minmax(0, 1fr) 31px; }
+.panelLayout { --bottom-panel-height: 300px; --right-panel-width: 380px; --left-panel-width: 300px; flex: 1; min-height: 0; display: grid; grid-template-columns: var(--left-panel-width) minmax(420px, 1fr) var(--right-panel-width); grid-template-rows: minmax(0, 1fr); }
+.panelLayout.hasBottom { grid-template-rows: minmax(0, 1fr) var(--bottom-panel-height); }
+.panelLayout.leftCollapsed { --left-panel-width: 52px; }
+.panelLayout.rightCollapsed { --right-panel-width: 32px; }
+.panelLayout.hasBottom.bottomCollapsed { grid-template-rows: minmax(0, 1fr) 31px; }
 .studioRail { position: relative; min-width: 0; min-height: 0; background: var(--panel); }
 .leftRail { grid-column: 1; grid-row: 1; border-right: 1px solid var(--line); }
 .rightRail { grid-column: 3; grid-row: 1; border-left: 1px solid var(--line); }
 .workspace { grid-column: 2; grid-row: 1; }
-.railCollapse { position: absolute; z-index: 8; top: 7px; width: 24px; height: 24px; padding: 0; }
+.railCollapse { position: absolute; z-index: 9; top: 7px; width: 24px; height: 24px; padding: 0; }
+.rightResizeHandle { position: absolute; z-index: 8; top: 0; bottom: 0; left: -4px; width: 8px; cursor: ew-resize; touch-action: none; }
+.rightResizeHandle:hover { background: color-mix(in srgb, var(--accent) 28%, transparent); }
 .leftRail > .railCollapse { right: 5px; }.rightRail > .railCollapse { left: 5px; }
 .leftRailContent { height: 100%; min-height: 0; display: grid; grid-template-columns: 52px minmax(0, 1fr); }
 .runtimeRailContent { height: 100%; min-height: 0; display: flex; flex-direction: column; }
@@ -76,13 +78,14 @@ input, textarea { border: 1px solid var(--line); border-radius: 5px; background:
 .bottomCollapse { position: absolute; z-index: 8; top: 5px; right: 7px; min-width: 27px; height: 24px; padding: 0 6px; }
 .bottomCollapsed .bottomCollapse { position: static; float: right; margin: 3px 7px; }
 .focusPanelContent { height: 100%; min-height: 0; display: flex; flex-direction: column; }
-.focusPanelContent > header { flex: 0 0 40px; display: flex; align-items: center; gap: 12px; padding: 6px 44px 6px 14px; border-bottom: 1px solid var(--line); }
+.focusPanelContent > header { flex: 0 0 auto; min-height: 40px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 8px 14px 8px 36px; border-bottom: 1px solid var(--line); }
 .focusPanelContent > header div { display: flex; align-items: baseline; gap: 8px; }
 .focusPanelContent > header h2 { margin: 0; }
 .focusPanelContent > header strong { font: 11px ui-monospace, monospace; }.focusPanelContent > header small { color: var(--muted); font-size: 10px; }
 .focusPanelScroll { min-height: 0; overflow: auto; padding: 12px 14px; }
 .eventDetailEditor { display: grid; gap: 10px; }
-.eventMetaBar { display: grid; grid-template-columns: minmax(0, 230px) 110px minmax(220px, 1fr); gap: 8px; }
+.eventMetaBar { display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 8px; }
+.eventMetaBar > *:nth-child(3) { grid-column: 1 / -1; }
 .eventMetaBar > span, .eventMetaBar > label { min-width: 0; display: grid; gap: 4px; padding: 7px 9px; border: 1px solid #2b2b27; border-radius: 6px; background: #11110f; }
 .eventMetaBar small { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .eventMetaBar code { overflow: hidden; color: #cccac2; font: 10px ui-monospace, monospace; text-overflow: ellipsis; white-space: nowrap; }
@@ -90,14 +93,14 @@ input, textarea { border: 1px solid var(--line); border-radius: 5px; background:
 .eventMetaBar label > span input { width: 100%; min-width: 0; }
 .eventMetaBar em { color: var(--muted); font-size: 10px; font-style: normal; }
 .eventMetaBar input { min-width: 0; padding: 4px 6px; font-size: 10px; }
-.eventEditorGrid { display: grid; grid-template-columns: minmax(440px, 1.35fr) minmax(300px, .85fr); gap: 10px; align-items: start; }
+.eventEditorGrid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; align-items: start; }
 .eventEditorCard { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: #11110f; }
 .eventEditorCard > header, .synthDraftSection > header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 7px 10px; border-bottom: 1px solid #2b2b27; background: #191917; }
 .eventEditorCard > header strong, .synthDraftSection > header strong { color: #d0cec7; font-size: 10px; }
 .eventEditorCard > header small, .synthDraftSection > header small { color: var(--muted); font-size: 10px; }
 .eventEditorCard .typedPayload { border: 0; border-radius: 0; background: transparent; }
 .rawEventCard .eventJson { display: block; min-height: 150px; margin: 0; border: 0; border-radius: 0; background: #0d0d0c; }
-.synthDefDraft { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(300px, 1fr); gap: 14px; }
+.synthDefDraft { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .nonAudioNotice { grid-column: 1 / -1; margin: 0; padding: 8px 10px; border: 1px solid #62583c; border-radius: 6px; color: #cfc5a8; font-size: 10px; }
 .nonAudioNotice strong { margin-right: 7px; color: #e4c36b; text-transform: capitalize; }
 .synthDraftSection { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: #11110f; }
@@ -384,10 +387,7 @@ h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: u
 .liveControl em { color: var(--muted); font-size: 10px; font-style: normal; }
 .liveBoolean input { justify-self: end; }
 @media (max-width: 900px) {
-  .panelLayout { grid-template-columns: 260px minmax(360px, 1fr) 220px; }
-  .panelLayout.leftCollapsed { grid-template-columns: 52px minmax(360px, 1fr) 220px; }
-  .panelLayout.rightCollapsed { grid-template-columns: 260px minmax(360px, 1fr) 32px; }
-  .panelLayout.leftCollapsed.rightCollapsed { grid-template-columns: 52px minmax(360px, 1fr) 32px; }
+  .panelLayout { --left-panel-width: 260px; --right-panel-width: 300px; grid-template-columns: var(--left-panel-width) minmax(300px, 1fr) var(--right-panel-width); }
   .eventMetaBar { grid-template-columns: minmax(170px, 1fr) 100px; }
   .eventPathField { grid-column: 1 / -1; }
   .eventEditorGrid { grid-template-columns: 1fr; }

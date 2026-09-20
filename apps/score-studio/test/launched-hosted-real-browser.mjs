@@ -139,7 +139,7 @@ try {
   await systemDefinition.waitFor();
   await systemDefinition.click();
   await page.getByLabel( 'Draft freq', { exact: true } ).waitFor();
-  if ( !( await page.locator( '.bottomPanel' ).getByText( 'hosted context', { exact: false } ).isVisible() ) ) {
+  if ( !( await page.locator( '.focusPanel' ).getByText( 'hosted context', { exact: false } ).isVisible() ) ) {
     throw new Error( 'unreferenced hosted system SynthDef did not become an admitted audition draft' );
   }
   passed += 2;

@@ -56,6 +56,7 @@ export default function EventPayloadEditor( {
               onChange={ ( value ) => update( field.name, value, 'json' ) } />
             : field.kind === 'number'
               ? <ControlSlider key={ field.name } name={ field.name } label={ field.label }
+                numberLabel={ `Payload ${ field.name }` }
                 detail={ field.unit ?? '' } unit={ field.unit } value={ event[ field.name ] ?? '' }
                 fallback={ field.defaultValue } placeholder={ payloadFieldPlaceholder( field ) }
                 min={ field.min } max={ field.max } step={ field.step } decimals={ field.decimals }

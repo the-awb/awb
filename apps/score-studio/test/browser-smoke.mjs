@@ -67,23 +67,21 @@ try {
     failures.push( 'left collapse did not preserve the activity rail while hiding its content panel' );
   }
   await page.getByRole( 'button', { name: 'Expand left panel', exact: true } ).click();
-  await page.getByRole( 'button', { name: 'Collapse right panel', exact: true } ).click();
-  if ( await page.locator( '.panelLayout.rightCollapsed' ).count() !== 1 ) failures.push( 'right panel did not collapse independently' );
-  await page.getByRole( 'button', { name: 'Expand right panel', exact: true } ).click();
-  const bottomBeforeResize = await page.locator( '.bottomPanel' ).evaluate( ( element ) => element.getBoundingClientRect().height );
-  const resizeHandle = await page.getByRole( 'separator', { name: 'Resize edit panel' } ).boundingBox();
-  if ( !resizeHandle ) failures.push( 'bottom panel resize handle is missing' );
+  await page.getByRole( 'button', { name: 'Collapse focus panel', exact: true } ).click();
+  if ( await page.locator( '.panelLayout.rightCollapsed' ).count() !== 1 ) failures.push( 'focus panel did not collapse independently' );
+  await page.getByRole( 'button', { name: 'Expand focus panel', exact: true } ).click();
+  const focusBeforeResize = await page.locator( '.focusPanel' ).evaluate( ( element ) => element.getBoundingClientRect().width );
+  const resizeHandle = await page.getByRole( 'separator', { name: 'Resize focus panel' } ).boundingBox();
+  if ( !resizeHandle ) failures.push( 'focus panel resize handle is missing' );
   else {
-    await page.mouse.move( resizeHandle.x + 20, resizeHandle.y + 2 );
+    await page.mouse.move( resizeHandle.x + resizeHandle.width / 2, resizeHandle.y + 200 );
     await page.mouse.down();
-    await page.mouse.move( resizeHandle.x + 20, resizeHandle.y - 45, { steps: 3 } );
+    await page.mouse.move( resizeHandle.x + resizeHandle.width / 2 - 60, resizeHandle.y + 200, { steps: 5 } );
     await page.mouse.up();
-    const bottomAfterResize = await page.locator( '.bottomPanel' ).evaluate( ( element ) => element.getBoundingClientRect().height );
-    if ( bottomAfterResize <= bottomBeforeResize ) failures.push( 'bottom panel did not resize vertically' );
+    const focusAfterResize = await page.locator( '.focusPanel' ).evaluate( ( element ) => element.getBoundingClientRect().width );
+    if ( focusAfterResize <= focusBeforeResize ) failures.push( 'focus panel did not resize horizontally' );
   }
-  await page.getByRole( 'button', { name: 'Collapse edit panel', exact: true } ).click();
-  if ( await page.locator( '.panelLayout.bottomCollapsed' ).count() !== 1 ) failures.push( 'bottom panel did not collapse independently' );
-  await page.getByRole( 'button', { name: 'Expand edit panel', exact: true } ).click();
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Runtime', exact: true } ).click();
   if ( await page.locator( '.instrumentCard' ).count() !== 1 ) failures.push( 'seed score instrument panel did not deduplicate SynthDefs' );
   const seedInstrument = page.locator( '.instrumentCard' ).first();
   if ( !( await seedInstrument.getByText( '\\substrate', { exact: true } ).isVisible() ) ) {
@@ -92,6 +90,7 @@ try {
   await seedInstrument.locator( 'summary' ).click();
   await seedInstrument.getByText( 'freqA=60', { exact: true } ).waitFor( { timeout: 5000 } )
     .catch( () => failures.push( 'instrument panel did not disclose compiled SynthDef controls' ) );
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
   await page.locator( '.viewTabs' ).getByRole( 'button', { name: 'Instruments', exact: true } ).click();
   if ( !( await page.getByRole( 'heading', { name: 'Hosted instruments', exact: true } ).isVisible() ) ) failures.push( 'hosted instrument boundary is missing' );
   if ( await page.getByRole( 'button', { name: 'Prepare audio', exact: true } ).count() ) failures.push( 'hosted mode exposed browser audio preparation' );
@@ -118,7 +117,7 @@ try {
   if ( !( await inventory.getByRole( 'option', { name: /awbSchedulerPulse.*audio/ } ).isVisible() ) ) {
     failures.push( 'modelled SynthDef did not disclose its audio/control/utility classification' );
   }
-  if ( await page.locator( '.bottomPanel' ).getByText( 'browser bundle', { exact: false } ).count() === 0 ) {
+  if ( await page.locator( '.focusPanel' ).getByText( 'browser bundle', { exact: false } ).count() === 0 ) {
     failures.push( 'selected system SynthDef did not create a visibly sourced bottom-panel draft' );
   }
   await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
@@ -159,7 +158,7 @@ try {
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 0 ) failures.push( 'seed score still contains an authored release' );
   if ( await page.locator( '.synthTriggerTick.auto-release' ).count() !== 2 ) failures.push( 'finite seed notes lost their derived release boundaries' );
   const toolbarHeightClosed = await page.locator( '.scoreToolbars' ).evaluate( ( element ) => element.getBoundingClientRect().height );
-  await page.locator( '.eventCommandPalette summary' ).click();
+  await page.locator( '.eventCommandPalette:not(.timeCommands) summary' ).click();
   const paletteGeometry = await page.locator( '.scoreToolbars' ).evaluate( ( element ) => ( {
     toolbarHeight: element.getBoundingClientRect().height,
     toolbarBottom: element.getBoundingClientRect().bottom,
@@ -172,11 +171,11 @@ try {
       failures.push( `score command palette is missing ${ label }` );
     }
   }
-  await page.locator( '.eventCommandPalette summary' ).click();
+  await page.locator( '.eventCommandPalette:not(.timeCommands) summary' ).click();
   const firstBar = page.locator( '.synthBar' ).first();
   await page.locator( '.tick' ).nth( 1 ).click();
   await firstBar.click();
-  await page.locator( '.eventCommandPalette summary' ).click();
+  await page.locator( '.eventCommandPalette:not(.timeCommands) summary' ).click();
   await page.getByRole( 'button', { name: '+ set', exact: true } ).click();
   const inheritedFreq = page.getByLabel( 'Payload freqA', { exact: true } );
   const inheritedAmp = page.getByLabel( 'Payload amp', { exact: true } );
@@ -197,7 +196,7 @@ try {
   }
   await page.getByRole( 'button', { name: 'Delete', exact: true } ).click();
   await firstBar.click();
-  await page.locator( '.eventCommandPalette summary' ).click();
+  await page.locator( '.eventCommandPalette:not(.timeCommands) summary' ).click();
   await page.getByRole( 'button', { name: '+ release', exact: true } ).click();
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'authored release was not projected as a child of its parent synth lane' );
   if ( await page.locator( '.expandedTrigger.release' ).count() !== 1 ) failures.push( 'expanded synth did not disclose its release trigger' );
@@ -266,7 +265,7 @@ try {
   }
 
   if ( !( await page.locator( '.eventJson' ).isVisible() ) ) failures.push( 'event inspector did not open' );
-  if ( await page.locator( '.bottomPanel .eventJson' ).count() !== 1 ) failures.push( 'event editor was not relocated to the bottom focus panel' );
+  if ( await page.locator( '.focusPanel .eventJson' ).count() !== 1 ) failures.push( 'event editor was not relocated to the focus rail' );
   const eventSynthDef = page.getByLabel( 'Event SynthDef', { exact: true } );
   if ( await eventSynthDef.evaluate( ( element ) => element.tagName ) !== 'SELECT'
     || await eventSynthDef.locator( 'option[value="resonantBassEnv2"]' ).count() !== 1 ) {
@@ -351,7 +350,9 @@ try {
   if ( await page.locator( '.synthLane' ).count() !== 11 ) failures.push( 'bundled real demo did not open as a canonical score' );
   if ( await page.locator( '.titleInput' ).inputValue() !== 'Sonic Attunement 01' ) failures.push( 'bundled demo metadata did not load' );
   if ( await page.locator( '.synthEnvelope' ).count() !== 11 ) failures.push( 'real demo did not render one envelope strip per synth row' );
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Runtime', exact: true } ).click();
   if ( await page.locator( '.instrumentCard' ).count() !== 2 ) failures.push( 'real demo instrument panel did not show its two SynthDefs' );
+  await page.locator( '.activityRail' ).getByRole( 'button', { name: 'Document', exact: true } ).click();
   const polyLane = page.locator( '.synthLane' ).filter( { has: page.locator( '.synthLaneName small' ).filter( { hasText: '×' } ) } ).first();
   if ( await polyLane.count() ) {
     if ( await polyLane.locator( '.synthVoiceChild' ).count() !== 0 ) {

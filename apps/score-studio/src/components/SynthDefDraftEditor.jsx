@@ -120,6 +120,7 @@ export default function SynthDefDraftEditor( {
       <div className="synthDraftControls">
       { model.controls.map( ( control ) => control.numChannels === 1 && !Array.isArray( values[ control.name ] )
         ? <ControlSlider key={ control.name } name={ control.name } value={ values[ control.name ] }
+          numberLabel={ `Draft ${ control.name }` }
           detail={ [ control.roles.join( ', ' ) || control.rate, control.spec?.unit ].filter( Boolean ).join( ' · ' ) }
           min={ control.spec?.min } max={ control.spec?.max }
           warp={ control.spec?.warp } step={ control.spec?.step ?? 0 } unit={ control.spec?.unit }

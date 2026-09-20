@@ -905,7 +905,34 @@ export default function App( { host, createHostedClient } ) {
             focusedSource={ focus.kind === 'synthDef' ? focus.source : '' }
             focusedInitialValues={ focus.kind === 'synthDef' ? focus.initialValues : null }
             focusedContextGeneration={ focus.kind === 'synthDef' ? focus.contextGeneration : null }
-            onFocus={ focusSynthDef } /> } /> }
+            onFocus={ focusSynthDef } /> }
+          runtimePanel={ <ScoreRuntimeRail
+            instrumentPanel={ <InstrumentPanel document={ session.document } mode={ session.mode }
+            hostedSynthDefs={ hosted.synthDefContext }
+            standaloneDefinitions={ definitionsCurrent ? standaloneDefinitions : {
+              scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
+            } } /> }
+          auditionPanel={ <AuditionRuntimePanel realizations={ audition.realizations }
+            onFocus={ ( realization, voice ) => {
+              if ( realization.definition ) {
+                const description = realization.description
+                  ?? hosted.synthDefContext.definitions[ realization.definition ];
+                focusSynthDef( { name: realization.definition, description,
+                  contextGeneration: description?.contextGeneration ?? 0,
+                  signalKind: realization.signalKind ?? 'unknown', source: `live audition voice ${ voice.nodeID }`,
+                  initialValues: voice.params,
+                  runtimeTarget: { kind: 'audition', realizationID: realization.realizationID,
+                    nodeID: voice.nodeID, voiceIndex: voice.voiceIndex, state: voice.state } } );
+              }
+            } }
+            onCommand={ ( id, action, nodeID ) => auditionController.command( id, action, nodeID ) }
+            onAuditionCopy={ auditionRuntimeCopy } /> }
+          realizationsPanel={ ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 )
+            && <ScoreRealizationPanel
+              document={ session.document }
+              realizations={ session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations }
+              onFocus={ focusScoreRealization } onCommand={ commandScoreRealization }
+              onAuditionCopy={ auditionRuntimeCopy } /> } /> } /> }
         centre={ <>
           <nav className="viewTabs">
             <button className={ session.view === 'score' ? 'active' : '' }
@@ -958,34 +985,7 @@ export default function App( { host, createHostedClient } ) {
             : <ConsoleWorkspace sc={ sc } sclang={ sclang }
               workingDocument={ session.workingDocument } mode={ session.mode } /> }
         </> }
-        right={ <ScoreRuntimeRail
-          instrumentPanel={ <InstrumentPanel document={ session.document } mode={ session.mode }
-            hostedSynthDefs={ hosted.synthDefContext }
-            standaloneDefinitions={ definitionsCurrent ? standaloneDefinitions : {
-              scoreID: null, revision: null, state: 'unknown', missing: [], detail: ''
-            } } /> }
-          auditionPanel={ <AuditionRuntimePanel realizations={ audition.realizations }
-            onFocus={ ( realization, voice ) => {
-              if ( realization.definition ) {
-                const description = realization.description
-                  ?? hosted.synthDefContext.definitions[ realization.definition ];
-                focusSynthDef( { name: realization.definition, description,
-                  contextGeneration: description?.contextGeneration ?? 0,
-                  signalKind: realization.signalKind ?? 'unknown', source: `live audition voice ${ voice.nodeID }`,
-                  initialValues: voice.params,
-                  runtimeTarget: { kind: 'audition', realizationID: realization.realizationID,
-                    nodeID: voice.nodeID, voiceIndex: voice.voiceIndex, state: voice.state } } );
-              }
-            } }
-            onCommand={ ( id, action, nodeID ) => auditionController.command( id, action, nodeID ) }
-            onAuditionCopy={ auditionRuntimeCopy } /> }
-          realizationsPanel={ ( session.mode === MODES.HOSTED || standalone.realizations.length > 0 )
-            && <ScoreRealizationPanel
-              document={ session.document }
-              realizations={ session.mode === MODES.HOSTED ? hosted.realizations : standalone.realizations }
-              onFocus={ focusScoreRealization } onCommand={ commandScoreRealization }
-              onAuditionCopy={ auditionRuntimeCopy } /> } /> }
-        bottom={ <ScoreFocusPanel focus={ displayedFocus }>
+        right={ <ScoreFocusPanel focus={ displayedFocus }>
           { focus.kind === 'scoreEvent' && selectedEntry && <EventEditor
             key={ `${ selectedEntry.id }:${ session.document.revision }:${ session.previewVersion }` }
             entry={ selectedEntry } onPreview={ previewSelectedEntry } onCommit={ updateSelectedEntry }
