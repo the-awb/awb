@@ -7,6 +7,7 @@ import { formatTimelineTime, timelineTicks } from '../engine/timelineScale.js';
 import { musicalVoiceLabel } from '../engine/runtimeVoices.js';
 
 const LEFT = 92;
+const TRANSPORT_HEIGHT = 48;
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 160;
 
@@ -32,6 +33,8 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
   const [ envelopeDrag, setEnvelopeDrag ] = useState( null );
   const [ durationDrag, setDurationDrag ] = useState( null );
   const scrollRef = useRef( null );
+  const viewRef = useRef( null );
+  const toolbarsRef = useRef( null );
   const dragRef = useRef( null );
   const removeDragListenersRef = useRef( () => {} );
   const removeHandleListenersRef = useRef( () => {} );
@@ -143,6 +146,21 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
   useEffect( () => () => {
     removeDragListenersRef.current();
     removeHandleListenersRef.current();
+  }, [] );
+  // The toolbars float over the timeline, so the timeline's top padding has to equal their real
+  // height. Hard-coding it meant controls past 84px were clipped away with no way to reach them;
+  // measuring keeps the reservation honest however the toolbars wrap or however many rows show.
+  useEffect( () => {
+    const view = viewRef.current;
+    const toolbars = toolbarsRef.current;
+    if ( !view || !toolbars || typeof ResizeObserver === 'undefined' ) return undefined;
+    const sync = () => view.style.setProperty(
+      '--score-overlay-height', `${ TRANSPORT_HEIGHT + toolbars.offsetHeight }px`
+    );
+    const observer = new ResizeObserver( sync );
+    observer.observe( toolbars );
+    sync();
+    return () => observer.disconnect();
   }, [] );
   const dragProps = ( entryID ) => ( {
     onPointerDown: ( event ) => beginDrag( event, entryID ),
@@ -288,8 +306,8 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
   };
 
   return (
-    <section className="scoreView">
-      <div className="scoreToolbars">
+    <section className="scoreView" ref={ viewRef }>
+      <div className="scoreToolbars" ref={ toolbarsRef }>
         <div className="scoreToolbar">
           <div className="layoutSwitch" aria-label="Timeline layout">
             <button className={ layout === 'structure' ? 'active' : '' }
@@ -310,11 +328,17 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
                 onClick={ ( event ) => chooseAddCommand( event, () => addLifecycle( 'free' ) ) }>+ free</button>
             </div>
           </details>
-          <button disabled={ selected.size !== 1 } onClick={ duplicateSelected }>Duplicate</button>
-          <button disabled={ !selected.size }
-            onClick={ () => apply( entries.filter( ( entry ) => !selected.has( entry.id ) ) ) }>Delete</button>
           <button disabled={ !session.undo.length } onClick={ () => dispatch( { type: 'UNDO' } ) }>Undo</button>
           <button disabled={ !session.redo.length } onClick={ () => dispatch( { type: 'REDO' } ) }>Redo</button>
+          <details className="eventCommandPalette timeCommands">
+            <summary>Time</summary>
+            <div aria-label="Timeline-wide time edits">
+              <label>Step <input aria-label="Edit step" type="number" min="0.01" step="0.25" value={ step }
+                onChange={ ( event ) => setStep( Number( event.target.value ) ) } /> s</label>
+              <button onClick={ () => apply( rippleFrom( entries, session.cursorTime, -step ) ) }>Ripple − from cursor</button>
+              <button onClick={ () => apply( rippleFrom( entries, session.cursorTime, step ) ) }>Ripple + from cursor</button>
+            </div>
+          </details>
           <span className="spacer" />
           <div className="zoomControls" aria-label="Timeline zoom">
             <button aria-label="Zoom out" disabled={ pxPerSecond <= MIN_ZOOM }
@@ -324,34 +348,36 @@ export default function ScoreTimeline( { session, dispatch, onSeek, onVoiceSelec
               onClick={ () => changeZoom( pxPerSecond * 1.6 ) }>+</button>
             <output>{ pxPerSecond < 1 ? pxPerSecond.toFixed( 2 ) : Math.round( pxPerSecond ) } px/s</output>
           </div>
+        </div>
+        { selected.size > 0 && <div className="scoreToolbar selectionToolbar" aria-label="Selected events">
+          <strong className="selectionCount">{ selected.size } selected</strong>
+          <button disabled={ selected.size !== 1 } onClick={ duplicateSelected }>Duplicate</button>
+          <button onClick={ () => apply( entries.filter( ( entry ) => !selected.has( entry.id ) ) ) }>Delete</button>
+          <span className="toolbarRule" />
+          <button onClick={ () => apply( nudge( entries, selected, -step ) ) }>Earlier</button>
+          <button onClick={ () => apply( nudge( entries, selected, step ) ) }>Later</button>
           <label>Step <input aria-label="Edit step" type="number" min="0.01" step="0.25" value={ step }
             onChange={ ( event ) => setStep( Number( event.target.value ) ) } /> s</label>
-          <button disabled={ !selected.size }
-            onClick={ () => apply( nudge( entries, selected, -step ) ) }>Earlier</button>
-          <button disabled={ !selected.size }
-            onClick={ () => apply( nudge( entries, selected, step ) ) }>Later</button>
-          <button onClick={ () => apply( rippleFrom( entries, session.cursorTime, -step ) ) }>Ripple −</button>
-          <button onClick={ () => apply( rippleFrom( entries, session.cursorTime, step ) ) }>Ripple +</button>
-        </div>
-        <div className="scoreToolbar structuralToolbar">
+          <span className="toolbarRule" />
           <label>Gap <input aria-label="Gap seconds" type="number" min="0" step="0.25" value={ gap }
             onChange={ ( event ) => setGapValue( Number( event.target.value ) ) } /> s</label>
           <label className="checkLabel"><input type="checkbox" checked={ carryTail }
             onChange={ ( event ) => setCarryTail( event.target.checked ) } /> carry tail</label>
           <button disabled={ selected.size !== 2 }
             onClick={ () => apply( setGap( entries, session.selected[ 0 ], session.selected[ 1 ], gap, { ripple: carryTail } ) ) }>Set gap</button>
+          <span className="toolbarRule" />
           <label>Stretch <input aria-label="Stretch factor" type="number" min="0.01" step="0.1" value={ factor }
             onChange={ ( event ) => setFactor( Number( event.target.value ) ) } /> ×</label>
-          <button disabled={ !selected.size || !( factor > 0 ) }
+          <button disabled={ !( factor > 0 ) }
             onClick={ () => apply( stretch( entries, selected, factor ) ) }>Apply stretch</button>
-          <span className="spacer" />
+          <span className="toolbarRule" />
           <label>Group <input aria-label="Group name" value={ groupName }
             onChange={ ( event ) => setGroupName( event.target.value ) } /></label>
-          <button disabled={ !selected.size || !groupName.trim() }
+          <button disabled={ !groupName.trim() }
             onClick={ () => apply( group( entries, selected, groupName.trim() ) ) }>Group</button>
           <button disabled={ !sharedGroup }
             onClick={ () => apply( ungroup( entries, selected ) ) }>Ungroup{ sharedGroup ? ` ${ sharedGroup }` : '' }</button>
-        </div>
+        </div> }
       </div>
 
       <div className="timelineScroll" ref={ scrollRef }>

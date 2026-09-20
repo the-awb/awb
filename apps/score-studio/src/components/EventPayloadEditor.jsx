@@ -1,4 +1,5 @@
 import { INSTRUMENT_CATALOG } from '@awb/instruments';
+import ControlSlider from './ControlSlider.jsx';
 import { useEffect, useState } from 'react';
 import { payloadFieldPlaceholder, payloadFields, updatePayloadField } from '../engine/eventPayloadFields.js';
 import { mergeSynthDefNames } from '../engine/instrumentInventory.js';
@@ -53,15 +54,24 @@ export default function EventPayloadEditor( {
             ? <ScValueField key={ field.name } name={ field.name } value={ event[ field.name ] }
               inheritedValue={ field.defaultValue }
               onChange={ ( value ) => update( field.name, value, 'json' ) } />
-            : <label key={ field.name }>{ field.label }{ field.unit ?? '' }
-              <input aria-label={ `Payload ${ field.name }` } type={ field.kind }
-                min={ field.min } max={ field.max } step={ field.step }
-                value={ event[ field.name ] ?? '' }
-                className={ event[ field.name ] === undefined && field.defaultValue !== undefined
+            : field.kind === 'number'
+              ? <ControlSlider key={ field.name } name={ field.name } label={ field.label }
+                detail={ field.unit ?? '' } unit={ field.unit } value={ event[ field.name ] ?? '' }
+                fallback={ field.defaultValue } placeholder={ payloadFieldPlaceholder( field ) }
+                min={ field.min } max={ field.max } step={ field.step } decimals={ field.decimals }
+                allowEmpty inherited={ event[ field.name ] === undefined && field.defaultValue !== undefined }
+                numberClassName={ event[ field.name ] === undefined && field.defaultValue !== undefined
                   ? 'payloadInheritedDefault' : undefined }
-                placeholder={ payloadFieldPlaceholder( field ) }
-                onChange={ ( change ) => update( field.name, change.target.value, field.kind ) } />
-            </label> ) }
+                onChange={ ( value ) => update( field.name, value, 'number' ) } />
+              : <label key={ field.name }>{ field.label }{ field.unit ?? '' }
+                <input aria-label={ `Payload ${ field.name }` } type={ field.kind }
+                  min={ field.min } max={ field.max } step={ field.step }
+                  value={ event[ field.name ] ?? '' }
+                  className={ event[ field.name ] === undefined && field.defaultValue !== undefined
+                    ? 'payloadInheritedDefault' : undefined }
+                  placeholder={ payloadFieldPlaceholder( field ) }
+                  onChange={ ( change ) => update( field.name, change.target.value, field.kind ) } />
+              </label> ) }
       </div>
     </fieldset>
   );

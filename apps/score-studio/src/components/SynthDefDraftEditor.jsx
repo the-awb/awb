@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { scEnvAsControlArray, scEnvFromControlArray } from '@awb/sc-envelope';
+import ControlSlider from './ControlSlider.jsx';
 import EnvelopeEditor from './EnvelopeEditor.jsx';
 import { formatScValue, parseScValue } from '../engine/scValueSyntax.js';
 import { scRef, unwrapScRef } from '../engine/scEventSemantics.js';
@@ -118,15 +119,12 @@ export default function SynthDefDraftEditor( {
       <small>Audition values for the selected definition or playing voice.</small></header>
       <div className="synthDraftControls">
       { model.controls.map( ( control ) => control.numChannels === 1 && !Array.isArray( values[ control.name ] )
-        ? <label key={ control.name }><span><code>{ control.name }</code>
-          <small>{ control.roles.join( ', ' ) || control.rate }{ control.spec?.unit ? ` · ${ control.spec.unit }` : '' }</small></span>
-          <input aria-label={ `Draft ${ control.name }` } type="number" value={ values[ control.name ] }
-            disabled={ Boolean( focus.runtimeTarget ) && !runtimeLive }
-            min={ control.spec?.min } max={ control.spec?.max } step={ control.spec?.step || 'any' }
-            onChange={ ( event ) => {
-              const next = Number( event.target.value );
-              if ( Number.isFinite( next ) ) updateControl( control.name, next, control.numChannels );
-            } } /></label>
+        ? <ControlSlider key={ control.name } name={ control.name } value={ values[ control.name ] }
+          detail={ [ control.roles.join( ', ' ) || control.rate, control.spec?.unit ].filter( Boolean ).join( ' · ' ) }
+          min={ control.spec?.min } max={ control.spec?.max }
+          warp={ control.spec?.warp } step={ control.spec?.step ?? 0 } unit={ control.spec?.unit }
+          disabled={ Boolean( focus.runtimeTarget ) && !runtimeLive }
+          onChange={ ( next ) => updateControl( control.name, next, control.numChannels ) } />
         : control.numChannels === 1
           ? <DraftExpandedControl key={ control.name } control={ control } value={ values[ control.name ] }
             disabled={ Boolean( focus.runtimeTarget ) && !runtimeLive }
