@@ -4,10 +4,13 @@ import { map, quantise, sliderRange, unmap } from '../engine/controlRange.js';
 const display = ( value ) => Number.isFinite( value )
   ? String( Number( value.toPrecision( 6 ) ) ) : String( value ?? '' );
 
-// A numeric control as a fader plus a number box, used for SynthDef controls and for the declared
-// payload fields of a score event. The fader is mapped through the control's ControlSpec warp so an
-// exponential frequency control moves the way it does in sclang, and it sweeps a working window
-// rather than the declared legality bound, which for a frequency is 20..25000 Hz.
+// One control, one row: name, fader, value. Rows stack with no gap so a set of them reads as a
+// rack rather than as a list of cards.
+//
+// The fader is mapped through the control's ControlSpec warp so an exponential frequency control
+// moves the way it does in sclang, and it sweeps a working window rather than the declared legality
+// bound, which for a frequency is 20..25000 Hz. Everything that would otherwise need its own line -
+// the unit, the swept range, whether the range is provisional - is in the row's tooltip.
 //
 // The number box stays authoritative: it takes any value the control declares, the fader re-anchors
 // around whatever is typed, and clearing it (where the caller allows) falls back to the inherited
@@ -40,42 +43,34 @@ export default function ControlSlider( {
     onChange( next );
   }
 
-  const scaleNote = range.provisional ? 'provisional'
-    : range.windowed ? 'zoomed' : inherited ? 'inherited' : null;
-  const trackTitle = range.provisional
-    ? 'No declared range for this control - the fader range is provisional; the number box is not limited by it.'
+  const rangeText = range.provisional
+    ? 'no declared range — the fader span is provisional and the number box is not limited by it'
     : range.windowed
-      ? `Fader sweeps ${ display( range.min ) } … ${ display( range.max ) }${ range.warp === 'exp' ? ' · exponential' : '' }. Declared range is ${ display( range.declared.min ) } … ${ display( range.declared.max ) }; type any value in the box and the fader re-centres.`
-      : `${ display( range.min ) } … ${ display( range.max ) }${ range.warp && range.warp !== 'lin' ? ` · ${ range.warp }` : '' }`;
+      ? `fader ${ display( range.min ) }…${ display( range.max ) }${ range.warp === 'exp' ? ' exponential' : '' }, declared ${ display( range.declared.min ) }…${ display( range.declared.max ) } — type any value and the fader re-centres`
+      : `${ display( range.min ) }…${ display( range.max ) }${ range.warp && range.warp !== 'lin' ? ` ${ range.warp }` : '' }`;
+  const title = [ label, detail, rangeText, inherited ? 'inherited' : '' ]
+    .filter( Boolean ).join( ' · ' );
 
-  return <div className={ `controlSlider${ range.provisional ? ' provisionalRange' : '' }${ range.windowed ? ' windowedRange' : '' }${ inherited ? ' inheritedValue' : '' }` }>
-    <div className="controlSliderHead">
-      <span className="controlSliderName">
-        <code>{ label }</code>
-        { detail && <small>{ detail }</small> }
-      </span>
-      <input className={ `controlSliderNumber${ numberClassName ? ` ${ numberClassName }` : '' }` }
-        aria-label={ numberLabel ?? `${ name } value` } type="number"
-        value={ Number.isFinite( numeric ) ? display( numeric ) : '' }
-        disabled={ disabled } step={ step || 'any' } placeholder={ placeholder }
-        min={ range.declared?.min } max={ range.declared?.max }
-        onChange={ ( event ) => {
-          const text = event.target.value;
-          if ( text === '' ) { if ( allowEmpty ) emit( '' ); return; }
-          const next = Number( text );
-          if ( !Number.isFinite( next ) ) return;
-          // Typed values re-anchor the window: the fader follows where you put the control.
-          setAnchor( next );
-          emit( next );
-        } } />
-    </div>
+  return <div
+    className={ `controlSlider${ range.provisional ? ' provisionalRange' : '' }${ range.windowed ? ' windowedRange' : '' }${ inherited ? ' inheritedValue' : '' }` }
+    title={ title }>
+    <span className="controlSliderName"><code>{ label }</code></span>
     <input className="controlSliderTrack" type="range" min="0" max="1" step="0.0001"
-      aria-label={ `${ name } slider` } value={ position } disabled={ disabled } title={ trackTitle }
+      aria-label={ `${ name } slider` } value={ position } disabled={ disabled }
       onChange={ ( event ) => emit( quantise( range, unmap( range, Number( event.target.value ) ), decimals ) ) } />
-    <div className="controlSliderScale">
-      <span>{ display( range.min ) }</span>
-      { scaleNote && <em>{ scaleNote }</em> }
-      <span>{ display( range.max ) }</span>
-    </div>
+    <input className={ `controlSliderNumber${ numberClassName ? ` ${ numberClassName }` : '' }` }
+      aria-label={ numberLabel ?? `${ name } value` } type="number"
+      value={ Number.isFinite( numeric ) ? display( numeric ) : '' }
+      disabled={ disabled } step={ step || 'any' } placeholder={ placeholder }
+      min={ range.declared?.min } max={ range.declared?.max }
+      onChange={ ( event ) => {
+        const text = event.target.value;
+        if ( text === '' ) { if ( allowEmpty ) emit( '' ); return; }
+        const next = Number( text );
+        if ( !Number.isFinite( next ) ) return;
+        // Typed values re-anchor the window: the fader follows where you put the control.
+        setAnchor( next );
+        emit( next );
+      } } />
   </div>;
 }

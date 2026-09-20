@@ -23,32 +23,32 @@ export default function EventPayloadEditor( {
   return (
     <fieldset className="typedPayload">
       <legend>Payload controls</legend>
-      <label>Type
-        <input aria-label="Event type" list="score-event-types" value={ event.type ?? '' }
-          onChange={ ( change ) => update( 'type', change.target.value ) } />
-        <datalist id="score-event-types">
-          { COMMON_TYPES.map( ( type ) => <option key={ type } value={ type } /> ) }
-        </datalist>
-      </label>
-      { event.type === 'note' && <label>SynthDef
-        <select aria-label="Event SynthDef" value={ selectedSynthDef }
-          onChange={ ( change ) => update( event.def !== undefined ? 'def' : 'instrument', change.target.value ) }>
-          { synthDefs.map( ( synthDef ) => <option key={ synthDef } value={ synthDef }>{ synthDef }</option> ) }
-        </select>
-      </label> }
-      { [ 'set', 'release', 'free' ].includes( event.type ) && !Array.isArray( event.target ) && <label>Target
-        <input aria-label="Event target" value={ event.target ?? '' }
-          onChange={ ( change ) => update( 'target', change.target.value ) } />
-      </label> }
       <div className="payloadFieldGrid">
+        <label className="controlRow"><span className="controlRowName"><code>type</code></span>
+          <input aria-label="Event type" list="score-event-types" value={ event.type ?? '' }
+            onChange={ ( change ) => update( 'type', change.target.value ) } />
+          <datalist id="score-event-types">
+            { COMMON_TYPES.map( ( type ) => <option key={ type } value={ type } /> ) }
+          </datalist>
+        </label>
+        { event.type === 'note' && <label className="controlRow"><span className="controlRowName"><code>def</code></span>
+          <select aria-label="Event SynthDef" value={ selectedSynthDef }
+            onChange={ ( change ) => update( event.def !== undefined ? 'def' : 'instrument', change.target.value ) }>
+            { synthDefs.map( ( synthDef ) => <option key={ synthDef } value={ synthDef }>{ synthDef }</option> ) }
+          </select>
+        </label> }
+        { [ 'set', 'release', 'free' ].includes( event.type ) && !Array.isArray( event.target ) && <label className="controlRow"><span className="controlRowName"><code>target</code></span>
+          <input aria-label="Event target" value={ event.target ?? '' }
+            onChange={ ( change ) => update( 'target', change.target.value ) } />
+        </label> }
         { fields.map( ( field ) => field.kind === 'boolean'
-          ? <label key={ field.name } className="payloadBoolean">
+          ? <label key={ field.name } className="controlRow payloadBoolean">
+            <span className="controlRowName"><code>{ field.label }</code></span>
             <input aria-label={ `Payload ${ field.name }` } type="checkbox"
               className={ event[ field.name ] === undefined && field.defaultValue !== undefined
                 ? 'payloadInheritedDefault' : undefined }
               checked={ event[ field.name ] ?? field.defaultValue ?? false }
               onChange={ ( change ) => update( field.name, change.target.checked, 'boolean' ) } />
-            { field.label }
           </label>
           : field.kind === 'json'
             ? <ScValueField key={ field.name } name={ field.name } value={ event[ field.name ] }
@@ -86,7 +86,7 @@ function ScValueField( { name, value, inheritedValue, onChange } ) {
     try { onChange( parseScValue( text ) ); setError( '' ); }
     catch ( nextError ) { setError( nextError.message ); }
   }
-  return <label className="payloadScValue">{ name }
+  return <label className="controlRow payloadScValue"><span className="controlRowName"><code>{ name }</code></span>
     <input aria-label={ `Payload ${ name }` } value={ text }
       className={ value === undefined && inheritedValue !== undefined ? 'payloadInheritedDefault' : undefined }
       placeholder={ inheritedValue === undefined ? undefined : formatScValue( inheritedValue ) }
