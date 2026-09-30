@@ -117,7 +117,7 @@ export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedSta
     <header className="instrumentWorkspaceHeader">
       <div><h1>{ hosted ? 'Hosted instruments' : 'Live instruments' }</h1>
         <p>{ hosted
-          ? 'Desktop ToolSession synths played by the connected SuperCollider language and server.'
+          ? 'Desktop ToolInstance synths played by the connected SuperCollider language and server.'
           : 'Browser-owned synths for playing and shaping directly. Nothing here edits the score.' }</p></div>
       <div className="liveRackActions">
         <span>{ hosted
@@ -129,7 +129,7 @@ export default function InstrumentWorkspace( { sc, mode, hostedClient, hostedSta
         <button disabled={ rackNodeCount === 0 } onClick={ () => act( 'free-all', () => allAction( 'free' ) ) }>Free all live</button>
       </div>
     </header>
-    { hosted && <p className="liveRackBoundary">Hosted mode never boots the browser audio engine. These controls address the desktop ToolSession; its Synths are tracked by NodeManager when tracking is enabled.</p> }
+    { hosted && <p className="liveRackBoundary">Hosted mode never boots the browser audio engine. These controls address the desktop ToolInstance; its Synths are tracked by NodeManager when tracking is enabled.</p> }
     { message && <p className="liveRackMessage">{ message }</p> }
     { ( error || ( !hosted && sc.error ) ) && <p className="error">{ error || sc.error }</p> }
     { hosted && <HostedSynthDefLibrary hostedClient={ hostedClient } hostedState={ hostedState } /> }

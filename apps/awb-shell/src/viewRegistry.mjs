@@ -2,35 +2,35 @@ const STATES = new Set( [ 'requested', 'loading', 'ready', 'disconnected', 'reco
 
 export class ViewRegistry {
   #views = new Map();
-  #sessions = new Map();
+  #instances = new Map();
   #listeners = new Set();
 
-  sessionKey( toolID, toolSessionID ) {
-    return toolSessionID ? `${ toolID }\u0000${ toolSessionID }` : null;
+  instanceKey( toolID, toolInstanceID ) {
+    return toolInstanceID ? `${ toolID }\u0000${ toolInstanceID }` : null;
   }
 
   add( record ) {
     if ( this.#views.has( record.viewID ) ) throw new Error( `Duplicate viewID: ${ record.viewID }.` );
-    const key = this.sessionKey( record.toolID, record.toolSessionID );
-    if ( key && this.#sessions.has( key ) ) throw new Error( 'ToolSession already has a view.' );
+    const key = this.instanceKey( record.toolID, record.toolInstanceID );
+    if ( key && this.#instances.has( key ) ) throw new Error( 'ToolInstance already has a view.' );
     const view = Object.freeze( { ...record, lifecycle: record.lifecycle ?? 'requested', sessionState: null, detailedState: null } );
     this.#views.set( view.viewID, view );
-    if ( key ) this.#sessions.set( key, view.viewID );
+    if ( key ) this.#instances.set( key, view.viewID );
     this.#emit();
     return view;
   }
 
   get( viewID ) { return this.#views.get( viewID ) ?? null; }
-  findSession( toolID, toolSessionID ) {
-    const key = this.sessionKey( toolID, toolSessionID );
-    return key ? this.get( this.#sessions.get( key ) ) : null;
+  findInstance( toolID, toolInstanceID ) {
+    const key = this.instanceKey( toolID, toolInstanceID );
+    return key ? this.get( this.#instances.get( key ) ) : null;
   }
 
   update( viewID, patch ) {
     const current = this.get( viewID );
     if ( !current ) throw new Error( `Unknown viewID: ${ viewID }.` );
     if ( patch.lifecycle && !STATES.has( patch.lifecycle ) ) throw new Error( `Unknown lifecycle state: ${ patch.lifecycle }.` );
-    const next = Object.freeze( { ...current, ...patch, viewID: current.viewID, toolID: current.toolID, toolSessionID: current.toolSessionID } );
+    const next = Object.freeze( { ...current, ...patch, viewID: current.viewID, toolID: current.toolID, toolInstanceID: current.toolInstanceID } );
     this.#views.set( viewID, next );
     this.#emit();
     return next;
@@ -39,8 +39,8 @@ export class ViewRegistry {
   remove( viewID ) {
     const current = this.get( viewID );
     if ( !current ) return false;
-    const key = this.sessionKey( current.toolID, current.toolSessionID );
-    if ( key ) this.#sessions.delete( key );
+    const key = this.instanceKey( current.toolID, current.toolInstanceID );
+    if ( key ) this.#instances.delete( key );
     this.#views.delete( viewID );
     this.#emit();
     return true;

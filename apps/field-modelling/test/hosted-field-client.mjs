@@ -89,9 +89,9 @@ test( 'requests and atomically commits a scheduled relative-phase snapshot', () 
   client.disconnect();
 } );
 
-test( 'connects a Field ToolSession and controls its owned instruments without a score', async () => {
+test( 'connects a Field ToolInstance and controls its owned instruments without a score', async () => {
   const client = new HostedFieldClient( { WebSocketImpl: FakeSocket, heartbeatMs: 100000 } );
-  client.connect( 'ws://fixture', { toolSessionID: 'fieldModelling:fixture' } );
+  client.connect( 'ws://fixture', { toolInstanceID: 'fieldModelling:fixture' } );
   const socket = client.socket;
   socket.emit( '/awb/bridge/ready', [ 60001 ] );
   assert.deepEqual( socket.sent[ 0 ], { address: '/awb/timeline/hello',

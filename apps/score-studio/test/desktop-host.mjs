@@ -10,7 +10,7 @@ const calls = [];
 const record = { path: '/scores/source.score.json', name: 'source.score.json', text };
 const bridge = {
   launchContext: () => ( {
-    endpoint: 'ws://127.0.0.1:9000/token', toolSessionID: 'tool-1',
+    endpoint: 'ws://127.0.0.1:9000/token', toolInstanceID: 'tool-1',
     scorePath: record.path, ownerPID: 123
   } ),
   initialScore: async () => record,
@@ -46,7 +46,7 @@ assert.deepEqual( host.capabilities.documentIngress,
   { new: true, open: true, demo: true, browse: true } );
 assert.deepEqual( host.capabilities.executionModes, [ 'hosted' ] );
 assert.equal( host.engineNodeRegistry(), null );
-assert.equal( host.hostedLaunchContext().toolSessionID, 'tool-1' );
+assert.equal( host.hostedLaunchContext().toolInstanceID, 'tool-1' );
 const opened = await host.initialScore();
 assert.equal( opened.document.scoreID, 'sonic-attunement-01' );
 assert.equal( opened.handle.path, record.path );

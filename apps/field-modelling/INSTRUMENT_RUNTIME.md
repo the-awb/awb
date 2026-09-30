@@ -30,21 +30,21 @@ shared SynthDef-context analysis. On the web, a WASM adapter may construct the e
 from its local runtime. The Field application consumes the same shape in either case.
 
 Authored Field instruments use a narrower path in a hosted desktop session. The shell creates one
-named `fieldModelling:*` ToolSession and grants the renderer the bounded timeline instrument
+named `fieldModelling:*` ToolInstance and grants the renderer the bounded timeline instrument
 protocol. The renderer sends semantic `start`, `set`, `pause`, `resume`, `release` and `free`
 commands; sclang creates and owns the Synths, validates controls against `SynthDescLib`, and reports
-their node IDs and lifecycle. Those synths are associated with the Field ToolSession and therefore
+their node IDs and lifecycle. Those synths are associated with the Field ToolInstance and therefore
 remain visible to NodeManager without making the browser a second node allocator.
 
 This path remains available when the Field view is attached to a score. Score realizations are
 observed as externally owned voices, while instruments authored in the Field document remain owned
-by its separate `fieldModelling:*` ToolSession. They may therefore coexist deliberately. The UI and
+by its separate `fieldModelling:*` ToolInstance. They may therefore coexist deliberately. The UI and
 runtime projection must keep those ownership classes distinct so that a score realization is never
 respawned, released or drawn twice as though it were a Field-authored instrument.
 
 Natural completion or an external free reconciles the authored instrument back to `Play`; it is
 not silently respawned. A bridge disconnect does not make the same claim—the synth may still exist
-in scsynth—so reconnect recovers the ToolSession state instead of changing authored play state.
+in scsynth—so reconnect recovers the ToolInstance state instead of changing authored play state.
 
 Active externally-owned nodes whose SynthDefs have a declared `@awb/instruments` field mapping are
 projected into the shared Field renderer. Owned nodes remain represented by the saved Field
@@ -55,7 +55,7 @@ therefore owns the sounding set while the Field renderer continues to own the vi
 
 Ownership and available actions are mandatory host facts. They must not be inferred from node-ID
 ranges, SynthDef names, the presence of a `gate` control or which renderer observed the node first.
-The desktop adapter should use explicit ToolSession/NodeManager bindings.
+The desktop adapter should use explicit ToolInstance/NodeManager bindings.
 
 The shared SynthDef interface describes real controls and graph evidence. `@awb/instruments` adds
 curated practice meaning and the explicit acoustic projection. An arbitrary analysed SynthDef is

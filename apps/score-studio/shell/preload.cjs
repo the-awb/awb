@@ -4,7 +4,7 @@ const encodedContext = process.argv.find( ( argument ) => argument.startsWith( '
   ?.slice( '--awb-launch-context='.length );
 const launchContext = encodedContext
   ? JSON.parse( decodeURIComponent( encodedContext ) )
-  : { endpoint: '', toolSessionID: '', scorePath: null, ownerPID: 0 };
+  : { endpoint: '', toolInstanceID: '', scorePath: null, ownerPID: 0 };
 
 contextBridge.exposeInMainWorld( 'awbDesktopHost', Object.freeze( {
   launchContext: () => launchContext,

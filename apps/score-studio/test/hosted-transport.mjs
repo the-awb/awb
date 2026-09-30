@@ -42,7 +42,7 @@ osc.on( 'message', ( packet, rinfo ) => {
   } else if ( message.address === '/awb/synthdef/hello' ) {
     reply( rinfo, '/awb/synthdef/connected', [ args[ 0 ], 1 ] );
   } else if ( message.address === '/awb/audition/hello' ) {
-    reply( rinfo, '/awb/audition/connected', [ args[ 0 ], 1, 'audition-session-test' ] );
+    reply( rinfo, '/awb/audition/connected', [ args[ 0 ], 1, 'audition-instance-test' ] );
   } else if ( message.address === '/awb/audition/play' ) {
     const voices = JSON.parse( args[ 9 ] );
     reply( rinfo, '/awb/audition/state', [
@@ -152,7 +152,7 @@ osc.on( 'message', ( packet, rinfo ) => {
 
 const bridge = await createHostedBridge( { port: 0, oscPort } );
 const client = new HostedScoreClient( {
-  clientID: 'score-browser-test', toolSessionID: 'score-session-test',
+  clientID: 'score-browser-test', toolInstanceID: 'score-instance-test',
   requestingToolID: 'score-studio', viewID: 'view-test',
   WebSocketImpl: WebSocket, requestTimeoutMs: 80
 } );
@@ -170,11 +170,11 @@ try {
   assert.equal( client.getState().protocolVersion, 2 );
   assert.equal( client.getState().readiness.canPlay, false );
   const hello = received.find( ( message ) => message.address === '/awb/timeline/hello' );
-  assert.equal( hello.args[ 2 ], 'score-session-test', 'hosted hello carries its ToolSession identity' );
+  assert.equal( hello.args[ 2 ], 'score-instance-test', 'hosted hello carries its ToolInstance identity' );
   await waitFor( () => client.getState().audition.status === 'connected' );
   const auditionHello = received.find( ( message ) => message.address === '/awb/audition/hello' );
-  assert.deepEqual( auditionHello.args.slice( 2 ), [ 'score-studio', 'view-test', 'score-session-test' ] );
-  assert.equal( client.getState().audition.sessionID, 'audition-session-test' );
+  assert.deepEqual( auditionHello.args.slice( 2 ), [ 'score-studio', 'view-test', 'score-instance-test' ] );
+  assert.equal( client.getState().audition.instanceID, 'audition-instance-test' );
   await waitFor( () => client.getState().synthDefContext.status === 'connected' );
   assert.equal( client.getState().synthDefContext.generation, 1 );
   const context = await client.loadSynthDefContext( [ 'fieldBasic', 'missingFromDesktop' ] );

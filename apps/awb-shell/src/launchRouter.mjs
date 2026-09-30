@@ -10,16 +10,16 @@ function boundedObject( value, label, maximum = 32 * 1024 ) {
 export function normalizeLaunchRequest( request ) {
   if ( !request || typeof request !== 'object' ) throw new Error( 'Launch request must be an object.' );
   if ( typeof request.toolID !== 'string' || !request.toolID ) throw new Error( 'Launch request needs toolID.' );
-  if ( request.toolSessionID !== null && request.toolSessionID !== undefined
-    && ( typeof request.toolSessionID !== 'string' || !request.toolSessionID || request.toolSessionID.length > 256 ) ) {
-    throw new Error( 'toolSessionID must be null or a bounded string.' );
+  if ( request.toolInstanceID !== null && request.toolInstanceID !== undefined
+    && ( typeof request.toolInstanceID !== 'string' || !request.toolInstanceID || request.toolInstanceID.length > 256 ) ) {
+    throw new Error( 'toolInstanceID must be null or a bounded string.' );
   }
   const origin = request.launchOrigin ?? 'desktop';
   if ( ![ 'desktop', 'supercollider', 'web' ].includes( origin ) ) throw new Error( `Unknown launch origin: ${ origin }.` );
   return Object.freeze( {
     requestID: typeof request.requestID === 'string' && request.requestID ? request.requestID : crypto.randomUUID(),
     toolID: request.toolID,
-    toolSessionID: request.toolSessionID ?? null,
+    toolInstanceID: request.toolInstanceID ?? null,
     launchOrigin: origin,
     profileID: request.profileID ?? null,
     owner: boundedObject( request.owner ?? { kind: 'none', pid: null }, 'owner', 1024 ),
@@ -45,7 +45,7 @@ export class LaunchRouter {
     if ( request.profileID && !tool.launchProfiles.some( ( profile ) => profile.id === request.profileID ) ) {
       return { requestID: request.requestID, status: 'failed', error: `Unknown profile ${ request.profileID } for ${ request.toolID }.` };
     }
-    const existing = this.registry.findSession( request.toolID, request.toolSessionID );
+    const existing = this.registry.findInstance( request.toolID, request.toolInstanceID );
     if ( existing ) {
       await this.focusView( existing.viewID );
       return { requestID: request.requestID, status: 'focused-existing', viewID: existing.viewID };
@@ -55,7 +55,7 @@ export class LaunchRouter {
     }
     try {
       const viewID = crypto.randomUUID();
-      this.registry.add( { viewID, toolID: tool.id, toolSessionID: request.toolSessionID, requestID: request.requestID,
+      this.registry.add( { viewID, toolID: tool.id, toolInstanceID: request.toolInstanceID, requestID: request.requestID,
         launchOrigin: request.launchOrigin, owner: request.owner, requestPayload: request.payload,
         lifecycle: 'requested' } );
       await this.createView( { viewID, request, tool } );

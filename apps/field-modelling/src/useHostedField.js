@@ -14,10 +14,10 @@ export function useHostedField( { context, document, speakers, instruments, disp
     client.connect( context.connections.endpoint, { scoreID: document?.scoreID ?? null,
       revision: document?.revision ?? null, runID: context.payload?.runID ?? null,
       followRuns: context.payload?.followRuns === true,
-      toolSessionID: context.toolSessionID ?? '' } );
+      toolInstanceID: context.toolInstanceID ?? '' } );
     return () => client.disconnect();
   }, [ client, context.connections?.endpoint, context.payload?.followRuns,
-    context.payload?.runID, context.toolSessionID, document, enabled ] );
+    context.payload?.runID, context.toolInstanceID, document, enabled ] );
   const projection = useMemo( () => projectScoreRealizations( document, runtime, speakers ),
     [ document, runtime.realizations, speakers ] );
   useEffect( () => {

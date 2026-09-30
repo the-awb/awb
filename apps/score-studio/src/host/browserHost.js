@@ -44,7 +44,7 @@ export function createBrowserHost( {
     endpoint: launch.endpoint ?? '',
     initialScoreURL: launch.initialScoreURL ?? '',
     initialScoreName: launch.initialScoreName ?? 'hosted.score.json',
-    toolSessionID: launch.toolSessionID ?? ''
+    toolInstanceID: launch.toolInstanceID ?? ''
   } );
   const capabilities = Object.freeze( {
     filePicker: typeof browser?.showOpenFilePicker === 'function',
@@ -55,7 +55,7 @@ export function createBrowserHost( {
     retainedFileHandles: typeof browser?.showSaveFilePicker === 'function',
     downloadFallback: true,
     recoveryStorage: Boolean( storage ),
-    hostedLaunch: Boolean( launchContext.endpoint || launchContext.toolSessionID ),
+    hostedLaunch: Boolean( launchContext.endpoint || launchContext.toolInstanceID ),
     documentIngress: Object.freeze( { new: true, open: true, demo: true, browse: true } ),
     executionModes: Object.freeze( [ 'hosted', 'standalone' ] ),
     nativeWindowFocus: false,

@@ -8,7 +8,7 @@ const EMPTY_SYNTHDEF_CONTEXT = Object.freeze( {
 } );
 
 const EMPTY_AUDITION = Object.freeze( {
-  status: 'disconnected', protocolVersion: null, sessionID: '',
+  status: 'disconnected', protocolVersion: null, instanceID: '',
   realizations: Object.freeze( [] ), error: ''
 } );
 
@@ -54,13 +54,13 @@ export class HostedProtocolError extends Error {
 export class HostedScoreClient {
   constructor( {
     clientID = `score-web-${ crypto.randomUUID() }`, WebSocketImpl = globalThis.WebSocket,
-    toolSessionID = '',
+    toolInstanceID = '',
     requestingToolID = 'score-studio', viewID = '',
     requestTimeoutMs = 1500, maxProjectionCharacters = 4 * 1024 * 1024,
     maxProjectionChunks = 4096
   } = {} ) {
     this.clientID = clientID;
-    this.toolSessionID = toolSessionID;
+    this.toolInstanceID = toolInstanceID;
     this.requestingToolID = requestingToolID;
     this.viewID = viewID || clientID;
     this.WebSocketImpl = WebSocketImpl;
@@ -170,10 +170,10 @@ export class HostedScoreClient {
     const { address, args = [] } = frame;
     if ( address === '/awb/bridge/ready' ) {
       this.replyPort = args[ 0 ];
-      this.send( '/awb/timeline/hello', [ this.clientID, this.replyPort, this.toolSessionID ] );
+      this.send( '/awb/timeline/hello', [ this.clientID, this.replyPort, this.toolInstanceID ] );
       this.send( '/awb/synthdef/hello', [ this.clientID, this.replyPort ] );
       this.send( '/awb/audition/hello', [ this.clientID, this.replyPort,
-        this.requestingToolID, this.viewID, this.toolSessionID ] );
+        this.requestingToolID, this.viewID, this.toolInstanceID ] );
     } else if ( address === '/awb/bridge/error' ) {
       this.publish( { error: `${ args[ 0 ] }: ${ args[ 1 ] }` } );
     } else if ( address === '/awb/timeline/connected' && args[ 0 ] === this.clientID ) {
@@ -190,7 +190,7 @@ export class HostedScoreClient {
       } );
     } else if ( address === '/awb/audition/connected' && args[ 0 ] === this.clientID ) {
       this.publish( { audition: Object.freeze( { ...this.state.audition,
-        status: 'connected', protocolVersion: args[ 1 ], sessionID: `${ args[ 2 ] }`, error: '' } ) } );
+        status: 'connected', protocolVersion: args[ 1 ], instanceID: `${ args[ 2 ] }`, error: '' } ) } );
     } else if ( address === '/awb/audition/result' && args[ 0 ] === this.clientID ) {
       const result = { clientID: args[ 0 ], requestID: args[ 1 ], ok: Boolean( args[ 2 ] ),
         action: args[ 3 ], realizationID: args[ 4 ], code: args[ 5 ], detail: args[ 6 ] };

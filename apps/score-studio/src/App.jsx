@@ -43,7 +43,7 @@ export default function App( { host, createHostedClient } ) {
   const executionModes = host.capabilities.executionModes ?? Object.values( MODES );
   const documentIngress = host.capabilities.documentIngress
     ?? { new: true, open: true, demo: true, browse: true };
-  const { endpoint: launchedEndpoint, toolSessionID, viewID = '', toolID = 'score-studio' } = launchContext;
+  const { endpoint: launchedEndpoint, toolInstanceID, viewID = '', toolID = 'score-studio' } = launchContext;
   const [ session, dispatch ] = useReducer( scoreSessionReducer, undefined, () => createSessionState() );
   const [ file, setFile ] = useState( {
     handle: null, name: null, hash: null, savedRevision: null,
@@ -67,9 +67,9 @@ export default function App( { host, createHostedClient } ) {
   const sc = useSuperCollider( { importScsynth } );
   const sclang = useScLang( sc, { importSclang, locateFile: locateSclangFile, exposeDevGlobals: import.meta.env.DEV } );
   const hostedClient = useMemo( () => createHostedClient( {
-    clientID: toolSessionID ? `score-tool-${ toolSessionID }` : undefined,
-    toolSessionID, viewID, requestingToolID: toolID
-  } ), [ createHostedClient, toolID, toolSessionID, viewID ] );
+    clientID: toolInstanceID ? `score-tool-${ toolInstanceID }` : undefined,
+    toolInstanceID, viewID, requestingToolID: toolID
+  } ), [ createHostedClient, toolID, toolInstanceID, viewID ] );
   const hosted = useSyncExternalStore( hostedClient.subscribe, hostedClient.getState, hostedClient.getState );
   const referencedSynthDefs = useMemo(
     () => scoreInstruments( session.document ).map( ( instrument ) => instrument.definition ),
@@ -79,7 +79,7 @@ export default function App( { host, createHostedClient } ) {
   if ( executionModes.includes( MODES.STANDALONE ) && !browserNodeRegistry ) {
     throw new Error( 'The standalone host did not provide an engine node registry.' );
   }
-  const runtimeOwnerPrefix = `${ toolID }:${ viewID || toolSessionID || 'browser' }`;
+  const runtimeOwnerPrefix = `${ toolID }:${ viewID || toolInstanceID || 'browser' }`;
   const standaloneExecutorRef = useRef( null );
   if ( standaloneExecutorRef.current === null ) {
     standaloneExecutorRef.current = createStandaloneScoreExecutor( {
@@ -193,7 +193,7 @@ export default function App( { host, createHostedClient } ) {
   }, [ host ] );
 
   useEffect( () => {
-    if ( !toolSessionID || !endpoint || hosted.status !== 'disconnected' ) return undefined;
+    if ( !toolInstanceID || !endpoint || hosted.status !== 'disconnected' ) return undefined;
     let cancelled = false;
     const timer = setTimeout( () => {
       if ( cancelled ) return;
@@ -208,15 +208,16 @@ export default function App( { host, createHostedClient } ) {
   }, [ endpoint, hosted.status, hostedClient ] );
 
   useEffect( () => {
-    if ( !toolSessionID || !file.name || hosted.status !== 'connected' ) return;
+    if ( !toolInstanceID || !file.name || hosted.status !== 'connected' ) return;
     let cancelled = false;
     const identity = `${ session.document.scoreID }:${ session.document.revision }`;
-    if ( launchState.current.installed === identity ) return;
     if ( hosted.scoreID === session.document.scoreID
       && hosted.remoteRevision === session.document.revision ) {
       launchState.current.installed = identity;
+      setHostedMessage( `Revision ${ session.document.revision } installed atomically.` );
       return;
     }
+    if ( launchState.current.installed === identity ) return;
     launchState.current.installed = identity;
     hostedClient.installDocument( session.document )
       .then( () => {

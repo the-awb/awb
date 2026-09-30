@@ -22,7 +22,7 @@ try {
   assert.match( output, /AWB_SHELL_MULTIVIEW_READY views=2 repeated=focused-existing/ );
   assert.match( output, /AWB_SHELL_HOME_CLOSED tools=2/ ); assert.match( output, /AWB_SHELL_VIEW_ISOLATION pass/ );
   assert.match( output, /AWB_SHELL_HOME_RETURNED/ );
-  console.log( 'electron-multiview: pass (Home launch/focus/close, two sessions, idempotent ToolSession)' );
+  console.log( 'electron-multiview: pass (Home launch/focus/close, two sessions, idempotent ToolInstance)' );
 } finally {
   if ( child.exitCode === null ) child.kill( 'SIGKILL' ); await rm( userData, { recursive: true, force: true } );
 }

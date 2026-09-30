@@ -37,7 +37,7 @@ export function createDesktopHost( {
     retainedFileHandles: true,
     downloadFallback: false,
     recoveryStorage: Boolean( storage ),
-    hostedLaunch: Boolean( bridge.launchContext().endpoint || bridge.launchContext().toolSessionID ),
+    hostedLaunch: Boolean( bridge.launchContext().endpoint || bridge.launchContext().toolInstanceID ),
     documentIngress: Object.freeze( { new: true, open: true, demo: true, browse: true } ),
     executionModes: Object.freeze( [ 'hosted' ] ),
     nativeWindowFocus: true,

@@ -17,10 +17,10 @@ test( 'NodeManager projection replaces snapshots, scopes explicit bindings and r
   projection.receive( { address: '/awb/nm/subscribed', args: [ projection.clientID, 3, 'summary', 'coalesced' ] } );
   projection.receive( { address: '/awb/nm/snapshot/begin', args: [ projection.clientID, 10 ] } );
   projection.receive( { address: '/awb/nm/container/upsert', args: [ projection.clientID, 10, 100,
-    'toolSession_scoreArranger_scoreArranger:1001', 'Score A', 1 ] } );
+    'toolInstance_scoreArranger_scoreArranger:1001', 'Score A', 1 ] } );
   projection.receive( { address: '/awb/nm/entry/upsert', args: [ projection.clientID, 10, 101, 'synth', 'Synth', 'voice', 1, 'localhost', 'scoreArranger', '', 'uncataloguedVoice' ] } );
   projection.receive( { address: '/awb/nm/membership/upsert', args: [ projection.clientID, 10, 101, 100,
-    'toolSession_scoreArranger_scoreArranger:1001' ] } );
+    'toolInstance_scoreArranger_scoreArranger:1001' ] } );
   projection.receive( { address: '/awb/nm/snapshot/end', args: [ projection.clientID, 10 ] } );
   const scoped = projection.viewForBinding( { toolSource: 'scoreArranger', toolInstance: 'scoreArranger:1001' } );
   assert.equal( scoped.containers.length, 1 ); assert.equal( scoped.entries.length, 1 );

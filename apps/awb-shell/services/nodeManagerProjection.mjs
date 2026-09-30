@@ -126,7 +126,7 @@ export class NodeManagerProjection {
   }
 
   viewForBinding( { toolSource, toolInstance } ) {
-    const key = `toolSession_${ toolSource }_${ toolInstance }`;
+    const key = `toolInstance_${ toolSource }_${ toolInstance }`;
     const containers = [ ...this.containers.values() ].filter( ( container ) => container.key === key );
     const containerIDs = new Set( containers.map( ( item ) => item.entryID ) );
     return Object.freeze( { containers: Object.freeze( containers ), entries: Object.freeze( [ ...this.entries.values() ].filter( ( entry ) => (

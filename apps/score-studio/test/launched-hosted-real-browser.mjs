@@ -95,16 +95,16 @@ let udp;
 let passed = 0;
 try {
   const ready = await waitFor( () => scOutput.match(
-    /AWB_SCORE_STUDIO_BROWSER_FIXTURE_READY port=(\d+) session=([^\s]+)/
+    /AWB_SCORE_STUDIO_BROWSER_FIXTURE_READY port=(\d+) instance=([^\s]+)/
   ) );
   const oscPort = Number( ready[ 1 ] );
-  const toolSessionID = ready[ 2 ];
+  const toolInstanceID = ready[ 2 ];
   const vitePort = await freePort();
   passed += 1;
 
   hostedChild = spawn( process.execPath, [
     launcherPath, '--osc-port', `${ oscPort }`, '--score', scorePath,
-    '--tool-session', toolSessionID, '--vite-port', `${ vitePort }`,
+    '--tool-instance', toolInstanceID, '--vite-port', `${ vitePort }`,
     '--owner-pid', `${ sclangChild.pid }`
   ], { cwd: appRoot, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
   hostedChild.stdout.on( 'data', ( chunk ) => { hostedOutput += chunk; } );
@@ -154,7 +154,7 @@ try {
   await waitFor( () => scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_FIXTURE_STOPPED' ) );
   passed += 1;
 
-  console.log( `launched-hosted-real-browser: ${ passed }/9 pass (SC ToolSession, source score, system SynthDef admission, handshake, revision install and disconnect)` );
+  console.log( `launched-hosted-real-browser: ${ passed }/9 pass (SC ToolInstance, source score, system SynthDef admission, handshake, revision install and disconnect)` );
 } catch ( error ) {
   console.error( `launched-hosted-real-browser: FAIL after ${ passed }/7: ${ error.message }` );
   console.error( `HOSTED OUTPUT:\n${ hostedOutput }` );
