@@ -488,3 +488,17 @@ run `npm run build --workspace @awb/rack` from the AWB root, then reopen Rack.
 The [headless audio deadline comparison](docs/scope-headless-dropouts.md) tests steady widgets and app-focus switching under two DSP loads, with native callback evidence and a separate focus-automation control. Steady widgets were clean; heavy-load focus switching produced interruptions.
 
 [Headless-only audio rerun](docs/scope-headless-dropouts-ide-closed.md): 18 comparison phases after closing the SC IDE and its server, with a persistent focus helper and recorded SC process inventories.
+
+### Native SC Rack
+
+The Rack workspace now bundles `AWBSendRackTool : Tool` and a bidirectional OSC
+bridge. With its classes loaded alongside AWB's ToolInstance framework, open a
+rack in sclang and call `instance.tool.gui`; it launches the standard shell bound
+to that instance. The default shell checkout is `~/awb`. Persistent inputs, channel
+faders/mute/solo, reserved FX/follower buses, mix snapshots and processor assignment
+share the existing rack surface. SC edits update only the affected controls.
+
+See [native setup and examples](../rack/sc/README.md). Load/recompile the bundled
+classes in your chosen SC language configuration before using this path. Toolkit
+Home's ordinary standalone Rack still opens the legacy comparison library. No
+Bitwig feedback, class-path installation or hardware audio test is implied.

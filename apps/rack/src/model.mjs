@@ -32,7 +32,8 @@ export function validateConfig(input) {
   }
   const perInstrument=c.instruments.map(i=>channelRegions(c,i).reduce((n,r)=>n+r.destinations.length,0)),global=c.regions.filter(r=>r.scope==='global').reduce((n,r)=>n+r.destinations.length,0);
   if(Math.max(...perInstrument,global)>96||perInstrument.reduce((a,b)=>a+b,0)+global>4096)throw Error('Rack supports up to 96 controls per row and 4096 controls total.');
-  if(!['legacy','osc','off'].includes(c.output?.mode)||!['127.0.0.1','localhost'].includes(c.output?.host)||!Number.isInteger(c.output?.port)||c.output.port<1||c.output.port>65535)throw Error('Output must use a local UDP endpoint.');
+  if(!['legacy','osc','sc','off'].includes(c.output?.mode)||!['127.0.0.1','localhost'].includes(c.output?.host)||!Number.isInteger(c.output?.port)||c.output.port<1||c.output.port>65535)throw Error('Output must use a local UDP endpoint.');
+  if(c.output.mode==='sc'&&(!/^sendRack:[a-zA-Z0-9_-]+$/.test(c.output.instanceID)||!idPattern.test(c.output.libraryID)))throw Error('Invalid SC ToolInstance binding.');
   return c;
 }
 export function quantise(v,r){return clamp(r.step?Math.round((v-r.min)/r.step)*r.step+r.min:v,r.min,r.max);}
@@ -55,10 +56,19 @@ export function descriptors(config){
   for(const r of config.regions.filter(r=>r.scope==='global'))append({id:'global',label:'LEVELS'},r);
   return out;
 }
-export function importSceneConfig(input,document){const ds=descriptors(document.config);let skipped=0;const snapshots=input.scenes.map(s=>{const targets={};for(const t of s.transitions??[]){const kind=String(t.type).toLowerCase(),line=String(t.item_1).toLowerCase(),destination=String(t.item_2).toLowerCase(),d=ds.find(d=>d.region.kind===(kind==='bus'&&line==='level'?'levels':kind)&&d.instrument===(line==='level'?'global':line)&&d.destination===destination);const value=Math.trunc(Number(t.amount)*127);if(!d||!Number.isFinite(value)){skipped++;continue;}const aligned=['J','L','C','R'].includes(t.alignment);targets[d.id]={value,fraction:aligned&&t.duration?Number(t.duration):1,alignment:aligned?t.alignment:'J'};}return {id:`imported-${s.id}`,sceneID:String(s.id),label:s.description||`Scene ${s.id}`,duration:Number(s.transition_dur)||0,targets};});return {document:{...document,snapshots},skipped};}
+export function importSceneConfig(input,document){const ds=descriptors(document.config);let skipped=0;const snapshots=input.scenes.map(s=>{const targets={};for(const t of s.transitions??[]){const kind=String(t.type).toLowerCase(),line=String(t.item_1).toLowerCase(),destination=String(t.item_2).toLowerCase(),d=ds.find(d=>d.region.kind===(kind==='bus'&&line==='level'?'levels':kind)&&d.instrument===(line==='level'?'global':line)&&d.destination===destination);const value=document.config.output.mode==='sc'?Number(t.amount):Math.trunc(Number(t.amount)*127);if(!d||!Number.isFinite(value)){skipped++;continue;}const aligned=['J','L','C','R'].includes(t.alignment);targets[d.id]={value,fraction:aligned&&t.duration?Number(t.duration):1,alignment:aligned?t.alignment:'J'};}return {id:`imported-${s.id}`,sceneID:String(s.id),label:s.description||`Scene ${s.id}`,duration:Number(s.transition_dur)||0,targets};});return {document:{...document,snapshots},skipped};}
 export function wireMessage(d,value,config){
   if(config.output.mode==='off')return null;
   if(config.output.mode==='osc')return {address:d.address,args:[value]};
+  if(config.output.mode==='sc'){
+    let op,channel=d.instrument,destination=d.destination;
+    if(['fx','followers'].includes(d.region.kind)&&d.region.scope==='instrument')op='send';
+    else if(d.region.kind==='channel-state'&&['mute','solo'].includes(destination)&&d.region.scope==='instrument')op=destination;
+    else if(d.region.kind==='channel-levels'&&d.region.scope==='global'){op='level';channel=destination;}
+    else if(d.region.kind==='levels'&&d.region.scope==='global'){op='return';channel='';}
+    else throw Error('Unknown SC rack mapping.');
+    return {address:'/awb/rack/control',args:[config.output.instanceID,op,channel,destination,value]};
+  }
   if(!['fx','bus','levels'].includes(d.region.kind))throw Error('This custom region needs direct OSC output.');
   if(d.destination==='envir')throw Error('ENVIR has no mapping in the current o-s-c bridge.');
   if(!config.instruments.some(i=>i.id===d.instrument)&&d.instrument!=='global')throw Error('Unknown legacy instrument.');

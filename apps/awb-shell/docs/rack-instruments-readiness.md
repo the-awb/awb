@@ -1,6 +1,6 @@
 # Rack Instruments preparation — 4 October 2026
 
-Step 0 remains finding the unexplained audio overrun wall with Xcode tools. No new MOTU load measurements have been made during this preparation. This checkpoint commits the Instruments wrapper and runbook; it depends on the existing rack/scope benchmark work in this working checkout, which has not all been committed yet. Willy has another agent working on Bitwig set inspection; its work can continue while the load tests wait for a quiet window.
+Step 0 remains finding the unexplained audio overrun wall with Xcode tools. No new MOTU load measurements have been made during this preparation. This checkpoint commits the Instruments wrapper and runbook; it depends on the existing rack/scope benchmark work in this working checkout, checkpointed on `integration/bw-sc` at `94c4265`. Willy has another agent working on Bitwig set inspection; its work can continue while the load tests wait for a quiet window.
 
 ## Ready and verified
 
@@ -15,7 +15,16 @@ Step 0 remains finding the unexplained audio overrun wall with Xcode tools. No n
 
 An isolated copy of the native rack at `/private/tmp/awb-rack-integration-ready-20261004/apps/rack` passed 47 SC contracts, 88 offline audio assertions and 26 Node tests, including its real sclang OSC bridge test. Evidence is in `/private/tmp/awb-rack-functional-preflight-20261004/test/`. SC audio was rendered offline; no hardware device or live class library was changed.
 
-These checks cover the existing implementation, not continuous bidirectional feedback. Its present bridge sends edits to SC and supports attach/explicit state sync. SC-originated continuous value updates still need implementation and functional validation before measuring that requested integrated workload. The OSC protocol test uses a stubbed server dispatch; DSP correctness is tested separately by the offline audio cases.
+The native rack is now integrated into `apps/rack`, with SC-originated changed-control
+feedback coalesced at 33 ms. Revision-fenced writes prevent stale GUI commands from
+overwriting an SC edit. Processor changes and missed batches resync; GUI echoes do
+not interrupt recalls or loop back to SC. The integrated verification passes 47 SC
+contracts, 88 offline audio assertions, 28 Node tests, both actual GUI renderers
+and the normal Shell gate. Both renderers update SC-originated values with zero
+React app/rack renders. Evidence is in `/private/tmp/awb-rack-feedback-shared-20261004`.
+The GUI/OSC tests use stubbed server dispatch; DSP correctness is verified separately
+by real offline audio. Integrated live bridge cost remains unmeasured until the
+quiet-window stage. The user's installed language class paths remain unchanged.
 
 ## Quiet-window measurement protocol
 

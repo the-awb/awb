@@ -1592,3 +1592,29 @@ the investigator's original captures. No hardware audio/load test was run. Step 
 remains the Instruments investigation in an agreed quiet window. Raw PCM and bulk
 callback recordings stay local; obsolete unreferenced Lissajous builds are excluded.
 Vault and Telegram are unavailable in this session; no external update is claimed.
+
+### Native Rack and SC feedback integration — 4 October 2026
+
+The native rack is now in the shared `apps/rack` workspace on `integration/bw-sc`.
+Its `AWBSendRackTool : Tool` owns persistent channel input/post buses, faders,
+mute/solo, fixed/spare FX and follower destinations, tail-retiring processors and
+full/packed voice wrappers. `.gui` defaults to the standard shell in `~/awb`, with
+exact ToolInstance/owner identity. The legacy comparison launch and library remain
+separate. The bundled classes require loading/recompilation in the chosen SC
+language configuration; no live class-path installation was performed.
+
+The OSC bridge now carries coalesced changed-control feedback, rather than polling
+every value. SC edits reach both renderers without React rack rebuilding or OSC
+echo. A language-side edit overrides only its control during a mix recall; revision
+fences reject already queued GUI writes that would reclaim it. Full Sync handles
+attach, processor metadata and incomplete/gapped updates. Subscription heartbeats
+and close notifications detect connection loss and disarm output. This is SC
+command-state feedback, with no Bitwig state readback or audio modulation polling.
+
+Validation: 47 SC contracts, 88 real offline audio assertions, 28 Node tests, actual
+HTML/SVG and Three.js SC-feedback gates with zero React app/rack renders, and the
+normal Shell import/export/ToolInstance gate. Evidence is retained in
+`/private/tmp/awb-rack-feedback-shared-20261004`; GUI/OSC server dispatch is stubbed
+and no hardware audio/load test was run. Step 0 remains the quiet-window Instruments
+investigation. The realistic eight-channel rig, mixed GUI workload, AWFollower
+input and first FX migration remain subsequent work. Vault/Telegram are unavailable.

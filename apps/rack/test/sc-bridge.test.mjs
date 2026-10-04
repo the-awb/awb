@@ -1,0 +1,100 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import dgram from 'node:dgram';import {spawn} from 'node:child_process';
+import {mkdtemp,readFile,rm} from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import {fileURLToPath} from 'node:url';
+import {encodeOSC,decodeOSC,createSCBridge} from '../runtime/sc-bridge.mjs';
+import {startRuntime} from '../runtime/shell-runtime.mjs';
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+test('OSC scalars roundtrip and malformed packets are rejected',()=>{const m={address:'/test',args:['rack',0,1,.125,-12,4294967296]};assert.deepEqual(decodeOSC(encodeOSC(m)),m);assert.throws(()=>decodeOSC(Buffer.from('bad')));assert.throws(()=>encodeOSC({address:'/test',args:[NaN]}));assert.throws(()=>encodeOSC({address:'/test',args:['embedded\0nul']}));});
+
+test('actual ToolInstance bridge coalesces feedback, fences stale writes and preserves sparse recall',{timeout:30000,skip:!process.env.AWB_RACK_SC_TEST_ROOT},async()=>{
+  const build=process.env.AWB_RACK_SC_TEST_ROOT??path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
+  const dir=await mkdtemp(path.join(os.tmpdir(),'rack-sc-bridge-'));let child,runtime,bridge,socket,log='';
+  try {
+    await rm(path.join(build,'test/bridge-ready.json'),{force:true});
+    child=spawn('/Applications/SuperCollider.app/Contents/MacOS/sclang',['-l',path.join(build,'sclang_conf.yaml'),path.join(build,'test/bridge.scd')]);
+    child.stdout.on('data',b=>log+=b);child.stderr.on('data',b=>log+=b);
+    let binding;for(let i=0;i<100;i++){try{binding=JSON.parse(await readFile(path.join(build,'test/bridge-ready.json'),'utf8'));break;}catch{}if(child.exitCode!==null)throw Error(log);await wait(50);}assert.ok(binding,log);
+    runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),scBinding:{...binding,libraryRoot:dir}});
+    assert.equal(runtime.state().sc.instanceID,binding.instanceID);assert.equal(runtime.store.controls.length,16);assert.equal(runtime.store.get('a/fx/mast'),0);assert.equal(runtime.store.get('global/channel-levels/a'),1);
+    await assert.rejects(startRuntime({runtimeDirectory:path.join(dir,'competing'),scBinding:{...binding,libraryRoot:dir}}),/already open/);
+    assert.match(runtime.libraryPath,/rack-library-sc-bridge-test.json$/);
+    // Preview changes are local only; Sync restores the authoritative SC command state.
+    await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.8}]});await runtime.command({type:'sync-sc'});assert.equal(runtime.store.get('a/fx/mast'),0);assert.equal(runtime.state().sent,0);
+    await runtime.command({type:'arm',armed:true});
+    await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.375},{id:'b/fx/mast',value:.25},{id:'global/channel-levels/a',value:.7},{id:'a/state/mute',value:1},{id:'b/state/solo',value:1},{id:'a/followers/env',value:.4},{id:'global/levels/mast',value:.9}]});
+    await runtime.command({type:'sync-sc'});assert.equal(runtime.store.get('a/fx/mast'),.375);assert.ok(Math.abs(runtime.store.get('global/channel-levels/a')-.7)<1e-6);assert.equal(runtime.store.get('a/state/mute'),1);assert.equal(runtime.store.get('b/state/solo'),1);assert.ok(Math.abs(runtime.store.get('a/followers/env')-.4)<1e-6);assert.ok(Math.abs(runtime.store.get('global/levels/mast')-.9)<1e-6);assert.equal(runtime.state().sent,7);
+    socket=dgram.createSocket('udp4');
+    const observed=[];const unsubscribe=runtime.store.subscribe('a/fx/mast',()=>observed.push(runtime.store.get('a/fx/mast')));
+    const sentBefore=runtime.state().sent;
+    await new Promise((resolve,reject)=>socket.send(encodeOSC({address:'/awb/rack/test',args:[binding.instanceID,'external']}),binding.port,'127.0.0.1',e=>e?reject(e):resolve()));
+    for(let i=0;i<100&&runtime.store.get('a/fx/mast')!==.625;i++)await wait(10);
+    assert.equal(runtime.store.get('a/fx/mast'),.625,'language-side sends arrive without explicit Sync');
+    assert.equal(runtime.store.get('global/channel-levels/a'),.512);
+    assert.deepEqual(observed,[.625],'101 writes coalesce to one changed value');unsubscribe();await wait(40);
+    assert.equal(runtime.state().sent,sentBefore,'SC-originated feedback never echoes into SC');
+    assert.ok(Math.abs(runtime.state().sc.sends.a[0]-.625)<1e-6);
+    bridge=await createSCBridge(binding);await bridge.watch();const observedRevision=(await bridge.sync()).revision;
+    await new Promise((resolve,reject)=>socket.send(encodeOSC({address:'/awb/rack/test',args:[binding.instanceID,'gui-external',.7]}),binding.port,'127.0.0.1',e=>e?reject(e):resolve()));
+    for(let i=0;i<60&&runtime.store.get('a/fx/mast')!==.7;i++)await wait(10);
+    await bridge.control('send',['a','mast',.9,observedRevision]);const fenced=await bridge.sync();
+    assert.ok(Math.abs(fenced.sends.a[0]-.7)<1e-6,'stale command cannot overwrite newer SC edit');
+    await bridge.control('send',['a','mast',.75,fenced.revision]);assert.ok(Math.abs((await bridge.sync()).sends.a[0]-.75)<1e-6,'fresh observed revision can take control');bridge.close();bridge=null;await runtime.command({type:'sync-sc'});
+    await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.375}]});await runtime.command({type:'sync-sc'});
+    await new Promise((resolve,reject)=>socket.send(encodeOSC({address:'/awb/rack/test',args:[binding.instanceID,'external-fx']}),binding.port,'127.0.0.1',e=>e?reject(e):resolve()));
+    for(let i=0;i<100&&!runtime.state().sc.processors.includes('externaltest');i++)await wait(10);
+    assert.ok(runtime.state().sc.processors.includes('externaltest'),'language processor registration refreshes metadata');
+    assert.equal(runtime.state().sc.slots.find(s=>s.id==='fx1').processor,'externaltest');
+    await runtime.command({type:'capture',label:'only A',ids:['a/fx/mast'],duration:250,targetDuration:100,alignment:'R'});const snapshot=runtime.store.snapshots[0];assert.equal(snapshot.targets['b/fx/mast'],null);
+    await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:0},{id:'b/fx/mast',value:.6}]});await runtime.command({type:'recall',id:snapshot.id});await wait(340);await runtime.command({type:'sync-sc'});assert.equal(runtime.store.get('a/fx/mast'),.375);assert.ok(Math.abs(runtime.store.get('b/fx/mast')-.6)<1e-6);
+    await runtime.command({type:'set-fx',slotID:'fx1',processor:'pass'});assert.equal(runtime.state().sc.slots.find(s=>s.id==='fx1').active,1);assert.equal(runtime.state().sc.slots.find(s=>s.id==='fx1').processor,'pass');
+    await runtime.command({type:'clear-fx',slotID:'fx1'});assert.equal(runtime.state().sc.slots.find(s=>s.id==='fx1').active,0);
+    await runtime.command({type:'set-follower',slotID:'follow1',settings:{curve:'sqrt',attack:.02,release:.2,scale:1,blend:.7,floorDb:-50}});assert.equal(runtime.state().sc.slots.find(s=>s.id==='follow1').processor,'sqrt');
+    await runtime.command({type:'clear-follower',slotID:'follow1'});assert.equal(runtime.state().sc.slots.find(s=>s.id==='follow1').active,0);
+    const stale=runtime.store.document();stale.config.output.instanceID='sendRack:old';stale.config.output.port=59999;await runtime.command({type:'document',document:stale});assert.equal(runtime.store.config.output.instanceID,binding.instanceID);assert.equal(runtime.store.config.output.port,binding.port);await runtime.command({type:'arm',armed:true});
+    const changed=runtime.store.document();changed.config.instruments.push({id:'c',label:'C'});await assert.rejects(runtime.command({type:'document',document:changed}),/Stable SC topology/);
+    await runtime.command({type:'capture',label:'full'});assert.equal(Object.values(runtime.store.snapshots[1].targets).filter(Boolean).length,16);
+    await runtime.stop();runtime=null;
+    runtime=await startRuntime({runtimeDirectory:path.join(dir,'again'),scBinding:{...binding,libraryRoot:dir}});assert.equal(runtime.store.snapshots.length,2);assert.equal(runtime.state().armed,false);assert.equal(runtime.store.get('a/fx/mast'),.375);
+    await runtime.command({type:'arm',armed:true});
+    await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.9},{id:'b/fx/mast',value:.8}]});
+    const transition=await runtime.command({type:'capture',label:'two channels',ids:['a/fx/mast','b/fx/mast'],duration:300,targetDuration:300});
+    await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:0},{id:'b/fx/mast',value:0}]});await runtime.command({type:'sync-sc'});
+    await runtime.command({type:'recall',id:transition.snapshotID});await wait(100);
+    await new Promise((resolve,reject)=>socket.send(encodeOSC({address:'/awb/rack/test',args:[binding.instanceID,'gui-external',.625]}),binding.port,'127.0.0.1',e=>e?reject(e):resolve()));
+    await wait(300);assert.equal(runtime.store.get('a/fx/mast'),.625,'SC edit takes over its control during recall');assert.equal(runtime.store.get('b/fx/mast'),.8,'other controls finish their transition');
+    // A wrong ToolInstance identity receives no state, even on the right language port.
+    bridge=await createSCBridge({...binding,instanceID:'sendRack:wrong'},{timeout:100});await assert.rejects(bridge.sync(),/timed out/);bridge.close();bridge=null;
+    socket??=dgram.createSocket('udp4');const send=op=>new Promise((resolve,reject)=>socket.send(encodeOSC({address:'/awb/rack/test',args:[binding.instanceID,op]}),binding.port,'127.0.0.1',e=>e?reject(e):resolve()));
+    await send('close');await wait(50);assert.equal(runtime.state().armed,false,'close notification disarms without polling');await assert.rejects(runtime.command({type:'sync-sc'}),/timed out/);assert.equal(runtime.state().armed,false);
+    await send('finish');await new Promise((resolve,reject)=>{if(child.exitCode!==null){resolve();return;}child.once('exit',code=>code===0?resolve():reject(Error(log)));});assert.match(log,/AWB_RACK_BRIDGE_FINISHED=PASS/);
+  }finally{await runtime?.stop();bridge?.close();try{socket?.close();}catch{}if(child&&child.exitCode===null)child.kill('SIGTERM');await rm(dir,{recursive:true,force:true});}
+});
+
+
+test('feedback frames tolerate reordering, reject other tokens and recover incomplete batches',async()=>{
+  const socket=dgram.createSocket('udp4');await new Promise(r=>socket.bind(0,'127.0.0.1',r));
+  const events=[],errors=[];let endpoint;
+  socket.on('message',(bytes,remote)=>{const m=decodeOSC(bytes);if(m.args[1]==='watch'){endpoint=remote;socket.send(encodeOSC({address:'/awb/rack/watch',args:['sendRack:test',m.args[2],0]}),remote.port,remote.address);}});
+  const bridge=await createSCBridge({instanceID:'sendRack:test',port:socket.address().port},{onUpdate:e=>events.push(e),onError:e=>errors.push(e),heartbeat:50});
+  try{
+    await bridge.watch();
+    const send=(token,id,kind,...args)=>new Promise((resolve,reject)=>socket.send(encodeOSC({address:'/awb/rack/update',args:['sendRack:test',token,id,kind,...args]}),endpoint.port,endpoint.address,e=>e?reject(e):resolve()));
+    await send('wrong','ignored','begin',0,1,1,0);
+    await send(bridge.watchToken,'one','value','a/fx/mast',.5,'');
+    await send(bridge.watchToken,'one','end',1);
+    await send(bridge.watchToken,'one','begin',0,1,1,0);await wait(30);
+    assert.deepEqual(events.filter(e=>e.kind==='values').map(e=>e.changes),[[{id:'a/fx/mast',value:.5,source:''}]]);
+    await send(bridge.watchToken,'lost','begin',1,2,2,0);await send(bridge.watchToken,'lost','value','a/fx/mast',.6,'');await send(bridge.watchToken,'lost','end',2);await wait(380);
+    assert.equal(events.filter(e=>e.kind==='recover').length,1);assert.equal(events.filter(e=>e.kind==='values').length,1);
+    assert.deepEqual(errors,[]);
+    socket.removeAllListeners('message');await wait(230);assert.ok(errors.some(e=>e.includes('heartbeat timed out')));
+  }finally{bridge.close();await wait(10);socket.close();}
+});
+
+
+test('old SC classes fail attach with an explicit recompile instruction',async()=>{
+  const socket=dgram.createSocket('udp4');await new Promise(r=>socket.bind(0,'127.0.0.1',r));
+  socket.on('message',(bytes,remote)=>{const m=decodeOSC(bytes);if(m.args[1]==='sync')socket.send(encodeOSC({address:'/awb/rack/state',args:['sendRack:old',m.args[2],'begin',0,'Old rack','old',4,1,1,1]}),remote.port,remote.address);});
+  const bridge=await createSCBridge({instanceID:'sendRack:old',port:socket.address().port});
+  try{await assert.rejects(bridge.sync(),/load this workspace SC rack classes and recompile/);}finally{bridge.close();await wait(10);socket.close();}
+});

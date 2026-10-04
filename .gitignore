@@ -14,3 +14,7 @@ apps/awb-shell/test/signal-bench/**/input-return.bin*
 # Earlier loopback capture names; preserve raw recordings locally.
 apps/awb-shell/test/signal-bench/**/*.audit.gz
 apps/awb-shell/test/signal-bench/**/*.input.gz
+
+# Native rack GUI profiles and local mix libraries.
+.rack-sc-user-data/
+.rack-sc-libraries/

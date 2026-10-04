@@ -1,9 +1,10 @@
 # Rack comparison tool
 
-Open **Rack → Open Rack** from AWB Toolkit Home. The normal Electron shell loads
-this workspace's manifest and starts its local Node runtime. Output starts off,
-and Rack needs no SuperCollider host. The comparison checkout and its separate
-launcher/profile remain available for experiments.
+Run `./launch-rack.sh` from the isolated checkout. It launches the normal AWB
+Electron shell with a separate profile, opens Rack, and disables the shell's SC
+host connection. Rack output starts off. This checkout includes a snapshot of
+the existing AWB working files; it has not been merged into the live checkout.
+Dependencies currently link to `/Users/willy/awb/node_modules`.
 
 ## Available controls
 
@@ -55,7 +56,7 @@ local UDP port. Templates accept `{instrument}`, `{destination}`, and zero-based
 extension does not supply one. **Preview only** emits no OSC.
 
 The library is `rack-library.json` in the shell profile's `tool-runtimes` folder.
-The comparison launcher uses `.rack-user-data/tool-runtimes/rack-library.json` in its own checkout; use Import/Export to transfer that separate library.
+With the launcher this is `.rack-user-data/tool-runtimes/rack-library.json`.
 The original o-s-c configuration and sheet data are never overwritten.
 
 ## Rendering and verification
@@ -89,7 +90,6 @@ env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron apps/rack/test/shell-smok
 env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron apps/rack/test/canvas-visible.mjs
 env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron apps/rack/test/svg-visible.mjs
 env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron apps/rack/test/mixes-electron.mjs
-env -u ELECTRON_RUN_AS_NODE node_modules/.bin/electron apps/rack/test/toolkit-smoke.mjs
 ```
 
 The GUI check mounts 354 controls, changes one control on 100 animation frames,
@@ -100,7 +100,9 @@ receiver. The shell check verifies actual registration/preload/runtime and
 native file grants. Screenshots and JSON results are in `test/artifacts`.
 The onscreen canvas regression reproduced the disappearing-controls bug before the fix and now verifies that edits preserve unchanged pixels, earlier controls, and the complete idle image after browser composition. Offscreen capture alone did not expose that bug. The onscreen SVG check uses native Chromium pointer/text/keyboard input, tests Tab/blur, checks same-frame coalescing and pending-frame unmount/remount, and verifies that pixel changes stay inside the edited control. The mix GUI check uses native Chromium input in both renderers: complete/selected capture, selection highlights and blocked value changes, arrow/Tab navigation, collapsed timing fields, blank/zero destination levels, live amount edits with dummy OSC output, definition-only timing/blank edits, discard semantics, invalid timing, save and sparse/full recall. Its results are in `test/artifacts/mixes.json`. Tests do not operate the live Bitwig mixer or SC audio engine.
 
-Registration adds `../rack` to `apps/awb-shell/tools.json`; `package-lock.json` records the workspace. The separate comparison checkout and launcher are retained.
+Files added: `apps/rack/` and `launch-rack.sh`. Registration adds `../rack` to
+`apps/awb-shell/tools.json`; `package-lock.json` records the new workspace.
+All other working-file differences in this isolated checkout predate the rack.
 
 ## HTML/SVG optimisation measurements (2026-10-03)
 
@@ -147,3 +149,9 @@ Matched diagnostic profiles at full load reduced recorded JavaScript time from
 Those profiles include profiling overhead and endpoint checks; they explain the
 result but are not used for the CPU percentages above. At one moving control,
 JavaScript remained a small cost and compositor layer preparation dominated.
+
+## Native SuperCollider send rack
+
+The rack now has a real `AWBSendRackTool : Tool` routing backend: persistent channel input buses, faders/mute/solo, stable FX/follower pipes, tail-preserving FX replacement, and prepared full/packed per-voice wrappers. Both existing renderers and mix editors operate this backend through OSC. SC-originated control changes follow automatically through bounded, coalesced feedback; attach and explicit Sync refresh the complete command state.
+
+See [sc/README.md](sc/README.md) for setup, examples, native Tool/NodeManager ownership, the isolated verification command and first-pass boundaries. The SC classes are bundled in this shell workspace; the comparison checkout remains a separate experimental lane. They are not installed into the live class path automatically.

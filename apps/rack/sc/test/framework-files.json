@@ -1,0 +1,23 @@
+{
+  "ToolInstance.sc": "classes WIP/ToolInstance.sc",
+  "NodeManager.sc": "classes WIP/NodeManager.sc",
+  "EventPreset.sc": "Classes/EventPreset.sc",
+  "VirtualOrphanContainer.sc": "classes WIP/VirtualOrphanContainer.sc",
+  "ToolGUIContract.sc": "classes WIP/ToolGUIContract.sc",
+  "PStreamPlayer.sc": "Classes/PStreamPlayer.sc",
+  "Tool.sc": "classes WIP/Tool.sc",
+  "HarmonicContext.sc": "classes WIP/HarmonicContext.sc",
+  "ToolLauncher.sc": "classes WIP/ToolLauncher.sc",
+  "EventStreamPlayerWithTracking.sc": "Classes/EventStreamPlayerWithTracking.sc",
+  "Preset.sc": "Classes/Preset.sc",
+  "PresetSubclasses.sc": "Classes/PresetSubclasses.sc",
+  "SessionRecorder.sc": "classes WIP/SessionRecorder.sc",
+  "ToolPresetLibrary.sc": "classes WIP/ToolPresetLibrary.sc",
+  "ToolPresetApplyDialogs.sc": "classes WIP/ToolPresetApplyDialogs.sc",
+  "PlaylistGUI.sc": "classes WIP/PlaylistGUI.sc",
+  "ToolRegistry.sc": "classes WIP/ToolRegistry.sc",
+  "ToolDefinition.sc": "classes WIP/ToolDefinition.sc",
+  "Playlist.sc": "classes WIP/Playlist.sc",
+  "ToolInstanceControls.sc": "classes WIP/ToolInstanceControls.sc",
+  "ToolInstanceRecordCodec.sc": "classes WIP/ToolInstanceRecordCodec.sc"
+}

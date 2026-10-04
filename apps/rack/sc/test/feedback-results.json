@@ -1,0 +1,99 @@
+{
+  "passed": true,
+  "date": "2026-10-04",
+  "branch": "integration/bw-sc",
+  "evidenceDirectory": "/private/tmp/awb-rack-feedback-shared-20261004/test",
+  "scContracts": 47,
+  "offlineAudioAssertions": 88,
+  "rackNodeTests": 28,
+  "shellUnitTests": 65,
+  "gui": {
+    "HTML / SVG SC feedback": {
+      "value": 0.432,
+      "feedback": {
+        "app": 0,
+        "svg": 0,
+        "canvas": 0,
+        "paints": 1,
+        "frames": 0
+      }
+    },
+    "HTML / SVG": {
+      "liveSCEdit": true,
+      "keyboard": true,
+      "counters": {
+        "app": 0,
+        "svg": 0,
+        "canvas": 0
+      }
+    },
+    "Three.js canvas SC feedback": {
+      "value": 0.543,
+      "feedback": {
+        "app": 0,
+        "svg": 0,
+        "canvas": 0,
+        "paints": 0,
+        "frames": 1
+      }
+    },
+    "Three.js canvas": {
+      "liveSCEdit": true,
+      "keyboard": true,
+      "counters": {
+        "app": 0,
+        "svg": 0,
+        "canvas": 0
+      }
+    },
+    "passed": true,
+    "errors": [],
+    "controls": 16
+  },
+  "shell": {
+    "passed": true,
+    "nativeImportExport": true,
+    "liveSCRecall": true,
+    "host": true,
+    "controls": 16,
+    "channelRacks": 2,
+    "canvases": 1,
+    "connected": true,
+    "context": {
+      "shellProtocol": 1,
+      "shellInstanceID": "5cd3fb49-157f-463b-95de-2ce01a23b5f9",
+      "viewID": "f8c038fc-9b4d-4253-9c54-036f041a3784",
+      "tool": {
+        "id": "rack",
+        "version": "0.1.0"
+      },
+      "toolInstanceID": "sendRack:1001",
+      "launchOrigin": "supercollider",
+      "owner": {
+        "kind": "attached-process",
+        "pid": 26733
+      },
+      "grantedCapabilities": {
+        "filesystem": [
+          "open-file",
+          "save-file"
+        ],
+        "media": [],
+        "connections": [],
+        "rendering": []
+      },
+      "connections": {},
+      "payload": {}
+    },
+    "mode": "sc",
+    "instanceID": "sendRack:1001"
+  },
+  "hardwareAudioTested": false,
+  "liveClassPathsModified": false,
+  "sources": {
+    "apps/rack/runtime/sc-bridge.mjs": "a5e85cab4d66abb2b8385072d66731ea1cdd5b2ca635b51765a2d0fa5733a108",
+    "apps/rack/runtime/shell-runtime.mjs": "0710987378ee3e36652f2a2a9cc83ac21a23f4c47b45d10b40761a40d60dc90d",
+    "apps/rack/sc/classes/AWBSendRackTool.sc": "20bc9537aad4355a1cdba965dbec8771252ed9dc8a8df56e10e4c707f895df1e",
+    "apps/rack/test/sc-bridge.test.mjs": "c78da5301d6e961cba3061f656280d4b78232049b36f49520ac828bbbcdf2e5a"
+  }
+}

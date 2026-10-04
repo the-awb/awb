@@ -1,8 +1,37 @@
 {
-  "schema":"awb.tool/1", "id":"rack", "name":"Rack", "version":"0.1.0",
-  "renderer":{"entry":"dist/index.html", "preloadProtocol":1},
-  "runtime":{"schema":"awb.local-runtime/1", "entry":"runtime/shell-runtime.mjs"},
-  "view":{"defaultWidth":1700,"defaultHeight":1000,"allowMultiple":false},
-  "launchProfiles":[{"id":"standalone","label":"Open Rack"}],
-  "capabilities":{"filesystem":["open-file","save-file"]}, "documentKinds":[]
+  "schema": "awb.tool/1",
+  "id": "rack",
+  "name": "Rack",
+  "version": "0.1.0",
+  "renderer": {
+    "entry": "dist/index.html",
+    "preloadProtocol": 1
+  },
+  "runtime": {
+    "schema": "awb.local-runtime/1",
+    "entry": "runtime/shell-runtime.mjs"
+  },
+  "view": {
+    "defaultWidth": 1700,
+    "defaultHeight": 1000,
+    "allowMultiple": false
+  },
+  "launchProfiles": [
+    {
+      "id": "standalone",
+      "label": "Open Rack"
+    }
+  ],
+  "capabilities": {
+    "filesystem": [
+      "open-file",
+      "save-file"
+    ]
+  },
+  "documentKinds": [],
+  "hostBindings": {
+    "nodeManager": {
+      "toolSource": "sendRack"
+    }
+  }
 }

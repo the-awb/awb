@@ -3,39 +3,108 @@ import dgram from 'node:dgram';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,rename,open,unlink} from 'node:fs/promises';
 import {WebSocketServer} from 'ws';
 import {RackStore,defaultConfig,wireMessage,createRecall} from '../src/model.mjs';
 
-const pad=b=>Buffer.concat([b,Buffer.alloc((4-b.length%4)%4)]);
-const str=s=>pad(Buffer.from(`${s}\0`));
-export function encodeOSC({address,args}){const types=','+args.map(v=>typeof v==='string'?'s':Number.isInteger(v)?'i':'f').join('');return Buffer.concat([str(address),str(types),...args.map(v=>{if(typeof v==='string')return str(v);const b=Buffer.alloc(4);if(Number.isInteger(v))b.writeInt32BE(v);else b.writeFloatBE(v);return b;})]);}
+import {encodeOSC,createSCBridge,documentFromState,envBinding} from './sc-bridge.mjs';
+export {encodeOSC} from './sc-bridge.mjs';
 const MIME={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.map':'application/json','.svg':'image/svg+xml'};
-export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sendPacket}={}){
+export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sendPacket,scBinding=envBinding()}={}){
   await mkdir(runtimeDirectory,{recursive:true});
-  const libraryPath=path.join(path.dirname(runtimeDirectory),'rack-library.json');
+  let scState=null,bridge=null,reportSCError=()=>{},applySCUpdate=()=>{},feedbackReady=false;const feedbackQueue=[];
+  if(scBinding){bridge=await createSCBridge(scBinding,{onError:message=>reportSCError(message),onUpdate:event=>{if(feedbackReady)applySCUpdate(event);else feedbackQueue.push(event)}});try{scState=await bridge.sync();}catch(e){bridge.close();throw e;}}
+  const libraryPath=path.join(scState&&scBinding.libraryRoot?path.resolve(scBinding.libraryRoot):path.dirname(runtimeDirectory),scState?`rack-library-sc-${scState.libraryID}.json`:'rack-library.json');
+  try{await mkdir(path.dirname(libraryPath),{recursive:true});}catch(e){bridge?.close();throw e;}
+  let libraryLock=null;
+  const unlock=async()=>{if(libraryLock){await libraryLock.close();libraryLock=null;await unlink(libraryPath+'.lock').catch(e=>{if(e.code!=='ENOENT')throw e;});}};
+  if(bridge){
+    try{
+      for(let attempt=0;attempt<2;attempt++){
+        try{libraryLock=await open(libraryPath+'.lock','wx');await libraryLock.writeFile(String(process.pid));break;}
+        catch(e){if(e.code!=='EEXIST')throw e;const pid=Number(await readFile(libraryPath+'.lock','utf8'));if(!Number.isInteger(pid)||pid<1)throw Error('SC mix library lock is incomplete; another rack may be opening.');try{process.kill(pid,0);}catch(check){if(check.code==='ESRCH'){await unlink(libraryPath+'.lock');continue;}throw check;}throw Error('This SC mix library is already open in another rack. Use a different libraryID for an independent rack.');}
+      }
+      if(!libraryLock)throw Error('Unable to acquire SC mix library.');
+    }catch(e){bridge.close();await unlock();throw e;}
+  }
   let document=seedDocument;
-  if(!document){try{document=JSON.parse(await readFile(libraryPath,'utf8'));}catch(e){if(e.code!=='ENOENT')throw e;try{document=JSON.parse(await readFile(new URL('../fixtures/live-set.rack.json',import.meta.url),'utf8'));}catch{document={config:defaultConfig(),values:{},snapshots:[]};}}}
-  const store=new RackStore(document),token=crypto.randomUUID(),udp=dgram.createSocket('udp4'),peers=new Set();
-  const root=path.resolve(fileURLToPath(new URL('../dist/',import.meta.url)));let armed=false,recall=null,saveTimer,flushTimer,closed=false,writeQueue=Promise.resolve();const pending=new Map();let sent=0,failures=0;
-  const state=()=>({document:store.document(),armed,token,libraryPath,sent,failures});
+  try {
+    if(!document){try{document=JSON.parse(await readFile(libraryPath,'utf8'));}catch(e){if(e.code!=='ENOENT')throw e;if(!scState){try{document=JSON.parse(await readFile(new URL('../fixtures/live-set.rack.json',import.meta.url),'utf8'));}catch{document={config:defaultConfig(),values:{},snapshots:[]};}}}}
+    if(scState)document=documentFromState(scState,document?.snapshots??[]);
+  }catch(e){bridge?.close();await unlock();throw e;}
+  if(!bridge&&document.config.output.mode==='sc')throw Error('Native SC rack requires its ToolInstance binding.');
+  let store;try{store=new RackStore(document);}catch(e){bridge?.close();await unlock();throw e;}
+  const token=crypto.randomUUID(),udp=dgram.createSocket('udp4'),peers=new Set();
+  const root=path.resolve(fileURLToPath(new URL('../dist/',import.meta.url)));let armed=false,recall=null,saveTimer,flushTimer,closed=false,writeQueue=Promise.resolve(),transmitQueue=Promise.resolve();const pending=new Map();let sent=0,failures=0;
+  const state=()=>({document:store.document(),armed,token,libraryPath,sent,failures,sc:scState});
   const broadcast=message=>{const text=JSON.stringify(message);for(const ws of peers)if(ws.readyState===1)ws.send(text);};
+  reportSCError=message=>{failures++;armed=false;broadcast({type:'armed',armed});broadcast({type:'error',message:`SC: ${message}`});};
   const save=()=>{const text=JSON.stringify(store.document(),null,2)+'\n';writeQueue=writeQueue.catch(()=>{}).then(async()=>{await writeFile(libraryPath+'.tmp',text);await rename(libraryPath+'.tmp',libraryPath);}).catch(e=>{broadcast({type:'error',message:`Save failed: ${e.message}`});throw e;});return writeQueue;};
   const queueSave=()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>save().catch(()=>{}),300);};
-  const transmit=async(id,value)=>{try{const d=store.byID.get(id),message=wireMessage(d,value,store.config);if(!message)return;const packet={id,value,message,endpoint:store.config.output,armed};broadcast({type:'wire',...packet});if(armed){const bytes=encodeOSC(message);if(sendPacket)await sendPacket(bytes,packet);else await new Promise((resolve,reject)=>udp.send(bytes,store.config.output.port,store.config.output.host,e=>e?reject(e):resolve()));sent++;}}catch(e){failures++;broadcast({type:'error',message:`${id}: ${e.message}`});}};
-  const flush=()=>{flushTimer=null;const changes=[...pending].map(([id,change])=>({id,...change}));pending.clear();if(changes.length)broadcast({type:'patch',changes});for(const {id,value}of changes)void transmit(id,value);};
-  const unsub=store.subscribeAll(event=>{if(event.kind==='value'){pending.set(event.id,{value:event.value,origin:event.origin});if(!flushTimer)flushTimer=setTimeout(flush,16);}else broadcast({type:'document',document:store.document()});queueSave();});
+  const transmit=async(id,value,scRevision=scState?.revision)=>{try{const d=store.byID.get(id),message=wireMessage(d,value,store.config);if(!message)return;if(bridge)message.args.push(scRevision);const packet={id,value,message,endpoint:store.config.output,armed};broadcast({type:'wire',...packet});if(armed){const bytes=encodeOSC(message);if(sendPacket)await sendPacket(bytes,packet);else if(bridge)await bridge.send(message);else await new Promise((resolve,reject)=>udp.send(bytes,store.config.output.port,store.config.output.host,e=>e?reject(e):resolve()));sent++;}}catch(e){failures++;broadcast({type:'error',message:`${id}: ${e.message}`});}};
+  const flush=async()=>{clearTimeout(flushTimer);flushTimer=null;const changes=[...pending].map(([id,change])=>({id,...change}));pending.clear();if(changes.length)broadcast({type:'patch',changes});transmitQueue=transmitQueue.then(async()=>{for(const {id,value,origin,scRevision}of changes)if(!origin.startsWith('sc-'))await transmit(id,value,scRevision);});return await transmitQueue;};
+  const unsub=store.subscribeAll(event=>{if(event.kind==='value'){pending.set(event.id,{value:event.value,origin:event.origin,scRevision:scState?.revision});if(!flushTimer)flushTimer=setTimeout(()=>void flush(),16);}else broadcast({type:'document',document:store.document()});queueSave();});
+  const compatible=(doc)=>{
+    if(!bridge){if(doc.config.output.mode==='sc')throw Error('Open this rack from its SC ToolInstance to bind native routing.');return;}
+    const current=store.config;
+    if(doc.config.output.mode!=='sc'||doc.config.output.libraryID!==current.output.libraryID||JSON.stringify(doc.config.instruments)!==JSON.stringify(current.instruments)||JSON.stringify(doc.config.regions)!==JSON.stringify(current.regions))throw Error('Stable SC topology is defined by the ToolInstance. Open a new rack to change channels or capacity.');
+  };
+  let syncingSC=null;const updatesDuringSync=[];
+  const syncSC=()=>{if(syncingSC)return syncingSC;syncingSC=(async()=>{
+    if(!bridge)throw Error('No native SC rack is bound.');
+    recall?.stop();recall=null;await flush();
+    let next;try{next=await bridge.sync();}catch(e){reportSCError(e.message);throw e;}const doc=documentFromState(next,store.snapshots);
+    compatible(doc);scState=next;
+    for(const [id,value]of Object.entries(doc.values))store.set(id,value,'sc-sync');
+    broadcast({type:'sc',sc:scState});broadcast({type:'recall',active:false});await save();return {revision:scState.revision};
+  })().finally(()=>{syncingSC=null;for(const event of updatesDuringSync.splice(0))applySCUpdate(event);});return syncingSC;
+  };
+  applySCUpdate=event=>{
+    if(closed)return;
+    const recover=()=>void syncSC().catch(()=>{});
+    if(syncingSC){if(updatesDuringSync.length<64)updatesDuringSync.push(event);else updatesDuringSync.splice(0,updatesDuringSync.length,{kind:'recover'});return;}
+    if(event.kind==='recover'){recover();return;}
+    if(event.kind==='heartbeat'){if(event.revision>scState.revision)recover();return;}
+    if(event.revision<=scState.revision)return;
+    if(event.metadata||event.baseRevision>scState.revision){recover();return;}
+    for(const change of event.changes){
+      const d=store.byID.get(change.id);
+      if(!d||change.value<d.region.min||change.value>d.region.max){reportSCError('Invalid SC feedback control/value.');recover();return;}
+    }
+    scState.revision=event.revision;
+    for(const {id,value,source} of event.changes){
+      const [channel,region,destination]=id.split('/');
+      if(region==='fx'||region==='followers')scState.sends[channel][scState.slots.findIndex(s=>s.id===destination)]=value;
+      else if(region==='state')scState.channels.find(c=>c.id===channel)[destination]=value;
+      else if(region==='channel-levels')scState.channels.find(c=>c.id===destination).level=value;
+      else if(region==='levels')scState.slots.find(s=>s.id===destination).level=value;
+      // Echoes confirm SC receipt; they must not rewind a newer local gesture or recall.
+      if(source!==bridge.watchToken){recall?.override(id);store.set(id,value,'sc-feedback');}
+    }
+  };
+
   const command=async (c,origin='local')=>{
     if(!c||typeof c.type!=='string')throw Error('Invalid Rack command.');
     if(c.type==='batch'){if(!Array.isArray(c.changes)||c.changes.length>4096)throw Error('Invalid control batch.');for(const x of c.changes){if(!store.byID.has(x.id)||!Number.isFinite(x.value))throw Error('Unknown control or value.');}for(const x of c.changes){recall?.override(x.id);store.set(x.id,x.value,origin);}return;}
     if(c.type==='arm'){armed=c.armed===true;broadcast({type:'armed',armed});return;}
     if(c.type==='stop'){recall?.stop();recall=null;broadcast({type:'recall',active:false});return;}
-    if(c.type==='document'){const next=new RackStore(c.document);recall?.stop();recall=null;armed=false;pending.clear();store.replace(next.document());broadcast({type:'armed',armed});await save();return;}
-    if(c.type==='capture'){const snapshot=store.capture(c.label,c.sceneID??null,c.ids,{duration:c.duration??1000,targetDuration:c.targetDuration??c.duration??1000,alignment:c.alignment??'L'});await save();return {snapshotID:snapshot.id};}
+    if(c.type==='sync-sc')return await syncSC();
+    if(['set-fx','clear-fx','set-follower','clear-follower'].includes(c.type)){
+      if(!bridge||!armed)throw Error('Enable output before changing an SC processor.');
+      const slot=scState.slots.find(s=>s.id===c.slotID);if(!slot||slot.kind!==(c.type.includes('follower')?'follower':'fx'))throw Error('Unknown SC slot.');
+      if(c.type==='set-fx'&&!scState.processors.includes(c.processor))throw Error('Choose a registered SC processor.');
+      const args=c.type==='set-fx'?[c.slotID,c.processor]:[c.slotID];
+      if(c.type==='set-follower'){const f=c.settings??{};if(!['linear','log','sqrt'].includes(f.curve)||![f.attack,f.release,f.scale,f.blend,f.floorDb].every(Number.isFinite)||f.attack<0||f.attack>60||f.release<0||f.release>60||f.scale<0||f.scale>scState.maxGain||f.blend<0||f.blend>1||f.floorDb>=0||f.floorDb< -120)throw Error('Invalid follower configuration.');args.push(f.curve,f.attack,f.release,f.scale,f.blend,f.floorDb);}
+      await flush();await bridge.control(c.type,args);const result=await syncSC(),updated=scState.slots.find(s=>s.id===c.slotID);
+      if(c.type.startsWith('clear')?updated.active!==0:updated.active!==1||updated.processor!==(c.type==='set-fx'?c.processor:c.settings.curve))throw Error('SC did not apply the processor change; inspect the SC error.');
+      return result;
+    }
+    if(c.type==='document'){const next=new RackStore(c.document),doc=next.document();compatible(doc);if(bridge)doc.config.output={...store.config.output};recall?.stop();recall=null;armed=false;pending.clear();store.replace(doc);broadcast({type:'armed',armed});await save();return;}
+    if(c.type==='capture'){await flush();const snapshot=store.capture(c.label,c.sceneID??null,c.ids,{duration:c.duration??1000,targetDuration:c.targetDuration??c.duration??1000,alignment:c.alignment??'L'});await save();return {snapshotID:snapshot.id};}
     if(c.type==='snapshot'){store.updateSnapshot(c.snapshot);await save();return;}
     if(c.type==='delete-snapshot'){store.snapshots=store.snapshots.filter(s=>s.id!==c.id);store.notifyMeta();await save();return;}
     if(c.type==='recall'){const s=store.snapshots.find(s=>s.id===c.id);if(!s)throw Error('Unknown snapshot.');recall?.stop();broadcast({type:'recall',active:true,id:s.id});let finished=false;const next=createRecall(store,{...s,duration:c.direct?0:s.duration},{onFinish:()=>{finished=true;recall=null;broadcast({type:'recall',active:false});}});recall=finished?null:next;return;}
-    if(c.type==='send-all'){for(const d of store.controls)await transmit(d.id,store.get(d.id));return;}
+    if(c.type==='send-all'){await flush();for(const d of store.controls)await transmit(d.id,store.get(d.id));return;}
     if(c.type==='save'){await save();return;}
     throw Error('Unknown Rack command.');
   };
@@ -53,7 +122,11 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
   const wss=new WebSocketServer({noServer:true});
   server.on('upgrade',(req,socket,head)=>{const u=new URL(req.url,'http://127.0.0.1');if(u.pathname!=='/ws'||u.searchParams.get('token')!==token){socket.destroy();return;}wss.handleUpgrade(req,socket,head,ws=>wss.emit('connection',ws,req));});
   wss.on('connection',ws=>{peers.add(ws);const clientID=crypto.randomUUID();let sequence=Promise.resolve();ws.send(JSON.stringify({type:'state',clientID,...state()}));ws.on('close',()=>{peers.delete(ws);if(!peers.size){armed=false;recall?.stop();recall=null;}});ws.on('message',data=>{if(data.length>4*1024*1024){ws.close(1009);return;}sequence=sequence.then(async()=>{let c;try{c=JSON.parse(data);const result=await command(c,clientID);if(c.requestID&&ws.readyState===1)ws.send(JSON.stringify({type:'ack',requestID:c.requestID,result}));}catch(e){if(ws.readyState===1)ws.send(JSON.stringify({type:'error',requestID:c?.requestID,message:e.message}));}});});});
-  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(httpPort,'127.0.0.1',resolve);});
+  try{await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(httpPort,'127.0.0.1',resolve);});}catch(e){bridge?.close();await unlock();throw e;}
+  if(bridge){
+    try{await bridge.watch();await syncSC();feedbackReady=true;for(const event of feedbackQueue.splice(0))applySCUpdate(event);}
+    catch(e){bridge.close();unsub();clearTimeout(saveTimer);clearTimeout(flushTimer);await new Promise(r=>wss.close(r));await new Promise(r=>server.close(r));await unlock();throw e;}
+  }
   return {url:`http://127.0.0.1:${server.address().port}/`,libraryPath,store,command,state,
-    async stop(){if(closed)return;closed=true;recall?.stop();clearTimeout(saveTimer);clearTimeout(flushTimer);pending.clear();unsub();await save();for(const ws of peers)ws.terminate();await new Promise(r=>wss.close(r));await new Promise(r=>server.close(r));try{udp.close();}catch{};}};
+    async stop(){if(closed)return;closed=true;recall?.stop();clearTimeout(saveTimer);clearTimeout(flushTimer);pending.clear();unsub();armed=false;await transmitQueue;bridge?.close();try{await save();}finally{for(const ws of peers)ws.terminate();await new Promise(r=>wss.close(r));await new Promise(r=>server.close(r));try{udp.close();}catch{};await unlock();}}};
 }

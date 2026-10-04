@@ -1,6 +1,23 @@
 {
-  "name": "@awb/rack", "version": "0.1.0", "private": true, "type": "module",
-  "scripts": {"build":"vite build --configLoader native", "test":"node --test test/model.test.mjs test/runtime.test.mjs test/mixes.test.mjs", "start":"node runtime/standalone.mjs"},
-  "dependencies": {"react":"^18.2.0", "react-dom":"^18.2.0", "three":"^0.185.1", "ws":"^8.18.3"},
-  "devDependencies": {"vite":"^8.2.2", "@vitejs/plugin-react":"^6.1.0"}
+  "name": "@awb/rack",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build --configLoader native",
+    "test": "node --test test/model.test.mjs test/runtime.test.mjs test/mixes.test.mjs test/sc-bridge.test.mjs",
+    "start": "node runtime/standalone.mjs",
+    "test:sc": "python3 sc/test/run.py",
+    "test:sc:gui": "python3 sc/test/run.py --gui --shell"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.185.1",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2",
+    "@vitejs/plugin-react": "^6.1.0"
+  }
 }
