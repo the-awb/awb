@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import path from 'node:path';
 import process from 'node:process';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, stat, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { grantedCapabilities, publicManifest, SHELL_PROTOCOL } from '../src/contract.mjs';
@@ -12,10 +12,15 @@ import { ViewRegistry } from '../src/viewRegistry.mjs';
 import { FileGrantStore } from '../src/fileGrants.mjs';
 import { atomicWriteText, guardedWriteText } from '../src/nativeFiles.mjs';
 import { ServiceRegistry } from '../src/serviceRegistry.mjs';
+import { ToolRuntimeRegistry } from '../src/toolRuntimeRegistry.mjs';
 import { documentKindIDForPath, RecentStore } from '../src/recentStore.mjs';
 import { createOscWebSocketRelay } from '../services/oscWebSocketRelay.mjs';
 import { createNativeAudioBroker } from '@awb/native-audio';
 import { NativeAudioAccess } from '../src/nativeAudioAccess.mjs';
+import {SignalCaptureBroker} from '../src/signalCaptureBroker.mjs';
+import {openScSignalSource} from '../src/scSignalSource.mjs';
+import { ScBusAudioAccess } from '../src/scBusAudioAccess.mjs';
+import { OSC as ScBusOSC } from '../src/scBusOsc.mjs';
 import { RenderJobBroker } from '../src/renderJobBroker.mjs';
 import { resolveToolBindingFromProject } from '../src/scoreProjectResolver.mjs';
 import { RenderOutputStore } from '../src/renderOutputStore.mjs';
@@ -33,6 +38,7 @@ const shellInstanceID = crypto.randomUUID();
 const shellHostToken = crypto.randomUUID();
 const registry = new ViewRegistry();
 const windows = new Map();
+const scopeWindows = new Map();
 const senderRecords = new Map();
 const ownerTimers = new Map();
 const serviceReleases = new Map();
@@ -41,12 +47,21 @@ const hostSubscriptions = new Map();
 const fileGrants = new FileGrantStore();
 const services = new ServiceRegistry( createOscWebSocketRelay );
 const nativeAudio = new NativeAudioAccess( createNativeAudioBroker() );
+const signalCaptures=new SignalCaptureBroker({open:openScSignalSource});
+const scBusAudio = new ScBusAudioAccess({broker:signalCaptures,hostContext: async()=>{
+ const native=await nativeHostForProfile('hosted');
+ await waitFor(()=>native.service.hostSnapshot().scsynth.status==='ready',10000);
+ return {...native.configuration,token:shellHostToken,service:native.service,
+  isConnected:()=>native.service.hostSnapshot().scsynth.status==='ready'};
+}});
 const renderJobs = new RenderJobBroker();
 const renderOutputs = new RenderOutputStore();
 const nativeScHost = new NativeScHostSupervisor( { token: shellHostToken,
-  bootstrapPath: path.join( appRoot, 'sc/AWBHeadlessHost.scd' ), onChange: () => notifyHome() } );
+  bootstrapPath: path.join( appRoot, 'sc/AWBHeadlessHost.scd' ),
+  pluginPaths: [ path.resolve( appRoot, '../../tool-artifacts/shared-loop/0.1.0/build' ) ], onChange: () => notifyHome() } );
 const renderExecutorID = `headless-local-${ crypto.randomUUID() }`;
 let recentStore;
+let toolRuntimes;
 let homeWindow = null;
 let quitting = false;
 let servicesClosed = false;
@@ -58,6 +73,9 @@ let renderExecutorWindow = null;
 let renderExecutorReady = false;
 let renderExecutorLease = null;
 const smokeHome = process.argv.includes( '--smoke-home' );
+const smokeSharedLoop = process.argv.includes( '--smoke-shared-loop' );
+const smokeScBus = process.argv.includes('--smoke-sc-bus');
+const smokeScopeTool = process.argv.includes('--smoke-scope-tool');
 const smokeMultiview = process.argv.includes( '--smoke-multiview' );
 const smokeHosted = process.argv.includes( '--smoke-hosted' );
 const smokeOwnerLoss = process.argv.includes( '--smoke-owner-loss' );
@@ -83,7 +101,7 @@ const developmentURL = loopbackDevelopmentURL( option( process.argv, 'dev-url', 
 
 const SUPPORTED_CAPABILITIES = Object.freeze( {
   filesystem: [ 'open-file', 'open-directory', 'save-file' ],
-  media: [ 'audio-input', 'system-audio', 'native-audio' ],
+  media: [ 'audio-input', 'system-audio', 'native-audio', 'sc-bus-audio' ],
   connections: [ 'hosted-timeline', 'hosted-field' ], rendering: [ 'local-render' ]
 } );
 
@@ -222,8 +240,8 @@ async function startHeadlessHost() {
 
 async function stopHeadlessHost() {
   const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.mode === 'headless' );
-  if ( [ ...nativeToolInstances.values() ].some( ( owned ) => owned.service === service ) ) {
-    throw new Error( 'Close headless SuperCollider tool views before stopping their host.' );
+  if ( signalCaptures.diagnostics().sources.length || scBusAudio.has() || toolRuntimes?.has( 'shared-loop' ) || [ ...nativeToolInstances.values() ].some( ( owned ) => owned.service === service ) ) {
+    throw new Error( 'Stop SC captures or close instrument views before stopping their host.' );
   }
   return nativeScHost.stop( () => service?.shutdownHost?.() );
 }
@@ -262,6 +280,7 @@ async function nativeHostForProfile( profileID ) {
 }
 
 async function launchFromHome( rawRequest ) {
+  if ( [ 'shared-loop', 'scope' ].includes( rawRequest.toolID ) ) rawRequest = { ...rawRequest, profileID: 'hosted' };
   const nativeTool = rawRequest.toolID === 'score-studio'
     ? { instancePrefix: 'scoreArranger', profiles: [ 'hosted', 'attached', 'headless' ] }
     : rawRequest.toolID === 'field-modelling'
@@ -396,6 +415,452 @@ async function runHomeSmoke() {
     }; check();
   })` );
   console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions + result.lissajousActions } hostFacts=${ result.hostFacts } hostServices=${ services.snapshot().length } profiles=hosted-public` ); app.quit();
+}
+
+async function runScBusSmoke() {
+  smokeRunning=true;
+  await startHeadlessHost();
+  await waitFor(()=>services.firstService()?.hostSnapshot?.().scsynth.status==='ready',30000);
+  const hostPID=nativeScHost.snapshot().processID;
+  const osc=new ScBusOSC(nativeScHost.snapshot().serverPort);
+  try {
+    await osc.request('/d_load',[option(process.argv,'smoke-sc-bus-def')],'/done',a=>a[0]==='/d_load');
+    osc.send('/s_new','awbScBusSmokeSource',888881,1,0);await osc.sync();
+    const baseline=await osc.request('/status',[],'/status.reply');
+    const launched=await launchFromHome({toolID:'lissajous',profileID:'standalone',launchOrigin:'desktop'});
+    if(launched.status!=='accepted')throw new Error(JSON.stringify(launched));
+    await waitFor(()=>registry.get(launched.viewID)?.lifecycle==='ready',30000);
+    const win=windows.get(launched.viewID);win.show();win.focus();
+    win.webContents.on('console-message',event=>{if(event.level>=2)console.error('SC bus renderer:',event.message)});
+    await win.webContents.executeJavaScript(`(()=>{
+      window.__scBusSmoke={frames:0,rate:0,channels:0,end:0,peaks:[],requests:[]};
+      const Original=window.WebSocket;
+      window.WebSocket=class extends Original {constructor(...args){super(...args);this.addEventListener('message',event=>{
+        if(!(event.data instanceof ArrayBuffer)||event.data.byteLength<48)return;
+        const v=new DataView(event.data);if(v.getUint32(0,true)!==0x43535741)return;
+        const s=window.__scBusSmoke;s.frames++;s.rate=v.getFloat64(16,true);s.channels=v.getUint32(36,true);s.end=v.getFloat64(24,true);
+        const n=v.getUint32(40,true),samples=new Float32Array(event.data,48);
+        s.peaks=Array.from({length:s.channels},(_,ch)=>Math.max(...samples.subarray(ch*n,(ch+1)*n).map(Math.abs)));
+      })}};
+      const source=document.querySelector('button[title="Source"]');if(source.getAttribute('aria-pressed')!=='true')source.click();
+    })()`);
+    const setRange=async(bus,channels)=>win.webContents.executeJavaScript(`(()=>{
+      const input=document.querySelector('[aria-label="SC audio bus"]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,${bus});input.dispatchEvent(new Event('input',{bubbles:true}));
+      const select=document.querySelector('[aria-label="SC bus channels"]');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(select,'${channels}');select.dispatchEvent(new Event('change',{bubbles:true}));
+    })()`);
+    const click=async(text)=>win.webContents.executeJavaScript(`(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='${text}');if(!b)throw new Error('Missing ${text}');b.click()})()`);
+    await win.webContents.executeJavaScript(`new Promise((resolve,reject)=>{const until=Date.now()+5000;const poll=()=>{if(document.querySelector('[aria-label="SC audio bus"]'))resolve();else if(Date.now()>until)reject(new Error('SC Bus controls did not mount'));else setTimeout(poll,20)};poll()})`);
+    await setRange(32,4);await new Promise(resolve=>setTimeout(resolve,100));await click('Start SC Bus');
+    await waitFor(()=>registry.get(launched.viewID)?.sessionState?.sourceKind==='sc-bus',15000);
+    await new Promise(resolve=>setTimeout(resolve,700));
+    const first=await win.webContents.executeJavaScript('window.__scBusSmoke');
+    if(first.frames<4||first.channels!==4||first.peaks.some((p,i)=>Math.abs(p-(i+1)*.1)>.002))throw new Error('Wrong raw SC bus channel samples: '+JSON.stringify(first));
+    // Compare canvas pixels only: status counters and dropdown labels cannot prove drawing.
+    const plot=await win.webContents.executeJavaScript(`(()=>{const r=document.querySelector('canvas').getBoundingClientRect();return {x:Math.ceil(r.x),y:Math.ceil(r.y),width:Math.floor(r.width),height:Math.floor(r.height)}})()`);
+    const capturePlot=async()=> (await win.webContents.capturePage(plot)).toPNG();
+    const shape=async()=>{
+      const image=await win.webContents.capturePage(plot),{width,height}=image.getSize(),bitmap=image.toBitmap();
+      let minX=width,maxX=-1,minY=height,maxY=-1;
+      for(let y=Math.floor(height/4);y<height*3/4;y++)for(let x=Math.floor(width/4);x<width*3/4;x++){
+        const i=(y*width+x)*4;if(bitmap[i]>40||bitmap[i+1]>40||bitmap[i+2]>40){minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y)}
+      }
+      return {width:Math.max(0,maxX-minX+1),height:Math.max(0,maxY-minY+1)};
+    };
+    const awaitShape=async(predicate,message)=>{const until=Date.now()+5000;let current;do{current=await shape();if(predicate(current))return current;await new Promise(resolve=>setTimeout(resolve,100))}while(Date.now()<until);throw new Error(message+': '+JSON.stringify(current))};
+    const beforeShape=await awaitShape(s=>s.width>15&&s.height>25,'Initial SC curve was not drawn');
+    await win.webContents.executeJavaScript(`document.querySelector('button[title="Patterns"]').click()`);
+    await win.webContents.executeJavaScript(`new Promise((resolve,reject)=>{const until=Date.now()+5000;const poll=()=>{const select=document.querySelector('#pattern-source-pair');if(select){const labels=[...select.options].map(o=>o.textContent.trim());if(labels.join('|')!=='1 · SC buses 32/33|2 · SC buses 34/35'){reject(new Error('Wrong SC bus pair labels: '+labels));return}Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(select,'1');select.dispatchEvent(new Event('change',{bubbles:true}));resolve()}else if(Date.now()>until)reject(new Error('Pattern pair controls did not mount'));else setTimeout(poll,20)};poll()})`);
+    await new Promise(resolve=>setTimeout(resolve,500));
+    await awaitShape(s=>s.width>beforeShape.width*1.8&&s.height>beforeShape.height*1.3,'SC buses 34/35 did not produce their expected larger curve');
+    const image1=await capturePlot();
+    osc.send('/n_set',888881,'gain',.25);await osc.sync();await new Promise(resolve=>setTimeout(resolve,500));
+    await awaitShape(s=>s.width<beforeShape.width*1.2&&s.height<beforeShape.height*.8,'SC gain change did not shrink the selected pair');
+    const image2=await capturePlot();
+    const screenshot=option(process.argv,'smoke-screenshot');if(screenshot)await writeFile(screenshot,(await win.webContents.capturePage()).toPNG());
+    if(image1.equals(image2))throw new Error('Lissajous image did not respond to an SC gain change');
+    await win.webContents.executeJavaScript(`document.querySelector('button[title="Add a new pattern"]').click()`);
+    await new Promise(resolve=>setTimeout(resolve,100));
+    await win.webContents.executeJavaScript(`(()=>{if(document.querySelector('#pattern-source-pair').value!=='0')throw new Error('New pattern did not get its own default pair');document.querySelector('button[title="Pattern 1"]').click()})()`);
+    await new Promise(resolve=>setTimeout(resolve,100));
+    if(await win.webContents.executeJavaScript(`document.querySelector('#pattern-source-pair').value`)!=='1')throw new Error('Patterns lost independent SC pair selections');
+    osc.send('/n_set',888881,'gain',1);await osc.sync();
+    // A second private tap must coexist without tail-following feedback, then release alone.
+    const peer=await scBusAudio.start('sc-bus-smoke-peer',{bus:34,channels:2});
+    const PeerSocket=require('ws').WebSocket,peerSocket=new PeerSocket(peer.endpoint);let peerFrames=0;
+    peerSocket.on('message',()=>peerFrames++);peerSocket.on('error',()=>{});
+    await new Promise(resolve=>setTimeout(resolve,300));
+    const live=await win.webContents.executeJavaScript('window.__scBusSmoke.frames');
+    if(peerFrames<3||live<=first.frames)throw new Error('Concurrent SC bus taps stopped publishing');
+    peerSocket.terminate();await scBusAudio.releaseView('sc-bus-smoke-peer');
+    await win.webContents.executeJavaScript(`document.querySelector('button[title="Source"]').click()`);
+    await new Promise(resolve=>setTimeout(resolve,100));
+    await click('Stop SC Bus');await waitFor(()=>!scBusAudio.has(),5000);
+    await setRange(34,2);await new Promise(resolve=>setTimeout(resolve,100));await click('Start SC Bus');
+    await waitFor(()=>registry.get(launched.viewID)?.sessionState?.audioChannels===2&&registry.get(launched.viewID)?.sessionState?.sourceKind==='sc-bus',10000);
+    await new Promise(resolve=>setTimeout(resolve,400));const second=await win.webContents.executeJavaScript('window.__scBusSmoke');
+    if(second.channels!==2||Math.abs(second.peaks[0]-.3)>.002||Math.abs(second.peaks[1]-.4)>.002)throw new Error('Switching SC bus range lost channel identity');
+    await win.webContents.executeJavaScript(`document.querySelector('button[title="Patterns"]').click()`);
+    await win.webContents.executeJavaScript(`new Promise((resolve,reject)=>{const until=Date.now()+5000;const poll=()=>{const select=document.querySelector('#pattern-source-pair');if(select){if(select.value!=='1'||select.options[0].textContent.trim()!=='1 · SC buses 34/35'||!select.options[1].disabled)reject(new Error('Reduced bus range silently changed the selected pair'));else resolve()}else if(Date.now()>until)reject(new Error('Missing pattern bus selector'));else setTimeout(poll,20)};poll()})`);
+    await closeToolView(launched.viewID);await waitFor(()=>!scBusAudio.has(),5000);
+    const state=await osc.request('/status',[],'/status.reply');
+    if(nativeScHost.snapshot().processID!==hostPID||state[2]!==baseline[2]||state[3]!==baseline[3]||registry.list().some(v=>v.toolID!=='lissajous'))throw new Error('View closure disturbed host or unrelated tool opened');
+    console.log(`AWB_SC_BUS_READY source=sc-bus channels=4,2 raw-peaks=true switching=true live-image=true concurrent=true pair-routing=true actualRate=${first.rate} host-survives=true unrelated-tools=0`);
+  } finally {osc.send('/n_free',888881);await osc.sync().catch(()=>{});osc.close()}
+  app.quit();
+}
+
+async function runSharedLoopSmoke() {
+  smokeRunning = true;
+  const unavailable = await launchFromHome({toolID:'shared-loop',profileID:'hosted',launchOrigin:'desktop'});
+  if(unavailable.status!=='failed')throw new Error('Looper launched without shell host');
+  const failed = registry.list().find(view=>view.toolID==='shared-loop');
+  if(failed)await closeToolView(failed.viewID);
+  await startHeadlessHost();
+  await waitFor( () => services.firstService( ( service ) => service.hostSnapshot?.().scsynth.status === 'ready' ), 30000 );
+  const hostPID = nativeScHost.snapshot().processID;
+  const serviceCount = services.snapshot().length;
+  await homeWindow.webContents.executeJavaScript( `new Promise((resolve, reject) => {
+    const started = Date.now();
+    const check = () => {
+      const button = document.querySelector('[data-tool="shared-loop"][data-profile="hosted"]');
+      if (button) { button.click(); resolve(); }
+      else if (Date.now()-started > 5000) reject(new Error('Shared Loop catalogue action missing'));
+      else setTimeout(check, 25);
+    }; check();
+  })` );
+  await waitFor( () => registry.list().some( ( view ) => view.toolID === 'shared-loop' && view.lifecycle === 'ready' ), 45000 );
+  const loop = registry.list().find( ( view ) => view.toolID === 'shared-loop' );
+  const window = windows.get( loop.viewID );
+  const result = await window.webContents.executeJavaScript( `(async () => {
+    const send = async (action, value) => {
+      const response = await fetch('/api/control', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action,value})});
+      if (!response.ok) throw new Error('Looper control failed');
+    };
+    await send('outputGain', 0);
+    document.querySelector('#record').click();
+    const wait = async (predicate) => {const started=Date.now();while(!predicate()){if(Date.now()-started>10000)throw new Error('Looper UI timed out');await new Promise(r=>setTimeout(r,40));}};
+    await wait(()=>document.querySelector('#mode').textContent==='PLAYING');
+    const stored = await (await fetch('/api/state')).json();
+    if (Math.max(...stored.snapshot.envelope)<0.2) throw new Error('Shared waveform missing');
+    document.querySelector('#overdub').click();
+    await wait(()=>document.querySelector('#mode').textContent==='OVERDUBBING');
+    document.querySelector('#play').click();
+    await wait(()=>document.querySelector('#mode').textContent==='STOPPED');
+    const canvas=document.querySelector('#wave');
+    return {connected:stored.connected,sequence:stored.snapshot.sequence,width:canvas.width,height:canvas.height};
+  })()` );
+  if ( !result.connected || result.width < 100 || result.height < 100 ) throw new Error( 'Looper canvas is unavailable.' );
+  const screenshot = option( process.argv, 'smoke-screenshot' );
+  if ( screenshot ) { window.show(); window.focus(); await window.webContents.executeJavaScript('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))'); await writeFile( screenshot, ( await window.webContents.capturePage() ).toPNG() ); }
+  const beforeClose = await window.webContents.executeJavaScript(`fetch('/api/state').then(r=>r.json())`);
+  if ( beforeClose.session.host !== 'shell' || beforeClose.session.port !== nativeScHost.snapshot().serverPort ) throw new Error('Looper did not use shell SC');
+  if ( beforeClose.snapshot.sampleRate !== beforeClose.session.sampleRate ) throw new Error('Looper sample rate differs from host');
+  if(signalCaptures.diagnostics().sources.length)throw new Error('Looper allocated scope taps without viewers');
+  const loopOSCModule = await import( path.resolve( appRoot, '../../tool-artifacts/shared-loop/0.1.0/osc.mjs' ) );
+  const serverProbe = new loopOSCModule.OSC( beforeClose.session.port );
+  // A separate node must survive closing the looper on the same server.
+  serverProbe.send('/g_new', 900000001, 1, 1); await serverProbe.sync();
+  await serverProbe.request('/d_load', [path.resolve(appRoot,'../../tool-artifacts/shared-loop/0.1.0/build/awbScopeMicProbeV1.scsyndef')], '/done', a=>a[0]==='/d_load');
+  await serverProbe.request('/d_load', [path.resolve(appRoot,'../../tool-artifacts/shared-loop/0.1.0/build/awbScopeOutputProbeV1.scsyndef')], '/done', a=>a[0]==='/d_load');
+  serverProbe.send('/s_new','awbScopeMicProbeV1',900000011,0,0);
+  serverProbe.send('/s_new','awbScopeOutputProbeV1',900000012,1,0); await serverProbe.sync();
+  await window.webContents.executeJavaScript(`document.querySelector('#micScope').click();document.querySelector('#outputScope').click();document.querySelector('#controlScope').click();`);
+  await waitFor(()=>scopeWindows.get(loop.viewID)?.size===3,5000);
+  const capture = async (kind) => {
+    const scope = scopeWindows.get(loop.viewID).get(kind);scope.webContents.setBackgroundThrottling(false);scope.show();scope.focus();
+    const checked=await scope.webContents.executeJavaScript(`(async()=>{
+      const started=Date.now();let state;
+      while(Date.now()-started<6000){
+        state=await(await fetch('/api/scopes')).json();
+        if(state.connected&&state.scopes.mic?.peaks[0]>0.079&&state.scopes.output?.peaks[0]>0.0039)break;
+        await new Promise(r=>setTimeout(r,50));
+      }
+      if(!state.connected||state.scopes.mic.peaks[0]<0.079||state.scopes.output.peaks[0]<0.0039||Math.abs(state.scopes.output.peaks[1]-0.002)>0.0001)throw new Error('Scope routing did not match hardware bus probes: '+JSON.stringify(state));
+      if(state.scopes.mic.channels!==1||state.scopes.output.channels!==2||state.scopes.output.frames!==1024)throw new Error('Scope format mismatch');
+      if(state.scopes.output.samples||state.scopes.mic.samples)throw new Error('Scope API unexpectedly contains sample JSON');
+      const {decodeScopeFrame,SCOPE_PROTOCOL}=await import('/scope-protocol.js');
+      const binary=await new Promise((resolve,reject)=>{
+        const ws=new WebSocket(location.origin.replace('http:','ws:')+'/scope/socket?kind=${kind}',SCOPE_PROTOCOL);ws.binaryType='arraybuffer';
+        const timeout=setTimeout(()=>{ws.close();reject(new Error('Binary scope timed out'));},3000);
+        ws.onerror=()=>{clearTimeout(timeout);reject(new Error('Binary scope connection failed'));};
+        ws.onmessage=event=>{if(typeof event.data==='string')return;try{const frame=decodeScopeFrame(event.data,'${kind}',${beforeClose.session.sharedId});
+          ws.send(JSON.stringify({ack:frame.sequence}));clearTimeout(timeout);ws.close();
+          resolve({channels:frame.channels,frames:frame.frames,peak:Math.max(...frame.samples.subarray(0,frame.frames)),rightPeak:frame.channels===2?Math.max(...frame.samples.subarray(frame.frames)):null});
+        }catch(error){clearTimeout(timeout);ws.close();reject(error);}};
+      });
+      if(binary.frames!==1024||binary.channels!==('${kind}'==='mic'?1:2)||Math.abs(binary.peak-('${kind}'==='mic'?0.08:0.004))>0.0001||binary.rightPeak!==null&&Math.abs(binary.rightPeak-0.002)>0.0001)throw new Error('Binary samples/stride differ from SC bus probes');
+      if(document.querySelector('#scope').dataset.transport!=='binary-v5')throw new Error('Scope GUI did not receive binary frames');
+      const readyAt=Date.now();while(document.querySelector('#connection').textContent!=='Live') {if(Date.now()-readyAt>3000)throw new Error('Scope UI not live');await new Promise(r=>setTimeout(r,40));}
+      return {node:typeof require,host:typeof awbHost,peak:state.scopes['${kind}'].peaks,rate:state.scopes['${kind}'].sampleRate};
+    })()`);
+    if(checked.node!=='undefined'||checked.host!=='undefined'||checked.rate!==beforeClose.session.sampleRate)throw new Error('Scope sandbox or sample rate mismatch');
+    scope.show(); scope.focus();
+    await scope.webContents.executeJavaScript(`(async()=>{
+      document.querySelector('#gain').value=String(document.querySelector('#gain').dataset.scale==='log2'?Math.log2(16):16);document.querySelector('#gain').dispatchEvent(new Event('change'));
+      document.querySelector('#zoom').value=String(document.querySelector('#zoom').dataset.scale==='log2'?Math.log2(4):4);document.querySelector('#zoom').dispatchEvent(new Event('change'));
+      document.querySelector('#pan').value='50';document.querySelector('#pan').dispatchEvent(new Event('input'));
+      const started=Date.now();while(!document.querySelector('#scope').dataset.renderedSequence){if(Date.now()-started>3000)throw new Error('Scope canvas never painted');await new Promise(r=>setTimeout(r,25));}
+      await new Promise(resolve=>setTimeout(resolve,200));
+    })()`);
+    const fits=await scope.webContents.executeJavaScript(`document.documentElement.scrollWidth<=innerWidth&&document.querySelector('footer').getBoundingClientRect().bottom<=innerHeight`);
+    if(!fits)throw new Error('Scope controls/footer do not fit the default viewport');
+    if(screenshot)await writeFile(screenshot.replace('.png',`-${kind}.png`),(await scope.webContents.capturePage()).toPNG());
+    return scope;
+  };
+  const micWindow=await capture('mic'),outputWindow=await capture('output');
+  const outputSource=signalCaptures.diagnostics().sources.find(s=>s.rate==='audio'&&s.bus===0&&s.channels===2);
+  if(!outputSource||outputSource.subscribers!==1||signalCaptures.diagnostics().sources.length!==3)throw new Error('Scope taps did not allocate per demand');
+  const sharedPeer=await scBusAudio.start('scope-lissajous-peer',{bus:0,channels:2});
+  if(sharedPeer.generation!==outputSource.generation||signalCaptures.diagnostics().sources.find(s=>s.generation===sharedPeer.generation)?.subscribers!==2)throw new Error('SC Bus and scope did not share one physical capture');
+  const PeerSocket=require('ws').WebSocket,sharedPeerSocket=new PeerSocket(sharedPeer.endpoint);let rawPeerFrames=0;
+  sharedPeerSocket.on('error',()=>{});sharedPeerSocket.on('message',packet=>{
+   if(packet.readUInt32LE(40)!==512||packet.readUInt32LE(36)!==2||packet.readDoubleLE(16)!==beforeClose.session.sampleRate)throw new Error('Scope zoom degraded raw SC Bus PCM');
+   rawPeerFrames++;
+  });
+  await waitFor(()=>rawPeerFrames>3,3000);
+  const controlWindow=scopeWindows.get(loop.viewID).get('control');
+  if(!controlWindow)throw new Error('Control scope did not open');
+  controlWindow.webContents.setBackgroundThrottling(false);
+  for(const scope of [micWindow,outputWindow]) {
+    scope.show();scope.focus();
+    const zoomed=await scope.webContents.executeJavaScript(`(async()=>{
+      document.querySelector('#freeze').click();const sequence=document.querySelector('#updates').textContent;
+      document.querySelector('#zoom').value=String(document.querySelector('#zoom').dataset.scale==='log2'?Math.log2(8):8);document.querySelector('#zoom').dispatchEvent(new Event('change'));
+      document.querySelector('#pan').value='100';document.querySelector('#pan').dispatchEvent(new Event('input'));
+      await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Visible scope paint timed out')),5000);requestAnimationFrame(()=>requestAnimationFrame(()=>{clearTimeout(timer);resolve();}));});
+      const canvas=document.querySelector('#scope');
+      const valid=canvas.dataset.visibleFrames==='128'&&canvas.dataset.startFrame==='896'&&!document.querySelector('#pan').disabled&&document.querySelector('#updates').textContent===sequence;
+      document.querySelector('#zoom').value=String(document.querySelector('#zoom').dataset.scale==='log2'?Math.log2(1):1);document.querySelector('#zoom').dispatchEvent(new Event('change'));
+      await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Visible scope paint timed out')),5000);requestAnimationFrame(()=>requestAnimationFrame(()=>{clearTimeout(timer);resolve();}));});
+      const reset=canvas.dataset.visibleFrames==='1024'&&canvas.dataset.startFrame==='0'&&document.querySelector('#pan').disabled;
+      document.querySelector('#freeze').click();return valid&&reset;
+    })()`);
+    if(!zoomed)throw new Error('Scope horizontal zoom/pan/reset failed on frozen snapshot');
+  }
+  for(const [kind,scope] of [['mic',micWindow],['output',outputWindow],['control',controlWindow]]) {
+    scope.show();scope.focus();
+    const wider=await scope.webContents.executeJavaScript(`(async()=>{
+      const {decodeScopeFrame,SCOPE_PROTOCOL}=await import('/scope-protocol.js');
+      const {ScopeHistory}=await import('/scope-history.js');
+      const wait=async(predicate)=>{const start=Date.now();while(!predicate()){if(Date.now()-start>7000)throw new Error('Wide capture/GUI timed out: '+JSON.stringify({kind:'${kind}',dataset:{...document.querySelector('#scope').dataset},connection:document.querySelector('#connection').textContent,metadata:await(await fetch('/api/scopes')).json()}));await new Promise(r=>setTimeout(r,35));}};
+      document.querySelector('#gain').value=String(document.querySelector('#gain').dataset.scale==='log2'?Math.log2(1):1);document.querySelector('#gain').dispatchEvent(new Event('change'));
+      document.querySelector('#zoom').value=String(document.querySelector('#zoom').dataset.scale==='log2'?Math.log2(0.0625):0.0625);document.querySelector('#zoom').dispatchEvent(new Event('change'));
+      const expectedSource='${kind}'==='control'?2048:16384,reduction='${kind}'==='control'?1:16;
+      await wait(()=>document.querySelector('#scope').dataset.sourceFrames===String(expectedSource)&&document.querySelector('#scope').dataset.format===('${kind}'==='control'?'samples':'minmax'));
+      let publications=0,firstEnd,lastEnd;
+      const frame=await new Promise((resolve,reject)=>{
+        const ws=new WebSocket(location.origin.replace('http:','ws:')+'/scope/socket?kind=${kind}',SCOPE_PROTOCOL);ws.binaryType='arraybuffer';
+        const composite=new ScopeHistory('${kind}'==='control'?128:1024);
+        const timeout=setTimeout(()=>{ws.close();reject(new Error('Rolling history timed out'));},9000);
+        ws.onerror=()=>{clearTimeout(timeout);reject(new Error('Wide packet connection failed'));};
+        ws.onmessage=event=>{if(typeof event.data==='string')return;try{
+          const f=decodeScopeFrame(event.data,'${kind}',${beforeClose.session.sharedId});ws.send(JSON.stringify({ack:f.sequence}));
+          const expectedChunk='${kind}'==='control'?32:1024;
+          if(f.sourceFrames!==expectedChunk||f.frames!==expectedChunk/reduction)throw new Error('Zoom changed the source chunk size instead of reduction');
+          if(firstEnd===undefined)firstEnd=f.sourceEnd;lastEnd=f.sourceEnd;publications++;
+          composite.append(f);const view=composite.view(expectedSource);
+          if(lastEnd-firstEnd<expectedSource-expectedChunk||view.missingSourceFrames)return;
+          clearTimeout(timeout);ws.close();resolve(view);
+        }catch(error){clearTimeout(timeout);ws.close();reject(error);}};
+      });
+      if(frame.frames!==expectedSource/reduction||frame.samples.length!==frame.frames*frame.channels*(reduction===1?1:2))throw new Error('Wide bucket count/stride incorrect');
+      const expectedRate='${kind}'==='control'?${beforeClose.session.sampleRate}/${beforeClose.session.blockSize}:${beforeClose.session.sampleRate};
+      if(frame.sampleRate!==expectedRate||frame.audioSampleRate!==${beforeClose.session.sampleRate})throw new Error('Audio/control rate mismatch');
+      if(reduction!==1)for(let i=0;i<frame.samples.length;i+=2)if(frame.samples[i]>frame.samples[i+1])throw new Error('Minmax bucket reversed');
+      if('${kind}'==='control'){
+        if(Math.max(...frame.samples)<.99||Math.min(...frame.samples)>-.99)throw new Error('Control LFO shape missing');
+        // A 1 Hz LFO should have approximately duration positive-going crossings, within one window phase.
+        let crossings=0;for(let i=1;i<frame.frames;i++){if(frame.samples[i-1]<0&&frame.samples[i]>=0)crossings++;}
+        if(Math.abs(crossings-frame.sourceFrames/frame.sampleRate)>1)throw new Error('Control LFO time axis incorrect');
+        if(frame.channels!==6||frame.peaks.length!==6||frame.rms.length!==6)throw new Error('Control array dimensions incorrect');
+        const stride=frame.frames;
+        let fastCrossings=0;for(let i=1;i<stride;i++){if(frame.samples[stride+i-1]<0&&frame.samples[stride+i]>=0)fastCrossings++;}
+        if(Math.abs(fastCrossings-10*frame.sourceFrames/frame.sampleRate)>1)throw new Error('Fast 10 Hz LFO missing/wrong time axis');
+        const noise=[];for(let ch=2;ch<6;ch++){
+          const values=frame.samples.subarray(ch*stride,(ch+1)*stride);
+          if(values.some(value=>!Number.isFinite(value)||Math.abs(value)>1.001)||new Set(values).size<2)throw new Error('Noise channel '+ch+' is absent or constant');
+          noise.push(values);
+        }
+        for(let i=0;i<noise.length;i++)for(let j=i+1;j<noise.length;j++)if(noise[i].every((value,n)=>value===noise[j][n]))throw new Error('Noise channels are duplicate copies');
+        const paint=()=>new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Control signal picker paint timed out')),3000);requestAnimationFrame(()=>requestAnimationFrame(()=>{clearTimeout(timer);resolve();}));});
+        document.querySelector('#freeze').click();const held=document.querySelector('#updates').textContent;
+        for(const [mode,expected] of [['noise','2,3,4,5'],['fast','1'],['slow','0'],['all','0,1,2,3,4,5']]){
+          document.querySelector('#signals').value=mode;document.querySelector('#signals').dispatchEvent(new Event('change'));await paint();
+          if(document.querySelector('#scope').dataset.visibleChannels!==expected||document.querySelector('#updates').textContent!==held)throw new Error('Control signal picker/freeze failed');
+        }
+        document.querySelector('#freeze').click();
+        for(const [mode,expected] of [['slow','0'],['fast','1'],['noise','2,3,4,5'],['all','0,1,2,3,4,5']]){
+          document.querySelector('#signals').value=mode;document.querySelector('#signals').dispatchEvent(new Event('change'));
+          await wait(()=>document.querySelector('#scope').dataset.channelIds===expected&&document.querySelector('#scope').dataset.visibleChannels===expected);
+        }
+        document.querySelector('#signals').value='fast';document.querySelector('#signals').dispatchEvent(new Event('change'));
+        await wait(()=>document.querySelector('#scope').dataset.channelIds==='1'&&document.querySelector('#scope').dataset.visibleChannels==='1');
+        document.querySelector('#freeze').click();await paint();const paintCount=document.querySelector('#scope').dataset.paints;
+        await new Promise(r=>setTimeout(r,160));
+        if(document.querySelector('#scope').dataset.paints!==paintCount)throw new Error('Frozen subset kept painting');
+        if(!document.querySelector('#signals option[value="all"]').disabled||document.querySelector('#signals option[value="fast"]').disabled)throw new Error('Frozen subset offers unavailable history');
+        document.querySelector('#freeze').click();document.querySelector('#signals').value='all';document.querySelector('#signals').dispatchEvent(new Event('change'));
+        await wait(()=>document.querySelector('#scope').dataset.channelIds==='0,1,2,3,4,5');
+
+      }else{
+        const expected='${kind}'==='mic'?.08:.004;
+        if(Math.abs(Math.max(...frame.samples.subarray(0,frame.frames*2))-expected)>.0001)throw new Error('Wide reduction lost audio peaks');
+        if(frame.channels===2&&Math.abs(Math.max(...frame.samples.subarray(frame.frames*2))-.002)>.0001)throw new Error('Wide stereo stride/peak incorrect');
+      }
+      await wait(()=>document.querySelector('#scope').dataset.visibleFrames===String(expectedSource/reduction));
+      if(publications<4)throw new Error('Rolling history did not advance through multiple short chunks');
+      if(lastEnd-firstEnd<=0)throw new Error('Source clock did not advance');
+      const duration=Number.parseFloat(document.querySelector('#duration').textContent);
+      if(Math.abs(duration-1000*frame.sourceFrames/frame.sampleRate)>.02)throw new Error('Wider ruler duration incorrect');
+      if(!document.querySelector('#pan').disabled)throw new Error('Wider capture should display its entire range');
+      if(document.documentElement.scrollWidth>innerWidth||document.querySelector('footer').getBoundingClientRect().bottom>innerHeight)throw new Error('Wide scope footer/controls do not fit');
+      if(document.querySelector('#connection').textContent!=='Live')throw new Error('Wide/control scope did not recover live status');
+      return {sourceFrames:frame.sourceFrames,frames:frame.frames,duration,format:frame.format,rate:frame.sampleRate,publications,sourceClockAdvance:lastEnd-firstEnd,node:typeof require,host:typeof awbHost};
+    })()`);
+    if(wider.node!=='undefined'||wider.host!=='undefined')throw new Error('Wide/control scope escaped sandbox');
+    scope.show();scope.focus();
+    if(screenshot){
+      await scope.webContents.executeJavaScript(`new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Control screenshot paint timed out')),3000);requestAnimationFrame(()=>requestAnimationFrame(()=>{clearTimeout(timer);resolve();}));})`);
+      await writeFile(screenshot.replace('.png',`-${kind}-wide.png`),(await scope.webContents.capturePage()).toPNG());
+    }
+    console.log('AWB_SHARED_SCOPE_WIDE '+JSON.stringify({kind,...wider}));
+    if(kind==='control'){
+      const single=await scope.webContents.executeJavaScript(`(async()=>{
+        document.querySelector('#zoom').value=String(document.querySelector('#zoom').dataset.scale==='log2'?Math.log2(0.25):0.25);document.querySelector('#zoom').dispatchEvent(new Event('change'));
+        const canvas=document.querySelector('#scope'),started=Date.now();
+        while(canvas.dataset.frames!=='512'||canvas.dataset.format!=='samples'||canvas.dataset.missingSourceFrames!=='0'){
+          if(Date.now()-started>5000)throw new Error('Quarter-width control raw history not ready');await new Promise(r=>setTimeout(r,35));
+        }
+        document.querySelector('#freeze').click();await new Promise(r=>setTimeout(r,50));
+        const ctx=canvas.getContext('2d'),names=['beginPath','moveTo','closePath','stroke'],saved=Object.fromEntries(names.map(n=>[n,ctx[n]])),traces=[];
+        let moves=0,closed=0;const colors=['#6ce0c1','#ffb276','#80bcff','#ed97bd','#b5df85','#bbabff'];
+        ctx.beginPath=function(...a){moves=closed=0;return saved.beginPath.apply(this,a)};
+        ctx.moveTo=function(...a){moves++;return saved.moveTo.apply(this,a)};
+        ctx.closePath=function(...a){closed++;return saved.closePath.apply(this,a)};
+        ctx.stroke=function(...a){if(colors.includes(this.strokeStyle))traces.push({moves,closed});return saved.stroke.apply(this,a)};
+        try{document.querySelector('#gain').dispatchEvent(new Event('change'));await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));}
+        finally{for(const n of names)ctx[n]=saved[n];}
+        if(traces.length!==6||traces.some(t=>t.moves!==1||t.closed))throw new Error('Control lanes are not single open paths: '+JSON.stringify(traces));
+        return {format:canvas.dataset.format,frames:Number(canvas.dataset.frames),paths:traces.length,closed:traces.reduce((n,t)=>n+t.closed,0)};
+      })()`);
+      if(screenshot)await writeFile(screenshot.replace('.png','-control-single-line.png'),(await scope.webContents.capturePage()).toPNG());
+      console.log('AWB_CONTROL_SINGLE_TRACE_READY '+JSON.stringify(single));
+      await scope.webContents.executeJavaScript(`document.querySelector('#freeze').click();void 0;`);
+    }
+    await scope.webContents.executeJavaScript(`document.querySelector('#zoom').value=String(document.querySelector('#zoom').dataset.scale==='log2'?Math.log2(1):1);document.querySelector('#zoom').dispatchEvent(new Event('change'));void 0;`);
+  }
+  const sliderGenerations=signalCaptures.diagnostics().sources.map(s=>s.generation).sort().join(',');
+  for(const [kind,scope] of [['mic',micWindow],['output',outputWindow],['control',controlWindow]]){
+    const sliders=await scope.webContents.executeJavaScript(`(async()=>{
+      const canvas=document.querySelector('#scope'),base='${kind}'==='control'?128:1024,requests=[],originalFetch=window.fetch;
+      const wait=async(fn)=>{const start=Date.now();while(!fn()){if(Date.now()-start>6000)throw new Error('Slider view did not settle: '+JSON.stringify({...canvas.dataset}));await new Promise(r=>setTimeout(r,25));}};
+      const paint=()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+      const axis=(id,value)=>{const input=document.querySelector('#'+id);if(input.type!=='range'||input.dataset.scale!=='log2')throw new Error('Missing zoom slider');input.value=String(value);input.dispatchEvent(new Event('input'));};
+      window.fetch=(url,options)=>{if(String(url)==='/api/scope-view')requests.push(JSON.parse(options.body));return originalFetch(url,options);};
+      try{
+        const spans=[];
+        for(const exponent of [-1.37,-2.43]){
+          axis('zoom',exponent);const z=2**exponent,step='${kind}'==='control'?1:z>=.25?4:16,bins=Math.floor(base/z/step);
+          await wait(()=>canvas.dataset.sourceFrames===String(bins*step)&&canvas.dataset.frames===String(bins)&&canvas.dataset.format===(step===1?'samples':'minmax'));
+          const ms=Number.parseFloat(document.querySelector('#duration').textContent),rate='${kind}'==='control'?${beforeClose.session.sampleRate}/${beforeClose.session.blockSize}:${beforeClose.session.sampleRate};
+          if(Math.abs(ms-1000*bins*step/rate)>.02)throw new Error('Fractional slider changed the time axis');spans.push({zoom:z,sourceFrames:bins*step,step});
+        }
+        // Crossing a capture-profile boundary repeatedly in one drag must coalesce requests.
+        axis('zoom',0);await wait(()=>canvas.dataset.frames===String(base)&&canvas.dataset.format==='samples');const before=requests.length;
+        for(let i=0;i<24;i++)axis('zoom',i%2?-2.1:-1.9);
+        const z=2**-2.1,step='${kind}'==='control'?1:16,bins=Math.floor(base/z/step);
+        await wait(()=>canvas.dataset.frames===String(bins)&&canvas.dataset.sourceFrames===String(bins*step));
+        const dragRequests=requests.length-before;if(dragRequests>2)throw new Error('Slider flooded capture changes: '+dragRequests);
+        axis('zoom',0);await wait(()=>canvas.dataset.frames===String(base)&&canvas.dataset.format==='samples');axis('gain',0);await paint();
+        document.querySelector('#freeze').click();await paint();const held=canvas.dataset.renderedSourceEnd,image=canvas.toDataURL();
+        axis('zoom',.63);document.querySelector('#pan').value='100';document.querySelector('#pan').dispatchEvent(new Event('input'));await paint();const zoomImage=canvas.toDataURL();
+        axis('gain',3.25);await paint();if(canvas.toDataURL()===zoomImage||document.querySelector('#gainValue').textContent!=='9.51×')throw new Error('Y slider did not change the frozen waveform amplitude');
+        const count=Math.floor(base/2**.63);
+        if(canvas.dataset.visibleFrames!==String(count)||canvas.dataset.startFrame!==String(base-count)||document.querySelector('#pan').disabled||canvas.toDataURL()===image)throw new Error('Fractional frozen X/Y zoom or pan failed');
+        await new Promise(r=>setTimeout(r,160));if(canvas.dataset.renderedSourceEnd!==held)throw new Error('Zoom altered the frozen source');
+        for(const id of ['zoom','gain'])document.querySelector('#'+id).dispatchEvent(new MouseEvent('dblclick'));await paint();
+        if(document.querySelector('#zoomValue').textContent!=='1×'||document.querySelector('#gainValue').textContent!=='1×'||canvas.dataset.visibleFrames!==String(base)||!document.querySelector('#pan').disabled)throw new Error('Slider reset failed');
+        document.querySelector('#freeze').click();
+        if(requests.some(r=>!['${kind}'].includes(r.kind)||![1,.25,.0625].includes(r.zoom)))throw new Error('Fractional zoom escaped supported capture profiles');
+        if(document.documentElement.scrollWidth>innerWidth||document.querySelector('footer').getBoundingClientRect().bottom>innerHeight)throw new Error('Sliders overflow the scope window');
+        return {kind:'${kind}',fractional:true,spans,dragRequests,frozenXY:true,reset:true};
+      }finally{window.fetch=originalFetch;}
+    })()`);
+    console.log('AWB_SCOPE_SLIDERS_READY '+JSON.stringify(sliders));
+  }
+  if(signalCaptures.diagnostics().sources.map(s=>s.generation).sort().join(',')!==sliderGenerations)throw new Error('Slider changes replaced a physical SC capture');
+  const cadenceProbe=await outputWindow.webContents.executeJavaScript(`(async()=>{
+    const canvas=document.querySelector('#scope'),delay=ms=>new Promise(r=>setTimeout(r,ms)),results=[];
+    const oldGain=document.querySelector('#gain').value;document.querySelector('#gain').value=String(document.querySelector('#gain').dataset.scale==='log2'?Math.log2(64):64);document.querySelector('#gain').dispatchEvent(new Event('change'));
+    for(const fps of [30,15]){
+      document.querySelector('#paintRate').value=String(fps);document.querySelector('#paintRate').dispatchEvent(new Event('change'));await delay(250);
+      const count=Number(canvas.dataset.paints),end=Number(canvas.dataset.sourceEnd),image=canvas.toDataURL(),start=performance.now();await delay(1500);
+      const rate=(Number(canvas.dataset.paints)-count)*1000/(performance.now()-start);
+      if(rate>fps+1||rate<fps*.65||Number(canvas.dataset.sourceEnd)<=end)throw new Error('Scope paint cap/source progression failed: '+fps+' / '+rate);
+      const pixelsChanged=canvas.toDataURL()!==image;if(!pixelsChanged)throw new Error('Capped scope canvas pixels did not change: '+fps);
+      results.push({fps,actual:rate,pixelsChanged});
+    }
+    document.querySelector('#paintRate').value='0';document.querySelector('#paintRate').dispatchEvent(new Event('change'));document.querySelector('#gain').value=oldGain;document.querySelector('#gain').dispatchEvent(new Event('change'));return results;
+  })()`);
+  console.log('AWB_SCOPE_CADENCE_READY capture=unchanged rates='+JSON.stringify(cadenceProbe));
+  const controlValue=await serverProbe.request('/c_get',[beforeClose.session.controlBus],'/c_set',a=>a[0]===beforeClose.session.controlBus);
+  if(!Number.isFinite(controlValue[1])||Math.abs(controlValue[1])>1.001)throw new Error('Demo control bus unavailable');
+  console.log('AWB_SCOPE_SELECTION_READY masks=0;1;2,3,4,5;0,1,2,3,4,5 frozen-subset=true');
+  console.log('AWB_CONTROL_ARRAY_READY lfos=1,10 noise=1,5,20,100 channels=6 selector=all,noise,slow,fast');
+  console.log('AWB_SHARED_SCOPE_WIDE_CHECKS_COMPLETE');
+  if(process.argv.includes('--smoke-assess')) {
+    const {assess}=await import(path.resolve(appRoot,'../../tool-artifacts/shared-loop/0.1.0/tests/assessment.mjs'));
+    console.log('AWB_SHARED_LOOP_ASSESS '+JSON.stringify(await assess({serverProbe,session:beforeClose.session,url:window.webContents.getURL(),scopeWindows:[micWindow,outputWindow]})));
+  }
+  const frozen=await outputWindow.webContents.executeJavaScript(`(async()=>{document.querySelector('#freeze').click();const before=document.querySelector('#updates').textContent;await new Promise(r=>setTimeout(r,160));const after=document.querySelector('#updates').textContent;document.querySelector('#freeze').click();return before===after;})()`);
+  if(!frozen)throw new Error('Scope freeze did not hold display');
+  await outputWindow.webContents.executeJavaScript(`(async()=>{
+   const button=document.querySelector('#freeze');if(button.textContent==='Resume')button.click();button.click();
+   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+   const before=document.querySelector('#scope').dataset.paints;await new Promise(r=>setTimeout(r,250));
+   if(document.querySelector('#scope').dataset.paints!==before)throw new Error('Frozen scope kept repainting');button.click();
+  })()`);
+  micWindow.close();await waitFor(()=>!scopeWindows.get(loop.viewID)?.has('mic'),3000);
+  await waitFor(()=>!signalCaptures.diagnostics().sources.some(s=>s.rate==='audio'&&s.channels===1),5000);
+  await window.webContents.executeJavaScript(`document.querySelector('#micScope').click()`);
+  await waitFor(()=>scopeWindows.get(loop.viewID)?.size===3,5000);
+  await capture('mic');
+  let refused=false;try{await window.webContents.executeJavaScript(`window.awbHost.request('scope.open',{kind:'invalid'})`);}catch{refused=true;}
+  if(!refused)throw new Error('Scope accepted arbitrary viewer kind');
+  const oldScopes=[...scopeWindows.get(loop.viewID).values()];
+  if(registry.list().some(view=>view.toolID!=='shared-loop'))throw new Error('Looper smoke launched an unrelated tool');
+  const url = window.webContents.getURL();
+  await closeToolView( loop.viewID );
+  await waitFor( () => !registry.get( loop.viewID ), 5000 );
+  await toolRuntimes.release( loop.viewID );
+  if(scopeWindows.has(loop.viewID)||oldScopes.some(scope=>!scope.isDestroyed()))throw new Error('Scope windows survived instrument closure');
+  if ( nativeScHost.snapshot().processID !== hostPID ) throw new Error('Closing looper restarted the host');
+  await serverProbe.request('/g_queryTree', [900000001,0], '/g_queryTree.reply', a=>a[1]===900000001);
+  await serverProbe.request('/status', [], '/status.reply');
+  const freedBuffer=await serverProbe.request('/b_query',[beforeClose.session.bufnum],'/b_info',a=>a[0]===beforeClose.session.bufnum);
+  if(freedBuffer[1]!==0)throw new Error('Looper Buffer survived view closure');
+  await serverProbe.request('/n_query',[beforeClose.session.nodeId],'/fail',a=>a[0]==='/n_query');
+  const nativeReader=require(path.resolve(appRoot,'../../tool-artifacts/shared-loop/0.1.0/build/loopview.node'));
+  try {const handle=nativeReader.attach(beforeClose.session.sharedId);nativeReader.detach(handle);throw new Error('Looper region survived view closure');}
+  catch(error){if(error.message!=='Shared region unavailable')throw error;}
+  const surviving=signalCaptures.diagnostics().sources;
+  if(surviving.length!==1||surviving[0].generation!==sharedPeer.generation||surviving[0].subscribers!==1)throw new Error('Closing looper detached peer or leaked private scopes');
+  const heldFrames=rawPeerFrames;await waitFor(()=>rawPeerFrames>heldFrames+3,3000);
+  sharedPeerSocket.terminate();await scBusAudio.releaseView('scope-lissajous-peer');
+  if(signalCaptures.diagnostics().sources.length||signalCaptures.diagnostics().polling)throw new Error('Last scope subscriber left acquisition running');
+  console.log('AWB_SIGNAL_ENGINE_READY shared-capture=true raw-pcm-isolated=true demand=true peer-survives=true last-release=true');
+  serverProbe.send('/n_free',900000001,900000011,900000012); await serverProbe.sync(); serverProbe.close();
+  console.log('AWB_SHARED_SCOPES_READY sources=hardware-input-1,hardware-output-1-2,control-bus windows=3 isolated-close=true zoom=1/16-8 pan=true transport=binary-v5 unrelated-tools=0');
+  if ( services.snapshot().length !== serviceCount ) throw new Error( 'Looper changed shared host services.' );
+  try { await fetch( new URL( '/api/state', url ) ); throw new Error( 'Looper backend survived view closure.' ); }
+  catch ( error ) { if ( error.message === 'Looper backend survived view closure.' ) throw error; }
+  console.log( `AWB_SHARED_LOOP_READY controls=record,overdub,stop waveform=shared-memory shared-host=true host-survives=true sampleRate=${ beforeClose.snapshot.sampleRate } hostServices=${ serviceCount }` );
+  const reopened=await launchFromHome({toolID:'shared-loop',profileID:'hosted',launchOrigin:'desktop'});
+  if(reopened.status!=='accepted')throw new Error(reopened.error);
+  await waitFor(()=>registry.get(reopened.viewID)?.lifecycle==='ready',10000);
+  const reopening=await windows.get(reopened.viewID).webContents.executeJavaScript(`fetch('/api/state').then(r=>r.json())`);
+  console.log(`AWB_SHARED_LOOP_QUIT_ACTIVE sharedId=${reopening.session.sharedId} serverPort=${reopening.session.port}`);
+  app.quit();
 }
 
 async function runMultiviewSmoke() {
@@ -748,9 +1213,19 @@ function launchContextFor( viewID, request, tool ) {
     connections: request.connections, payload: request.payload } );
 }
 
-async function createToolWindow( { viewID, request, tool } ) {
+async function createToolWindow( args ) {
+  try { return await createToolWindowOwned( args ); }
+  catch ( error ) {
+    windows.get( args.viewID )?.close();
+    await toolRuntimes.release( args.viewID ).catch( ( cleanup ) => console.error( cleanup ) );
+    throw error;
+  }
+}
+
+async function createToolWindowOwned( { viewID, request, tool } ) {
   registry.update( viewID, { lifecycle: 'loading' } );
   let effectiveRequest = request;
+  const runtimeURL = await toolRuntimes.start( viewID, tool );
   if ( request.connections.oscPort ) {
     const connectionID = tool.capabilities.connections.find( ( id ) => tool.connectionPolicies[ id ] );
     const policy = connectionID ? tool.connectionPolicies[ connectionID ] : null;
@@ -770,14 +1245,17 @@ async function createToolWindow( { viewID, request, tool } ) {
   const window = new BrowserWindow( secureWindowOptions( tool.view.defaultWidth, tool.view.defaultHeight, context ) );
   const senderID = window.webContents.id;
   windows.set( viewID, window ); senderRecords.set( senderID, { kind: 'tool', viewID } );
-  bindNavigationGuards( window, ( url ) => developmentURL ? url.startsWith( developmentURL ) : url.startsWith( 'file:' ) );
+  bindNavigationGuards( window, ( url ) => runtimeURL
+    ? new URL( url ).origin === new URL( runtimeURL ).origin
+    : developmentURL ? url.startsWith( developmentURL ) : url.startsWith( 'file:' ) );
   window.once( 'ready-to-show', () => window.show() );
   window.webContents.on( 'render-process-gone', ( event, details ) => {
     if ( registry.get( viewID ) ) registry.update( viewID, { lifecycle: 'failed', lastError: `renderer-${ details.reason }` } );
   } );
   window.on( 'closed', () => finalizeView( viewID, window, senderID ) );
   if ( request.owner.kind === 'attached-process' && request.owner.pid ) monitorOwner( viewID, request.owner.pid );
-  if ( developmentURL ) await window.loadURL( developmentURL );
+  if ( runtimeURL ) await window.loadURL( runtimeURL );
+  else if ( developmentURL ) await window.loadURL( developmentURL );
   else await window.loadFile( tool.renderer.entryPath );
   notifyHome();
 }
@@ -796,11 +1274,42 @@ function monitorOwner( viewID, pid ) {
   timer.unref(); ownerTimers.set( viewID, timer );
 }
 
+async function openScopeWindow( viewID, kind ) {
+  if ( ![ 'mic', 'output', 'control' ].includes( kind ) || registry.get( viewID )?.toolID !== 'shared-loop' ) {
+    throw new Error( 'Only Shared Loop may open its mic, output or control scope.' );
+  }
+  const owner = windows.get( viewID );
+  if ( !owner || owner.isDestroyed() ) throw new Error( 'Scope owner is unavailable.' );
+  let owned = scopeWindows.get( viewID );
+  if ( !owned ) { owned = new Map(); scopeWindows.set( viewID, owned ); }
+  const existing = owned.get( kind );
+  if ( existing && !existing.isDestroyed() ) { existing.show(); existing.focus(); return { status: 'focused' }; }
+  const url = new URL( '/scope', owner.webContents.getURL() ); url.searchParams.set( 'kind', kind );
+  if ( url.protocol !== 'http:' || url.hostname !== '127.0.0.1' ) throw new Error( 'Scope requires the local tool runtime.' );
+  const bounds = owner.getBounds();
+  const scope = new BrowserWindow( { width: 720, height: kind === 'control' ? 640 : 520, minWidth: 480, minHeight: kind === 'control' ? 600 : 480,
+    x: bounds.x + ( kind === 'mic' ? 20 : 110 ), y: bounds.y + ( kind === 'mic' ? 80 : 160 ),
+    parent: owner, show: false, title: kind === 'mic' ? 'Mic / input 1' : kind === 'output' ? 'Audio out / 1–2' : 'Control / LFO + Noise',
+    webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true } } );
+  owned.set( kind, scope );
+  bindNavigationGuards( scope, ( target ) => {
+    const parsed = new URL( target ); return parsed.origin === url.origin && parsed.pathname === '/scope';
+  } );
+  scope.once( 'ready-to-show', () => scope.show() );
+  scope.on( 'closed', () => { owned.delete( kind ); if ( !owned.size ) scopeWindows.delete( viewID ); } );
+  try { await scope.loadURL( url.href ); return { status: 'opened' }; }
+  catch ( error ) { scope.close(); throw error; }
+}
+
 function finalizeView( viewID, window, senderID ) {
+  for ( const scope of scopeWindows.get( viewID )?.values() ?? [] ) if ( !scope.isDestroyed() ) scope.close();
+  scopeWindows.delete( viewID );
   senderRecords.delete( senderID ); windows.delete( viewID );
   clearInterval( ownerTimers.get( viewID ) ); ownerTimers.delete( viewID );
   fileGrants.releaseView( viewID );
   nativeAudio.releaseView( viewID ).catch( ( error ) => console.error( error ) );
+  scBusAudio.releaseView( viewID ).catch( ( error ) => console.error( error ) );
+  toolRuntimes.release( viewID ).catch( ( error ) => console.error( error ) );
   const nativeInstance = nativeToolInstances.get( viewID ); nativeToolInstances.delete( viewID );
   nativeInstance?.service.closeToolInstance( nativeInstance.toolID, nativeInstance.instanceID )
     .catch( ( error ) => console.error( error ) );
@@ -817,8 +1326,12 @@ async function focusToolView( viewID ) {
 }
 
 async function closeToolView( viewID ) {
-  const window = windows.get( viewID ); if ( !window || window.isDestroyed() ) return false;
+  const window = windows.get( viewID );
   const view = registry.get( viewID );
+  if ( !window || window.isDestroyed() ) {
+    if ( view?.lifecycle !== 'failed' ) return false;
+    await toolRuntimes.release( viewID ); registry.remove( viewID ); notifyHome(); return true;
+  }
   if ( view && view.lifecycle !== 'closing' ) registry.update( viewID, { lifecycle: 'closing' } );
   window.webContents.send( 'awb:command', { type: 'dispose', viewID } );
   setTimeout( () => { if ( !window.isDestroyed() ) window.close(); }, 150 ).unref();
@@ -870,6 +1383,7 @@ function safeArtifactPath( tool, relative ) {
 
 async function handleToolOperation( sender, operation, payload ) {
   const { view, tool, window } = requireToolSender( sender );
+  if ( operation === 'scope.open' ) return openScopeWindow( view.viewID, payload.kind );
   if ( operation.startsWith( 'render.' ) ) requireCapability( tool, 'rendering', 'local-render' );
   if ( operation === 'render.submit' ) {
     const result = await dialog.showSaveDialog( window, {
@@ -922,6 +1436,14 @@ async function handleToolOperation( sender, operation, payload ) {
       result = await nativeInstance.service.loadScoreSynthDefs( nativeInstance.instanceID, sourcePath, true );
     }
     return { ...result, sourcePath: undefined, previousSourcePath: undefined };
+  }
+  if ( operation === 'sc-bus-audio.start' ) {
+    requireCapability(tool,'media','sc-bus-audio');
+    return scBusAudio.start(view.viewID,payload);
+  }
+  if ( operation === 'sc-bus-audio.stop' ) {
+    requireCapability(tool,'media','sc-bus-audio');
+    return scBusAudio.stop(view.viewID);
   }
   if ( operation === 'native-audio.devices' ) {
     requireCapability( tool, 'media', 'native-audio' );
@@ -1023,6 +1545,14 @@ function registerIPC() {
       homeReadyCount += 1;
       console.log( 'AWB_SHELL_HOME_READY' );
       if ( smokeHome ) runHomeSmoke().catch( reportFatal );
+      else if ( smokeScopeTool && !smokeRunning ) { smokeRunning=true;
+        import('../test/scope-tool/smoke.mjs').then(({runScopeToolSmoke})=>runScopeToolSmoke({
+          startHeadlessHost,services,nativeScHost,launchFromHome,closeToolView,windows,registry,signalCaptures,scBusAudio,homeWindow,
+          definition:option(process.argv,'smoke-scope-def'),screenshot:option(process.argv,'smoke-screenshot')
+        })).then(()=>app.quit()).catch(reportFatal);
+      }
+      else if(smokeScBus&&!smokeRunning) runScBusSmoke().catch(async error=>{console.error(nativeScHost.snapshot().logTail.join('\n'));await scBusAudio.close().catch(console.error);await nativeScHost.stop(()=>services.firstService()?.shutdownHost?.());reportFatal(error)});
+      else if ( smokeSharedLoop && !smokeRunning ) runSharedLoopSmoke().catch( async ( error ) => { console.error( nativeScHost.snapshot().logTail.join( '\n' ), registry.list() ); await toolRuntimes.closeAll().catch( console.error ); await nativeScHost.stop( () => services.firstService()?.shutdownHost?.() ); reportFatal( error ); } );
       else if ( smokeRender && !smokeRunning ) runRenderSmoke().catch( reportFatal );
       else if ( smokeField && !smokeRunning ) runFieldSmoke().catch( reportFatal );
       else if ( smokeHeadlessSc && !smokeRunning ) runHeadlessScSmoke().catch( reportFatal );
@@ -1200,6 +1730,22 @@ if ( gotLock ) {
   } );
   app.whenReady().then( async () => {
     await loadTools();
+    toolRuntimes = new ToolRuntimeRegistry( {
+      runtimeRoot: path.join( app.getPath( 'userData' ), 'tool-runtimes' ),
+      runtimeContext: async ( { tool } ) => {
+        if ( tool.id === 'scope' ) return { signalCaptures, getNativeHost: async () => {
+          const native = await nativeHostForProfile( 'hosted' );
+          if ( native.service.hostSnapshot().scsynth.status !== 'ready' ) throw new Error( 'Boot the shell SC host or prepared IDE server before listening.' );
+          return { ...native.configuration, service: native.service, token: shellHostToken,
+            isConnected: () => native.service.hostSnapshot().scsynth.status === 'ready' };
+        } };
+        if ( tool.id !== 'shared-loop' ) return {};
+        const native = await nativeHostForProfile( 'hosted' );
+        await waitFor( () => native.service.hostSnapshot().scsynth.status === 'ready', 30000 );
+        return { signalCaptures, nativeHost: { ...native.configuration, service:native.service, token: shellHostToken,
+          isConnected: () => native.service.hostSnapshot().scsynth.status === 'ready' } };
+      }
+    } );
     recentStore = new RecentStore( { filePath: path.join( app.getPath( 'userData' ), 'recent-documents.json' ) } );
     await recentStore.load(); registerIPC(); registerRendererPolicies();
     router = new LaunchRouter( { tools, registry, createView: createToolWindow, focusView: focusToolView } );
@@ -1223,10 +1769,12 @@ if ( gotLock ) {
         ( owned ) => owned.service.closeToolInstance( owned.toolID, owned.instanceID )
       ) );
       nativeToolInstances.clear();
+      const runtimeStops = await Promise.allSettled( [ toolRuntimes?.closeAll(), scBusAudio.close() ] );
+      await signalCaptures.close();
       const headlessService = services.firstService( ( service ) => service.hostSnapshot?.().control?.mode === 'headless' );
       const hostStop = await Promise.allSettled( [ nativeAudio.close(),
         nativeScHost.stop( () => headlessService?.shutdownHost?.() ) ] );
-      const results = [ ...nativeInstanceStops, ...hostStop, ...await Promise.allSettled( [ services.closeAll() ] ) ];
+      const results = [ ...nativeInstanceStops, ...runtimeStops, ...hostStop, ...await Promise.allSettled( [ services.closeAll() ] ) ];
       results.filter( ( result ) => result.status === 'rejected' )
         .forEach( ( result ) => console.error( result.reason ) );
       servicesClosed = true; app.quit();

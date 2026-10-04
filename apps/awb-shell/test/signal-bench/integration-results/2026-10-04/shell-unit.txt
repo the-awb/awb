@@ -1,0 +1,404 @@
+
+> @awb/desktop-shell@0.1.0 test
+> node --test test/files.test.mjs test/host-control.test.mjs test/manifest.test.mjs test/native-host-profile.test.mjs test/node-manager-projection.test.mjs test/recent-store.test.mjs test/render-job-broker.test.mjs test/router.test.mjs test/renderer-policy.test.mjs test/score-project-resolver.test.mjs test/services.test.mjs test/shared-host-integration.test.mjs test/synthdef-broker.test.mjs test/tool-runtime.test.mjs test/sc-bus-audio.test.mjs test/signal-capture.test.mjs
+
+TAP version 13
+# Subtest: file grants are opaque and scoped to one view
+ok 1 - file grants are opaque and scoped to one view
+  ---
+  duration_ms: 69.979313
+  type: 'test'
+  ...
+# Subtest: guarded writes reject external changes
+ok 2 - guarded writes reject external changes
+  ---
+  duration_ms: 16.2094
+  type: 'test'
+  ...
+# Subtest: render output bytes stay on a dedicated port and commit atomically
+ok 3 - render output bytes stay on a dedicated port and commit atomically
+  ---
+  duration_ms: 26.363751
+  type: 'test'
+  ...
+# Subtest: host control reports independent language, engine and NodeManager state
+ok 4 - host control reports independent language, engine and NodeManager state
+  ---
+  duration_ms: 2.464035
+  type: 'test'
+  ...
+# Subtest: host control correlates NodeManager commands and protects the control token
+ok 5 - host control correlates NodeManager commands and protects the control token
+  ---
+  duration_ms: 0.42369
+  type: 'test'
+  ...
+# Subtest: host control creates and closes named native ToolInstances
+ok 6 - host control creates and closes named native ToolInstances
+  ---
+  duration_ms: 7.624574
+  type: 'test'
+  ...
+# Subtest: host control loads score-owned SynthDefs into a named Score Studio session
+ok 7 - host control loads score-owned SynthDefs into a named Score Studio session
+  ---
+  duration_ms: 0.615792
+  type: 'test'
+  ...
+# Subtest: host control requests a bounded audible server probe
+ok 8 - host control requests a bounded audible server probe
+  ---
+  duration_ms: 0.489386
+  type: 'test'
+  ...
+# Subtest: NodeManager projection stops retrying while the host reports it disabled
+ok 9 - NodeManager projection stops retrying while the host reports it disabled
+  ---
+  duration_ms: 0.627293
+  type: 'test'
+  ...
+# Subtest: validates a bounded awb.tool/1 manifest
+ok 10 - validates a bounded awb.tool/1 manifest
+  ---
+  duration_ms: 7.093704
+  type: 'test'
+  ...
+# Subtest: normalizes an explicitly declared local-render capability
+ok 11 - normalizes an explicitly declared local-render capability
+  ---
+  duration_ms: 1.002797
+  type: 'test'
+  ...
+# Subtest: accepts safe compound and hyphenated document suffixes
+ok 12 - accepts safe compound and hyphenated document suffixes
+  ---
+  duration_ms: 0.402784
+  type: 'test'
+  ...
+# Subtest: rejects malformed manifests
+ok 13 - rejects malformed manifests
+  ---
+  duration_ms: 0.719329
+  type: 'test'
+  ...
+# Subtest: rejects escaping renderer paths
+ok 14 - rejects escaping renderer paths
+  ---
+  duration_ms: 0.329376
+  type: 'test'
+  ...
+# Subtest: rejects unsupported preload protocols
+ok 15 - rejects unsupported preload protocols
+  ---
+  duration_ms: 0.191207
+  type: 'test'
+  ...
+# Subtest: normalizes multi-protocol relay lifecycle addresses
+ok 16 - normalizes multi-protocol relay lifecycle addresses
+  ---
+  duration_ms: 0.646191
+  type: 'test'
+  ...
+# Subtest: accepts an exact-address-only relay policy
+ok 17 - accepts an exact-address-only relay policy
+  ---
+  duration_ms: 0.293537
+  type: 'test'
+  ...
+# Subtest: document actions exist only when declared by a document kind
+ok 18 - document actions exist only when declared by a document kind
+  ---
+  duration_ms: 1.241623
+  type: 'test'
+  ...
+# Subtest: tool-owned local runtime entries remain inside installed artifacts
+ok 19 - tool-owned local runtime entries remain inside installed artifacts
+  ---
+  duration_ms: 0.779201
+  type: 'test'
+  ...
+# Subtest: native tool profiles collapse to the hosted public contract
+ok 20 - native tool profiles collapse to the hosted public contract
+  ---
+  duration_ms: 1.020756
+  type: 'test'
+  ...
+# Subtest: hosted launch reuses the active native host ownership mode
+ok 21 - hosted launch reuses the active native host ownership mode
+  ---
+  duration_ms: 0.207293
+  type: 'test'
+  ...
+# Subtest: NodeManager projection replaces snapshots, scopes explicit bindings and recovers gaps
+ok 22 - NodeManager projection replaces snapshots, scopes explicit bindings and recovers gaps
+  ---
+  duration_ms: 2.682908
+  type: 'test'
+  ...
+# Subtest: NodeManager reconnects after late startup and failed health checks
+ok 23 - NodeManager reconnects after late startup and failed health checks
+  ---
+  duration_ms: 83.865412
+  type: 'test'
+  ...
+# Subtest: document kinds are inferred from declared compound suffixes
+ok 24 - document kinds are inferred from declared compound suffixes
+  ---
+  duration_ms: 1.329104
+  type: 'test'
+  ...
+# Subtest: recent descriptors are bounded, redacted and scoped to tool document kinds
+ok 25 - recent descriptors are bounded, redacted and scoped to tool document kinds
+  ---
+  duration_ms: 44.415653
+  type: 'test'
+  ...
+# Subtest: a headless executor leases a validated job and returns a matching receipt
+ok 26 - a headless executor leases a validated job and returns a matching receipt
+  ---
+  duration_ms: 3.9451
+  type: 'test'
+  ...
+# Subtest: executor leases enforce identity and monotonic frame progress
+ok 27 - executor leases enforce identity and monotonic frame progress
+  ---
+  duration_ms: 1.174261
+  type: 'test'
+  ...
+# Subtest: jobs outlive submitting views and recover from executor loss
+ok 28 - jobs outlive submitting views and recover from executor loss
+  ---
+  duration_ms: 0.473414
+  type: 'test'
+  ...
+# Subtest: queued and leased cancellation have distinct handshakes
+ok 29 - queued and leased cancellation have distinct handshakes
+  ---
+  duration_ms: 0.65323
+  type: 'test'
+  ...
+# Subtest: cross-origin isolation headers are limited to requesting tools
+ok 30 - cross-origin isolation headers are limited to requesting tools
+  ---
+  duration_ms: 8.010578
+  type: 'test'
+  ...
+# Subtest: display capture is restricted to declared system-audio tools
+ok 31 - display capture is restricted to declared system-audio tools
+  ---
+  duration_ms: 0.455326
+  type: 'test'
+  ...
+# Subtest: media permission is audio-only and capability-gated
+ok 32 - media permission is audio-only and capability-gated
+  ---
+  duration_ms: 0.439639
+  type: 'test'
+  ...
+# Subtest: ToolInstances are idempotent while distinct and standalone sessions coexist
+ok 33 - ToolInstances are idempotent while distinct and standalone sessions coexist
+  ---
+  duration_ms: 2.872386
+  type: 'test'
+  ...
+# Subtest: owner state is kept per view
+ok 34 - owner state is kept per view
+  ---
+  duration_ms: 0.338579
+  type: 'test'
+  ...
+# Subtest: raw paired PCM and actual 44.1 kHz rate survive the binary boundary
+ok 35 - raw paired PCM and actual 44.1 kHz rate survive the binary boundary
+  ---
+  duration_ms: 1.313252
+  type: 'test'
+  ...
+# Subtest: bus range and stereo channel count are bounded
+ok 36 - bus range and stereo channel count are bounded
+  ---
+  duration_ms: 1.086938
+  type: 'test'
+  ...
+# Subtest: restart frees the previous capture; closing a view during open cleans the late capture
+ok 37 - restart frees the previous capture; closing a view during open cleans the late capture
+  ---
+  duration_ms: 8.499994
+  type: 'test'
+  ...
+# Subtest: project bindings resolve only the explicitly selected tool config
+ok 38 - project bindings resolve only the explicitly selected tool config
+  ---
+  duration_ms: 1.65718
+  type: 'test'
+  ...
+# Subtest: ambiguous and cross-tool bindings are refused
+ok 39 - ambiguous and cross-tool bindings are refused
+  ---
+  duration_ms: 2.752709
+  type: 'test'
+  ...
+# Subtest: one shell-owned host survives view release and layers distinct tool grants
+ok 40 - one shell-owned host survives view release and layers distinct tool grants
+  ---
+  duration_ms: 3.081914
+  type: 'test'
+  ...
+# Subtest: concurrent acquisition creates only one host for an endpoint
+ok 41 - concurrent acquisition creates only one host for an endpoint
+  ---
+  duration_ms: 0.506526
+  type: 'test'
+  ...
+# Subtest: the shell relay carries and closes every declared context protocol
+ok 42 - the shell relay carries and closes every declared context protocol
+  ---
+  duration_ms: 38.495496
+  type: 'test'
+  ...
+# Subtest: exact relay grants do not widen into address prefixes
+ok 43 - exact relay grants do not widen into address prefixes
+  ---
+  duration_ms: 19.654728
+  type: 'test'
+  ...
+# Subtest: native audio capture is view-scoped while its broker can share devices
+ok 44 - native audio capture is view-scoped while its broker can share devices
+  ---
+  duration_ms: 1.136018
+  type: 'test'
+  ...
+# Subtest: starting a replacement capture releases the view previous source
+ok 45 - starting a replacement capture releases the view previous source
+  ---
+  duration_ms: 0.224723
+  type: 'test'
+  ...
+# Subtest: two views share SynthDef transfers and one NodeManager subscription
+ok 46 - two views share SynthDef transfers and one NodeManager subscription
+  ---
+  duration_ms: 92.781002
+  type: 'test'
+  ...
+# Subtest: compatible subscribers share one open/read/clock; one close cannot detach its peer
+ok 47 - compatible subscribers share one open/read/clock; one close cannot detach its peer
+  ---
+  duration_ms: 6.427679
+  type: 'test'
+  ...
+# Subtest: host identity, rate and channel range isolate incompatible captures
+ok 48 - host identity, rate and channel range isolate incompatible captures
+  ---
+  duration_ms: 0.591848
+  type: 'test'
+  ...
+# Subtest: cached data never refreshes freshness and a stalled source releases once
+ok 49 - cached data never refreshes freshness and a stalled source releases once
+  ---
+  duration_ms: 9.136882
+  type: 'test'
+  ...
+# Subtest: broker closure during allocation cleans the late source and rejects the subscription
+ok 50 - broker closure during allocation cleans the late source and rejects the subscription
+  ---
+  duration_ms: 1.858265
+  type: 'test'
+  ...
+# Subtest: failed open leaves no source; a consumer error cannot break another subscriber
+ok 51 - failed open leaves no source; a consumer error cannot break another subscriber
+  ---
+  duration_ms: 1.227191
+  type: 'test'
+  ...
+# Subtest: reacquisition waits for the previous detach/free before opening a new generation
+ok 52 - reacquisition waits for the previous detach/free before opening a new generation
+  ---
+  duration_ms: 4.975293
+  type: 'test'
+  ...
+# Subtest: shutdown waits for every source even when another cleanup fails
+ok 53 - shutdown waits for every source even when another cleanup fails
+  ---
+  duration_ms: 2.072175
+  type: 'test'
+  ...
+# Subtest: identical display profiles share one transform while raw PCM and other profiles stay independent
+ok 54 - identical display profiles share one transform while raw PCM and other profiles stay independent
+  ---
+  duration_ms: 1.886086
+  type: 'test'
+  ...
+# Subtest: late derived subscription receives original freshness without transforming cached PCM again
+ok 55 - late derived subscription receives original freshness without transforming cached PCM again
+  ---
+  duration_ms: 1.161199
+  type: 'test'
+  ...
+# Subtest: display transform failure releases only its profile and leaves a raw peer streaming
+ok 56 - display transform failure releases only its profile and leaves a raw peer streaming
+  ---
+  duration_ms: 4.352197
+  type: 'test'
+  ...
+# Subtest: derived closure during allocation rejects startup but waits for late raw cleanup
+ok 57 - derived closure during allocation rejects startup but waits for late raw cleanup
+  ---
+  duration_ms: 2.448606
+  type: 'test'
+  ...
+# Subtest: display profiles validate factories and isolate callback exceptions
+ok 58 - display profiles validate factories and isolate callback exceptions
+  ---
+  duration_ms: 0.861857
+  type: 'test'
+  ...
+# Subtest: SynthDef broker shares transfers, replays exact data and rejects stale generations
+ok 59 - SynthDef broker shares transfers, replays exact data and rejects stale generations
+  ---
+  duration_ms: 4.336882
+  type: 'test'
+  ...
+# Subtest: SynthDef broker reconnects for late bridge startup and bridge restart
+ok 60 - SynthDef broker reconnects for late bridge startup and bridge restart
+  ---
+  duration_ms: 57.985809
+  type: 'test'
+  ...
+# Subtest: view closure stops only its owned runtime, once
+ok 61 - view closure stops only its owned runtime, once
+  ---
+  duration_ms: 2.427906
+  type: 'test'
+  ...
+# Subtest: closure during pending startup waits for and stops the runtime
+ok 62 - closure during pending startup waits for and stops the runtime
+  ---
+  duration_ms: 5.532753
+  type: 'test'
+  ...
+# Subtest: invalid runtime URLs are refused and the started process is stopped
+ok 63 - invalid runtime URLs are refused and the started process is stopped
+  ---
+  duration_ms: 0.665891
+  type: 'test'
+  ...
+# Subtest: static tools start without a runtime or module import
+ok 64 - static tools start without a runtime or module import
+  ---
+  duration_ms: 0.662728
+  type: 'test'
+  ...
+# Subtest: trusted runtime receives shell host context and remains tracked until release completes
+ok 65 - trusted runtime receives shell host context and remains tracked until release completes
+  ---
+  duration_ms: 0.701739
+  type: 'test'
+  ...
+1..65
+# tests 65
+# suites 0
+# pass 65
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 508.55059

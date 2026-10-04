@@ -1,0 +1,10 @@
+{
+  "tests": 56,
+  "pass": 56,
+  "fail": 0,
+  "liveGate": "AWB_SCOPE_TOOL_READY trigger=true",
+  "deviceSettings": "defaults; isolated host detected 48000 Hz; synthetic coverage 44100/48000",
+  "unrelatedToolsOpened": 0,
+  "benchmarkedCPU": false,
+  "reload": "Close and reopen Scope; no shell/audio restart or build needed"
+}

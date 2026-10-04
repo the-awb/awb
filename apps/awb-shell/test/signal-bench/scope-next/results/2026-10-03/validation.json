@@ -1,0 +1,32 @@
+{
+  "scopeUnits": 41,
+  "historyExperiment": {
+    "tests": 1,
+    "comparisons": 7200
+  },
+  "liveShell": {
+    "pass": true,
+    "scopes": 3,
+    "unrelatedTools": 0,
+    "observedRate": 48000
+  },
+  "fidelity": {
+    "pageCases": 72,
+    "traceCases": 252,
+    "pixelDelta": 0,
+    "pageDpr": [
+      1,
+      1.25,
+      2
+    ]
+  },
+  "productionRuntimeFilesChanged": [
+    "public/scope.js",
+    "public/scope-trace.js"
+  ],
+  "syntheticProductionModes": true,
+  "activeStageHashesMatch": true,
+  "measuredPhases": 99,
+  "unchangedRuntimeSources": 49,
+  "protectedRuntimeSources": 51
+}

@@ -73,3 +73,12 @@ test( 'document actions exist only when declared by a document kind', () => {
     id: 'score', label: 'Score', extensions: [ 'json' ], actions: [ 'new' ], profileID: 'missing'
   } ] }, '/tmp/artifact' ), /unknown launch profile/ );
 } );
+
+test( 'tool-owned local runtime entries remain inside installed artifacts', () => {
+  const runtime = { schema: 'awb.local-runtime/1', entry: 'shell-runtime.mjs' };
+  const manifest = validateToolManifest( { ...valid, runtime }, '/tmp/artifact' );
+  assert.equal( manifest.runtime.entryPath, '/tmp/artifact/shell-runtime.mjs' );
+  assert.throws( () => validateToolManifest( { ...valid, runtime: { ...runtime, entry: '../escape.mjs' } }, '/tmp/artifact' ), /escapes/ );
+  assert.throws( () => validateToolManifest( { ...valid, runtime: { ...runtime, schema: 'unknown' } }, '/tmp/artifact' ), /Unsupported tool runtime/ );
+  assert.throws( () => validateToolManifest( { ...valid, runtime: { ...runtime, entry: 'runtime.cjs' } }, '/tmp/artifact' ), /ES module/ );
+} );

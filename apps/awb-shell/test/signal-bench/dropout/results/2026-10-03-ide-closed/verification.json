@@ -1,0 +1,41 @@
+{
+  "phases": 18,
+  "allListenersRegistered": true,
+  "allFocusSwitchesConfirmed": true,
+  "exclusiveSCInventoryChecks": 20,
+  "exclusiveSC": true,
+  "privateFocusHelperAbsent": true,
+  "nativePhaseRangesVerified": true,
+  "privateSCProcessAbsent": true,
+  "productionHashes": {
+    "apps/awb-shell/shell/main.mjs": true,
+    "apps/awb-shell/sc/AWBHeadlessHost.scd": true,
+    "apps/awb-shell/sc/AWBScBusAudio.scd": true,
+    "apps/awb-shell/src/signalCaptureBroker.mjs": true,
+    "apps/awb-shell/src/scSignalSource.mjs": true,
+    "apps/awb-shell/.build/sc-bus-reader.node": true,
+    "tool-artifacts/scope/0.1.0/server.mjs": true,
+    "tool-artifacts/scope/0.1.0/public/scope.js": true,
+    "tool-artifacts/scope/0.1.0/public/index.html": true,
+    "tool-artifacts/scope/0.1.0/public/scope.css": true,
+    "tool-artifacts/scope/0.1.0/public/scope-opacity.js": true,
+    "tool-artifacts/scope/0.1.0/public/protocol.js": true,
+    "tool-artifacts/shared-loop/0.1.0/public/scope-history.js": true,
+    "tool-artifacts/shared-loop/0.1.0/public/scope-metadata.js": true,
+    "tool-artifacts/shared-loop/0.1.0/public/scope-painter.js": true,
+    "tool-artifacts/shared-loop/0.1.0/public/scope-trace.js": true
+  },
+  "copiedSCTextSectionsMatchInstalled": true,
+  "installedSCTextSections": {
+    "__text": "e64bd27436618faf501b4fc6b143b8137c454d65a6715d0c0b146c807df38b8c",
+    "__stubs": "11855dd48f7767968a6e0c9990a5604850d8a8ab0085715401aa0f7ad631c4f9",
+    "__stub_helper": "9e14462b63d78f5620ce412a819ce9ce7cbbc99475c23862bb375bf197d549cb",
+    "__objc_methname": "275110e6c9055781d8609ed2eaeec14556497496ea7dbea6004bf127c08ecc82",
+    "__const": "ea7c4adedd67748cd4f2a27e129ec88cfc77d5f4d2670cf7eb5611f541a3b434",
+    "__gcc_except_tab": "128007d8a50ab1529c292d7efc7921e616316c885f0b0fde9af361999261a929",
+    "__cstring": "ded1cd4bee67d47d846f0bfe61aceec74e91080fd1f9b9e588b68d5d8c309d43",
+    "__unwind_info": "46f798e305a54f8e622612e23ec7fd0018feebcc4f191ceb8b9e9ed91b7b1064"
+  },
+  "rawAuditSHA256": "ffb11fa3e7af74e6923fefa5c2b25cab337c0573445ff3d6e1d67f63ac5944ab",
+  "installedSCSHA256": "817f728e74294d78d788f3dd065c56e878957442e564212330f91bdb34876be2"
+}

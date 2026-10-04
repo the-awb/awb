@@ -1,0 +1,97 @@
+{
+  "complete": false,
+  "runs": [
+    {
+      "repeat": 1,
+      "ms": 10183.991712,
+      "code": 1,
+      "stages": [
+        {
+          "workspace": "@awb/field-documents@0.1.0",
+          "atMs": 524.885583,
+          "durationMs": 324.4715590000003
+        },
+        {
+          "workspace": "@awb/field-engine@0.1.0",
+          "atMs": 849.3571420000003,
+          "durationMs": 271.01378699999987
+        },
+        {
+          "workspace": "@awb/field-renderer@0.2.0",
+          "atMs": 1120.3709290000002,
+          "durationMs": 267.7440550000001
+        },
+        {
+          "workspace": "@awb/instruments@0.1.0",
+          "atMs": 1388.1149840000003,
+          "durationMs": 245.3847139999998
+        },
+        {
+          "workspace": "@awb/lissajous-engine@0.1.0",
+          "atMs": 1633.499698,
+          "durationMs": 635.526421
+        },
+        {
+          "workspace": "@awb/native-audio@0.1.0",
+          "atMs": 2269.026119,
+          "durationMs": 1910.3306599999996
+        },
+        {
+          "workspace": "@awb/phase-fit@0.1.0",
+          "atMs": 4179.356779,
+          "durationMs": 265.161435
+        },
+        {
+          "workspace": "@awb/render-pipeline@0.7.0",
+          "atMs": 4444.518214,
+          "durationMs": 252.22372300000097
+        },
+        {
+          "workspace": "@awb/sc-console@0.1.0",
+          "atMs": 4696.741937000001,
+          "durationMs": 261.526883999999
+        },
+        {
+          "workspace": "@awb/sc-envelope@0.1.0",
+          "atMs": 4958.268821,
+          "durationMs": 264.8016239999997
+        },
+        {
+          "workspace": "@awb/sc-runtime@0.1.0",
+          "atMs": 5223.070444999999,
+          "durationMs": 238.55983900000138
+        },
+        {
+          "workspace": "@awb/sc-wasm@0.1.0",
+          "atMs": 5461.630284000001,
+          "durationMs": 251.88920099999996
+        },
+        {
+          "workspace": "@awb/score@0.1.0",
+          "atMs": 5713.519485000001,
+          "durationMs": 258.07923200000005
+        },
+        {
+          "workspace": "@awb/synthdef-interface@0.1.0",
+          "atMs": 5971.598717000001,
+          "durationMs": 262.55051999999887
+        },
+        {
+          "workspace": "@awb/desktop-shell@0.1.0",
+          "atMs": 6234.149237,
+          "durationMs": 2961.8193040000006
+        },
+        {
+          "workspace": "@awb/field-modelling@0.1.0",
+          "atMs": 9195.968541,
+          "durationMs": 517.9997489999987
+        },
+        {
+          "workspace": "@awb/score-studio@0.0.0",
+          "atMs": 9713.968289999999,
+          "durationMs": 470.0234220000002
+        }
+      ]
+    }
+  ]
+}

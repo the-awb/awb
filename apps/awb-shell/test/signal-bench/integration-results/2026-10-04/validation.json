@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-04",
+  "awbBase": "0c200e6",
+  "scMain": "00c5ccc",
+  "lissajousSource": "6ecc30b",
+  "shellUnit": 65,
+  "scopeSuites": 72,
+  "nativeClock": 1,
+  "electronHome": 1,
+  "lissajousHost": 7,
+  "lissajousFormat": 9,
+  "lissajousBrowser": 14,
+  "workspaceBuild": true,
+  "nativeBuild": true,
+  "benchmarkPrepareOnly": true,
+  "newClassLookup": {
+    "Tool": true,
+    "ToolInstance": true,
+    "ToolSession": false
+  },
+  "freshHardwareAudioTest": false,
+  "sharedCheckoutsPreserved": true
+}

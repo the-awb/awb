@@ -1,0 +1,20 @@
+
+> lissajous-viz@0.0.0 test:host-browser
+> node tools/verify/hosted-tool-browser.mjs
+
+  PASS  reduced rail exposes Configs, Source, Patterns and Pattern layout
+  PASS  hosted rail omits the legacy Files library and Session
+  PASS  shell native audio source is available
+  PASS  granted system output capture is exposed as a separate source
+  PASS  file, stream, browser SC and test sources are absent
+  PASS  durable automation and render controls are absent
+  PASS  hosted config pane exposes visual-document save without audio or automation
+  PASS  launch-supplied config restores scene and pattern values
+  PASS  hosted save emits a bounded visual config through the shell
+  PASS  renderer reports ready with ToolInstance identity
+  PASS  lightweight state keeps ToolInstance and visual-session identities separate
+  PASS  lightweight state excludes renderer and sample objects
+  PASS  host parameter command updates the pattern and reported state
+  PASS  explicit detailed snapshot is revisioned and completed
+
+All checks passed.

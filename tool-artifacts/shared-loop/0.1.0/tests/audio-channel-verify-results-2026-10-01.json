@@ -1,0 +1,180 @@
+{
+  "protocol": "awb.scope.audio-bench.v4",
+  "audioChannels": 6,
+  "drawnLaneCounts": [
+    1,
+    2,
+    4,
+    6
+  ],
+  "zooms": [
+    1,
+    0.0625
+  ],
+  "controlCostOnly": true,
+  "audioDisplayGain": 1,
+  "scopePollMs": 8,
+  "audioCaptureFrames": 1024,
+  "controlCaptureFrames": 32,
+  "display": {
+    "width": 2560,
+    "height": 1415
+  },
+  "machine": "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz",
+  "scVersion": "3.12.2",
+  "sampleRate": 48000,
+  "phases": [
+    {
+      "name": "idle-server-no-bridge-no-viewer",
+      "seconds": 5.118681615,
+      "traffic": null,
+      "scAudioCPU": 0.08566436283290386,
+      "scPeakCPU": 0.22901250422000885,
+      "processes": {
+        "electronMain": {
+          "corePercent": 0.5860884160500764,
+          "rssMiB": 75.9140625
+        },
+        "sclang": {
+          "corePercent": 0.1953628053500215,
+          "rssMiB": 201.09765625
+        },
+        "scsynth": {
+          "corePercent": 0.586088416050077,
+          "rssMiB": 31.51953125
+        }
+      },
+      "wireBytesPerSnapshot": null
+    },
+    {
+      "name": "scope-tap-node-reader-no-viewer",
+      "seconds": 5.125902410999999,
+      "traffic": {
+        "binaryBytesPerSecond": 0,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 0,
+        "framesPerSecond": 0
+      },
+      "scAudioCPU": 0.25783649608492853,
+      "scPeakCPU": 0.6814968585968018,
+      "processes": {
+        "electronMain": {
+          "corePercent": 4.0968396032930245,
+          "rssMiB": 87.35546875
+        },
+        "sclang": {
+          "corePercent": 0.1950876001568109,
+          "rssMiB": 201.0546875
+        },
+        "scsynth": {
+          "corePercent": 0.7803504006272426,
+          "rssMiB": 31.48828125
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21499,
+        "output": 126495
+      }
+    },
+    {
+      "name": "audio-verify-1-six-live-lanes",
+      "seconds": 5.116479776,
+      "traffic": {
+        "binaryBytesPerSecond": 1172141.836293657,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 569.9230970633665,
+        "framesPerSecond": 47.49359142194721
+      },
+      "scAudioCPU": 0.23134077340364456,
+      "scPeakCPU": 0.6590999960899353,
+      "processes": {
+        "electronMain": {
+          "corePercent": 5.472512591829309,
+          "rssMiB": 133.80859375
+        },
+        "sclang": {
+          "corePercent": 0,
+          "rssMiB": 201.0546875
+        },
+        "scsynth": {
+          "corePercent": 0.7817875131184723,
+          "rssMiB": 31.48828125
+        },
+        "outputRenderer": {
+          "corePercent": 13.290387723014033,
+          "rssMiB": 99.59375
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21519,
+        "output": 126414
+      },
+      "rendererDiagnostics": {
+        "strokes": 7440,
+        "visibleChannels": "0,1,2,3,4,5",
+        "sourceEnd": 710656,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "audio-verify-0.0625-six-live-lanes",
+      "seconds": 5.121558235,
+      "traffic": {
+        "binaryBytesPerSecond": 150069.95229450904,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 567.014933102679,
+        "framesPerSecond": 47.251244425223256
+      },
+      "scAudioCPU": 0.25469557121396064,
+      "scPeakCPU": 0.6515156030654907,
+      "processes": {
+        "electronMain": {
+          "corePercent": 5.857592284118586,
+          "rssMiB": 137.71484375
+        },
+        "sclang": {
+          "corePercent": 0.19525307613728635,
+          "rssMiB": 201.0546875
+        },
+        "scsynth": {
+          "corePercent": 0.7810123045491454,
+          "rssMiB": 31.49609375
+        },
+        "outputRenderer": {
+          "corePercent": 14.25347455802189,
+          "rssMiB": 115.19140625
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21523,
+        "output": 16218
+      },
+      "rendererDiagnostics": {
+        "strokes": 7464,
+        "visibleChannels": "0,1,2,3,4,5",
+        "sourceEnd": 1063936,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    }
+  ],
+  "encoding": {
+    "json": {
+      "pairMicroseconds": 529.632481333334,
+      "bytesPerPair": 147758
+    },
+    "binary-copy": {
+      "pairMicroseconds": 14.441531333335055,
+      "bytesPerPair": 28672
+    },
+    "binary-wrap": {
+      "pairMicroseconds": 0.5377346666670443,
+      "bytesPerPair": 28672
+    },
+    "binary-packet": {
+      "pairMicroseconds": 19.361478000001323,
+      "bytesPerPair": 28880
+    }
+  }
+}

@@ -2,6 +2,8 @@
   "artifacts": [
     "../score-studio",
     "../field-modelling",
-    "../../tool-artifacts/lissajous/0.1.0"
+    "../../tool-artifacts/lissajous/0.1.0",
+    "../../tool-artifacts/shared-loop/0.1.0",
+    "../../tool-artifacts/scope/0.1.0"
   ]
 }

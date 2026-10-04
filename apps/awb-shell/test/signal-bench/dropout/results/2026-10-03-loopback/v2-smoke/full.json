@@ -1,0 +1,1580 @@
+{
+  "complete": true,
+  "session": {
+    "port": 55142,
+    "sampleRate": 48000,
+    "blockSize": 64,
+    "scPID": 93800,
+    "toneNode": 1001
+  },
+  "seconds": 3,
+  "repeats": 1,
+  "targets": [
+    0
+  ],
+  "phases": [
+    {
+      "target": 0,
+      "nodes": 0,
+      "repeat": 1,
+      "condition": "stopped",
+      "seconds": 3.0768581840000024,
+      "electronCPU": 0.6500137089191202,
+      "processes": [
+        {
+          "pid": 93701,
+          "role": "main",
+          "corePercent": 0.6500137089191202
+        },
+        {
+          "pid": 93724,
+          "role": "sclang",
+          "corePercent": 0.3250068544595836
+        },
+        {
+          "pid": 93800,
+          "role": "scsynth",
+          "corePercent": 0.9750205633786841
+        },
+        {
+          "pid": 93810,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 93723,
+          "role": "home",
+          "corePercent": 0
+        },
+        {
+          "pid": 93704,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 93808,
+          "role": "input-recorder",
+          "corePercent": 3.250068544595616
+        },
+        {
+          "pid": 93702,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 93703,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 0.4426700050632159,
+      "scPeak": 0.6566062569618225,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 921,
+        "lastSequence": 1215,
+        "firstEntryNs": 126979669874322,
+        "lastEntryNs": 126982805703838
+      },
+      "audio": {
+        "callbacks": 295,
+        "seconds": 3.135829516,
+        "frames": 151040,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0757738649544435e-9,
+        "meanRMS": 0.002236050105182596,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 0.055124901694915254,
+        "maxDspMs": 0.08426,
+        "meanAuditUs": 3.485257627118644,
+        "maxAuditUs": 7.235,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 731,
+        "lastSequence": 1022
+      }
+    },
+    {
+      "target": 0,
+      "nodes": 0,
+      "repeat": 1,
+      "condition": "widgets",
+      "seconds": 3.0714151200000015,
+      "electronCPU": 27.023374163763307,
+      "processes": [
+        {
+          "pid": 93701,
+          "role": "main",
+          "corePercent": 8.139570531254007
+        },
+        {
+          "pid": 93724,
+          "role": "sclang",
+          "corePercent": 0.3255828212501533
+        },
+        {
+          "pid": 93800,
+          "role": "scsynth",
+          "corePercent": 0.9767484637504816
+        },
+        {
+          "pid": 93810,
+          "role": "scope",
+          "corePercent": 11.720981565005772
+        },
+        {
+          "pid": 93723,
+          "role": "home",
+          "corePercent": 0
+        },
+        {
+          "pid": 93704,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 93808,
+          "role": "input-recorder",
+          "corePercent": 2.2790797487511223
+        },
+        {
+          "pid": 93702,
+          "role": "GPU",
+          "corePercent": 6.186073603753043
+        },
+        {
+          "pid": 93703,
+          "role": "Utility",
+          "corePercent": 0.9767484637504807
+        }
+      ],
+      "scAverage": 0.47874706983566284,
+      "scPeak": 0.8518593907356262,
+      "opacityHz": 14.94435612082671,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 46.74085850556439,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 1393,
+        "lastSequence": 1686,
+        "firstEntryNs": 126984704345431,
+        "lastEntryNs": 126987829648433
+      },
+      "audio": {
+        "callbacks": 294,
+        "seconds": 3.125303002,
+        "frames": 150528,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.040700597747246e-9,
+        "meanRMS": 0.0022360483237303876,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 0.058939928571428574,
+        "maxDspMs": 0.124818,
+        "meanAuditUs": 3.0499149659863947,
+        "maxAuditUs": 22.489,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 1202,
+        "lastSequence": 1492
+      }
+    },
+    {
+      "target": 0,
+      "nodes": 0,
+      "repeat": 1,
+      "condition": "mixed-16-30",
+      "seconds": 3.0681275480000005,
+      "electronCPU": 66.4900649690982,
+      "processes": [
+        {
+          "pid": 93701,
+          "role": "main",
+          "corePercent": 6.844565511524814
+        },
+        {
+          "pid": 93724,
+          "role": "sclang",
+          "corePercent": 0
+        },
+        {
+          "pid": 93800,
+          "role": "scsynth",
+          "corePercent": 0.9777950730749745
+        },
+        {
+          "pid": 93810,
+          "role": "scope",
+          "corePercent": 18.904038079449492
+        },
+        {
+          "pid": 93723,
+          "role": "home",
+          "corePercent": 0.3259316910249915
+        },
+        {
+          "pid": 93704,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 93808,
+          "role": "input-recorder",
+          "corePercent": 1.6296584551249573
+        },
+        {
+          "pid": 93702,
+          "role": "GPU",
+          "corePercent": 39.43773461402393
+        },
+        {
+          "pid": 93703,
+          "role": "Utility",
+          "corePercent": 0.9777950730749745
+        }
+      ],
+      "scAverage": 0.47476718326409656,
+      "scPeak": 0.8339718580245972,
+      "opacityHz": 15.234226228201852,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 48,
+        "widgetHz": 15,
+        "canvases": 16,
+        "width": 256,
+        "height": 64,
+        "paintHz": 30
+      },
+      "packetHz": 46.97219753695571,
+      "waveHz": 30.151072743316163,
+      "freshWaveHz": 30.151072743316163,
+      "waveDrawMs": 27.35813125490371,
+      "waveFrameTimes": [
+        17474.29999999702,
+        17499.79999999702,
+        17532.79999999702,
+        17549.79999999702,
+        17583.09999999404,
+        17616.79999999702,
+        17650.09999999404,
+        17683.39999999106,
+        17716.79999999702,
+        17750.59999999404,
+        17783.5,
+        17816.89999999106,
+        17850.39999999106,
+        17882.89999999106,
+        17916.89999999106,
+        17950.29999999702,
+        17984.39999999106,
+        18017,
+        18050.79999999702,
+        18083.59999999404,
+        18117,
+        18149.59999999404,
+        18183.59999999404,
+        18217.09999999404,
+        18250.09999999404,
+        18284.09999999404,
+        18317.19999998808,
+        18350.19999998808,
+        18383.59999999404,
+        18417.5,
+        18450.89999999106,
+        18483.69999998808,
+        18517.5,
+        18550.69999998808,
+        18583.59999999404,
+        18617.5,
+        18651,
+        18684.39999999106,
+        18717.69999998808,
+        18751.09999999404,
+        18784.39999999106,
+        18817.69999998808,
+        18850.5,
+        18883.79999999702,
+        18917.5,
+        18951,
+        18984.29999999702,
+        19017.59999999404,
+        19050.89999999106,
+        19084.59999999404,
+        19117.09999999404,
+        19151.29999999702,
+        19183.79999999702,
+        19218,
+        19251.09999999404,
+        19284.19999998808,
+        19318,
+        19351.5,
+        19385,
+        19418,
+        19450.69999998808,
+        19484.89999999106,
+        19517.89999999106,
+        19551.69999998808,
+        19584.79999999702,
+        19617.29999999702,
+        19651.5,
+        19684.79999999702,
+        19718.5,
+        19751.79999999702,
+        19785.19999998808,
+        19817.69999998808,
+        19851.89999999106,
+        19884,
+        19917.79999999702,
+        19951.79999999702,
+        19985.5,
+        20018.19999998808,
+        20052,
+        20085,
+        20118.79999999702,
+        20151.69999998808,
+        20185.39999999106,
+        20218.19999998808,
+        20252.39999999106,
+        20285.29999999702,
+        20318.89999999106,
+        20352.29999999702,
+        20385.09999999404,
+        20419.29999999702,
+        20451.79999999702,
+        20485.69999998808,
+        20518.19999998808,
+        20552.09999999404,
+        20585.59999999404
+      ],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 30,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 4096,
+      "auditRange": {
+        "firstSequence": 1849,
+        "lastSequence": 2144,
+        "firstEntryNs": 126989568183998,
+        "lastEntryNs": 126992714867396
+      },
+      "audio": {
+        "callbacks": 296,
+        "seconds": 3.146683398,
+        "frames": 151552,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 9.955798217081702e-10,
+        "meanRMS": 0.0022360699276317525,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 0.05757393918918919,
+        "maxDspMs": 0.117516,
+        "meanAuditUs": 2.7570844594594597,
+        "maxAuditUs": 16.177,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 1659,
+        "lastSequence": 1950
+      }
+    },
+    {
+      "target": 0,
+      "nodes": 0,
+      "repeat": 1,
+      "condition": "mixed-64-30",
+      "seconds": 3.073061594999999,
+      "electronCPU": 163.35500753280544,
+      "processes": [
+        {
+          "pid": 93701,
+          "role": "main",
+          "corePercent": 7.809801156946874
+        },
+        {
+          "pid": 93724,
+          "role": "sclang",
+          "corePercent": 0.3254083815394462
+        },
+        {
+          "pid": 93800,
+          "role": "scsynth",
+          "corePercent": 0.9762251446183584
+        },
+        {
+          "pid": 93810,
+          "role": "scope",
+          "corePercent": 27.008895667774592
+        },
+        {
+          "pid": 93723,
+          "role": "home",
+          "corePercent": 0.6508167630789068
+        },
+        {
+          "pid": 93704,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 93808,
+          "role": "input-recorder",
+          "corePercent": 0.9762251446183602
+        },
+        {
+          "pid": 93702,
+          "role": "GPU",
+          "corePercent": 126.90926880038673
+        },
+        {
+          "pid": 93703,
+          "role": "Utility",
+          "corePercent": 0.9762251446183602
+        }
+      ],
+      "scAverage": 0.42186252276102704,
+      "scPeak": 2.4048562049865723,
+      "opacityHz": 15.113826002049786,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 48,
+        "widgetHz": 15,
+        "canvases": 64,
+        "width": 256,
+        "height": 64,
+        "paintHz": 30
+      },
+      "packetHz": 46.915834881362876,
+      "waveHz": 28.65329512888605,
+      "freshWaveHz": 28.65329512888605,
+      "waveDrawMs": 78.49743379251574,
+      "waveFrameTimes": [
+        22418.5,
+        22425.69999998808,
+        22452.29999999702,
+        22495,
+        22529.19999998808,
+        22552.89999999106,
+        22600.79999999702,
+        22619,
+        22673.89999999106,
+        22686.59999999404,
+        22719.79999999702,
+        22777,
+        22809.79999999702,
+        22829.19999998808,
+        22852.59999999404,
+        22918.59999999404,
+        22955.29999999702,
+        22991.5,
+        23019.79999999702,
+        23067.5,
+        23086,
+        23137.29999999702,
+        23152.79999999702,
+        23186.5,
+        23220.09999999404,
+        23277.89999999106,
+        23314.59999999404,
+        23320.59999999404,
+        23352.69999998808,
+        23387.69999998808,
+        23425.69999998808,
+        23460.29999999702,
+        23497.69999998808,
+        23532.09999999404,
+        23566.89999999106,
+        23605.5,
+        23641.29999999702,
+        23676.09999999404,
+        23719.69999998808,
+        23782.79999999702,
+        23787.59999999404,
+        23820,
+        23855.89999999106,
+        23888.89999999106,
+        23926.59999999404,
+        23963,
+        23997.59999999404,
+        24005.09999999404,
+        24066.59999999404,
+        24073.09999999404,
+        24106.69999998808,
+        24141.09999999404,
+        24179.09999999404,
+        24212.69999998808,
+        24246.39999999106,
+        24281.5,
+        24315,
+        24388.5,
+        24425.39999999106,
+        24459.89999999106,
+        24495.39999999106,
+        24529.29999999702,
+        24565.19999998808,
+        24600.59999999404,
+        24634.89999999106,
+        24673,
+        24708.39999999106,
+        24743,
+        24781.09999999404,
+        24814.79999999702,
+        24853.5,
+        24887.39999999106,
+        24923.29999999702,
+        24957,
+        24992.19999998808,
+        25027.69999998808,
+        25064.89999999106,
+        25102.59999999404,
+        25143.29999999702,
+        25178.59999999404,
+        25213.29999999702,
+        25250.09999999404,
+        25285,
+        25322.39999999106,
+        25358.79999999702,
+        25391.89999999106,
+        25430.29999999702,
+        25462.69999998808,
+        25499.19999998808,
+        25536.09999999404,
+        25543.39999999106
+      ],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 30,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 5120,
+      "auditRange": {
+        "firstSequence": 2311,
+        "lastSequence": 2608,
+        "firstEntryNs": 126994496116310,
+        "lastEntryNs": 126997664020815
+      },
+      "audio": {
+        "callbacks": 298,
+        "seconds": 3.167904505,
+        "frames": 152576,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 9.784304920087972e-10,
+        "meanRMS": 0.0022360907673044193,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 0.05050855704697986,
+        "maxDspMs": 0.263011,
+        "meanAuditUs": 2.526211409395973,
+        "maxAuditUs": 25.511,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 2120,
+        "lastSequence": 2413
+      }
+    },
+    {
+      "target": 0,
+      "nodes": 0,
+      "repeat": 1,
+      "condition": "mixed-128-60",
+      "seconds": 3.0756528729999992,
+      "electronCPU": 171.34573430777414,
+      "processes": [
+        {
+          "pid": 93701,
+          "role": "main",
+          "corePercent": 5.852415972561549
+        },
+        {
+          "pid": 93724,
+          "role": "sclang",
+          "corePercent": 0
+        },
+        {
+          "pid": 93800,
+          "role": "scsynth",
+          "corePercent": 0.6502684413957259
+        },
+        {
+          "pid": 93810,
+          "role": "scope",
+          "corePercent": 37.71556960095218
+        },
+        {
+          "pid": 93723,
+          "role": "home",
+          "corePercent": 0.3251342206978621
+        },
+        {
+          "pid": 93704,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 93808,
+          "role": "input-recorder",
+          "corePercent": 0.9754026620935917
+        },
+        {
+          "pid": 93702,
+          "role": "GPU",
+          "corePercent": 126.47721185146897
+        },
+        {
+          "pid": 93703,
+          "role": "Utility",
+          "corePercent": 0.9754026620935917
+        }
+      ],
+      "scAverage": 0.37836886445681256,
+      "scPeak": 1.1305687427520752,
+      "opacityHz": 14.15494951403994,
+      "graphicsProfile": {
+        "widgets": 512,
+        "size": 24,
+        "widgetHz": 15,
+        "canvases": 128,
+        "width": 128,
+        "height": 48,
+        "paintHz": 60
+      },
+      "packetHz": 46.868610613154466,
+      "waveHz": 14.15494951403994,
+      "freshWaveHz": 14.15494951403994,
+      "waveDrawMs": 76.27945016836746,
+      "waveFrameTimes": [
+        27620.59999999404,
+        27691.69999998808,
+        27763.09999999404,
+        27832.19999998808,
+        27915.29999999702,
+        27991,
+        28057.69999998808,
+        28127.29999999702,
+        28192.79999999702,
+        28258.69999998808,
+        28325.5,
+        28385.89999999106,
+        28458.29999999702,
+        28532.19999998808,
+        28600.59999999404,
+        28675.59999999404,
+        28742.69999998808,
+        28807.09999999404,
+        28875.89999999106,
+        28944,
+        29020,
+        29097.59999999404,
+        29176.29999999702,
+        29243,
+        29313.89999999106,
+        29383.69999998808,
+        29450.59999999404,
+        29515.5,
+        29584.69999998808,
+        29660,
+        29732.09999999404,
+        29811.5,
+        29878.19999998808,
+        29945.59999999404,
+        30010.69999998808,
+        30077.59999999404,
+        30144.19999998808,
+        30212.69999998808,
+        30276.59999999404,
+        30344.09999999404,
+        30411.29999999702,
+        30477.69999998808,
+        30560.39999999106,
+        30646.5,
+        30728
+      ],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 60,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": true
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 6144,
+      "auditRange": {
+        "firstSequence": 2800,
+        "lastSequence": 3097,
+        "firstEntryNs": 126999711988208,
+        "lastEntryNs": 127002879852718
+      },
+      "audio": {
+        "callbacks": 298,
+        "seconds": 3.16786451,
+        "frames": 152576,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0201877094842549e-9,
+        "meanRMS": 0.0022360451385594346,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 0.0452659966442953,
+        "maxDspMs": 0.146193,
+        "meanAuditUs": 2.2465,
+        "maxAuditUs": 20.6,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 2609,
+        "lastSequence": 2903
+      }
+    }
+  ],
+  "calibration": [
+    {
+      "target": 0,
+      "nodes": 0,
+      "avg": 0.46119192242622375,
+      "fixed": true
+    }
+  ],
+  "loopback": {
+    "path": "/private/tmp/awb-loopback-v2-smoke4.input",
+    "recorderPID": 93808,
+    "channel": 6,
+    "pilotBus": 2,
+    "inputClean": {
+      "recorderVersion": 2,
+      "captureDrops": 0,
+      "recorderOverBudgetCallbacks": 0,
+      "events": [],
+      "callbacks": 94,
+      "frames": 48128,
+      "seconds": 0.992096717,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.002236155203764895,
+      "peak": 0.003162384033203125,
+      "maxResidual": 2.3362244415490313e-7,
+      "residualCallbacks": 0,
+      "silentCallbacks": 0,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.1447978723404253,
+      "maxRecorderUs": 2.614
+    },
+    "inputMute": {
+      "recorderVersion": 2,
+      "captureDrops": 0,
+      "recorderOverBudgetCallbacks": 0,
+      "events": [
+        {
+          "sequence": 237,
+          "entryNs": 126974405296722,
+          "inputHostNs": 126974394313850,
+          "sampleTime": 251650,
+          "frameOffset": 121344,
+          "frames": 512,
+          "firstHit": 316,
+          "residualHits": 33,
+          "maxResidual": 0.000043392181396484375,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.11
+        },
+        {
+          "sequence": 238,
+          "entryNs": 126974416065851,
+          "inputHostNs": 126974404979724,
+          "sampleTime": 252162,
+          "frameOffset": 121856,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.248
+        },
+        {
+          "sequence": 239,
+          "entryNs": 126974426613111,
+          "inputHostNs": 126974415645599,
+          "sampleTime": 252674,
+          "frameOffset": 122368,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.171
+        },
+        {
+          "sequence": 240,
+          "entryNs": 126974437397247,
+          "inputHostNs": 126974426311474,
+          "sampleTime": 253186,
+          "frameOffset": 122880,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.211
+        },
+        {
+          "sequence": 241,
+          "entryNs": 126974447967945,
+          "inputHostNs": 126974436977348,
+          "sampleTime": 253698,
+          "frameOffset": 123392,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.124
+        },
+        {
+          "sequence": 242,
+          "entryNs": 126974458729609,
+          "inputHostNs": 126974447643223,
+          "sampleTime": 254210,
+          "frameOffset": 123904,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.328
+        },
+        {
+          "sequence": 243,
+          "entryNs": 126974469221052,
+          "inputHostNs": 126974458309098,
+          "sampleTime": 254722,
+          "frameOffset": 124416,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 1.098
+        },
+        {
+          "sequence": 244,
+          "entryNs": 126974479837884,
+          "inputHostNs": 126974468974972,
+          "sampleTime": 255234,
+          "frameOffset": 124928,
+          "frames": 512,
+          "firstHit": 316,
+          "residualHits": 32,
+          "maxResidual": 0.00004398822784423828,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 1.011
+        }
+      ],
+      "callbacks": 32,
+      "frames": 16384,
+      "seconds": 0.330630856,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.0019752152684932847,
+      "peak": 0.003162384033203125,
+      "maxResidual": 0.00004398822784423828,
+      "residualCallbacks": 2,
+      "silentCallbacks": 8,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.12065625,
+      "maxRecorderUs": 2.662
+    },
+    "inputPhase": {
+      "recorderVersion": 2,
+      "captureDrops": 0,
+      "recorderOverBudgetCallbacks": 0,
+      "events": [
+        {
+          "sequence": 269,
+          "entryNs": 126974746660540,
+          "inputHostNs": 126974735620092,
+          "sampleTime": 268034,
+          "frameOffset": 137728,
+          "frames": 512,
+          "firstHit": 316,
+          "residualHits": 2,
+          "maxResidual": 0.00002918696810324129,
+          "silent": false,
+          "gap": 0,
+          "recorderUs": 2.194
+        },
+        {
+          "sequence": 283,
+          "entryNs": 126974895885376,
+          "inputHostNs": 126974884942195,
+          "sampleTime": 275202,
+          "frameOffset": 144896,
+          "frames": 512,
+          "firstHit": 316,
+          "residualHits": 2,
+          "maxResidual": 0.00002298643185604486,
+          "silent": false,
+          "gap": 0,
+          "recorderUs": 2.116
+        }
+      ],
+      "callbacks": 75,
+      "frames": 38400,
+      "seconds": 0.789392664,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.0022360488096230245,
+      "peak": 0.003162384033203125,
+      "maxResidual": 0.00002918696810324129,
+      "residualCallbacks": 2,
+      "silentCallbacks": 0,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.05572,
+      "maxRecorderUs": 3.12
+    }
+  },
+  "detector": {
+    "clean": {
+      "callbacks": 94,
+      "seconds": 0.992049423,
+      "frames": 48128,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 0,
+      "residualHits": 0,
+      "silentCallbacks": 0,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 9.892826054874737e-10,
+      "meanRMS": 0.0022360741202363554,
+      "maxPeak": 0.003162277629598975,
+      "meanDspMs": 0.05579205319148936,
+      "maxDspMs": 0.066316,
+      "meanAuditUs": 3.4466170212765954,
+      "maxAuditUs": 4.113,
+      "events": []
+    },
+    "injectedMute": {
+      "callbacks": 31,
+      "seconds": 0.320007633,
+      "frames": 15872,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 2,
+      "residualHits": 64,
+      "silentCallbacks": 8,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 0.00004395769428811036,
+      "meanRMS": 0.0017415854352193863,
+      "maxPeak": 0.003162277163937688,
+      "meanDspMs": 0.05673370967741936,
+      "maxDspMs": 0.068851,
+      "meanAuditUs": 3.5295806451612903,
+      "maxAuditUs": 4.304,
+      "events": [
+        {
+          "seq": 426,
+          "entryNs": 126974389980059,
+          "outputNs": 126974400698106,
+          "sampleTime": 251956,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 68851,
+          "auditNs": 3517,
+          "peak": 0.002410524059087038,
+          "rms": 0.0004224913559168894,
+          "residual": 0.000043388816266087815,
+          "residualHits": 32,
+          "zeroRun": 448,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.645679
+        },
+        {
+          "seq": 427,
+          "entryNs": 126974400739746,
+          "outputNs": 126974411364201,
+          "sampleTime": 252468,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58673,
+          "auditNs": 3748,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 960,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.562034
+        },
+        {
+          "seq": 428,
+          "entryNs": 126974411365980,
+          "outputNs": 126974422030297,
+          "sampleTime": 252980,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 57329,
+          "auditNs": 3300,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 1472,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.603688
+        },
+        {
+          "seq": 429,
+          "entryNs": 126974422105349,
+          "outputNs": 126974432696392,
+          "sampleTime": 253492,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 60228,
+          "auditNs": 3666,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 1984,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.527149
+        },
+        {
+          "seq": 430,
+          "entryNs": 126974432652988,
+          "outputNs": 126974443362487,
+          "sampleTime": 254004,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 60984,
+          "auditNs": 4304,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 2496,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.644211
+        },
+        {
+          "seq": 431,
+          "entryNs": 126974443403440,
+          "outputNs": 126974454028583,
+          "sampleTime": 254516,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 57318,
+          "auditNs": 3666,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 3008,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.564159
+        },
+        {
+          "seq": 432,
+          "entryNs": 126974454118812,
+          "outputNs": 126974464694678,
+          "sampleTime": 255028,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 59353,
+          "auditNs": 3739,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 3520,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.512774
+        },
+        {
+          "seq": 433,
+          "entryNs": 126974464768885,
+          "outputNs": 126974475360773,
+          "sampleTime": 255540,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 63328,
+          "auditNs": 4042,
+          "peak": 0.003162270411849022,
+          "rms": 0.0021467731008110785,
+          "residual": 0.00004395769428811036,
+          "residualHits": 32,
+          "zeroRun": 3521,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.524518
+        }
+      ]
+    },
+    "injectedPhase": {
+      "callbacks": 29,
+      "seconds": 0.298604976,
+      "frames": 14848,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 2,
+      "residualHits": 4,
+      "silentCallbacks": 0,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 0.000029148469426096627,
+      "meanRMS": 0.002236415391333258,
+      "maxPeak": 0.003162277629598975,
+      "meanDspMs": 0.05638131034482759,
+      "maxDspMs": 0.061458,
+      "meanAuditUs": 3.4964137931034482,
+      "maxAuditUs": 3.958,
+      "events": [
+        {
+          "seq": 458,
+          "entryNs": 126974731407209,
+          "outputNs": 126974742001910,
+          "sampleTime": 268340,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 61458,
+          "auditNs": 3671,
+          "peak": 0.0031622773967683315,
+          "rms": 0.00225137928863748,
+          "residual": 0.000029148469426096627,
+          "residualHits": 2,
+          "zeroRun": 0,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.529572
+        },
+        {
+          "seq": 472,
+          "entryNs": 126974880617823,
+          "outputNs": 126974891326330,
+          "sampleTime": 275508,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 59963,
+          "auditNs": 3588,
+          "peak": 0.003162255510687828,
+          "rms": 0.0022387795617613547,
+          "residual": 0.00002305650999596693,
+          "residualHits": 2,
+          "zeroRun": 0,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.644956
+        }
+      ]
+    },
+    "residualThreshold": 0.00001,
+    "silenceRunThreshold": 32
+  },
+  "audit": [
+    0,
+    0,
+    0
+  ],
+  "versions": {
+    "electron": "44.4.1",
+    "node": "24.21.0"
+  },
+  "machine": "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz",
+  "window": {
+    "width": 2250,
+    "height": 1250,
+    "dpr": 1
+  },
+  "widget": {
+    "count": 128,
+    "size": 96,
+    "hz": 15,
+    "sourceChannels": 16
+  },
+  "graphicsProfiles": {
+    "widgets": {
+      "widgets": 128,
+      "size": 96,
+      "widgetHz": 15,
+      "canvases": 0,
+      "width": 0,
+      "height": 0,
+      "paintHz": 0
+    },
+    "mixed-16-30": {
+      "widgets": 128,
+      "size": 48,
+      "widgetHz": 15,
+      "canvases": 16,
+      "width": 256,
+      "height": 64,
+      "paintHz": 30
+    },
+    "mixed-64-30": {
+      "widgets": 128,
+      "size": 48,
+      "widgetHz": 15,
+      "canvases": 64,
+      "width": 256,
+      "height": 64,
+      "paintHz": 30
+    },
+    "mixed-128-60": {
+      "widgets": 512,
+      "size": 24,
+      "widgetHz": 15,
+      "canvases": 128,
+      "width": 128,
+      "height": 48,
+      "paintHz": 60
+    }
+  },
+  "displayFanOut": true,
+  "focusDestination": {
+    "pid": 30128,
+    "name": "existing VS Code"
+  },
+  "focusProbe": "/private/tmp/awb-focus-probe",
+  "persistentFocus": false,
+  "fixedNodeCounts": [
+    0
+  ],
+  "exclusiveSC": true,
+  "scInventories": [
+    {
+      "at": "2026-10-03T22:52:04.660Z",
+      "processes": [
+        {
+          "pid": 93724,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 93800,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:52:10.738Z",
+      "processes": [
+        {
+          "pid": 93724,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 93800,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:52:15.467Z",
+      "processes": [
+        {
+          "pid": 93724,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 93800,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:52:20.499Z",
+      "processes": [
+        {
+          "pid": 93724,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 93800,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:52:25.381Z",
+      "processes": [
+        {
+          "pid": 93724,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 93800,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:52:30.361Z",
+      "processes": [
+        {
+          "pid": 93724,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 93800,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:52:35.577Z",
+      "processes": [
+        {
+          "pid": 93724,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 93800,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    "stopped",
+    "widgets",
+    "mixed-16-30",
+    "mixed-64-30",
+    "mixed-128-60"
+  ],
+  "unrelatedTools": 0,
+  "cleanup": true,
+  "beforeSC": [
+    1,
+    106,
+    2,
+    2,
+    273,
+    0.444075345993042,
+    0.5963249802589417,
+    48000,
+    48001.43638418644
+  ],
+  "afterSC": [
+    1,
+    106,
+    2,
+    2,
+    274,
+    0.3629133701324463,
+    1.3545093536376953,
+    48000,
+    48001.13441126858
+  ],
+  "hostSurvives": true,
+  "sourceHashes": {
+    "apps/awb-shell/shell/main.mjs": "e33d8610140dbb0e830ee65f3d04560235036c93f37028bba8104209b86e395c",
+    "apps/awb-shell/sc/AWBHeadlessHost.scd": "e3f9b161d8b51385bf431837c5b3b7181c25378eb0eac0fcec73281e9e6d0ab6",
+    "apps/awb-shell/sc/AWBScBusAudio.scd": "e7e207a763d8f5f100fafad44e39cd3e2a123128133dd6b85a0fd95df2f46b74",
+    "apps/awb-shell/src/signalCaptureBroker.mjs": "b66150a19bfc4191201976faa34f88ad55cb9bd5906976ef4a12ee82d16c4a92",
+    "apps/awb-shell/src/scSignalSource.mjs": "6aeed55e8a0d2accf353402a0d9e2bd7dcf4426e5ddc7bd954d7afb4d210048f",
+    "apps/awb-shell/.build/sc-bus-reader.node": "106a3e644c9f65194ed0cb686bf9b0552d57b7c975899c123f78d7cff9ad6d0e",
+    "tool-artifacts/scope/0.1.0/server.mjs": "9225fcff0a7a111765161b139ededf4c86ba7897b23fd1707a71915ee19613a0",
+    "tool-artifacts/scope/0.1.0/public/scope.js": "2e965e505db89f87aec3f696dd673c7cbd1e43048323b0bb2f9526863d394a68",
+    "tool-artifacts/scope/0.1.0/public/index.html": "66f879efc757c21270f2c805b737b580eaabbe6458cc30ecec2be16ea0d2fa63",
+    "tool-artifacts/scope/0.1.0/public/scope.css": "ea884dec7eb3aca48bad5a9c6f0f96cb1fdaf38df29720f936e2fe0efd61680a",
+    "tool-artifacts/scope/0.1.0/public/scope-opacity.js": "875ee6c777fc4fa4f9ae5e0386d905731bde429262ee3c2a5456f4943691010b",
+    "tool-artifacts/scope/0.1.0/public/protocol.js": "88f31031f86fa54f2f7e80d4a41cc63abf9baa1bbbfd5e03ffa6406b435e2d68",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-history.js": "ffa2e3e5c70e68a8088b9d6d5c9f7888ba0322cc57835c86155eb269e276ba42",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-metadata.js": "ece9bd97757f5d89cfa145d1db47df39f025035587486798aa177e093284410d",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-painter.js": "284a99f10417dcc676b9bd1c9a146202c10de152e69d1eab4a4d120fdf63b119",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-trace.js": "da82f5457fb8313d3fb1ca321e013bd8553bd0719f311d2d0b42d57caccb91e5"
+  },
+  "protectedCount": 16,
+  "fixtureOnlyInstrumentation": true
+}

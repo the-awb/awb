@@ -1,0 +1,2220 @@
+{
+  "complete": false,
+  "session": {
+    "port": 65256,
+    "sampleRate": 48000,
+    "blockSize": 64,
+    "scPID": 83834,
+    "toneNode": 1001
+  },
+  "seconds": 20,
+  "repeats": 2,
+  "targets": [
+    30,
+    40,
+    50,
+    55,
+    65
+  ],
+  "phases": [
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "stopped",
+      "seconds": 20.195838252,
+      "electronCPU": 0.8912727352734395,
+      "processes": [
+        {
+          "pid": 83726,
+          "role": "main",
+          "corePercent": 0.6932121274348975
+        },
+        {
+          "pid": 83735,
+          "role": "sclang",
+          "corePercent": 0.09903030391927334
+        },
+        {
+          "pid": 83834,
+          "role": "scsynth",
+          "corePercent": 34.31400030802742
+        },
+        {
+          "pid": 83871,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 83734,
+          "role": "home",
+          "corePercent": 0.198060607838542
+        },
+        {
+          "pid": 83730,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83841,
+          "role": "input-recorder",
+          "corePercent": 0.14854545587890658
+        },
+        {
+          "pid": 83869,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 83728,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 83729,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 33.92210611120447,
+      "scPeak": 37.43705749511719,
+      "opacityHz": 0,
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 1012,
+        "lastSequence": 2911,
+        "firstEntryNs": 124333731077636,
+        "lastEntryNs": 124353986633616
+      },
+      "audio": {
+        "callbacks": 1900,
+        "seconds": 20.25555598,
+        "frames": 972800,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0757738649544435e-9,
+        "meanRMS": 0.002236053387130019,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.6010641415789473,
+        "maxDspMs": 4.000179,
+        "meanAuditUs": 2.643053684210526,
+        "maxAuditUs": 16.772,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 737,
+        "lastSequence": 2632
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "stopped-focus",
+      "seconds": 20.004863714,
+      "electronCPU": 2.6993435582472474,
+      "processes": [
+        {
+          "pid": 83726,
+          "role": "main",
+          "corePercent": 1.8995380595073215
+        },
+        {
+          "pid": 83735,
+          "role": "sclang",
+          "corePercent": 0.0999756873424885
+        },
+        {
+          "pid": 83834,
+          "role": "scsynth",
+          "corePercent": 29.992706202747193
+        },
+        {
+          "pid": 83871,
+          "role": "scope",
+          "corePercent": 0.24993921835622668
+        },
+        {
+          "pid": 83734,
+          "role": "home",
+          "corePercent": 0.04998784367124536
+        },
+        {
+          "pid": 83730,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83841,
+          "role": "input-recorder",
+          "corePercent": 0.1999513746849812
+        },
+        {
+          "pid": 83869,
+          "role": "focus-helper",
+          "corePercent": 0.19995137468498128
+        },
+        {
+          "pid": 83728,
+          "role": "GPU",
+          "corePercent": 0.49987843671245336
+        },
+        {
+          "pid": 83729,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 29.317677796776614,
+      "scPeak": 40.889427185058594,
+      "opacityHz": 0,
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 3062,
+        "lastSequence": 4943,
+        "firstEntryNs": 124355597252203,
+        "lastEntryNs": 124375660725935
+      },
+      "audio": {
+        "callbacks": 1882,
+        "seconds": 20.063473732,
+        "frames": 963584,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0882817017346391e-9,
+        "meanRMS": 0.0022360479213392177,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.146037817215728,
+        "maxDspMs": 4.387202,
+        "meanAuditUs": 3.3701471838469717,
+        "maxAuditUs": 40.301,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 112.09810600000492,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 812.621908000001,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 1383.497077,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1983.140744000004,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 2564.6662170000054,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3150.5526800000007,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 3718.213730000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4316.824376000004,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 4920.190471000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5509.667083,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 6089.379178000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6686.906433000004,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 7269.012198000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7852.025661,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 8438.003179,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9026.557971000002,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 9603.166812000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10201.724911000005,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 10822.813486,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11407.991690000003,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 11983.269401000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12576.023097000005,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 13156.515995000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13754.127697000004,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 14331.873002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14940.639482000006,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 15552.342119,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 16131.772108000005,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 16713.348602000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 17358.633668000002,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 17991.210354000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 18573.375407,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 19163.429815000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 19747.674599000005,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 2787,
+        "lastSequence": 4665
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "widgets",
+      "seconds": 20.231295142000004,
+      "electronCPU": 26.889034843382838,
+      "processes": [
+        {
+          "pid": 83726,
+          "role": "main",
+          "corePercent": 8.402823388557136
+        },
+        {
+          "pid": 83735,
+          "role": "sclang",
+          "corePercent": 0.0988567457477289
+        },
+        {
+          "pid": 83834,
+          "role": "scsynth",
+          "corePercent": 32.27672748663418
+        },
+        {
+          "pid": 83871,
+          "role": "scope",
+          "corePercent": 11.022527150872008
+        },
+        {
+          "pid": 83734,
+          "role": "home",
+          "corePercent": 0.09885674574773083
+        },
+        {
+          "pid": 83730,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83841,
+          "role": "input-recorder",
+          "corePercent": 0.1977134914954622
+        },
+        {
+          "pid": 83869,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 83728,
+          "role": "GPU",
+          "corePercent": 6.227974982107052
+        },
+        {
+          "pid": 83729,
+          "role": "Utility",
+          "corePercent": 1.1368525760989066
+        }
+      ],
+      "scAverage": 31.65183448791504,
+      "scPeak": 38.290321350097656,
+      "opacityHz": 14.999729513072156,
+      "sourceAdvances": true,
+      "sourceGapFrames": 1024,
+      "auditRange": {
+        "firstSequence": 5121,
+        "lastSequence": 7027,
+        "firstEntryNs": 124377559408708,
+        "lastEntryNs": 124397889527105
+      },
+      "audio": {
+        "callbacks": 1907,
+        "seconds": 20.330118397,
+        "frames": 976384,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1082386917882214e-9,
+        "meanRMS": 0.0022360527647346255,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.384397728369166,
+        "maxDspMs": 4.091476,
+        "meanAuditUs": 2.981227058206607,
+        "maxAuditUs": 33.113,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 4846,
+        "lastSequence": 6748
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "focus",
+      "seconds": 20.129624155,
+      "electronCPU": 27.720338725817612,
+      "processes": [
+        {
+          "pid": 83726,
+          "role": "main",
+          "corePercent": 8.892366723873394
+        },
+        {
+          "pid": 83735,
+          "role": "sclang",
+          "corePercent": 0.09935605278071057
+        },
+        {
+          "pid": 83834,
+          "role": "scsynth",
+          "corePercent": 30.50230820367744
+        },
+        {
+          "pid": 83871,
+          "role": "scope",
+          "corePercent": 10.8298097530972
+        },
+        {
+          "pid": 83734,
+          "role": "home",
+          "corePercent": 0.14903407917106254
+        },
+        {
+          "pid": 83730,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83841,
+          "role": "input-recorder",
+          "corePercent": 0.19871210556141647
+        },
+        {
+          "pid": 83869,
+          "role": "focus-helper",
+          "corePercent": 0.09935605278070826
+        },
+        {
+          "pid": 83728,
+          "role": "GPU",
+          "corePercent": 6.855567641868871
+        },
+        {
+          "pid": 83729,
+          "role": "Utility",
+          "corePercent": 0.9935605278070827
+        }
+      ],
+      "scAverage": 29.991118662285082,
+      "scPeak": 52.106746673583984,
+      "opacityHz": 14.983014305560067,
+      "sourceAdvances": true,
+      "sourceGapFrames": 87552,
+      "auditRange": {
+        "firstSequence": 7178,
+        "lastSequence": 9073,
+        "firstEntryNs": 124399500224108,
+        "lastEntryNs": 124419713042505
+      },
+      "audio": {
+        "callbacks": 1896,
+        "seconds": 20.212818397,
+        "frames": 970752,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.05813053978554e-9,
+        "meanRMS": 0.0022360542660504273,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.2011839767932493,
+        "maxDspMs": 5.560279,
+        "meanAuditUs": 3.8497151898734177,
+        "maxAuditUs": 38.629,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 51.81461100000888,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 633.3992759999965,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 1305.8815029999969,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 2010.7415340000007,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 2590.003117,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3187.3186120000028,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 3758.346126000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4399.693010999996,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 4998.943952000001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5587.126172000004,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 6171.879423000006,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6752.616341000001,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 7337.031185,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7921.154808000007,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 8516.030016000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9101.723385000005,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 9678.007041999997,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10259.880474999998,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 10843.562766999996,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11424.242286000008,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 11998.888896999997,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12641.416334000009,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 13215.261190999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13790.818713,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 14380.662956,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14976.140497,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 15565.860236000008,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 16150.666058000003,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 16739.446662000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 17340.886144999997,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 17932.771575000006,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 18517.14718300001,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 19219.010601,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 6902,
+        "lastSequence": 8794
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 2,
+      "condition": "focus",
+      "seconds": 20.231085086000007,
+      "electronCPU": 27.63074731897748,
+      "processes": [
+        {
+          "pid": 83726,
+          "role": "main",
+          "corePercent": 8.847770608402449
+        },
+        {
+          "pid": 83735,
+          "role": "sclang",
+          "corePercent": 0.09885777216091911
+        },
+        {
+          "pid": 83834,
+          "role": "scsynth",
+          "corePercent": 30.299907167322367
+        },
+        {
+          "pid": 83871,
+          "role": "scope",
+          "corePercent": 10.726068279459952
+        },
+        {
+          "pid": 83734,
+          "role": "home",
+          "corePercent": 0.1482866582413817
+        },
+        {
+          "pid": 83730,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83841,
+          "role": "input-recorder",
+          "corePercent": 0.19771554432184235
+        },
+        {
+          "pid": 83869,
+          "role": "focus-helper",
+          "corePercent": 0.14828665824138182
+        },
+        {
+          "pid": 83728,
+          "role": "GPU",
+          "corePercent": 6.870615165184025
+        },
+        {
+          "pid": 83729,
+          "role": "Utility",
+          "corePercent": 1.0380066076896726
+        }
+      ],
+      "scAverage": 29.801159531322877,
+      "scPeak": 47.4261474609375,
+      "opacityHz": 15.00415688936551,
+      "sourceAdvances": true,
+      "sourceGapFrames": 86528,
+      "auditRange": {
+        "firstSequence": 9226,
+        "lastSequence": 11131,
+        "firstEntryNs": 124421344944504,
+        "lastEntryNs": 124441664470417
+      },
+      "audio": {
+        "callbacks": 1906,
+        "seconds": 20.319525913,
+        "frames": 975872,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0409193073462886e-9,
+        "meanRMS": 0.0022360488533313657,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.179043034627492,
+        "maxDspMs": 5.094471,
+        "meanAuditUs": 3.893384050367261,
+        "maxAuditUs": 56.646,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 67.20683700000518,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 666.8170200000022,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 1251.513340999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1837.5692439999984,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 2413.174362000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3004.9925220000005,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 3599.8284790000034,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4232.377022000001,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 4808.2363049999985,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5406.464246000003,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 5997.130839999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6585.979567000002,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 7161.230779000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7749.956382999997,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 8333.738826999994,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8951.291570000001,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 9530.597762999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10121.737825999997,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 10704.520795000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11291.267751000007,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 11865.851089999996,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12442.924325,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 13038.482090999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13625.865042999998,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 14222.016587999999,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14812.008801999997,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 15482.576111000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 16462.69769,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 17039.512574000008,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 17620.632664999997,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 18194.264057000008,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 18790.322367999994,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 19378.693782000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 19975.628413,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 8950,
+        "lastSequence": 10852
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 2,
+      "condition": "widgets",
+      "seconds": 20.228169962000013,
+      "electronCPU": 26.250520981261246,
+      "processes": [
+        {
+          "pid": 83726,
+          "role": "main",
+          "corePercent": 7.860325491564098
+        },
+        {
+          "pid": 83735,
+          "role": "sclang",
+          "corePercent": 0.09887201876181491
+        },
+        {
+          "pid": 83834,
+          "role": "scsynth",
+          "corePercent": 31.98509806944638
+        },
+        {
+          "pid": 83871,
+          "role": "scope",
+          "corePercent": 10.925358073180291
+        },
+        {
+          "pid": 83734,
+          "role": "home",
+          "corePercent": 0.09887201876181272
+        },
+        {
+          "pid": 83730,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83841,
+          "role": "input-recorder",
+          "corePercent": 0.19774403752362543
+        },
+        {
+          "pid": 83869,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 83728,
+          "role": "GPU",
+          "corePercent": 6.278373191375104
+        },
+        {
+          "pid": 83729,
+          "role": "Utility",
+          "corePercent": 1.0875922063799393
+        }
+      ],
+      "scAverage": 31.21438987345635,
+      "scPeak": 39.29174041748047,
+      "opacityHz": 15.000983671060396,
+      "sourceAdvances": true,
+      "sourceGapFrames": 1536,
+      "auditRange": {
+        "firstSequence": 11283,
+        "lastSequence": 13188,
+        "firstEntryNs": 124443285827675,
+        "lastEntryNs": 124463605254013
+      },
+      "audio": {
+        "callbacks": 1906,
+        "seconds": 20.319426338,
+        "frames": 975872,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.088438872885733e-9,
+        "meanRMS": 0.0022360480035080546,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.355010289611752,
+        "maxDspMs": 4.198866,
+        "meanAuditUs": 2.8159380902413433,
+        "maxAuditUs": 40.275,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 11007,
+        "lastSequence": 12909
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 2,
+      "condition": "stopped-focus",
+      "seconds": 20.042000453999993,
+      "electronCPU": 3.1433987911833645,
+      "processes": [
+        {
+          "pid": 83726,
+          "role": "main",
+          "corePercent": 2.145494413029913
+        },
+        {
+          "pid": 83735,
+          "role": "sclang",
+          "corePercent": 0.049895218907671374
+        },
+        {
+          "pid": 83834,
+          "role": "scsynth",
+          "corePercent": 30.485978752587858
+        },
+        {
+          "pid": 83871,
+          "role": "scope",
+          "corePercent": 0.34926653235370847
+        },
+        {
+          "pid": 83734,
+          "role": "home",
+          "corePercent": 0.09979043781534497
+        },
+        {
+          "pid": 83730,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83841,
+          "role": "input-recorder",
+          "corePercent": 0.14968565672301745
+        },
+        {
+          "pid": 83869,
+          "role": "focus-helper",
+          "corePercent": 0.0997904378153449
+        },
+        {
+          "pid": 83728,
+          "role": "GPU",
+          "corePercent": 0.5488474079843983
+        },
+        {
+          "pid": 83729,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 29.6126963487312,
+      "scPeak": 41.27345657348633,
+      "opacityHz": 0,
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 13343,
+        "lastSequence": 15230,
+        "firstEntryNs": 124465258570102,
+        "lastEntryNs": 124485386044891
+      },
+      "audio": {
+        "callbacks": 1888,
+        "seconds": 20.127474789,
+        "frames": 966656,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0846120581525787e-9,
+        "meanRMS": 0.0022360530966492446,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.200299644597458,
+        "maxDspMs": 4.412399,
+        "meanAuditUs": 3.323652012711864,
+        "maxAuditUs": 37.445,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 52.672246000001905,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 648.9519020000007,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 1220.3118210000102,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1820.4237850000209,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 2404.6604940000107,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 2997.178222000017,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 3567.9013130000094,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4160.039266000007,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 4753.056624000019,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5334.0226390000025,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 5907.627043000015,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6495.234937000001,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 7071.659723999997,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7656.508178000018,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 8231.489119000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8819.386609000008,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 9396.162977,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9973.955592000013,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 10555.115122000017,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11129.454434000014,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 11716.151807000017,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12307.952401000017,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 13008.551443000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13929.60189000002,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 14520.488158000022,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 15114.215022000019,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 15694.804613000015,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 16275.378622000018,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 16848.024483999994,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 17447.49410000001,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 18025.280115,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 18613.534348000016,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        },
+        {
+          "at": 19204.612418000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 19781.95397500001,
+          "destination": "scope",
+          "pid": 83726,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 13068,
+        "lastSequence": 14952
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 2,
+      "condition": "stopped",
+      "seconds": 20.145330233999992,
+      "electronCPU": 0.5956715457434963,
+      "processes": [
+        {
+          "pid": 83726,
+          "role": "main",
+          "corePercent": 0.49639295478624657
+        },
+        {
+          "pid": 83735,
+          "role": "sclang",
+          "corePercent": 0.09927859095725196
+        },
+        {
+          "pid": 83834,
+          "role": "scsynth",
+          "corePercent": 34.54894965312289
+        },
+        {
+          "pid": 83871,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 83734,
+          "role": "home",
+          "corePercent": 0.09927859095724975
+        },
+        {
+          "pid": 83730,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83841,
+          "role": "input-recorder",
+          "corePercent": 0.1985571819144995
+        },
+        {
+          "pid": 83869,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 83728,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 83729,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 33.94261877877371,
+      "scPeak": 38.330589294433594,
+      "opacityHz": 0,
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 15381,
+        "lastSequence": 17278,
+        "firstEntryNs": 124486996676189,
+        "lastEntryNs": 124507230847254
+      },
+      "audio": {
+        "callbacks": 1898,
+        "seconds": 20.234171065,
+        "frames": 971776,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1034715060101452e-9,
+        "meanRMS": 0.00223605493893526,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.62323455426765,
+        "maxDspMs": 4.097675,
+        "meanAuditUs": 2.6875115911485774,
+        "maxAuditUs": 16.951,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 15105,
+        "lastSequence": 17000
+      }
+    }
+  ],
+  "calibration": [
+    {
+      "target": 30,
+      "nodes": 20,
+      "avg": 33.27436828613281,
+      "fixed": true
+    }
+  ],
+  "loopback": {
+    "path": "/private/tmp/awb-loopback-sweep.input",
+    "recorderPID": 83841,
+    "channel": 6,
+    "pilotBus": 2,
+    "inputClean": {
+      "callbacks": 94,
+      "frames": 48128,
+      "seconds": 0.991995478,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.002236190779659617,
+      "peak": 0.003162384033203125,
+      "maxResidual": 2.3084632083322787e-7,
+      "residualCallbacks": 0,
+      "silentCallbacks": 0,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.406595744680851,
+      "maxRecorderUs": 4.137
+    },
+    "inputMute": {
+      "callbacks": 31,
+      "frames": 15872,
+      "seconds": 0.320080975,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.0019237958936592506,
+      "peak": 0.003162384033203125,
+      "maxResidual": 0.000049410375411445585,
+      "residualCallbacks": 2,
+      "silentCallbacks": 9,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.4269354838709676,
+      "maxRecorderUs": 2.743
+    },
+    "inputPhase": {
+      "callbacks": 75,
+      "frames": 38400,
+      "seconds": 0.789318411,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.0022361918254039685,
+      "peak": 0.003162384033203125,
+      "maxResidual": 0.0000334734569155693,
+      "residualCallbacks": 2,
+      "silentCallbacks": 0,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.0556533333333333,
+      "maxRecorderUs": 3.036
+    }
+  },
+  "detector": {
+    "clean": {
+      "callbacks": 94,
+      "seconds": 0.992144144,
+      "frames": 48128,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 0,
+      "residualHits": 0,
+      "silentCallbacks": 0,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 9.611231888487226e-10,
+      "meanRMS": 0.0022359009432201967,
+      "maxPeak": 0.003162277629598975,
+      "meanDspMs": 0.058248563829787235,
+      "maxDspMs": 0.11475,
+      "meanAuditUs": 3.7675,
+      "maxAuditUs": 6.39,
+      "events": []
+    },
+    "injectedMute": {
+      "callbacks": 32,
+      "seconds": 0.33072793,
+      "frames": 16384,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 2,
+      "residualHits": 65,
+      "silentCallbacks": 9,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 0.00004939927566323041,
+      "meanRMS": 0.001688948937314836,
+      "maxPeak": 0.003162277163937688,
+      "meanDspMs": 0.05826984375,
+      "maxDspMs": 0.063315,
+      "meanAuditUs": 3.76525,
+      "maxAuditUs": 4.502,
+      "events": [
+        {
+          "seq": 515,
+          "entryNs": 124328430089002,
+          "outputNs": 124328440756476,
+          "sampleTime": 297608,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 38567,
+          "auditNs": 1750,
+          "peak": 0.003143581561744213,
+          "rms": 0.00048017643747180045,
+          "residual": 0.00004939927566323041,
+          "residualHits": 32,
+          "zeroRun": 448,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.627157
+        },
+        {
+          "seq": 516,
+          "entryNs": 124328440795423,
+          "outputNs": 124328451423005,
+          "sampleTime": 298120,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 59295,
+          "auditNs": 4053,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 960,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.564234
+        },
+        {
+          "seq": 517,
+          "entryNs": 124328451360740,
+          "outputNs": 124328462089534,
+          "sampleTime": 298632,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 56381,
+          "auditNs": 3750,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 1472,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.668663
+        },
+        {
+          "seq": 518,
+          "entryNs": 124328462041313,
+          "outputNs": 124328472756064,
+          "sampleTime": 299144,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 59485,
+          "auditNs": 3521,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 1984,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.651745
+        },
+        {
+          "seq": 519,
+          "entryNs": 124328472795086,
+          "outputNs": 124328483422593,
+          "sampleTime": 299656,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58941,
+          "auditNs": 3809,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 2496,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.564757
+        },
+        {
+          "seq": 520,
+          "entryNs": 124328483466235,
+          "outputNs": 124328494089122,
+          "sampleTime": 300168,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58289,
+          "auditNs": 3878,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 3008,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.56072
+        },
+        {
+          "seq": 521,
+          "entryNs": 124328494127464,
+          "outputNs": 124328504755652,
+          "sampleTime": 300680,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 59014,
+          "auditNs": 3776,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 3520,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.565398
+        },
+        {
+          "seq": 522,
+          "entryNs": 124328504791134,
+          "outputNs": 124328515422181,
+          "sampleTime": 301192,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58469,
+          "auditNs": 4103,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 4032,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.568475
+        },
+        {
+          "seq": 523,
+          "entryNs": 124328515467919,
+          "outputNs": 124328526088710,
+          "sampleTime": 301704,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 59453,
+          "auditNs": 3451,
+          "peak": 0.0031622634269297123,
+          "rms": 0.002146464020044557,
+          "residual": 0.00004318054925533943,
+          "residualHits": 33,
+          "zeroRun": 4033,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.557887
+        }
+      ]
+    },
+    "injectedPhase": {
+      "callbacks": 29,
+      "seconds": 0.29871426,
+      "frames": 14848,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 2,
+      "residualHits": 3,
+      "silentCallbacks": 0,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 0.00003355985268386119,
+      "meanRMS": 0.002236368193740936,
+      "maxPeak": 0.0031622773967683315,
+      "meanDspMs": 0.0431761724137931,
+      "maxDspMs": 0.060706,
+      "meanAuditUs": 2.767310344827586,
+      "maxAuditUs": 4.348,
+      "events": [
+        {
+          "seq": 547,
+          "entryNs": 124328771319047,
+          "outputNs": 124328782107832,
+          "sampleTime": 313992,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 33014,
+          "auditNs": 1829,
+          "peak": 0.0031622741371393204,
+          "rms": 0.002241701925995668,
+          "residual": 0.00003355985268386119,
+          "residualHits": 2,
+          "zeroRun": 0,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.753942
+        },
+        {
+          "seq": 561,
+          "entryNs": 124328920696122,
+          "outputNs": 124328931440121,
+          "sampleTime": 321160,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 43868,
+          "auditNs": 2581,
+          "peak": 0.003162265056744218,
+          "rms": 0.002234350344193213,
+          "residual": 0.000032265282098880134,
+          "residualHits": 1,
+          "zeroRun": 0,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.69755
+        }
+      ]
+    },
+    "residualThreshold": 0.00001,
+    "silenceRunThreshold": 32
+  },
+  "audit": [
+    0,
+    0,
+    0
+  ],
+  "versions": {
+    "electron": "44.4.1",
+    "node": "24.21.0"
+  },
+  "machine": "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz",
+  "window": {
+    "width": 2250,
+    "height": 1250,
+    "dpr": 1
+  },
+  "widget": {
+    "count": 128,
+    "size": 96,
+    "hz": 15,
+    "sourceChannels": 16
+  },
+  "focusDestination": {
+    "pid": 30128,
+    "name": "existing VS Code"
+  },
+  "focusProbe": "/private/tmp/awb-focus-probe",
+  "persistentFocus": true,
+  "fixedNodeCounts": [
+    20,
+    28,
+    36,
+    44,
+    52
+  ],
+  "exclusiveSC": true,
+  "scInventories": [
+    {
+      "at": "2026-10-03T22:07:58.683Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:08:04.785Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:08:26.651Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:08:48.320Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:09:10.548Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:09:32.389Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:09:54.330Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:10:16.265Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:10:38.052Z",
+      "processes": [
+        {
+          "pid": 83735,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83834,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    "stopped",
+    "stopped-focus",
+    "widgets",
+    "focus"
+  ],
+  "helperPID": 83869,
+  "unrelatedTools": 0
+}

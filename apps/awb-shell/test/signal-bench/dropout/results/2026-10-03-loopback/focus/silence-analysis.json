@@ -1,0 +1,416 @@
+{
+  "threshold": 1e-09,
+  "minimumFrames": 32,
+  "sampleRate": 48000,
+  "scope": "Zero-sample spans in the measured pilot channel; injected validation faults excluded by phase ranges. Audibility not graded. Runs meeting a phase boundary may be truncated.",
+  "phases": [
+    {
+      "nodes": 20,
+      "condition": "stopped",
+      "repeat": 1,
+      "scAverage": 33.78098737782445,
+      "inputRange": {
+        "firstSequence": 737,
+        "lastSequence": 2152
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 20,
+      "condition": "stopped-focus",
+      "repeat": 1,
+      "scAverage": 28.75226095610974,
+      "inputRange": {
+        "firstSequence": 2304,
+        "lastSequence": 3730
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 20,
+      "condition": "widgets",
+      "repeat": 1,
+      "scAverage": 30.141421851465257,
+      "inputRange": {
+        "firstSequence": 3911,
+        "lastSequence": 5331
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 20,
+      "condition": "focus",
+      "repeat": 1,
+      "scAverage": 28.670590782165526,
+      "inputRange": {
+        "firstSequence": 5486,
+        "lastSequence": 6902
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 20,
+      "condition": "focus",
+      "repeat": 2,
+      "scAverage": 28.882843541164025,
+      "inputRange": {
+        "firstSequence": 7058,
+        "lastSequence": 8494
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 20,
+      "condition": "widgets",
+      "repeat": 2,
+      "scAverage": 30.815120470725883,
+      "inputRange": {
+        "firstSequence": 8649,
+        "lastSequence": 10071
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 20,
+      "condition": "stopped-focus",
+      "repeat": 2,
+      "scAverage": 28.837133071001837,
+      "inputRange": {
+        "firstSequence": 10231,
+        "lastSequence": 11657
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 20,
+      "condition": "stopped",
+      "repeat": 2,
+      "scAverage": 33.26532765092521,
+      "inputRange": {
+        "firstSequence": 11812,
+        "lastSequence": 13235
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 36,
+      "condition": "stopped",
+      "repeat": 1,
+      "scAverage": 49.701879936352114,
+      "inputRange": {
+        "firstSequence": 13625,
+        "lastSequence": 15049
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 36,
+      "condition": "stopped-focus",
+      "repeat": 1,
+      "scAverage": 49.033783659643056,
+      "inputRange": {
+        "firstSequence": 15202,
+        "lastSequence": 16624
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 36,
+      "condition": "widgets",
+      "repeat": 1,
+      "scAverage": 47.31080489323057,
+      "inputRange": {
+        "firstSequence": 16785,
+        "lastSequence": 18209
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 36,
+      "condition": "focus",
+      "repeat": 1,
+      "scAverage": 50.48304239908854,
+      "inputRange": {
+        "firstSequence": 18364,
+        "lastSequence": 19786
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 36,
+      "condition": "focus",
+      "repeat": 2,
+      "scAverage": 50.44257187843323,
+      "inputRange": {
+        "firstSequence": 19940,
+        "lastSequence": 21361
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 36,
+      "condition": "widgets",
+      "repeat": 2,
+      "scAverage": 47.56423601610907,
+      "inputRange": {
+        "firstSequence": 21516,
+        "lastSequence": 22952
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 36,
+      "condition": "stopped-focus",
+      "repeat": 2,
+      "scAverage": 49.30908020019531,
+      "inputRange": {
+        "firstSequence": 23111,
+        "lastSequence": 24534
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 36,
+      "condition": "stopped",
+      "repeat": 2,
+      "scAverage": 49.8858084427683,
+      "inputRange": {
+        "firstSequence": 24688,
+        "lastSequence": 26117
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 52,
+      "condition": "stopped",
+      "repeat": 1,
+      "scAverage": 66.23526723761307,
+      "inputRange": {
+        "firstSequence": 26509,
+        "lastSequence": 27942
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 52,
+      "condition": "stopped-focus",
+      "repeat": 1,
+      "scAverage": 69.80044197082519,
+      "inputRange": {
+        "firstSequence": 28095,
+        "lastSequence": 29534
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 52,
+      "condition": "widgets",
+      "repeat": 1,
+      "scAverage": 64.1274294936866,
+      "inputRange": {
+        "firstSequence": 29694,
+        "lastSequence": 31130
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 52,
+      "condition": "focus",
+      "repeat": 1,
+      "scAverage": 72.78199822562081,
+      "inputRange": {
+        "firstSequence": 31284,
+        "lastSequence": 32726
+      },
+      "silenceRunsFrames": [
+        1529,
+        1528,
+        1530,
+        1518,
+        1529
+      ],
+      "silenceRunsMs": [
+        31.854166666666668,
+        31.833333333333332,
+        31.875,
+        31.625,
+        31.854166666666668
+      ],
+      "silenceRunCount": 5,
+      "totalSilenceMs": 159.04166666666666,
+      "maxSilenceMs": 31.875,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 52,
+      "condition": "focus",
+      "repeat": 2,
+      "scAverage": 72.23759788513183,
+      "inputRange": {
+        "firstSequence": 32882,
+        "lastSequence": 34321
+      },
+      "silenceRunsFrames": [
+        1526,
+        1527,
+        1530,
+        2553,
+        1530
+      ],
+      "silenceRunsMs": [
+        31.791666666666668,
+        31.8125,
+        31.875,
+        53.1875,
+        31.875
+      ],
+      "silenceRunCount": 5,
+      "totalSilenceMs": 180.54166666666666,
+      "maxSilenceMs": 53.1875,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 52,
+      "condition": "widgets",
+      "repeat": 2,
+      "scAverage": 64.16900748537297,
+      "inputRange": {
+        "firstSequence": 34476,
+        "lastSequence": 35914
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 52,
+      "condition": "stopped-focus",
+      "repeat": 2,
+      "scAverage": 69.25014013173629,
+      "inputRange": {
+        "firstSequence": 36072,
+        "lastSequence": 37519
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    },
+    {
+      "nodes": 52,
+      "condition": "stopped",
+      "repeat": 2,
+      "scAverage": 65.9801518624289,
+      "inputRange": {
+        "firstSequence": 37674,
+        "lastSequence": 39111
+      },
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "totalSilenceMs": 0.0,
+      "maxSilenceMs": 0.0,
+      "recorderReliable": true
+    }
+  ]
+}

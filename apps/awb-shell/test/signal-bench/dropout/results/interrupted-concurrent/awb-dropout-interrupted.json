@@ -1,0 +1,11 @@
+{
+  "stoppedAtUserRequest": true,
+  "reason": "Another agent was running similar performance tests; overlapping load may contaminate measurements.",
+  "notAnIsolatedComparison": true,
+  "stoppedOwnedPIDs": [
+    62848,
+    62780
+  ],
+  "savedPhases": 17,
+  "ownedAudioProcessesAbsentOrTerminated": true
+}

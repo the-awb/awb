@@ -1,0 +1,442 @@
+TAP version 13
+# Subtest: Conditions distinguish stopped capture, historical focus controls, and sustained profiles
+ok 1 - Conditions distinguish stopped capture, historical focus controls, and sustained profiles
+  ---
+  duration_ms: 1.489375
+  type: 'test'
+  ...
+# Subtest: widgets uses real trace painting with one shared snapshot and stops its scheduler
+ok 2 - widgets uses real trace painting with one shared snapshot and stops its scheduler
+  ---
+  duration_ms: 23.273613
+  type: 'test'
+  ...
+# Subtest: mixed-16-30 uses real trace painting with one shared snapshot and stops its scheduler
+ok 3 - mixed-16-30 uses real trace painting with one shared snapshot and stops its scheduler
+  ---
+  duration_ms: 26.274323
+  type: 'test'
+  ...
+# Subtest: mixed-64-30 uses real trace painting with one shared snapshot and stops its scheduler
+ok 4 - mixed-64-30 uses real trace painting with one shared snapshot and stops its scheduler
+  ---
+  duration_ms: 42.22171
+  type: 'test'
+  ...
+# Subtest: mixed-128-60 uses real trace painting with one shared snapshot and stops its scheduler
+ok 5 - mixed-128-60 uses real trace painting with one shared snapshot and stops its scheduler
+  ---
+  duration_ms: 164.348658
+  type: 'test'
+  ...
+# Subtest: range validation rejects coercion/extra fields and keeps controls raw
+ok 6 - range validation rejects coercion/extra fields and keeps controls raw
+  ---
+  duration_ms: 2.580308
+  type: 'test'
+  ...
+# Subtest: two scopes and a raw peer share physical capture; zoom does not mutate the raw route
+ok 7 - two scopes and a raw peer share physical capture; zoom does not mutate the raw route
+  ---
+  duration_ms: 7.891377
+  type: 'test'
+  ...
+# Subtest: failed replacement preserves the old lease, and close fences pending allocation
+ok 8 - failed replacement preserves the old lease, and close fences pending allocation
+  ---
+  duration_ms: 1.064364
+  type: 'test'
+  ...
+# Subtest: capture errors retire the lease and leave a recoverable disconnected state
+ok 9 - capture errors retire the lease and leave a recoverable disconnected state
+  ---
+  duration_ms: 0.575388
+  type: 'test'
+  ...
+# Subtest: 15 Hz meters share every second 30 Hz wave frame and every fourth 60 Hz frame
+ok 10 - 15 Hz meters share every second 30 Hz wave frame and every fourth 60 Hz frame
+  ---
+  duration_ms: 43.822083
+  type: 'test'
+  ...
+# Subtest: meters retain cadence with a 23 Hz control feed while waves are frozen; close cancels work
+ok 11 - meters retain cadence with a 23 Hz control feed while waves are frozen; close cancels work
+  ---
+  duration_ms: 0.722307
+  type: 'test'
+  ...
+# Subtest: shared frame cancellation keeps other consumers and reentrant requests on later frames
+ok 12 - shared frame cancellation keeps other consumers and reentrant requests on later frames
+  ---
+  duration_ms: 1.492471
+  type: 'test'
+  ...
+# Subtest: audio aggregates observed peaks and sample-weighted RMS without scanning samples
+ok 13 - audio aggregates observed peaks and sample-weighted RMS without scanning samples
+  ---
+  duration_ms: 7.635164
+  type: 'test'
+  ...
+# Subtest: control keeps signed last values and observed ranges across update windows
+ok 14 - control keeps signed last values and observed ranges across update windows
+  ---
+  duration_ms: 1.411584
+  type: 'test'
+  ...
+# Subtest: small canvas bank handles DPR, idle de-duplication, 16 widgets and teardown
+ok 15 - small canvas bank handles DPR, idle de-duplication, 16 widgets and teardown
+  ---
+  duration_ms: 16.401789
+  type: 'test'
+  ...
+# Subtest: opacity mapping is explicit, clamped and preserves control sign
+ok 16 - opacity mapping is explicit, clamped and preserves control sign
+  ---
+  duration_ms: 1.93679
+  type: 'test'
+  ...
+# Subtest: opacity observes latest control samples and weighted RMS without scanning audio PCM
+ok 17 - opacity observes latest control samples and weighted RMS without scanning audio PCM
+  ---
+  duration_ms: 3.512004
+  type: 'test'
+  ...
+# Subtest: 24/48/96 px widgets follow their own buses with only changed opacity writes
+ok 18 - 24/48/96 px widgets follow their own buses with only changed opacity writes
+  ---
+  duration_ms: 3.47876
+  type: 'test'
+  ...
+# Subtest: 8 Hz is opt-in for opacity painters and default scope validation is unchanged
+ok 19 - 8 Hz is opt-in for opacity painters and default scope validation is unchanged
+  ---
+  duration_ms: 2.437597
+  type: 'test'
+  ...
+# Subtest: binary scope preserves 1–16 planar channels, both rates and min/max pairs
+ok 20 - binary scope preserves 1–16 planar channels, both rates and min/max pairs
+  ---
+  duration_ms: 17.444119
+  type: 'test'
+  ...
+# Subtest: codec rejects corrupt dimensions, rates, identities and lengths
+ok 21 - codec rejects corrupt dimensions, rates, identities and lengths
+  ---
+  duration_ms: 4.979273
+  type: 'test'
+  ...
+# Subtest: local scope HTTP/WS enforce origin, bounded latest-frame ACKs and viewer cleanup
+ok 22 - local scope HTTP/WS enforce origin, bounded latest-frame ACKs and viewer cleanup
+  ---
+  duration_ms: 187.39323
+  type: 'test'
+  ...
+# Subtest: runtime closes its HTTP socket even if native lease cleanup fails
+ok 23 - runtime closes its HTTP socket even if native lease cleanup fails
+  ---
+  duration_ms: 10.482914
+  type: 'test'
+  ...
+# Subtest: arbitrary periodic raw inputs align to measured crossings at 44.1/48 kHz and both edges
+ok 24 - arbitrary periodic raw inputs align to measured crossings at 44.1/48 kHz and both edges
+  ---
+  duration_ms: 38.796377
+  type: 'test'
+  ...
+# Subtest: trigger selection uses one lane and a shared time range for every channel
+ok 25 - trigger selection uses one lane and a shared time range for every channel
+  ---
+  duration_ms: 0.857978
+  type: 'test'
+  ...
+# Subtest: missing chunks never provide a crossing or complete trigger window
+ok 26 - missing chunks never provide a crossing or complete trigger window
+  ---
+  duration_ms: 0.841133
+  type: 'test'
+  ...
+# Subtest: DC and out-of-range thresholds wait; envelopes are never treated as ordered crossings
+ok 27 - DC and out-of-range thresholds wait; envelopes are never treated as ordered crossings
+  ---
+  duration_ms: 0.35988
+  type: 'test'
+  ...
+# Subtest: Connected locates fractional crossing; Stepped aligns the actual sample transition
+ok 28 - Connected locates fractional crossing; Stepped aligns the actual sample transition
+  ---
+  duration_ms: 0.245209
+  type: 'test'
+  ...
+# Subtest: history endpoint views and point reads remain bounded across wrap without modifying live/frozen views
+ok 29 - history endpoint views and point reads remain bounded across wrap without modifying live/frozen views
+  ---
+  duration_ms: 1.113164
+  type: 'test'
+  ...
+# Subtest: OSC protocol preserves server command strings, integers and float controls
+ok 30 - OSC protocol preserves server command strings, integers and float controls
+  ---
+  duration_ms: 2.051248
+  type: 'test'
+  ...
+# Subtest: Malformed OSC string is rejected
+ok 31 - Malformed OSC string is rejected
+  ---
+  duration_ms: 0.521386
+  type: 'test'
+  ...
+# Subtest: rolling history replaces the oldest chunks with bounded storage and correct temporal order
+ok 32 - rolling history replaces the oldest chunks with bounded storage and correct temporal order
+  ---
+  duration_ms: 104.361005
+  type: 'test'
+  ...
+# Subtest: missing publications are visible gaps, and duplicate packets do not invent history
+ok 33 - missing publications are visible gaps, and duplicate packets do not invent history
+  ---
+  duration_ms: 0.555231
+  type: 'test'
+  ...
+# Subtest: minmax chunks retain source span and immutable frozen views while the ring advances
+ok 34 - minmax chunks retain source span and immutable frozen views while the ring advances
+  ---
+  duration_ms: 5.710474
+  type: 'test'
+  ...
+# Subtest: instrument identity/rate changes clear old history and channels remain planar
+ok 35 - instrument identity/rate changes clear old history and channels remain planar
+  ---
+  duration_ms: 0.425055
+  type: 'test'
+  ...
+# Subtest: display storage can be reused while default frozen snapshots remain independent
+ok 36 - display storage can be reused while default frozen snapshots remain independent
+  ---
+  duration_ms: 0.700805
+  type: 'test'
+  ...
+# Subtest: selection remaps common channel history and marks newly requested past lanes missing
+ok 37 - selection remaps common channel history and marks newly requested past lanes missing
+  ---
+  duration_ms: 0.883252
+  type: 'test'
+  ...
+# Subtest: wide control history retains exact ordered transitions as a single raw trace
+ok 38 - wide control history retains exact ordered transitions as a single raw trace
+  ---
+  duration_ms: 4.663617
+  type: 'test'
+  ...
+# Subtest: 8 Hz labels coalesce a fast feed without throttling waveform painting
+ok 39 - 8 Hz labels coalesce a fast feed without throttling waveform painting
+  ---
+  duration_ms: 12.576412
+  type: 'test'
+  ...
+# Subtest: freeze/control flush consumes pending text now; later ticks cannot change the frozen view
+ok 40 - freeze/control flush consumes pending text now; later ticks cannot change the frozen view
+  ---
+  duration_ms: 1.941178
+  type: 'test'
+  ...
+# Subtest: closing cancels pending metadata and idle views schedule no recurring work
+ok 41 - closing cancels pending metadata and idle views schedule no recurring work
+  ---
+  duration_ms: 0.631256
+  type: 'test'
+  ...
+# Subtest: paint rate caps coalesce dirty frames and do no idle work
+ok 42 - paint rate caps coalesce dirty frames and do no idle work
+  ---
+  duration_ms: 4.636821
+  type: 'test'
+  ...
+# Subtest: throttled paint retains all incoming source-indexed history rather than dropping samples
+ok 43 - throttled paint retains all incoming source-indexed history rather than dropping samples
+  ---
+  duration_ms: 5.373325
+  type: 'test'
+  ...
+# Subtest: urgent controls bypass the pending data deadline and rate changes replace it
+ok 44 - urgent controls bypass the pending data deadline and rate changes replace it
+  ---
+  duration_ms: 0.355226
+  type: 'test'
+  ...
+# Subtest: shutdown cancels both pending frame and deadline; frozen receiving can omit invalidation
+ok 45 - shutdown cancels both pending frame and deadline; frozen receiving can omit invalidation
+  ---
+  duration_ms: 0.352452
+  type: 'test'
+  ...
+# Subtest: rate validation and timing diagnostics remain bounded
+ok 46 - rate validation and timing diagnostics remain bounded
+  ---
+  duration_ms: 1.723044
+  type: 'test'
+  ...
+# Subtest: scope packet preserves planar float samples, metrics, actual rate and identity
+ok 47 - scope packet preserves planar float samples, metrics, actual rate and identity
+  ---
+  duration_ms: 2.641748
+  type: 'test'
+  ...
+# Subtest: scope packet rejects truncation, layout/version, kind and generation mismatches
+ok 48 - scope packet rejects truncation, layout/version, kind and generation mismatches
+  ---
+  duration_ms: 4.149314
+  type: 'test'
+  ...
+# Subtest: scope packet decodes an unaligned byte view and handles uint32 sequence wrap
+ok 49 - scope packet decodes an unaligned byte view and handles uint32 sequence wrap
+  ---
+  duration_ms: 0.754385
+  type: 'test'
+  ...
+# Subtest: wide audio packet preserves minmax buckets and original time span
+ok 50 - wide audio packet preserves minmax buckets and original time span
+  ---
+  duration_ms: 0.312763
+  type: 'test'
+  ...
+# Subtest: control bus packet carries control rate and actual audio rate independently
+ok 51 - control bus packet carries control rate and actual audio rate independently
+  ---
+  duration_ms: 0.697115
+  type: 'test'
+  ...
+# Subtest: selected channels retain physical identity, planar data and selected metrics at both resolutions
+ok 52 - selected channels retain physical identity, planar data and selected metrics at both resolutions
+  ---
+  duration_ms: 1.862817
+  type: 'test'
+  ...
+# Subtest: v4 full-channel packets still decode and v5 rejects invalid masks and reserved bytes
+ok 53 - v4 full-channel packets still decode and v5 rejects invalid masks and reserved bytes
+  ---
+  duration_ms: 0.553617
+  type: 'test'
+  ...
+# Subtest: display reduction preserves raw paired PCM, extrema and actual source rate
+ok 54 - display reduction preserves raw paired PCM, extrema and actual source rate
+  ---
+  duration_ms: 2.193256
+  type: 'test'
+  ...
+# Subtest: missing chunks are not joined into fabricated continuous audio
+ok 55 - missing chunks are not joined into fabricated continuous audio
+  ---
+  duration_ms: 0.343387
+  type: 'test'
+  ...
+# Subtest: control rate bypasses audio chunk combining
+ok 56 - control rate bypasses audio chunk combining
+  ---
+  duration_ms: 0.269902
+  type: 'test'
+  ...
+# Subtest: adjacent min/max bounds form one connected band retaining every peak
+ok 57 - adjacent min/max bounds form one connected band retaining every peak
+  ---
+  duration_ms: 6.318788
+  type: 'test'
+  ...
+# Subtest: missing min/max bins leave true time gaps rather than joining across them
+ok 58 - missing min/max bins leave true time gaps rather than joining across them
+  ---
+  duration_ms: 5.25642
+  type: 'test'
+  ...
+# Subtest: raw traces retain planar channel selection and restart after a missing sample
+ok 59 - raw traces retain planar channel selection and restart after a missing sample
+  ---
+  duration_ms: 0.294943
+  type: 'test'
+  ...
+# Subtest: stepped mode is explicit and preserves sample-and-hold geometry
+ok 60 - stepped mode is explicit and preserves sample-and-hold geometry
+  ---
+  duration_ms: 0.790474
+  type: 'test'
+  ...
+# Subtest: audio and control samples share connected default and explicit stepped geometry
+ok 61 - audio and control samples share connected default and explicit stepped geometry
+  ---
+  duration_ms: 0.473801
+  type: 'test'
+  ...
+# Subtest: both connection modes preserve missing-data gaps, cropping and channel selection
+ok 62 - both connection modes preserve missing-data gaps, cropping and channel selection
+  ---
+  duration_ms: 0.337507
+  type: 'test'
+  ...
+# Subtest: connection mode leaves every reduced min/max bound unchanged
+ok 63 - connection mode leaves every reduced min/max bound unchanged
+  ---
+  duration_ms: 0.456631
+  type: 'test'
+  ...
+# Subtest: dense held runs preserve the final sample before every connected transition
+ok 64 - dense held runs preserve the final sample before every connected transition
+  ---
+  duration_ms: 0.597049
+  type: 'test'
+  ...
+# Subtest: dense stepped compression keeps exact jump positions and flushes held runs before gaps
+ok 65 - dense stepped compression keeps exact jump positions and flushes held runs before gaps
+  ---
+  duration_ms: 0.621897
+  type: 'test'
+  ...
+# Subtest: sparse and entirely flat traces retain their original Canvas raster path
+ok 66 - sparse and entirely flat traces retain their original Canvas raster path
+  ---
+  duration_ms: 1.710385
+  type: 'test'
+  ...
+# Subtest: slow viewer retains only one outstanding sample block and receives latest after acknowledgement
+ok 67 - slow viewer retains only one outstanding sample block and receives latest after acknowledgement
+  ---
+  duration_ms: 6.471287
+  type: 'test'
+  ...
+# Subtest: unacknowledged frame times out and removes the viewer; malformed acknowledgement closes it
+ok 68 - unacknowledged frame times out and removes the viewer; malformed acknowledgement closes it
+  ---
+  duration_ms: 1.363735
+  type: 'test'
+  ...
+# Subtest: real socket sends binary floats and rejects wrong origin, kind and protocol
+ok 69 - real socket sends binary floats and rejects wrong origin, kind and protocol
+  ---
+  duration_ms: 27.282962
+  type: 'test'
+  ...
+# Subtest: subscriber counts drive each kind independently and stale-kind status does not silence peers
+ok 70 - subscriber counts drive each kind independently and stale-kind status does not silence peers
+  ---
+  duration_ms: 1.030926
+  type: 'test'
+  ...
+# Subtest: channel masks are per viewer, same-clock changes resend, and encoded variants survive status refresh
+ok 71 - channel masks are per viewer, same-clock changes resend, and encoded variants survive status refresh
+  ---
+  duration_ms: 2.066621
+  type: 'test'
+  ...
+# Subtest: socket upgrade validates selected channels before accepting a connection
+ok 72 - socket upgrade validates selected channels before accepting a connection
+  ---
+  duration_ms: 10.127806
+  type: 'test'
+  ...
+1..72
+# tests 72
+# suites 0
+# pass 72
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 641.415024

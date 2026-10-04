@@ -11,7 +11,8 @@ export class NativeScHostSupervisor {
   constructor( { token, bootstrapPath, sclangPath = process.env.AWB_SCLANG_PATH ?? DEFAULT_SCLANG,
     sclangConfig = process.env.AWB_SCLANG_CONFIG ?? null,
     serverPort = process.env.AWB_HEADLESS_SERVER_PORT ? Number( process.env.AWB_HEADLESS_SERVER_PORT ) : null,
-    onChange = () => {} } ) {
+    pluginPaths = [], onChange = () => {} } ) {
+    this.pluginPaths = pluginPaths;
     this.token = token; this.bootstrapPath = path.resolve( bootstrapPath ); this.sclangPath = sclangPath;
     this.sclangConfig = sclangConfig; this.serverPort = serverPort; this.onChange = onChange; this.child = null; this.state = 'stopped';
     this.lastExitCode = null; this.lastError = null; this.logTail = [];
@@ -39,7 +40,8 @@ export class NativeScHostSupervisor {
     args.push( this.bootstrapPath );
     const child = spawn( this.sclangPath, args, {
       cwd: path.dirname( this.bootstrapPath ), env: { ...process.env, AWB_HEADLESS_TOKEN: this.token,
-        AWB_HEADLESS_SERVER_PORT: `${ this.serverPort }`, AWB_HOST_AUTOSTART: '0' },
+        AWB_HEADLESS_SERVER_PORT: `${ this.serverPort }`, AWB_HOST_AUTOSTART: '0',
+        SC_PLUGIN_PATH: [ process.env.SC_PLUGIN_PATH, ...this.pluginPaths ].filter( Boolean ).join( path.delimiter ) },
       stdio: [ 'ignore', 'pipe', 'pipe' ]
     } );
     this.child = child;

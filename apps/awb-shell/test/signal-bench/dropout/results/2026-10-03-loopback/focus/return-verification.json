@@ -1,0 +1,26 @@
+{
+  "complete": true,
+  "cleanup": true,
+  "protectedCount": 16,
+  "recorder": {
+    "version": 2,
+    "captureDrops": 0,
+    "callbacks": 39156,
+    "recordedFrames": 20047872
+  },
+  "allReturnedRangesVerified": true,
+  "allRecorderCallbacksWithinBudget": true,
+  "inputBytes": 92995584,
+  "inputSHA256": "4b4c9b9e6bd67141de149fb56993ac7b3a90073e193cc73afae57f5663cea88b",
+  "detectorPositiveChecks": {
+    "clean": true,
+    "mute": true,
+    "phase": true
+  },
+  "sourceSHA256": {
+    "input-record.cpp": "e60dbfef24c1976997ef5d9805a707f15fe075b76bdbf58c9e263ff388b58d35",
+    "input-audit.mjs": "1ea3dbfec09aaee382e02a437284f325cfe55dd29aafbff4dee0790a17fe2aa9",
+    "measure.mjs": "f4eb20a3f8c98e19bcaf4398a1fa26c58e489bf0c3d7baf8082da608859c40fe",
+    "graphics-renderer.mjs": "df1c172ffa87844e11d39ae03f3462faf34774b3c54714dab5c1e94ba6cc0c7e"
+  }
+}

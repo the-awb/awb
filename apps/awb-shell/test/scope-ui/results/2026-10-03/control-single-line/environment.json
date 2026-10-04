@@ -1,0 +1,13 @@
+{
+  "currentSHA256": {
+    "tool-artifacts/shared-loop/0.1.0/public/scope.js": "8e4ab0f76e9aa2760b8b238f9b929af2d1a02f4e79bf617a60f68e83e905b748",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-trace.js": "3c6232e7bb249b384353dd654fc2a4a6cf17af86361fe127373f442173a0dd68",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-metadata.js": "ccc8a4253de9557048cb20fb46d0e09263764fc51d61bed324edd78a0cc4336c",
+    "tool-artifacts/shared-loop/0.1.0/scope-reduction.mjs": "197339cd1fbcb90892739375c17f8eab449e28733afce8f946af90b9834b76eb",
+    "apps/awb-shell/shell/main.mjs": "0bc8f9589b4851ea1e20418f9713a337d105033346c2735d32176f9dbe9c2c43",
+    "apps/awb-shell/test/electron-shared-loop.test.mjs": "b8b33642d5bd2ed54e762a22031b855f039f43d4b72dba82ad3bf3e31255678f"
+  },
+  "otherProtectedUnchanged": 141,
+  "changedGuardedFile": "shell/main.mjs: focused smoke checks only",
+  "cpuRemeasured": false
+}

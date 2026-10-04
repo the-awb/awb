@@ -1,0 +1,41 @@
+{
+  "newUnits": {
+    "passed": 8,
+    "failed": 0
+  },
+  "liveScopeGate": {
+    "passed": 1,
+    "audioChannels": [
+      1,
+      4,
+      16
+    ],
+    "controlChannels": [
+      16
+    ],
+    "sampleRate": 48000,
+    "blockSize": 64,
+    "unrelatedTools": 0,
+    "hostSurvives": true,
+    "rawPeerSurvives": true,
+    "sharedTap": true,
+    "layoutNoScroll": true
+  },
+  "existingShellChecks": {
+    "passed": 34,
+    "failed": 0
+  },
+  "existingScopeUnits": {
+    "passed": 41,
+    "failed": 0
+  },
+  "runtimeGuards": {
+    "count": 52,
+    "changed": [
+      "apps/awb-shell/shell/main.mjs",
+      "apps/awb-shell/tools.json"
+    ]
+  },
+  "newTool": "scope",
+  "buildOnStart": false
+}

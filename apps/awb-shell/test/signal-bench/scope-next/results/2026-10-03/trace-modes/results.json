@@ -1,0 +1,58 @@
+{
+  "synthetic": true,
+  "audioRate": 44100,
+  "blockSize": 64,
+  "controlRate": 689.0625,
+  "results": [
+    {
+      "kind": "control",
+      "connected": {
+        "mode": "connected",
+        "disabled": false,
+        "format": "samples",
+        "sourceEnd": "1920",
+        "missing": "4",
+        "frames": "128",
+        "level": "Peak 1.000 · RMS 0.500"
+      },
+      "stepped": {
+        "mode": "stepped",
+        "disabled": false,
+        "format": "samples",
+        "sourceEnd": "1920",
+        "missing": "4",
+        "frames": "128",
+        "level": "Peak 1.000 · RMS 0.500"
+      },
+      "restoredPixels": true,
+      "frozenZoomPan": true,
+      "modeCaptureRequests": 0
+    },
+    {
+      "kind": "mic",
+      "connected": {
+        "mode": "connected",
+        "disabled": false,
+        "format": "samples",
+        "sourceEnd": "43008",
+        "missing": "16",
+        "frames": "1024",
+        "level": "-3.1 dBFS"
+      },
+      "stepped": {
+        "mode": "stepped",
+        "disabled": false,
+        "format": "samples",
+        "sourceEnd": "43008",
+        "missing": "16",
+        "frames": "1024",
+        "level": "-3.1 dBFS"
+      },
+      "restoredPixels": true,
+      "frozenZoomPan": true,
+      "modeCaptureRequests": 0
+    }
+  ],
+  "errors": [],
+  "unrelatedTools": 0
+}

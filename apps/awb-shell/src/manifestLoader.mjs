@@ -106,6 +106,13 @@ export function validateToolManifest( input, artifactRoot ) {
     return Object.freeze( { id: kind.id, label: nonEmptyString( kind.label, 'Document kind label' ), extensions, actions,
       profileID } );
   } );
+  let runtime = null;
+  if ( input.runtime !== undefined ) {
+    if ( !input.runtime || input.runtime.schema !== 'awb.local-runtime/1' ) throw new Error( 'Unsupported tool runtime schema.' );
+    const entryPath = containedPath( artifactRoot, input.runtime.entry, 'Runtime entry' );
+    if ( !input.runtime.entry.endsWith( '.mjs' ) ) throw new Error( 'Runtime entry must be an ES module.' );
+    runtime = Object.freeze( { schema: 'awb.local-runtime/1', entry: input.runtime.entry, entryPath } );
+  }
   const width = Number( input.view?.defaultWidth ?? 1200 );
   const height = Number( input.view?.defaultHeight ?? 800 );
   if ( !Number.isInteger( width ) || width < 480 || width > 4096
@@ -124,7 +131,7 @@ export function validateToolManifest( input, artifactRoot ) {
     } ),
     view: Object.freeze( { defaultWidth: width, defaultHeight: height, allowMultiple: input.view?.allowMultiple !== false } ),
     launchProfiles: Object.freeze( profiles ),
-    capabilities, connectionPolicies,
+    capabilities, connectionPolicies, runtime,
     hostBindings: Object.freeze( { nodeManager: nodeManagerBinding } ),
     documentKinds: Object.freeze( documentKinds )
   } );
@@ -138,6 +145,10 @@ export async function loadToolManifest( artifactRoot ) {
   const manifest = validateToolManifest( parsed, artifactRoot );
   try { await access( manifest.renderer.entryPath ); }
   catch { throw new Error( `Renderer entry does not exist: ${ manifest.renderer.entry }.` ); }
+  if ( manifest.runtime ) {
+    try { await access( manifest.runtime.entryPath ); }
+    catch { throw new Error( `Runtime entry does not exist: ${ manifest.runtime.entry }.` ); }
+  }
   return manifest;
 }
 

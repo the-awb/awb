@@ -1,0 +1,16 @@
+{
+  "rawSHA256": {
+    "apps/awb-shell/test/signal-bench/results/one-line-minimal-2026-10-02.json": "fc7ea1ffc1e8d28b391c58141eb1d9d26425d92d8e9a8a9b70d2a4e13ec610d9",
+    "apps/awb-shell/test/signal-bench/results/one-line-minimal-smoke-2026-10-02.json": "a169baca30308bb4f4cd8748cdeca9e178e84e084bb1878ec464f195e986fb3f",
+    "apps/awb-shell/test/signal-bench/results/one-line-shell-2026-10-02.json": "4daf9b145212caeb2be1ba16ba53f121e77d3df7bbe23e43d99033c5a8084fc6",
+    "apps/awb-shell/test/signal-bench/results/one-line-shell-smoke-2026-10-02.json": "6af19db1cf5f2280eea91a6c59d320f6667a75d93c7f68d6a8f904e01b92cd3b",
+    "apps/awb-shell/test/signal-bench/results/one-line-summary-2026-10-02.json": "e9a24ec893ec7537186c151b9e72a200103855af61c1c2b0e0e49127d3674a5e"
+  },
+  "harnessSHA256": {
+    "apps/awb-shell/test/signal-bench/one-line/run.mjs": "71b06eb4a2557b8d2b2b7f8ee84b77165e86642c316f3496f60c909aceadce71",
+    "apps/awb-shell/test/signal-bench/one-line/measure.mjs": "564c715f347f312a5c762581093be6520370877440a44ffc9291c1ce19d0a5ea",
+    "apps/awb-shell/test/signal-bench/one-line/producer.scd": "146816ba919382c279dbe9a4600e4b1d37c668fcf89cc6655525c322bd798d48"
+  },
+  "productionMatched": true,
+  "protectedCount": 136
+}

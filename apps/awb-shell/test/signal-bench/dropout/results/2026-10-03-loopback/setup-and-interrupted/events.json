@@ -1,0 +1,102 @@
+[
+  {
+    "nodes": 20,
+    "condition": "stopped-focus",
+    "repeat": 2,
+    "SCmean": 29.54762968650231,
+    "event": {
+      "sequence": 11295,
+      "entryNs": 124773918531698,
+      "inputHostNs": 124773907616119,
+      "sampleTime": 5913464,
+      "frameOffset": 5783040,
+      "frames": 512,
+      "firstHit": 0,
+      "residualHits": 6,
+      "maxResidual": 0.005332190067200359,
+      "silent": false,
+      "gap": 576,
+      "recorderUs": 1.397
+    },
+    "nearestSCTimingEvent": null,
+    "snippet": "nodes-20-stopped-focus-pass-2-event-1.wav",
+    "boostedSnippet": "nodes-20-stopped-focus-pass-2-event-1-boosted.wav"
+  },
+  {
+    "nodes": 20,
+    "condition": "stopped-focus",
+    "repeat": 2,
+    "SCmean": 29.54762968650231,
+    "event": {
+      "sequence": 11296,
+      "entryNs": 124773929241306,
+      "inputHostNs": 124773918282526,
+      "sampleTime": 5913976,
+      "frameOffset": 5783552,
+      "frames": 512,
+      "firstHit": 32,
+      "residualHits": 2,
+      "maxResidual": 0.0012411427966358846,
+      "silent": false,
+      "gap": 0,
+      "recorderUs": 12.001
+    },
+    "nearestSCTimingEvent": null,
+    "snippet": "nodes-20-stopped-focus-pass-2-event-2.wav",
+    "boostedSnippet": "nodes-20-stopped-focus-pass-2-event-2-boosted.wav"
+  },
+  {
+    "nodes": 36,
+    "condition": "focus",
+    "repeat": 2,
+    "SCmean": 54.85438764856217,
+    "event": {
+      "sequence": 32948,
+      "entryNs": 125004878180919,
+      "inputHostNs": 125004867243530,
+      "sampleTime": 16999800,
+      "frameOffset": 16869376,
+      "frames": 512,
+      "firstHit": 195,
+      "residualHits": 4,
+      "maxResidual": 0.004513586184405664,
+      "silent": false,
+      "gap": 0,
+      "recorderUs": 8.541
+    },
+    "nearestSCTimingEvent": {
+      "outputDeadlineNs": 125004871118435,
+      "returnEventAfterOutputDeadlineMs": 0.187595,
+      "scLatenessMs": 0.074645
+    },
+    "snippet": "nodes-36-focus-pass-2-event-1.wav",
+    "boostedSnippet": "nodes-36-focus-pass-2-event-1-boosted.wav"
+  },
+  {
+    "nodes": 36,
+    "condition": "focus",
+    "repeat": 2,
+    "SCmean": 54.85438764856217,
+    "event": {
+      "sequence": 33466,
+      "entryNs": 125010403366425,
+      "inputHostNs": 125010392442149,
+      "sampleTime": 17265016,
+      "frameOffset": 17134592,
+      "frames": 512,
+      "firstHit": 195,
+      "residualHits": 4,
+      "maxResidual": 0.004036022907958651,
+      "silent": false,
+      "gap": 0,
+      "recorderUs": 7.77
+    },
+    "nearestSCTimingEvent": {
+      "outputDeadlineNs": 125010396317057,
+      "returnEventAfterOutputDeadlineMs": 0.187592,
+      "scLatenessMs": 0.229171
+    },
+    "snippet": "nodes-36-focus-pass-2-event-2.wav",
+    "boostedSnippet": "nodes-36-focus-pass-2-event-2-boosted.wav"
+  }
+]

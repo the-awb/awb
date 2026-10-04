@@ -1,0 +1,45 @@
+// Bounded, source-indexed history. Missing chunks remain NaN, never compressed in time.
+export class ScopeHistory {
+ constructor(baseFrames){this.baseFrames=baseFrames;this.reset();}
+ reset(){this.latest=null;this.tags=null;}
+ append(packet){
+  const step=packet.sourceFrames/packet.frames,start=packet.sourceEnd-packet.sourceFrames;
+  if(!Number.isInteger(step)||![1,4,16].includes(step)||!Number.isSafeInteger(packet.sourceEnd))throw new Error('Invalid history chunk');
+  const identity=[packet.generation,packet.channels,packet.sampleRate,step].join(':');
+  if(identity!==this.identity||!this.tags){
+   this.identity=identity;this.step=step;this.capacity=this.baseFrames*16/step;this.origin=start%step;
+   this.tags=new Float64Array(this.capacity);this.tags.fill(NaN);
+   this.low=new Float32Array(this.capacity*packet.channels);this.high=new Float32Array(this.capacity*packet.channels);
+   this.latest=null;
+  }
+  if((start-this.origin)%step)throw new Error('Misaligned history clock');
+  if(this.latest&&packet.sourceEnd<=this.latest.sourceEnd)return false;
+  const values=packet.format==='minmax'?2:1;
+  for(let i=0;i<packet.frames;i++){
+   const id=(start+i*step-this.origin)/step,slot=((id%this.capacity)+this.capacity)%this.capacity;
+   this.tags[slot]=id;
+   for(let ch=0;ch<packet.channels;ch++){
+    const from=(ch*packet.frames+i)*values,to=ch*this.capacity+slot;
+    this.low[to]=packet.samples[from];this.high[to]=packet.samples[from+values-1];
+   }
+  }
+  this.latest=packet;return true;
+ }
+ view(sourceFrames,{reuse}={}){
+  if(!this.latest)return null;
+  const frames=sourceFrames/this.step,packet=this.latest,values=this.step>1?2:1;
+  if(!Number.isInteger(frames)||frames<1||frames>this.capacity)throw new Error('History span exceeds capacity');
+  const length=frames*packet.channels*values;
+  const samples=reuse instanceof Float32Array&&reuse.length===length?reuse:new Float32Array(length);samples.fill(NaN);
+  const first=(packet.sourceEnd-sourceFrames-this.origin)/this.step;let missingBins=0;
+  for(let i=0;i<frames;i++){
+   const id=first+i,slot=((id%this.capacity)+this.capacity)%this.capacity;
+   if(this.tags[slot]!==id){missingBins++;continue;}
+   for(let ch=0;ch<packet.channels;ch++){
+    const from=ch*this.capacity+slot,to=(ch*frames+i)*values;
+    samples[to]=this.low[from];if(values===2)samples[to+1]=this.high[from];
+   }
+  }
+  return {...packet,frames,sourceFrames,format:values===2?'minmax':'samples',samples,captureFrames:packet.sourceFrames,missingSourceFrames:missingBins*this.step,history:true};
+ }
+}

@@ -1,0 +1,7233 @@
+{
+  "phases": [
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "stopped",
+      "seconds": 15.068140827999997,
+      "electronCPU": 0.597286692680492,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 0.46455631652927154
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.1327303761512175
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 34.37716742316607
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.13273037615122044
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 2.256416394570746
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 33.78098737782445,
+      "scPeak": 36.647701263427734,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 899,
+        "lastSequence": 2317,
+        "firstEntryNs": 128204407712511,
+        "lastEntryNs": 128219532383410
+      },
+      "audio": {
+        "callbacks": 1419,
+        "seconds": 15.124670899,
+        "frames": 726528,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0757738649544435e-9,
+        "meanRMS": 0.0022360564628584423,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.6108289915433405,
+        "maxDspMs": 3.915997,
+        "meanAuditUs": 2.8945341789992955,
+        "maxAuditUs": 51.49,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 737,
+        "lastSequence": 2152
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1416,
+        "frames": 724992,
+        "seconds": 15.092952063,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360671732281337,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3654683231101592e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.236271186440678,
+        "maxRecorderUs": 3.781
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "stopped-focus",
+      "seconds": 15.180602895999996,
+      "electronCPU": 3.0301826821463558,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 2.1738267067571684
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.13174707313680112
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 29.44547084607437
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0.263494146273596
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.13174707313679818
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.5150913410731777
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.1976206097051971
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0.46111475597879326
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 28.75226095610974,
+      "scPeak": 40.7527961730957,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 2467,
+        "lastSequence": 3896,
+        "firstEntryNs": 128221132505005,
+        "lastEntryNs": 128236374699333
+      },
+      "audio": {
+        "callbacks": 1430,
+        "seconds": 15.242194328,
+        "frames": 732160,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.031237137349983e-9,
+        "meanRMS": 0.0022360476583921773,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.089468138461539,
+        "maxDspMs": 4.358493,
+        "meanAuditUs": 3.2943944055944057,
+        "maxAuditUs": 30.549,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 123.34118200000012,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 708.6420010000002,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1282.0776329999971,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1876.2567629999976,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2451.932670000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3030.196530000001,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3599.445427999999,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4189.3199749999985,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4765.447678999997,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5372.8300519999975,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 5949.412796999997,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6538.893173999997,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7112.158473999996,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7697.3538469999985,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8275.801507999997,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8868.740639999996,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9451.253640999996,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10035.173078,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10608.380293000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11191.147711999998,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 11767.490190999997,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12351.308341999997,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12936.099085000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13755.811396999998,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14345.178584000001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14922.747837999996,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 2304,
+        "lastSequence": 3730
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1427,
+        "frames": 730624,
+        "seconds": 15.210242284,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236068904968621,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3541660187486463e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.8098493342676945,
+        "maxRecorderUs": 24.264
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "widgets",
+      "seconds": 15.114568579999998,
+      "electronCPU": 25.86908107436038,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 8.137843918532806
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.066161332670997
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 30.765019692014267
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.585813227359747
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.06616133267099847
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.852517314787955
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 6.086842605731854
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0.9924199900649762
+        }
+      ],
+      "scAverage": 30.141421851465257,
+      "scPeak": 37.097232818603516,
+      "opacityHz": 15.064996579130367,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 46.90542603021813,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 4074,
+        "lastSequence": 5498,
+        "firstEntryNs": 128238273318634,
+        "lastEntryNs": 128253462233175
+      },
+      "audio": {
+        "callbacks": 1425,
+        "seconds": 15.188914541,
+        "frames": 729600,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0882817017346391e-9,
+        "meanRMS": 0.002236043346106214,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.230307608421053,
+        "maxDspMs": 3.999857,
+        "meanAuditUs": 2.701201403508772,
+        "maxAuditUs": 21.77,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 3911,
+        "lastSequence": 5331
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1421,
+        "frames": 727552,
+        "seconds": 15.146267698,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236069293860097,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3512794642202572e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.020770584095707,
+        "maxRecorderUs": 16.286
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "focus",
+      "seconds": 15.063628283999998,
+      "electronCPU": 26.753182726106626,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 8.364518668708275
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.13277013759854714
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 29.209430271679686
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.621611007883525
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.0663850687992721
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.4604715135839845
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.13277013759854409
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 6.704891948726473
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0.9957760319890806
+        }
+      ],
+      "scAverage": 28.670590782165526,
+      "scPeak": 45.49565505981445,
+      "opacityHz": 14.975788043122659,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 42.024568209115124,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 75264,
+      "auditRange": {
+        "firstSequence": 5649,
+        "lastSequence": 7069,
+        "firstEntryNs": 128255072939348,
+        "lastEntryNs": 128270219091425
+      },
+      "audio": {
+        "callbacks": 1421,
+        "seconds": 15.146152077,
+        "frames": 727552,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1082386917882214e-9,
+        "meanRMS": 0.0022360442806783776,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.062691833216045,
+        "maxDspMs": 4.867846,
+        "meanAuditUs": 3.63581069669247,
+        "maxAuditUs": 33.74,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 163.48415599999862,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 895.265588000002,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1485.0377320000043,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 2078.0069679999942,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2659.3180559999964,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3244.0345420000012,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3823.2304689999946,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4414.695763000003,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 5023.934774000001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5625.574449999993,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6207.922671999993,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6914.8588910000035,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7499.778860999992,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8081.754276999993,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8674.650333000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9270.988795999998,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9850.184207999999,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10437.145968999997,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 11012.985787000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11589.151061999997,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12163.422748000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12759.362354999997,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13332.072605999994,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13957.295552999996,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14544.841194,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 5486,
+        "lastSequence": 6902
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1417,
+        "frames": 725504,
+        "seconds": 15.103524288,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236077520494513,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3607899170404942e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.7798242766407903,
+        "maxRecorderUs": 16.113
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 2,
+      "condition": "focus",
+      "seconds": 15.270025953000005,
+      "electronCPU": 26.719011562638688,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 8.316947226605674
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06548777343783853
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 29.33852250015229
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.347068203178708
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.1309755468756796
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.5062187890703183
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.1309755468756799
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 6.941703984411032
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0.9823166015675983
+        }
+      ],
+      "scAverage": 28.882843541164025,
+      "scPeak": 43.95319747924805,
+      "opacityHz": 15.039258323664416,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 42.318259352302476,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 71680,
+      "auditRange": {
+        "firstSequence": 7222,
+        "lastSequence": 8661,
+        "firstEntryNs": 128271851112186,
+        "lastEntryNs": 128287200070648
+      },
+      "audio": {
+        "callbacks": 1440,
+        "seconds": 15.348958462,
+        "frames": 737280,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.05813053978554e-9,
+        "meanRMS": 0.0022360467145501914,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.078388910416667,
+        "maxDspMs": 4.696915,
+        "meanAuditUs": 3.8206381944444443,
+        "maxAuditUs": 40.273,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 58.5752380000049,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 645.9573970000056,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1221.0123770000064,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1794.9933220000094,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2377.792319,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 2960.6334160000115,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3526.3026979999995,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4112.128853000002,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4709.838913,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5299.867373000001,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 5880.560329,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6469.080721999999,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7055.072723000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7637.684706,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8283.798909000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8888.022871000008,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9467.247442000007,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10333.889624000003,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10915.122266999999,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11489.616370000003,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12080.45384300001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12685.462350000002,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13275.260447000008,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13854.003857000003,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14434.339718000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 15009.150487000006,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 7058,
+        "lastSequence": 8494
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1437,
+        "frames": 735744,
+        "seconds": 15.316908688,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360687346299974,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.351275620584778e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.780501043841336,
+        "maxRecorderUs": 6.201
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 2,
+      "condition": "widgets",
+      "seconds": 15.121857795000004,
+      "electronCPU": 25.393705271251026,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 7.737144574834296
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06612944081054814
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 31.411484385011033
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.514581088877378
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.1322588816210992
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.917753783505937
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 5.951649672949461
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 1.058071052968793
+        }
+      ],
+      "scAverage": 30.815120470725883,
+      "scPeak": 36.76110076904297,
+      "opacityHz": 14.984818013337406,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 46.794694848667696,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 1024,
+      "auditRange": {
+        "firstSequence": 8812,
+        "lastSequence": 10238,
+        "firstEntryNs": 128288810784422,
+        "lastEntryNs": 128304021038807
+      },
+      "audio": {
+        "callbacks": 1427,
+        "seconds": 15.210254385,
+        "frames": 730624,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0248607422783107e-9,
+        "meanRMS": 0.002236044451648377,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.301748327259986,
+        "maxDspMs": 3.936492,
+        "meanAuditUs": 2.653805886475123,
+        "maxAuditUs": 16.738,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 8649,
+        "lastSequence": 10071
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1423,
+        "frames": 728576,
+        "seconds": 15.167708924,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360624853355352,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3491707222154587e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.0708812368236122,
+        "maxRecorderUs": 15.498
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 2,
+      "condition": "stopped-focus",
+      "seconds": 15.156390906999993,
+      "electronCPU": 3.232959634035917,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 2.1113205773295745
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06597876804155378
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 29.558488082614126
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0.39587260824929926
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.1979363041246478
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.5834904329971853
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.0659787680415493
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0.5278301443323951
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 28.837133071001837,
+      "scPeak": 40.56317901611328,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 10394,
+        "lastSequence": 11824,
+        "firstEntryNs": 128305684953164,
+        "lastEntryNs": 128320937856424
+      },
+      "audio": {
+        "callbacks": 1431,
+        "seconds": 15.25290326,
+        "frames": 732672,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1246618254745488e-9,
+        "meanRMS": 0.002236039106899826,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.1073296170510134,
+        "maxDspMs": 4.343218,
+        "meanAuditUs": 3.170214535290007,
+        "maxAuditUs": 25.794,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 99.1265379999968,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 750.4030499999935,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1325.6923099999985,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1931.8312409999926,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2511.2247269999934,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3100.6384560000006,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3681.1507379999966,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4261.113943999997,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4834.982596000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5418.495144,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6009.463747999995,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6601.6661440000025,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7180.325305999999,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7779.8317039999965,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8354.102318999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8941.103642999995,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9547.456607999993,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10129.825224999993,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10709.834157000005,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11397.243405999994,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 11975.832286000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12568.946135000006,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13143.356413000001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13733.021819000001,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14311.837023,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14897.086859999996,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 10231,
+        "lastSequence": 11657
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1427,
+        "frames": 730624,
+        "seconds": 15.210273947,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236069008096489,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3809074474988312e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.8253693062368603,
+        "maxRecorderUs": 15.106
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 2,
+      "condition": "stopped",
+      "seconds": 15.132306555999996,
+      "electronCPU": 0.5947540096874053,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 0.5286702308332492
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06608377885415467
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 33.90097855218209
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.06608377885415614
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 2.246848481041306
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 33.26532765092521,
+      "scPeak": 36.735008239746094,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 11975,
+        "lastSequence": 13401,
+        "firstEntryNs": 128322548547651,
+        "lastEntryNs": 128337758831214
+      },
+      "audio": {
+        "callbacks": 1427,
+        "seconds": 15.210283563,
+        "frames": 730624,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.088438872885733e-9,
+        "meanRMS": 0.0022360505630947295,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.555312295725298,
+        "maxDspMs": 3.925519,
+        "meanAuditUs": 2.9302340574632093,
+        "maxAuditUs": 28.388,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 11812,
+        "lastSequence": 13235
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1424,
+        "frames": 729088,
+        "seconds": 15.178365651,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236062809967759,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3654683231101592e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.1825814606741574,
+        "maxRecorderUs": 5.364
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 50,
+      "nodes": 36,
+      "repeat": 1,
+      "condition": "stopped",
+      "seconds": 15.119648843000002,
+      "electronCPU": 0.8598083285524629,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 0.7936692263561196
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.13227820439268367
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 50.33185677141721
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.06613910219634331
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.8518948614976094
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 49.701879936352114,
+      "scPeak": 57.35158157348633,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 13788,
+        "lastSequence": 15214,
+        "firstEntryNs": 128341886700190,
+        "lastEntryNs": 128357096972594
+      },
+      "audio": {
+        "callbacks": 1427,
+        "seconds": 15.210272404,
+        "frames": 730624,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0774558519693889e-9,
+        "meanRMS": 0.0022360403265769676,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 5.31897866923616,
+        "maxDspMs": 6.143402,
+        "meanAuditUs": 2.063198318149965,
+        "maxAuditUs": 22.214,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 13625,
+        "lastSequence": 15049
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1425,
+        "frames": 729600,
+        "seconds": 15.189087449,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236072728766862,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3423105974371052e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.0824933333333333,
+        "maxRecorderUs": 5.791
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 50,
+      "nodes": 36,
+      "repeat": 1,
+      "condition": "stopped-focus",
+      "seconds": 15.106537551000017,
+      "electronCPU": 2.6478602303776806,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 1.7873056555049323
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06619650575944651
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 49.448789802303196
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0.2647860230377684
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.1323930115188842
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.4563231267077232
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.1323930115188841
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0.4633755403160961
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 49.033783659643056,
+      "scPeak": 73.15597534179688,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 15365,
+        "lastSequence": 16790,
+        "firstEntryNs": 128358707559832,
+        "lastEntryNs": 128373907192710
+      },
+      "audio": {
+        "callbacks": 1426,
+        "seconds": 15.199632878,
+        "frames": 730112,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1034715060101452e-9,
+        "meanRMS": 0.0022360517009489536,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 5.2157636598877986,
+        "maxDspMs": 7.805727,
+        "meanAuditUs": 3.196335904628331,
+        "maxAuditUs": 38.578,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 55.22539599999436,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 784.2134979999973,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1386.1849110000185,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1990.8819249999942,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2577.494623000006,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3552.2485640000086,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4156.671503999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4768.042362000007,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 5352.5896730000095,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5938.9349570000195,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6534.210668999993,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7125.789223,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7715.276457,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8328.745392000012,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8929.679969000019,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9524.255980000016,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10109.026481000008,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10704.884546000016,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 11299.528671000007,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11891.728988999996,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12476.022320000018,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13074.951533999993,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13659.869082999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14254.228103000001,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14843.84795699999,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 15202,
+        "lastSequence": 16624
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1423,
+        "frames": 728576,
+        "seconds": 15.167665755,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360602351189176,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3423105974371052e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.8185945186226284,
+        "maxRecorderUs": 8.962
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 50,
+      "nodes": 36,
+      "repeat": 1,
+      "condition": "widgets",
+      "seconds": 15.131565663999995,
+      "electronCPU": 24.91480448034093,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 7.533919657185324
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06608701453671192
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 47.97917255365387
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.309574267727283
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.1321740290734268
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.718262377954548
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 5.881744293767484
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 1.0573922325874137
+        }
+      ],
+      "scAverage": 47.31080489323057,
+      "scPeak": 62.31559753417969,
+      "opacityHz": 15.026443916575078,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 46.78539088435821,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 2048,
+      "auditRange": {
+        "firstSequence": 16948,
+        "lastSequence": 18376,
+        "firstEntryNs": 128375592482005,
+        "lastEntryNs": 128390824117009
+      },
+      "audio": {
+        "callbacks": 1429,
+        "seconds": 15.231635004,
+        "frames": 731648,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0206453564254314e-9,
+        "meanRMS": 0.0022360538885863577,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 5.064174489853044,
+        "maxDspMs": 6.655176,
+        "meanAuditUs": 2.615932820153954,
+        "maxAuditUs": 20.118,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 16785,
+        "lastSequence": 18209
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1425,
+        "frames": 729600,
+        "seconds": 15.189087443,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360693329142108,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3444903943323908e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.9820105263157894,
+        "maxRecorderUs": 18.837
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 50,
+      "nodes": 36,
+      "repeat": 1,
+      "condition": "focus",
+      "seconds": 15.049393618000002,
+      "electronCPU": 26.37980041436111,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 8.106638918267148
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.1328957199715956
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 50.234582149261904
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.36586615778421
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.19934357995738824
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.3289571997159264
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.13289571997159247
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 6.7112338585654205
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0.9967178997869434
+        }
+      ],
+      "scAverage": 50.48304239908854,
+      "scPeak": 73.41832733154297,
+      "opacityHz": 14.932442210779117,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 41.442460761193146,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 84992,
+      "auditRange": {
+        "firstSequence": 18527,
+        "lastSequence": 19952,
+        "firstEntryNs": 128392434790399,
+        "lastEntryNs": 128407634336748
+      },
+      "audio": {
+        "callbacks": 1426,
+        "seconds": 15.199546349,
+        "frames": 730112,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0836506778716393e-9,
+        "meanRMS": 0.0022360506564949472,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 5.294563628330995,
+        "maxDspMs": 7.839895,
+        "meanAuditUs": 3.7567033660589058,
+        "maxAuditUs": 30.056,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 84.4246620000049,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1361.6466070000024,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1950.5500170000014,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 2546.3352529999975,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3121.6511750000063,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3742.7219739999855,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4337.271306999988,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4936.29505700001,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 5531.987690000009,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6135.954678999988,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6728.007340000011,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7328.169735000003,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7923.470999000012,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8541.170631999994,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9148.015715999994,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9752.091656000004,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10341.930865000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10945.906381000008,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 11532.362903000001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12128.49803399999,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12731.799299000006,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13334.963786999986,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13926.650636999984,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14534.203925000009,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 18364,
+        "lastSequence": 19786
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1423,
+        "frames": 728576,
+        "seconds": 15.167655489,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360693253780624,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3654683231101592e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.788382993675334,
+        "maxRecorderUs": 19.148
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 50,
+      "nodes": 36,
+      "repeat": 2,
+      "condition": "focus",
+      "seconds": 15.047362709999987,
+      "electronCPU": 26.782101805267125,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 8.373560365914784
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06645682830090958
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 50.24136219548873
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.300808386641197
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.1329136566018221
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.3955933943191308
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.06645682830091106
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 6.911510143294744
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 1.0633092528145756
+        }
+      ],
+      "scAverage": 50.44257187843323,
+      "scPeak": 75.36365509033203,
+      "opacityHz": 14.99950659517779,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 42.56438932929838,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 67072,
+      "auditRange": {
+        "firstSequence": 20103,
+        "lastSequence": 21527,
+        "firstEntryNs": 128409245018416,
+        "lastEntryNs": 128424433950990
+      },
+      "audio": {
+        "callbacks": 1425,
+        "seconds": 15.188932574,
+        "frames": 729600,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.207838677165507e-9,
+        "meanRMS": 0.0022360449308880294,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 5.294826263859649,
+        "maxDspMs": 8.045262,
+        "meanAuditUs": 3.710926315789474,
+        "maxAuditUs": 30.697,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 67.3339510000078,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 656.6189770000055,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1277.477199999994,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1884.009607999993,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2468.6143830000074,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3524.050344999996,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4112.547873000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4708.443035999982,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 5318.044148999994,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5924.858588999981,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6513.762381000008,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7115.495219000004,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7715.219465000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8299.204983000003,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8878.404622000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9625.352732,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10213.935704000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10894.234727999981,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 11483.614692000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12094.110703999992,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12693.986654999986,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13304.323180000007,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13901.731486999983,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14517.590269999986,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 19940,
+        "lastSequence": 21361
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1422,
+        "frames": 728064,
+        "seconds": 15.156896224,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236067925304016,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3541660187486463e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.8083783403656821,
+        "maxRecorderUs": 21.171
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 50,
+      "nodes": 36,
+      "repeat": 2,
+      "condition": "widgets",
+      "seconds": 15.202177588000021,
+      "electronCPU": 24.60173865454778,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 7.433145636267114
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.13156009975693717
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 48.15099651103999
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.130127681284373
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.06578004987847005
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.7102812968402212
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 5.854424439183833
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 1.1182608479339908
+        }
+      ],
+      "scAverage": 47.56423601610907,
+      "scPeak": 60.848045349121094,
+      "opacityHz": 15.041510662542732,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 46.622171577405176,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 4096,
+      "auditRange": {
+        "firstSequence": 21679,
+        "lastSequence": 23118,
+        "firstEntryNs": 128426055356462,
+        "lastEntryNs": 128441404291937
+      },
+      "audio": {
+        "callbacks": 1440,
+        "seconds": 15.348935475,
+        "frames": 737280,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0866968696426893e-9,
+        "meanRMS": 0.002236054727373302,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 5.081387928472222,
+        "maxDspMs": 6.498282,
+        "meanAuditUs": 2.672731944444444,
+        "maxAuditUs": 28.734,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 21516,
+        "lastSequence": 22952
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1437,
+        "frames": 735744,
+        "seconds": 15.317079785,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360687133444936,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3458981441497155e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.002686847599165,
+        "maxRecorderUs": 16.787
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 50,
+      "nodes": 36,
+      "repeat": 2,
+      "condition": "stopped-focus",
+      "seconds": 15.103398255999986,
+      "electronCPU": 3.2443029819818494,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 2.2511490079057737
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06621026493840926
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 49.39285764404993
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0.39726158963043207
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.06621026493840486
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.4566258286449096
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.13242052987680952
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0.5296821195072389
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 49.30908020019531,
+      "scPeak": 67.98296356201172,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 23273,
+        "lastSequence": 24699,
+        "firstEntryNs": 128443057604112,
+        "lastEntryNs": 128458267741392
+      },
+      "audio": {
+        "callbacks": 1427,
+        "seconds": 15.21013728,
+        "frames": 730624,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0874077072814403e-9,
+        "meanRMS": 0.00223605529390821,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 5.216129936930624,
+        "maxDspMs": 7.259941,
+        "meanAuditUs": 3.075823405746321,
+        "maxAuditUs": 39.372,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 61.08398600001237,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 671.9470469999942,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1264.5301479999907,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1851.4893480000028,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2512.2376090000034,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3138.7650659999927,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3727.030201000016,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4314.057751999993,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4901.822053000011,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5505.802305999998,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6106.042434000003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6817.445980000019,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7408.725154000014,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 8024.335105000006,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8616.076020000008,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9210.794240999996,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9797.324064000015,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10393.967980999994,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10986.950278000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11594.303260999994,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12188.699373999989,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12786.579332000023,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13370.036304999987,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13968.88135499999,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14555.650331000012,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 23111,
+        "lastSequence": 24534
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1424,
+        "frames": 729088,
+        "seconds": 15.17840196,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236075930315861,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3477706596669243e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.8267977528089887,
+        "maxRecorderUs": 31.956
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 50,
+      "nodes": 36,
+      "repeat": 2,
+      "condition": "stopped",
+      "seconds": 15.145125545999967,
+      "electronCPU": 0.792334138370316,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 0.6602784486419314
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.13205568972838158
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 50.44527347624275
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.13205568972838452
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.8487796561973833
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 49.8858084427683,
+      "scPeak": 57.2678337097168,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 24851,
+        "lastSequence": 26282,
+        "firstEntryNs": 128459889011312,
+        "lastEntryNs": 128475152694802
+      },
+      "audio": {
+        "callbacks": 1432,
+        "seconds": 15.26368349,
+        "frames": 733184,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.049118669542437e-9,
+        "meanRMS": 0.0022360445299032658,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 5.323262929469274,
+        "maxDspMs": 6.114225,
+        "meanAuditUs": 2.0904846368715084,
+        "maxAuditUs": 12.117,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 24688,
+        "lastSequence": 26117
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1430,
+        "frames": 732160,
+        "seconds": 15.242489564,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360630225193158,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3477706596669243e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.1062195804195802,
+        "maxRecorderUs": 3.392
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 65,
+      "nodes": 52,
+      "repeat": 1,
+      "condition": "stopped",
+      "seconds": 15.195118141999991,
+      "electronCPU": 0.8555379351784939,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 0.6581061039834573
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06581061039834456
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 66.79776955432109
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.13162122079669203
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.645265259958649
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0.06581061039834456
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 66.23526723761307,
+      "scPeak": 75.9675064086914,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 26671,
+        "lastSequence": 28107,
+        "firstEntryNs": 128479301937710,
+        "lastEntryNs": 128494618817812
+      },
+      "audio": {
+        "callbacks": 1437,
+        "seconds": 15.316880102,
+        "frames": 735744,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0409193073462886e-9,
+        "meanRMS": 0.0022360505038064348,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.0580418816979815,
+        "maxDspMs": 8.009221,
+        "meanAuditUs": 2.04819624217119,
+        "maxAuditUs": 16.052,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 26509,
+        "lastSequence": 27942
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1434,
+        "frames": 734208,
+        "seconds": 15.285101265,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360741274633153,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3809074474988312e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.105884937238494,
+        "maxRecorderUs": 21.546
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 65,
+      "nodes": 52,
+      "repeat": 1,
+      "condition": "stopped-focus",
+      "seconds": 15.253357108999975,
+      "electronCPU": 2.88461088831642,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 2.097898827866478
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.1311186767416585
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 69.0339833044816
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0.262237353483317
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.13111867674165487
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.2456274290457294
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.1311186767416556
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0.3933560302249697
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 69.80044197082519,
+      "scPeak": 99.49893188476562,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 28257,
+        "lastSequence": 29699,
+        "firstEntryNs": 128496218860306,
+        "lastEntryNs": 128511599722111
+      },
+      "audio": {
+        "callbacks": 1443,
+        "seconds": 15.380861805,
+        "frames": 738816,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1461698456657898e-9,
+        "meanRMS": 0.00223604559563184,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.298146076923077,
+        "maxDspMs": 10.621673,
+        "meanAuditUs": 3.228251559251559,
+        "maxAuditUs": 28.078,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 88.61593899998115,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 743.2556679999689,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1349.520000999968,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1950.34114699997,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2555.900237999973,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3157.2904330000165,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3762.347131000017,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4366.064338999975,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4953.302183999971,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5561.468463999976,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6151.704472000012,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6752.788170000014,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7349.375404999999,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7965.666388000012,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8557.95471099997,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9171.474810999993,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9887.748711999971,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10520.509545999987,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 11111.017672999995,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11721.665525999968,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12326.80808300001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12929.832331000012,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13523.71374799998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14104.072711999994,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14702.055507000012,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 28095,
+        "lastSequence": 29534
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [
+          {
+            "sequence": 29157,
+            "entryNs": 128507556697939,
+            "inputHostNs": 128507545753924,
+            "sampleTime": 15044592,
+            "frameOffset": 14928384,
+            "frames": 512,
+            "firstHit": 51,
+            "residualHits": 4,
+            "maxResidual": 0.003257901281589054,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.699
+          }
+        ],
+        "callbacks": 1440,
+        "frames": 737280,
+        "seconds": 15.349119547,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360587863984346,
+        "peak": 0.003162384033203125,
+        "maxResidual": 0.003257901281589054,
+        "residualCallbacks": 1,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.7389083333333333,
+        "maxRecorderUs": 20.666
+      },
+      "recorderReliable": true,
+      "returnClean": false
+    },
+    {
+      "target": 65,
+      "nodes": 52,
+      "repeat": 1,
+      "condition": "widgets",
+      "seconds": 15.17806805100001,
+      "electronCPU": 22.993703732736016,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 6.588453791614912
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06588453791614761
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 64.69861623365829
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 9.553257997841614
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.13176907583229813
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.51534437207143
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 5.731954798704958
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0.9882680687422346
+        }
+      ],
+      "scAverage": 64.1274294936866,
+      "scPeak": 84.687744140625,
+      "opacityHz": 14.974445782740323,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 46.55099449851883,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 4608,
+      "auditRange": {
+        "firstSequence": 29856,
+        "lastSequence": 31295,
+        "firstEntryNs": 128513274384932,
+        "lastEntryNs": 128528623304564
+      },
+      "audio": {
+        "callbacks": 1440,
+        "seconds": 15.348919632,
+        "frames": 737280,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1079352340084836e-9,
+        "meanRMS": 0.0022360450125217604,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 6.842093943055556,
+        "maxDspMs": 9.045634,
+        "meanAuditUs": 2.7490715277777777,
+        "maxAuditUs": 42.576,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 29694,
+        "lastSequence": 31130
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1437,
+        "frames": 735744,
+        "seconds": 15.317026251,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236066900624444,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3764652679135034e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.8785288796102992,
+        "maxRecorderUs": 31.015
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 65,
+      "nodes": 52,
+      "repeat": 1,
+      "condition": "focus",
+      "seconds": 15.230322293000004,
+      "electronCPU": 26.394713930956208,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 8.338628530426458
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.1313169847311284
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 71.50209818609768
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.17706631666222
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.06565849236556275
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.313169847311255
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.06565849236556257
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 6.828483206018525
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0.9848773854834397
+        }
+      ],
+      "scAverage": 72.78199822562081,
+      "scPeak": 111.3761215209961,
+      "opacityHz": 14.969380811975505,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 40.1775588892849,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 101888,
+      "auditRange": {
+        "firstSequence": 31446,
+        "lastSequence": 32884,
+        "firstEntryNs": 128530233959989,
+        "lastEntryNs": 128545657110936
+      },
+      "audio": {
+        "callbacks": 1439,
+        "seconds": 15.423150947,
+        "frames": 736768,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 4,
+        "gapFrames": 4070,
+        "lateCallbacks": 6,
+        "maxLateMs": 1.527963,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 6,
+        "overloadEvents": 4,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0209360214868957e-9,
+        "meanRMS": 0.0022360391990626353,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.600084294649061,
+        "maxDspMs": 11.901308,
+        "meanAuditUs": 3.9017477414871435,
+        "maxAuditUs": 35.751,
+        "events": [
+          {
+            "seq": 31465,
+            "entryNs": 128530436631008,
+            "outputNs": 128530447387854,
+            "sampleTime": 16143898,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 11153598,
+            "auditNs": 3601,
+            "peak": 0.0031622701790183783,
+            "rms": 0.0022234852740481105,
+            "residual": 7.241855847633927e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 0,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.400353
+          },
+          {
+            "seq": 31467,
+            "entryNs": 128530457956239,
+            "outputNs": 128530468720623,
+            "sampleTime": 16144922,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 11471135,
+            "auditNs": 5975,
+            "peak": 0.0031622741371393204,
+            "rms": 0.0022480609641298333,
+            "residual": 7.906264714099831e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 0,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.712726
+          },
+          {
+            "seq": 31468,
+            "entryNs": 128530489514063,
+            "outputNs": 128530500178125,
+            "sampleTime": 16146432,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10083855,
+            "auditNs": 4643,
+            "peak": 0.0031622773967683315,
+            "rms": 0.002230994309597988,
+            "residual": 7.51582335430101e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 1,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 998,
+            "latenessMs": -0.575564
+          },
+          {
+            "seq": 31815,
+            "entryNs": 128534190748430,
+            "outputNs": 128534201430593,
+            "sampleTime": 16324096,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10850915,
+            "auditNs": 5159,
+            "peak": 0.003162245498970151,
+            "rms": 0.002238000622105723,
+            "residual": 8.268993363300114e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 1,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.173911
+          },
+          {
+            "seq": 31928,
+            "entryNs": 128535396363257,
+            "outputNs": 128535406737366,
+            "sampleTime": 16381952,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 11896508,
+            "auditNs": 5564,
+            "peak": 0.0031622766982764006,
+            "rms": 0.002239250385490779,
+            "residual": 7.250831515065448e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 1,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 1.527963
+          },
+          {
+            "seq": 31929,
+            "entryNs": 128535428066532,
+            "outputNs": 128535438736614,
+            "sampleTime": 16383488,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 8100924,
+            "auditNs": 3389,
+            "peak": 0.0031622701790183783,
+            "rms": 0.002223583633365959,
+            "residual": 7.724415924600936e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 2,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 1024,
+            "latenessMs": -2.565769
+          },
+          {
+            "seq": 32751,
+            "entryNs": 128544196392452,
+            "outputNs": 128544206457738,
+            "sampleTime": 16804352,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10932394,
+            "auditNs": 13389,
+            "peak": 0.0031622741371393204,
+            "rms": 0.002244661572029366,
+            "residual": 7.009431897755936e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 2,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.880497
+          },
+          {
+            "seq": 32752,
+            "entryNs": 128544227781444,
+            "outputNs": 128544238456754,
+            "sampleTime": 16805888,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 8819104,
+            "auditNs": 2859,
+            "peak": 0.0031622473616153,
+            "rms": 0.002244091586908777,
+            "residual": 6.51092226140737e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 3,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 1024,
+            "latenessMs": -1.853347
+          },
+          {
+            "seq": 32870,
+            "entryNs": 128545486436313,
+            "outputNs": 128545497134351,
+            "sampleTime": 16866304,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 11901308,
+            "auditNs": 11392,
+            "peak": 0.0031622748356312513,
+            "rms": 0.002247079907659427,
+            "residual": 6.570938767061496e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 3,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 1.214662
+          },
+          {
+            "seq": 32871,
+            "entryNs": 128545518460921,
+            "outputNs": 128545529133571,
+            "sampleTime": 16867840,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 8610548,
+            "auditNs": 5006,
+            "peak": 0.0031622503884136677,
+            "rms": 0.00224067912712847,
+            "residual": 8.13730164847537e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 4,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 1024,
+            "latenessMs": -2.057096
+          }
+        ]
+      },
+      "focusEvents": [
+        {
+          "at": 70.63475000002654,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 691.7534570000134,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1306.3458150000079,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1895.6828310000128,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2504.3230319999857,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3094.0325939999893,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3691.7050020000315,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4286.669445000007,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4887.690685999987,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5499.562810999982,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6102.429689000011,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6703.688200999983,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7298.826570000034,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7909.67108,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8502.048284000019,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9098.711425999994,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9704.550985999987,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10309.886299000005,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10902.360113000032,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11497.510580000002,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12153.296085999988,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13080.028862999985,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13671.340838000004,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14313.206945999991,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14906.70449600002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 31284,
+        "lastSequence": 32726
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [
+          {
+            "sequence": 31304,
+            "entryNs": 128530457457112,
+            "inputHostNs": 128530446512877,
+            "sampleTime": 16143856,
+            "frameOffset": 16027648,
+            "frames": 512,
+            "firstHit": 51,
+            "residualHits": 4,
+            "maxResidual": 0.0036704758290238846,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.673
+          },
+          {
+            "sequence": 31306,
+            "entryNs": 128530478891388,
+            "inputHostNs": 128530467845646,
+            "sampleTime": 16144880,
+            "frameOffset": 16028672,
+            "frames": 512,
+            "firstHit": 51,
+            "residualHits": 4,
+            "maxResidual": 0.0051626099830274635,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 2.948
+          },
+          {
+            "sequence": 31307,
+            "entryNs": 128530489500337,
+            "inputHostNs": 128530478512031,
+            "sampleTime": 16145392,
+            "frameOffset": 16029184,
+            "frames": 512,
+            "firstHit": 51,
+            "residualHits": 2,
+            "maxResidual": 0.0023521242704191946,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.989
+          },
+          {
+            "sequence": 31309,
+            "entryNs": 128530510798109,
+            "inputHostNs": 128530499844801,
+            "sampleTime": 16146416,
+            "frameOffset": 16030208,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.005930401442122408,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.921
+          },
+          {
+            "sequence": 31656,
+            "entryNs": 128534212069493,
+            "inputHostNs": 128534201097268,
+            "sampleTime": 16324080,
+            "frameOffset": 16207872,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.004664187458906632,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.687
+          },
+          {
+            "sequence": 31657,
+            "entryNs": 128534222715897,
+            "inputHostNs": 128534211763681,
+            "sampleTime": 16324592,
+            "frameOffset": 16208384,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.787
+          },
+          {
+            "sequence": 31658,
+            "entryNs": 128534233383784,
+            "inputHostNs": 128534222430094,
+            "sampleTime": 16325104,
+            "frameOffset": 16208896,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 2.045
+          },
+          {
+            "sequence": 31659,
+            "entryNs": 128534244065763,
+            "inputHostNs": 128534233096507,
+            "sampleTime": 16325616,
+            "frameOffset": 16209408,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.000717484281196736,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.939
+          },
+          {
+            "sequence": 31769,
+            "entryNs": 128535417465436,
+            "inputHostNs": 128535406404041,
+            "sampleTime": 16381936,
+            "frameOffset": 16265728,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.0037574712778244493,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 3.202
+          },
+          {
+            "sequence": 31770,
+            "entryNs": 128535428056867,
+            "inputHostNs": 128535417070457,
+            "sampleTime": 16382448,
+            "frameOffset": 16266240,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.881
+          },
+          {
+            "sequence": 31771,
+            "entryNs": 128535438919285,
+            "inputHostNs": 128535427736872,
+            "sampleTime": 16382960,
+            "frameOffset": 16266752,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.762
+          },
+          {
+            "sequence": 31772,
+            "entryNs": 128535449341168,
+            "inputHostNs": 128535438403288,
+            "sampleTime": 16383472,
+            "frameOffset": 16267264,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.0016683199864481403,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.113
+          },
+          {
+            "sequence": 31869,
+            "entryNs": 128536484013386,
+            "inputHostNs": 128536473020736,
+            "sampleTime": 16433136,
+            "frameOffset": 16316928,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.00509710806164455,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 2.058
+          },
+          {
+            "sequence": 32326,
+            "entryNs": 128541358528698,
+            "inputHostNs": 128541347594486,
+            "sampleTime": 16667120,
+            "frameOffset": 16550912,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.005217608729246067,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.8
+          },
+          {
+            "sequence": 32527,
+            "entryNs": 128543502436035,
+            "inputHostNs": 128543491479074,
+            "sampleTime": 16770032,
+            "frameOffset": 16653824,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.004976036839340313,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.324
+          },
+          {
+            "sequence": 32528,
+            "entryNs": 128543513083286,
+            "inputHostNs": 128543502145412,
+            "sampleTime": 16770544,
+            "frameOffset": 16654336,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.344
+          },
+          {
+            "sequence": 32529,
+            "entryNs": 128543523776635,
+            "inputHostNs": 128543512811750,
+            "sampleTime": 16771056,
+            "frameOffset": 16654848,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.551
+          },
+          {
+            "sequence": 32530,
+            "entryNs": 128543534399507,
+            "inputHostNs": 128543523478087,
+            "sampleTime": 16771568,
+            "frameOffset": 16655360,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.00022386187479488681,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.244
+          },
+          {
+            "sequence": 32593,
+            "entryNs": 128544206607048,
+            "inputHostNs": 128544195458076,
+            "sampleTime": 16803824,
+            "frameOffset": 16687616,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.004247437296089208,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 3.09
+          },
+          {
+            "sequence": 32594,
+            "entryNs": 128544217057216,
+            "inputHostNs": 128544206124415,
+            "sampleTime": 16804336,
+            "frameOffset": 16688128,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.005150939567368953,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.562
+          },
+          {
+            "sequence": 32595,
+            "entryNs": 128544227766670,
+            "inputHostNs": 128544216790754,
+            "sampleTime": 16804848,
+            "frameOffset": 16688640,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.603
+          },
+          {
+            "sequence": 32596,
+            "entryNs": 128544238433831,
+            "inputHostNs": 128544227457092,
+            "sampleTime": 16805360,
+            "frameOffset": 16689152,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 2.01
+          },
+          {
+            "sequence": 32597,
+            "entryNs": 128544249059858,
+            "inputHostNs": 128544238123431,
+            "sampleTime": 16805872,
+            "frameOffset": 16689664,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.003158483112869999,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.502
+          },
+          {
+            "sequence": 32641,
+            "entryNs": 128544718464633,
+            "inputHostNs": 128544707465644,
+            "sampleTime": 16828400,
+            "frameOffset": 16712192,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.005206668869211721,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.773
+          },
+          {
+            "sequence": 32701,
+            "entryNs": 128545358435133,
+            "inputHostNs": 128545347471334,
+            "sampleTime": 16859120,
+            "frameOffset": 16742912,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.0043625214386615605,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 3.019
+          },
+          {
+            "sequence": 32715,
+            "entryNs": 128545507737955,
+            "inputHostNs": 128545496801026,
+            "sampleTime": 16866288,
+            "frameOffset": 16750080,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.005223150795353587,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.46
+          },
+          {
+            "sequence": 32716,
+            "entryNs": 128545518455492,
+            "inputHostNs": 128545507467432,
+            "sampleTime": 16866800,
+            "frameOffset": 16750592,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 2.472
+          },
+          {
+            "sequence": 32717,
+            "entryNs": 128545529113028,
+            "inputHostNs": 128545518133839,
+            "sampleTime": 16867312,
+            "frameOffset": 16751104,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.513
+          },
+          {
+            "sequence": 32718,
+            "entryNs": 128545540000580,
+            "inputHostNs": 128545528800246,
+            "sampleTime": 16867824,
+            "frameOffset": 16751616,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.0031435139211946185,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 3.956
+          }
+        ],
+        "callbacks": 1443,
+        "frames": 738816,
+        "seconds": 15.381059047,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022244745965113344,
+        "peak": 0.003162384033203125,
+        "maxResidual": 0.005930401442122408,
+        "residualCallbacks": 19,
+        "silentCallbacks": 20,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.8028142758142758,
+        "maxRecorderUs": 22.133
+      },
+      "recorderReliable": true,
+      "returnClean": false
+    },
+    {
+      "target": 65,
+      "nodes": 52,
+      "repeat": 2,
+      "condition": "focus",
+      "seconds": 15.200128619000024,
+      "electronCPU": 26.973455967175447,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 8.618348126097526
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.13157783398621872
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 70.72308576759407
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 10.394648884911513
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.06578891699311083
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.3157783398622165
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.13157783398622167
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 6.842047367283525
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 1.0526226718897733
+        }
+      ],
+      "scAverage": 72.23759788513183,
+      "scPeak": 105.97673797607422,
+      "opacityHz": 15.009356481971501,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 41.77929098661331,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 76800,
+      "auditRange": {
+        "firstSequence": 33037,
+        "lastSequence": 34473,
+        "firstEntryNs": 128547289121257,
+        "lastEntryNs": 128562670129930
+      },
+      "audio": {
+        "callbacks": 1437,
+        "seconds": 15.381008673,
+        "frames": 735744,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 3,
+        "gapFrames": 3072,
+        "lateCallbacks": 9,
+        "maxLateMs": 0.638146,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 6,
+        "overloadEvents": 3,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0187750938001061e-9,
+        "meanRMS": 0.0022360504170642,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.509001325678496,
+        "maxDspMs": 11.312803,
+        "meanAuditUs": 3.8005546276965902,
+        "maxAuditUs": 35.137,
+        "events": [
+          {
+            "seq": 33058,
+            "entryNs": 128547513094878,
+            "outputNs": 128547523789940,
+            "sampleTime": 16963584,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 11260341,
+            "auditNs": 5789,
+            "peak": 0.003162263659760356,
+            "rms": 0.0022242257808161,
+            "residual": 8.27706557807173e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 4,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.571068
+          },
+          {
+            "seq": 33059,
+            "entryNs": 128547545387930,
+            "outputNs": 128547555789306,
+            "sampleTime": 16965120,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10545025,
+            "auditNs": 5618,
+            "peak": 0.0031622571405023336,
+            "rms": 0.002241743396288701,
+            "residual": 6.632192685665506e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 5,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 1024,
+            "latenessMs": 0.149267
+          },
+          {
+            "seq": 33520,
+            "entryNs": 128552462249500,
+            "outputNs": 128552472936795,
+            "sampleTime": 17201152,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10867314,
+            "auditNs": 9509,
+            "peak": 0.003162274369969964,
+            "rms": 0.0022485555038791742,
+            "residual": 8.403291101161114e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 5,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.189528
+          },
+          {
+            "seq": 33978,
+            "entryNs": 128557347575368,
+            "outputNs": 128557358163586,
+            "sampleTime": 17435648,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10668509,
+            "auditNs": 4308,
+            "peak": 0.0031622627284377813,
+            "rms": 0.002229217607733546,
+            "residual": 6.783659823109134e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 5,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.084599
+          },
+          {
+            "seq": 34095,
+            "entryNs": 128558595457911,
+            "outputNs": 128558606129437,
+            "sampleTime": 17495552,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 11237493,
+            "auditNs": 4699,
+            "peak": 0.0031622741371393204,
+            "rms": 0.002243665776297145,
+            "residual": 8.06212705969922e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 5,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.570666
+          },
+          {
+            "seq": 34096,
+            "entryNs": 128558627460361,
+            "outputNs": 128558638128583,
+            "sampleTime": 17497088,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 8094655,
+            "auditNs": 4489,
+            "peak": 0.0031622773967683315,
+            "rms": 0.0022450495806906746,
+            "residual": 9.085318634569073e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 6,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 1024,
+            "latenessMs": -2.569078
+          },
+          {
+            "seq": 34191,
+            "entryNs": 128559641090413,
+            "outputNs": 128559651448254,
+            "sampleTime": 17545728,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10527975,
+            "auditNs": 6533,
+            "peak": 0.0031622634269297123,
+            "rms": 0.0022329052807873507,
+            "residual": 6.809424022910515e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 6,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.176667
+          },
+          {
+            "seq": 34193,
+            "entryNs": 128559662670155,
+            "outputNs": 128559672781055,
+            "sampleTime": 17546752,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10463622,
+            "auditNs": 4478,
+            "peak": 0.0031622766982764006,
+            "rms": 0.0022362102847204635,
+            "residual": 6.916468743220494e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 6,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.3572
+          },
+          {
+            "seq": 34200,
+            "entryNs": 128559736766023,
+            "outputNs": 128559747446354,
+            "sampleTime": 17550336,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 11312803,
+            "auditNs": 5674,
+            "peak": 0.003162256209179759,
+            "rms": 0.0022444473879406016,
+            "residual": 6.934185101115098e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 6,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.638146
+          },
+          {
+            "seq": 34201,
+            "entryNs": 128559768776465,
+            "outputNs": 128559779445556,
+            "sampleTime": 17551872,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 9437021,
+            "auditNs": 4354,
+            "peak": 0.003162269713357091,
+            "rms": 0.002225749074363214,
+            "residual": 6.942629669944023e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 7,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 1024,
+            "latenessMs": -1.227716
+          },
+          {
+            "seq": 34318,
+            "entryNs": 128561016822662,
+            "outputNs": 128561027412947,
+            "sampleTime": 17611776,
+            "frames": 512,
+            "sampleRate": 48000,
+            "dspNs": 10938475,
+            "auditNs": 3611,
+            "peak": 0.003162275068461895,
+            "rms": 0.0022468478789112803,
+            "residual": 6.982786709963662e-10,
+            "residualHits": 0,
+            "zeroRun": 0,
+            "overloads": 7,
+            "rateChanges": 0,
+            "bufferChanges": 0,
+            "device": 154,
+            "timestampFlags": 7,
+            "hardwareFrames": 512,
+            "status": 0,
+            "gap": 0,
+            "latenessMs": 0.351801
+          }
+        ]
+      },
+      "focusEvents": [
+        {
+          "at": 71.59301000001142,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 666.3742109999876,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1264.666275000025,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1855.1478200000129,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2462.3668489999836,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3102.355296999973,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3696.516767999972,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4312.611296000017,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4911.5544900000095,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5502.994382000004,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6118.5304999999935,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6743.291127000004,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7346.80576399999,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7956.595091000025,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8550.71603900002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9194.393047999998,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 9799.04359299998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10401.58192299999,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10996.66777900001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 11610.061730000016,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12215.973453000013,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12862.949426000006,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13458.439933000016,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14062.951337000006,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 14661.402148000023,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 32882,
+        "lastSequence": 34321
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [
+          {
+            "sequence": 32905,
+            "entryNs": 128547534397656,
+            "inputHostNs": 128547523456613,
+            "sampleTime": 16963568,
+            "frameOffset": 16847360,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.002577543258666992,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.824
+          },
+          {
+            "sequence": 32906,
+            "entryNs": 128547545351739,
+            "inputHostNs": 128547534123068,
+            "sampleTime": 16964080,
+            "frameOffset": 16847872,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 4.354
+          },
+          {
+            "sequence": 32907,
+            "entryNs": 128547555751578,
+            "inputHostNs": 128547544789524,
+            "sampleTime": 16964592,
+            "frameOffset": 16848384,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.621
+          },
+          {
+            "sequence": 32908,
+            "entryNs": 128547566437078,
+            "inputHostNs": 128547555455979,
+            "sampleTime": 16965104,
+            "frameOffset": 16848896,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.003162007503113378,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.375
+          },
+          {
+            "sequence": 32909,
+            "entryNs": 128547577094744,
+            "inputHostNs": 128547566122434,
+            "sampleTime": 16965616,
+            "frameOffset": 16849408,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.819
+          },
+          {
+            "sequence": 32910,
+            "entryNs": 128547587810972,
+            "inputHostNs": 128547576788890,
+            "sampleTime": 16966128,
+            "frameOffset": 16849920,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 2.133
+          },
+          {
+            "sequence": 32911,
+            "entryNs": 128547598444718,
+            "inputHostNs": 128547587455345,
+            "sampleTime": 16966640,
+            "frameOffset": 16850432,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.00022562162911745942,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.603
+          },
+          {
+            "sequence": 33126,
+            "entryNs": 128549891686778,
+            "inputHostNs": 128549880684822,
+            "sampleTime": 17076720,
+            "frameOffset": 16960512,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 3,
+            "maxResidual": 0.003693278498800896,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.771
+          },
+          {
+            "sequence": 33369,
+            "entryNs": 128552483613714,
+            "inputHostNs": 128552472603471,
+            "sampleTime": 17201136,
+            "frameOffset": 17084928,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.005210355007288967,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.557
+          },
+          {
+            "sequence": 33370,
+            "entryNs": 128552494217489,
+            "inputHostNs": 128552483269838,
+            "sampleTime": 17201648,
+            "frameOffset": 17085440,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.583
+          },
+          {
+            "sequence": 33371,
+            "entryNs": 128552504897900,
+            "inputHostNs": 128552493936204,
+            "sampleTime": 17202160,
+            "frameOffset": 17085952,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.535
+          },
+          {
+            "sequence": 33372,
+            "entryNs": 128552515592673,
+            "inputHostNs": 128552504602571,
+            "sampleTime": 17202672,
+            "frameOffset": 17086464,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.0017049312591552734,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.408
+          },
+          {
+            "sequence": 33714,
+            "entryNs": 128556163497249,
+            "inputHostNs": 128556152548608,
+            "sampleTime": 17377776,
+            "frameOffset": 17261568,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.005216529108043518,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.558
+          },
+          {
+            "sequence": 33819,
+            "entryNs": 128557283467827,
+            "inputHostNs": 128557272502709,
+            "sampleTime": 17431536,
+            "frameOffset": 17315328,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 3,
+            "maxResidual": 0.007001472477122361,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.623
+          },
+          {
+            "sequence": 33827,
+            "entryNs": 128557368817606,
+            "inputHostNs": 128557357830262,
+            "sampleTime": 17435632,
+            "frameOffset": 17319424,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.005046426240383088,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.745
+          },
+          {
+            "sequence": 33944,
+            "entryNs": 128558616751846,
+            "inputHostNs": 128558605796112,
+            "sampleTime": 17495536,
+            "frameOffset": 17379328,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.0050988144379623245,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 2.128
+          },
+          {
+            "sequence": 33945,
+            "entryNs": 128558627445737,
+            "inputHostNs": 128558616462495,
+            "sampleTime": 17496048,
+            "frameOffset": 17379840,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.004591782105481669,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.489
+          },
+          {
+            "sequence": 33947,
+            "entryNs": 128558649001668,
+            "inputHostNs": 128558637795259,
+            "sampleTime": 17497072,
+            "frameOffset": 17380864,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.00017905248580603935,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 2.234
+          },
+          {
+            "sequence": 34042,
+            "entryNs": 128559662066716,
+            "inputHostNs": 128559651114929,
+            "sampleTime": 17545712,
+            "frameOffset": 17429504,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.004089916049574234,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.579
+          },
+          {
+            "sequence": 34043,
+            "entryNs": 128559672786859,
+            "inputHostNs": 128559661781330,
+            "sampleTime": 17546224,
+            "frameOffset": 17430016,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.749
+          },
+          {
+            "sequence": 34044,
+            "entryNs": 128559683426653,
+            "inputHostNs": 128559672447730,
+            "sampleTime": 17546736,
+            "frameOffset": 17430528,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 2.006
+          },
+          {
+            "sequence": 34045,
+            "entryNs": 128559694098257,
+            "inputHostNs": 128559683114623,
+            "sampleTime": 17547248,
+            "frameOffset": 17431040,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.832
+          },
+          {
+            "sequence": 34046,
+            "entryNs": 128559704734784,
+            "inputHostNs": 128559693781024,
+            "sampleTime": 17547760,
+            "frameOffset": 17431552,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.645
+          },
+          {
+            "sequence": 34047,
+            "entryNs": 128559715427406,
+            "inputHostNs": 128559704447425,
+            "sampleTime": 17548272,
+            "frameOffset": 17432064,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.0031104087829589844,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.658
+          },
+          {
+            "sequence": 34051,
+            "entryNs": 128559758057634,
+            "inputHostNs": 128559747113029,
+            "sampleTime": 17550320,
+            "frameOffset": 17434112,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.004506219951768888,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.808
+          },
+          {
+            "sequence": 34052,
+            "entryNs": 128559768769543,
+            "inputHostNs": 128559757779430,
+            "sampleTime": 17550832,
+            "frameOffset": 17434624,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.621
+          },
+          {
+            "sequence": 34053,
+            "entryNs": 128559779424922,
+            "inputHostNs": 128559768445830,
+            "sampleTime": 17551344,
+            "frameOffset": 17435136,
+            "frames": 512,
+            "firstHit": null,
+            "residualHits": 0,
+            "maxResidual": 0,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 1.708
+          },
+          {
+            "sequence": 34054,
+            "entryNs": 128559790110987,
+            "inputHostNs": 128559779112231,
+            "sampleTime": 17551856,
+            "frameOffset": 17435648,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 2,
+            "maxResidual": 0.00225392923090529,
+            "silent": true,
+            "gap": 0,
+            "recorderUs": 2.513
+          },
+          {
+            "sequence": 34103,
+            "entryNs": 128560312743156,
+            "inputHostNs": 128560301764648,
+            "sampleTime": 17576944,
+            "frameOffset": 17460736,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.004884050157424064,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.798
+          },
+          {
+            "sequence": 34171,
+            "entryNs": 128561038018701,
+            "inputHostNs": 128561027079622,
+            "sampleTime": 17611760,
+            "frameOffset": 17495552,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.005221571114351616,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 2.295
+          },
+          {
+            "sequence": 34172,
+            "entryNs": 128561048680026,
+            "inputHostNs": 128561037746021,
+            "sampleTime": 17612272,
+            "frameOffset": 17496064,
+            "frames": 512,
+            "firstHit": 25,
+            "residualHits": 4,
+            "maxResidual": 0.004031139038699422,
+            "silent": false,
+            "gap": 0,
+            "recorderUs": 1.543
+          }
+        ],
+        "callbacks": 1440,
+        "frames": 737280,
+        "seconds": 15.348885658,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.00222287452499789,
+        "peak": 0.003162384033203125,
+        "maxResidual": 0.007001472477122361,
+        "residualCallbacks": 19,
+        "silentCallbacks": 21,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.8829347222222224,
+        "maxRecorderUs": 27.405
+      },
+      "recorderReliable": true,
+      "returnClean": false
+    },
+    {
+      "target": 65,
+      "nodes": 52,
+      "repeat": 2,
+      "condition": "widgets",
+      "seconds": 15.189366249000013,
+      "electronCPU": 23.832462399399454,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 7.307743995395962
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06583553149005235
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 64.9138340491929
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 9.611987597547854
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.1316710629801076
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.5142172242712333
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 5.72769123963467
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 1.053368503840861
+        }
+      ],
+      "scAverage": 64.16900748537297,
+      "scPeak": 82.01542663574219,
+      "opacityHz": 15.014136687140489,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "packetHz": 46.53732410386402,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 15,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": true,
+      "sourceGapFrames": 5120,
+      "auditRange": {
+        "firstSequence": 34624,
+        "lastSequence": 36066,
+        "firstEntryNs": 128564280714492,
+        "lastEntryNs": 128579661589440
+      },
+      "audio": {
+        "callbacks": 1443,
+        "seconds": 15.380874948,
+        "frames": 738816,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1079352340084836e-9,
+        "meanRMS": 0.0022360398811706443,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 6.861455117117117,
+        "maxDspMs": 8.6932,
+        "meanAuditUs": 2.6874144144144143,
+        "maxAuditUs": 32.053,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 34476,
+        "lastSequence": 35914
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1439,
+        "frames": 736768,
+        "seconds": 15.338308167,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360728995163832,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3764652679135034e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.9236066712995137,
+        "maxRecorderUs": 32.442
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 65,
+      "nodes": 52,
+      "repeat": 2,
+      "condition": "stopped-focus",
+      "seconds": 15.302390926000022,
+      "electronCPU": 3.1367647207629594,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 2.156525745524542
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.13069853003179271
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 69.20487165183268
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0.32674632507947887
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.19604779504768471
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.2416360353020046
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0.13069853003178963
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0.45744485511125416
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 69.25014013173629,
+      "scPeak": 94.79750061035156,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 36221,
+        "lastSequence": 37671,
+        "firstEntryNs": 128581314867864,
+        "lastEntryNs": 128596781136448
+      },
+      "audio": {
+        "callbacks": 1451,
+        "seconds": 15.466268584,
+        "frames": 742912,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1461698456657898e-9,
+        "meanRMS": 0.002236048991322289,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.3125826278428665,
+        "maxDspMs": 10.123355,
+        "meanAuditUs": 3.293659545141282,
+        "maxAuditUs": 27.581,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 64.79751000000397,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 659.1370870000101,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 1249.2671100000152,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1847.6087800000096,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 2437.8343060000334,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 3044.749045000004,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 3638.444266000006,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 4247.614141000027,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 4842.820344000007,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 5446.370609999984,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 6038.5290050000185,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 6651.379871000012,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 7246.611109999998,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 7840.893423000001,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 8535.18494300003,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 9557.202663000033,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 10145.123445999983,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 10760.909504999989,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 11396.695628000016,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 12040.28607999999,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 12631.054990000033,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 13238.784846000024,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 13843.70107000001,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 14442.840272000001,
+          "destination": "scope",
+          "pid": 97425,
+          "confirmed": true
+        },
+        {
+          "at": 15033.93551500002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 36072,
+        "lastSequence": 37519
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1448,
+        "frames": 741376,
+        "seconds": 15.434252841,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236067609681031,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3558772063074843e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.7734019337016576,
+        "maxRecorderUs": 28.564
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    },
+    {
+      "target": 65,
+      "nodes": 52,
+      "repeat": 2,
+      "condition": "stopped",
+      "seconds": 15.194080758999975,
+      "electronCPU": 0.7239661401354676,
+      "processes": [
+        {
+          "pid": 97425,
+          "role": "main",
+          "corePercent": 0.6581510364867874
+        },
+        {
+          "pid": 97430,
+          "role": "sclang",
+          "corePercent": 0.06581510364867874
+        },
+        {
+          "pid": 97497,
+          "role": "scsynth",
+          "corePercent": 66.73651509976158
+        },
+        {
+          "pid": 97515,
+          "role": "scope",
+          "corePercent": 0
+        },
+        {
+          "pid": 97429,
+          "role": "home",
+          "corePercent": 0.06581510364868019
+        },
+        {
+          "pid": 97428,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 97512,
+          "role": "input-recorder",
+          "corePercent": 1.6453775912170034
+        },
+        {
+          "pid": 97513,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 97426,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 97427,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 65.9801518624289,
+      "scPeak": 77.34552764892578,
+      "opacityHz": 0,
+      "graphicsProfile": null,
+      "packetHz": 0,
+      "waveHz": 0,
+      "freshWaveHz": 0,
+      "waveDrawMs": 0,
+      "waveFrameTimes": [],
+      "guiCadence": {
+        "widgetTargetHz": 0,
+        "waveTargetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 37822,
+        "lastSequence": 39262,
+        "firstEntryNs": 128598391770536,
+        "lastEntryNs": 128613751357320
+      },
+      "audio": {
+        "callbacks": 1441,
+        "seconds": 15.359586784,
+        "frames": 737792,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.070771099391521e-9,
+        "meanRMS": 0.002236046739686678,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.055022397640527,
+        "maxDspMs": 8.254859,
+        "meanAuditUs": 2.09470159611381,
+        "maxAuditUs": 17.287,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 37674,
+        "lastSequence": 39111
+      },
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "events": [],
+        "callbacks": 1438,
+        "frames": 736256,
+        "seconds": 15.327875892,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360613590209385,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3809074474988312e-7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 2.0428609179415855,
+        "maxRecorderUs": 25.946
+      },
+      "recorderReliable": true,
+      "returnClean": true
+    }
+  ],
+  "cases": {
+    "20/stopped": {
+      "passes": 2,
+      "seconds": 30.200447383999993,
+      "scAverage": 33.52315751437483,
+      "scPeak": 36.735008239746094,
+      "electronCPU": 0.5960203511839486,
+      "graphicsProfile": null,
+      "gui": {
+        "opacityHz": 0,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 3.925519,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 5.364,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3654683231101592e-7,
+        "rmsMin": 0.002236062809967759,
+        "meanRecorderUs": 2.209426323557418
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 2.251632437806026
+    },
+    "20/stopped-focus": {
+      "passes": 2,
+      "seconds": 30.33699380299999,
+      "scAverage": 28.79469701355579,
+      "scPeak": 40.7527961730957,
+      "electronCPU": 3.1315711580911363,
+      "graphicsProfile": null,
+      "gui": {
+        "opacityHz": 0,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 4.358493,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 24.264,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3809074474988312e-7,
+        "rmsMin": 0.002236068904968621,
+        "meanRecorderUs": 1.8176093202522774
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.5492908870351814
+    },
+    "20/widgets": {
+      "passes": 2,
+      "seconds": 30.236426375,
+      "scAverage": 30.47827116109557,
+      "scPeak": 37.097232818603516,
+      "electronCPU": 25.6313931728057,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "gui": {
+        "opacityHz": 15.024907296233888,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 46.85006043944291,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 3.999857,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 16.286,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3512794642202572e-7,
+        "rmsMin": 0.0022360624853355352,
+        "meanRecorderUs": 2.0458259104596594
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.8851355491469461
+    },
+    "20/focus": {
+      "passes": 2,
+      "seconds": 30.333654237000005,
+      "scAverage": 28.776717161664777,
+      "scPeak": 45.49565505981445,
+      "electronCPU": 26.736097144372657,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "gui": {
+        "opacityHz": 15.007523183393538,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 42.171413780708804,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 4.867846,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 16.113,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3607899170404942e-7,
+        "rmsMin": 0.0022360687346299974,
+        "meanRecorderUs": 1.7801626602410632
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.4833451513271514
+    },
+    "36/stopped": {
+      "passes": 2,
+      "seconds": 30.264774388999967,
+      "scAverage": 49.793844189560204,
+      "scPeak": 57.35158157348633,
+      "electronCPU": 0.8260712334613894,
+      "graphicsProfile": null,
+      "gui": {
+        "opacityHz": 0,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 6.143402,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 5.791,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3477706596669243e-7,
+        "rmsMin": 0.0022360630225193158,
+        "meanRecorderUs": 2.094356456876457
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.8503372588474964
+    },
+    "36/stopped-focus": {
+      "passes": 2,
+      "seconds": 30.209935807,
+      "scAverage": 49.17143192991918,
+      "scPeak": 73.15597534179688,
+      "electronCPU": 2.946081606179765,
+      "graphicsProfile": null,
+      "gui": {
+        "opacityHz": 0,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 7.805727,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 31.956,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3477706596669243e-7,
+        "rmsMin": 0.0022360602351189176,
+        "meanRecorderUs": 1.8226961357158085
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.4564744776763163
+    },
+    "36/widgets": {
+      "passes": 2,
+      "seconds": 30.333743252000016,
+      "scAverage": 47.43752045466982,
+      "scPeak": 62.31559753417969,
+      "electronCPU": 24.758271567444353,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "gui": {
+        "opacityHz": 15.033977289558905,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 46.70378123088169,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 6.655176,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 18.837,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3458981441497155e-7,
+        "rmsMin": 0.0022360687133444936,
+        "meanRecorderUs": 1.9923486869574771
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.7142718373973846
+    },
+    "36/focus": {
+      "passes": 2,
+      "seconds": 30.09675632799999,
+      "scAverage": 50.46280713876088,
+      "scPeak": 75.36365509033203,
+      "electronCPU": 26.580951109814116,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "gui": {
+        "opacityHz": 14.965974402978453,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 42.00342504524576,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 8.045262,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 21.171,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3654683231101592e-7,
+        "rmsMin": 0.002236067925304016,
+        "meanRecorderUs": 1.798380667020508
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.3622752970175287
+    },
+    "52/stopped": {
+      "passes": 2,
+      "seconds": 30.389198900999965,
+      "scAverage": 66.10770955002099,
+      "scPeak": 77.34552764892578,
+      "electronCPU": 0.7897520376569807,
+      "graphicsProfile": null,
+      "gui": {
+        "opacityHz": 0,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 8.254859,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 25.946,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3809074474988312e-7,
+        "rmsMin": 0.0022360613590209385,
+        "meanRecorderUs": 2.0743729275900398
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.6453214255878263
+    },
+    "52/stopped-focus": {
+      "passes": 2,
+      "seconds": 30.555748034999997,
+      "scAverage": 69.52529105128073,
+      "scPeak": 99.49893188476562,
+      "electronCPU": 3.01068780453969,
+      "graphicsProfile": null,
+      "gui": {
+        "opacityHz": 0,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 0,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 10.621673,
+      "returnClean": false,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 28.564,
+        "residualCallbacks": 1,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 0.003257901281589054,
+        "rmsMin": 0.0022360587863984346,
+        "meanRecorderUs": 1.7561551335174954
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.243631732173867
+    },
+    "52/widgets": {
+      "passes": 2,
+      "seconds": 30.36743430000002,
+      "scAverage": 64.1482184895298,
+      "scPeak": 84.687744140625,
+      "electronCPU": 23.413083066067735,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "gui": {
+        "opacityHz": 14.994291234940405,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 46.54415930119143,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 9.045634,
+      "returnClean": true,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 32.442,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "maxResidual": 2.3764652679135034e-7,
+        "rmsMin": 0.002236066900624444,
+        "meanRecorderUs": 1.9010677754549064
+      },
+      "output": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "overBudgetCallbacks": 0
+      },
+      "inputRecorderCPU": 1.5147807981713317
+    },
+    "52/focus": {
+      "passes": 2,
+      "seconds": 30.430450912000026,
+      "scAverage": 72.50979805537632,
+      "scPeak": 111.3761215209961,
+      "electronCPU": 26.684084949065827,
+      "graphicsProfile": {
+        "widgets": 128,
+        "size": 96,
+        "widgetHz": 15,
+        "canvases": 0,
+        "width": 0,
+        "height": 0,
+        "paintHz": 0
+      },
+      "gui": {
+        "opacityHz": 14.989368646973503,
+        "waveHz": 0,
+        "freshWaveHz": 0,
+        "packetHz": 40.97842493794911,
+        "widgetUnderTarget": false,
+        "waveUnderTarget": false
+      },
+      "maxDspMs": 11.901308,
+      "returnClean": false,
+      "recorderReliable": true,
+      "input": {
+        "recorderOverBudgetCallbacks": 0,
+        "maxRecorderUs": 27.405,
+        "residualCallbacks": 38,
+        "silentCallbacks": 41,
+        "frameGaps": 0,
+        "maxResidual": 0.007001472477122361,
+        "rmsMin": 0.00222287452499789,
+        "meanRecorderUs": 1.842874499018249
+      },
+      "output": {
+        "frameGaps": 7,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 7,
+        "overBudgetCallbacks": 12
+      },
+      "inputRecorderCPU": 1.3144740935867358
+    }
+  },
+  "nodes": [
+    20,
+    36,
+    52
+  ],
+  "detector": {
+    "path": "/private/tmp/awb-loopback-focus.input",
+    "recorderPID": 97512,
+    "channel": 6,
+    "pilotBus": 2,
+    "inputClean": {
+      "recorderVersion": 2,
+      "captureDrops": 0,
+      "recorderOverBudgetCallbacks": 0,
+      "events": [],
+      "callbacks": 94,
+      "frames": 48128,
+      "seconds": 0.992061427,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.0022360490164736123,
+      "peak": 0.003162384033203125,
+      "maxResidual": 2.3362244415490313e-7,
+      "residualCallbacks": 0,
+      "silentCallbacks": 0,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.2807021276595747,
+      "maxRecorderUs": 2.772
+    },
+    "inputMute": {
+      "recorderVersion": 2,
+      "captureDrops": 0,
+      "recorderOverBudgetCallbacks": 0,
+      "events": [
+        {
+          "sequence": 242,
+          "entryNs": 128199137969668,
+          "inputHostNs": 128199126906537,
+          "sampleTime": 240112,
+          "frameOffset": 123904,
+          "frames": 512,
+          "firstHit": 52,
+          "residualHits": 32,
+          "maxResidual": 0.00004935264587402344,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.38
+        },
+        {
+          "sequence": 243,
+          "entryNs": 128199148625555,
+          "inputHostNs": 128199137573192,
+          "sampleTime": 240624,
+          "frameOffset": 124416,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.489
+        },
+        {
+          "sequence": 244,
+          "entryNs": 128199159328683,
+          "inputHostNs": 128199148239847,
+          "sampleTime": 241136,
+          "frameOffset": 124928,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.32
+        },
+        {
+          "sequence": 245,
+          "entryNs": 128199169887927,
+          "inputHostNs": 128199158906503,
+          "sampleTime": 241648,
+          "frameOffset": 125440,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.441
+        },
+        {
+          "sequence": 246,
+          "entryNs": 128199180561789,
+          "inputHostNs": 128199169573158,
+          "sampleTime": 242160,
+          "frameOffset": 125952,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.187
+        },
+        {
+          "sequence": 247,
+          "entryNs": 128199191258681,
+          "inputHostNs": 128199180239813,
+          "sampleTime": 242672,
+          "frameOffset": 126464,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.44
+        },
+        {
+          "sequence": 248,
+          "entryNs": 128199201990658,
+          "inputHostNs": 128199190906469,
+          "sampleTime": 243184,
+          "frameOffset": 126976,
+          "frames": 512,
+          "firstHit": null,
+          "residualHits": 0,
+          "maxResidual": 0,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.373
+        },
+        {
+          "sequence": 249,
+          "entryNs": 128199212599432,
+          "inputHostNs": 128199201573124,
+          "sampleTime": 243696,
+          "frameOffset": 127488,
+          "frames": 512,
+          "firstHit": 52,
+          "residualHits": 34,
+          "maxResidual": 0.00004589135803737335,
+          "silent": true,
+          "gap": 0,
+          "recorderUs": 2.36
+        }
+      ],
+      "callbacks": 32,
+      "frames": 16384,
+      "seconds": 0.330803869,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.001974744492247067,
+      "peak": 0.003162384033203125,
+      "maxResidual": 0.00004935264587402344,
+      "residualCallbacks": 2,
+      "silentCallbacks": 8,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.27103125,
+      "maxRecorderUs": 2.489
+    },
+    "inputPhase": {
+      "recorderVersion": 2,
+      "captureDrops": 0,
+      "recorderOverBudgetCallbacks": 0,
+      "events": [
+        {
+          "sequence": 273,
+          "entryNs": 128199468558622,
+          "inputHostNs": 128199457568005,
+          "sampleTime": 255984,
+          "frameOffset": 139776,
+          "frames": 512,
+          "firstHit": 52,
+          "residualHits": 2,
+          "maxResidual": 0.000033895231958099795,
+          "silent": false,
+          "gap": 0,
+          "recorderUs": 2.21
+        },
+        {
+          "sequence": 288,
+          "entryNs": 128199628484688,
+          "inputHostNs": 128199617572045,
+          "sampleTime": 263664,
+          "frameOffset": 147456,
+          "frames": 512,
+          "firstHit": 116,
+          "residualHits": 1,
+          "maxResidual": 0.000032235550399316,
+          "silent": false,
+          "gap": 0,
+          "recorderUs": 1.104
+        }
+      ],
+      "callbacks": 76,
+      "frames": 38912,
+      "seconds": 0.800025577,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.0022360259704973197,
+      "peak": 0.003162384033203125,
+      "maxResidual": 0.000033895231958099795,
+      "residualCallbacks": 2,
+      "silentCallbacks": 0,
+      "frameGaps": 0,
+      "meanRecorderUs": 1.4908157894736842,
+      "maxRecorderUs": 2.71
+    }
+  },
+  "recorder": {
+    "version": 2,
+    "captureDrops": 0,
+    "callbacks": 39156,
+    "recordedFrames": 20047872
+  },
+  "complete": true,
+  "partial": false
+}
