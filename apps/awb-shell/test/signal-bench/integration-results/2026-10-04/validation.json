@@ -19,5 +19,7 @@
     "ToolSession": false
   },
   "freshHardwareAudioTest": false,
-  "sharedCheckoutsPreserved": true
+  "sharedCheckoutsPreserved": true,
+  "sharedHostTestCorrection": "470ada8",
+  "activeScCheckoutAtFinalCheck": "a2f3a80"
 }

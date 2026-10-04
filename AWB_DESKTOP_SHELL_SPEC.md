@@ -1505,7 +1505,10 @@ class check confirms Tool/ToolInstance and absence of ToolSession. The full work
 build, actual Electron Home gate and migrated benchmark prepare-only check also pass.
 
 The [integration handoff](apps/awb-shell/docs/scope-tool-instance-integration.md)
-records source/checkout coordination still needed for the separate Rack lane, active
-SC library and Lissajous source tree. The shared dirty checkouts and live sets are
+records source/checkout coordination still needed for the separate Rack lane and
+Lissajous source tree. The mixer developer has now brought the active SC checkout
+to the migrated `a2f3a80`, preserving dirty live-set files; its source matches the
+SC main used for the class check. Their shared-host test readiness fix `470ada8`
+is retained here too. The shared dirty checkouts and live sets are
 preserved. Historical MOTU figures retain their original provenance; raw recordings
 remain local rather than entering Git. Runtime audio gates need a quiet window.

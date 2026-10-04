@@ -23,7 +23,8 @@ against the unchanged artifact; they now check restored config and actual comman
 ## Checks
 
 - Full workspace build passes; shell native reader and looper plugin build passes.
-- Shell unit tests: 65/65.
+- Shell unit tests: 65/65. The mixer developer's shared-host readiness/cleanup
+  correction from `470ada8` is also retained, avoiding timing-based test startup.
 - Actual Electron Toolkit Home: 1/1, without booting audio.
 - Migrated dropout fixture prepare-only passes; 16 production hashes unchanged and
   no Electron or SC process launched.
@@ -42,21 +43,23 @@ Raw callback/return captures stay in the original checkout; see
 
 ## Other work requiring a coordinated update
 
-- `/Users/willy/awb` is still on `design/score-studio-layout` with dirty Rack/mixer,
-  Bitwig inspection and scope work. Merging this branch updates the main ref without
-  overwriting that checkout. The Rack developer must reconcile their branch/dirty
-  changes with new main, including catalogue, Home icons and the package lock.
-- The live SC checkout `/Volumes/ARMED WITH SOUND/SuperCollider` remains on
-  `recovery/preset-session-pipeline` and still contains ToolSession. SC main has the
-  refactor (`00c5ccc` at validation). Bring the checkout/class path onto that main
-  before claiming the normal shell launch uses the new library. Dirty live-set
-  edits were left untouched; switching currently overlaps a modified live-set file.
+- `/Users/willy/awb` is still on `design/score-studio-layout` with dirty scope and
+  Bitwig work. During this integration the mixer developer committed Rack preparation,
+  merged ToolInstance through `a52246b`, and added test-readiness correction `470ada8`
+  and validation `50a4f35`. Their separate lane still needs integration with this
+  merged scope main. Preserve the catalogue/Home/package-lock Rack additions when
+  reconciling the shared checkout; do not discard the dirty scope files blindly.
+- The active SC checkout was initially on the pre-migration recovery commit, but
+  the mixer developer has now fast-forwarded it to `a2f3a80`, preserving dirty live-set
+  files. Its awbCollider source matches the tested new SC main (`00c5ccc`). The
+  earlier class-path blocker is resolved; any already-running old language process
+  still requires a normal recompile/restart before it can use the new class library.
 - The shared Lissajous source checkout remains on `design/shell-visual-language`
   with dirty work. Its reviewed SC-bus adaptation plus ToolInstance contract is
   committed on `integration/sc-bus-tool-instance`; integrate that source branch
   before publishing another renderer, or the old checkout will reintroduce legacy
   identity fields. The AWB artifact is already updated and source-pinned.
-- After those checkouts are coordinated, run the focused Scope, Shared Loop and
+- After the AWB/Lissajous source checkouts are coordinated, run the focused Scope, Shared Loop and
   SC-bus Electron gates in a quiet audio window. Repeat the MOTU load matrix only
   if a post-migration performance comparison is wanted.
 
