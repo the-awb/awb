@@ -14,7 +14,7 @@ const host = globalThis.awbHost
     endpoint: import.meta.env.VITE_HOSTED_ENDPOINT ?? '',
     initialScoreURL: import.meta.env.VITE_HOSTED_SCORE_URL ?? '',
     initialScoreName: import.meta.env.VITE_HOSTED_SCORE_NAME ?? 'hosted.score.json',
-    toolSessionID: import.meta.env.VITE_TOOL_SESSION_ID ?? ''
+    toolInstanceID: import.meta.env.VITE_TOOL_INSTANCE_ID ?? ''
   } } );
 const createHostedClient = ( options ) => new HostedScoreClient( options );
 
@@ -22,7 +22,7 @@ let unsubscribeShellCommand = null;
 if ( globalThis.awbHost ) {
   const context = globalThis.awbHost.initialLaunchContext();
   globalThis.awbHost.reportReady( { toolID: 'score-studio', viewID: context.viewID,
-    toolSessionID: context.toolSessionID } );
+    toolInstanceID: context.toolInstanceID } );
 }
 
 const root = createRoot( document.getElementById( 'root' ) );

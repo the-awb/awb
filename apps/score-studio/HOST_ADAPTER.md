@@ -107,7 +107,7 @@ and webview hosts, not filesystem, process or score-authority decisions.
 | `openScore()`, `openScoreDirectory()` and directory reads | Encapsulates browser handles versus native paths and dialogs. |
 | `saveCanonical(document, guard)` | Performs the host write while retaining the editor-supplied external-change guard. |
 | `saveProjection(text, identity, guard)` | Writes only already-generated projection text; generation and pair ordering stay outside. |
-| `hostedLaunchContext()` | Supplies the endpoint and ToolSession identity without environment reads in the editor. |
+| `hostedLaunchContext()` | Supplies the endpoint and ToolInstance identity without environment reads in the editor. |
 | `reportSessionState(state)`, `shellState()` | Reports editor state and exposes process/window state without becoming score authority. |
 | `focusWindow()`, `closeWindow()` | Real operations in the desktop shell and explicit unsupported no-ops in a browser. |
 
@@ -126,7 +126,7 @@ The shell accepts:
 
 ```text
 --score /absolute/path/piece.score.json
---tool-session SESSION_ID
+--tool-instance INSTANCE_ID
 --osc-port PORT
 --ws-port PORT                 optional fixed sidecar port
 --endpoint ws://.../TOKEN      optional already-running sidecar instead of --osc-port
@@ -143,7 +143,7 @@ terminates sclang.
 Run the built-source spike and its gates from the repository root with Node 22 first in `PATH`:
 
 ```sh
-npm run shell:start --workspace @awb/score-studio -- --score /path/piece.score.json --osc-port 57120 --tool-session SESSION_ID
+npm run shell:start --workspace @awb/score-studio -- --score /path/piece.score.json --osc-port 57120 --tool-instance INSTANCE_ID
 npm run test:shell --workspace @awb/score-studio
 npm run test:shell-hosted-real --workspace @awb/score-studio
 ```

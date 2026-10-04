@@ -22,8 +22,8 @@ export class HostedFieldClient {
     this.socket.send( JSON.stringify( { address, args } ) );
   }
   connect( endpoint, { scoreID = null, revision = null, runID = null,
-    followRuns = false, toolSessionID = '' } = {} ) {
-    this.disconnect(); this.binding = Object.freeze( { scoreID, revision, runID, followRuns, toolSessionID } );
+    followRuns = false, toolInstanceID = '' } = {} ) {
+    this.disconnect(); this.binding = Object.freeze( { scoreID, revision, runID, followRuns, toolInstanceID } );
     this.publish( { ...EMPTY, status: 'connecting' } );
     const socket = new this.WebSocketImpl( endpoint ); this.socket = socket;
     socket.addEventListener( 'message', ( event ) => this.receive( event.data ) );
@@ -40,7 +40,7 @@ export class HostedFieldClient {
     catch { this.publish( { error: 'Hosted Field bridge sent invalid JSON.' } ); return; }
     const { address, args = [] } = frame;
     if ( address === '/awb/bridge/ready' ) {
-      this.send( '/awb/timeline/hello', [ this.clientID, args[ 0 ], this.binding.toolSessionID ] );
+      this.send( '/awb/timeline/hello', [ this.clientID, args[ 0 ], this.binding.toolInstanceID ] );
     } else if ( address === '/awb/timeline/connected' && args[ 0 ] === this.clientID ) {
       if ( this.binding.scoreID ) {
         this.observeID = `observe-${ crypto.randomUUID() }`;

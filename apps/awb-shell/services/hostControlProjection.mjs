@@ -50,7 +50,7 @@ export class HostControlProjection {
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) {
         clearTimeout( pending.timer ); this.pending.delete( requestID );
-        pending.resolve( Object.freeze( { status: `${ args[ 2 ] }`, toolID: `${ args[ 3 ] }`, sessionID: `${ args[ 4 ] }` } ) );
+        pending.resolve( Object.freeze( { status: `${ args[ 2 ] }`, toolID: `${ args[ 3 ] }`, instanceID: `${ args[ 4 ] }` } ) );
       }
       return true;
     }
@@ -58,7 +58,7 @@ export class HostControlProjection {
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) {
         clearTimeout( pending.timer ); this.pending.delete( requestID );
-        pending.resolve( Object.freeze( { status: `${ args[ 2 ] }`, sessionID: `${ args[ 3 ] }`,
+        pending.resolve( Object.freeze( { status: `${ args[ 2 ] }`, instanceID: `${ args[ 3 ] }`,
           sourceName: `${ args[ 4 ] }`, previousSourcePath: `${ args[ 5 ] ?? '' }` } ) );
       }
       return true;
@@ -99,16 +99,16 @@ export class HostControlProjection {
 
   shutdown() { return this.request( '/awb/host/shutdown', [] ); }
 
-  openToolSession( toolID, sessionID ) {
-    return this.request( '/awb/host/tool/open', [ toolID, sessionID ] );
+  openToolInstance( toolID, instanceID ) {
+    return this.request( '/awb/host/tool/open', [ toolID, instanceID ] );
   }
 
-  closeToolSession( toolID, sessionID ) {
-    return this.request( '/awb/host/tool/close', [ toolID, sessionID ] );
+  closeToolInstance( toolID, instanceID ) {
+    return this.request( '/awb/host/tool/close', [ toolID, instanceID ] );
   }
 
-  loadScoreSynthDefs( sessionID, sourcePath, allowOverride = false ) {
-    return this.request( '/awb/host/score/synthdefs', [ sessionID, sourcePath, allowOverride ? 1 : 0 ], 15000 );
+  loadScoreSynthDefs( instanceID, sourcePath, allowOverride = false ) {
+    return this.request( '/awb/host/score/synthdefs', [ instanceID, sourcePath, allowOverride ? 1 : 0 ], 15000 );
   }
 
   audioProbe( { frequency = 440, duration = 0.35, amplitude = 0.08 } = {} ) {

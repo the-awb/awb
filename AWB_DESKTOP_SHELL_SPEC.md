@@ -58,7 +58,7 @@ the application.
 `apps/score-studio/shell/` already proves:
 
 - Electron can load the same built editor used by the web application;
-- sclang can launch it with a score path, ToolSession ID and OSC endpoint;
+- sclang can launch it with a score path, ToolInstance ID and OSC endpoint;
 - a token-protected WebSocket-to-OSC bridge can run in the main process;
 - a sandboxed preload can expose named filesystem and window operations;
 - canonical score and generated projection writes can retain external-change guards;
@@ -114,14 +114,14 @@ BusRecorder take. It is not silently converted into Score Studio timeline events
 
 ### Desktop SuperCollider owns
 
-- `ToolDefinition`, `ToolLauncher`, `ToolSession` and NodeManager semantics;
-- identity of an SC-launched ToolSession;
+- `ToolDefinition`, `ToolLauncher`, `ToolInstance` and NodeManager semantics;
+- identity of an SC-launched ToolInstance;
 - desktop score execution through `PTimelineOSCBridge`/`PScoreTimelinePlayer`;
 - SC-side objects, Patterns, Synths and explicit preset promotion;
 - whether an sclang process is attached or explicitly shell-owned.
 
 The shell never infers authored score membership from NodeManager and never treats receipt of an
-OSC parameter as proof that a ToolSession is valid. NodeManager remains authoritative for realized
+OSC parameter as proof that a ToolInstance is valid. NodeManager remains authoritative for realized
 language-side objects and their container membership. The shell holds only a replaceable projection
 for display and routing.
 
@@ -156,7 +156,7 @@ projections: the view registry, bounded renderer status and NodeManager containe
 Selecting a card focuses its view; closing a card invokes the normal view shutdown path.
 
 Tool/container association is explicit. A desktop handshake supplies the mapping between
-`toolID`, `toolSessionID`, NodeManager `toolSource` and `toolInstance`; the shell never guesses it
+`toolID`, `toolInstanceID`, NodeManager `toolSource` and `toolInstance`; the shell never guesses it
 from a SynthDef name, process ID or window title. A tool container with no open view may be shown
 with an `Open interface` action. Containers without a tool binding belong in a separate optional
 live-runtime/unassigned section rather than being attached to an arbitrary tool card.
@@ -260,17 +260,17 @@ The following identities are distinct:
 shellInstanceID    one running AWB main process
 viewID             one renderer view owned by that process
 toolID             stable tool kind from the manifest
-toolSessionID      optional running session supplied by ToolLauncher
+toolInstanceID      optional running ToolInstance supplied by ToolLauncher
 documentID         optional tool-owned document identity, such as scoreID
 clientID           one transport connection incarnation
 ```
 
-The shell addresses a view by `viewID`. It may use `(toolID, toolSessionID)` as the idempotent key
-for an SC launch when a ToolSession exists. It must not use a score ID, visual-session ID or file
+The shell addresses a view by `viewID`. It may use `(toolID, toolInstanceID)` as the idempotent key
+for an SC launch when a ToolInstance exists. It must not use a score ID, visual-session ID or file
 path as a universal session identity.
 
 Multiple Score Studio views may host different scores and their independent desktop players.
-Multiple Lissajous ToolSessions may coexist. Whether a future UI presents these views as windows or
+Multiple Lissajous ToolInstances may coexist. Whether a future UI presents these views as windows or
 tabs does not alter their identities.
 
 ## 9. Launch context
@@ -283,7 +283,7 @@ Each renderer receives one frozen context before application mount:
   shellInstanceID,
   viewID,
   tool: { id, version },
-  toolSessionID: null,
+  toolInstanceID: null,
   launchOrigin: "supercollider" | "desktop" | "web",
   owner: {
     kind: "attached-process" | "owned-process" | "none",
@@ -349,10 +349,10 @@ Requirements:
 
 1. A launch request receives a request ID and an explicit accepted, focused-existing or failed
    result.
-2. A repeated request for the same `(toolID, toolSessionID)` focuses the existing view and does not
+2. A repeated request for the same `(toolID, toolInstanceID)` focuses the existing view and does not
    create a duplicate session.
-3. Different ToolSessions create distinct views unless a later, explicit tool policy groups them.
-4. Renderer readiness includes matching `toolID`, `viewID`, protocol and ToolSession identity.
+3. Different ToolInstances create distinct views unless a later, explicit tool policy groups them.
+4. Renderer readiness includes matching `toolID`, `viewID`, protocol and ToolInstance identity.
 5. Renderer crash, connection loss and owner loss are separate states.
 6. Closing a view asks the renderer to dispose, waits for bounded acknowledgement, then tears down
    its resources even if acknowledgement never arrives.
@@ -460,7 +460,7 @@ The shell provides bounded filesystem mechanisms, not a universal document model
   `Browse` actions from those declarations; tools without canonical files expose no false file
   controls.
 - `Browse` uses a capability-checked native dialog and passes an opaque grant or explicit approved
-  path to the selected tool. `New` creates a tool session with a tool-owned empty document or
+  path to the selected tool. `New` creates a ToolInstance with a tool-owned empty document or
   initial payload. `Recent` repeats the same validated launch path; it is not a shortcut around
   permissions or external-change checks.
 - Shell preferences, recent items and window placement may live in shell application data, but
@@ -496,7 +496,7 @@ The shell exposes a non-semantic diagnostic snapshot:
 shell version and PID
 loaded tool artifact versions
 view IDs and lifecycle states
-ToolSession IDs where present
+ToolInstance IDs where present
 owned/attached process records
 bridge endpoints with secrets redacted
 granted capabilities
@@ -519,7 +519,7 @@ their own detailed diagnostic snapshot through their versioned adapter.
 
 ### Slice 2 — Score Studio parity and cutover
 
-1. Map the current score path, ToolSession, endpoint and owner PID into the generic launch context.
+1. Map the current score path, ToolInstance, endpoint and owner PID into the generic launch context.
 2. Move score-specific native file calls behind Score Studio wrappers over `host.request`.
 3. Preserve named-score load, hosted handshake, authoritative desktop transport, guarded pair save,
    owner-loss handling and web mode.
@@ -530,7 +530,7 @@ their own detailed diagnostic snapshot through their versioned adapter.
 
 1. Consume the versioned Lissajous renderer artifact and manifest.
 2. Launch the reduced system-audio profile with multichannel preference.
-3. Bind lifecycle readiness to the named ToolSession and parameter traffic to the existing
+3. Bind lifecycle readiness to the named ToolInstance and parameter traffic to the existing
    Lissajous protocol.
 4. Run Score Studio and Lissajous concurrently and close either without disturbing the other.
 
@@ -547,7 +547,7 @@ system-audio profile. It does not request cross-origin isolation because this pr
 2. Move shared WebSocket/OSC adapter ownership out of individual tool views while preserving each
    tool's semantic address vocabulary.
 3. Consume the existing NodeManager snapshot/delta protocol and show explicitly associated tool
-   containers beneath active or discoverable ToolSessions.
+   containers beneath active or discoverable ToolInstances.
 4. Add manifest-declared document kinds and per-tool `New`, `Recent` and `Browse` launcher actions.
 5. Persist bounded recent-file descriptors without making Toolkit Home a document authority.
 
@@ -567,7 +567,7 @@ Automated checks must prove:
 2. direct application launch opens Toolkit Home and exposes only valid installed-tool profiles;
 3. Home and external SC launches project into the same view registry;
 4. renderer IPC is accepted only from its registered view;
-5. repeated launch of one ToolSession focuses rather than duplicates it;
+5. repeated launch of one ToolInstance focuses rather than duplicates it;
 6. two distinct Score Studio sessions can coexist;
 7. Score Studio and Lissajous can coexist in one shell process;
 8. closing Home leaves active tools functional, and closing the last tool returns to Home;
@@ -610,14 +610,14 @@ establish useful desktop behaviour.
 ## 21. First handoff
 
 The shell engineer owns Slices 1 and 2 in `~/awb`. The Lissajous engineer owns its host adapter and
-renderer artifact. The awbCollider engineer owns SC tool descriptors and ToolSession bindings.
+renderer artifact. The awbCollider engineer owns SC tool descriptors and ToolInstance bindings.
 
 Before implementation, freeze only these joins:
 
 - `awb.tool/1` manifest fixture;
 - shell launch-context fixture;
 - base preload method names;
-- view/ToolSession identity and idempotent launch rule;
+- view/ToolInstance identity and idempotent launch rule;
 - renderer ready/close lifecycle messages.
 
 Do not wait for one universal tool-state schema, automation design, tabs, headless sclang or final
@@ -638,3 +638,12 @@ sync. The [readiness and measurement protocol](apps/awb-shell/docs/rack-instrume
 records commands, evidence boundaries and pending topology/follower questions.
 Bitwig inspection is owned by the separate agent; production renderers and the live
 SC class library have not been changed by this preparation.
+
+### ToolInstance integration — 4 October 2026
+
+The integration branch incorporates AWB runtime-contract commit `0c200e6`, paired
+with awbCollider commit `a2f3a80`. The merge preserves genuine score/host/recording
+session terminology while making tool runtime ownership use `ToolInstance`.
+Eighteen targeted Node tests passed, including Score Studio's 50/50 transport
+assertions. Existing scope/rack work is reconciled separately in the working tree;
+this merge does not promote the WIP SC classes or claim a new hardware load result.

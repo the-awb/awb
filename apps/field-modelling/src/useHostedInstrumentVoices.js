@@ -4,7 +4,7 @@ import { scaleFrequencies } from './engine/instrumentState.js';
 
 const RESERVED_CONTROLS = new Set( [ 'out', 'gate' ] );
 
-// Reconcile the authored Field instruments with synths owned by this Field ToolSession. The
+// Reconcile the authored Field instruments with synths owned by this Field ToolInstance. The
 // protocol remains semantic (instrument ID + controls); sclang owns lifecycle and NodeManager
 // association, while the renderer reads this small live projection.
 export function useHostedInstrumentVoices( {

@@ -8,7 +8,7 @@ const handle = { kind: 'desktop-file', grantID: 'file-1', name: 'source.score.js
 const calls = []; const states = [];
 const bridge = {
   initialLaunchContext: () => ( { shellProtocol: 1, viewID: 'view-1', tool: { id: 'score-studio' },
-    toolSessionID: 'tool-1', owner: { pid: 123 }, connections: { endpoint: 'ws://127.0.0.1/token' } } ),
+    toolInstanceID: 'tool-1', owner: { pid: 123 }, connections: { endpoint: 'ws://127.0.0.1/token' } } ),
   capabilities: () => ( { filesystem: [ 'open-file', 'open-directory', 'save-file' ], connections: [ 'hosted-timeline' ] } ),
   request: async ( operation, payload ) => {
     calls.push( [ operation, payload ] );
@@ -31,7 +31,7 @@ assert.equal( opened.handle.grantID, 'file-1' ); assert.equal( opened.handle.pat
 assert.deepEqual( calls.slice( 0, 2 ).map( ( call ) => call[ 0 ] ), [
   'filesystem.initial-file', 'score.load-synthdefs'
 ] );
-assert.equal( host.hostedLaunchContext().toolSessionID, 'tool-1' );
+assert.equal( host.hostedLaunchContext().toolInstanceID, 'tool-1' );
 assert.deepEqual( host.capabilities.executionModes, [ 'hosted' ] );
 assert.equal( host.engineNodeRegistry(), null );
 assert.deepEqual( host.capabilities.documentIngress,

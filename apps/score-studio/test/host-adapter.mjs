@@ -35,7 +35,7 @@ const host = createBrowserHost( {
     endpoint: 'ws://127.0.0.1:1234/token',
     initialScoreURL: '/__awb/hosted-score',
     initialScoreName: 'launched.score.json',
-    toolSessionID: 'session-1'
+    toolInstanceID: 'instance-1'
   }
 } );
 
@@ -62,7 +62,7 @@ assert.deepEqual( host.hostedLaunchContext(), {
   endpoint: 'ws://127.0.0.1:1234/token',
   initialScoreURL: '/__awb/hosted-score',
   initialScoreName: 'launched.score.json',
-  toolSessionID: 'session-1'
+  toolInstanceID: 'instance-1'
 } );
 
 const initial = await host.initialScore();

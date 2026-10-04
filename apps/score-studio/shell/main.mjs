@@ -27,7 +27,7 @@ const oscPort = Number( option( 'osc-port', 0 ) );
 const wsPort = Number( option( 'ws-port', 0 ) );
 let launchContext = Object.freeze( {
   endpoint: option( 'endpoint', '' ),
-  toolSessionID: option( 'tool-session', '' ),
+  toolInstanceID: option( 'tool-instance', '' ),
   scorePath: scorePath ? path.resolve( scorePath ) : null,
   ownerPID: Number( option( 'owner-pid', 0 ) ) || 0
 } );

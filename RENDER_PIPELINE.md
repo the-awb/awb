@@ -82,7 +82,7 @@ live SC stream or recorded multichannel audio
 `FieldModellingTool` owns live SC routing, capture and observation production; the live view consumes
 its stream directly. The render pipeline consumes frozen configuration and the materialised phase
 track. `@awb/field-renderer` supplies the common React-free WebGL controller used by both the live
-adapter and deterministic producer, but does not own the SC `ToolSession` or observation extraction.
+adapter and deterministic producer, but does not own the SC `ToolInstance` or observation extraction.
 
 ## Current implementation
 

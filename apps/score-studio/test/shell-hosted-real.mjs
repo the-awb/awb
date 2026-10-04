@@ -57,7 +57,7 @@ let shellChild;
 let udp;
 try {
   const ready = await waitFor( () => scOutput.match(
-    /AWB_SCORE_STUDIO_BROWSER_FIXTURE_READY port=(\d+) session=([^\s]+)/
+    /AWB_SCORE_STUDIO_BROWSER_FIXTURE_READY port=(\d+) instance=([^\s]+)/
   ) );
   const env = { ...process.env, ELECTRON_DISABLE_SECURITY_WARNINGS: 'true' };
   delete env.ELECTRON_RUN_AS_NODE;
@@ -65,7 +65,7 @@ try {
     main,
     '--osc-port', ready[ 1 ],
     '--score', scorePath,
-    '--tool-session', ready[ 2 ],
+    '--tool-instance', ready[ 2 ],
     '--owner-pid', `${ sclangChild.pid }`,
     '--smoke-hosted',
     `--user-data-dir=${ path.join( temporary, 'electron-profile' ) }`
@@ -85,7 +85,7 @@ try {
   udp = dgram.createSocket( 'udp4' );
   udp.send( encodeOscMessage( '/awb/test/score-studio/stop', [] ), Number( ready[ 1 ] ), '127.0.0.1' );
   await waitFor( () => scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_FIXTURE_STOPPED' ) );
-  console.log( 'shell-hosted-real: pass (ToolSession hello, named score, automatic revision install)' );
+  console.log( 'shell-hosted-real: pass (ToolInstance hello, named score, automatic revision install)' );
 } catch ( error ) {
   console.error( `SHELL OUTPUT:\n${ shellOutput }` );
   console.error( `SCLANG OUTPUT:\n${ scOutput.slice( -8000 ) }` );

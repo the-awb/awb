@@ -20,7 +20,7 @@ An external launch uses the same router as Toolkit Home:
 
 ```sh
 npm start --workspace @awb/desktop-shell -- \
-  --tool score-studio --tool-session session-1 --score /path/to/example.score.json
+  --tool score-studio --tool-instance instance-1 --score /path/to/example.score.json
 ```
 
 Tool renderers receive only the frozen `awbHost` preload contract. The shell discovers workspace
@@ -107,7 +107,7 @@ state without owning any of them:
   transfers cannot restore stale state;
 - a lightweight shared NodeManager subscription which the shell filters into per-tool and
   per-session container summaries;
-- explicit `toolID`/`toolSessionID` to `toolSource`/`toolInstance` bindings, never name-based
+- explicit `toolID`/`toolInstanceID` to `toolSource`/`toolInstance` bindings, never name-based
   inference;
 - bounded health probes and reconnect backoff for shell-first startup and attached bridge restarts;
 - manifest-declared document kinds which produce `New`, `Recent` and `Browse` actions on each
@@ -118,7 +118,7 @@ state without owning any of them:
 Score Studio documents also have one deliberately narrow native dependency operation. Given the
 view's opaque grant for a canonical `*.score.json`, the shell checks only for an optional sibling
 named `synths.scd`. When present, that file is authoritative for the score: the shell asks the
-view's native Score Studio ToolSession to load and synchronize it before accepting the document.
+view's native Score Studio ToolInstance to load and synchronize it before accepting the document.
 The renderer cannot submit an arbitrary path or SuperCollider source string. When the sibling is
 absent, the score uses definitions already installed in the connected desktop context; normal
 runtime readiness still blocks playback and names any definition which is genuinely missing.
@@ -129,7 +129,7 @@ definition is installed on the active server.
 
 When sclang and scsynth are ready, **Test tone** asks that exact host to compile and play a short
 440 Hz sine on hardware outputs 0 and 1. It deliberately bypasses Score Studio, the instrument
-library, NodeManager and tool sessions. Hearing it proves the shell-to-sclang-to-scsynth output
+library, NodeManager and ToolInstances. Hearing it proves the shell-to-sclang-to-scsynth output
 path; the acknowledgement alone proves only that scsynth accepted the synchronized definition and
 node request, not that the selected hardware outputs are audible.
 
@@ -154,15 +154,15 @@ selected away from an occupied default, or fixed with `AWB_HEADLESS_SERVER_PORT`
 
 The lightweight host-control responder is separate from NodeManager. Toolkit Home can select
 `when needed`, `always on`, or `off / manual`. Turning NodeManager off removes tracking responders
-and subscriptions but never stops, releases or frees sound objects. A ToolSession Track request
+and subscriptions but never stops, releases or frees sound objects. A ToolInstance Track request
 reactivates the manager and its external bridge under `when needed`; `manual` refuses implicit
 activation.
 
 Score Studio exposes one **Open hosted** action. Attached IDE versus shell-owned headless is a
 shell-level host choice, selected in Toolkit Home rather than repeated on each tool card. A hosted
-launch reuses whichever native host is active and asks its sclang to create a named `ToolSession`;
+launch reuses whichever native host is active and asks its sclang to create a named `ToolInstance`;
 if no host exists, it reports that the user must open SuperCollider or start the headless host.
-The shell supplies the session identity to the renderer and closes only that shell-owned session
+The shell supplies the ToolInstance identity to the renderer and closes only that shell-owned instance
 with the view. Multiple score views therefore have separate sessions and `PScoreTimelinePlayer`
 instances while sharing the selected language and server host. The Electron renderer exposes
 hosted execution only; it cannot silently boot scsynth.wasm. Browser Score Studio retains its
@@ -170,9 +170,9 @@ standalone WASM mode.
 
 Field Modelling follows the same ownership boundary. **New analytic field** needs no audio host;
 **Open hosted** reuses the shell's active native host and creates a named `fieldModelling:*`
-ToolSession. Authored Field instruments are then created and controlled through that session. An
+ToolInstance. Authored Field instruments are then created and controlled through that instance. An
 active hosted Score Studio card exposes **Open Field for this score**. That view observes the
-score's current and subsequent runs while retaining its separate Field ToolSession: score
+score's current and subsequent runs while retaining its separate Field ToolInstance: score
 realizations and Field-authored instruments can therefore coexist without confusing their
 ownership or lifecycle.
 

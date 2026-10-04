@@ -26,16 +26,16 @@ const sclangChild = spawn( sclang, [ '-D', '-l', testConfig, fixturePath ], { cw
 let scOutput = ''; let shellOutput = ''; let shellChild; let udp;
 sclangChild.stdout.on( 'data', ( chunk ) => { scOutput += chunk; } ); sclangChild.stderr.on( 'data', ( chunk ) => { scOutput += chunk; } );
 try {
-  const ready = await waitFor( () => scOutput.match( /AWB_SCORE_STUDIO_BROWSER_FIXTURE_READY port=(\d+) session=([^\s]+)/ ) );
+  const ready = await waitFor( () => scOutput.match( /AWB_SCORE_STUDIO_BROWSER_FIXTURE_READY port=(\d+) instance=([^\s]+)/ ) );
   const env = { ...process.env, ELECTRON_DISABLE_SECURITY_WARNINGS: 'true' }; delete env.ELECTRON_RUN_AS_NODE;
   shellChild = spawn( electron, [ path.join( shellRoot, 'shell/main.mjs' ), '--tool', 'score-studio', '--osc-port', ready[ 1 ],
-    '--score', scorePath, '--tool-session', ready[ 2 ], '--owner-pid', `${ sclangChild.pid }`, '--smoke-hosted',
+    '--score', scorePath, '--tool-instance', ready[ 2 ], '--owner-pid', `${ sclangChild.pid }`, '--smoke-hosted',
     `--user-data-dir=${ temporary }` ], { cwd: shellRoot, env, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
   shellChild.stdout.on( 'data', ( chunk ) => { shellOutput += chunk; } ); shellChild.stderr.on( 'data', ( chunk ) => { shellOutput += chunk; } );
   await waitFor( () => shellOutput.includes( 'AWB_SHELL_HOSTED_INSTALLED' ) && scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_CONNECTED client=' ) );
   await waitFor( () => shellChild.exitCode !== null ); if ( shellChild.exitCode !== 0 ) throw new Error( shellOutput );
   udp = dgram.createSocket( 'udp4' ); udp.send( encodeOscMessage( '/awb/test/score-studio/stop', [] ), Number( ready[ 1 ] ), '127.0.0.1' );
   await waitFor( () => scOutput.includes( 'AWB_SCORE_STUDIO_BROWSER_FIXTURE_STOPPED' ) );
-  console.log( 'neutral-shell-hosted-real: pass (named score, ToolSession hello, SC-launch Recent, shell-brokered SynthDef context, sclang-authoritative revision)' );
+  console.log( 'neutral-shell-hosted-real: pass (named score, ToolInstance hello, SC-launch Recent, shell-brokered SynthDef context, sclang-authoritative revision)' );
 } catch ( error ) { console.error( `SHELL OUTPUT:\n${ shellOutput }` ); console.error( `SCLANG OUTPUT:\n${ scOutput.slice( -8000 ) }` ); throw error; }
 finally { udp?.close(); await stop( shellChild ); await stop( sclangChild ); await rm( temporary, { recursive: true, force: true } ); }

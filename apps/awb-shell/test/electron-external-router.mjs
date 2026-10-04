@@ -16,8 +16,8 @@ const common = [ `--user-data-dir=${ userData }` ]; let output = '';
 const primary = spawn( electron, [ main, '--smoke-external-router', ...common ], { cwd: appRoot, env, stdio: [ 'ignore', 'pipe', 'pipe' ] } );
 primary.stdout.on( 'data', ( chunk ) => { output += chunk; } ); primary.stderr.on( 'data', ( chunk ) => { output += chunk; } );
 const waitFor = async ( predicate, timeout = 20000 ) => { const started = Date.now(); while ( !predicate() ) { if ( Date.now() - started > timeout ) throw new Error( `Timed out.\n${ output }` ); await new Promise( ( resolve ) => setTimeout( resolve, 25 ) ); } };
-const launch = async ( session ) => {
-  const child = spawn( electron, [ main, '--tool', 'score-studio', '--tool-session', session, '--score', score, ...common ], { cwd: appRoot, env, stdio: 'ignore' } );
+const launch = async ( instance ) => {
+  const child = spawn( electron, [ main, '--tool', 'score-studio', '--tool-instance', instance, '--score', score, ...common ], { cwd: appRoot, env, stdio: 'ignore' } );
   await new Promise( ( resolve, reject ) => { child.once( 'exit', resolve ); child.once( 'error', reject ); } );
 };
 try {

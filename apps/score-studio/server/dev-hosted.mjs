@@ -18,7 +18,7 @@ const vitePort = Number( option( 'vite-port', 5201 ) );
 const wsPort = Number( option( 'ws-port', 0 ) );
 const ownerPID = Number( option( 'owner-pid', 0 ) );
 const sourcePath = option( 'score' );
-const toolSessionID = option( 'tool-session', '' );
+const toolInstanceID = option( 'tool-instance', '' );
 let sourceName = '';
 
 if ( !Number.isInteger( oscPort ) || oscPort <= 0 || oscPort > 65535 ) {
@@ -58,7 +58,7 @@ const vite = spawn( process.execPath, viteArgs, {
     VITE_HOSTED_ENDPOINT: bridge.endpoint,
     VITE_HOSTED_SCORE_URL: sourcePath ? '/__awb/hosted-score' : '',
     VITE_HOSTED_SCORE_NAME: sourceName,
-    VITE_TOOL_SESSION_ID: toolSessionID,
+    VITE_TOOL_INSTANCE_ID: toolInstanceID,
     AWB_SCORE_STUDIO_SOURCE: sourcePath ? path.resolve( sourcePath ) : ''
   },
   stdio: 'inherit'
@@ -67,7 +67,7 @@ const vite = spawn( process.execPath, viteArgs, {
 console.log( `Hosted bridge ready: ${ bridge.endpoint }` );
 console.log( `Forwarding to sclang OSC at 127.0.0.1:${ oscPort }` );
 if ( sourcePath ) console.log( `Initial score: ${ path.resolve( sourcePath ) }` );
-if ( toolSessionID ) console.log( `Tool session: ${ toolSessionID }` );
+if ( toolInstanceID ) console.log( `Tool instance: ${ toolInstanceID }` );
 
 let stopPromise = null;
 let ownerTimer = null;

@@ -18,7 +18,7 @@ import './App.css';
 
 const host = globalThis.awbHost ?? null;
 const context = host?.initialLaunchContext?.() ?? { tool: { id: 'field-modelling' }, viewID: 'browser',
-  toolSessionID: null, payload: {}, connections: {}, launchOrigin: 'web' };
+  toolInstanceID: null, payload: {}, connections: {}, launchOrigin: 'web' };
 
 const EMPTY_INSTRUMENT_RUNTIME = Object.freeze( {
   externalNodes: Object.freeze( [] ), voices: null,
@@ -42,7 +42,7 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
   const [ readings, setReadings ] = useState( {} );
   const stateRef = useRef( state ); stateRef.current = state;
   const attached = Boolean( context.payload?.scoreSessionID && scoreDocument );
-  const hostedConnection = Boolean( context.connections?.endpoint && context.toolSessionID );
+  const hostedConnection = Boolean( context.connections?.endpoint && context.toolInstanceID );
   const runtime = useMemo( () => ( {
     ...EMPTY_INSTRUMENT_RUNTIME,
     ...instrumentRuntime,
@@ -92,7 +92,7 @@ export default function App( { instrumentRuntime = EMPTY_INSTRUMENT_RUNTIME } ) 
           opened.kind === 'config' ? 'field-config' : null } );
       } catch ( failure ) { if ( live ) { setError( failure.message ); setDocumentStatus( 'open failed' ); } }
       host.reportReady( { toolID: 'field-modelling', viewID: context.viewID,
-        toolSessionID: context.toolSessionID, mode } );
+        toolInstanceID: context.toolInstanceID, mode } );
     } )();
     return () => { live = false; };
   }, [] );

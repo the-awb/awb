@@ -28,7 +28,7 @@ export function createNeutralDesktopHost( {
     canonicalSave: grants.filesystem?.includes( 'save-file' ) ?? false,
     projectionSave: grants.filesystem?.includes( 'save-file' ) ?? false,
     retainedFileHandles: true, downloadFallback: false, recoveryStorage: Boolean( storage ),
-    hostedLaunch: Boolean( launch.connections?.endpoint || launch.toolSessionID ),
+    hostedLaunch: Boolean( launch.connections?.endpoint || launch.toolInstanceID ),
     documentIngress: Object.freeze( { new: false, open: false, demo: false, browse: false } ),
     executionModes: Object.freeze( [ 'hosted' ] ),
     nativeWindowFocus: true, nativeWindowClose: true
@@ -97,7 +97,7 @@ export function createNeutralDesktopHost( {
     confirmDiscard( message ) { return confirm( message ); },
     engineNodeRegistry() { return nodeRegistry; },
     hostedLaunchContext() { return { endpoint: launch.connections?.endpoint ?? '',
-      toolSessionID: launch.toolSessionID ?? '', viewID: launch.viewID ?? '', toolID: launch.tool?.id ?? 'score-studio',
+      toolInstanceID: launch.toolInstanceID ?? '', viewID: launch.viewID ?? '', toolID: launch.tool?.id ?? 'score-studio',
       scorePath: null, ownerPID: launch.owner?.pid ?? 0 }; },
     reportSessionState( state ) { bridge.reportSessionState( state ); },
     shellState() { return bridge.shellState(); },

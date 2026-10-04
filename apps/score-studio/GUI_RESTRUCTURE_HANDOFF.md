@@ -60,7 +60,7 @@ explicitly performs a future insertion action.
   `scsynth.wasm`; hosted controls must never fall back silently to it.
 - Hosted audition is a shell service with its own stable tool identity, provisionally
   `synthdef-audition`; it is not an extra role of `score-studio`, `PTimelineOSCBridge` or a
-  score-owning ToolSession. Any authorised shell tool may submit an explicit audition request to a
+  score-owning ToolInstance. Any authorised shell tool may submit an explicit audition request to a
   client-scoped audition session. The service must never discover or adopt unrelated shell voices.
 
 Relevant implementation surfaces:
@@ -232,8 +232,8 @@ until a standalone adapter can honestly implement the same contract.
 Hosted audition must use a distinct shell-wide ToolDefinition/tool ID, provisionally
 `synthdef-audition`, and a transport namespace owned by that service such as `/awb/audition/*`.
 The service is headless: it does not create another renderer view or appear as a score executor.
-The shell grants a requesting view a separate audition ToolSession and records the requesting
-`toolID`, `viewID` and, when present, parent `toolSessionID` as provenance. Score Studio is one
+The shell grants a requesting view a separate audition ToolInstance and records the requesting
+`toolID`, `viewID` and, when present, parent `toolInstanceID` as provenance. Score Studio is one
 client of this contract; other shell tools must be able to use the same service without borrowing
 Score Studio's player or session.
 
@@ -265,7 +265,7 @@ realizations may coexist. The panel should display how many it owns and provide:
 
 Do not target `@all`, do not reuse the score event ID as the node owner, and do not let Stop touch
 score playback, rack nodes, another view, another audition draft or unowned nodes. Hosted audition
-nodes belong to the dedicated audition ToolSession only through their explicit realization
+nodes belong to the dedicated audition ToolInstance only through their explicit realization
 membership, with requester, view, draft and realization metadata so NodeManager can observe them
 without confusing them with score or tool-native realizations. Browser-standalone nodes require the
 same logical ownership even though their server node IDs are browser-local; the shell never exposes
@@ -488,7 +488,7 @@ tabs, search text and focus drafts are editor/view state and must not be seriali
 
 ### Slice C — isolated audition
 
-- register the shell-wide `\synthdefAudition` tool/service and its dedicated ToolSession/transport
+- register the shell-wide `\synthdefAudition` tool/service and its dedicated ToolInstance/transport
   contract;
 - add `AuditionController` and requester-scoped identity model;
 - Play creates fresh hosted audition realizations, or browser-standalone realizations only when the
@@ -599,7 +599,7 @@ Not yet implemented:
   nodes.
 - Hosted audition runs under the dedicated `\synthdefAudition` tool identity; its NodeManager
   projection retains the requesting tool/view provenance and is never attributed to Score Studio's
-  score ToolSession.
+  score ToolInstance.
 - Every node owned by the audition service belongs to an explicit audition realization. Unrelated
   unowned voices remain visible as unowned/orphaned in NodeManager and are never adopted.
 - One realization may own several nodes; it remains active until every member node ends or that
@@ -650,8 +650,8 @@ Not yet implemented:
    engine as a surprise fallback.
 10. **Treat panel persistence as disposable UI state.** Corrupt or stale layout preferences should
     reset safely and never block opening a score.
-11. **Do not disguise audition as a score command.** The shell-wide audition ToolSession owns its
-    disposable voices; `PTimelineOSCBridge` and the score ToolSession do not.
+11. **Do not disguise audition as a score command.** The shell-wide audition ToolInstance owns its
+    disposable voices; `PTimelineOSCBridge` and the score ToolInstance do not.
 12. **Do not turn audition into an orphan bucket.** Ownership starts with an explicit audition
     request and extends only to the nodes created for that realization.
 13. **Do not confuse audible time with editable time.** Server latency and event timing offsets may

@@ -45,7 +45,7 @@ Electron uses either the attached IDE host or the shell-owned headless native sc
 
 A score may own SynthDefs through an optional `synths.scd` sibling beside its canonical
 `*.score.json`. The shell resolves only that fixed sibling from its opaque file grant; when it is
-present, the named Score Studio ToolSession executes it and synchronizes the active server before
+present, the named Score Studio ToolInstance executes it and synchronizes the active server before
 the document is accepted. Those definitions deliberately override same-named definitions already
 installed in the host. Without a sibling, hosted playback uses the connected desktop context and
 reports any genuinely missing definitions through normal readiness. The browser build may package
@@ -170,8 +170,8 @@ score realizations.
 
 Hosted mode never boots or falls back to the browser audio engine. Its instrument surface sends
 bounded, idempotent start, set, pause, resume, release and free commands to the authenticated
-desktop Score Studio ToolSession. Desktop sclang creates the Synths on desktop scsynth and the
-ToolSession owns them, so NodeManager can project them when tracking is enabled. Losing the desktop
+desktop Score Studio ToolInstance. Desktop sclang creates the Synths on desktop scsynth and the
+ToolInstance owns them, so NodeManager can project them when tracking is enabled. Losing the desktop
 connection disables hosted controls rather than silently changing execution engine. Switching to
 Hosted also stops standalone score playback and shuts down the browser engine. Hosted controls are
 derived from the exact loaded desktop SynthDef interface; browser-manifest-only controls are never
@@ -295,7 +295,7 @@ cd ~/awb
 npm install
 npm run dev --workspace @awb/score-studio
 npm run dev:hosted --workspace @awb/score-studio -- --osc-port 57120
-npm run dev:hosted --workspace @awb/score-studio -- --osc-port 57120 --vite-port 5201 --score /path/to/piece.score.json --tool-session SESSION_ID --open
+npm run dev:hosted --workspace @awb/score-studio -- --osc-port 57120 --vite-port 5201 --score /path/to/piece.score.json --tool-instance INSTANCE_ID --open
 npm run test:hosted-real --workspace @awb/score-studio
 npm run test:hosted-browser-real --workspace @awb/score-studio
 npm run test:launched-hosted-real --workspace @awb/score-studio
@@ -316,8 +316,8 @@ token-bearing endpoint into the Hosted runtime panel.
 
 The optional `--score` path is validated as a canonical `awb.score/1` document and exposed only at
 the development server's fixed initial-score endpoint; it is not embedded in the browser URL and
-does not enable general filesystem access. `--tool-session` makes the browser identify the
-language-side ToolSession during its OSC hello. With both values present, Score Studio loads the
+does not enable general filesystem access. `--tool-instance` makes the browser identify the
+language-side ToolInstance during its OSC hello. With both values present, Score Studio loads the
 source document, connects, and installs its revision automatically. `--open` asks Vite to open the
 system browser.
 
@@ -334,7 +334,7 @@ projection as the working document, and drives the UI playhead/seek to 773 secon
 never presses Play.
 
 `test:launched-hosted-real` covers the desktop entry point itself: real sclang creates the
-`ScoreStudioTool` ToolSession, the hosted process receives its session ID and canonical source-score
+`ScoreStudioTool` ToolInstance, the hosted process receives its instance ID and canonical source-score
 path, Chromium loads the score, handshakes with that exact session and installs the revision without
 manual Connect or Load actions.
 

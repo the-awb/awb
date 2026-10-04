@@ -7,7 +7,7 @@
 **Source application:** `~/field_modelling/react-app`
 **Depends on:** `AWB_DESKTOP_SHELL_SPEC.md`, `RENDER_PIPELINE.md`,
 `@awb/field-engine`, `@awb/field-renderer`, `@awb/instruments`, `@awb/score`,
-Score Studio's hosted connector, awbCollider `ToolSession`/NodeManager, and the shell-owned
+Score Studio's hosted connector, awbCollider `ToolInstance`/NodeManager, and the shell-owned
 native-audio service.
 
 ## 1. Goal
@@ -22,7 +22,7 @@ Bring the existing Field Modelling application into AWB as a first-class tool wh
   periodically corrected rather than guessed;
 - continue to support a standalone analytic mode without desktop SuperCollider;
 - use the shared render pipeline for deterministic output without making that offline pipeline own
-  live audio, ToolSessions or score playback.
+  live audio, ToolInstances or score playback.
 
 The import is application-preserving. The existing field renderer, instrument-specific projection,
 room/speaker geometry, surfaces, probes and phase refusal behaviour are the baseline. The task is
@@ -48,7 +48,7 @@ to put them behind the current AWB document, host and session boundaries—not r
    adds no private buses, mixers or output interception.
 7. **Closing a renderer must not stop or mute score sound.** A Field view observes a concrete score
    run but does not own that run's realization lifecycle. A non-score hosted Field view does own
-   its explicitly authored instruments through its ToolSession and releases them when that session
+   its explicitly authored instruments through its ToolInstance and releases them when that session
    closes.
 8. **Phase is measured inside the running synth graph.** Each supported component corrects a local
    phase accumulator at positive-going zero crossings. sclang schedules one trigger bundle for all
@@ -57,10 +57,10 @@ to put them behind the current AWB document, host and session boundaries—not r
 9. **Physical output count is irrelevant to observation identity.** The protocol addresses
    realization node IDs and component indices, not hardware channels. This is why no arbitrary
    collection of physical outputs is required.
-10. **Live and offline rendering share a renderer, not a lifecycle.** The live ToolSession and the
+10. **Live and offline rendering share a renderer, not a lifecycle.** The live ToolInstance and the
     deterministic render scheduler are separate adapters around common Field renderer state.
 11. **Hosted authored instruments belong to sclang.** A non-score Field session sends semantic
-    instrument commands to its named `fieldModelling:*` ToolSession. It does not allocate node IDs
+    instrument commands to its named `fieldModelling:*` ToolInstance. It does not allocate node IDs
     or send raw `/s_new` from the renderer. Score-attached Field views project the score and do not
     also start the Field document's authored seed instruments.
 
@@ -110,7 +110,7 @@ It excludes:
 
 - the canonical score document;
 - a mutable copy of score events;
-- live node IDs, run IDs or ToolSession IDs;
+- live node IDs, run IDs or ToolInstance IDs;
 - physical Core Audio device identity;
 - recordings, automation takes and rendered outputs.
 
@@ -155,7 +155,7 @@ The shell resolves a durable binding into a live attachment:
 projectID + scoreID + bindingID
                  |
                  v
-scoreSessionID + runID + toolViewID + toolSessionID
+scoreSessionID + runID + toolViewID + toolInstanceID
 ```
 
 Several scores and several Field views may coexist. Every message and phase snapshot carries enough
@@ -173,7 +173,7 @@ AWB shell
 
 desktop sclang / scsynth
   |- PScoreTimelinePlayer: score execution and transport
-  `- FieldModellingTool ToolSession
+  `- FieldModellingTool ToolInstance
        |- owns explicitly authored hosted instruments
        |- associates score realizations with node identity
        `- schedules bounded simultaneous phase observations
@@ -191,7 +191,7 @@ and tracking depend on it. Disabling Track changes projection/recording visibili
 sound or tears down the score-session mixer.
 
 The first hosted authored-instrument slice does not require NodeManager in order to sound. The
-ToolSession still owns the Synth lifecycle, while NodeManager adds shared visibility, inspection
+ToolInstance still owns the Synth lifecycle, while NodeManager adds shared visibility, inspection
 and tracking when enabled.
 
 ## 6. SuperCollider observation topology
@@ -389,9 +389,9 @@ schema carries a validated phase artifact; live hosted rendering may apply sched
 
 ### F5 — hosted instrument ownership
 
-- Create one named `fieldModelling:*` ToolSession per hosted Field view.
+- Create one named `fieldModelling:*` ToolInstance per hosted Field view.
 - Route authored `start`/`set`/`pause`/`resume`/`release`/`free` commands through sclang.
-- Associate created Synths with that ToolSession and expose them to NodeManager when tracking is
+- Associate created Synths with that ToolInstance and expose them to NodeManager when tracking is
   enabled.
 - Reconcile natural completion and external frees without silently respawning the instrument.
 - Keep score-attached Field views observational so they cannot duplicate score audio.
@@ -480,7 +480,7 @@ This work can be split without conflicting ownership:
   tool launch UI.
 - **Field renderer lane:** Three.js extraction, live adapter, deterministic producer and parity
   gates.
-- **awbCollider lane:** `FieldModellingTool`, ToolSession-owned instrument commands and scheduled
+- **awbCollider lane:** `FieldModellingTool`, ToolInstance-owned instrument commands and scheduled
   observer requests.
 - **Transport lane:** bounded phase-snapshot protocol and shell relay, with stale/partial recovery
   tests.
