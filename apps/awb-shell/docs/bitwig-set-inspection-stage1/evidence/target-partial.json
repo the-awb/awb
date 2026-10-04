@@ -1,0 +1,1619 @@
+{
+  "artifactKind": "verified partial file evidence; not a controller capture or decoded set",
+  "generatedAt": "2026-10-04T17:25:20.248680+00:00",
+  "source": {
+    "project": "/Users/willy/Documents/Bitwig Studio/Library/Templates/awb 5.2 (ef script).bwtemplate/template.bwproject",
+    "bytes": 3447457,
+    "sha256": "c41ab2729aa00efa82586602705380d5b880542b2e7ecc1e26de1308d5cdae94",
+    "installedBitwigVersion": "4.3.10",
+    "templateBundle": "/Users/willy/Documents/Bitwig Studio/Library/Templates/awb 5.2 (ef script).bwtemplate",
+    "originalWritten": false
+  },
+  "extractor": {
+    "script": "collect-file-evidence.py",
+    "kind": "bounded standard-library scan",
+    "candidates": {
+      "beat-twin": "802e4a400d4018e44dea39d08920125d4d2441ae",
+      "bitwig-control-deck": "2043a61b9e9c77cafa85fd7360e5c7e22f869220"
+    }
+  },
+  "headerMetadata": {
+    "application_version_name": {
+      "status": "observed",
+      "value": "4.3.10",
+      "evidence": {
+        "kind": "length-prefixed header string",
+        "keyOffset": 80,
+        "valueOffset": 109,
+        "byteLength": 6
+      }
+    },
+    "creator": {
+      "status": "observed",
+      "value": "A_W_B",
+      "evidence": {
+        "kind": "length-prefixed header string",
+        "keyOffset": 211,
+        "valueOffset": 223,
+        "byteLength": 5
+      }
+    },
+    "branch": {
+      "status": "observed",
+      "value": "releases",
+      "evidence": {
+        "kind": "length-prefixed header string",
+        "keyOffset": 142,
+        "valueOffset": 153,
+        "byteLength": 8
+      }
+    }
+  },
+  "coverage": {
+    "identity": "observed",
+    "hierarchy": "unresolved",
+    "routingEdges": "unresolved",
+    "orderedDeviceChains": "unresolved",
+    "parameters": "unimplemented",
+    "modulationMappings": "unresolved",
+    "dependencies": "observed file and string inventory only",
+    "liveCompatibility": "unresolved; native host proof pending user enablement",
+    "nameClues": {
+      "status": "observed strings; musical roles unresolved",
+      "byteWindow": [
+        512,
+        3700
+      ]
+    }
+  },
+  "tracks": {
+    "status": "unresolved",
+    "reason": "Raw name strings do not establish tracks or parent relations",
+    "items": null
+  },
+  "routing": {
+    "status": "unresolved",
+    "reason": "No controller/UI-confirmed edges",
+    "edges": null
+  },
+  "devices": {
+    "status": "unresolved",
+    "reason": "Device names and preset files do not establish ordered chains",
+    "items": null
+  },
+  "nameStringClues": [
+    {
+      "offset": 516,
+      "length": 7,
+      "text": "Project"
+    },
+    {
+      "offset": 541,
+      "length": 11,
+      "text": "Audio group"
+    },
+    {
+      "offset": 591,
+      "length": 8,
+      "text": "Cello In"
+    },
+    {
+      "offset": 617,
+      "length": 17,
+      "text": "Line 1 (VC) Group"
+    },
+    {
+      "offset": 652,
+      "length": 7,
+      "text": "Cello 1"
+    },
+    {
+      "offset": 694,
+      "length": 24,
+      "text": "Line 1 (VC) Group Master"
+    },
+    {
+      "offset": 757,
+      "length": 15,
+      "text": "Cello In Master"
+    },
+    {
+      "offset": 793,
+      "length": 5,
+      "text": "Pro 2"
+    },
+    {
+      "offset": 816,
+      "length": 4,
+      "text": "Pro2"
+    },
+    {
+      "offset": 855,
+      "length": 12,
+      "text": "Pro 2 Master"
+    },
+    {
+      "offset": 906,
+      "length": 10,
+      "text": "INS Master"
+    },
+    {
+      "offset": 937,
+      "length": 6,
+      "text": "Delays"
+    },
+    {
+      "offset": 961,
+      "length": 15,
+      "text": "Cello Delay BUS"
+    },
+    {
+      "offset": 993,
+      "length": 6,
+      "text": "DelB.1"
+    },
+    {
+      "offset": 1016,
+      "length": 6,
+      "text": "DelA.1"
+    },
+    {
+      "offset": 1039,
+      "length": 6,
+      "text": "DelA.2"
+    },
+    {
+      "offset": 1062,
+      "length": 6,
+      "text": "DelB.2"
+    },
+    {
+      "offset": 1103,
+      "length": 13,
+      "text": "Delays Master"
+    },
+    {
+      "offset": 1137,
+      "length": 5,
+      "text": "SC IN"
+    },
+    {
+      "offset": 1160,
+      "length": 7,
+      "text": "SC IN 1"
+    },
+    {
+      "offset": 1184,
+      "length": 7,
+      "text": "SC IN 2"
+    },
+    {
+      "offset": 1208,
+      "length": 7,
+      "text": "SC IN 3"
+    },
+    {
+      "offset": 1232,
+      "length": 7,
+      "text": "SC IN 4"
+    },
+    {
+      "offset": 1274,
+      "length": 12,
+      "text": "SC IN Master"
+    },
+    {
+      "offset": 1307,
+      "length": 14,
+      "text": "Ambient sounds"
+    },
+    {
+      "offset": 1339,
+      "length": 10,
+      "text": "Ambient 01"
+    },
+    {
+      "offset": 1384,
+      "length": 21,
+      "text": "Ambient sounds Master"
+    },
+    {
+      "offset": 1426,
+      "length": 8,
+      "text": "LH DRIVE"
+    },
+    {
+      "offset": 1460,
+      "length": 21,
+      "text": "Splutter 5.0 (remote)"
+    },
+    {
+      "offset": 1498,
+      "length": 14,
+      "text": "Spiral Sparkle"
+    },
+    {
+      "offset": 1529,
+      "length": 15,
+      "text": "Shaped Decimate"
+    },
+    {
+      "offset": 1561,
+      "length": 4,
+      "text": "FUZZ"
+    },
+    {
+      "offset": 1582,
+      "length": 6,
+      "text": "Reverb"
+    },
+    {
+      "offset": 1605,
+      "length": 4,
+      "text": "Mast"
+    },
+    {
+      "offset": 1635,
+      "length": 18,
+      "text": "Audio group Master"
+    },
+    {
+      "offset": 1674,
+      "length": 18,
+      "text": "Midi guitar + Bass"
+    },
+    {
+      "offset": 1709,
+      "length": 18,
+      "text": "AudioToMidi Stream"
+    },
+    {
+      "offset": 1764,
+      "length": 7,
+      "text": "Group 5"
+    },
+    {
+      "offset": 1789,
+      "length": 7,
+      "text": "Audio 1"
+    },
+    {
+      "offset": 1813,
+      "length": 7,
+      "text": "Audio 2"
+    },
+    {
+      "offset": 1855,
+      "length": 14,
+      "text": "Group 5 Master"
+    },
+    {
+      "offset": 1890,
+      "length": 6,
+      "text": "Record"
+    },
+    {
+      "offset": 1914,
+      "length": 11,
+      "text": "Mast Record"
+    },
+    {
+      "offset": 1943,
+      "length": 15,
+      "text": "Master Record A"
+    },
+    {
+      "offset": 1975,
+      "length": 15,
+      "text": "Master Record B"
+    },
+    {
+      "offset": 2007,
+      "length": 15,
+      "text": "Master Record C"
+    },
+    {
+      "offset": 2039,
+      "length": 13,
+      "text": "Reverb RETURN"
+    },
+    {
+      "offset": 2087,
+      "length": 18,
+      "text": "Mast Record Master"
+    },
+    {
+      "offset": 2126,
+      "length": 9,
+      "text": "P2 record"
+    },
+    {
+      "offset": 2153,
+      "length": 12,
+      "text": "MIDI Streams"
+    },
+    {
+      "offset": 2183,
+      "length": 12,
+      "text": "Pro2 Midi In"
+    },
+    {
+      "offset": 2212,
+      "length": 16,
+      "text": "Pro2 Midi Stream"
+    },
+    {
+      "offset": 2263,
+      "length": 19,
+      "text": "MIDI Streams Master"
+    },
+    {
+      "offset": 2303,
+      "length": 13,
+      "text": "Capture Group"
+    },
+    {
+      "offset": 2334,
+      "length": 12,
+      "text": "MIDI Input A"
+    },
+    {
+      "offset": 2363,
+      "length": 14,
+      "text": "Pro2 Capture A"
+    },
+    {
+      "offset": 2394,
+      "length": 14,
+      "text": "Pro2 Capture A"
+    },
+    {
+      "offset": 2425,
+      "length": 12,
+      "text": "MIDI Input B"
+    },
+    {
+      "offset": 2454,
+      "length": 14,
+      "text": "Pro2 Capture B"
+    },
+    {
+      "offset": 2485,
+      "length": 12,
+      "text": "MIDI Input C"
+    },
+    {
+      "offset": 2514,
+      "length": 14,
+      "text": "Pro2 Capture C"
+    },
+    {
+      "offset": 2563,
+      "length": 20,
+      "text": "Capture Group Master"
+    },
+    {
+      "offset": 2622,
+      "length": 16,
+      "text": "P2 record Master"
+    },
+    {
+      "offset": 2659,
+      "length": 10,
+      "text": "AL Capture"
+    },
+    {
+      "offset": 2687,
+      "length": 6,
+      "text": "DelB.1"
+    },
+    {
+      "offset": 2710,
+      "length": 6,
+      "text": "DelA.1"
+    },
+    {
+      "offset": 2733,
+      "length": 6,
+      "text": "DelA.2"
+    },
+    {
+      "offset": 2756,
+      "length": 6,
+      "text": "DelB.2"
+    },
+    {
+      "offset": 2797,
+      "length": 17,
+      "text": "AL Capture Master"
+    },
+    {
+      "offset": 2853,
+      "length": 13,
+      "text": "Record Master"
+    },
+    {
+      "offset": 2887,
+      "length": 7,
+      "text": "Group 7"
+    },
+    {
+      "offset": 2912,
+      "length": 23,
+      "text": "Windy reeds & trains 04"
+    },
+    {
+      "offset": 2951,
+      "length": 45,
+      "text": ",constructiona t batersea heavy ambient noise"
+    },
+    {
+      "offset": 3013,
+      "length": 4,
+      "text": "bell"
+    },
+    {
+      "offset": 3052,
+      "length": 14,
+      "text": "Group 7 Master"
+    },
+    {
+      "offset": 3172,
+      "length": 9,
+      "text": "B1 SC BUS"
+    },
+    {
+      "offset": 3198,
+      "length": 9,
+      "text": "A1 SC BUS"
+    },
+    {
+      "offset": 3224,
+      "length": 9,
+      "text": "A2 SC BUS"
+    },
+    {
+      "offset": 3250,
+      "length": 9,
+      "text": "B2 SC BUS"
+    },
+    {
+      "offset": 3276,
+      "length": 11,
+      "text": "Stutter BUS"
+    },
+    {
+      "offset": 3304,
+      "length": 12,
+      "text": "Splutter BUS"
+    },
+    {
+      "offset": 3333,
+      "length": 11,
+      "text": "Ubermod BUS"
+    },
+    {
+      "offset": 3361,
+      "length": 11,
+      "text": "Sparkle BUS"
+    },
+    {
+      "offset": 3389,
+      "length": 12,
+      "text": "Decimate BUS"
+    },
+    {
+      "offset": 3418,
+      "length": 8,
+      "text": "Fuzz BUS"
+    },
+    {
+      "offset": 3443,
+      "length": 8,
+      "text": "Verb BUS"
+    },
+    {
+      "offset": 3468,
+      "length": 8,
+      "text": "Mast BUS"
+    },
+    {
+      "offset": 3493,
+      "length": 9,
+      "text": "P2 SC BUS"
+    },
+    {
+      "offset": 3519,
+      "length": 15,
+      "text": "Environment BUS"
+    },
+    {
+      "offset": 3551,
+      "length": 11,
+      "text": "---BLANK---"
+    },
+    {
+      "offset": 3588,
+      "length": 6,
+      "text": "Master"
+    },
+    {
+      "offset": 3614,
+      "length": 4,
+      "text": "tags"
+    },
+    {
+      "offset": 3631,
+      "length": 5,
+      "text": "title"
+    },
+    {
+      "offset": 3649,
+      "length": 4,
+      "text": "type"
+    },
+    {
+      "offset": 3658,
+      "length": 26,
+      "text": "application/bitwig-project"
+    },
+    {
+      "offset": 3692,
+      "length": 10,
+      "text": "used_files"
+    }
+  ],
+  "pluginPathClues": [
+    {
+      "path": "/Library/Audio/Plug-Ins/VST/ExSlAugustusLoopFxLoop Wave.vst",
+      "status": "observed",
+      "fileExistsAtExactPath": false,
+      "occurrenceOffsets": [
+        1660328,
+        1762742,
+        1913151,
+        2130863
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST/FabFilter Pro-Q 3.vst",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        216525,
+        216636,
+        216888,
+        220223,
+        2814774,
+        2814885,
+        2815137,
+        2818472,
+        2871678,
+        2871789,
+        2872041,
+        2875376,
+        2928573,
+        2928684,
+        2928936,
+        2932271,
+        3178864,
+        3178975,
+        3179227,
+        3182739,
+        3211729,
+        3211840,
+        3212092,
+        3215604,
+        3218835,
+        3218946,
+        3219198,
+        3222710,
+        3225941,
+        3226052,
+        3226304,
+        3229816
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST/MIDI Bass.vst",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        2383485
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST/MIDI Guitar 2.vst",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        2387314
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST/ValhallaShimmer_x64.vst",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        997050,
+        997165,
+        997423,
+        1000961
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/++decimate.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        911862,
+        911985,
+        912241,
+        915643,
+        1111854,
+        1111977,
+        1112233,
+        1115635
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/++delay.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        1099983,
+        1100100,
+        1100350,
+        1103749
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/++pitchdelay.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        1078389,
+        1078516,
+        1078776,
+        1082214,
+        1086419,
+        1086546,
+        1086806,
+        1090244
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/++spectralcompand.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        3194481,
+        3194618,
+        3194888,
+        3198488,
+        3233042,
+        3233179,
+        3233449,
+        3237049,
+        3240355,
+        3240492,
+        3240762,
+        3244362,
+        3315123,
+        3315260,
+        3315530,
+        3319117,
+        3322409,
+        3322546,
+        3322816,
+        3326403
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/++spiralstretch.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        1070547,
+        1070680,
+        1070946,
+        1074361
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/ConvologyXT.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": false,
+      "occurrenceOffsets": [
+        1016003,
+        1016128,
+        1016395,
+        1020017,
+        2824484,
+        2824609,
+        2824876,
+        2828324,
+        2881388,
+        2881513,
+        2881780,
+        2885228,
+        2938283,
+        2938408,
+        2938675,
+        2942123
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/FabFilter Pro-Q 2.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": false,
+      "occurrenceOffsets": [
+        2045269,
+        2075594,
+        2660267,
+        2660404,
+        2660680,
+        2664239,
+        2791770,
+        2791907,
+        2792183,
+        2795800,
+        2848674,
+        2848811,
+        2849087,
+        2852704,
+        2905569,
+        2905706,
+        2905982,
+        2909599
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/Ozone Imager 2.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        2819625,
+        2819756,
+        2820030,
+        2823487,
+        2876529,
+        2876660,
+        2876934,
+        2880391,
+        2933424,
+        2933555,
+        2933829,
+        2937286
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/ThingsTexture.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        984716,
+        984845,
+        985127,
+        988546,
+        1030034,
+        1030163,
+        1030445,
+        1033882,
+        1254841,
+        1254970,
+        1255252,
+        1258689
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/ValhallaUberMod.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        194559,
+        194692,
+        194966,
+        198627
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    },
+    {
+      "path": "/Library/Audio/Plug-Ins/VST3/WaveShell1-VST3 12.7.vst3",
+      "status": "observed",
+      "fileExistsAtExactPath": true,
+      "occurrenceOffsets": [
+        23876,
+        24019,
+        27752,
+        31157,
+        43746,
+        43889,
+        47622,
+        51032,
+        51777,
+        51920,
+        55653,
+        59136,
+        228380,
+        228523,
+        232256,
+        235688,
+        1138703,
+        1138846,
+        1142579,
+        1146237,
+        1586612,
+        1586755,
+        1590488,
+        1593983,
+        2802198,
+        2802341,
+        2806074,
+        2809481,
+        2829319,
+        2829462,
+        2833195,
+        2836638,
+        2859102,
+        2859245,
+        2862978,
+        2866385,
+        2886223,
+        2886366,
+        2890099,
+        2893542,
+        2915997,
+        2916140,
+        2919873,
+        2923280,
+        2943118,
+        2943261,
+        2946994,
+        2950437
+      ],
+      "activeUseStatus": "unresolved",
+      "identityVersionLicenseStatus": "unresolved"
+    }
+  ],
+  "bundleAssets": [
+    {
+      "path": "project/samples/Cello 1-1-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 5862038,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 5862038,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-2-2-2-2-2-2.wav",
+      "bytes": 5862038,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-2-2-2-2-2.wav",
+      "bytes": 5862038,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-2-2-2-2.wav",
+      "bytes": 5862038,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-3-2-2-2-2.wav",
+      "bytes": 5310080,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-3-2-2-2.wav",
+      "bytes": 5310080,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-3-2-2.wav",
+      "bytes": 5310080,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-3-2.wav",
+      "bytes": 5310080,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-1-2-2-3.wav",
+      "bytes": 5310080,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-2-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 7461926,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 7461926,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 7461926,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-2-2-2-2-2-2-2-2.wav",
+      "bytes": 7461926,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-2-2-2-2-2-2-2.wav",
+      "bytes": 7461926,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-3-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 36351104,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-3-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 36351104,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-3-2-2-2-2-2-2-2-2.wav",
+      "bytes": 36351104,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-3-2-2-2-2-2-2-2.wav",
+      "bytes": 36351104,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Cello 1-3-2-2-2-2-2-2.wav",
+      "bytes": 36351104,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/DR660 Anvil-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 106540,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/DR660 Anvil-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 106540,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/DR660 Anvil-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 106540,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/DR660 Anvil-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 106540,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/DR660 Anvil-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 106540,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Master Record A-1-2-2-2-2-2-2-2.wav",
+      "bytes": 10620032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Master Record A-1-2-2-2-2-2-2.wav",
+      "bytes": 10620032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Master Record A-1-2-2-2-2-2.wav",
+      "bytes": 10620032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Master Record A-1-2-2-2-2.wav",
+      "bytes": 10620032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Master Record A-1-2-2-2.wav",
+      "bytes": 10620032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Windy reeds & trains 01-bounce-2-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 717984,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Windy reeds & trains 01-bounce-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 717984,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Windy reeds & trains 01-bounce-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 717984,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Windy reeds & trains 01-bounce-2-2-2-2-2-2-2-2.wav",
+      "bytes": 717984,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/Windy reeds & trains 01-bounce-2-2-2-2-2-2-2.wav",
+      "bytes": 717984,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/construction at battersea -2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 209531536,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/construction at battersea -2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 209531536,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/construction at battersea -2-2-2-2-2-2-2-2.wav",
+      "bytes": 209531536,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/construction at battersea -2-2-2-2-2-2-2.wav",
+      "bytes": 209531536,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/construction at battersea -2-2-2-2-2-2.wav",
+      "bytes": 209531536,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/constructiona t batersea heavy ambient noise-2-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 104006032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/constructiona t batersea heavy ambient noise-2-2-2-2-2-2-2-2-2.wav",
+      "bytes": 104006032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/constructiona t batersea heavy ambient noise-2-2-2-2-2-2-2-2.wav",
+      "bytes": 104006032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/constructiona t batersea heavy ambient noise-2-2-2-2-2-2-2.wav",
+      "bytes": 104006032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/constructiona t batersea heavy ambient noise-2-2-2-2-2-2.wav",
+      "bytes": 104006032,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/motif with quaver delay-bounce-1-2-2-2-2-2-2.wav",
+      "bytes": 1561706,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/motif with quaver delay-bounce-1-2-2-2-2-2.wav",
+      "bytes": 1561706,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/nice overlapping loop-2-2-2-2-2-2.wav",
+      "bytes": 16693376,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/nice overlapping loop-2-2-2-2-2.wav",
+      "bytes": 16693376,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/nice overlapping loop-2-2-2-2.wav",
+      "bytes": 16693376,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/nice overlapping loop-2-2-2.wav",
+      "bytes": 16693376,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/samples/nice overlapping loop-2-2.wav",
+      "bytes": 16693376,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/214216__acs272__world-s-longest-echo-4th-impulse-2-2.bwimpulse",
+      "bytes": 3334810,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/214216__acs272__world-s-longest-echo-4th-impulse-2.bwimpulse",
+      "bytes": 3334810,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/214216__acs272__world-s-longest-echo-4th-impulse.bwimpulse",
+      "bytes": 3334810,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/Mulching 1-2-2.bwimpulse",
+      "bytes": 935538,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/Mulching 1-2.bwimpulse",
+      "bytes": 935538,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/Mulching 1.bwimpulse",
+      "bytes": 935538,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/composite earth b-2-2.bwimpulse",
+      "bytes": 3620864,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/composite earth b-2.bwimpulse",
+      "bytes": 3620864,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    },
+    {
+      "path": "project/impulses/composite earth b.bwimpulse",
+      "bytes": 3620864,
+      "status": "observed",
+      "usedByCurrentProjectStatus": "unresolved"
+    }
+  ],
+  "embeddedPluginStateArchive": {
+    "status": "observed",
+    "crcValidation": "all entries passed",
+    "entries": [
+      {
+        "entry": "plugin-states/195e614a-5d41-42a3-a3a2-f8616042a72f.vstpreset",
+        "bytes": 17308,
+        "compressedBytes": 5183,
+        "headerOffset": 3396635,
+        "crc32": "761f633f",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/d3afed96-c384-4dd2-aba6-fd30d3af52ff.fxb",
+        "bytes": 1668,
+        "compressedBytes": 203,
+        "headerOffset": 3401924,
+        "crc32": "76bfc60d",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/1eb16457-c434-4e02-a553-124b31402b4d.vstpreset",
+        "bytes": 608,
+        "compressedBytes": 300,
+        "headerOffset": 3402227,
+        "crc32": "efe68f96",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/31a7d573-4f74-4536-ba71-07bf57e61abc.vstpreset",
+        "bytes": 625,
+        "compressedBytes": 313,
+        "headerOffset": 3402633,
+        "crc32": "98ea44e7",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/1bbd2595-f2d6-4529-a958-a85789288daf.vstpreset",
+        "bytes": 861,
+        "compressedBytes": 373,
+        "headerOffset": 3403052,
+        "crc32": "02f313eb",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/68329df6-c9b9-4cbb-a07d-18ec85fd69e3.vstpreset",
+        "bytes": 577,
+        "compressedBytes": 309,
+        "headerOffset": 3403531,
+        "crc32": "6e99c4c7",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/80a5f376-133c-49bd-aa6d-4c319b64b14c.vstpreset",
+        "bytes": 17565,
+        "compressedBytes": 4361,
+        "headerOffset": 3403946,
+        "crc32": "62dac0e2",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/65ad1642-9825-4928-943f-fc51e56664e9.fxb",
+        "bytes": 1668,
+        "compressedBytes": 279,
+        "headerOffset": 3408413,
+        "crc32": "1b326421",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/19f4e35d-31a5-4f40-abe2-934308fc2980.vstpreset",
+        "bytes": 1274,
+        "compressedBytes": 659,
+        "headerOffset": 3408792,
+        "crc32": "b2e354bf",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/0f0db4e4-05a8-4008-9642-fc0089ecbd84.fxb",
+        "bytes": 1668,
+        "compressedBytes": 229,
+        "headerOffset": 3409557,
+        "crc32": "30e99e95",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/4c571530-97a8-4797-9b68-871c01c411ed.vstpreset",
+        "bytes": 17339,
+        "compressedBytes": 5254,
+        "headerOffset": 3409886,
+        "crc32": "87be2550",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/5912d13c-972e-4ddd-aecf-32c06f4616c0.fxb",
+        "bytes": 4860,
+        "compressedBytes": 1086,
+        "headerOffset": 3415246,
+        "crc32": "c7d3136e",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/baf84135-6048-434f-9dfb-18d670a3ab0b.vstpreset",
+        "bytes": 593,
+        "compressedBytes": 320,
+        "headerOffset": 3416432,
+        "crc32": "80002c3e",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/396028e2-4dab-46ec-8853-00302f31f6fa.vstpreset",
+        "bytes": 911,
+        "compressedBytes": 311,
+        "headerOffset": 3416858,
+        "crc32": "7d77775e",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/dc2beabd-a544-4dda-b669-2f9f02f6a5c8.fxb",
+        "bytes": 1757,
+        "compressedBytes": 489,
+        "headerOffset": 3417275,
+        "crc32": "95c3a979",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/3a9b1f57-b81d-407f-923b-bd74fc4c2e1a.fxb",
+        "bytes": 4860,
+        "compressedBytes": 1108,
+        "headerOffset": 3417864,
+        "crc32": "3479aea0",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/98805e8c-dda5-46b8-8e2e-c9e815cbb52c.fxb",
+        "bytes": 4860,
+        "compressedBytes": 1103,
+        "headerOffset": 3419072,
+        "crc32": "f7773494",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/2a91d6e7-2cef-4721-b36b-9fe1e625938f.vstpreset",
+        "bytes": 898,
+        "compressedBytes": 397,
+        "headerOffset": 3420275,
+        "crc32": "54d277ed",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/2de4330c-7433-42d4-88b9-c9ae20d622fe.vstpreset",
+        "bytes": 17834,
+        "compressedBytes": 2979,
+        "headerOffset": 3420778,
+        "crc32": "1ab4b660",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/18ef3790-9521-48fa-a2f9-36da4531b6fe.vstpreset",
+        "bytes": 10906,
+        "compressedBytes": 1653,
+        "headerOffset": 3423863,
+        "crc32": "c4b65ced",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/eebed1cb-791d-4158-882a-9ce29812e799.vstpreset",
+        "bytes": 1214,
+        "compressedBytes": 503,
+        "headerOffset": 3425622,
+        "crc32": "542e43bb",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/9d1fe16b-d7d3-4034-864d-86f94aaa381f.vstpreset",
+        "bytes": 17596,
+        "compressedBytes": 4380,
+        "headerOffset": 3426231,
+        "crc32": "0283d2ac",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/7f3fc423-83bf-4251-8e35-02c5560df15b.vstpreset",
+        "bytes": 911,
+        "compressedBytes": 220,
+        "headerOffset": 3430717,
+        "crc32": "90a0c238",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/25f1529b-b1e4-4fcd-acde-fcdbb26dbbcc.fxb",
+        "bytes": 1664,
+        "compressedBytes": 229,
+        "headerOffset": 3431043,
+        "crc32": "5d8b8230",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/94abeba6-bfad-4f8a-866e-931ca0f1eb05.vstpreset",
+        "bytes": 1692,
+        "compressedBytes": 623,
+        "headerOffset": 3431372,
+        "crc32": "5d31f5eb",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/ba4d9774-f721-4b6b-a12a-4af038d12bb2.vstpreset",
+        "bytes": 2948,
+        "compressedBytes": 1580,
+        "headerOffset": 3432101,
+        "crc32": "b273121a",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/4a0ee1c9-2d7f-4614-9756-6f38e8be3171.vstpreset",
+        "bytes": 1271,
+        "compressedBytes": 527,
+        "headerOffset": 3433787,
+        "crc32": "86c376ee",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/c448467b-0a52-4be2-a6ce-72396d7e5cc1.vstpreset",
+        "bytes": 1961,
+        "compressedBytes": 548,
+        "headerOffset": 3434420,
+        "crc32": "a5b039b6",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/04de0113-865e-4582-84c2-fd7047511a81.vstpreset",
+        "bytes": 911,
+        "compressedBytes": 170,
+        "headerOffset": 3435074,
+        "crc32": "0cdbe9ca",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/c97f29bb-658b-442c-9fed-b8a0cba93bfc.fxb",
+        "bytes": 574,
+        "compressedBytes": 265,
+        "headerOffset": 3435350,
+        "crc32": "76334e33",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/cf88a89f-21b0-4781-b21d-ecd25d9adc72.fxb",
+        "bytes": 1668,
+        "compressedBytes": 189,
+        "headerOffset": 3435715,
+        "crc32": "73fbd1e5",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/3347d1b9-156c-4a77-9f1c-479649a2912c.vstpreset",
+        "bytes": 857,
+        "compressedBytes": 372,
+        "headerOffset": 3436004,
+        "crc32": "70ef95d1",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/5a8111d5-db7a-45cf-9442-1889e6cc8ad9.fxb",
+        "bytes": 1668,
+        "compressedBytes": 190,
+        "headerOffset": 3436482,
+        "crc32": "44ee8f5a",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/83fa6303-de95-4465-8729-82500f46fcfd.vstpreset",
+        "bytes": 1459,
+        "compressedBytes": 524,
+        "headerOffset": 3436772,
+        "crc32": "caca1112",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/3159fccc-c713-4600-a67d-51dd5c7be7c0.fxb",
+        "bytes": 4860,
+        "compressedBytes": 1082,
+        "headerOffset": 3437402,
+        "crc32": "9e854563",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/ab9039c4-ec46-4d97-8196-7f23663c6419.vstpreset",
+        "bytes": 592,
+        "compressedBytes": 318,
+        "headerOffset": 3438584,
+        "crc32": "bc5451af",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/0865b2c6-4038-450a-b3f5-c2523e6ddf85.vstpreset",
+        "bytes": 1962,
+        "compressedBytes": 545,
+        "headerOffset": 3439008,
+        "crc32": "f0998812",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/572ca6d4-e4ae-47c4-badf-75ab70fed646.vstpreset",
+        "bytes": 1458,
+        "compressedBytes": 528,
+        "headerOffset": 3439659,
+        "crc32": "bafdc816",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/04a75f1f-fb60-48a1-9c27-de13bc41e928.vstpreset",
+        "bytes": 1640,
+        "compressedBytes": 622,
+        "headerOffset": 3440293,
+        "crc32": "d95982c2",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/cc2d1629-4ea4-4b4c-af22-dba650a24b97.vstpreset",
+        "bytes": 1652,
+        "compressedBytes": 623,
+        "headerOffset": 3441021,
+        "crc32": "2d08f145",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/4d3d0067-630b-4163-b4a7-0b8f5db3ba2d.vstpreset",
+        "bytes": 1690,
+        "compressedBytes": 606,
+        "headerOffset": 3441750,
+        "crc32": "3c86382e",
+        "deviceAssociationStatus": "unresolved"
+      },
+      {
+        "entry": "plugin-states/85b484ef-74b2-4033-8aab-ec9988e5a39d.fxb",
+        "bytes": 1764,
+        "compressedBytes": 499,
+        "headerOffset": 3442462,
+        "crc32": "779c49c3",
+        "deviceAssociationStatus": "unresolved"
+      }
+    ]
+  },
+  "humanAnnotations": []
+}

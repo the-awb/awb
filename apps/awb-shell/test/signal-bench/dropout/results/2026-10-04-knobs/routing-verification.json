@@ -1,0 +1,26 @@
+{
+  "verifiedLoopbackMappings": {
+    "ext/obank/7/ch/6/src": "23:12",
+    "ext/obank/7/ch/7/src": "23:13",
+    "ext/obank/7/ch/8/src": "23:14",
+    "ext/obank/7/ch/9/src": "23:15",
+    "ext/obank/7/ch/10/src": "23:16",
+    "ext/obank/7/ch/11/src": "23:17",
+    "ext/obank/7/ch/12/src": "23:18",
+    "ext/obank/7/ch/13/src": "23:19",
+    "ext/obank/24/ch/12/src": "6:2",
+    "ext/obank/24/ch/13/src": "6:3",
+    "ext/obank/24/ch/14/src": "6:4",
+    "ext/obank/24/ch/15/src": "6:5",
+    "ext/obank/24/ch/16/src": "6:6",
+    "ext/obank/24/ch/17/src": "6:7",
+    "ext/obank/24/ch/18/src": "6:8",
+    "ext/obank/24/ch/19/src": "6:9"
+  },
+  "loopbackUnchanged": true,
+  "routingSourceFieldsCompared": 339,
+  "changedSourceFields": {},
+  "readOnlyAPI": true,
+  "firstSnapshot": "during upper sweep",
+  "reference": "2026-10-03-loopback/routing-verification.json"
+}

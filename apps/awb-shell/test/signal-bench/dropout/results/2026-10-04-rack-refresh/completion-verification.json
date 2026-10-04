@@ -1,0 +1,57 @@
+{
+  "acceptedPhases": 30,
+  "measuredSeconds": 1357.5732714139997,
+  "verifiedActualValueChanges": 11953872,
+  "protectedSourceCount": 26,
+  "productionHashesUnchanged": true,
+  "routingSourceFields": 339,
+  "motuRoutingUnchanged": true,
+  "allRecorderRangesReliable": true,
+  "recorderDrops": 0,
+  "noScopeCapture": true,
+  "noReactAppRackOrControlRendersDuringMotion": true,
+  "actualPaintCadenceVerified": true,
+  "allFinalVisibleOrDrawnValuesVerified": true,
+  "sourceHashes": {
+    "apps/awb-shell/shell/main.mjs": "e33d8610140dbb0e830ee65f3d04560235036c93f37028bba8104209b86e395c",
+    "apps/awb-shell/sc/AWBHeadlessHost.scd": "e3f9b161d8b51385bf431837c5b3b7181c25378eb0eac0fcec73281e9e6d0ab6",
+    "apps/awb-shell/sc/AWBScBusAudio.scd": "e7e207a763d8f5f100fafad44e39cd3e2a123128133dd6b85a0fd95df2f46b74",
+    "apps/awb-shell/src/signalCaptureBroker.mjs": "b66150a19bfc4191201976faa34f88ad55cb9bd5906976ef4a12ee82d16c4a92",
+    "apps/awb-shell/src/scSignalSource.mjs": "6aeed55e8a0d2accf353402a0d9e2bd7dcf4426e5ddc7bd954d7afb4d210048f",
+    "apps/awb-shell/.build/sc-bus-reader.node": "106a3e644c9f65194ed0cb686bf9b0552d57b7c975899c123f78d7cff9ad6d0e",
+    "tool-artifacts/scope/0.1.0/server.mjs": "9225fcff0a7a111765161b139ededf4c86ba7897b23fd1707a71915ee19613a0",
+    "tool-artifacts/scope/0.1.0/public/scope.js": "2e965e505db89f87aec3f696dd673c7cbd1e43048323b0bb2f9526863d394a68",
+    "tool-artifacts/scope/0.1.0/public/index.html": "66f879efc757c21270f2c805b737b580eaabbe6458cc30ecec2be16ea0d2fa63",
+    "tool-artifacts/scope/0.1.0/public/scope.css": "ea884dec7eb3aca48bad5a9c6f0f96cb1fdaf38df29720f936e2fe0efd61680a",
+    "tool-artifacts/scope/0.1.0/public/scope-opacity.js": "875ee6c777fc4fa4f9ae5e0386d905731bde429262ee3c2a5456f4943691010b",
+    "tool-artifacts/scope/0.1.0/public/protocol.js": "88f31031f86fa54f2f7e80d4a41cc63abf9baa1bbbfd5e03ffa6406b435e2d68",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-history.js": "ffa2e3e5c70e68a8088b9d6d5c9f7888ba0322cc57835c86155eb269e276ba42",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-metadata.js": "ece9bd97757f5d89cfa145d1db47df39f025035587486798aa177e093284410d",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-painter.js": "284a99f10417dcc676b9bd1c9a146202c10de152e69d1eab4a4d120fdf63b119",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-trace.js": "da82f5457fb8313d3fb1ca321e013bd8553bd0719f311d2d0b42d57caccb91e5",
+    "apps/rack/src/main.jsx": "a3281c4d6e4eba7d0f7ed4c761284e4f7db935a9bde2ca1c83703bb018f994af",
+    "apps/rack/src/SvgRack.jsx": "03f0c55e6542bede8ffdc95bee5d06b3bda7d17471f60380fac48797d498936e",
+    "apps/rack/src/CanvasRack.jsx": "6ef008eff2eb3a76cbb962c4aaa5ef3353be339be7b67ae1adbd2d7088068a0f",
+    "apps/rack/src/canvasRenderer.mjs": "f6a8681040b1cfa512ceeb26391585a8abf126f78d902b7ade7e97cfbb229552",
+    "apps/rack/src/style.css": "ec8085bdaf079c8a610a1b72396ad189023b35ba7ce9d382a6d893d28a66f991",
+    "apps/rack/src/model.mjs": "f02f2bb62167871b89b0c5a76d9989277b1926d1fe8775b84e87a9167d44b50a",
+    "apps/rack/runtime/shell-runtime.mjs": "3e1927c2d478f01c532821b3fa534e6f10c2ee67432e85db14e47f170cb7bbd8",
+    "apps/rack/test/benchmark-react-workload.mjs": "bb64de7b74415d6734dff53d87ab6c4d985510668de615f67a9875acefddaf49",
+    "apps/rack/fixtures/live-set.rack.json": "25f6803c63cce1463c6c364a896ea42677602ba7df465ab8aa270d7b1c947cae",
+    "apps/rack/tool-manifest.json": "6daea8d5978d310edd1fc6e9d71cd747c3c2215d785424ee6e5397b189f7016d"
+  },
+  "excludedSmokeCaptures": [
+    "smoke: diagnostic handle collided at initial dual-view mount, no measured phases",
+    "smoke2: four-second no-load setup/cadence test only"
+  ],
+  "ownedProcessesAbsent": true,
+  "allContentViewports": [
+    2250,
+    1222
+  ],
+  "excludedUpperCaptures": [
+    "excluded-unmatched56: viewport changed from 2250 to 1585 px",
+    "excluded-unmatched60: viewport changed from 2250 to 1640 px",
+    "excluded-aborted-guard60: width guard stopped capture at 1469 px after eight completed phases"
+  ]
+}

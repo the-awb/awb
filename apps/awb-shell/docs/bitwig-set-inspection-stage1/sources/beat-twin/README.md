@@ -1,0 +1,441 @@
+<p align="center">
+  <img src="Beat-Twin_logo.png" alt="Beat Twin logo" width="240">
+</p>
+
+# Beat Twin
+
+Optional Bitwig MCP `search_tools` / `call_tool`:
+see [tool discovery](docs/MCP_TOOL_DISCOVERY.md). Activate with
+`BITWIG_MCP_TOOL_DISCOVERY=1`; write policies remain separately controlled.
+
+Beat Twin is an experimental, local-first orchestration layer between musical agents and DAWs.
+
+Its current repo contains four working musical surfaces:
+
+- a Bitwig Studio MCP bridge with explicit write-policy gates;
+- a standalone browser NanoDAW built on the canonical Beat Twin song and command models;
+- a secure browser Bitwig Remote that reuses the current MCP policy and
+  authenticated controller path without exposing secrets to React;
+- a NanoDAW MCP planning surface that prepares instrument-track and MIDI-clip
+  plans for explicit review and confirmation in the browser, without Bitwig.
+
+The DAW/agent contracts, transactional NanoDAW memory adapter, LiteRT-LM
+provider, Gateway security core, loopback HTTP API, authenticated browser
+WebSocket proxy, connected Agent mode, and bounded Bitwig adapter are
+implemented and covered by deterministic tests. The separately confirmed live
+NanoDAW/Bitwig proof and installable runtime packaging remain gated work.
+
+## What Works
+
+- Read-only session inspection for transport, tracks, scenes, selected device, and remote controls.
+- Plan-only arrangement suggestions based on the current read-only Bitwig snapshot.
+- A short read-only live smoke that separates TCP/controller setup failures from session-inspection failures.
+- Transport, mixer, clip, scene, device, and application write tools, hidden and blocked by default.
+- A Bitwig controller script that speaks JSON-RPC over a local TCP connection.
+- A loopback same-origin React Bitwig Remote for session inspection and
+  explicitly confirmed restart/play/stop commands when transport writes are enabled.
+- Offline protocol and policy tests that run without launching Bitwig.
+- A browser NanoDAW for command-first song sketches, Tone.js audition, note editing, pattern tools, keyboard shortcuts, local undo/redo, JSON save/load, visible timeline feedback, a local command palette, and deterministic command drafts.
+- A browser-owned live runtime with one persistent clock, quantized launcher,
+  step editor, and atomic MIDI loop recording/overdub.
+- Atomic `ExecutableBeatTwinCommand[]` batches with monotonic revisions, stable errors, and idempotent request IDs.
+- A versioned `DawAdapter` contract with fake-adapter conformance tests.
+- Strict `SongPatchV1` validation, deterministic compilation, and mutation-free preview.
+- A `NanoDawAdapter` memory port plus an abstract browser-owned proxy boundary.
+- A real S25 LiteRT-LM capture of the exact three-tool runtime request, plus a strict provider loop bounded to four steps; G1 passed with `gemma4-e2b` on 2026-07-14.
+- A fail-closed Gateway core for hashed pairing tokens, quotas, immutable plans, short-lived single-use confirmations, and redacted audit events.
+- A loopback-only Gateway HTTP API with strict pairing,
+  target-fixed preview/confirmation/execution, and process-lifetime terminal
+  uncertain-outcome readback.
+- A typed `@beat-twin/gateway-http` delivery package, an explicit
+  `apps/nanodaw-mcp` composition root, and CI-enforced workspace dependency
+  direction.
+- An authenticated browser WebSocket proxy and explicit connected Agent mode
+  that preserve the browser as the only NanoDAW song owner.
+- A bounded `bitwig-launcher-v1` adapter with authenticated writes, fixed target
+  identity, strict musical bounds, and exact note readback in deterministic tests.
+- Bounded, clock-injected process-lifetime retention for command, adapter,
+  Gateway, MCP review, and browser performance registries. Restart never
+  triggers automatic mutation replay.
+
+## Architecture
+
+The current Bitwig MCP path is:
+
+```text
+MCP client
+  -> Node.js MCP server (index.js)
+  -> local TCP JSON-RPC bridge on 127.0.0.1:8888
+  -> Bitwig controller script
+  -> Bitwig Studio
+```
+
+The Node process is the MCP server. It connects to the Bitwig controller on demand through `BITWIG_HOST` and `BITWIG_PORT`.
+
+The local browser Bitwig Remote reuses the same implementation contract:
+
+```text
+React Bitwig Remote
+  -> same-origin Vite loopback endpoint
+  -> current MCP tool registry and policy
+  -> authenticated local TCP JSON-RPC bridge
+  -> Bitwig controller script
+```
+
+It exposes no provider key or bridge secret to the browser. See
+[`docs/BITWIG_WEB_REMOTE.md`](docs/BITWIG_WEB_REMOTE.md).
+
+The browser NanoDAW foundation now lives alongside the MCP bridge:
+
+```text
+apps/playground
+  -> @beat-twin/commands
+  -> @beat-twin/core
+  -> @beat-twin/audio-tone browser audition
+  -> localStorage JSON save/load
+```
+
+The 187-tool Bitwig MCP bridge (including the original 57 tools) is maintained in `index.ts`; `index.js` is its
+committed, generated runtime entry point for the npm package and MCP clients. The portable `BitwigAdapter` lives separately under
+`packages/adapters/bitwig` and receives the shared authenticated RPC primitive
+through an injected port. The capability guides cover
+[inspection and navigation](docs/BITWIG_MCP_PORT.md),
+[launcher construction](docs/BITWIG_MCP_CONSTRUCTION.md),
+[transport and cues](docs/BITWIG_MCP_TRANSPORT.md), and
+[sound and mix](docs/BITWIG_MCP_MIX.md), and
+[API 15 parity](docs/BITWIG_MCP_PARITY_NEXT.md), and
+[musical extensions and MIDI](docs/BITWIG_MCP_MUSICAL.md), including controller upgrades and
+readback limits, plus [project save requests and persistence evidence](docs/BITWIG_MCP_PERSISTENCE.md). The [historical parity inventory](docs/BITWIG_MCP_PARITY.md)
+tracks remaining work.
+Browser audition is local Web Audio preview, not a
+Bitwig mutation or MCP write.
+Browser save/load is also local NanoDAW state, not a Bitwig mutation.
+Browser pattern tools are local document edits for duplicate, quantize, and transpose.
+Browser undo/redo restores local NanoDAW command snapshots only.
+Browser keyboard shortcuts invoke existing local NanoDAW actions only. After
+entering the full workspace, the visible Shortcuts control or `?` opens an
+inline reference that closes with Escape and restores trigger focus. The guide
+never appears automatically on first run. Inspector Compact mode changes only
+presentation density and leaves preview/live audio state untouched.
+Browser timeline feedback is derived from local song state and does not call Bitwig.
+Browser command palette actions reuse the same local NanoDAW action boundary.
+Browser command drafts parse known local phrases only; they are not an AI chat path.
+
+The standalone NanoDAW MCP path is separate from the historical Bitwig MCP:
+
+```text
+MCP client
+  -> apps/nanodaw-mcp
+  -> @beat-twin/nanodaw-mcp + @beat-twin/gateway-http
+  -> immutable plan -> browser review -> human confirm
+```
+
+It exposes catalog, inspection, and plan-preparation tools only. It never owns
+song state and has no confirmation or execution tool. See
+[`docs/NANODAW_MCP.md`](docs/NANODAW_MCP.md).
+
+The Agent architecture keeps the browser as the only owner of NanoDAW song
+state and puts Beat Twin on the laptop between the UI, the phone-hosted model,
+and the selected DAW adapter:
+
+```text
+NanoDAW Agent mode
+  -> Beat Twin Gateway on the laptop
+  -> LiteRT-LM OpenAI-compatible API on the S25
+  -> validated SongPatch
+  -> ExecutableBeatTwinCommand[]
+  -> side-effect-free preview
+  -> explicit human confirmation
+  -> NanoDawAdapter | BitwigAdapter
+  -> verifiable execution report
+```
+
+Gemma may only list targets, inspect the selected session, and propose a
+bounded `SongPatchV1`. Confirmation and execution are gateway/UI operations;
+they are never model tools. The `TOOL_SPECS` registry preserves the original 57 tools and adds 130
+inspection, construction, transport, arranger, sound and mix tools. This registry is separate from the portable agent language. See
+[`docs/LOCAL-LLM-TOOL-ORCHESTRATION.md`](docs/LOCAL-LLM-TOOL-ORCHESTRATION.md).
+
+The provider, security core, typed loopback HTTP/WebSocket delivery, explicit
+NanoDAW MCP application, browser connected-mode wiring, architecture guard, and
+bounded process-lifetime retention are implemented. Live S25 plus Bitwig
+dual-target proof, restart-durable Gateway recovery, and installable packaging
+remain separate follow-up gates.
+
+The preview-only RTX-to-Bitwig composition can be started with
+`pnpm gateway:rtx-bitwig-preview`. It performs real controller inspection,
+bounded Gemma 4 E4B proposal generation, compilation, and immutable preview while
+omitting confirmation and execution routes. See
+[`docs/RTX_BITWIG_PREVIEW_RUNTIME.md`](docs/RTX_BITWIG_PREVIEW_RUNTIME.md).
+
+The separately gated dual-target runtime uses one Gemma 4 E4B proposal to prepare
+independent NanoDAW and Bitwig plans with target-specific previews and
+confirmation domains. See
+[`docs/DUAL_TARGET_RUNTIME.md`](docs/DUAL_TARGET_RUNTIME.md).
+
+### Run NanoDAW Agent mode with MUE
+
+MUE exposes the adopted daily model as `gemma4_e4b` and requires its LAN API key for chat
+completions. Keep the key on the local machine and load it into the Gateway
+process without printing it:
+
+```bash
+export LITERT_API_KEY="$(
+  ssh -F "$HOME/.ssh/config" rtx \
+    'cat ~/.config/mue/llama-api-key'
+)"
+
+BEAT_TWIN_ALLOWED_ORIGINS=http://127.0.0.1:5174 \
+LITERT_BASE_URL=http://mue.orbit:8003/ \
+LITERT_MODEL=gemma4_e4b \
+pnpm gateway:rtx-dual-target
+```
+
+The local SSH configuration in this setup names MUE `rtx` and uses the
+`taenia` account. Start the Playground at `http://127.0.0.1:5174`, enable
+Agent mode, connect to the local Gateway, enter a musical request, and choose
+**Generate preview**. The Gateway creates the immutable plan; NanoDAW remains
+the owner of song state and requires a separate **Confirm and apply once**.
+
+## Requirements
+
+- Node.js 26 or newer (`package.json` enforces `>=26.0.0`; CI runs Node 26)
+- pnpm 11.10.0 through Corepack
+- Bitwig Studio for live/manual verification
+
+If Node is older than 26, stop before installing dependencies. The workspace is
+outside its declared runtime contract. pnpm reports an `Unsupported engine`
+warning by default, or an install error when `engine-strict` is enabled; a
+green install on an older Node runtime is not evidence of support. Upgrade Node,
+then let Corepack activate the repository-pinned pnpm:
+
+```bash
+node --version
+corepack enable
+corepack prepare pnpm@11.10.0 --activate
+pnpm --version
+```
+
+## Install
+
+```bash
+pnpm install
+```
+
+## Run
+
+```bash
+node index.js
+```
+
+Configure your MCP client to run that command from this repository. A portable example lives in [`llm-mcp/mcp.example.json`](llm-mcp/mcp.example.json).
+
+The browser controller is available from **Open Bitwig Remote** in the
+playground started by `tp up`, or through `pnpm nanodaw:dev`. It is read-only by
+default; its server-side transport policy and live-write gate are documented in
+[`docs/BITWIG_WEB_REMOTE.md`](docs/BITWIG_WEB_REMOTE.md).
+
+Codex example:
+
+```bash
+codex mcp add beat-twin --env BITWIG_HOST=127.0.0.1 --env BITWIG_PORT=8888 -- node /absolute/path/to/beat-twin/index.js
+```
+
+## Install The Bitwig Controller
+
+The current controller requires **controller API 15 or newer**. Earlier port
+tranches selected API 10. The API audit uses the official documentation bundled
+with installed Bitwig Studio 6.1.1; live compatibility acceptance is still pending.
+See [API coverage](docs/BITWIG_CONTROLLER_API_COVERAGE.md).
+
+Copy the controller script into your Bitwig controller scripts directory.
+
+Linux example:
+
+```bash
+mkdir -p "$HOME/Bitwig Studio/Controller Scripts/BeatTwin"
+cp bitwig-controller/BeatTwin/BeatTwin.control.js "$HOME/Bitwig Studio/Controller Scripts/BeatTwin/BeatTwin.control.js"
+```
+
+macOS users commonly use:
+
+```text
+$HOME/Documents/Bitwig Studio/Controller Scripts/
+```
+
+Windows users can copy `bitwig-controller/BeatTwin` into:
+
+```text
+%USERPROFILE%\Documents\Bitwig Studio\Controller Scripts\
+```
+
+Then open Bitwig Studio and add the controller manually:
+
+```text
+Beat Twin -> Beat Twin
+```
+
+If Bitwig was already open before installing the file, restart Bitwig or reload
+the controller settings before testing the bridge. See [`docs/LOCAL_MCP_SETUP.md`](docs/LOCAL_MCP_SETUP.md)
+for local verification commands and troubleshooting.
+
+## Safety Model
+
+Beat Twin is read-only by default. At the MCP entry point, write tools are not listed by MCP clients and are blocked without an enabling policy. The Bitwig controller connects out to a fixed loopback relay without a secret. The dual-target Gateway starts that relay automatically; for standalone MCP or preview mode, run `pnpm bridge:local` first. Install the current controller script: older controllers still listen on port 8888 and require their old secret. See [local bridge setup](docs/LOCAL_BITWIG_BRIDGE.md).
+
+The Agent Gateway does not expose these Bitwig MCP write tools to Gemma.
+It validates a constrained SongPatch, materializes executable IDs, previews the
+exact plan without mutation, and requires a short-lived human confirmation.
+The `bitwig-launcher-v1` adapter now authenticates, validates one bounded empty
+launcher target, binds every mutation to its confirmed identity, and requires
+tempo/clip/note readback. Its first live write belongs to the separately
+confirmed BT-213 disposable-project proof.
+
+To enable a narrow write class:
+
+```bash
+BITWIG_MCP_WRITE_POLICY=transport node index.js
+```
+
+To enable multiple write classes:
+
+```bash
+BITWIG_MCP_WRITE_POLICY=transport,mixer_write node index.js
+```
+
+To enable every write class for disposable test sessions only:
+
+```bash
+BITWIG_MCP_ENABLE_WRITES=1 node index.js
+```
+
+This includes the new `midi_write` and `audio_capture` policies. MIDI requires the
+separate optional MIDI controller profile; Ear requires an explicitly configured
+local service. See [musical extensions](docs/BITWIG_MCP_MUSICAL.md) and the
+[deferred live acceptance plan](docs/BITWIG_LIVE_ACCEPTANCE.md).
+
+Use write mode only in a disposable Bitwig project or a copy of real work.
+
+## Tests
+
+Run the offline checks:
+
+```bash
+pnpm test
+pnpm check:architecture
+```
+
+Run a syntax check:
+
+```bash
+node --check index.js
+```
+
+Run the short read-only live smoke after Bitwig has loaded the controller:
+
+```bash
+pnpm smoke:read-only
+```
+
+This checks TCP connectivity first, then returns a compact read-only session
+summary. It does not enable write tools or mutate Bitwig.
+
+Run the browser NanoDAW checks:
+
+```bash
+pnpm nanodaw:test
+pnpm test:playground
+pnpm --filter @beat-twin/playground build
+pnpm --filter @beat-twin/playground test:e2e
+```
+
+The Playwright smoke covers the focused first-run entry, voluntary shortcut
+help, Escape focus recovery, and adaptable Inspector density during preview on
+desktop and a 390-pixel mobile viewport. It also covers the disconnected,
+policy-locked Bitwig Remote and proves that this state sends no command POST.
+Install Chromium once with
+`pnpm --filter @beat-twin/playground exec playwright install chromium` when a
+machine does not already have the matching browser binary.
+
+Live tests require Bitwig Studio, the controller script, and explicit write permissions. They are intentionally separate from the default test suite.
+
+## Useful Docs
+
+- [`docs/ARCHITECTURE_AUDIT_2026-07-20.md`](docs/ARCHITECTURE_AUDIT_2026-07-20.md)
+- [`docs/ADR-002-MODULAR-MONOLITH-BOUNDARIES.md`](docs/ADR-002-MODULAR-MONOLITH-BOUNDARIES.md)
+- [`docs/ADR-003-PROCESS-LIFETIME-RETENTION.md`](docs/ADR-003-PROCESS-LIFETIME-RETENTION.md)
+- [`docs/ARCHITECTURE_REFACTORING_ROADMAP_2026-07-20.md`](docs/ARCHITECTURE_REFACTORING_ROADMAP_2026-07-20.md)
+- [`docs/BT-101-SESSION-INSPECTOR.md`](docs/BT-101-SESSION-INSPECTOR.md)
+- [`docs/BT-102-PROTOCOL-SMOKE.md`](docs/BT-102-PROTOCOL-SMOKE.md)
+- [`docs/BT-103-POLICY-GATE.md`](docs/BT-103-POLICY-GATE.md)
+- [`docs/BT-104-ARRANGEMENT-PLAN.md`](docs/BT-104-ARRANGEMENT-PLAN.md)
+- [`docs/BITWIG_WEB_REMOTE.md`](docs/BITWIG_WEB_REMOTE.md)
+- [`docs/BITWIG_MANUAL_SMOKE_CHECKLIST.md`](docs/BITWIG_MANUAL_SMOKE_CHECKLIST.md)
+- [`docs/FUTURE-DIRECTION.md`](docs/FUTURE-DIRECTION.md)
+- [`docs/LOCAL-LLM-TOOL-ORCHESTRATION.md`](docs/LOCAL-LLM-TOOL-ORCHESTRATION.md)
+- [`docs/RTX_BITWIG_PREVIEW_RUNTIME.md`](docs/RTX_BITWIG_PREVIEW_RUNTIME.md)
+- [`docs/DUAL_TARGET_RUNTIME.md`](docs/DUAL_TARGET_RUNTIME.md)
+- [`docs/ADR-001-GEMMA-MOBILE-AGENT.md`](docs/ADR-001-GEMMA-MOBILE-AGENT.md)
+- [`docs/GEMMA-MOBILE-VERTICAL-SLICE.md`](docs/GEMMA-MOBILE-VERTICAL-SLICE.md)
+- [`docs/PLAYGROUND_ARCHITECTURE.md`](docs/PLAYGROUND_ARCHITECTURE.md)
+- [`docs/SPRINT-2-BROWSER-AUDITION.md`](docs/SPRINT-2-BROWSER-AUDITION.md)
+- [`docs/SPRINT-3-NOTE-EDITOR.md`](docs/SPRINT-3-NOTE-EDITOR.md)
+- [`docs/SPRINT-4-SAVE-LOAD.md`](docs/SPRINT-4-SAVE-LOAD.md)
+- [`docs/SPRINT-5-PATTERN-TOOLS.md`](docs/SPRINT-5-PATTERN-TOOLS.md)
+- [`docs/SPRINT-6-UNDO-REDO.md`](docs/SPRINT-6-UNDO-REDO.md)
+- [`docs/SPRINT-7-KEYBOARD-SHORTCUTS.md`](docs/SPRINT-7-KEYBOARD-SHORTCUTS.md)
+- [`docs/SPRINT-8-TIMELINE-SELECTION.md`](docs/SPRINT-8-TIMELINE-SELECTION.md)
+- [`docs/SPRINT-9-COMMAND-PALETTE.md`](docs/SPRINT-9-COMMAND-PALETTE.md)
+- [`docs/SPRINT-10-DRAFT-COMMAND-PARSER.md`](docs/SPRINT-10-DRAFT-COMMAND-PARSER.md)
+- [`docs/AGENT_SETUP.md`](docs/AGENT_SETUP.md)
+- [`docs/LOCAL_MCP_SETUP.md`](docs/LOCAL_MCP_SETUP.md)
+
+## Status
+
+Beat Twin is an experimental local integration, not a hardened production tool. It is published as an open-source foundation for safe, inspectable, DAW-agnostic music-agent experiments.
+
+## License
+
+MIT
+## Integration verification (2026-09-12)
+
+MUE authentication and TypeScript Gateway entrypoints are integrated on the
+current NanoDAW base. Offline checks do not demonstrate live inference or DAW
+execution. If the bundled Playwright browser is unavailable, use an installed
+Chrome for the existing desktop/mobile suite:
+
+```bash
+CI=1 PLAYWRIGHT_CHANNEL=chrome pnpm --filter @beat-twin/playground exec playwright test --workers=2 --retries=0
+```
+
+## NanoDAW Agent V2 (PR #70)
+
+`pnpm nanodaw:agent` composes an opt-in NanoDAW-only SongPatchV2 provider in
+`apps/nanodaw-mcp`. TWIN discovers pending external MCP proposals for explicit
+review and human confirmation. See `docs/NANODAW_MCP.md`. Rendered-browser,
+real-provider and human listening acceptance remain unverified for this slice.
+
+## Source and distribution boundaries
+
+The root npm package distributes the Bitwig MCP bridge, controller and its
+operator diagnostics. It does **not** package the full NanoDAW browser app,
+Gateway or S25 development workspace.
+
+- Edit `index.ts` and `bitwig-controller/BeatTwin/BeatTwin.control.ts`.
+  `node --experimental-strip-types scripts/build-bridge.ts` regenerates their
+  committed `.js` delivery files. Bitwig requires its ES5-compatible controller
+  output; the npm executable remains `index.js`.
+- Other existing `.js` files under `scripts/` are historical maintained tools,
+  not generated bridge artifacts. In particular `mcp-diagnostics.js` and
+  `read-only-smoke.js` are distributed operator tools; capture/provider/live
+  scripts are repository workflows and require their documented prerequisites.
+  New maintained scripts use TypeScript. Do not regenerate or rename legacy
+  scripts as part of an unrelated runtime update.
+- From a source checkout, `npm run smoke:distribution` builds the bridge, packs with lifecycle scripts
+  disabled, extracts to a temporary directory, verifies required artifacts and
+  uses the installed SDK to initialize the packed executable and list tools.
+  It never connects to Bitwig, runs musical tools, installs dependencies or
+  publishes. Temporary files are removed on success or failure.
+- This smoke checks distribution contents and MCP startup with the existing
+  local dependency installation. It is not a clean-network npm installation,
+  browser packaging, live controller test or proof of DAW writes.

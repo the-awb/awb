@@ -1,0 +1,10 @@
+{
+  "kind": "human-confirmation",
+  "source": "Willy, this conversation",
+  "date": "2026-10-04",
+  "statement": "the open set is the one we want to map and it is an instance of template awb 5.2 (ef script)",
+  "mappingTargetConfirmed": true,
+  "templateName": "awb 5.2 (ef script)",
+  "instanceFilePath": null,
+  "instanceFileHash": null
+}

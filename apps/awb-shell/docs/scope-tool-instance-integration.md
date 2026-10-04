@@ -45,9 +45,10 @@ Raw callback/return captures stay in the original checkout; see
 
 - `/Users/willy/awb` now uses the shared `integration/bw-sc` workstream, combining
   scope main `66890bb` and the mixer preparation/integration lane through `50a4f35`.
-  The formerly separate committed AWB histories are reconciled. Pending rack,
-  Bitwig and diagnostic work in the shared checkout remains outside that merge.
-  Preserve those pending files when working on this branch.
+  The formerly separate committed AWB histories are reconciled. The subsequent
+  shared working-tree checkpoint records the shell Rack workspace, Bitwig inspector
+  preparation and mixer benchmark evidence on this branch. The native SC Rack
+  remains a separately committed comparison checkout; raw recordings stay local.
 - The active SC checkout was initially on the pre-migration recovery commit, but
   the mixer developer has now fast-forwarded it to `a2f3a80`, preserving dirty live-set
   files. Its awbCollider source matches the tested new SC main (`00c5ccc`). The

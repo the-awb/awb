@@ -1,0 +1,45 @@
+{
+  "reportedAtUTC": "2026-10-04T12:02:28Z",
+  "source": "User post-run message",
+  "userReport": "sorry the window size change was me! I also did about 8 switches...",
+  "manualResizingConfirmed": true,
+  "approximateManualSwitches": 8,
+  "switchKindAssumed": "app/window focus switches; awaiting clarification",
+  "switchTimingKnown": false,
+  "manualFocusTelemetryRecorded": false,
+  "geometryChecksRemainValidForAcceptedCaptures": true,
+  "rendererOnlyAudioAttributionEstablished": false,
+  "rawEvidenceUnchanged": true,
+  "acceptedCaptureWindowsUTC": {
+    "load44": [
+      "2026-10-04T10:42:00.291Z",
+      "2026-10-04T10:50:15.064Z"
+    ],
+    "load56": [
+      "2026-10-04T11:14:22.384Z",
+      "2026-10-04T11:22:38.607Z"
+    ],
+    "load60": [
+      "2026-10-04T11:36:04.702Z",
+      "2026-10-04T11:44:22.062Z"
+    ]
+  },
+  "userClarification": "Only during the early attempts",
+  "manualSwitchesDuringFinalNonResizable60NodeRepeat": false,
+  "final60NodeManualSwitchStatusSource": "User confirmation, not recorded focus telemetry",
+  "earlierSwitchPhaseTimingKnown": false,
+  "final60NodeComparisonRemainsSupported": true,
+  "attributionScope": "Possible unmeasured background work limits renderer-only audio attribution in all captures; earlier manual interaction timing is additionally unknown",
+  "backgroundActivityUserReport": "it may have been dowload / unzipping / other processes that affected some of them I cant promise nothing at all was happening on the machine",
+  "possibleBackgroundActivity": [
+    "downloading",
+    "unzipping/extraction",
+    "other processes"
+  ],
+  "specificBackgroundJobOverlapVerified": false,
+  "backgroundActivityPhaseTimingKnown": false,
+  "unrelatedBackgroundActivityControlled": false,
+  "wholeMachineSchedulingOrIOTraceRecorded": false,
+  "quietWholeMachineBaselineVerified": false,
+  "final60NodeSupportScope": "Recorded outcomes with fixed geometry and no reported manual switching; renderer-only causal reliability ranking is not established"
+}

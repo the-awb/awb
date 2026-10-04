@@ -11,7 +11,7 @@ const escapeHTML = ( value ) => `${ value }`.replace( /[&<>"']/g, ( character ) 
 } )[ character ] );
 
 const TOOL_HUE = {
-  'score-studio': '#ff8a3d', 'field-modelling': '#ffc24b', lissajous: '#4fc3f7'
+  'score-studio': '#ff8a3d', 'field-modelling': '#ffc24b', lissajous: '#4fc3f7', rack: '#82d5c5'
 };
 
 const statusClass = ( status ) => [ 'ready', 'connected', 'whenNeeded', 'always', 'running' ].includes( status ) ? 'is-ready'

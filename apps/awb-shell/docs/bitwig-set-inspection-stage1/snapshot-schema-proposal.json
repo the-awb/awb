@@ -1,0 +1,729 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:awb:bitwig-inspection:proposal:0",
+  "title": "Bitwig one-shot set snapshot - proposal only",
+  "type": "object",
+  "required": [
+    "schemaStatus",
+    "source",
+    "capture",
+    "tracks",
+    "devices",
+    "routingEdges",
+    "dependencies",
+    "coverage",
+    "humanAnnotations"
+  ],
+  "properties": {
+    "schemaStatus": {
+      "const": "proposal"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256",
+        "bitwigVersion"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "bitwigVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "capture": {
+      "type": "object",
+      "required": [
+        "extractorRevision",
+        "timestamp",
+        "limits",
+        "settling",
+        "sourceAssociation"
+      ],
+      "properties": {
+        "extractorRevision": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "limits": {
+          "type": "object"
+        },
+        "settling": {
+          "type": "object"
+        },
+        "sourceAssociation": {
+          "$ref": "#/$defs/field"
+        }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/track"
+      }
+    },
+    "devices": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/device"
+      }
+    },
+    "routingEdges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edge"
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/coverage"
+      }
+    },
+    "humanAnnotations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/annotation"
+      }
+    }
+  },
+  "$defs": {
+    "field": {
+      "type": "object",
+      "required": [
+        "status",
+        "value",
+        "evidence"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "observed",
+            "unavailable",
+            "unimplemented",
+            "unresolved",
+            "truncated"
+          ]
+        },
+        "value": {},
+        "reason": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "host-observation",
+                  "ui-comparison",
+                  "binary-span",
+                  "filesystem",
+                  "api-documentation",
+                  "source-review",
+                  "human"
+                ]
+              },
+              "source": {
+                "type": "string"
+              },
+              "span": {
+                "type": "object"
+              },
+              "apiMethod": {
+                "type": "string"
+              },
+              "binding": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "observed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          },
+          "else": {
+            "required": [
+              "reason"
+            ]
+          }
+        }
+      ]
+    },
+    "track": {
+      "type": "object",
+      "required": [
+        "captureRef",
+        "locator",
+        "name",
+        "type",
+        "parent",
+        "chainRefs"
+      ],
+      "properties": {
+        "captureRef": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "object",
+          "description": "Capture-local hierarchy indices, bank offsets and host positions; no invented persistent UUID"
+        },
+        "name": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "parent": {
+          "$ref": "#/$defs/field"
+        },
+        "volumeNormalized": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "volumeDisplay": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "mute": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "solo": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "chainRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "device": {
+      "type": "object",
+      "required": [
+        "captureRef",
+        "locator",
+        "name",
+        "enabled",
+        "children",
+        "parameters",
+        "modulation"
+      ],
+      "properties": {
+        "captureRef": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "object"
+        },
+        "name": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "type": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "enabled": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "pluginIdentity": {
+          "$ref": "#/$defs/field"
+        },
+        "preset": {
+          "$ref": "#/$defs/field"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "position",
+              "coverage",
+              "deviceRefs"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "chain",
+                  "slot",
+                  "layer",
+                  "pad",
+                  "grid-internals"
+                ]
+              },
+              "position": {
+                "$ref": "#/$defs/field"
+              },
+              "name": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/field"
+                  },
+                  {
+                    "properties": {
+                      "value": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "coverage": {
+                "$ref": "#/$defs/coverage"
+              },
+              "deviceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "modulation": {
+          "$ref": "#/$defs/field"
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "normalized",
+        "display",
+        "units",
+        "coverage"
+      ],
+      "properties": {
+        "id": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "name": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "normalized": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "display": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "units": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "rawValue": {
+          "$ref": "#/$defs/field"
+        },
+        "surface": {
+          "enum": [
+            "direct-parameter",
+            "remote-control",
+            "mixer",
+            "manual"
+          ]
+        },
+        "coverage": {
+          "$ref": "#/$defs/coverage"
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": [
+        "source",
+        "destination",
+        "kind",
+        "level",
+        "prePost",
+        "evidence"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/field"
+        },
+        "destination": {
+          "$ref": "#/$defs/field"
+        },
+        "kind": {
+          "enum": [
+            "input",
+            "output",
+            "send",
+            "device-chain",
+            "sidechain",
+            "follower",
+            "unknown"
+          ]
+        },
+        "level": {
+          "$ref": "#/$defs/field"
+        },
+        "prePost": {
+          "$ref": "#/$defs/field"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "required": [
+        "kind",
+        "identity",
+        "path",
+        "presence",
+        "association"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "plugin",
+            "sample",
+            "impulse",
+            "preset-state",
+            "other"
+          ]
+        },
+        "identity": {
+          "$ref": "#/$defs/field"
+        },
+        "path": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/field"
+            },
+            {
+              "properties": {
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "presence": {
+          "$ref": "#/$defs/field"
+        },
+        "association": {
+          "$ref": "#/$defs/field"
+        },
+        "version": {
+          "$ref": "#/$defs/field"
+        },
+        "license": {
+          "$ref": "#/$defs/field"
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "area",
+        "status",
+        "reason",
+        "limits"
+      ],
+      "properties": {
+        "area": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "unavailable",
+            "unimplemented",
+            "unresolved",
+            "truncated"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "limits": {
+          "type": "object"
+        },
+        "reportedCount": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "returnedCount": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "required": [
+        "annotationId",
+        "author",
+        "text",
+        "anchor",
+        "createdAt"
+      ],
+      "properties": {
+        "annotationId": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "anchor": {
+          "type": "object",
+          "description": "Source hash plus capture locator and human-reviewed mapping on refresh; do not auto-match duplicate names"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "file": "/private/tmp/bitwig-set-inspection-20261004/InspectionProbe.control.js",
+    "kind": "offline source/interface diagnostic; not host execution",
+    "bypassApiGate": false,
+    "skipMissing": false,
+    "selectedApi": 15,
+    "outcome": "init reached end against interface stand-ins",
+    "missing": [],
+    "calls": 6765,
+    "notes": [
+      "AWB_INSPECTION_PROBE {\"run\":\"1791134071017\",\"kind\":\"init\",\"data\":{\"api\":0,\"hostVersion\":\"\",\"limits\":{\"tracksPerWindow\":8,\"maxWindows\":2,\"devicesPerChain\":12,\"sends\":8,\"layers\":8,\"directParameters\":16},\"sideEffects\":\"bank window navigation only; no UI selection or musical state writes\"}}"
+    ]
+  }
+]

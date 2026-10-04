@@ -1,0 +1,2 @@
+sleep wall_ms=22.674 cpu_ms=0.017
+busy wall_ms=20.000 cpu_ms=19.942 value=0.948515

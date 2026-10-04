@@ -1,0 +1,175 @@
+{
+  "threshold": 1e-09,
+  "minimumFrames": 32,
+  "sampleRate": 48000,
+  "phases": [
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 56.13035041763938,
+      "silenceRunsFrames": [
+        1513
+      ],
+      "silenceRunsMs": [
+        31.520833333333332
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.520833333333332,
+      "totalSilenceMs": 31.520833333333332
+    },
+    {
+      "nodes": 44,
+      "condition": "webgl-static",
+      "repeat": 1,
+      "scAverage": 52.307172483556414,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "webgl-354",
+      "repeat": 1,
+      "scAverage": 63.12798391559167,
+      "silenceRunsFrames": [
+        1530,
+        1528,
+        1529,
+        1525,
+        1528,
+        3062,
+        1525,
+        1536,
+        1526,
+        1526,
+        1527,
+        1526,
+        1529,
+        1516,
+        1536,
+        1525,
+        1528,
+        1526,
+        1527
+      ],
+      "silenceRunsMs": [
+        31.875,
+        31.833333333333332,
+        31.854166666666668,
+        31.770833333333332,
+        31.833333333333332,
+        63.791666666666664,
+        31.770833333333332,
+        32.0,
+        31.791666666666668,
+        31.791666666666668,
+        31.8125,
+        31.791666666666668,
+        31.854166666666668,
+        31.583333333333332,
+        32.0,
+        31.770833333333332,
+        31.833333333333332,
+        31.791666666666668,
+        31.8125
+      ],
+      "silenceRunCount": 19,
+      "maxSilenceMs": 63.791666666666664,
+      "totalSilenceMs": 636.5625
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas2d-354",
+      "repeat": 1,
+      "scAverage": 54.63928092507755,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "worker-354",
+      "repeat": 1,
+      "scAverage": 60.371168983053174,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "worker-354",
+      "repeat": 2,
+      "scAverage": 60.7896448023179,
+      "silenceRunsFrames": [
+        1519
+      ],
+      "silenceRunsMs": [
+        31.645833333333332
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.645833333333332,
+      "totalSilenceMs": 31.645833333333332
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas2d-354",
+      "repeat": 2,
+      "scAverage": 55.04496902826975,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "webgl-354",
+      "repeat": 2,
+      "scAverage": 60.97418338551241,
+      "silenceRunsFrames": [
+        1522,
+        1525,
+        1518,
+        1523
+      ],
+      "silenceRunsMs": [
+        31.708333333333332,
+        31.770833333333332,
+        31.625,
+        31.729166666666668
+      ],
+      "silenceRunCount": 4,
+      "maxSilenceMs": 31.770833333333332,
+      "totalSilenceMs": 126.83333333333333
+    },
+    {
+      "nodes": 44,
+      "condition": "webgl-static",
+      "repeat": 2,
+      "scAverage": 56.30946291410006,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 56.17075891889764,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    }
+  ]
+}

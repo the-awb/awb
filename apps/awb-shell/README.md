@@ -465,3 +465,26 @@ ToolSession fallback. Read the [integration handoff](docs/scope-tool-instance-in
 before moving a dirty checkout: it lists the paired SC class-path update, separate
 Rack work and the pinned Lissajous source commit. Build once explicitly, then use
 `npm start --workspace @awb/desktop-shell`.
+
+## Rack mixer
+
+Toolkit Home includes **Rack → Open Rack**. The workspace source is in
+[`../rack`](../rack/README.md). It supplies per-channel send strips, shared
+destination levels, HTML/SVG and single-canvas views, local mixes, complete or
+selected snapshots, and inline amount/time/alignment editing. Amount edits update
+live commanded values immediately; output must be explicitly enabled to send OSC.
+The tool needs no SC host and defines mix presets associated with SC scene IDs.
+
+Rack starts with the existing 354-control/11-mix fixture when there is no saved
+library. Its library lives in the toolkit profile's `tool-runtimes/rack-library.json`;
+the comparison launcher's separate `.rack-user-data` library is kept separate.
+Import/Export in Rack can transfer a library between those profiles. Closing Rack
+stops its local runtime and reopening restores its saved definition and commanded
+values with output off.
+
+The renderer is already built in this installation. After rack source changes,
+run `npm run build --workspace @awb/rack` from the AWB root, then reopen Rack.
+
+The [headless audio deadline comparison](docs/scope-headless-dropouts.md) tests steady widgets and app-focus switching under two DSP loads, with native callback evidence and a separate focus-automation control. Steady widgets were clean; heavy-load focus switching produced interruptions.
+
+[Headless-only audio rerun](docs/scope-headless-dropouts-ide-closed.md): 18 comparison phases after closing the SC IDE and its server, with a persistent focus helper and recorded SC process inventories.

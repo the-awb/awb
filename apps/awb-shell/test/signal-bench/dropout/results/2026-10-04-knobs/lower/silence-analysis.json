@@ -1,0 +1,933 @@
+{
+  "threshold": 1e-09,
+  "minimumFrames": 32,
+  "sampleRate": 48000,
+  "phases": [
+    {
+      "nodes": 0,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 0.43168881312012675,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-32",
+      "repeat": 1,
+      "scAverage": 0.3985297054052353,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-64",
+      "repeat": 1,
+      "scAverage": 0.38716222196817396,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-128",
+      "repeat": 1,
+      "scAverage": 0.3689776733517647,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-256",
+      "repeat": 1,
+      "scAverage": 0.3622771598398685,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-354",
+      "repeat": 1,
+      "scAverage": 0.3417261876165867,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-32",
+      "repeat": 1,
+      "scAverage": 0.4647450841963291,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-64",
+      "repeat": 1,
+      "scAverage": 0.4845895655453205,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-128",
+      "repeat": 1,
+      "scAverage": 0.4790032185614109,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-256",
+      "repeat": 1,
+      "scAverage": 0.5065081134438515,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-354",
+      "repeat": 1,
+      "scAverage": 0.4797737680375576,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-354",
+      "repeat": 2,
+      "scAverage": 0.5016920387744903,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-256",
+      "repeat": 2,
+      "scAverage": 0.4871177919209003,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-128",
+      "repeat": 2,
+      "scAverage": 0.5004098922014236,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-64",
+      "repeat": 2,
+      "scAverage": 0.523077978938818,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "canvas-32",
+      "repeat": 2,
+      "scAverage": 0.490181415528059,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-354",
+      "repeat": 2,
+      "scAverage": 0.33782472610473635,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-256",
+      "repeat": 2,
+      "scAverage": 0.3429093360900879,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-128",
+      "repeat": 2,
+      "scAverage": 0.37238968908786774,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-64",
+      "repeat": 2,
+      "scAverage": 0.3876885950565338,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "svg-32",
+      "repeat": 2,
+      "scAverage": 0.397118753939867,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 0,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 0.4236349828541279,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 58.573643935354134,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-32",
+      "repeat": 1,
+      "scAverage": 55.43078061154014,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-64",
+      "repeat": 1,
+      "scAverage": 55.10158518741005,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-128",
+      "repeat": 1,
+      "scAverage": 54.47465635600843,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-256",
+      "repeat": 1,
+      "scAverage": 54.16405547292609,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-354",
+      "repeat": 1,
+      "scAverage": 54.687781384116725,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-32",
+      "repeat": 1,
+      "scAverage": 61.20935068632427,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-64",
+      "repeat": 1,
+      "scAverage": 62.06869366294459,
+      "silenceRunsFrames": [
+        1519
+      ],
+      "silenceRunsMs": [
+        31.645833333333332
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.645833333333332,
+      "totalSilenceMs": 31.645833333333332
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-128",
+      "repeat": 1,
+      "scAverage": 61.76677764089484,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-256",
+      "repeat": 1,
+      "scAverage": 60.177269785027754,
+      "silenceRunsFrames": [
+        1528
+      ],
+      "silenceRunsMs": [
+        31.833333333333332
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.833333333333332,
+      "totalSilenceMs": 31.833333333333332
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-354",
+      "repeat": 1,
+      "scAverage": 61.27644840039705,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-354",
+      "repeat": 2,
+      "scAverage": 61.00449461685984,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-256",
+      "repeat": 2,
+      "scAverage": 61.26002392015959,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-128",
+      "repeat": 2,
+      "scAverage": 61.288674003199525,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-64",
+      "repeat": 2,
+      "scAverage": 62.177676953767474,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-32",
+      "repeat": 2,
+      "scAverage": 61.313935932360195,
+      "silenceRunsFrames": [
+        1518
+      ],
+      "silenceRunsMs": [
+        31.625
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.625,
+      "totalSilenceMs": 31.625
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-354",
+      "repeat": 2,
+      "scAverage": 54.068286393818106,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-256",
+      "repeat": 2,
+      "scAverage": 54.92587932787443,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-128",
+      "repeat": 2,
+      "scAverage": 54.297992505525286,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-64",
+      "repeat": 2,
+      "scAverage": 53.54792113053171,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-32",
+      "repeat": 2,
+      "scAverage": 55.05992949636359,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 58.12983161524723,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 65.6584863160786,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-32",
+      "repeat": 1,
+      "scAverage": 63.24794478165476,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-64",
+      "repeat": 1,
+      "scAverage": 63.26654865867213,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-128",
+      "repeat": 1,
+      "scAverage": 62.79190264250103,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-256",
+      "repeat": 1,
+      "scAverage": 63.37024769030119,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-354",
+      "repeat": 1,
+      "scAverage": 63.947650608263515,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-32",
+      "repeat": 1,
+      "scAverage": 69.77202766820004,
+      "silenceRunsFrames": [
+        1522,
+        1530
+      ],
+      "silenceRunsMs": [
+        31.708333333333332,
+        31.875
+      ],
+      "silenceRunCount": 2,
+      "maxSilenceMs": 31.875,
+      "totalSilenceMs": 63.583333333333336
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-64",
+      "repeat": 1,
+      "scAverage": 70.66445481149773,
+      "silenceRunsFrames": [
+        1520,
+        1514,
+        1516,
+        1525,
+        1519,
+        1523,
+        1529,
+        1530,
+        1528,
+        1531,
+        1522,
+        1523,
+        1525,
+        1522,
+        1528,
+        1525,
+        1529,
+        1527
+      ],
+      "silenceRunsMs": [
+        31.666666666666668,
+        31.541666666666668,
+        31.583333333333332,
+        31.770833333333332,
+        31.645833333333332,
+        31.729166666666668,
+        31.854166666666668,
+        31.875,
+        31.833333333333332,
+        31.895833333333332,
+        31.708333333333332,
+        31.729166666666668,
+        31.770833333333332,
+        31.708333333333332,
+        31.833333333333332,
+        31.770833333333332,
+        31.854166666666668,
+        31.8125
+      ],
+      "silenceRunCount": 18,
+      "maxSilenceMs": 31.895833333333332,
+      "totalSilenceMs": 571.5833333333334
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-128",
+      "repeat": 1,
+      "scAverage": 70.28685981348941,
+      "silenceRunsFrames": [
+        1520,
+        1524,
+        1527,
+        1527,
+        1530,
+        1529,
+        1528,
+        1527,
+        1525
+      ],
+      "silenceRunsMs": [
+        31.666666666666668,
+        31.75,
+        31.8125,
+        31.8125,
+        31.875,
+        31.854166666666668,
+        31.833333333333332,
+        31.8125,
+        31.770833333333332
+      ],
+      "silenceRunCount": 9,
+      "maxSilenceMs": 31.875,
+      "totalSilenceMs": 286.1875
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-256",
+      "repeat": 1,
+      "scAverage": 70.80352622584293,
+      "silenceRunsFrames": [
+        1515,
+        1525,
+        1528,
+        1530,
+        1514,
+        1525,
+        1518,
+        1523,
+        1536
+      ],
+      "silenceRunsMs": [
+        31.5625,
+        31.770833333333332,
+        31.833333333333332,
+        31.875,
+        31.541666666666668,
+        31.770833333333332,
+        31.625,
+        31.729166666666668,
+        32.0
+      ],
+      "silenceRunCount": 9,
+      "maxSilenceMs": 32.0,
+      "totalSilenceMs": 285.7083333333333
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-354",
+      "repeat": 1,
+      "scAverage": 70.54202641938862,
+      "silenceRunsFrames": [
+        1519,
+        1520,
+        1526,
+        1527,
+        1526,
+        1520,
+        1524,
+        1525,
+        1524,
+        1527
+      ],
+      "silenceRunsMs": [
+        31.645833333333332,
+        31.666666666666668,
+        31.791666666666668,
+        31.8125,
+        31.791666666666668,
+        31.666666666666668,
+        31.75,
+        31.770833333333332,
+        31.75,
+        31.8125
+      ],
+      "silenceRunCount": 10,
+      "maxSilenceMs": 31.8125,
+      "totalSilenceMs": 317.4583333333333
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-354",
+      "repeat": 2,
+      "scAverage": 69.73076810334858,
+      "silenceRunsFrames": [
+        1511,
+        1524,
+        1527,
+        1524
+      ],
+      "silenceRunsMs": [
+        31.479166666666668,
+        31.75,
+        31.8125,
+        31.75
+      ],
+      "silenceRunCount": 4,
+      "maxSilenceMs": 31.8125,
+      "totalSilenceMs": 126.79166666666667
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-256",
+      "repeat": 2,
+      "scAverage": 70.94413938020405,
+      "silenceRunsFrames": [
+        1517,
+        1526,
+        1515,
+        1526,
+        1530,
+        1529,
+        1529,
+        1521,
+        1525,
+        1527,
+        1525,
+        1529
+      ],
+      "silenceRunsMs": [
+        31.604166666666668,
+        31.791666666666668,
+        31.5625,
+        31.791666666666668,
+        31.875,
+        31.854166666666668,
+        31.854166666666668,
+        31.6875,
+        31.770833333333332,
+        31.8125,
+        31.770833333333332,
+        31.854166666666668
+      ],
+      "silenceRunCount": 12,
+      "maxSilenceMs": 31.875,
+      "totalSilenceMs": 381.2291666666667
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-128",
+      "repeat": 2,
+      "scAverage": 70.71947499325401,
+      "silenceRunsFrames": [
+        1523,
+        1521,
+        1521,
+        1522,
+        1523,
+        1527,
+        1526,
+        1526
+      ],
+      "silenceRunsMs": [
+        31.729166666666668,
+        31.6875,
+        31.6875,
+        31.708333333333332,
+        31.729166666666668,
+        31.8125,
+        31.791666666666668,
+        31.791666666666668
+      ],
+      "silenceRunCount": 8,
+      "maxSilenceMs": 31.8125,
+      "totalSilenceMs": 253.9375
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-64",
+      "repeat": 2,
+      "scAverage": 70.44084388331363,
+      "silenceRunsFrames": [
+        1520,
+        1519,
+        1528,
+        1530,
+        1529,
+        1526,
+        1527,
+        1514
+      ],
+      "silenceRunsMs": [
+        31.666666666666668,
+        31.645833333333332,
+        31.833333333333332,
+        31.875,
+        31.854166666666668,
+        31.791666666666668,
+        31.8125,
+        31.541666666666668
+      ],
+      "silenceRunCount": 8,
+      "maxSilenceMs": 31.875,
+      "totalSilenceMs": 254.02083333333334
+    },
+    {
+      "nodes": 52,
+      "condition": "canvas-32",
+      "repeat": 2,
+      "scAverage": 69.75713970786647,
+      "silenceRunsFrames": [
+        1525,
+        1524,
+        1527,
+        1525
+      ],
+      "silenceRunsMs": [
+        31.770833333333332,
+        31.75,
+        31.8125,
+        31.770833333333332
+      ],
+      "silenceRunCount": 4,
+      "maxSilenceMs": 31.8125,
+      "totalSilenceMs": 127.10416666666667
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-354",
+      "repeat": 2,
+      "scAverage": 64.05409461573551,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-256",
+      "repeat": 2,
+      "scAverage": 64.44075273212634,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-128",
+      "repeat": 2,
+      "scAverage": 63.01819480092902,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-64",
+      "repeat": 2,
+      "scAverage": 62.313878310354134,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-32",
+      "repeat": 2,
+      "scAverage": 63.443592975014134,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 65.7696795212595,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    }
+  ]
+}

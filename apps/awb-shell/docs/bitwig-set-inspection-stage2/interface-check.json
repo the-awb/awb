@@ -1,0 +1,15 @@
+[
+  {
+    "file": "/private/tmp/bitwig-set-mapper-20261004/AWBSetMapper.control.js",
+    "kind": "offline source/interface diagnostic; not host execution",
+    "bypassApiGate": false,
+    "skipMissing": false,
+    "selectedApi": 15,
+    "outcome": "init reached end against interface stand-ins",
+    "missing": [],
+    "calls": 9998,
+    "notes": [
+      "AWB_SET_MAPPER {\"run\":\"1791137156118\",\"kind\":\"init\",\"data\":{\"hostVersion\":\"\",\"api\":0,\"limits\":{\"bank\":8,\"sends\":32,\"tracks\":512,\"chain\":256,\"layers\":128,\"pads\":128,\"depth\":12,\"devices\":4096,\"parameters\":4096,\"displayPage\":64,\"waitAttempts\":12,\"waitMs\":150,\"minimumWaitMs\":450},\"sideEffects\":\"Independent named cursors and bank scrolling; no editor selection or musical state writes\",\"target\":\"Human-confirmed open instance of awb 5.2 (ef script)\"}}"
+    ]
+  }
+]

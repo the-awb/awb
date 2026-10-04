@@ -1,0 +1,73 @@
+{
+  "SPDisplaysDataType" : [
+    {
+      "_name" : "kHW_IntelUHDGraphics630Item",
+      "_spdisplays_vram" : "1536 MB",
+      "spdisplays_device-id" : "0x3e9b",
+      "spdisplays_mtlgpufamilysupport" : "spdisplays_metal3",
+      "spdisplays_ndrvs" : [
+        {
+          "_IODisplayEDID" : "{length = 256, bytes = 0x00ffffff ffffff00 09d13580 45540000 ... 00000000 0000007c }",
+          "_name" : "BenQ PD2705Q",
+          "_spdisplays_display-product-id" : "8035",
+          "_spdisplays_display-serial-number" : "5445",
+          "_spdisplays_display-serial-number2" : "5445",
+          "_spdisplays_display-vendor-id" : "9d1",
+          "_spdisplays_display-week" : "50",
+          "_spdisplays_display-year" : "2020",
+          "_spdisplays_displayID" : "74605906",
+          "_spdisplays_displayPath" : "IOService:/AppleACPIPlatformExpert/PCI0@0/AppleACPIPCI/IGPU@2/AppleIntelFramebuffer@2/AppleMCCSControlModule",
+          "_spdisplays_displayport_device" : {
+            "_name" : "spdisplays_displayport_info",
+            "spdisplays_displayport_branch_ascii_name" : "pHDMIf",
+            "spdisplays_displayport_branch_chip_version" : " 1.04",
+            "spdisplays_displayport_branch_sw_version" : " 2.19",
+            "spdisplays_displayport_branch_vendor" : "00 10 fa",
+            "spdisplays_displayport_current_bandwidth" : " 5.40 Gbps",
+            "spdisplays_displayport_current_lanes" : "4",
+            "spdisplays_displayport_current_spread" : "<= 0.5%",
+            "spdisplays_displayport_dongle_type" : "spdisplays_displayport_dongletype_dvi",
+            "spdisplays_displayport_DPCD_version" : "1.4",
+            "spdisplays_displayport_errors_lane0" : "0",
+            "spdisplays_displayport_errors_lane1" : "0",
+            "spdisplays_displayport_errors_lane2" : "0",
+            "spdisplays_displayport_errors_lane3" : "0",
+            "spdisplays_displayport_hdcp_capability" : "spdisplays_displayport_hdcp_incapable",
+            "spdisplays_displayport_max_bandwidth" : "5.40 Gbps",
+            "spdisplays_displayport_max_lanes" : "4",
+            "spdisplays_displayport_max_spread" : "0.5%",
+            "spdisplays_displayport_sink_count" : "1",
+            "spdisplays_displayport_source_ascii_name" : "AAPL",
+            "spdisplays_displayport_source_chip_version" : " 0.01",
+            "spdisplays_displayport_source_sw_version" : " 1.00",
+            "spdisplays_displayport_source_vendor" : "00 10 fa",
+            "spdisplays_displayport_valid_error_lane0" : "1",
+            "spdisplays_displayport_valid_error_lane1" : "1",
+            "spdisplays_displayport_valid_error_lane2" : "1",
+            "spdisplays_displayport_valid_error_lane3" : "1"
+          },
+          "_spdisplays_displayRegID" : "6d17",
+          "_spdisplays_edid" : "0x00ffffffffffff0009d1358045540000321e0103803c22782a3355ac524ea026105054a56b80d1c0b300a9c08180810081c001010101565e00a0a0a029503020350055502100001a000000ff0031313131313131313131300a20000000fd00184c1e873c000a202020202020000000fc0042656e5120504432373035510a01b7020344f14f5d5e5f6061101f22212004131203012309070783010000e200cf6d030c001000383c20006001020367d85dc401788003e305c301e30f1800e6060501575748565e00a0a0a029503020350055502100001a00000000000000000000000000000000000000000000000000000000000000000000000000000000007c",
+          "_spdisplays_pixels" : "2560 x 1440",
+          "_spdisplays_resolution" : "2560 x 1440 @ 59.00Hz",
+          "spdisplays_adapter_type" : "spdisplays_displayport_dongletype_dvi",
+          "spdisplays_depth" : "CGSThirtyBitColor",
+          "spdisplays_display-serial-number" : "11111111110 ",
+          "spdisplays_displayport_adapter_firmware_version" : " 2.19",
+          "spdisplays_main" : "spdisplays_yes",
+          "spdisplays_mirror" : "spdisplays_off",
+          "spdisplays_online" : "spdisplays_yes",
+          "spdisplays_pixelresolution" : "spdisplays_qhd",
+          "spdisplays_resolution" : "2560 x 1440 @ 59.00Hz",
+          "spdisplays_rotation" : "spdisplays_supported"
+        }
+      ],
+      "spdisplays_revision-id" : "0x0000",
+      "spdisplays_vendor" : "Intel",
+      "spdisplays_vram_shared" : "1536 MB",
+      "sppci_bus" : "spdisplays_builtin",
+      "sppci_device_type" : "spdisplays_gpu",
+      "sppci_model" : "Intel UHD Graphics 630"
+    }
+  ]
+}

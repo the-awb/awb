@@ -1,0 +1,3295 @@
+Compiled from "SourceFile"
+public class com.bitwig.flt.control_surface.proxy.BitwigStudioHost extends OBl {
+  private static final java.lang.String DEFAULT_CURSOR_TRACK_ID;
+
+  private static final java.lang.String DEFAULT_CURSOR_TRACK_NAME;
+
+  private final java.util.List mScheduledTasks;
+
+  private final java.util.List mScheduledTasksToProcess;
+
+  private final java.util.List mDocumentListeners;
+
+  private final com.bitwig.flt.control_surface.proxy.MidiInPort[] mMidiInPorts;
+
+  private final com.bitwig.flt.control_surface.proxy.MidiOutPort[] mMidiOutPorts;
+
+  private final LZA mControlSurface;
+
+  private com.bitwig.flt.document.core.iface.nlh mDocument;
+
+  private Wdc mDocumentState;
+
+  private final com.bitwig.flt.control_surface.proxy.PreferencesProxy mPreferencesProxy;
+
+  private final com.bitwig.flt.control_surface.proxy.DocumentStateProxy mDocumentStateProxy;
+
+  private java.net.DatagramSocket mDatagramSendSocket;
+
+  private com.bitwig.flt.control_surface.proxy.ProjectProxy mProjectSection;
+
+  private final com.bitwig.flt.control_surface.proxy.NotificationSettingsObject mNotificationSettings;
+
+  private final java.util.List mObjectsToDisposeOnControlSurfaceThread;
+
+  private final java.util.List mObjectsToInitAndDisposeOnEventThread;
+
+  private final com.bitwig.flt.control_surface.proxy.RootControlSurfaceObject mRoot;
+
+  private com.bitwig.flt.control_surface.proxy.PopupBrowserProxy mPopupBrowserProxy;
+
+  private final com.bitwig.flt.control_surface.values.IntegerValueProxy mTimeSignatureNumerator;
+
+  private final com.bitwig.flt.control_surface.values.IntegerValueProxy mTimeSignatureDenominator;
+
+  private final com.bitwig.flt.control_surface.values.IntegerValueProxy mTimeSignatureTickRate;
+
+  private final boolean mHasBeenConstructed;
+
+  private final java.util.List mCursorTrackProxies;
+
+  private final java.util.List mAreProxiesEqualsValue;
+
+  private final java.util.List mRemappableRangedValueProxies;
+
+  private final lEd mManualMappingsListener;
+
+  private com.bitwig.flt.control_surface.opensoundcontrol.FaM mOscModule;
+
+  private final stc mMidiExpressions;
+
+  private final Bfz mHardwareControllerProxy;
+
+  static final boolean $assertionsDisabled;
+
+  public com.bitwig.flt.control_surface.proxy.BitwigStudioHost(LZA, rYJ, java.util.Map);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokespecial #223                // Method OBl."<init>":(LrYJ;)V
+       5: aload_0
+       6: new           #141                // class java/util/ArrayList
+       9: dup
+      10: invokespecial #371                // Method java/util/ArrayList."<init>":()V
+      13: putfield      #182                // Field mScheduledTasks:Ljava/util/List;
+      16: aload_0
+      17: new           #141                // class java/util/ArrayList
+      20: dup
+      21: invokespecial #371                // Method java/util/ArrayList."<init>":()V
+      24: putfield      #183                // Field mScheduledTasksToProcess:Ljava/util/List;
+      27: aload_0
+      28: new           #141                // class java/util/ArrayList
+      31: dup
+      32: invokespecial #371                // Method java/util/ArrayList."<init>":()V
+      35: putfield      #164                // Field mDocumentListeners:Ljava/util/List;
+      38: aload_0
+      39: new           #141                // class java/util/ArrayList
+      42: dup
+      43: invokespecial #371                // Method java/util/ArrayList."<init>":()V
+      46: putfield      #174                // Field mObjectsToDisposeOnControlSurfaceThread:Ljava/util/List;
+      49: aload_0
+      50: new           #141                // class java/util/ArrayList
+      53: dup
+      54: invokespecial #371                // Method java/util/ArrayList."<init>":()V
+      57: putfield      #175                // Field mObjectsToInitAndDisposeOnEventThread:Ljava/util/List;
+      60: aload_0
+      61: new           #110                // class com/bitwig/flt/control_surface/proxy/RootControlSurfaceObject
+      64: dup
+      65: aload_0
+      66: invokespecial #333                // Method com/bitwig/flt/control_surface/proxy/RootControlSurfaceObject."<init>":(Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;)V
+      69: putfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      72: aload_0
+      73: new           #141                // class java/util/ArrayList
+      76: dup
+      77: iconst_3
+      78: invokespecial #372                // Method java/util/ArrayList."<init>":(I)V
+      81: putfield      #161                // Field mCursorTrackProxies:Ljava/util/List;
+      84: aload_0
+      85: new           #141                // class java/util/ArrayList
+      88: dup
+      89: iconst_5
+      90: invokespecial #372                // Method java/util/ArrayList."<init>":(I)V
+      93: putfield      #159                // Field mAreProxiesEqualsValue:Ljava/util/List;
+      96: aload_0
+      97: new           #141                // class java/util/ArrayList
+     100: dup
+     101: bipush        50
+     103: invokespecial #372                // Method java/util/ArrayList."<init>":(I)V
+     106: putfield      #180                // Field mRemappableRangedValueProxies:Ljava/util/List;
+     109: aload_0
+     110: new           #78                 // class com/bitwig/flt/control_surface/proxy/BitwigStudioHost$1
+     113: dup
+     114: aload_0
+     115: invokespecial #294                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost$1."<init>":(Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;)V
+     118: putfield      #169                // Field mManualMappingsListener:LlEd;
+     121: aload_0
+     122: aconst_null
+     123: putfield      #176                // Field mOscModule:Lcom/bitwig/flt/control_surface/opensoundcontrol/FaM;
+     126: aload_0
+     127: aload_1
+     128: putfield      #160                // Field mControlSurface:LLZA;
+     131: aload_0
+     132: new           #39                 // class Bfz
+     135: dup
+     136: aload_0
+     137: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     140: invokespecial #187                // Method Bfz."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+     143: putfield      #167                // Field mHardwareControllerProxy:LBfz;
+     146: aload_0
+     147: new           #151                // class stc
+     150: dup
+     151: aload_0
+     152: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     155: invokespecial #381                // Method stc."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+     158: putfield      #170                // Field mMidiExpressions:Lstc;
+     161: aload_0
+     162: new           #70                 // class com/bitwig/flt/control_surface/opensoundcontrol/FaM
+     165: dup
+     166: aload_0
+     167: invokespecial #236                // Method com/bitwig/flt/control_surface/opensoundcontrol/FaM."<init>":(Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;)V
+     170: putfield      #176                // Field mOscModule:Lcom/bitwig/flt/control_surface/opensoundcontrol/FaM;
+     173: aload_2
+     174: invokevirtual #378                // Method rYJ.Krn:()I
+     177: istore        4
+     179: aload_0
+     180: iload         4
+     182: anewarray     #97                 // class com/bitwig/flt/control_surface/proxy/MidiInPort
+     185: putfield      #171                // Field mMidiInPorts:[Lcom/bitwig/flt/control_surface/proxy/MidiInPort;
+     188: iconst_0
+     189: istore        5
+     191: iload         5
+     193: iload         4
+     195: if_icmpge     224
+     198: aload_0
+     199: getfield      #171                // Field mMidiInPorts:[Lcom/bitwig/flt/control_surface/proxy/MidiInPort;
+     202: iload         5
+     204: new           #97                 // class com/bitwig/flt/control_surface/proxy/MidiInPort
+     207: dup
+     208: aload_0
+     209: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     212: iload         5
+     214: invokespecial #322                // Method com/bitwig/flt/control_surface/proxy/MidiInPort."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;I)V
+     217: aastore
+     218: iinc          5, 1
+     221: goto          191
+     224: aload_2
+     225: invokevirtual #379                // Method rYJ.SVx:()I
+     228: istore        5
+     230: aload_0
+     231: iload         5
+     233: anewarray     #98                 // class com/bitwig/flt/control_surface/proxy/MidiOutPort
+     236: putfield      #172                // Field mMidiOutPorts:[Lcom/bitwig/flt/control_surface/proxy/MidiOutPort;
+     239: iconst_0
+     240: istore        6
+     242: iload         6
+     244: iload         5
+     246: if_icmpge     275
+     249: aload_0
+     250: getfield      #172                // Field mMidiOutPorts:[Lcom/bitwig/flt/control_surface/proxy/MidiOutPort;
+     253: iload         6
+     255: new           #98                 // class com/bitwig/flt/control_surface/proxy/MidiOutPort
+     258: dup
+     259: aload_0
+     260: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     263: iload         6
+     265: invokespecial #323                // Method com/bitwig/flt/control_surface/proxy/MidiOutPort."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;I)V
+     268: aastore
+     269: iinc          6, 1
+     272: goto          242
+     275: aload_0
+     276: new           #106                // class com/bitwig/flt/control_surface/proxy/PreferencesProxy
+     279: dup
+     280: aload_0
+     281: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     284: aload_3
+     285: invokespecial #329                // Method com/bitwig/flt/control_surface/proxy/PreferencesProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/util/Map;)V
+     288: putfield      #178                // Field mPreferencesProxy:Lcom/bitwig/flt/control_surface/proxy/PreferencesProxy;
+     291: aload_0
+     292: new           #91                 // class com/bitwig/flt/control_surface/proxy/DocumentStateProxy
+     295: dup
+     296: aload_0
+     297: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     300: invokespecial #316                // Method com/bitwig/flt/control_surface/proxy/DocumentStateProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+     303: putfield      #166                // Field mDocumentStateProxy:Lcom/bitwig/flt/control_surface/proxy/DocumentStateProxy;
+     306: aload_0
+     307: new           #101                // class com/bitwig/flt/control_surface/proxy/NotificationSettingsObject
+     310: dup
+     311: aload_0
+     312: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     315: invokespecial #326                // Method com/bitwig/flt/control_surface/proxy/NotificationSettingsObject."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+     318: putfield      #173                // Field mNotificationSettings:Lcom/bitwig/flt/control_surface/proxy/NotificationSettingsObject;
+     321: aload_0
+     322: new           #115                // class com/bitwig/flt/control_surface/values/IntegerValueProxy
+     325: dup
+     326: aload_0
+     327: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     330: iconst_4
+     331: invokespecial #341                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;I)V
+     334: putfield      #185                // Field mTimeSignatureNumerator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     337: aload_0
+     338: new           #115                // class com/bitwig/flt/control_surface/values/IntegerValueProxy
+     341: dup
+     342: aload_0
+     343: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     346: iconst_4
+     347: invokespecial #341                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;I)V
+     350: putfield      #184                // Field mTimeSignatureDenominator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     353: aload_0
+     354: new           #115                // class com/bitwig/flt/control_surface/values/IntegerValueProxy
+     357: dup
+     358: aload_0
+     359: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     362: bipush        16
+     364: invokespecial #341                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;I)V
+     367: putfield      #186                // Field mTimeSignatureTickRate:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     370: aload_0
+     371: getfield      #185                // Field mTimeSignatureNumerator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     374: invokevirtual #343                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.markInterested:()V
+     377: aload_0
+     378: getfield      #184                // Field mTimeSignatureDenominator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     381: invokevirtual #343                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.markInterested:()V
+     384: aload_0
+     385: getfield      #186                // Field mTimeSignatureTickRate:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     388: invokevirtual #343                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.markInterested:()V
+     391: aload_0
+     392: iconst_1
+     393: putfield      #168                // Field mHasBeenConstructed:Z
+     396: return
+
+  public void newSince(int);
+    Code:
+       0: aload_0
+       1: getfield      #168                // Field mHasBeenConstructed:Z
+       4: ifeq          12
+       7: aload_0
+       8: iload_1
+       9: invokespecial #225                // Method OBl.newSince:(I)V
+      12: return
+
+  public void betaApi();
+    Code:
+       0: aload_0
+       1: getfield      #168                // Field mHasBeenConstructed:Z
+       4: ifeq          11
+       7: aload_0
+       8: invokespecial #224                // Method OBl.betaApi:()V
+      11: return
+
+  protected final boolean isControlSurfaceThread();
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: invokevirtual #199                // Method LZA.SVx:()Z
+       7: ireturn
+
+  protected final boolean isDocumentThread();
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: invokevirtual #216                // Method LZA.jtC:()Z
+       7: ireturn
+
+  public LZA getControlSurface();
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: areturn
+
+  public Bfz getHardwareControllerProxy();
+    Code:
+       0: aload_0
+       1: getfield      #167                // Field mHardwareControllerProxy:LBfz;
+       4: areturn
+
+  public void restart();
+    Code:
+       0: aload_0
+       1: bipush        7
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: getfield      #160                // Field mControlSurface:LLZA;
+      10: invokevirtual #196                // Method LZA.Ga1:()Lcom/bitwig/flt/prefs/wLU;
+      13: invokevirtual #353                // Method com/bitwig/flt/prefs/wLU.iMP:()V
+      16: return
+
+  protected void driverDidSomethingWrong(eTu, ObM);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #160                // Field mControlSurface:LLZA;
+      28: aload_2
+      29: invokevirtual #207                // Method LZA.hWS:(LObM;)V
+      32: return
+
+  protected void driverCrashed(eTu, java.lang.Throwable);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #160                // Field mControlSurface:LLZA;
+      28: aload_2
+      29: invokevirtual #209                // Method LZA.hWS:(Ljava/lang/Throwable;)V
+      32: return
+
+  public com.bitwig.flt.control_surface.proxy.RootControlSurfaceObject getRoot();
+    Code:
+       0: aload_0
+       1: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+       4: areturn
+
+  public com.bitwig.extension.controller.api.Project getProject();
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: aload_0
+       5: getfield      #179                // Field mProjectSection:Lcom/bitwig/flt/control_surface/proxy/ProjectProxy;
+       8: ifnonnull     26
+      11: aload_0
+      12: new           #107                // class com/bitwig/flt/control_surface/proxy/ProjectProxy
+      15: dup
+      16: aload_0
+      17: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      20: invokespecial #330                // Method com/bitwig/flt/control_surface/proxy/ProjectProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+      23: putfield      #179                // Field mProjectSection:Lcom/bitwig/flt/control_surface/proxy/ProjectProxy;
+      26: aload_0
+      27: getfield      #179                // Field mProjectSection:Lcom/bitwig/flt/control_surface/proxy/ProjectProxy;
+      30: areturn
+
+  public com.bitwig.extension.controller.api.Transport createTransport();
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: new           #112                // class com/bitwig/flt/control_surface/proxy/TransportProxy
+       7: dup
+       8: aload_0
+       9: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      12: invokespecial #335                // Method com/bitwig/flt/control_surface/proxy/TransportProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+      15: areturn
+
+  public com.bitwig.extension.controller.api.Groove createGroove();
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: new           #94                 // class com/bitwig/flt/control_surface/proxy/GrooveProxy
+       7: dup
+       8: aload_0
+       9: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      12: invokespecial #319                // Method com/bitwig/flt/control_surface/proxy/GrooveProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+      15: areturn
+
+  public com.bitwig.extension.controller.api.Application createApplication();
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: new           #74                 // class com/bitwig/flt/control_surface/proxy/ApplicationProxy
+       7: dup
+       8: aload_0
+       9: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      12: invokespecial #240                // Method com/bitwig/flt/control_surface/proxy/ApplicationProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+      15: areturn
+
+  public com.bitwig.extension.controller.api.Arranger createArranger();
+    Code:
+       0: aload_0
+       1: iconst_m1
+       2: invokevirtual #247                // Method createArranger:(I)Lcom/bitwig/extension/controller/api/Arranger;
+       5: areturn
+
+  public com.bitwig.extension.controller.api.Arranger createArranger(int);
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: new           #76                 // class com/bitwig/flt/control_surface/proxy/ArrangerSection
+       7: dup
+       8: aload_0
+       9: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      12: ldc           #1                  // String
+      14: iload_1
+      15: invokespecial #242                // Method com/bitwig/flt/control_surface/proxy/ArrangerSection."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/String;I)V
+      18: areturn
+
+  public com.bitwig.extension.controller.api.Mixer createMixer();
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: iconst_m1
+       3: invokevirtual #259                // Method createMixer:(Ljava/lang/String;I)Lcom/bitwig/extension/controller/api/Mixer;
+       6: areturn
+
+  public com.bitwig.extension.controller.api.Mixer createMixer(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_m1
+       3: invokevirtual #259                // Method createMixer:(Ljava/lang/String;I)Lcom/bitwig/extension/controller/api/Mixer;
+       6: areturn
+
+  public com.bitwig.extension.controller.api.Mixer createMixer(int);
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: iload_1
+       3: invokevirtual #259                // Method createMixer:(Ljava/lang/String;I)Lcom/bitwig/extension/controller/api/Mixer;
+       6: areturn
+
+  public com.bitwig.extension.controller.api.Mixer createMixer(java.lang.String, int);
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: new           #99                 // class com/bitwig/flt/control_surface/proxy/MixerSection
+       7: dup
+       8: aload_0
+       9: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      12: aload_1
+      13: iload_2
+      14: invokespecial #324                // Method com/bitwig/flt/control_surface/proxy/MixerSection."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/String;I)V
+      17: areturn
+
+  public com.bitwig.extension.controller.api.DetailEditor createDetailEditor();
+    Code:
+       0: aload_0
+       1: iconst_m1
+       2: invokevirtual #254                // Method createDetailEditor:(I)Lcom/bitwig/extension/controller/api/DetailEditor;
+       5: areturn
+
+  public com.bitwig.extension.controller.api.DetailEditor createDetailEditor(int);
+    Code:
+       0: aload_0
+       1: bipush        14
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #87                 // class com/bitwig/flt/control_surface/proxy/DetailEditorSection
+       9: dup
+      10: aload_0
+      11: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      14: ldc           #1                  // String
+      16: iload_1
+      17: invokespecial #312                // Method com/bitwig/flt/control_surface/proxy/DetailEditorSection."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/String;I)V
+      20: areturn
+
+  public com.bitwig.extension.controller.api.TrackBank createTrackBank(int, int, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: iload_3
+       4: iconst_1
+       5: invokevirtual #261                // Method createTrackBank:(IIIZ)Lcom/bitwig/extension/controller/api/TrackBank;
+       8: areturn
+
+  public com.bitwig.extension.controller.api.TrackBank createTrackBank(int, int, int, boolean);
+    Code:
+       0: aload_0
+       1: invokevirtual #276                // Method getProject:()Lcom/bitwig/extension/controller/api/Project;
+       4: invokeinterface #392,  1          // InterfaceMethod com/bitwig/extension/controller/api/Project.getShownTopLevelTrackGroup:()Lcom/bitwig/extension/controller/api/Track;
+       9: iload_1
+      10: iload_2
+      11: iload_3
+      12: iload         4
+      14: invokeinterface #396,  5          // InterfaceMethod com/bitwig/extension/controller/api/Track.createTrackBank:(IIIZ)Lcom/bitwig/extension/controller/api/TrackBank;
+      19: areturn
+
+  public com.bitwig.extension.controller.api.TrackBank createMainTrackBank(int, int, int);
+    Code:
+       0: aload_0
+       1: invokevirtual #276                // Method getProject:()Lcom/bitwig/extension/controller/api/Project;
+       4: invokeinterface #392,  1          // InterfaceMethod com/bitwig/extension/controller/api/Project.getShownTopLevelTrackGroup:()Lcom/bitwig/extension/controller/api/Track;
+       9: iload_1
+      10: iload_2
+      11: iload_3
+      12: iconst_1
+      13: invokeinterface #394,  5          // InterfaceMethod com/bitwig/extension/controller/api/Track.createMainTrackBank:(IIIZ)Lcom/bitwig/extension/controller/api/TrackBank;
+      18: areturn
+
+  public com.bitwig.extension.controller.api.TrackBank createEffectTrackBank(int, int);
+    Code:
+       0: aload_0
+       1: invokevirtual #276                // Method getProject:()Lcom/bitwig/extension/controller/api/Project;
+       4: invokeinterface #392,  1          // InterfaceMethod com/bitwig/extension/controller/api/Project.getShownTopLevelTrackGroup:()Lcom/bitwig/extension/controller/api/Track;
+       9: iload_1
+      10: iload_2
+      11: iconst_1
+      12: invokeinterface #393,  4          // InterfaceMethod com/bitwig/extension/controller/api/Track.createEffectTrackBank:(IIZ)Lcom/bitwig/extension/controller/api/TrackBank;
+      17: areturn
+
+  public com.bitwig.extension.controller.api.MasterTrack createMasterTrack(int);
+    Code:
+       0: aload_0
+       1: invokevirtual #276                // Method getProject:()Lcom/bitwig/extension/controller/api/Project;
+       4: invokeinterface #391,  1          // InterfaceMethod com/bitwig/extension/controller/api/Project.getRootTrackGroup:()Lcom/bitwig/extension/controller/api/Track;
+       9: iload_1
+      10: invokeinterface #395,  2          // InterfaceMethod com/bitwig/extension/controller/api/Track.createMasterTrack:(I)Lcom/bitwig/extension/controller/api/MasterTrack;
+      15: areturn
+
+  public com.bitwig.flt.control_surface.proxy.CursorTrackProxy createCursorTrack(int, int);
+    Code:
+       0: aload_0
+       1: ldc           #12                 // String TrackSelection
+       3: ldc           #9                  // String Main Track
+       5: iload_1
+       6: iload_2
+       7: iconst_1
+       8: invokevirtual #253                // Method createCursorTrack:(Ljava/lang/String;Ljava/lang/String;IIZ)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+      11: areturn
+
+  public com.bitwig.flt.control_surface.proxy.CursorTrackProxy createArrangerCursorTrack(int, int);
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: iconst_1
+       3: iload_1
+       4: iload_2
+       5: invokevirtual #262                // Method createTrackSelection:(Ljava/lang/String;ZII)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+       8: areturn
+
+  public com.bitwig.flt.control_surface.proxy.CursorTrackProxy createEditorTrackSelection(boolean, int, int);
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: iload_1
+       3: iload_2
+       4: iload_3
+       5: invokevirtual #262                // Method createTrackSelection:(Ljava/lang/String;ZII)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+       8: areturn
+
+  public com.bitwig.flt.control_surface.proxy.CursorTrackProxy createTrackSelection(java.lang.String, boolean, int, int);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_3
+       3: iload         4
+       5: invokevirtual #252                // Method createCursorTrack:(Ljava/lang/String;II)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+       8: areturn
+
+  public com.bitwig.flt.control_surface.proxy.CursorTrackProxy createCursorTrack(java.lang.String, int, int);
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: iconst_2
+       3: ldc           #15                 // String Use createCursorTrack specifying id, name, numSends, numScenes, and if should follow selection instead
+       5: invokevirtual #266                // Method deprecated:(IILjava/lang/String;)V
+       8: aload_1
+       9: astore        4
+      11: iconst_0
+      12: istore        5
+      14: aload_1
+      15: ifnull        25
+      18: aload_1
+      19: invokevirtual #362                // Method java/lang/String.isEmpty:()Z
+      22: ifeq          35
+      25: ldc           #12                 // String TrackSelection
+      27: astore_1
+      28: ldc           #9                  // String Main Track
+      30: astore        4
+      32: iconst_1
+      33: istore        5
+      35: aload_0
+      36: aload_1
+      37: aload         4
+      39: iload_2
+      40: iload_3
+      41: iload         5
+      43: invokevirtual #253                // Method createCursorTrack:(Ljava/lang/String;Ljava/lang/String;IIZ)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+      46: areturn
+
+  public com.bitwig.flt.control_surface.proxy.CursorTrackProxy createCursorTrack(java.lang.String, java.lang.String, int, int, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #23                 // String id
+       4: invokevirtual #291                // Method notEmpty:(Ljava/lang/String;Ljava/lang/String;)V
+       7: aload_0
+       8: aload_2
+       9: ldc           #26                 // String name
+      11: invokevirtual #291                // Method notEmpty:(Ljava/lang/String;Ljava/lang/String;)V
+      14: aload_0
+      15: iload_3
+      16: iconst_0
+      17: ldc           #29                 // String numSends
+      19: invokevirtual #243                // Method atLeast:(IILjava/lang/String;)V
+      22: aload_0
+      23: iload         4
+      25: iconst_0
+      26: ldc           #28                 // String numScenes
+      28: invokevirtual #243                // Method atLeast:(IILjava/lang/String;)V
+      31: aload_0
+      32: getfield      #161                // Field mCursorTrackProxies:Ljava/util/List;
+      35: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      40: astore        6
+      42: aload         6
+      44: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      49: ifeq          113
+      52: aload         6
+      54: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      59: checkcast     #84                 // class com/bitwig/flt/control_surface/proxy/CursorTrackProxy
+      62: astore        7
+      64: aload         7
+      66: invokevirtual #307                // Method com/bitwig/flt/control_surface/proxy/CursorTrackProxy.getCursorId:()Ljava/lang/String;
+      69: aload_1
+      70: invokevirtual #361                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      73: ifeq          110
+      76: aload         7
+      78: invokevirtual #309                // Method com/bitwig/flt/control_surface/proxy/CursorTrackProxy.getNumSends:()I
+      81: iload_3
+      82: if_icmpne     98
+      85: aload         7
+      87: invokevirtual #308                // Method com/bitwig/flt/control_surface/proxy/CursorTrackProxy.getNumScenes:()I
+      90: iload         4
+      92: if_icmpne     98
+      95: aload         7
+      97: areturn
+      98: aload_0
+      99: iconst_1
+     100: iconst_2
+     101: aload_1
+     102: invokedynamic #420,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     107: invokevirtual #266                // Method deprecated:(IILjava/lang/String;)V
+     110: goto          42
+     113: new           #84                 // class com/bitwig/flt/control_surface/proxy/CursorTrackProxy
+     116: dup
+     117: aload_0
+     118: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     121: aload_1
+     122: aload_2
+     123: iload_3
+     124: iload         4
+     126: iload         5
+     128: invokespecial #305                // Method com/bitwig/flt/control_surface/proxy/CursorTrackProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/String;Ljava/lang/String;IIZ)V
+     131: astore        6
+     133: aload_0
+     134: getfield      #161                // Field mCursorTrackProxies:Ljava/util/List;
+     137: aload         6
+     139: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     144: pop
+     145: aload         6
+     147: areturn
+
+  public com.bitwig.flt.control_surface.proxy.AbstractClipCursorProxy createCursorClip(int, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: invokevirtual #258                // Method createLauncherCursorClip:(II)Lcom/bitwig/flt/control_surface/proxy/LauncherClipCursorProxy;
+       6: areturn
+
+  public com.bitwig.flt.control_surface.proxy.ArrangerClipCursorProxy createArrangerCursorClip(int, int);
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: new           #75                 // class com/bitwig/flt/control_surface/proxy/ArrangerClipCursorProxy
+       7: dup
+       8: aload_0
+       9: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      12: iload_1
+      13: iload_2
+      14: invokespecial #241                // Method com/bitwig/flt/control_surface/proxy/ArrangerClipCursorProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;II)V
+      17: areturn
+
+  public com.bitwig.flt.control_surface.proxy.LauncherClipCursorProxy createLauncherCursorClip(int, int);
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: new           #96                 // class com/bitwig/flt/control_surface/proxy/LauncherClipCursorProxy
+       7: dup
+       8: aload_0
+       9: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      12: iload_1
+      13: iload_2
+      14: invokespecial #321                // Method com/bitwig/flt/control_surface/proxy/LauncherClipCursorProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;II)V
+      17: areturn
+
+  public com.bitwig.extension.controller.api.SceneBank createSceneBank(int);
+    Code:
+       0: new           #111                // class com/bitwig/flt/control_surface/proxy/SceneBankProxy
+       3: dup
+       4: aload_0
+       5: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+       8: iload_1
+       9: invokespecial #334                // Method com/bitwig/flt/control_surface/proxy/SceneBankProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;I)V
+      12: areturn
+
+  public com.bitwig.flt.control_surface.proxy.UserControlBankObject createUserControls(int);
+    Code:
+       0: new           #113                // class com/bitwig/flt/control_surface/proxy/UserControlBankObject
+       3: dup
+       4: aload_0
+       5: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+       8: iload_1
+       9: invokespecial #336                // Method com/bitwig/flt/control_surface/proxy/UserControlBankObject."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;I)V
+      12: areturn
+
+  public com.bitwig.extension.controller.api.CursorDevice createCursorDevice();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokevirtual #257                // Method createEditorDeviceSelection:(Z)Lcom/bitwig/extension/controller/api/CursorDevice;
+       5: areturn
+
+  public com.bitwig.extension.controller.api.CursorDevice createEditorCursorDevice();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: iconst_2
+       3: ldc           #14                 // String Use CursorTrack.createCursorDevice()
+       5: invokevirtual #266                // Method deprecated:(IILjava/lang/String;)V
+       8: aload_0
+       9: iconst_0
+      10: invokevirtual #256                // Method createEditorCursorDevice:(I)Lcom/bitwig/extension/controller/api/CursorDevice;
+      13: areturn
+
+  public com.bitwig.extension.controller.api.CursorDevice createEditorCursorDevice(int);
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: iconst_2
+       3: ldc           #14                 // String Use CursorTrack.createCursorDevice()
+       5: invokevirtual #266                // Method deprecated:(IILjava/lang/String;)V
+       8: aload_0
+       9: iload_1
+      10: iconst_0
+      11: invokevirtual #251                // Method createCursorTrack:(II)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+      14: astore_2
+      15: aload_2
+      16: aconst_null
+      17: invokevirtual #306                // Method com/bitwig/flt/control_surface/proxy/CursorTrackProxy.createCursorDevice:(Ljava/lang/String;)Lcom/bitwig/extension/controller/api/PinnableCursorDevice;
+      20: areturn
+
+  public com.bitwig.extension.controller.api.CursorDevice createEditorDeviceSelection(boolean);
+    Code:
+       0: aload_0
+       1: invokevirtual #255                // Method createEditorCursorDevice:()Lcom/bitwig/extension/controller/api/CursorDevice;
+       4: areturn
+
+  public com.bitwig.flt.control_surface.proxy.PreferencesProxy getPreferences();
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #178                // Field mPreferencesProxy:Lcom/bitwig/flt/control_surface/proxy/PreferencesProxy;
+      28: areturn
+
+  public com.bitwig.extension.controller.api.DocumentState getDocumentState();
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #166                // Field mDocumentStateProxy:Lcom/bitwig/flt/control_surface/proxy/DocumentStateProxy;
+      28: areturn
+
+  public void crashApplicationDueToBadEvent();
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #166                // Field mDocumentStateProxy:Lcom/bitwig/flt/control_surface/proxy/DocumentStateProxy;
+      28: invokevirtual #317                // Method com/bitwig/flt/control_surface/proxy/DocumentStateProxy.crashApplicationDueToBadEvent:()V
+      31: return
+
+  private void checkIfAllowedToCreateSection();
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: invokevirtual #220                // Method LZA.rOT:()Z
+       7: ifne          20
+      10: new           #47                 // class ObM
+      13: dup
+      14: ldc           #13                 // String Trying to create section outside of init().
+      16: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+      19: athrow
+      20: return
+
+  public java.lang.String getHostVendor();
+    Code:
+       0: ldc           #3                  // String Bitwig
+       2: areturn
+
+  public java.lang.String getHostProduct();
+    Code:
+       0: ldc           #4                  // String Bitwig Studio
+       2: areturn
+
+  public java.lang.String getHostVersion();
+    Code:
+       0: ldc           #2                  // String 4.3.10
+       2: areturn
+
+  public com.bitwig.extension.api.opensoundcontrol.OscModule getOscModule();
+    Code:
+       0: aload_0
+       1: iconst_5
+       2: invokevirtual #290                // Method newSince:(I)V
+       5: aload_0
+       6: getfield      #176                // Field mOscModule:Lcom/bitwig/flt/control_surface/opensoundcontrol/FaM;
+       9: areturn
+
+  public void initMidiPorts(int, int);
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: iload_1
+       5: iload_2
+       6: invokevirtual #205                // Method LZA.hWS:(II)V
+       9: return
+
+  public void println(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: aload_1
+       5: ifnull        17
+       8: aload_1
+       9: bipush        63
+      11: invokestatic  #231                // Method aaX.hWS:(Ljava/lang/String;C)Ljava/lang/String;
+      14: goto          19
+      17: ldc           #27                 // String null
+      19: invokevirtual #208                // Method LZA.hWS:(Ljava/lang/String;)V
+      22: return
+
+  public void errorln(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: aload_1
+       5: ifnull        17
+       8: aload_1
+       9: bipush        63
+      11: invokestatic  #231                // Method aaX.hWS:(Ljava/lang/String;C)Ljava/lang/String;
+      14: goto          19
+      17: ldc           #27                 // String null
+      19: invokevirtual #214                // Method LZA.iW:(Ljava/lang/String;)V
+      22: return
+
+  public void showPopupNotification(java.lang.String);
+    Code:
+       0: aload_1
+       1: ifnull        12
+       4: aload_0
+       5: getfield      #160                // Field mControlSurface:LLZA;
+       8: aload_1
+       9: invokevirtual #219                // Method LZA.lsS:(Ljava/lang/String;)V
+      12: return
+
+  public com.bitwig.extension.controller.api.RemoteSocket createRemoteConnection(java.lang.String, int);
+    Code:
+       0: aload_0
+       1: invokevirtual #246                // Method checkIfAllowedToCreateSection:()V
+       4: new           #109                // class com/bitwig/flt/control_surface/proxy/RemoteSocketSection
+       7: dup
+       8: aload_0
+       9: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      12: aload_1
+      13: iload_2
+      14: invokespecial #332                // Method com/bitwig/flt/control_surface/proxy/RemoteSocketSection."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/String;I)V
+      17: areturn
+
+  public void connectToRemoteHost(java.lang.String, int, com.bitwig.extension.callback.ConnectionEstablishedCallback);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: new           #139                // class java/net/Socket
+      27: dup
+      28: aload_1
+      29: iload_2
+      30: invokespecial #370                // Method java/net/Socket."<init>":(Ljava/lang/String;I)V
+      33: astore        4
+      35: new           #108                // class com/bitwig/flt/control_surface/proxy/RemoteConnectionSection
+      38: dup
+      39: aload_0
+      40: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      43: aload         4
+      45: invokespecial #331                // Method com/bitwig/flt/control_surface/proxy/RemoteConnectionSection."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/net/Socket;)V
+      48: astore        5
+      50: aload_0
+      51: getfield      #160                // Field mControlSurface:LLZA;
+      54: aload_3
+      55: aload         5
+      57: invokedynamic #421,  0            // InvokeDynamic #1:run:(Lcom/bitwig/extension/callback/ConnectionEstablishedCallback;Lcom/bitwig/flt/control_surface/proxy/RemoteConnectionSection;)Ljava/lang/Runnable;
+      62: invokevirtual #213                // Method LZA.iW:(Ljava/lang/Runnable;)V
+      65: goto          78
+      68: astore        4
+      70: getstatic     #157                // Field ccz.oVA:LMcJ;
+      73: aload         4
+      75: invokevirtual #222                // Method McJ.hWS:(Ljava/lang/Throwable;)V
+      78: return
+    Exception table:
+       from    to  target type
+          24    65    68   Class java/io/IOException
+
+  public void sendDatagramPacket(java.lang.String, int, byte[]);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #162                // Field mDatagramSendSocket:Ljava/net/DatagramSocket;
+      28: ifnonnull     42
+      31: aload_0
+      32: new           #137                // class java/net/DatagramSocket
+      35: dup
+      36: invokespecial #366                // Method java/net/DatagramSocket."<init>":()V
+      39: putfield      #162                // Field mDatagramSendSocket:Ljava/net/DatagramSocket;
+      42: aload_1
+      43: invokestatic  #369                // Method java/net/InetAddress.getByName:(Ljava/lang/String;)Ljava/net/InetAddress;
+      46: astore        4
+      48: new           #136                // class java/net/DatagramPacket
+      51: dup
+      52: aload_3
+      53: aload_3
+      54: arraylength
+      55: aload         4
+      57: iload_2
+      58: invokespecial #365                // Method java/net/DatagramPacket."<init>":([BILjava/net/InetAddress;I)V
+      61: astore        5
+      63: aload_0
+      64: getfield      #162                // Field mDatagramSendSocket:Ljava/net/DatagramSocket;
+      67: aload         5
+      69: invokevirtual #368                // Method java/net/DatagramSocket.send:(Ljava/net/DatagramPacket;)V
+      72: goto          90
+      75: astore        4
+      77: new           #47                 // class ObM
+      80: dup
+      81: aload         4
+      83: invokevirtual #357                // Method java/io/IOException.getLocalizedMessage:()Ljava/lang/String;
+      86: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+      89: athrow
+      90: return
+    Exception table:
+       from    to  target type
+          24    72    75   Class java/io/IOException
+
+  public boolean addDatagramPacketObserver(java.lang.String, int, com.bitwig.extension.callback.DataReceivedCallback);
+    Code:
+       0: new           #86                 // class com/bitwig/flt/control_surface/proxy/DatagramServerSection
+       3: dup
+       4: aload_0
+       5: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+       8: aload_1
+       9: iload_2
+      10: aload_3
+      11: invokespecial #311                // Method com/bitwig/flt/control_surface/proxy/DatagramServerSection."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/String;ILcom/bitwig/extension/callback/DataReceivedCallback;)V
+      14: astore        4
+      16: iconst_1
+      17: ireturn
+      18: astore        5
+      20: getstatic     #157                // Field ccz.oVA:LMcJ;
+      23: aload         5
+      25: invokevirtual #222                // Method McJ.hWS:(Ljava/lang/Throwable;)V
+      28: iconst_0
+      29: ireturn
+    Exception table:
+       from    to  target type
+           0    17    18   Class java/net/SocketException
+
+  public com.bitwig.flt.control_surface.proxy.MidiInPort getMidiInPort(int);
+    Code:
+       0: iload_1
+       1: iflt          13
+       4: iload_1
+       5: aload_0
+       6: getfield      #171                // Field mMidiInPorts:[Lcom/bitwig/flt/control_surface/proxy/MidiInPort;
+       9: arraylength
+      10: if_icmplt     23
+      13: new           #47                 // class ObM
+      16: dup
+      17: ldc           #8                  // String Invalid MIDI port index.
+      19: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+      22: athrow
+      23: aload_0
+      24: getfield      #171                // Field mMidiInPorts:[Lcom/bitwig/flt/control_surface/proxy/MidiInPort;
+      27: iload_1
+      28: aaload
+      29: areturn
+
+  public com.bitwig.flt.control_surface.proxy.MidiOutPort getMidiOutPort(int);
+    Code:
+       0: iload_1
+       1: iflt          13
+       4: iload_1
+       5: aload_0
+       6: getfield      #172                // Field mMidiOutPorts:[Lcom/bitwig/flt/control_surface/proxy/MidiOutPort;
+       9: arraylength
+      10: if_icmplt     23
+      13: new           #47                 // class ObM
+      16: dup
+      17: ldc           #8                  // String Invalid MIDI port index.
+      19: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+      22: athrow
+      23: aload_0
+      24: getfield      #172                // Field mMidiOutPorts:[Lcom/bitwig/flt/control_surface/proxy/MidiOutPort;
+      27: iload_1
+      28: aaload
+      29: areturn
+
+  public com.bitwig.extension.controller.api.HardwareDevice hardwareDevice(int);
+    Code:
+       0: aload_0
+       1: bipush        7
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: getfield      #160                // Field mControlSurface:LLZA;
+      10: iload_1
+      11: invokevirtual #212                // Method LZA.iW:(I)Lcom/bitwig/extension/controller/api/HardwareDevice;
+      14: areturn
+
+  public com.bitwig.flt.control_surface.proxy.PopupBrowserProxy createPopupBrowser();
+    Code:
+       0: aload_0
+       1: getfield      #177                // Field mPopupBrowserProxy:Lcom/bitwig/flt/control_surface/proxy/PopupBrowserProxy;
+       4: ifnull        17
+       7: new           #47                 // class ObM
+      10: dup
+      11: ldc           #7                  // String Driver can only create one PopupBrowser
+      13: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: new           #105                // class com/bitwig/flt/control_surface/proxy/PopupBrowserProxy
+      21: dup
+      22: aload_0
+      23: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      26: invokespecial #328                // Method com/bitwig/flt/control_surface/proxy/PopupBrowserProxy."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+      29: putfield      #177                // Field mPopupBrowserProxy:Lcom/bitwig/flt/control_surface/proxy/PopupBrowserProxy;
+      32: aload_0
+      33: getfield      #177                // Field mPopupBrowserProxy:Lcom/bitwig/flt/control_surface/proxy/PopupBrowserProxy;
+      36: areturn
+
+  public void scheduleTask(java.lang.Object, java.lang.Object[], long);
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: iconst_2
+       3: ldc           #16                 // String Use scheduleTask(runnable, delay) instead
+       5: invokevirtual #266                // Method deprecated:(IILjava/lang/String;)V
+       8: aload_2
+       9: ifnull        17
+      12: aload_2
+      13: arraylength
+      14: goto          18
+      17: iconst_0
+      18: istore        5
+      20: aconst_null
+      21: astore        6
+      23: iload         5
+      25: ifne          94
+      28: aload_1
+      29: instanceof    #148                // class java/util/function/Function
+      32: ifeq          53
+      35: aload_1
+      36: checkcast     #148                // class java/util/function/Function
+      39: astore        7
+      41: aload         7
+      43: invokedynamic #422,  0            // InvokeDynamic #2:run:(Ljava/util/function/Function;)Ljava/lang/Runnable;
+      48: astore        6
+      50: goto          143
+      53: aload_1
+      54: instanceof    #147                // class java/util/function/Consumer
+      57: ifeq          78
+      60: aload_1
+      61: checkcast     #147                // class java/util/function/Consumer
+      64: astore        7
+      66: aload         7
+      68: invokedynamic #423,  0            // InvokeDynamic #3:run:(Ljava/util/function/Consumer;)Ljava/lang/Runnable;
+      73: astore        6
+      75: goto          143
+      78: aload_1
+      79: instanceof    #131                // class java/lang/Runnable
+      82: ifeq          143
+      85: aload_1
+      86: checkcast     #131                // class java/lang/Runnable
+      89: astore        6
+      91: goto          143
+      94: aload_1
+      95: instanceof    #148                // class java/util/function/Function
+      98: ifeq          120
+     101: aload_1
+     102: checkcast     #148                // class java/util/function/Function
+     105: astore        7
+     107: aload         7
+     109: aload_2
+     110: invokedynamic #424,  0            // InvokeDynamic #4:run:(Ljava/util/function/Function;[Ljava/lang/Object;)Ljava/lang/Runnable;
+     115: astore        6
+     117: goto          143
+     120: aload_1
+     121: instanceof    #147                // class java/util/function/Consumer
+     124: ifeq          143
+     127: aload_1
+     128: checkcast     #147                // class java/util/function/Consumer
+     131: astore        7
+     133: aload         7
+     135: aload_2
+     136: invokedynamic #425,  0            // InvokeDynamic #5:run:(Ljava/util/function/Consumer;[Ljava/lang/Object;)Ljava/lang/Runnable;
+     141: astore        6
+     143: aload         6
+     145: ifnull        192
+     148: aload_0
+     149: getfield      #182                // Field mScheduledTasks:Ljava/util/List;
+     152: dup
+     153: astore        7
+     155: monitorenter
+     156: aload_0
+     157: getfield      #182                // Field mScheduledTasks:Ljava/util/List;
+     160: new           #79                 // class com/bitwig/flt/control_surface/proxy/BitwigStudioHost$ScheduledTask
+     163: dup
+     164: aload_0
+     165: aload         6
+     167: lload_3
+     168: invokespecial #295                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost$ScheduledTask."<init>":(Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;Ljava/lang/Runnable;J)V
+     171: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     176: pop
+     177: aload         7
+     179: monitorexit
+     180: goto          191
+     183: astore        8
+     185: aload         7
+     187: monitorexit
+     188: aload         8
+     190: athrow
+     191: return
+     192: new           #47                 // class ObM
+     195: dup
+     196: ldc           #35                 // String scheduleTask with JSObject and multiple arguments no longer supported - please use scheduleTask(runnable, delay) instead
+     198: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+     201: athrow
+    Exception table:
+       from    to  target type
+         156   180   183   any
+         183   188   183   any
+
+  public void scheduleTask(java.lang.Runnable, long);
+    Code:
+       0: aload_0
+       1: iconst_2
+       2: invokevirtual #290                // Method newSince:(I)V
+       5: aload_0
+       6: getfield      #182                // Field mScheduledTasks:Ljava/util/List;
+       9: dup
+      10: astore        4
+      12: monitorenter
+      13: aload_0
+      14: getfield      #182                // Field mScheduledTasks:Ljava/util/List;
+      17: new           #79                 // class com/bitwig/flt/control_surface/proxy/BitwigStudioHost$ScheduledTask
+      20: dup
+      21: aload_0
+      22: aload_1
+      23: lload_2
+      24: invokespecial #295                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost$ScheduledTask."<init>":(Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;Ljava/lang/Runnable;J)V
+      27: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      32: pop
+      33: aload         4
+      35: monitorexit
+      36: goto          47
+      39: astore        5
+      41: aload         4
+      43: monitorexit
+      44: aload         5
+      46: athrow
+      47: return
+    Exception table:
+       from    to  target type
+          13    36    39   any
+          39    44    39   any
+
+  public void processScheduledTasks(int);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #158                // Field $assertionsDisabled:Z
+      27: ifne          53
+      30: aload_0
+      31: getfield      #183                // Field mScheduledTasksToProcess:Ljava/util/List;
+      34: invokeinterface #414,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+      39: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #128                // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: aconst_null
+      54: astore_2
+      55: aload_0
+      56: getfield      #182                // Field mScheduledTasks:Ljava/util/List;
+      59: dup
+      60: astore_3
+      61: monitorenter
+      62: aload_0
+      63: getfield      #183                // Field mScheduledTasksToProcess:Ljava/util/List;
+      66: invokeinterface #412,  1          // InterfaceMethod java/util/List.clear:()V
+      71: aload_0
+      72: getfield      #183                // Field mScheduledTasksToProcess:Ljava/util/List;
+      75: aload_0
+      76: getfield      #182                // Field mScheduledTasks:Ljava/util/List;
+      79: invokeinterface #411,  2          // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      84: pop
+      85: aload_3
+      86: monitorexit
+      87: goto          97
+      90: astore        4
+      92: aload_3
+      93: monitorexit
+      94: aload         4
+      96: athrow
+      97: aload_0
+      98: getfield      #183                // Field mScheduledTasksToProcess:Ljava/util/List;
+     101: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     106: astore_3
+     107: aload_3
+     108: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     113: ifeq          162
+     116: aload_3
+     117: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     122: checkcast     #79                 // class com/bitwig/flt/control_surface/proxy/BitwigStudioHost$ScheduledTask
+     125: astore        4
+     127: aload         4
+     129: iload_1
+     130: invokevirtual #296                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost$ScheduledTask.process:(I)Z
+     133: istore        5
+     135: iload         5
+     137: ifeq          159
+     140: aload_2
+     141: ifnonnull     152
+     144: new           #141                // class java/util/ArrayList
+     147: dup
+     148: invokespecial #371                // Method java/util/ArrayList."<init>":()V
+     151: astore_2
+     152: aload_2
+     153: aload         4
+     155: invokevirtual #373                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+     158: pop
+     159: goto          107
+     162: aload_0
+     163: getfield      #183                // Field mScheduledTasksToProcess:Ljava/util/List;
+     166: invokeinterface #412,  1          // InterfaceMethod java/util/List.clear:()V
+     171: aload_2
+     172: ifnull        205
+     175: aload_0
+     176: getfield      #182                // Field mScheduledTasks:Ljava/util/List;
+     179: dup
+     180: astore_3
+     181: monitorenter
+     182: aload_0
+     183: getfield      #182                // Field mScheduledTasks:Ljava/util/List;
+     186: aload_2
+     187: invokeinterface #416,  2          // InterfaceMethod java/util/List.removeAll:(Ljava/util/Collection;)Z
+     192: pop
+     193: aload_3
+     194: monitorexit
+     195: goto          205
+     198: astore        6
+     200: aload_3
+     201: monitorexit
+     202: aload         6
+     204: athrow
+     205: return
+    Exception table:
+       from    to  target type
+          62    87    90   any
+          90    94    90   any
+         182   195   198   any
+         198   202   198   any
+
+  public void requestFlush();
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: iconst_2
+      26: invokevirtual #290                // Method newSince:(I)V
+      29: aload_0
+      30: getfield      #160                // Field mControlSurface:LLZA;
+      33: invokevirtual #202                // Method LZA.Tsg:()V
+      36: return
+
+  public com.bitwig.flt.control_surface.values.IntegerValueProxy getTimeSignatureNumerator();
+    Code:
+       0: aload_0
+       1: getfield      #185                // Field mTimeSignatureNumerator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+       4: areturn
+
+  public com.bitwig.flt.control_surface.values.IntegerValueProxy getTimeSignatureDenominator();
+    Code:
+       0: aload_0
+       1: getfield      #184                // Field mTimeSignatureDenominator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+       4: areturn
+
+  public com.bitwig.flt.control_surface.values.IntegerValueProxy getTimeSignatureTickRate();
+    Code:
+       0: aload_0
+       1: getfield      #186                // Field mTimeSignatureTickRate:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+       4: areturn
+
+  public void connectToDocument(com.bitwig.flt.document.core.iface.nlh, Wdc, com.bitwig.flt.prefs.wLU);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #128                // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #158                // Field $assertionsDisabled:Z
+      32: ifne          58
+      35: aload_2
+      36: ifnull        43
+      39: iconst_1
+      40: goto          44
+      43: iconst_0
+      44: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      47: ifne          58
+      50: new           #128                // class java/lang/AssertionError
+      53: dup
+      54: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      57: athrow
+      58: getstatic     #158                // Field $assertionsDisabled:Z
+      61: ifne          87
+      64: aload_3
+      65: ifnull        72
+      68: iconst_1
+      69: goto          73
+      72: iconst_0
+      73: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      76: ifne          87
+      79: new           #128                // class java/lang/AssertionError
+      82: dup
+      83: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      86: athrow
+      87: getstatic     #158                // Field $assertionsDisabled:Z
+      90: ifne          119
+      93: aload_0
+      94: getfield      #163                // Field mDocument:Lcom/bitwig/flt/document/core/iface/nlh;
+      97: ifnonnull     104
+     100: iconst_1
+     101: goto          105
+     104: iconst_0
+     105: invokestatic  #235                // Method ccz.lsS:(Z)Z
+     108: ifne          119
+     111: new           #128                // class java/lang/AssertionError
+     114: dup
+     115: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     118: athrow
+     119: getstatic     #158                // Field $assertionsDisabled:Z
+     122: ifne          151
+     125: aload_0
+     126: getfield      #165                // Field mDocumentState:LWdc;
+     129: ifnonnull     136
+     132: iconst_1
+     133: goto          137
+     136: iconst_0
+     137: invokestatic  #234                // Method ccz.iW:(Z)Z
+     140: ifne          151
+     143: new           #128                // class java/lang/AssertionError
+     146: dup
+     147: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     150: athrow
+     151: getstatic     #158                // Field $assertionsDisabled:Z
+     154: ifne          177
+     157: aload_1
+     158: invokeinterface #402,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ze2:()Z
+     163: invokestatic  #235                // Method ccz.lsS:(Z)Z
+     166: ifne          177
+     169: new           #128                // class java/lang/AssertionError
+     172: dup
+     173: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     176: athrow
+     177: getstatic     #158                // Field $assertionsDisabled:Z
+     180: ifne          201
+     183: aload_0
+     184: invokevirtual #278                // Method isDocumentThread:()Z
+     187: invokestatic  #235                // Method ccz.lsS:(Z)Z
+     190: ifne          201
+     193: new           #128                // class java/lang/AssertionError
+     196: dup
+     197: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     200: athrow
+     201: aload_0
+     202: aload_1
+     203: putfield      #163                // Field mDocument:Lcom/bitwig/flt/document/core/iface/nlh;
+     206: aload_0
+     207: aload_2
+     208: putfield      #165                // Field mDocumentState:LWdc;
+     211: aload_0
+     212: getfield      #167                // Field mHardwareControllerProxy:LBfz;
+     215: aload_1
+     216: invokevirtual #190                // Method Bfz.hWS:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+     219: aload_1
+     220: invokeinterface #403,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.cPG:()LsuN;
+     225: astore        4
+     227: aload         4
+     229: invokeinterface #419,  1          // InterfaceMethod suN.SVx:()LEbf;
+     234: astore        5
+     236: aload_0
+     237: getfield      #185                // Field mTimeSignatureNumerator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     240: aload         5
+     242: invokeinterface #384,  1          // InterfaceMethod Ebf.rOT:()Lcom/bitwig/ramona/core/hEs;
+     247: invokevirtual #344                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.setTarget:(Ljava/lang/Object;)V
+     250: aload_0
+     251: getfield      #184                // Field mTimeSignatureDenominator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     254: aload         5
+     256: invokeinterface #383,  1          // InterfaceMethod Ebf.jtC:()Lcom/bitwig/ramona/core/hEs;
+     261: invokevirtual #344                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.setTarget:(Ljava/lang/Object;)V
+     264: aload_0
+     265: getfield      #186                // Field mTimeSignatureTickRate:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     268: aload         5
+     270: invokeinterface #385,  1          // InterfaceMethod Ebf.yo3:()Lcom/bitwig/ramona/core/hEs;
+     275: invokevirtual #344                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.setTarget:(Ljava/lang/Object;)V
+     278: aload_0
+     279: getfield      #164                // Field mDocumentListeners:Ljava/util/List;
+     282: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     287: astore        6
+     289: aload         6
+     291: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     296: ifeq          322
+     299: aload         6
+     301: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     306: checkcast     #83                 // class com/bitwig/flt/control_surface/proxy/CurrentDocumentListener
+     309: astore        7
+     311: aload         7
+     313: aload_1
+     314: invokeinterface #397,  2          // InterfaceMethod com/bitwig/flt/control_surface/proxy/CurrentDocumentListener.setCurrentDocument:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+     319: goto          289
+     322: aload_2
+     323: invokeinterface #388,  1          // InterfaceMethod Wdc.wPl:()LXbj;
+     328: invokeinterface #389,  1          // InterfaceMethod Xbj.Rre:()Lcom/bitwig/ramona/core/NXW;
+     333: aload_0
+     334: getfield      #169                // Field mManualMappingsListener:LlEd;
+     337: invokevirtual #354                // Method com/bitwig/ramona/core/NXW.hWS:(LlEd;)V
+     340: return
+
+  public void disconnectFromDocument(com.bitwig.flt.document.core.iface.nlh);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #128                // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #158                // Field $assertionsDisabled:Z
+      32: ifne          62
+      35: aload_0
+      36: getfield      #163                // Field mDocument:Lcom/bitwig/flt/document/core/iface/nlh;
+      39: aload_1
+      40: if_acmpne     47
+      43: iconst_1
+      44: goto          48
+      47: iconst_0
+      48: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      51: ifne          62
+      54: new           #128                // class java/lang/AssertionError
+      57: dup
+      58: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      61: athrow
+      62: getstatic     #158                // Field $assertionsDisabled:Z
+      65: ifne          94
+      68: aload_0
+      69: getfield      #165                // Field mDocumentState:LWdc;
+      72: ifnull        79
+      75: iconst_1
+      76: goto          80
+      79: iconst_0
+      80: invokestatic  #234                // Method ccz.iW:(Z)Z
+      83: ifne          94
+      86: new           #128                // class java/lang/AssertionError
+      89: dup
+      90: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      93: athrow
+      94: getstatic     #158                // Field $assertionsDisabled:Z
+      97: ifne          128
+     100: aload_1
+     101: invokeinterface #401,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ycb:()Lcom/bitwig/ramona/core/iEi;
+     106: ifnull        113
+     109: iconst_1
+     110: goto          114
+     113: iconst_0
+     114: invokestatic  #234                // Method ccz.iW:(Z)Z
+     117: ifne          128
+     120: new           #128                // class java/lang/AssertionError
+     123: dup
+     124: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     127: athrow
+     128: getstatic     #158                // Field $assertionsDisabled:Z
+     131: ifne          174
+     134: aload_1
+     135: invokeinterface #401,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ycb:()Lcom/bitwig/ramona/core/iEi;
+     140: ifnull        159
+     143: aload_1
+     144: invokeinterface #401,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ycb:()Lcom/bitwig/ramona/core/iEi;
+     149: invokevirtual #356                // Method com/bitwig/ramona/core/iEi.lsS:()Z
+     152: ifeq          159
+     155: iconst_1
+     156: goto          160
+     159: iconst_0
+     160: invokestatic  #234                // Method ccz.iW:(Z)Z
+     163: ifne          174
+     166: new           #128                // class java/lang/AssertionError
+     169: dup
+     170: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     173: athrow
+     174: getstatic     #158                // Field $assertionsDisabled:Z
+     177: ifne          207
+     180: aload_0
+     181: getfield      #163                // Field mDocument:Lcom/bitwig/flt/document/core/iface/nlh;
+     184: aload_1
+     185: if_acmpne     192
+     188: iconst_1
+     189: goto          193
+     192: iconst_0
+     193: invokestatic  #235                // Method ccz.lsS:(Z)Z
+     196: ifne          207
+     199: new           #128                // class java/lang/AssertionError
+     202: dup
+     203: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     206: athrow
+     207: aload_0
+     208: getfield      #185                // Field mTimeSignatureNumerator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     211: invokevirtual #342                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.clearTarget:()V
+     214: aload_0
+     215: getfield      #184                // Field mTimeSignatureDenominator:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     218: invokevirtual #342                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.clearTarget:()V
+     221: aload_0
+     222: getfield      #186                // Field mTimeSignatureTickRate:Lcom/bitwig/flt/control_surface/values/IntegerValueProxy;
+     225: invokevirtual #342                // Method com/bitwig/flt/control_surface/values/IntegerValueProxy.clearTarget:()V
+     228: aload_0
+     229: aconst_null
+     230: putfield      #163                // Field mDocument:Lcom/bitwig/flt/document/core/iface/nlh;
+     233: aload_0
+     234: getfield      #165                // Field mDocumentState:LWdc;
+     237: invokeinterface #388,  1          // InterfaceMethod Wdc.wPl:()LXbj;
+     242: astore_2
+     243: aload_2
+     244: invokeinterface #389,  1          // InterfaceMethod Xbj.Rre:()Lcom/bitwig/ramona/core/NXW;
+     249: aload_0
+     250: getfield      #169                // Field mManualMappingsListener:LlEd;
+     253: invokevirtual #355                // Method com/bitwig/ramona/core/NXW.iW:(LlEd;)V
+     256: aload_0
+     257: getfield      #180                // Field mRemappableRangedValueProxies:Ljava/util/List;
+     260: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     265: astore_3
+     266: aload_3
+     267: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     272: ifeq          294
+     275: aload_3
+     276: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     281: checkcast     #116                // class com/bitwig/flt/control_surface/values/RemappableParameterProxy
+     284: astore        4
+     286: aload         4
+     288: invokevirtual #345                // Method com/bitwig/flt/control_surface/values/RemappableParameterProxy.clearTarget:()V
+     291: goto          266
+     294: aload_0
+     295: aconst_null
+     296: putfield      #165                // Field mDocumentState:LWdc;
+     299: aload_0
+     300: getfield      #164                // Field mDocumentListeners:Ljava/util/List;
+     303: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     308: astore_3
+     309: aload_3
+     310: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     315: ifeq          340
+     318: aload_3
+     319: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     324: checkcast     #83                 // class com/bitwig/flt/control_surface/proxy/CurrentDocumentListener
+     327: astore        4
+     329: aload         4
+     331: aconst_null
+     332: invokeinterface #397,  2          // InterfaceMethod com/bitwig/flt/control_surface/proxy/CurrentDocumentListener.setCurrentDocument:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+     337: goto          309
+     340: aload_0
+     341: getfield      #167                // Field mHardwareControllerProxy:LBfz;
+     344: aconst_null
+     345: invokevirtual #190                // Method Bfz.hWS:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+     348: return
+
+  public void initOnEventThread();
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #278                // Method isDocumentThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #167                // Field mHardwareControllerProxy:LBfz;
+      28: invokevirtual #189                // Method Bfz.hWS:()V
+      31: aload_0
+      32: getfield      #175                // Field mObjectsToInitAndDisposeOnEventThread:Ljava/util/List;
+      35: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      40: astore_1
+      41: aload_1
+      42: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      47: ifeq          69
+      50: aload_1
+      51: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      56: checkcast     #103                // class com/bitwig/flt/control_surface/proxy/ObjectThatWantsToInitAndDisposeOnEventThread
+      59: astore_2
+      60: aload_2
+      61: invokeinterface #400,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ObjectThatWantsToInitAndDisposeOnEventThread.initOnEventThread:()V
+      66: goto          41
+      69: return
+
+  public void disposeOnEventThread();
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #278                // Method isDocumentThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #175                // Field mObjectsToInitAndDisposeOnEventThread:Ljava/util/List;
+      28: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      33: astore_1
+      34: aload_1
+      35: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      40: ifeq          62
+      43: aload_1
+      44: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      49: checkcast     #103                // class com/bitwig/flt/control_surface/proxy/ObjectThatWantsToInitAndDisposeOnEventThread
+      52: astore_2
+      53: aload_2
+      54: invokeinterface #399,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ObjectThatWantsToInitAndDisposeOnEventThread.disposeOnEventThread:()V
+      59: goto          34
+      62: aload_0
+      63: getfield      #167                // Field mHardwareControllerProxy:LBfz;
+      66: invokevirtual #191                // Method Bfz.iW:()V
+      69: return
+
+  public void disposeOnControlSurfaceThread();
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #174                // Field mObjectsToDisposeOnControlSurfaceThread:Ljava/util/List;
+      28: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      33: astore_1
+      34: aload_1
+      35: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      40: ifeq          73
+      43: aload_1
+      44: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      49: checkcast     #102                // class com/bitwig/flt/control_surface/proxy/ObjectThatWantsToDisposeOnControlSurfaceThread
+      52: astore_2
+      53: aload_2
+      54: invokeinterface #398,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ObjectThatWantsToDisposeOnControlSurfaceThread.disposeOnControlSurfaceThread:()V
+      59: goto          70
+      62: astore_3
+      63: getstatic     #157                // Field ccz.oVA:LMcJ;
+      66: aload_3
+      67: invokevirtual #222                // Method McJ.hWS:(Ljava/lang/Throwable;)V
+      70: goto          34
+      73: aload_0
+      74: getfield      #162                // Field mDatagramSendSocket:Ljava/net/DatagramSocket;
+      77: ifnull        103
+      80: aload_0
+      81: getfield      #162                // Field mDatagramSendSocket:Ljava/net/DatagramSocket;
+      84: invokevirtual #367                // Method java/net/DatagramSocket.close:()V
+      87: goto          98
+      90: astore_1
+      91: getstatic     #157                // Field ccz.oVA:LMcJ;
+      94: aload_1
+      95: invokevirtual #222                // Method McJ.hWS:(Ljava/lang/Throwable;)V
+      98: aload_0
+      99: aconst_null
+     100: putfield      #162                // Field mDatagramSendSocket:Ljava/net/DatagramSocket;
+     103: getstatic     #158                // Field $assertionsDisabled:Z
+     106: ifne          135
+     109: aload_0
+     110: getfield      #163                // Field mDocument:Lcom/bitwig/flt/document/core/iface/nlh;
+     113: ifnonnull     120
+     116: iconst_1
+     117: goto          121
+     120: iconst_0
+     121: invokestatic  #234                // Method ccz.iW:(Z)Z
+     124: ifne          135
+     127: new           #128                // class java/lang/AssertionError
+     130: dup
+     131: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     134: athrow
+     135: getstatic     #158                // Field $assertionsDisabled:Z
+     138: ifne          167
+     141: aload_0
+     142: getfield      #165                // Field mDocumentState:LWdc;
+     145: ifnonnull     152
+     148: iconst_1
+     149: goto          153
+     152: iconst_0
+     153: invokestatic  #234                // Method ccz.iW:(Z)Z
+     156: ifne          167
+     159: new           #128                // class java/lang/AssertionError
+     162: dup
+     163: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     166: athrow
+     167: return
+    Exception table:
+       from    to  target type
+          53    59    62   Class java/lang/Throwable
+          80    87    90   Class java/lang/Throwable
+
+  public com.bitwig.flt.control_surface.proxy.NotificationSettingsObject getNotificationSettings();
+    Code:
+       0: aload_0
+       1: getfield      #173                // Field mNotificationSettings:Lcom/bitwig/flt/control_surface/proxy/NotificationSettingsObject;
+       4: areturn
+
+  public void controlSurfaceObjectCreated(com.bitwig.flt.control_surface.proxy.ControlSurfaceObject);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #128                // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #158                // Field $assertionsDisabled:Z
+      32: ifne          62
+      35: aload_1
+      36: invokevirtual #299                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceObject.getHost:()Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      39: aload_0
+      40: if_acmpne     47
+      43: iconst_1
+      44: goto          48
+      47: iconst_0
+      48: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      51: ifne          62
+      54: new           #128                // class java/lang/AssertionError
+      57: dup
+      58: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      61: athrow
+      62: getstatic     #158                // Field $assertionsDisabled:Z
+      65: ifne          86
+      68: aload_0
+      69: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      72: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      75: ifne          86
+      78: new           #128                // class java/lang/AssertionError
+      81: dup
+      82: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      85: athrow
+      86: getstatic     #158                // Field $assertionsDisabled:Z
+      89: ifne          118
+      92: aload_1
+      93: invokevirtual #300                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceObject.getKey:()Ljava/lang/String;
+      96: ifnonnull     103
+      99: iconst_1
+     100: goto          104
+     103: iconst_0
+     104: invokestatic  #235                // Method ccz.lsS:(Z)Z
+     107: ifne          118
+     110: new           #128                // class java/lang/AssertionError
+     113: dup
+     114: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     117: athrow
+     118: aload_1
+     119: instanceof    #102                // class com/bitwig/flt/control_surface/proxy/ObjectThatWantsToDisposeOnControlSurfaceThread
+     122: ifeq          139
+     125: aload_0
+     126: getfield      #174                // Field mObjectsToDisposeOnControlSurfaceThread:Ljava/util/List;
+     129: aload_1
+     130: checkcast     #102                // class com/bitwig/flt/control_surface/proxy/ObjectThatWantsToDisposeOnControlSurfaceThread
+     133: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     138: pop
+     139: aload_1
+     140: instanceof    #83                 // class com/bitwig/flt/control_surface/proxy/CurrentDocumentListener
+     143: ifeq          163
+     146: aload_0
+     147: getfield      #164                // Field mDocumentListeners:Ljava/util/List;
+     150: aload_1
+     151: checkcast     #83                 // class com/bitwig/flt/control_surface/proxy/CurrentDocumentListener
+     154: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     159: pop
+     160: goto          205
+     163: aload_1
+     164: instanceof    #67                 // class com/bitwig/extension/controller/api/ObjectProxy
+     167: ifeq          205
+     170: aload_1
+     171: checkcast     #82                 // class com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy
+     174: astore_2
+     175: aload_2
+     176: invokevirtual #303                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getTargetType:()Ljava/lang/Class;
+     179: ldc           #120                // class com/bitwig/flt/document/core/iface/nlh
+     181: if_acmpne     205
+     184: aload_0
+     185: getfield      #164                // Field mDocumentListeners:Ljava/util/List;
+     188: aload_2
+     189: dup
+     190: invokestatic  #377                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+     193: pop
+     194: invokedynamic #426,  0            // InvokeDynamic #6:setCurrentDocument:(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;)Lcom/bitwig/flt/control_surface/proxy/CurrentDocumentListener;
+     199: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     204: pop
+     205: aload_1
+     206: instanceof    #103                // class com/bitwig/flt/control_surface/proxy/ObjectThatWantsToInitAndDisposeOnEventThread
+     209: ifeq          226
+     212: aload_0
+     213: getfield      #175                // Field mObjectsToInitAndDisposeOnEventThread:Ljava/util/List;
+     216: aload_1
+     217: checkcast     #103                // class com/bitwig/flt/control_surface/proxy/ObjectThatWantsToInitAndDisposeOnEventThread
+     220: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     225: pop
+     226: aload_1
+     227: instanceof    #93                 // class com/bitwig/flt/control_surface/proxy/GUIFollowable
+     230: ifeq          240
+     233: aload_0
+     234: invokevirtual #268                // Method getControlSurface:()LLZA;
+     237: invokevirtual #201                // Method LZA.Tm2:()V
+     240: return
+
+  public void rememberRemappableParameterProxy(com.bitwig.flt.control_surface.values.RemappableParameterProxy);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #128                // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #158                // Field $assertionsDisabled:Z
+      32: ifne          64
+      35: aload_1
+      36: invokevirtual #347                // Method com/bitwig/flt/control_surface/values/RemappableParameterProxy.getParameterId:()Ljava/lang/String;
+      39: invokevirtual #362                // Method java/lang/String.isEmpty:()Z
+      42: ifne          49
+      45: iconst_1
+      46: goto          50
+      49: iconst_0
+      50: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      53: ifne          64
+      56: new           #128                // class java/lang/AssertionError
+      59: dup
+      60: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      63: athrow
+      64: getstatic     #158                // Field $assertionsDisabled:Z
+      67: ifne          102
+      70: aload_0
+      71: getfield      #180                // Field mRemappableRangedValueProxies:Ljava/util/List;
+      74: aload_1
+      75: invokeinterface #413,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+      80: ifne          87
+      83: iconst_1
+      84: goto          88
+      87: iconst_0
+      88: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      91: ifne          102
+      94: new           #128                // class java/lang/AssertionError
+      97: dup
+      98: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     101: athrow
+     102: aload_0
+     103: getfield      #180                // Field mRemappableRangedValueProxies:Ljava/util/List;
+     106: aload_1
+     107: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     112: pop
+     113: return
+
+  private void manualKnobMappingAdded(UEg);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #278                // Method isDocumentThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #158                // Field $assertionsDisabled:Z
+      27: ifne          53
+      30: aload_1
+      31: invokeinterface #387,  1          // InterfaceMethod UEg.oO1:()Ljava/lang/String;
+      36: invokevirtual #362                // Method java/lang/String.isEmpty:()Z
+      39: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #128                // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: aload_1
+      54: invokeinterface #386,  1          // InterfaceMethod UEg.bW_:()Ljava/lang/String;
+      59: astore_2
+      60: aload_0
+      61: getfield      #180                // Field mRemappableRangedValueProxies:Ljava/util/List;
+      64: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      69: astore_3
+      70: aload_3
+      71: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      76: ifeq          111
+      79: aload_3
+      80: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      85: checkcast     #116                // class com/bitwig/flt/control_surface/values/RemappableParameterProxy
+      88: astore        4
+      90: aload         4
+      92: invokevirtual #347                // Method com/bitwig/flt/control_surface/values/RemappableParameterProxy.getParameterId:()Ljava/lang/String;
+      95: aload_2
+      96: invokevirtual #361                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      99: ifeq          108
+     102: aload         4
+     104: aload_1
+     105: invokevirtual #348                // Method com/bitwig/flt/control_surface/values/RemappableParameterProxy.manualMappingAdded:(LUEg;)V
+     108: goto          70
+     111: return
+
+  private void manualKnobMappingRemoved(UEg);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #278                // Method isDocumentThread:()Z
+      10: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #158                // Field $assertionsDisabled:Z
+      27: ifne          53
+      30: aload_1
+      31: invokeinterface #387,  1          // InterfaceMethod UEg.oO1:()Ljava/lang/String;
+      36: invokevirtual #362                // Method java/lang/String.isEmpty:()Z
+      39: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #128                // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: aload_1
+      54: invokeinterface #386,  1          // InterfaceMethod UEg.bW_:()Ljava/lang/String;
+      59: astore_2
+      60: aload_0
+      61: getfield      #180                // Field mRemappableRangedValueProxies:Ljava/util/List;
+      64: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      69: astore_3
+      70: aload_3
+      71: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      76: ifeq          111
+      79: aload_3
+      80: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      85: checkcast     #116                // class com/bitwig/flt/control_surface/values/RemappableParameterProxy
+      88: astore        4
+      90: aload         4
+      92: invokevirtual #347                // Method com/bitwig/flt/control_surface/values/RemappableParameterProxy.getParameterId:()Ljava/lang/String;
+      95: aload_2
+      96: invokevirtual #361                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      99: ifeq          108
+     102: aload         4
+     104: aload_1
+     105: invokevirtual #349                // Method com/bitwig/flt/control_surface/values/RemappableParameterProxy.manualMappingRemoved:(LUEg;)V
+     108: goto          70
+     111: return
+
+  private java.lang.String getControlName(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #180                // Field mRemappableRangedValueProxies:Ljava/util/List;
+       4: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          60
+      19: aload_2
+      20: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #116                // class com/bitwig/flt/control_surface/values/RemappableParameterProxy
+      28: astore_3
+      29: aload_3
+      30: invokevirtual #347                // Method com/bitwig/flt/control_surface/values/RemappableParameterProxy.getParameterId:()Ljava/lang/String;
+      33: aload_1
+      34: invokevirtual #361                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      37: ifeq          57
+      40: aload_3
+      41: invokevirtual #346                // Method com/bitwig/flt/control_surface/values/RemappableParameterProxy.getLabel:()Ljava/lang/String;
+      44: astore        4
+      46: aload         4
+      48: invokevirtual #362                // Method java/lang/String.isEmpty:()Z
+      51: ifne          57
+      54: aload         4
+      56: areturn
+      57: goto          10
+      60: ldc           #1                  // String
+      62: areturn
+
+  public com.bitwig.extension.controller.api.BooleanValue createAreProxiesEqualValue(com.bitwig.flt.control_surface.proxy.ControlSurfaceProxy, com.bitwig.flt.control_surface.proxy.ControlSurfaceProxy);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #128                // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: aload_0
+      30: aload_2
+      31: ldc           #32                 // String other
+      33: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      36: aload_0
+      37: iconst_3
+      38: invokevirtual #290                // Method newSince:(I)V
+      41: aload_0
+      42: getfield      #160                // Field mControlSurface:LLZA;
+      45: invokevirtual #204                // Method LZA.ZtL:()V
+      48: aload_1
+      49: invokevirtual #301                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getDeepestProxy:()Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+      52: astore_3
+      53: aload_2
+      54: invokevirtual #301                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getDeepestProxy:()Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+      57: astore        4
+      59: getstatic     #158                // Field $assertionsDisabled:Z
+      62: ifne          88
+      65: aload_3
+      66: ifnull        73
+      69: iconst_1
+      70: goto          74
+      73: iconst_0
+      74: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      77: ifne          88
+      80: new           #128                // class java/lang/AssertionError
+      83: dup
+      84: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      87: athrow
+      88: getstatic     #158                // Field $assertionsDisabled:Z
+      91: ifne          118
+      94: aload         4
+      96: ifnull        103
+      99: iconst_1
+     100: goto          104
+     103: iconst_0
+     104: invokestatic  #235                // Method ccz.lsS:(Z)Z
+     107: ifne          118
+     110: new           #128                // class java/lang/AssertionError
+     113: dup
+     114: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     117: athrow
+     118: aload_3
+     119: aload         4
+     121: if_acmpne     134
+     124: new           #47                 // class ObM
+     127: dup
+     128: ldc           #10                 // String These proxies always refer to the same target
+     130: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+     133: athrow
+     134: aload_3
+     135: invokevirtual #303                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getTargetType:()Ljava/lang/Class;
+     138: astore        5
+     140: aload         4
+     142: invokevirtual #303                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getTargetType:()Ljava/lang/Class;
+     145: astore        6
+     147: getstatic     #158                // Field $assertionsDisabled:Z
+     150: ifne          177
+     153: aload         5
+     155: ifnull        162
+     158: iconst_1
+     159: goto          163
+     162: iconst_0
+     163: invokestatic  #235                // Method ccz.lsS:(Z)Z
+     166: ifne          177
+     169: new           #128                // class java/lang/AssertionError
+     172: dup
+     173: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     176: athrow
+     177: getstatic     #158                // Field $assertionsDisabled:Z
+     180: ifne          207
+     183: aload         6
+     185: ifnull        192
+     188: iconst_1
+     189: goto          193
+     192: iconst_0
+     193: invokestatic  #235                // Method ccz.lsS:(Z)Z
+     196: ifne          207
+     199: new           #128                // class java/lang/AssertionError
+     202: dup
+     203: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     206: athrow
+     207: aload         5
+     209: aload         6
+     211: invokevirtual #360                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+     214: ifne          237
+     217: aload         6
+     219: aload         5
+     221: invokevirtual #360                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+     224: ifne          237
+     227: new           #47                 // class ObM
+     230: dup
+     231: ldc           #11                 // String These proxies can never refer be equal as they are of different types
+     233: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+     236: athrow
+     237: aload_0
+     238: getfield      #159                // Field mAreProxiesEqualsValue:Ljava/util/List;
+     241: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     246: astore        7
+     248: aload         7
+     250: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     255: ifeq          314
+     258: aload         7
+     260: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     265: checkcast     #114                // class com/bitwig/flt/control_surface/values/AreProxiesEqualsValue
+     268: astore        8
+     270: aload         8
+     272: invokevirtual #338                // Method com/bitwig/flt/control_surface/values/AreProxiesEqualsValue.getProxy1:()Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     275: aload_3
+     276: if_acmpne     289
+     279: aload         8
+     281: invokevirtual #339                // Method com/bitwig/flt/control_surface/values/AreProxiesEqualsValue.getProxy2:()Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     284: aload         4
+     286: if_acmpeq     308
+     289: aload         8
+     291: invokevirtual #338                // Method com/bitwig/flt/control_surface/values/AreProxiesEqualsValue.getProxy1:()Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     294: aload         4
+     296: if_acmpne     311
+     299: aload         8
+     301: invokevirtual #339                // Method com/bitwig/flt/control_surface/values/AreProxiesEqualsValue.getProxy2:()Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     304: aload_3
+     305: if_acmpne     311
+     308: aload         8
+     310: areturn
+     311: goto          248
+     314: new           #114                // class com/bitwig/flt/control_surface/values/AreProxiesEqualsValue
+     317: dup
+     318: aload_3
+     319: aload         4
+     321: invokespecial #337                // Method com/bitwig/flt/control_surface/values/AreProxiesEqualsValue."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;)V
+     324: astore        7
+     326: aload_0
+     327: getfield      #159                // Field mAreProxiesEqualsValue:Ljava/util/List;
+     330: aload         7
+     332: invokeinterface #410,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     337: pop
+     338: aload         7
+     340: areturn
+
+  void targetChanged(com.bitwig.flt.control_surface.proxy.ControlSurfaceProxy, java.lang.Object);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #128                // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #158                // Field $assertionsDisabled:Z
+      32: ifne          62
+      35: aload_1
+      36: invokevirtual #302                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getHost:()Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      39: aload_0
+      40: if_acmpne     47
+      43: iconst_1
+      44: goto          48
+      47: iconst_0
+      48: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      51: ifne          62
+      54: new           #128                // class java/lang/AssertionError
+      57: dup
+      58: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      61: athrow
+      62: getstatic     #158                // Field $assertionsDisabled:Z
+      65: ifne          86
+      68: aload_0
+      69: invokevirtual #278                // Method isDocumentThread:()Z
+      72: invokestatic  #235                // Method ccz.lsS:(Z)Z
+      75: ifne          86
+      78: new           #128                // class java/lang/AssertionError
+      81: dup
+      82: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      85: athrow
+      86: aload_0
+      87: getfield      #159                // Field mAreProxiesEqualsValue:Ljava/util/List;
+      90: invokeinterface #415,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      95: astore_3
+      96: aload_3
+      97: invokeinterface #408,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     102: ifeq          142
+     105: aload_3
+     106: invokeinterface #409,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     111: checkcast     #114                // class com/bitwig/flt/control_surface/values/AreProxiesEqualsValue
+     114: astore        4
+     116: aload         4
+     118: invokevirtual #338                // Method com/bitwig/flt/control_surface/values/AreProxiesEqualsValue.getProxy1:()Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     121: aload_1
+     122: if_acmpeq     134
+     125: aload         4
+     127: invokevirtual #339                // Method com/bitwig/flt/control_surface/values/AreProxiesEqualsValue.getProxy2:()Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     130: aload_1
+     131: if_acmpne     139
+     134: aload         4
+     136: invokevirtual #340                // Method com/bitwig/flt/control_surface/values/AreProxiesEqualsValue.update:()V
+     139: goto          96
+     142: return
+
+  public com.bitwig.extension.api.MemoryBlock allocateMemoryBlock(int);
+    Code:
+       0: aload_0
+       1: bipush        7
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: invokevirtual #244                // Method betaApi:()V
+      10: aload_0
+      11: iload_1
+      12: iconst_1
+      13: ldc           #36                 // String size
+      15: invokevirtual #243                // Method atLeast:(IILjava/lang/String;)V
+      18: aload_0
+      19: getfield      #160                // Field mControlSurface:LLZA;
+      22: iload_1
+      23: invokevirtual #217                // Method LZA.lsS:(I)Laag;
+      26: areturn
+
+  public com.bitwig.extension.api.graphics.Bitmap createBitmap(int, int, com.bitwig.extension.api.graphics.BitmapFormat);
+    Code:
+       0: aload_0
+       1: bipush        7
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: invokevirtual #244                // Method betaApi:()V
+      10: aload_0
+      11: iload_1
+      12: iconst_1
+      13: ldc           #38                 // String width
+      15: invokevirtual #243                // Method atLeast:(IILjava/lang/String;)V
+      18: aload_0
+      19: iload_2
+      20: iconst_1
+      21: ldc           #22                 // String height
+      23: invokevirtual #243                // Method atLeast:(IILjava/lang/String;)V
+      26: aload_3
+      27: ldc           #21                 // String format
+      29: invokestatic  #293                // Method validEnumValue:(Ljava/lang/Enum;Ljava/lang/String;)V
+      32: aload_0
+      33: getfield      #160                // Field mControlSurface:LLZA;
+      36: iload_1
+      37: iload_2
+      38: aload_3
+      39: invokevirtual #206                // Method LZA.hWS:(IILcom/bitwig/extension/api/graphics/BitmapFormat;)Lcom/bitwig/extension/api/graphics/Bitmap;
+      42: areturn
+
+  public com.bitwig.extension.api.graphics.FontFace loadFontFace(java.lang.String);
+    Code:
+       0: aload_0
+       1: bipush        7
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: invokevirtual #244                // Method betaApi:()V
+      10: aload_0
+      11: aload_1
+      12: ldc           #33                 // String path
+      14: invokevirtual #291                // Method notEmpty:(Ljava/lang/String;Ljava/lang/String;)V
+      17: aload_0
+      18: aload_0
+      19: invokevirtual #270                // Method getFontsFileSystem:()LGBX;
+      22: aload_1
+      23: ldc           #33                 // String path
+      25: invokevirtual #269                // Method getFile:(LGBX;Ljava/lang/String;Ljava/lang/String;)LvHQ;
+      28: astore_2
+      29: aload_0
+      30: getfield      #160                // Field mControlSurface:LLZA;
+      33: aload_2
+      34: invokevirtual #210                // Method LZA.hWS:(LvHQ;)Lcom/bitwig/extension/api/graphics/FontFace;
+      37: areturn
+      38: astore_3
+      39: new           #47                 // class ObM
+      42: dup
+      43: aload_3
+      44: invokespecial #227                // Method ObM."<init>":(Ljava/lang/Throwable;)V
+      47: athrow
+    Exception table:
+       from    to  target type
+          29    37    38   Class java/io/IOException
+
+  public com.bitwig.extension.api.graphics.FontOptions createFontOptions();
+    Code:
+       0: aload_0
+       1: bipush        7
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: invokevirtual #244                // Method betaApi:()V
+      10: aload_0
+      11: getfield      #160                // Field mControlSurface:LLZA;
+      14: invokevirtual #198                // Method LZA.QsM:()Lcom/bitwig/extension/api/graphics/FontOptions;
+      17: areturn
+
+  public com.bitwig.extension.api.graphics.Image loadPNG(java.lang.String);
+    Code:
+       0: aload_0
+       1: bipush        7
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: invokevirtual #244                // Method betaApi:()V
+      10: aload_0
+      11: aload_1
+      12: ldc           #33                 // String path
+      14: invokevirtual #291                // Method notEmpty:(Ljava/lang/String;Ljava/lang/String;)V
+      17: aload_0
+      18: aload_0
+      19: invokevirtual #271                // Method getImagesFileSystem:()LGBX;
+      22: aload_1
+      23: ldc           #33                 // String path
+      25: invokevirtual #269                // Method getFile:(LGBX;Ljava/lang/String;Ljava/lang/String;)LvHQ;
+      28: astore_2
+      29: aload_0
+      30: getfield      #160                // Field mControlSurface:LLZA;
+      33: aload_2
+      34: invokevirtual #215                // Method LZA.iW:(LvHQ;)Lcom/bitwig/extension/api/graphics/Image;
+      37: areturn
+      38: astore_3
+      39: new           #47                 // class ObM
+      42: dup
+      43: aload_3
+      44: invokespecial #227                // Method ObM."<init>":(Ljava/lang/Throwable;)V
+      47: athrow
+    Exception table:
+       from    to  target type
+          29    37    38   Class java/io/IOException
+
+  public com.bitwig.extension.api.graphics.Image loadSVG(java.lang.String, double);
+    Code:
+       0: aload_0
+       1: bipush        7
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: invokevirtual #244                // Method betaApi:()V
+      10: aload_0
+      11: aload_1
+      12: ldc           #33                 // String path
+      14: invokevirtual #291                // Method notEmpty:(Ljava/lang/String;Ljava/lang/String;)V
+      17: aload_0
+      18: dload_2
+      19: ldc           #34                 // String scale
+      21: invokevirtual #279                // Method isFinite:(DLjava/lang/String;)V
+      24: aload_0
+      25: aload_0
+      26: invokevirtual #271                // Method getImagesFileSystem:()LGBX;
+      29: aload_1
+      30: ldc           #33                 // String path
+      32: invokevirtual #269                // Method getFile:(LGBX;Ljava/lang/String;Ljava/lang/String;)LvHQ;
+      35: astore        4
+      37: aload_0
+      38: getfield      #160                // Field mControlSurface:LLZA;
+      41: aload         4
+      43: dload_2
+      44: invokevirtual #211                // Method LZA.hWS:(LvHQ;D)Lcom/bitwig/extension/api/graphics/Image;
+      47: areturn
+      48: astore        5
+      50: new           #47                 // class ObM
+      53: dup
+      54: aload         5
+      56: invokespecial #227                // Method ObM."<init>":(Ljava/lang/Throwable;)V
+      59: athrow
+    Exception table:
+       from    to  target type
+          37    47    48   Class java/io/IOException
+
+  protected GBX getImagesFileSystem();
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: invokevirtual #197                // Method LZA.Mzk:()LGBX;
+       7: areturn
+
+  protected GBX getFontsFileSystem();
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: invokevirtual #221                // Method LZA.uEr:()LGBX;
+       7: areturn
+
+  protected GBX getDocumentationFileSystem();
+    Code:
+       0: aload_0
+       1: getfield      #160                // Field mControlSurface:LLZA;
+       4: invokevirtual #200                // Method LZA.Sp3:()LGBX;
+       7: areturn
+
+  public void deleteObjects(com.bitwig.extension.controller.api.DeleteableObject...);
+    Code:
+       0: ldc           #17                 // String control_surface.operations.delete_objects_from
+       2: iconst_1
+       3: anewarray     #130                // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: invokevirtual #268                // Method getControlSurface:()LLZA;
+      12: invokevirtual #203                // Method LZA.Yqp:()LrYJ;
+      15: invokevirtual #380                // Method rYJ.iW:()Ljava/lang/String;
+      18: aastore
+      19: invokestatic  #382                // Method yxg.hWS:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      22: astore_2
+      23: aload_0
+      24: aload_2
+      25: aload_1
+      26: invokevirtual #264                // Method deleteObjects:(Ljava/lang/String;[Lcom/bitwig/extension/controller/api/DeleteableObject;)V
+      29: return
+
+  public void deleteObjects(java.lang.String, com.bitwig.extension.controller.api.DeleteableObject...);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #233                // Method ccz.hWS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: bipush        10
+      27: invokevirtual #290                // Method newSince:(I)V
+      30: aload_0
+      31: aload_2
+      32: ldc           #31                 // String objects
+      34: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      37: aload_0
+      38: aload_1
+      39: ldc           #37                 // String undoName
+      41: invokevirtual #291                // Method notEmpty:(Ljava/lang/String;Ljava/lang/String;)V
+      44: aload_2
+      45: arraylength
+      46: ifne          50
+      49: return
+      50: aload_2
+      51: astore_3
+      52: aload_3
+      53: arraylength
+      54: istore        4
+      56: iconst_0
+      57: istore        5
+      59: iload         5
+      61: iload         4
+      63: if_icmpge     86
+      66: aload_3
+      67: iload         5
+      69: aaload
+      70: astore        6
+      72: aload_0
+      73: aload         6
+      75: ldc           #30                 // String object
+      77: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      80: iinc          5, 1
+      83: goto          59
+      86: aload_0
+      87: invokevirtual #268                // Method getControlSurface:()LLZA;
+      90: aload_0
+      91: aload_1
+      92: aload_2
+      93: invokedynamic #427,  0            // InvokeDynamic #7:run:(Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;Ljava/lang/String;[Lcom/bitwig/extension/controller/api/DeleteableObject;)Ljava/lang/Runnable;
+      98: invokevirtual #218                // Method LZA.lsS:(Ljava/lang/Runnable;)V
+     101: return
+
+  public com.bitwig.flt.control_surface.proxy.DocumentAction deleteObjectsAction(com.bitwig.flt.control_surface.proxy.ControlSurfaceObject, com.bitwig.extension.controller.api.DeleteableObject...);
+    Code:
+       0: ldc           #17                 // String control_surface.operations.delete_objects_from
+       2: iconst_1
+       3: anewarray     #130                // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: invokevirtual #268                // Method getControlSurface:()LLZA;
+      12: invokevirtual #203                // Method LZA.Yqp:()LrYJ;
+      15: invokevirtual #380                // Method rYJ.iW:()Ljava/lang/String;
+      18: aastore
+      19: invokestatic  #382                // Method yxg.hWS:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      22: astore_3
+      23: aload_0
+      24: aload_1
+      25: aload_3
+      26: aload_2
+      27: invokevirtual #265                // Method deleteObjectsAction:(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/String;[Lcom/bitwig/extension/controller/api/DeleteableObject;)Lcom/bitwig/flt/control_surface/proxy/DocumentAction;
+      30: areturn
+
+  public com.bitwig.flt.control_surface.proxy.DocumentAction deleteObjectsAction(com.bitwig.flt.control_surface.proxy.ControlSurfaceObject, java.lang.String, com.bitwig.extension.controller.api.DeleteableObject...);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #277                // Method isControlSurfaceThread:()Z
+      10: invokestatic  #232                // Method ccz.Tsg:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: bipush        15
+      27: invokevirtual #290                // Method newSince:(I)V
+      30: aload_0
+      31: aload_3
+      32: ldc           #31                 // String objects
+      34: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      37: aload_0
+      38: aload_2
+      39: ldc           #37                 // String undoName
+      41: invokevirtual #291                // Method notEmpty:(Ljava/lang/String;Ljava/lang/String;)V
+      44: aload_3
+      45: astore        4
+      47: aload         4
+      49: arraylength
+      50: istore        5
+      52: iconst_0
+      53: istore        6
+      55: iload         6
+      57: iload         5
+      59: if_icmpge     83
+      62: aload         4
+      64: iload         6
+      66: aaload
+      67: astore        7
+      69: aload_0
+      70: aload         7
+      72: ldc           #30                 // String object
+      74: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      77: iinc          6, 1
+      80: goto          55
+      83: new           #90                 // class com/bitwig/flt/control_surface/proxy/DocumentAction
+      86: dup
+      87: aload_1
+      88: aload_0
+      89: aload_2
+      90: aload_3
+      91: invokedynamic #428,  0            // InvokeDynamic #8:run:(Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;Ljava/lang/String;[Lcom/bitwig/extension/controller/api/DeleteableObject;)Ljava/lang/Runnable;
+      96: invokespecial #315                // Method com/bitwig/flt/control_surface/proxy/DocumentAction."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/Runnable;)V
+      99: areturn
+
+  private void doDeleteObjects(java.lang.String, com.bitwig.extension.controller.api.DeleteableObject[]);
+    Code:
+       0: getstatic     #158                // Field $assertionsDisabled:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #278                // Method isDocumentThread:()Z
+      10: invokestatic  #233                // Method ccz.hWS:(Z)Z
+      13: ifne          24
+      16: new           #128                // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #158                // Field $assertionsDisabled:Z
+      27: ifne          53
+      30: aload_2
+      31: ifnull        38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: invokestatic  #233                // Method ccz.hWS:(Z)Z
+      42: ifne          53
+      45: new           #128                // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: aload_2
+      54: ifnull        62
+      57: aload_2
+      58: arraylength
+      59: ifne          63
+      62: return
+      63: new           #142                // class java/util/HashMap
+      66: dup
+      67: invokespecial #374                // Method java/util/HashMap."<init>":()V
+      70: astore_3
+      71: aload_2
+      72: astore        4
+      74: aload         4
+      76: arraylength
+      77: istore        5
+      79: iconst_0
+      80: istore        6
+      82: iload         6
+      84: iload         5
+      86: if_icmpge     188
+      89: aload         4
+      91: iload         6
+      93: aaload
+      94: astore        7
+      96: aload         7
+      98: checkcast     #80                 // class com/bitwig/flt/control_surface/proxy/ControlSurfaceDocumentObjectProxy
+     101: astore        8
+     103: aload         8
+     105: invokevirtual #298                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceDocumentObjectProxy.getTarget:()Ljava/lang/Object;
+     108: checkcast     #124                // class com/bitwig/ramona/core/wIl
+     111: astore        9
+     113: aload         8
+     115: invokevirtual #297                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceDocumentObjectProxy.getDocument:()Lcom/bitwig/flt/document/core/iface/nlh;
+     118: astore        10
+     120: getstatic     #158                // Field $assertionsDisabled:Z
+     123: ifne          150
+     126: aload         10
+     128: ifnull        135
+     131: iconst_1
+     132: goto          136
+     135: iconst_0
+     136: invokestatic  #233                // Method ccz.hWS:(Z)Z
+     139: ifne          150
+     142: new           #128                // class java/lang/AssertionError
+     145: dup
+     146: invokespecial #358                // Method java/lang/AssertionError."<init>":()V
+     149: athrow
+     150: aload         10
+     152: ifnonnull     158
+     155: goto          182
+     158: aload_3
+     159: aload         10
+     161: invokedynamic #429,  0            // InvokeDynamic #9:apply:()Ljava/util/function/Function;
+     166: invokevirtual #375                // Method java/util/HashMap.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+     169: checkcast     #141                // class java/util/ArrayList
+     172: astore        11
+     174: aload         11
+     176: aload         9
+     178: invokevirtual #373                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+     181: pop
+     182: iinc          6, 1
+     185: goto          82
+     188: aload_3
+     189: aload_1
+     190: invokedynamic #430,  0            // InvokeDynamic #10:accept:(Ljava/lang/String;)Ljava/util/function/BiConsumer;
+     195: invokevirtual #376                // Method java/util/HashMap.forEach:(Ljava/util/function/BiConsumer;)V
+     198: return
+
+  public com.bitwig.extension.controller.api.HardwareSurface createHardwareSurface();
+    Code:
+       0: aload_0
+       1: getfield      #167                // Field mHardwareControllerProxy:LBfz;
+       4: invokevirtual #192                // Method Bfz.lsS:()LvMe;
+       7: areturn
+
+  public com.bitwig.extension.controller.api.MidiExpressions midiExpressions();
+    Code:
+       0: aload_0
+       1: getfield      #170                // Field mMidiExpressions:Lstc;
+       4: areturn
+
+  public com.bitwig.extension.controller.api.HardwareActionBindable createAction(java.lang.Runnable, java.util.function.Supplier);
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #85                 // class com/bitwig/flt/control_surface/proxy/CustomAction
+       9: dup
+      10: aload_0
+      11: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      14: aload_1
+      15: invokedynamic #431,  0            // InvokeDynamic #11:accept:(Ljava/lang/Runnable;)Ljava/util/function/DoubleConsumer;
+      20: invokespecial #310                // Method com/bitwig/flt/control_surface/proxy/CustomAction."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/util/function/DoubleConsumer;)V
+      23: areturn
+
+  public com.bitwig.extension.controller.api.HardwareActionBindable createAction(java.util.function.DoubleConsumer, java.util.function.Supplier);
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #85                 // class com/bitwig/flt/control_surface/proxy/CustomAction
+       9: dup
+      10: aload_0
+      11: getfield      #181                // Field mRoot:Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      14: aload_1
+      15: invokespecial #310                // Method com/bitwig/flt/control_surface/proxy/CustomAction."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/util/function/DoubleConsumer;)V
+      18: areturn
+
+  public com.bitwig.extension.controller.api.RelativeHardwarControlBindable createRelativeHardwareControlStepTarget(com.bitwig.extension.controller.api.HardwareActionBindable, com.bitwig.extension.controller.api.HardwareActionBindable);
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #40                 // class DML
+       9: dup
+      10: aload_1
+      11: checkcast     #61                 // class aNw
+      14: aload_2
+      15: checkcast     #61                 // class aNw
+      18: invokespecial #193                // Method DML."<init>":(LaNw;LaNw;)V
+      21: areturn
+
+  public com.bitwig.extension.controller.api.RelativeHardwarControlBindable createRelativeHardwareControlAdjustmentTarget(java.util.function.DoubleConsumer);
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #53                 // class YBS
+       9: dup
+      10: aload_1
+      11: invokespecial #229                // Method YBS."<init>":(Ljava/util/function/DoubleConsumer;)V
+      14: areturn
+
+  public com.bitwig.extension.controller.api.AbsoluteHardwarControlBindable createAbsoluteHardwareControlAdjustmentTarget(java.util.function.DoubleConsumer);
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #43                 // class IHH
+       9: dup
+      10: aload_1
+      11: invokespecial #195                // Method IHH."<init>":(Ljava/util/function/DoubleConsumer;)V
+      14: areturn
+
+  public com.bitwig.extension.controller.api.HardwareActionMatcher createOrHardwareActionMatcher(com.bitwig.extension.controller.api.HardwareActionMatcher, com.bitwig.extension.controller.api.HardwareActionMatcher);
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: aload_1
+       8: ldc           #24                 // String matcher1
+      10: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      13: aload_0
+      14: aload_2
+      15: ldc           #25                 // String matcher2
+      17: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      20: new           #51                 // class Wxo
+      23: dup
+      24: aload_1
+      25: checkcast     #54                 // class YtE
+      28: aload_2
+      29: checkcast     #54                 // class YtE
+      32: invokespecial #228                // Method Wxo."<init>":(LYtE;LYtE;)V
+      35: areturn
+
+  public com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createOrRelativeHardwareValueMatcher(com.bitwig.extension.controller.api.RelativeHardwareValueMatcher, com.bitwig.extension.controller.api.RelativeHardwareValueMatcher);
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: aload_1
+       8: ldc           #24                 // String matcher1
+      10: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      13: aload_0
+      14: aload_2
+      15: ldc           #25                 // String matcher2
+      17: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      20: new           #42                 // class Hbn
+      23: dup
+      24: aload_1
+      25: checkcast     #150                // class sSk
+      28: aload_2
+      29: checkcast     #150                // class sSk
+      32: invokespecial #194                // Method Hbn."<init>":(LsSk;LsSk;)V
+      35: areturn
+
+  public com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createOrAbsoluteHardwareValueMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher, com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher);
+    Code:
+       0: aload_0
+       1: bipush        10
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: aload_0
+       7: aload_1
+       8: ldc           #24                 // String matcher1
+      10: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      13: aload_0
+      14: aload_2
+      15: ldc           #25                 // String matcher2
+      17: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      20: new           #60                 // class aLg
+      23: dup
+      24: aload_1
+      25: checkcast     #126                // class hVv
+      28: aload_2
+      29: checkcast     #126                // class hVv
+      32: invokespecial #230                // Method aLg."<init>":(LhVv;LhVv;)V
+      35: areturn
+
+  public java.util.List getHardwareSurfaces();
+    Code:
+       0: aload_0
+       1: getfield      #167                // Field mHardwareControllerProxy:LBfz;
+       4: invokevirtual #188                // Method Bfz.Rre:()Ljava/util/List;
+       7: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createInstrumentMatcher();
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #89                 // class com/bitwig/flt/control_surface/proxy/DeviceTypeMatcher
+       9: dup
+      10: getstatic     #156                // Field Vqg.lsS:LVqg;
+      13: invokespecial #314                // Method com/bitwig/flt/control_surface/proxy/DeviceTypeMatcher."<init>":(LVqg;)V
+      16: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createAudioEffectMatcher();
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #89                 // class com/bitwig/flt/control_surface/proxy/DeviceTypeMatcher
+       9: dup
+      10: getstatic     #154                // Field Vqg.hWS:LVqg;
+      13: invokespecial #314                // Method com/bitwig/flt/control_surface/proxy/DeviceTypeMatcher."<init>":(LVqg;)V
+      16: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createNoteEffectMatcher();
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #89                 // class com/bitwig/flt/control_surface/proxy/DeviceTypeMatcher
+       9: dup
+      10: getstatic     #155                // Field Vqg.iW:LVqg;
+      13: invokespecial #314                // Method com/bitwig/flt/control_surface/proxy/DeviceTypeMatcher."<init>":(LVqg;)V
+      16: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createBitwigDeviceMatcher(java.util.UUID);
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #88                 // class com/bitwig/flt/control_surface/proxy/DeviceIdMatcher
+       9: dup
+      10: new           #118                // class com/bitwig/flt/device/fhD
+      13: dup
+      14: aload_1
+      15: iconst_0
+      16: invokespecial #351                // Method com/bitwig/flt/device/fhD."<init>":(Ljava/util/UUID;I)V
+      19: invokespecial #313                // Method com/bitwig/flt/control_surface/proxy/DeviceIdMatcher."<init>":(Lcom/bitwig/flt/device/Cwi;)V
+      22: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createVST2DeviceMatcher(int);
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #88                 // class com/bitwig/flt/control_surface/proxy/DeviceIdMatcher
+       9: dup
+      10: new           #119                // class com/bitwig/flt/device/ipU
+      13: dup
+      14: iload_1
+      15: invokespecial #352                // Method com/bitwig/flt/device/ipU."<init>":(I)V
+      18: invokespecial #313                // Method com/bitwig/flt/control_surface/proxy/DeviceIdMatcher."<init>":(Lcom/bitwig/flt/device/Cwi;)V
+      21: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createVST3DeviceMatcher(java.lang.String);
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #88                 // class com/bitwig/flt/control_surface/proxy/DeviceIdMatcher
+       9: dup
+      10: new           #117                // class com/bitwig/flt/device/RIO
+      13: dup
+      14: aload_1
+      15: invokespecial #350                // Method com/bitwig/flt/device/RIO."<init>":(Ljava/lang/String;)V
+      18: invokespecial #313                // Method com/bitwig/flt/control_surface/proxy/DeviceIdMatcher."<init>":(Lcom/bitwig/flt/device/Cwi;)V
+      21: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createAndDeviceMatcher(com.bitwig.extension.controller.api.DeviceMatcher...);
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #73                 // class com/bitwig/flt/control_surface/proxy/AndDeviceMatcher
+       9: dup
+      10: aload_0
+      11: aload_1
+      12: invokevirtual #245                // Method checkDeviceMatchers:([Lcom/bitwig/extension/controller/api/DeviceMatcher;)[Lcom/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher;
+      15: invokespecial #239                // Method com/bitwig/flt/control_surface/proxy/AndDeviceMatcher."<init>":([Lcom/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher;)V
+      18: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createOrDeviceMatcher(com.bitwig.extension.controller.api.DeviceMatcher...);
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #104                // class com/bitwig/flt/control_surface/proxy/OrDeviceMatcher
+       9: dup
+      10: aload_0
+      11: aload_1
+      12: invokevirtual #245                // Method checkDeviceMatchers:([Lcom/bitwig/extension/controller/api/DeviceMatcher;)[Lcom/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher;
+      15: invokespecial #327                // Method com/bitwig/flt/control_surface/proxy/OrDeviceMatcher."<init>":([Lcom/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher;)V
+      18: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createActiveDeviceMatcher();
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #72                 // class com/bitwig/flt/control_surface/proxy/ActiveDeviceMatcher
+       9: dup
+      10: invokespecial #238                // Method com/bitwig/flt/control_surface/proxy/ActiveDeviceMatcher."<init>":()V
+      13: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createFirstDeviceInChainMatcher();
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #92                 // class com/bitwig/flt/control_surface/proxy/FirstDeviceInChainMatcher
+       9: dup
+      10: invokespecial #318                // Method com/bitwig/flt/control_surface/proxy/FirstDeviceInChainMatcher."<init>":()V
+      13: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createLastDeviceInChainMatcher();
+    Code:
+       0: aload_0
+       1: bipush        12
+       3: invokevirtual #290                // Method newSince:(I)V
+       6: new           #95                 // class com/bitwig/flt/control_surface/proxy/LastDeviceInChainMatcher
+       9: dup
+      10: invokespecial #320                // Method com/bitwig/flt/control_surface/proxy/LastDeviceInChainMatcher."<init>":()V
+      13: areturn
+
+  public com.bitwig.extension.controller.api.DeviceMatcher createNotDeviceMatcher(com.bitwig.extension.controller.api.DeviceMatcher);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #18                 // String deviceMatcher
+       4: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: bipush        12
+      10: invokevirtual #290                // Method newSince:(I)V
+      13: new           #100                // class com/bitwig/flt/control_surface/proxy/NotDeviceMatcher
+      16: dup
+      17: aload_1
+      18: invokestatic  #237                // Method com/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher.get:(Lcom/bitwig/extension/controller/api/DeviceMatcher;)Lcom/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher;
+      21: invokespecial #325                // Method com/bitwig/flt/control_surface/proxy/NotDeviceMatcher."<init>":(Lcom/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher;)V
+      24: areturn
+
+  private com.bitwig.flt.control_surface.proxy.AbstractDeviceMatcher[] checkDeviceMatchers(com.bitwig.extension.controller.api.DeviceMatcher[]);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #19                 // String deviceMatchers
+       4: invokevirtual #292                // Method notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_1
+       8: arraylength
+       9: iconst_1
+      10: if_icmpgt     23
+      13: new           #47                 // class ObM
+      16: dup
+      17: ldc           #20                 // String deviceMatchers must contain at least 2 device matchers
+      19: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+      22: athrow
+      23: aload_1
+      24: arraylength
+      25: anewarray     #71                 // class com/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher
+      28: astore_2
+      29: iconst_0
+      30: istore_3
+      31: iload_3
+      32: aload_1
+      33: arraylength
+      34: if_icmpge     75
+      37: aload_1
+      38: iload_3
+      39: aaload
+      40: astore        4
+      42: aload         4
+      44: ifnonnull     61
+      47: new           #47                 // class ObM
+      50: dup
+      51: iload_3
+      52: invokedynamic #432,  0            // InvokeDynamic #12:makeConcatWithConstants:(I)Ljava/lang/String;
+      57: invokespecial #226                // Method ObM."<init>":(Ljava/lang/String;)V
+      60: athrow
+      61: aload_2
+      62: iload_3
+      63: aload         4
+      65: invokestatic  #237                // Method com/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher.get:(Lcom/bitwig/extension/controller/api/DeviceMatcher;)Lcom/bitwig/flt/control_surface/proxy/AbstractDeviceMatcher;
+      68: aastore
+      69: iinc          3, 1
+      72: goto          31
+      75: aload_2
+      76: areturn
+
+  public com.bitwig.extension.controller.api.PopupBrowser createPopupBrowser();
+    Code:
+       0: aload_0
+       1: invokevirtual #260                // Method createPopupBrowser:()Lcom/bitwig/flt/control_surface/proxy/PopupBrowserProxy;
+       4: areturn
+
+  public com.bitwig.extension.controller.api.CursorTrack createCursorTrack(int, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: invokevirtual #251                // Method createCursorTrack:(II)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+       6: areturn
+
+  public com.bitwig.extension.controller.api.UserControlBank createUserControls(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #263                // Method createUserControls:(I)Lcom/bitwig/flt/control_surface/proxy/UserControlBankObject;
+       5: areturn
+
+  public com.bitwig.extension.controller.api.Clip createArrangerCursorClip(int, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: invokevirtual #248                // Method createArrangerCursorClip:(II)Lcom/bitwig/flt/control_surface/proxy/ArrangerClipCursorProxy;
+       6: areturn
+
+  public com.bitwig.extension.controller.api.Clip createLauncherCursorClip(int, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: invokevirtual #258                // Method createLauncherCursorClip:(II)Lcom/bitwig/flt/control_surface/proxy/LauncherClipCursorProxy;
+       6: areturn
+
+  public com.bitwig.extension.controller.api.Clip createCursorClip(int, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: invokevirtual #250                // Method createCursorClip:(II)Lcom/bitwig/flt/control_surface/proxy/AbstractClipCursorProxy;
+       6: areturn
+
+  public com.bitwig.extension.controller.api.CursorTrack createCursorTrack(java.lang.String, java.lang.String, int, int, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: iload_3
+       4: iload         4
+       6: iload         5
+       8: invokevirtual #253                // Method createCursorTrack:(Ljava/lang/String;Ljava/lang/String;IIZ)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+      11: areturn
+
+  public com.bitwig.extension.controller.api.CursorTrack createCursorTrack(java.lang.String, int, int);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: iload_3
+       4: invokevirtual #252                // Method createCursorTrack:(Ljava/lang/String;II)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+       7: areturn
+
+  public com.bitwig.extension.controller.api.CursorTrack createArrangerCursorTrack(int, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: invokevirtual #249                // Method createArrangerCursorTrack:(II)Lcom/bitwig/flt/control_surface/proxy/CursorTrackProxy;
+       6: areturn
+
+  public com.bitwig.extension.controller.api.NotificationSettings getNotificationSettings();
+    Code:
+       0: aload_0
+       1: invokevirtual #274                // Method getNotificationSettings:()Lcom/bitwig/flt/control_surface/proxy/NotificationSettingsObject;
+       4: areturn
+
+  public com.bitwig.extension.controller.api.Preferences getPreferences();
+    Code:
+       0: aload_0
+       1: invokevirtual #275                // Method getPreferences:()Lcom/bitwig/flt/control_surface/proxy/PreferencesProxy;
+       4: areturn
+
+  public com.bitwig.extension.controller.api.MidiOut getMidiOutPort(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #273                // Method getMidiOutPort:(I)Lcom/bitwig/flt/control_surface/proxy/MidiOutPort;
+       5: areturn
+
+  public com.bitwig.extension.controller.api.MidiIn getMidiInPort(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #272                // Method getMidiInPort:(I)Lcom/bitwig/flt/control_surface/proxy/MidiInPort;
+       5: areturn
+
+  private static void lambda$createAction$9(java.lang.Runnable, double);
+    Code:
+       0: aload_0
+       1: invokeinterface #407,  1          // InterfaceMethod java/lang/Runnable.run:()V
+       6: return
+
+  private static void lambda$doDeleteObjects$8(java.lang.String, com.bitwig.flt.document.core.iface.nlh, java.util.ArrayList);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: iconst_0
+       3: invokeinterface #404,  3          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.hWS:(Ljava/lang/String;Z)V
+       8: aload_1
+       9: aload_2
+      10: invokeinterface #406,  2          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.iW:(Ljava/util/Collection;)V
+      15: aload_1
+      16: iconst_0
+      17: invokeinterface #405,  2          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.hWS:(Z)V
+      22: return
+
+  private static java.util.ArrayList lambda$doDeleteObjects$7(com.bitwig.flt.document.core.iface.nlh);
+    Code:
+       0: new           #141                // class java/util/ArrayList
+       3: dup
+       4: invokespecial #371                // Method java/util/ArrayList."<init>":()V
+       7: areturn
+
+  private void lambda$deleteObjectsAction$6(java.lang.String, com.bitwig.extension.controller.api.DeleteableObject[]);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #267                // Method doDeleteObjects:(Ljava/lang/String;[Lcom/bitwig/extension/controller/api/DeleteableObject;)V
+       6: return
+
+  private void lambda$deleteObjects$5(java.lang.String, com.bitwig.extension.controller.api.DeleteableObject[]);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #267                // Method doDeleteObjects:(Ljava/lang/String;[Lcom/bitwig/extension/controller/api/DeleteableObject;)V
+       6: return
+
+  private static void lambda$scheduleTask$4(java.util.function.Consumer, java.lang.Object[]);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #417,  2          // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/Object;)V
+       7: return
+
+  private static void lambda$scheduleTask$3(java.util.function.Function, java.lang.Object[]);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #418,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+       7: pop
+       8: return
+
+  private static void lambda$scheduleTask$2(java.util.function.Consumer);
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokeinterface #417,  2          // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/Object;)V
+       7: return
+
+  private static void lambda$scheduleTask$1(java.util.function.Function);
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokeinterface #418,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+       7: pop
+       8: return
+
+  private static void lambda$connectToRemoteHost$0(com.bitwig.extension.callback.ConnectionEstablishedCallback, com.bitwig.flt.control_surface.proxy.RemoteConnectionSection);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #390,  2          // InterfaceMethod com/bitwig/extension/callback/ConnectionEstablishedCallback.connectionEstablished:(Lcom/bitwig/extension/controller/api/RemoteConnection;)V
+       7: return
+
+  static {};
+    Code:
+       0: ldc           #77                 // class com/bitwig/flt/control_surface/proxy/BitwigStudioHost
+       2: invokevirtual #359                // Method java/lang/Class.desiredAssertionStatus:()Z
+       5: ifne          12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: putstatic     #158                // Field $assertionsDisabled:Z
+      16: return
+}

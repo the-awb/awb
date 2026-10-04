@@ -1,0 +1,3882 @@
+Compiled from "SourceFile"
+public class LZA implements ihf {
+  private static rCV iW;
+
+  private final java.util.List lsS;
+
+  private eTu Rre;
+
+  private final java.util.List oVA;
+
+  private final java.util.List oO1;
+
+  private final int Tsg;
+
+  private final java.lang.String SvE;
+
+  private final nNh rOT;
+
+  private com.bitwig.flt.document.core.iface.nlh wPl;
+
+  private final rYJ ZtL;
+
+  private Wdc XsJ;
+
+  private boolean FKC;
+
+  private boolean sNw;
+
+  private com.bitwig.flt.control_surface.proxy.BitwigStudioHost Krn;
+
+  private int SVx;
+
+  private int YXl;
+
+  private final com.bitwig.flt.prefs.wLU KzU;
+
+  private com.bitwig.ramona.core.iEi hqe;
+
+  private boolean uZO;
+
+  private boolean jtC;
+
+  private final com.bitwig.ramona.core.mqV xVV;
+
+  private java.util.List Yqp;
+
+  private boolean Ga1;
+
+  private final com.bitwig.flt.control_surface.proxy.HardwareDeviceImpl[] yo3;
+
+  private final java.util.List QsM;
+
+  private final com.bitwig.graphics.nVJ MWL;
+
+  private final int euL;
+
+  private final GBX iMP;
+
+  private final GBX Eq;
+
+  private final GBX OdZ;
+
+  private final com.bitwig.base.platform.fhD VPX;
+
+  private int OWx;
+
+  private final Jpm TVX;
+
+  private final int Tm2;
+
+  private boolean WMU;
+
+  private final WnU LFd;
+
+  private final java.util.List jBo;
+
+  private boolean Mzk;
+
+  static final boolean hWS;
+
+  public static void hWS(rCV);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          26
+       6: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+       9: invokevirtual #247                // Method com/bitwig/flt/app/jeR.isEventDispatchThread:()Z
+      12: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      15: ifne          26
+      18: new           #76                 // class java/lang/AssertionError
+      21: dup
+      22: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      25: athrow
+      26: aload_0
+      27: putstatic     #130                // Field iW:LrCV;
+      30: return
+
+  public LZA(nNh, rYJ, int, java.lang.String, com.bitwig.flt.prefs.wLU, java.util.Map, java.lang.String[], java.lang.String[], EFJ[], com.bitwig.graphics.nVJ);
+    Code:
+       0: aload_0
+       1: invokespecial #306                // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #87                 // class java/util/ArrayList
+       8: dup
+       9: invokespecial #312                // Method java/util/ArrayList."<init>":()V
+      12: putfield      #133                // Field lsS:Ljava/util/List;
+      15: aload_0
+      16: new           #87                 // class java/util/ArrayList
+      19: dup
+      20: invokespecial #312                // Method java/util/ArrayList."<init>":()V
+      23: putfield      #135                // Field oVA:Ljava/util/List;
+      26: aload_0
+      27: new           #87                 // class java/util/ArrayList
+      30: dup
+      31: invokespecial #312                // Method java/util/ArrayList."<init>":()V
+      34: putfield      #134                // Field oO1:Ljava/util/List;
+      37: aload_0
+      38: new           #24                 // class BEL
+      41: dup
+      42: aload_0
+      43: invokespecial #146                // Method BEL."<init>":(LLZA;)V
+      46: putfield      #140                // Field xVV:Lcom/bitwig/ramona/core/mqV;
+      49: aload_0
+      50: new           #87                 // class java/util/ArrayList
+      53: dup
+      54: invokespecial #312                // Method java/util/ArrayList."<init>":()V
+      57: putfield      #124                // Field Yqp:Ljava/util/List;
+      60: aload_0
+      61: new           #87                 // class java/util/ArrayList
+      64: dup
+      65: iconst_1
+      66: invokespecial #313                // Method java/util/ArrayList."<init>":(I)V
+      69: putfield      #113                // Field QsM:Ljava/util/List;
+      72: aload_0
+      73: new           #52                 // class com/bitwig/base/platform/fhD
+      76: dup
+      77: ldc           #11                 // String ControlSurface
+      79: invokespecial #237                // Method com/bitwig/base/platform/fhD."<init>":(Ljava/lang/String;)V
+      82: putfield      #120                // Field VPX:Lcom/bitwig/base/platform/fhD;
+      85: aload_0
+      86: new           #28                 // class Jpm
+      89: dup
+      90: iconst_0
+      91: invokespecial #155                // Method Jpm."<init>":(Z)V
+      94: putfield      #117                // Field TVX:LJpm;
+      97: aload_0
+      98: invokestatic  #315                // Method lD.iW:()I
+     101: putfield      #118                // Field Tm2:I
+     104: aload_0
+     105: aload_0
+     106: invokedynamic #367,  0            // InvokeDynamic #0:eventOccurred:(LLZA;)LWnU;
+     111: putfield      #108                // Field LFd:LWnU;
+     114: aload_0
+     115: new           #87                 // class java/util/ArrayList
+     118: dup
+     119: iconst_1
+     120: invokespecial #313                // Method java/util/ArrayList."<init>":(I)V
+     123: putfield      #131                // Field jBo:Ljava/util/List;
+     126: getstatic     #127                // Field hWS:Z
+     129: ifne          155
+     132: aload_1
+     133: ifnull        140
+     136: iconst_1
+     137: goto          141
+     140: iconst_0
+     141: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     144: ifne          155
+     147: new           #76                 // class java/lang/AssertionError
+     150: dup
+     151: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     154: athrow
+     155: getstatic     #127                // Field hWS:Z
+     158: ifne          179
+     161: aload_1
+     162: invokevirtual #317                // Method nNh.Tsg:()Z
+     165: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     168: ifne          179
+     171: new           #76                 // class java/lang/AssertionError
+     174: dup
+     175: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     178: athrow
+     179: getstatic     #127                // Field hWS:Z
+     182: ifne          208
+     185: aload_2
+     186: ifnull        193
+     189: iconst_1
+     190: goto          194
+     193: iconst_0
+     194: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     197: ifne          208
+     200: new           #76                 // class java/lang/AssertionError
+     203: dup
+     204: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     207: athrow
+     208: getstatic     #127                // Field hWS:Z
+     211: ifne          237
+     214: iload_3
+     215: iflt          222
+     218: iconst_1
+     219: goto          223
+     222: iconst_0
+     223: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     226: ifne          237
+     229: new           #76                 // class java/lang/AssertionError
+     232: dup
+     233: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     236: athrow
+     237: getstatic     #127                // Field hWS:Z
+     240: ifne          267
+     243: aload         5
+     245: ifnull        252
+     248: iconst_1
+     249: goto          253
+     252: iconst_0
+     253: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     256: ifne          267
+     259: new           #76                 // class java/lang/AssertionError
+     262: dup
+     263: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     266: athrow
+     267: getstatic     #127                // Field hWS:Z
+     270: ifne          302
+     273: aload         7
+     275: arraylength
+     276: aload_2
+     277: invokevirtual #324                // Method rYJ.Krn:()I
+     280: if_icmpne     287
+     283: iconst_1
+     284: goto          288
+     287: iconst_0
+     288: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     291: ifne          302
+     294: new           #76                 // class java/lang/AssertionError
+     297: dup
+     298: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     301: athrow
+     302: getstatic     #127                // Field hWS:Z
+     305: ifne          337
+     308: aload         8
+     310: arraylength
+     311: aload_2
+     312: invokevirtual #327                // Method rYJ.SVx:()I
+     315: if_icmpne     322
+     318: iconst_1
+     319: goto          323
+     322: iconst_0
+     323: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     326: ifne          337
+     329: new           #76                 // class java/lang/AssertionError
+     332: dup
+     333: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     336: athrow
+     337: getstatic     #127                // Field hWS:Z
+     340: ifne          372
+     343: aload         9
+     345: arraylength
+     346: aload_2
+     347: invokevirtual #333                // Method rYJ.rOT:()I
+     350: if_icmpne     357
+     353: iconst_1
+     354: goto          358
+     357: iconst_0
+     358: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     361: ifne          372
+     364: new           #76                 // class java/lang/AssertionError
+     367: dup
+     368: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     371: athrow
+     372: getstatic     #127                // Field hWS:Z
+     375: ifne          402
+     378: aload         10
+     380: ifnull        387
+     383: iconst_1
+     384: goto          388
+     387: iconst_0
+     388: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     391: ifne          402
+     394: new           #76                 // class java/lang/AssertionError
+     397: dup
+     398: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     401: athrow
+     402: aload_0
+     403: aload_1
+     404: putfield      #136                // Field rOT:LnNh;
+     407: aload_0
+     408: iload_3
+     409: putfield      #119                // Field Tsg:I
+     412: aload_0
+     413: aload         4
+     415: putfield      #116                // Field SvE:Ljava/lang/String;
+     418: aload_0
+     419: aload_2
+     420: putfield      #125                // Field ZtL:LrYJ;
+     423: aload_0
+     424: aload         5
+     426: putfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+     429: aload_0
+     430: aload_2
+     431: invokevirtual #328                // Method rYJ.YXl:()I
+     434: putfield      #126                // Field euL:I
+     437: aload_0
+     438: aload         10
+     440: putfield      #109                // Field MWL:Lcom/bitwig/graphics/nVJ;
+     443: aload         7
+     445: ifnull        510
+     448: iconst_0
+     449: istore        11
+     451: aload         7
+     453: astore        12
+     455: aload         12
+     457: arraylength
+     458: istore        13
+     460: iconst_0
+     461: istore        14
+     463: iload         14
+     465: iload         13
+     467: if_icmpge     497
+     470: aload         12
+     472: iload         14
+     474: aaload
+     475: astore        15
+     477: aload         15
+     479: invokestatic  #221                // Method Wp.iW:(Ljava/lang/String;)Z
+     482: ifeq          491
+     485: iconst_1
+     486: istore        11
+     488: goto          497
+     491: iinc          14, 1
+     494: goto          463
+     497: iload         11
+     499: ifeq          510
+     502: aload_0
+     503: getfield      #117                // Field TVX:LJpm;
+     506: iconst_1
+     507: invokevirtual #157                // Method Jpm.setBoolValue:(Z)V
+     510: aload_1
+     511: invokevirtual #321                // Method nNh.wPl:()LIlf;
+     514: invokevirtual #152                // Method Ilf.Rre:()Z
+     517: ifne          531
+     520: new           #33                 // class Nk
+     523: dup
+     524: aload_0
+     525: ldc           #10                 // String Connection closed
+     527: invokespecial #205                // Method Nk."<init>":(LLZA;Ljava/lang/String;)V
+     530: athrow
+     531: aload_2
+     532: invokevirtual #329                // Method rYJ.hWS:()Z
+     535: ifeq          571
+     538: aload_0
+     539: invokestatic  #231                // Method cCy.oXg:()LcCy;
+     542: invokevirtual #226                // Method cCy.Qz2:()LGBX;
+     545: putfield      #129                // Field iMP:LGBX;
+     548: aload_0
+     549: invokestatic  #231                // Method cCy.oXg:()LcCy;
+     552: invokevirtual #227                // Method cCy.hWS:()LGBX;
+     555: putfield      #103                // Field Eq:LGBX;
+     558: aload_0
+     559: invokestatic  #231                // Method cCy.oXg:()LcCy;
+     562: invokevirtual #230                // Method cCy.n_:()LGBX;
+     565: putfield      #112                // Field OdZ:LGBX;
+     568: goto          595
+     571: aload_0
+     572: aload_2
+     573: invokevirtual #334                // Method rYJ.yo3:()LGBX;
+     576: putfield      #129                // Field iMP:LGBX;
+     579: aload_0
+     580: aload_2
+     581: invokevirtual #326                // Method rYJ.QsM:()LGBX;
+     584: putfield      #103                // Field Eq:LGBX;
+     587: aload_0
+     588: aload_2
+     589: invokevirtual #325                // Method rYJ.MWL:()LGBX;
+     592: putfield      #112                // Field OdZ:LGBX;
+     595: getstatic     #127                // Field hWS:Z
+     598: ifne          627
+     601: aload_0
+     602: getfield      #129                // Field iMP:LGBX;
+     605: ifnull        612
+     608: iconst_1
+     609: goto          613
+     612: iconst_0
+     613: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     616: ifne          627
+     619: new           #76                 // class java/lang/AssertionError
+     622: dup
+     623: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     626: athrow
+     627: getstatic     #127                // Field hWS:Z
+     630: ifne          659
+     633: aload_0
+     634: getfield      #103                // Field Eq:LGBX;
+     637: ifnull        644
+     640: iconst_1
+     641: goto          645
+     644: iconst_0
+     645: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     648: ifne          659
+     651: new           #76                 // class java/lang/AssertionError
+     654: dup
+     655: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     658: athrow
+     659: getstatic     #127                // Field hWS:Z
+     662: ifne          691
+     665: aload_0
+     666: getfield      #112                // Field OdZ:LGBX;
+     669: ifnull        676
+     672: iconst_1
+     673: goto          677
+     676: iconst_0
+     677: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     680: ifne          691
+     683: new           #76                 // class java/lang/AssertionError
+     686: dup
+     687: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     690: athrow
+     691: aload_2
+     692: invokevirtual #333                // Method rYJ.rOT:()I
+     695: istore        11
+     697: aload_0
+     698: iload         11
+     700: anewarray     #62                 // class com/bitwig/flt/control_surface/proxy/HardwareDeviceImpl
+     703: putfield      #141                // Field yo3:[Lcom/bitwig/flt/control_surface/proxy/HardwareDeviceImpl;
+     706: iconst_0
+     707: istore        12
+     709: iload         12
+     711: iload         11
+     713: if_icmpge     738
+     716: aload_0
+     717: getfield      #141                // Field yo3:[Lcom/bitwig/flt/control_surface/proxy/HardwareDeviceImpl;
+     720: iload         12
+     722: aload_0
+     723: aload         9
+     725: iload         12
+     727: aaload
+     728: invokestatic  #271                // Method com/bitwig/flt/control_surface/proxy/HardwareDeviceImpl.create:(LLZA;LEFJ;)Lcom/bitwig/flt/control_surface/proxy/HardwareDeviceImpl;
+     731: aastore
+     732: iinc          12, 1
+     735: goto          709
+     738: aload_0
+     739: aload         7
+     741: aload         8
+     743: aload         6
+     745: invokevirtual #183                // Method hWS:([Ljava/lang/String;[Ljava/lang/String;Ljava/util/Map;)V
+     748: goto          759
+     751: astore        12
+     753: aload_0
+     754: aload         12
+     756: invokevirtual #186                // Method iW:(Ljava/lang/Throwable;)V
+     759: getstatic     #127                // Field hWS:Z
+     762: ifne          791
+     765: aload_0
+     766: getfield      #114                // Field Rre:LeTu;
+     769: ifnull        776
+     772: iconst_1
+     773: goto          777
+     776: iconst_0
+     777: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     780: ifne          791
+     783: new           #76                 // class java/lang/AssertionError
+     786: dup
+     787: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     790: athrow
+     791: getstatic     #127                // Field hWS:Z
+     794: ifne          823
+     797: aload_0
+     798: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     801: ifnull        808
+     804: iconst_1
+     805: goto          809
+     808: iconst_0
+     809: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     812: ifne          823
+     815: new           #76                 // class java/lang/AssertionError
+     818: dup
+     819: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     822: athrow
+     823: aload_0
+     824: aload_0
+     825: invokedynamic #368,  0            // InvokeDynamic #1:run:(LLZA;)Ljava/lang/Runnable;
+     830: invokevirtual #192                // Method lsS:(Ljava/lang/Runnable;)V
+     833: return
+    Exception table:
+       from    to  target type
+         738   748   751   Class java/lang/Throwable
+
+  public com.bitwig.flt.control_surface.proxy.BitwigStudioHost hWS();
+    Code:
+       0: aload_0
+       1: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+       4: areturn
+
+  private void hWS(java.lang.String[], java.lang.String[], java.util.Map);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          32
+       6: aload_0
+       7: getfield      #114                // Field Rre:LeTu;
+      10: ifnonnull     17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      21: ifne          32
+      24: new           #76                 // class java/lang/AssertionError
+      27: dup
+      28: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      31: athrow
+      32: getstatic     #127                // Field hWS:Z
+      35: ifne          64
+      38: aload_0
+      39: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      42: ifnonnull     49
+      45: iconst_1
+      46: goto          50
+      49: iconst_0
+      50: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      53: ifne          64
+      56: new           #76                 // class java/lang/AssertionError
+      59: dup
+      60: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      63: athrow
+      64: getstatic     #127                // Field hWS:Z
+      67: ifne          88
+      70: aload_0
+      71: invokevirtual #166                // Method SVx:()Z
+      74: invokestatic  #235                // Method ccz.iW:(Z)Z
+      77: ifne          88
+      80: new           #76                 // class java/lang/AssertionError
+      83: dup
+      84: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      87: athrow
+      88: aload_0
+      89: aload_0
+      90: getfield      #136                // Field rOT:LnNh;
+      93: invokevirtual #321                // Method nNh.wPl:()LIlf;
+      96: aload_1
+      97: aload_2
+      98: invokevirtual #175                // Method hWS:(LIlf;[Ljava/lang/String;[Ljava/lang/String;)V
+     101: aload_0
+     102: invokevirtual #163                // Method KCb:()V
+     105: aload_0
+     106: aload_3
+     107: invokevirtual #182                // Method hWS:(Ljava/util/Map;)V
+     110: return
+
+  private void iW(java.lang.Throwable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: invokevirtual #197                // Method qdm:()V
+      28: aload_1
+      29: instanceof    #34                 // class ObM
+      32: ifeq          46
+      35: aload_0
+      36: aload_1
+      37: checkcast     #34                 // class ObM
+      40: invokevirtual #176                // Method hWS:(LObM;)V
+      43: goto          51
+      46: aload_0
+      47: aload_1
+      48: invokevirtual #181                // Method hWS:(Ljava/lang/Throwable;)V
+      51: aload_1
+      52: instanceof    #82                 // class java/lang/RuntimeException
+      55: ifeq          63
+      58: aload_1
+      59: checkcast     #82                 // class java/lang/RuntimeException
+      62: athrow
+      63: aload_1
+      64: instanceof    #78                 // class java/lang/Error
+      67: ifeq          75
+      70: aload_1
+      71: checkcast     #78                 // class java/lang/Error
+      74: athrow
+      75: new           #79                 // class java/lang/IllegalStateException
+      78: dup
+      79: aload_1
+      80: invokespecial #305                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/Throwable;)V
+      83: athrow
+
+  public java.util.UUID iW();
+    Code:
+       0: aload_0
+       1: getfield      #125                // Field ZtL:LrYJ;
+       4: invokevirtual #332                // Method rYJ.oO1:()Ljava/util/UUID;
+       7: areturn
+
+  public int lsS();
+    Code:
+       0: aload_0
+       1: getfield      #119                // Field Tsg:I
+       4: ireturn
+
+  public java.lang.String Rre();
+    Code:
+       0: aload_0
+       1: invokevirtual #188                // Method jtC:()Z
+       4: ifeq          15
+       7: aload_0
+       8: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+      11: invokevirtual #275                // Method com/bitwig/flt/prefs/wLU.H3K:()Ljava/lang/String;
+      14: areturn
+      15: aload_0
+      16: getfield      #116                // Field SvE:Ljava/lang/String;
+      19: areturn
+
+  public int oVA();
+    Code:
+       0: aload_0
+       1: getfield      #126                // Field euL:I
+       4: ireturn
+
+  private uSF Y2L();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          26
+       6: invokestatic  #231                // Method cCy.oXg:()LcCy;
+       9: invokevirtual #229                // Method cCy.isEventDispatchThread:()Z
+      12: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      15: ifne          26
+      18: new           #76                 // class java/lang/AssertionError
+      21: dup
+      22: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      25: athrow
+      26: aload_0
+      27: invokevirtual #160                // Method Cy2:()Ljava/lang/String;
+      30: astore_1
+      31: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+      34: invokevirtual #250                // Method com/bitwig/flt/app/jeR.sHx:()LBVl;
+      37: aload_1
+      38: invokevirtual #147                // Method BVl.hWS:(Ljava/lang/String;)LuSF;
+      41: areturn
+
+  private java.lang.String Cy2();
+    Code:
+       0: aload_0
+       1: invokevirtual #170                // Method Yqp:()LrYJ;
+       4: invokevirtual #331                // Method rYJ.iW:()Ljava/lang/String;
+       7: astore_1
+       8: aload_0
+       9: getfield      #119                // Field Tsg:I
+      12: ifle          28
+      15: aload_1
+      16: aload_0
+      17: getfield      #119                // Field Tsg:I
+      20: iconst_1
+      21: iadd
+      22: invokedynamic #369,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+      27: astore_1
+      28: aload_1
+      29: areturn
+
+  public eTu oO1();
+    Code:
+       0: aload_0
+       1: getfield      #114                // Field Rre:LeTu;
+       4: areturn
+
+  private void hWS(java.util.Map);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          56
+      30: aload_0
+      31: getfield      #114                // Field Rre:LeTu;
+      34: ifnonnull     41
+      37: iconst_1
+      38: goto          42
+      41: iconst_0
+      42: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      45: ifne          56
+      48: new           #76                 // class java/lang/AssertionError
+      51: dup
+      52: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      55: athrow
+      56: getstatic     #127                // Field hWS:Z
+      59: ifne          88
+      62: aload_0
+      63: getfield      #137                // Field sNw:Z
+      66: ifne          73
+      69: iconst_1
+      70: goto          74
+      73: iconst_0
+      74: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      77: ifne          88
+      80: new           #76                 // class java/lang/AssertionError
+      83: dup
+      84: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      87: athrow
+      88: aconst_null
+      89: astore_2
+      90: aload_0
+      91: aload_0
+      92: aload_1
+      93: invokevirtual #187                // Method iW:(Ljava/util/Map;)LeTu;
+      96: putfield      #114                // Field Rre:LeTu;
+      99: getstatic     #127                // Field hWS:Z
+     102: ifne          131
+     105: aload_0
+     106: getfield      #114                // Field Rre:LeTu;
+     109: ifnull        116
+     112: iconst_1
+     113: goto          117
+     116: iconst_0
+     117: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     120: ifne          131
+     123: new           #76                 // class java/lang/AssertionError
+     126: dup
+     127: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     130: athrow
+     131: getstatic     #127                // Field hWS:Z
+     134: ifne          163
+     137: aload_0
+     138: getfield      #137                // Field sNw:Z
+     141: ifne          148
+     144: iconst_1
+     145: goto          149
+     148: iconst_0
+     149: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     152: ifne          163
+     155: new           #76                 // class java/lang/AssertionError
+     158: dup
+     159: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     162: athrow
+     163: aload_0
+     164: iconst_1
+     165: putfield      #137                // Field sNw:Z
+     168: aload_0
+     169: getfield      #114                // Field Rre:LeTu;
+     172: invokevirtual #295                // Method eTu.lsS:()V
+     175: aload_0
+     176: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     179: invokevirtual #258                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.getPreferences:()Lcom/bitwig/flt/control_surface/proxy/PreferencesProxy;
+     182: invokevirtual #274                // Method com/bitwig/flt/control_surface/proxy/PreferencesProxy.finishedInitializing:()V
+     185: aload_0
+     186: iconst_0
+     187: putfield      #137                // Field sNw:Z
+     190: aload_2
+     191: astore_3
+     192: aload_0
+     193: aload_0
+     194: aload_3
+     195: invokedynamic #370,  0            // InvokeDynamic #3:run:(LLZA;Ljava/lang/Throwable;)Ljava/lang/Runnable;
+     200: invokevirtual #192                // Method lsS:(Ljava/lang/Runnable;)V
+     203: goto          236
+     206: astore_3
+     207: aload_3
+     208: astore_2
+     209: aload_3
+     210: athrow
+     211: astore        4
+     213: aload_0
+     214: iconst_0
+     215: putfield      #137                // Field sNw:Z
+     218: aload_2
+     219: astore        5
+     221: aload_0
+     222: aload_0
+     223: aload         5
+     225: invokedynamic #370,  0            // InvokeDynamic #3:run:(LLZA;Ljava/lang/Throwable;)Ljava/lang/Runnable;
+     230: invokevirtual #192                // Method lsS:(Ljava/lang/Runnable;)V
+     233: aload         4
+     235: athrow
+     236: return
+    Exception table:
+       from    to  target type
+          90   185   206   Class java/lang/Throwable
+          90   185   211   any
+         206   213   211   any
+
+  private void lsS(java.lang.Throwable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+      27: aload_0
+      28: aload_1
+      29: invokevirtual #244                // Method com/bitwig/flt/app/jeR.hWS:(LLZA;Ljava/lang/Throwable;)V
+      32: return
+
+  private void x31();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #114                // Field Rre:LeTu;
+      28: ifnull        79
+      31: aload_0
+      32: getfield      #136                // Field rOT:LnNh;
+      35: invokevirtual #321                // Method nNh.wPl:()LIlf;
+      38: invokevirtual #152                // Method Ilf.Rre:()Z
+      41: ifeq          74
+      44: aload_0
+      45: getfield      #114                // Field Rre:LeTu;
+      48: invokevirtual #296                // Method eTu.oO1:()V
+      51: goto          74
+      54: astore_1
+      55: getstatic     #142                // Field ccz.oVA:LMcJ;
+      58: aload_0
+      59: getfield      #125                // Field ZtL:LrYJ;
+      62: invokevirtual #323                // Method rYJ.Ga1:()Ljava/lang/String;
+      65: invokedynamic #371,  0            // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      70: aload_1
+      71: invokevirtual #204                // Method McJ.lsS:(Ljava/lang/Object;Ljava/lang/Throwable;)V
+      74: aload_0
+      75: aconst_null
+      76: putfield      #114                // Field Rre:LeTu;
+      79: return
+    Exception table:
+       from    to  target type
+          44    51    54   Class java/lang/Throwable
+
+  public void Tsg();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #114                // Field Rre:LeTu;
+      28: invokevirtual #297                // Method eTu.rOT:()V
+      31: return
+
+  public void hWS(int);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      28: ifnull        53
+      31: aload_0
+      32: getfield      #114                // Field Rre:LeTu;
+      35: ifnull        53
+      38: aload_0
+      39: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      42: iload_1
+      43: invokevirtual #261                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.processScheduledTasks:(I)V
+      46: aload_0
+      47: getfield      #114                // Field Rre:LeTu;
+      50: invokevirtual #298                // Method eTu.wPl:()V
+      53: return
+
+  public boolean SvE();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #104                // Field FKC:Z
+      28: ireturn
+
+  public boolean rOT();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #137                // Field sNw:Z
+      28: ireturn
+
+  public void wPl();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: invokevirtual #167                // Method SvE:()Z
+      28: ifne          41
+      31: new           #34                 // class ObM
+      34: dup
+      35: ldc           #21                 // String This can only be called during driver setup
+      37: invokespecial #208                // Method ObM."<init>":(Ljava/lang/String;)V
+      40: athrow
+      41: return
+
+  public final void ZtL();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #111                // Field OWx:I
+      28: ifne          48
+      31: aload_0
+      32: invokevirtual #198                // Method rOT:()Z
+      35: ifne          48
+      38: new           #34                 // class ObM
+      41: dup
+      42: ldc           #20                 // String This can only be called during driver initialization
+      44: invokespecial #208                // Method ObM."<init>":(Ljava/lang/String;)V
+      47: athrow
+      48: return
+
+  public void XsJ();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          32
+       6: aload_0
+       7: getfield      #111                // Field OWx:I
+      10: iflt          17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      21: ifne          32
+      24: new           #76                 // class java/lang/AssertionError
+      27: dup
+      28: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      31: athrow
+      32: aload_0
+      33: dup
+      34: getfield      #111                // Field OWx:I
+      37: iconst_1
+      38: iadd
+      39: putfield      #111                // Field OWx:I
+      42: return
+
+  public void FKC();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          32
+       6: aload_0
+       7: getfield      #111                // Field OWx:I
+      10: ifle          17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      21: ifne          32
+      24: new           #76                 // class java/lang/AssertionError
+      27: dup
+      28: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      31: athrow
+      32: aload_0
+      33: dup
+      34: getfield      #111                // Field OWx:I
+      37: iconst_1
+      38: isub
+      39: putfield      #111                // Field OWx:I
+      42: return
+
+  public com.bitwig.flt.document.core.iface.nlh sNw();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+      28: areturn
+
+  public void hWS(com.bitwig.flt.document.core.iface.nlh);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_1
+      25: ifnull        36
+      28: aload_0
+      29: getfield      #114                // Field Rre:LeTu;
+      32: ifnonnull     36
+      35: return
+      36: aload_1
+      37: aload_0
+      38: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+      41: if_acmpeq     176
+      44: aload_0
+      45: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+      48: ifnull        59
+      51: aload_0
+      52: aload_0
+      53: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+      56: invokevirtual #191                // Method lsS:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+      59: getstatic     #127                // Field hWS:Z
+      62: ifne          91
+      65: aload_0
+      66: getfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+      69: ifnonnull     76
+      72: iconst_1
+      73: goto          77
+      76: iconst_0
+      77: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      80: ifne          91
+      83: new           #76                 // class java/lang/AssertionError
+      86: dup
+      87: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      90: athrow
+      91: getstatic     #127                // Field hWS:Z
+      94: ifne          123
+      97: aload_0
+      98: getfield      #122                // Field XsJ:LWdc;
+     101: ifnonnull     108
+     104: iconst_1
+     105: goto          109
+     108: iconst_0
+     109: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     112: ifne          123
+     115: new           #76                 // class java/lang/AssertionError
+     118: dup
+     119: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     122: athrow
+     123: aload_0
+     124: aload_1
+     125: putfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+     128: aload_0
+     129: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+     132: ifnull        172
+     135: aload_0
+     136: aload_1
+     137: invokevirtual #184                // Method iW:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+     140: getstatic     #127                // Field hWS:Z
+     143: ifne          172
+     146: aload_0
+     147: getfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     150: ifnull        157
+     153: iconst_1
+     154: goto          158
+     157: iconst_0
+     158: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     161: ifne          172
+     164: new           #76                 // class java/lang/AssertionError
+     167: dup
+     168: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     171: athrow
+     172: aload_0
+     173: invokevirtual #168                // Method XDZ:()V
+     176: getstatic     #127                // Field hWS:Z
+     179: ifne          220
+     182: aload_0
+     183: getfield      #114                // Field Rre:LeTu;
+     186: ifnull        205
+     189: aload_0
+     190: invokevirtual #199                // Method sNw:()Lcom/bitwig/flt/document/core/iface/nlh;
+     193: aload_1
+     194: if_acmpne     201
+     197: iconst_1
+     198: goto          206
+     201: iconst_0
+     202: goto          206
+     205: iconst_1
+     206: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     209: ifne          220
+     212: new           #76                 // class java/lang/AssertionError
+     215: dup
+     216: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     219: athrow
+     220: return
+
+  private void iW(com.bitwig.flt.document.core.iface.nlh);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          57
+      30: aload_0
+      31: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+      34: aload_1
+      35: if_acmpne     42
+      38: iconst_1
+      39: goto          43
+      42: iconst_0
+      43: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      46: ifne          57
+      49: new           #76                 // class java/lang/AssertionError
+      52: dup
+      53: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      56: athrow
+      57: getstatic     #127                // Field hWS:Z
+      60: ifne          86
+      63: aload_1
+      64: ifnull        71
+      67: iconst_1
+      68: goto          72
+      71: iconst_0
+      72: invokestatic  #235                // Method ccz.iW:(Z)Z
+      75: ifne          86
+      78: new           #76                 // class java/lang/AssertionError
+      81: dup
+      82: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      85: athrow
+      86: getstatic     #127                // Field hWS:Z
+      89: ifne          120
+      92: aload_1
+      93: invokeinterface #350,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.jb:()Z
+      98: ifne          105
+     101: iconst_1
+     102: goto          106
+     105: iconst_0
+     106: invokestatic  #235                // Method ccz.iW:(Z)Z
+     109: ifne          120
+     112: new           #76                 // class java/lang/AssertionError
+     115: dup
+     116: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     119: athrow
+     120: getstatic     #127                // Field hWS:Z
+     123: ifne          154
+     126: aload_1
+     127: invokeinterface #346,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.A_:()Z
+     132: ifne          139
+     135: iconst_1
+     136: goto          140
+     139: iconst_0
+     140: invokestatic  #235                // Method ccz.iW:(Z)Z
+     143: ifne          154
+     146: new           #76                 // class java/lang/AssertionError
+     149: dup
+     150: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     153: athrow
+     154: getstatic     #127                // Field hWS:Z
+     157: ifne          188
+     160: aload_1
+     161: invokeinterface #347,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ycb:()Lcom/bitwig/ramona/core/iEi;
+     166: ifnull        173
+     169: iconst_1
+     170: goto          174
+     173: iconst_0
+     174: invokestatic  #235                // Method ccz.iW:(Z)Z
+     177: ifne          188
+     180: new           #76                 // class java/lang/AssertionError
+     183: dup
+     184: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     187: athrow
+     188: getstatic     #127                // Field hWS:Z
+     191: ifne          214
+     194: aload_1
+     195: invokeinterface #348,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ze2:()Z
+     200: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     203: ifne          214
+     206: new           #76                 // class java/lang/AssertionError
+     209: dup
+     210: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     213: athrow
+     214: getstatic     #127                // Field hWS:Z
+     217: ifne          246
+     220: aload_0
+     221: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     224: ifnull        231
+     227: iconst_1
+     228: goto          232
+     231: iconst_0
+     232: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     235: ifne          246
+     238: new           #76                 // class java/lang/AssertionError
+     241: dup
+     242: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     245: athrow
+     246: getstatic     #127                // Field hWS:Z
+     249: ifne          278
+     252: aload_0
+     253: getfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     256: ifnonnull     263
+     259: iconst_1
+     260: goto          264
+     263: iconst_0
+     264: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     267: ifne          278
+     270: new           #76                 // class java/lang/AssertionError
+     273: dup
+     274: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     277: athrow
+     278: aload_0
+     279: aload_0
+     280: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+     283: invokeinterface #347,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ycb:()Lcom/bitwig/ramona/core/iEi;
+     288: putfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     291: getstatic     #127                // Field hWS:Z
+     294: ifne          323
+     297: aload_0
+     298: getfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     301: ifnull        308
+     304: iconst_1
+     305: goto          309
+     308: iconst_0
+     309: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     312: ifne          323
+     315: new           #76                 // class java/lang/AssertionError
+     318: dup
+     319: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     322: athrow
+     323: aload_0
+     324: getfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     327: aload_0
+     328: getfield      #140                // Field xVV:Lcom/bitwig/ramona/core/mqV;
+     331: invokevirtual #283                // Method com/bitwig/ramona/core/iEi.hWS:(Lcom/bitwig/ramona/core/mqV;)V
+     334: aload_0
+     335: aload_0
+     336: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+     339: aload_0
+     340: getfield      #125                // Field ZtL:LrYJ;
+     343: invokevirtual #331                // Method rYJ.iW:()Ljava/lang/String;
+     346: aload_0
+     347: getfield      #125                // Field ZtL:LrYJ;
+     350: invokevirtual #332                // Method rYJ.oO1:()Ljava/util/UUID;
+     353: aload_0
+     354: invokevirtual #189                // Method lsS:()I
+     357: aload_0
+     358: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+     361: invokevirtual #277                // Method com/bitwig/flt/prefs/wLU.Rre:()Ljava/util/List;
+     364: iconst_1
+     365: invokeinterface #349,  6          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.hWS:(Ljava/lang/String;Ljava/util/UUID;ILjava/util/List;Z)LWdc;
+     370: putfield      #122                // Field XsJ:LWdc;
+     373: getstatic     #127                // Field hWS:Z
+     376: ifne          405
+     379: aload_0
+     380: getfield      #122                // Field XsJ:LWdc;
+     383: ifnull        390
+     386: iconst_1
+     387: goto          391
+     390: iconst_0
+     391: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     394: ifne          405
+     397: new           #76                 // class java/lang/AssertionError
+     400: dup
+     401: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     404: athrow
+     405: getstatic     #127                // Field hWS:Z
+     408: ifne          442
+     411: aload_0
+     412: getfield      #122                // Field XsJ:LWdc;
+     415: invokeinterface #338,  1          // InterfaceMethod Wdc.Tsg:()Z
+     420: ifne          427
+     423: iconst_1
+     424: goto          428
+     427: iconst_0
+     428: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     431: ifne          442
+     434: new           #76                 // class java/lang/AssertionError
+     437: dup
+     438: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     441: athrow
+     442: aload_0
+     443: getfield      #122                // Field XsJ:LWdc;
+     446: aload_0
+     447: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+     450: invokevirtual #279                // Method com/bitwig/flt/prefs/wLU.Ynf:()Ljava/lang/String;
+     453: invokeinterface #339,  2          // InterfaceMethod Wdc.hWS:(Ljava/lang/String;)V
+     458: aload_0
+     459: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+     462: invokevirtual #282                // Method com/bitwig/flt/prefs/wLU.oVA:()Ljava/lang/String;
+     465: astore_2
+     466: aload_2
+     467: ifnull        502
+     470: aload_2
+     471: invokevirtual #308                // Method java/lang/String.isEmpty:()Z
+     474: ifne          502
+     477: aload_0
+     478: getfield      #122                // Field XsJ:LWdc;
+     481: invokeinterface #337,  1          // InterfaceMethod Wdc.Rre:()Ljava/lang/String;
+     486: invokevirtual #308                // Method java/lang/String.isEmpty:()Z
+     489: ifeq          502
+     492: aload_0
+     493: getfield      #122                // Field XsJ:LWdc;
+     496: aload_2
+     497: invokeinterface #341,  2          // InterfaceMethod Wdc.iW:(Ljava/lang/String;)V
+     502: aload_0
+     503: getfield      #122                // Field XsJ:LWdc;
+     506: iconst_1
+     507: invokeinterface #340,  2          // InterfaceMethod Wdc.hWS:(Z)V
+     512: aload_0
+     513: getfield      #133                // Field lsS:Ljava/util/List;
+     516: invokeinterface #362,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     521: astore_3
+     522: aload_3
+     523: invokeinterface #355,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     528: ifeq          551
+     531: aload_3
+     532: invokeinterface #356,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     537: checkcast     #61                 // class com/bitwig/flt/control_surface/proxy/DirectNoteInput
+     540: astore        4
+     542: aload         4
+     544: aload_1
+     545: invokevirtual #264                // Method com/bitwig/flt/control_surface/proxy/DirectNoteInput.connectToDocument:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+     548: goto          522
+     551: aload_0
+     552: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     555: aload_1
+     556: aload_0
+     557: getfield      #122                // Field XsJ:LWdc;
+     560: aload_0
+     561: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+     564: invokevirtual #253                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.connectToDocument:(Lcom/bitwig/flt/document/core/iface/nlh;LWdc;Lcom/bitwig/flt/prefs/wLU;)V
+     567: return
+
+  private void lsS(com.bitwig.flt.document.core.iface.nlh);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          53
+      30: aload_1
+      31: ifnull        38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #76                 // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: getstatic     #127                // Field hWS:Z
+      56: ifne          86
+      59: aload_0
+      60: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+      63: aload_1
+      64: if_acmpne     71
+      67: iconst_1
+      68: goto          72
+      71: iconst_0
+      72: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      75: ifne          86
+      78: new           #76                 // class java/lang/AssertionError
+      81: dup
+      82: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      85: athrow
+      86: getstatic     #127                // Field hWS:Z
+      89: ifne          112
+      92: aload_1
+      93: invokeinterface #348,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ze2:()Z
+      98: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     101: ifne          112
+     104: new           #76                 // class java/lang/AssertionError
+     107: dup
+     108: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     111: athrow
+     112: getstatic     #127                // Field hWS:Z
+     115: ifne          144
+     118: aload_0
+     119: getfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     122: ifnull        129
+     125: iconst_1
+     126: goto          130
+     129: iconst_0
+     130: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     133: ifne          144
+     136: new           #76                 // class java/lang/AssertionError
+     139: dup
+     140: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     143: athrow
+     144: getstatic     #127                // Field hWS:Z
+     147: ifne          182
+     150: aload_0
+     151: getfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     154: aload_1
+     155: invokeinterface #347,  1          // InterfaceMethod com/bitwig/flt/document/core/iface/nlh.Ycb:()Lcom/bitwig/ramona/core/iEi;
+     160: if_acmpne     167
+     163: iconst_1
+     164: goto          168
+     167: iconst_0
+     168: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     171: ifne          182
+     174: new           #76                 // class java/lang/AssertionError
+     177: dup
+     178: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     181: athrow
+     182: getstatic     #127                // Field hWS:Z
+     185: ifne          214
+     188: aload_0
+     189: getfield      #122                // Field XsJ:LWdc;
+     192: ifnull        199
+     195: iconst_1
+     196: goto          200
+     199: iconst_0
+     200: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     203: ifne          214
+     206: new           #76                 // class java/lang/AssertionError
+     209: dup
+     210: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     213: athrow
+     214: aload_0
+     215: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     218: aload_1
+     219: invokevirtual #254                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.disconnectFromDocument:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+     222: aload_0
+     223: getfield      #133                // Field lsS:Ljava/util/List;
+     226: invokeinterface #362,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     231: astore_2
+     232: aload_2
+     233: invokeinterface #355,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     238: ifeq          258
+     241: aload_2
+     242: invokeinterface #356,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     247: checkcast     #61                 // class com/bitwig/flt/control_surface/proxy/DirectNoteInput
+     250: astore_3
+     251: aload_3
+     252: invokevirtual #266                // Method com/bitwig/flt/control_surface/proxy/DirectNoteInput.disconnectFromDocument:()V
+     255: goto          232
+     258: aload_0
+     259: getfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     262: aload_0
+     263: getfield      #140                // Field xVV:Lcom/bitwig/ramona/core/mqV;
+     266: invokevirtual #284                // Method com/bitwig/ramona/core/iEi.iW:(Lcom/bitwig/ramona/core/mqV;)V
+     269: aload_0
+     270: aconst_null
+     271: putfield      #128                // Field hqe:Lcom/bitwig/ramona/core/iEi;
+     274: aload_0
+     275: getfield      #122                // Field XsJ:LWdc;
+     278: iconst_0
+     279: invokeinterface #340,  2          // InterfaceMethod Wdc.hWS:(Z)V
+     284: aload_0
+     285: aconst_null
+     286: putfield      #122                // Field XsJ:LWdc;
+     289: return
+
+  public java.util.List Krn();
+    Code:
+       0: aload_0
+       1: getfield      #133                // Field lsS:Ljava/util/List;
+       4: areturn
+
+  private boolean Rre(java.lang.String);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: iconst_0
+      25: ireturn
+
+  public void hWS(uSF, java.lang.String);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: ldc           #23                 // String restart
+      26: aload_2
+      27: invokevirtual #307                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      30: ifeq          41
+      33: aload_0
+      34: invokevirtual #161                // Method Ga1:()Lcom/bitwig/flt/prefs/wLU;
+      37: invokevirtual #281                // Method com/bitwig/flt/prefs/wLU.iMP:()V
+      40: return
+      41: aload_0
+      42: getfield      #136                // Field rOT:LnNh;
+      45: aload_0
+      46: aload_2
+      47: invokedynamic #372,  0            // InvokeDynamic #5:run:(LLZA;Ljava/lang/String;)Ljava/lang/Runnable;
+      52: invokevirtual #319                // Method nNh.hWS:(Ljava/lang/Runnable;)V
+      55: return
+
+  public boolean SVx();
+    Code:
+       0: aload_0
+       1: getfield      #136                // Field rOT:LnNh;
+       4: invokevirtual #317                // Method nNh.Tsg:()Z
+       7: ireturn
+
+  public void hWS(java.lang.Object, java.lang.Runnable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #76                 // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #127                // Field hWS:Z
+      32: ifne          58
+      35: aload_2
+      36: ifnull        43
+      39: iconst_1
+      40: goto          44
+      43: iconst_0
+      44: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      47: ifne          58
+      50: new           #76                 // class java/lang/AssertionError
+      53: dup
+      54: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      57: athrow
+      58: getstatic     #127                // Field hWS:Z
+      61: ifne          82
+      64: aload_0
+      65: invokevirtual #188                // Method jtC:()Z
+      68: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      71: ifne          82
+      74: new           #76                 // class java/lang/AssertionError
+      77: dup
+      78: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      81: athrow
+      82: aload_0
+      83: getfield      #114                // Field Rre:LeTu;
+      86: astore_3
+      87: aload_3
+      88: ifnull        97
+      91: aload_3
+      92: aload_1
+      93: aload_2
+      94: invokevirtual #290                // Method eTu.hWS:(Ljava/lang/Object;Ljava/lang/Runnable;)V
+      97: return
+
+  public void hWS(java.lang.Runnable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #114                // Field Rre:LeTu;
+      28: astore_2
+      29: aload_2
+      30: ifnull        38
+      33: aload_2
+      34: aload_1
+      35: invokevirtual #291                // Method eTu.hWS:(Ljava/lang/Runnable;)V
+      38: return
+
+  private void XDZ();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #114                // Field Rre:LeTu;
+      28: astore_1
+      29: aload_1
+      30: ifnull        37
+      33: aload_1
+      34: invokevirtual #286                // Method eTu.SvE:()V
+      37: return
+
+  public void iW(java.lang.Object, java.lang.Runnable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #76                 // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #127                // Field hWS:Z
+      32: ifne          58
+      35: aload_2
+      36: ifnull        43
+      39: iconst_1
+      40: goto          44
+      43: iconst_0
+      44: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      47: ifne          58
+      50: new           #76                 // class java/lang/AssertionError
+      53: dup
+      54: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      57: athrow
+      58: getstatic     #127                // Field hWS:Z
+      61: ifne          90
+      64: aload_0
+      65: invokevirtual #188                // Method jtC:()Z
+      68: ifne          75
+      71: iconst_1
+      72: goto          76
+      75: iconst_0
+      76: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      79: ifne          90
+      82: new           #76                 // class java/lang/AssertionError
+      85: dup
+      86: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      89: athrow
+      90: aload_0
+      91: getfield      #114                // Field Rre:LeTu;
+      94: astore_3
+      95: aload_3
+      96: ifnull        105
+      99: aload_3
+     100: aload_1
+     101: aload_2
+     102: invokevirtual #293                // Method eTu.iW:(Ljava/lang/Object;Ljava/lang/Runnable;)V
+     105: return
+
+  public void iW(java.lang.Runnable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          32
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: ifne          17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      21: ifne          32
+      24: new           #76                 // class java/lang/AssertionError
+      27: dup
+      28: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      31: athrow
+      32: aload_0
+      33: getfield      #114                // Field Rre:LeTu;
+      36: astore_2
+      37: aload_2
+      38: ifnull        46
+      41: aload_2
+      42: aload_1
+      43: invokevirtual #294                // Method eTu.iW:(Ljava/lang/Runnable;)V
+      46: return
+
+  public void hWS(int, com.bitwig.extension.callback.ShortMidiDataReceivedCallback);
+    Code:
+       0: iload_1
+       1: iflt          12
+       4: iload_1
+       5: aload_0
+       6: getfield      #115                // Field SVx:I
+       9: if_icmplt     22
+      12: new           #34                 // class ObM
+      15: dup
+      16: ldc           #19                 // String Port out of range
+      18: invokespecial #208                // Method ObM."<init>":(Ljava/lang/String;)V
+      21: athrow
+      22: iload_1
+      23: aload_0
+      24: getfield      #134                // Field oO1:Ljava/util/List;
+      27: invokeinterface #364,  1          // InterfaceMethod java/util/List.size:()I
+      32: if_icmplt     45
+      35: new           #34                 // class ObM
+      38: dup
+      39: ldc           #12                 // String Could not aquire MIDI inport
+      41: invokespecial #208                // Method ObM."<init>":(Ljava/lang/String;)V
+      44: athrow
+      45: getstatic     #127                // Field hWS:Z
+      48: ifne          77
+      51: aload_0
+      52: getfield      #114                // Field Rre:LeTu;
+      55: ifnull        62
+      58: iconst_1
+      59: goto          63
+      62: iconst_0
+      63: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      66: ifne          77
+      69: new           #76                 // class java/lang/AssertionError
+      72: dup
+      73: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      76: athrow
+      77: aload_0
+      78: getfield      #134                // Field oO1:Ljava/util/List;
+      81: iload_1
+      82: invokeinterface #360,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      87: checkcast     #36                 // class PRf
+      90: aload_2
+      91: invokevirtual #211                // Method PRf.hWS:(Lcom/bitwig/extension/callback/ShortMidiDataReceivedCallback;)V
+      94: return
+
+  public void hWS(int, com.bitwig.extension.callback.SysexMidiDataReceivedCallback);
+    Code:
+       0: iload_1
+       1: iflt          12
+       4: iload_1
+       5: aload_0
+       6: getfield      #115                // Field SVx:I
+       9: if_icmplt     22
+      12: new           #34                 // class ObM
+      15: dup
+      16: ldc           #19                 // String Port out of range
+      18: invokespecial #208                // Method ObM."<init>":(Ljava/lang/String;)V
+      21: athrow
+      22: iload_1
+      23: aload_0
+      24: getfield      #134                // Field oO1:Ljava/util/List;
+      27: invokeinterface #364,  1          // InterfaceMethod java/util/List.size:()I
+      32: if_icmplt     45
+      35: new           #34                 // class ObM
+      38: dup
+      39: ldc           #12                 // String Could not aquire MIDI inport
+      41: invokespecial #208                // Method ObM."<init>":(Ljava/lang/String;)V
+      44: athrow
+      45: getstatic     #127                // Field hWS:Z
+      48: ifne          77
+      51: aload_0
+      52: getfield      #114                // Field Rre:LeTu;
+      55: ifnull        62
+      58: iconst_1
+      59: goto          63
+      62: iconst_0
+      63: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      66: ifne          77
+      69: new           #76                 // class java/lang/AssertionError
+      72: dup
+      73: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      76: athrow
+      77: aload_0
+      78: getfield      #134                // Field oO1:Ljava/util/List;
+      81: iload_1
+      82: invokeinterface #360,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      87: checkcast     #36                 // class PRf
+      90: aload_2
+      91: invokevirtual #212                // Method PRf.hWS:(Lcom/bitwig/extension/callback/SysexMidiDataReceivedCallback;)V
+      94: return
+
+  public void hWS(int, int);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          29
+       6: iload_1
+       7: iflt          14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #76                 // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #127                // Field hWS:Z
+      32: ifne          58
+      35: iload_2
+      36: iflt          43
+      39: iconst_1
+      40: goto          44
+      43: iconst_0
+      44: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      47: ifne          58
+      50: new           #76                 // class java/lang/AssertionError
+      53: dup
+      54: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      57: athrow
+      58: aload_0
+      59: iload_1
+      60: putfield      #115                // Field SVx:I
+      63: aload_0
+      64: iload_2
+      65: putfield      #123                // Field YXl:I
+      68: return
+
+  private void hWS(Ilf, java.lang.String[], java.lang.String[]);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #235                // Method ccz.iW:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          53
+      30: aload_0
+      31: getfield      #134                // Field oO1:Ljava/util/List;
+      34: invokeinterface #361,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+      39: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #76                 // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: aload_2
+      54: astore        4
+      56: aload         4
+      58: arraylength
+      59: istore        5
+      61: iconst_0
+      62: istore        6
+      64: iload         6
+      66: iload         5
+      68: if_icmpge     124
+      71: aload         4
+      73: iload         6
+      75: aaload
+      76: astore        7
+      78: new           #29                 // class KEi
+      81: dup
+      82: aload_0
+      83: aload_0
+      84: aload_0
+      85: getfield      #134                // Field oO1:Ljava/util/List;
+      88: invokeinterface #364,  1          // InterfaceMethod java/util/List.size:()I
+      93: invokespecial #158                // Method KEi."<init>":(LLZA;LLZA;I)V
+      96: astore        8
+      98: aload_0
+      99: getfield      #134                // Field oO1:Ljava/util/List;
+     102: aload         8
+     104: invokeinterface #357,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     109: pop
+     110: aload_1
+     111: aload         7
+     113: aload         8
+     115: invokevirtual #153                // Method Ilf.hWS:(Ljava/lang/String;LqnA;)V
+     118: iinc          6, 1
+     121: goto          64
+     124: aload_3
+     125: astore        4
+     127: aload         4
+     129: arraylength
+     130: istore        5
+     132: iconst_0
+     133: istore        6
+     135: iload         6
+     137: iload         5
+     139: if_icmpge     171
+     142: aload         4
+     144: iload         6
+     146: aaload
+     147: astore        7
+     149: aload_0
+     150: getfield      #135                // Field oVA:Ljava/util/List;
+     153: aload_1
+     154: aload         7
+     156: invokevirtual #154                // Method Ilf.oVA:(Ljava/lang/String;)LPlK;
+     159: invokeinterface #357,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     164: pop
+     165: iinc          6, 1
+     168: goto          135
+     171: return
+
+  void YXl();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      28: invokevirtual #260                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.initOnEventThread:()V
+      31: return
+
+  private void KCb();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #234                // Method ccz.hWS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #141                // Field yo3:[Lcom/bitwig/flt/control_surface/proxy/HardwareDeviceImpl;
+      28: astore_1
+      29: aload_1
+      30: arraylength
+      31: istore_2
+      32: iconst_0
+      33: istore_3
+      34: iload_3
+      35: iload_2
+      36: if_icmpge     71
+      39: aload_1
+      40: iload_3
+      41: aaload
+      42: astore        4
+      44: aload         4
+      46: invokevirtual #272                // Method com/bitwig/flt/control_surface/proxy/HardwareDeviceImpl.open:()V
+      49: goto          65
+      52: astore        5
+      54: new           #33                 // class Nk
+      57: dup
+      58: aload_0
+      59: aload         5
+      61: invokespecial #207                // Method Nk."<init>":(LLZA;Ljava/lang/Throwable;)V
+      64: athrow
+      65: iinc          3, 1
+      68: goto          34
+      71: return
+    Exception table:
+       from    to  target type
+          44    49    52   Class java/io/IOException
+
+  private void cgd();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #234                // Method ccz.hWS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #141                // Field yo3:[Lcom/bitwig/flt/control_surface/proxy/HardwareDeviceImpl;
+      28: astore_1
+      29: aload_1
+      30: arraylength
+      31: istore_2
+      32: iconst_0
+      33: istore_3
+      34: iload_3
+      35: iload_2
+      36: if_icmpge     55
+      39: aload_1
+      40: iload_3
+      41: aaload
+      42: astore        4
+      44: aload         4
+      46: invokevirtual #270                // Method com/bitwig/flt/control_surface/proxy/HardwareDeviceImpl.close:()V
+      49: iinc          3, 1
+      52: goto          34
+      55: return
+
+  public com.bitwig.extension.controller.api.HardwareDevice iW(int);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #234                // Method ccz.hWS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #141                // Field yo3:[Lcom/bitwig/flt/control_surface/proxy/HardwareDeviceImpl;
+      28: iload_1
+      29: aaload
+      30: areturn
+
+  void KzU();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          56
+      30: aload_0
+      31: getfield      #105                // Field Ga1:Z
+      34: ifne          41
+      37: iconst_1
+      38: goto          42
+      41: iconst_0
+      42: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      45: ifne          56
+      48: new           #76                 // class java/lang/AssertionError
+      51: dup
+      52: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      55: athrow
+      56: aload_0
+      57: getfield      #124                // Field Yqp:Ljava/util/List;
+      60: astore_1
+      61: getstatic     #127                // Field hWS:Z
+      64: ifne          90
+      67: aload_1
+      68: ifnull        75
+      71: iconst_1
+      72: goto          76
+      75: iconst_0
+      76: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      79: ifne          90
+      82: new           #76                 // class java/lang/AssertionError
+      85: dup
+      86: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      89: athrow
+      90: aload_0
+      91: iconst_1
+      92: putfield      #105                // Field Ga1:Z
+      95: aload_0
+      96: aconst_null
+      97: putfield      #124                // Field Yqp:Ljava/util/List;
+     100: aload_0
+     101: getfield      #114                // Field Rre:LeTu;
+     104: ifnull        142
+     107: aload_1
+     108: invokeinterface #362,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     113: astore_2
+     114: aload_2
+     115: invokeinterface #355,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     120: ifeq          142
+     123: aload_2
+     124: invokeinterface #356,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     129: checkcast     #81                 // class java/lang/Runnable
+     132: astore_3
+     133: aload_3
+     134: invokeinterface #354,  1          // InterfaceMethod java/lang/Runnable.run:()V
+     139: goto          114
+     142: return
+
+  private void hWS(int, com.bitwig.extension.callback.ShortMidiDataReceivedCallback, int, int, int);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          48
+      30: aload_0
+      31: getfield      #105                // Field Ga1:Z
+      34: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      37: ifne          48
+      40: new           #76                 // class java/lang/AssertionError
+      43: dup
+      44: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      47: athrow
+      48: getstatic     #130                // Field iW:LrCV;
+      51: astore        6
+      53: iconst_0
+      54: istore        7
+      56: aload         6
+      58: ifnull        196
+      61: iconst_1
+      62: istore        7
+      64: aload_0
+      65: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      68: iload_1
+      69: invokevirtual #257                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.getMidiInPort:(I)Lcom/bitwig/flt/control_surface/proxy/MidiInPort;
+      72: astore        8
+      74: new           #93                 // class lse
+      77: dup
+      78: iload_3
+      79: iload         4
+      81: iload         5
+      83: invokespecial #316                // Method lse."<init>":(III)V
+      86: astore        9
+      88: aconst_null
+      89: astore        10
+      91: aload         8
+      93: invokevirtual #273                // Method com/bitwig/flt/control_surface/proxy/MidiInPort.getNoteInputsToSendTo:()Ljava/util/List;
+      96: invokeinterface #362,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     101: astore        11
+     103: aload         11
+     105: invokeinterface #355,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     110: ifeq          167
+     113: aload         11
+     115: invokeinterface #356,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     120: checkcast     #61                 // class com/bitwig/flt/control_surface/proxy/DirectNoteInput
+     123: astore        12
+     125: aload         12
+     127: aload         9
+     129: invokevirtual #269                // Method com/bitwig/flt/control_surface/proxy/DirectNoteInput.shouldProcessEvent:(Llse;)Z
+     132: ifeq          164
+     135: aload         12
+     137: aload         9
+     139: invokevirtual #267                // Method com/bitwig/flt/control_surface/proxy/DirectNoteInput.getTransformedEvent:(Llse;)Llse;
+     142: astore        13
+     144: aload         13
+     146: ifnull        153
+     149: aload         13
+     151: astore        10
+     153: aload         12
+     155: invokevirtual #268                // Method com/bitwig/flt/control_surface/proxy/DirectNoteInput.shouldConsumeEvents:()Z
+     158: ifne          164
+     161: iconst_0
+     162: istore        7
+     164: goto          103
+     167: aload         10
+     169: ifnonnull     175
+     172: iconst_0
+     173: istore        7
+     175: aload         6
+     177: aload         8
+     179: aload         9
+     181: aload         10
+     183: ifnull        190
+     186: iconst_1
+     187: goto          191
+     190: iconst_0
+     191: invokeinterface #366,  4          // InterfaceMethod rCV.hWS:(Lcom/bitwig/flt/control_surface/proxy/MidiInPort;Llse;Z)V
+     196: aload_0
+     197: getfield      #114                // Field Rre:LeTu;
+     200: ifnull        221
+     203: iload         7
+     205: ifne          221
+     208: aload_0
+     209: getfield      #114                // Field Rre:LeTu;
+     212: aload_2
+     213: iload_3
+     214: iload         4
+     216: iload         5
+     218: invokevirtual #288                // Method eTu.hWS:(Lcom/bitwig/extension/callback/ShortMidiDataReceivedCallback;III)V
+     221: aload         6
+     223: ifnull        233
+     226: aload         6
+     228: invokeinterface #365,  1          // InterfaceMethod rCV.hWS:()V
+     233: return
+
+  private void hWS(com.bitwig.extension.callback.SysexMidiDataReceivedCallback, byte[]);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          53
+      30: aload_2
+      31: ifnull        38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #76                 // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: getstatic     #127                // Field hWS:Z
+      56: ifne          77
+      59: aload_0
+      60: getfield      #105                // Field Ga1:Z
+      63: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      66: ifne          77
+      69: new           #76                 // class java/lang/AssertionError
+      72: dup
+      73: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      76: athrow
+      77: aload_0
+      78: getfield      #114                // Field Rre:LeTu;
+      81: ifnull        96
+      84: aload_0
+      85: getfield      #114                // Field Rre:LeTu;
+      88: aload_1
+      89: aload_2
+      90: invokestatic  #220                // Method Wp.hWS:([B)Ljava/lang/String;
+      93: invokevirtual #289                // Method eTu.hWS:(Lcom/bitwig/extension/callback/SysexMidiDataReceivedCallback;Ljava/lang/String;)V
+      96: return
+
+  private void qdm();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #235                // Method ccz.iW:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #135                // Field oVA:Ljava/util/List;
+      28: invokeinterface #362,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      33: astore_1
+      34: aload_1
+      35: invokeinterface #355,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      40: ifeq          60
+      43: aload_1
+      44: invokeinterface #356,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      49: checkcast     #37                 // class PlK
+      52: astore_2
+      53: aload_2
+      54: invokevirtual #213                // Method PlK.hWS:()V
+      57: goto          34
+      60: aload_0
+      61: getfield      #134                // Field oO1:Ljava/util/List;
+      64: invokeinterface #362,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      69: astore_1
+      70: aload_1
+      71: invokeinterface #355,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      76: ifeq          96
+      79: aload_1
+      80: invokeinterface #356,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      85: checkcast     #95                 // class qnA
+      88: astore_2
+      89: aload_2
+      90: invokevirtual #322                // Method qnA.hWS:()V
+      93: goto          70
+      96: aload_0
+      97: getfield      #133                // Field lsS:Ljava/util/List;
+     100: invokeinterface #362,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     105: astore_1
+     106: aload_1
+     107: invokeinterface #355,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     112: ifeq          132
+     115: aload_1
+     116: invokeinterface #356,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     121: checkcast     #61                 // class com/bitwig/flt/control_surface/proxy/DirectNoteInput
+     124: astore_2
+     125: aload_2
+     126: invokevirtual #265                // Method com/bitwig/flt/control_surface/proxy/DirectNoteInput.destroy:()V
+     129: goto          106
+     132: aload_0
+     133: getfield      #133                // Field lsS:Ljava/util/List;
+     136: invokeinterface #358,  1          // InterfaceMethod java/util/List.clear:()V
+     141: return
+
+  void hqe();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          56
+      30: aload_0
+      31: getfield      #138                // Field uZO:Z
+      34: ifne          41
+      37: iconst_1
+      38: goto          42
+      41: iconst_0
+      42: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      45: ifne          56
+      48: new           #76                 // class java/lang/AssertionError
+      51: dup
+      52: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      55: athrow
+      56: aload_0
+      57: iconst_1
+      58: putfield      #138                // Field uZO:Z
+      61: aload_0
+      62: aconst_null
+      63: invokevirtual #179                // Method hWS:(Lcom/bitwig/flt/document/core/iface/nlh;)V
+      66: aload_0
+      67: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      70: invokevirtual #256                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.disposeOnEventThread:()V
+      73: aload_0
+      74: invokevirtual #169                // Method Y2L:()LuSF;
+      77: aconst_null
+      78: invokevirtual #335                // Method uSF.hWS:(Lihf;)V
+      81: return
+
+  void uZO();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          48
+      30: aload_0
+      31: getfield      #138                // Field uZO:Z
+      34: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      37: ifne          48
+      40: new           #76                 // class java/lang/AssertionError
+      43: dup
+      44: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      47: athrow
+      48: getstatic     #127                // Field hWS:Z
+      51: ifne          80
+      54: aload_0
+      55: getfield      #139                // Field wPl:Lcom/bitwig/flt/document/core/iface/nlh;
+      58: ifnonnull     65
+      61: iconst_1
+      62: goto          66
+      65: iconst_0
+      66: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      69: ifne          80
+      72: new           #76                 // class java/lang/AssertionError
+      75: dup
+      76: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      79: athrow
+      80: aload_0
+      81: invokevirtual #200                // Method x31:()V
+      84: aload_0
+      85: invokevirtual #197                // Method qdm:()V
+      88: aload_0
+      89: invokevirtual #173                // Method cgd:()V
+      92: aload_0
+      93: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      96: ifnull        111
+      99: aload_0
+     100: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     103: invokevirtual #255                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.disposeOnControlSurfaceThread:()V
+     106: aload_0
+     107: aconst_null
+     108: putfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     111: aload_0
+     112: aload_0
+     113: invokedynamic #373,  0            // InvokeDynamic #6:run:(LLZA;)Ljava/lang/Runnable;
+     118: invokevirtual #192                // Method lsS:(Ljava/lang/Runnable;)V
+     121: return
+
+  private void C31();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: invokevirtual #161                // Method Ga1:()Lcom/bitwig/flt/prefs/wLU;
+      28: aconst_null
+      29: invokevirtual #280                // Method com/bitwig/flt/prefs/wLU.hWS:(LLZA;)V
+      32: aload_0
+      33: getfield      #113                // Field QsM:Ljava/util/List;
+      36: invokeinterface #361,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+      41: ifne          60
+      44: invokestatic  #231                // Method cCy.oXg:()LcCy;
+      47: aload_0
+      48: invokedynamic #374,  0            // InvokeDynamic #7:run:(LLZA;)Ljava/lang/Runnable;
+      53: ldc2_w        #101                // long 800l
+      56: invokevirtual #228                // Method cCy.hWS:(Ljava/lang/Runnable;J)Ljava/util/TimerTask;
+      59: pop
+      60: getstatic     #127                // Field hWS:Z
+      63: ifne          95
+      66: aload_0
+      67: getfield      #120                // Field VPX:Lcom/bitwig/base/platform/fhD;
+      70: invokevirtual #238                // Method com/bitwig/base/platform/fhD.Rre:()I
+      73: ifne          80
+      76: iconst_1
+      77: goto          81
+      80: iconst_0
+      81: invokestatic  #234                // Method ccz.hWS:(Z)Z
+      84: ifne          95
+      87: new           #76                 // class java/lang/AssertionError
+      90: dup
+      91: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      94: athrow
+      95: aload_0
+      96: iconst_1
+      97: putfield      #132                // Field jtC:Z
+     100: return
+
+  private void Hj();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #113                // Field QsM:Ljava/util/List;
+      28: invokeinterface #362,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      33: astore_1
+      34: aload_1
+      35: invokeinterface #355,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      40: ifeq          60
+      43: aload_1
+      44: invokeinterface #356,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      49: checkcast     #47                 // class aag
+      52: astore_2
+      53: aload_2
+      54: invokevirtual #224                // Method aag.iW:()V
+      57: goto          34
+      60: return
+
+  public com.bitwig.flt.control_surface.proxy.DirectNoteInput hWS(com.bitwig.flt.control_surface.proxy.BitwigStudioHost, java.lang.String, boolean, java.lang.String[]);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #76                 // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #127                // Field hWS:Z
+      32: ifne          58
+      35: aload_2
+      36: ifnull        43
+      39: iconst_1
+      40: goto          44
+      43: iconst_0
+      44: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      47: ifne          58
+      50: new           #76                 // class java/lang/AssertionError
+      53: dup
+      54: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      57: athrow
+      58: aload         4
+      60: ifnull        69
+      63: aload         4
+      65: arraylength
+      66: ifne          116
+      69: bipush        7
+      71: anewarray     #83                 // class java/lang/String
+      74: dup
+      75: iconst_0
+      76: ldc           #5                  // String 8?????
+      78: aastore
+      79: dup
+      80: iconst_1
+      81: ldc           #6                  // String 9?????
+      83: aastore
+      84: dup
+      85: iconst_2
+      86: ldc           #7                  // String B?01??
+      88: aastore
+      89: dup
+      90: iconst_3
+      91: ldc           #8                  // String B?0B??
+      93: aastore
+      94: dup
+      95: iconst_4
+      96: ldc           #9                  // String B?40??
+      98: aastore
+      99: dup
+     100: iconst_5
+     101: ldc           #16                 // String D?????
+     103: aastore
+     104: dup
+     105: bipush        6
+     107: ldc           #17                 // String E?????
+     109: aastore
+     110: astore        5
+     112: aload         5
+     114: astore        4
+     116: new           #61                 // class com/bitwig/flt/control_surface/proxy/DirectNoteInput
+     119: dup
+     120: aload_1
+     121: invokevirtual #259                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.getRoot:()Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     124: aload_2
+     125: aload         4
+     127: iload_3
+     128: invokespecial #263                // Method com/bitwig/flt/control_surface/proxy/DirectNoteInput."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Ljava/lang/String;[Ljava/lang/String;Z)V
+     131: astore        5
+     133: aload_0
+     134: getfield      #133                // Field lsS:Ljava/util/List;
+     137: aload         5
+     139: invokeinterface #357,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     144: pop
+     145: aload         5
+     147: areturn
+
+  public void lsS(java.lang.Runnable);
+    Code:
+       0: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+       3: aload_1
+       4: invokevirtual #243                // Method com/bitwig/flt/app/jeR.asyncExec:(Ljava/lang/Runnable;)V
+       7: return
+
+  public java.util.TimerTask hWS(java.lang.Runnable, long);
+    Code:
+       0: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+       3: aload_1
+       4: lload_2
+       5: invokevirtual #246                // Method com/bitwig/flt/app/jeR.hWS:(Ljava/lang/Runnable;J)Ljava/util/TimerTask;
+       8: areturn
+
+  public void hWS(Rfe);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #76                 // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+      32: invokevirtual #251                // Method com/bitwig/flt/app/jeR.vya:()LcAm;
+      35: aload_1
+      36: invokevirtual #225                // Method cAm.hWS:(LdBB;)V
+      39: aload_1
+      40: invokevirtual #218                // Method Rfe.postedToQueue:()V
+      43: return
+
+  public void Rre(java.lang.Runnable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          29
+       6: aload_1
+       7: ifnull        14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #76                 // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #127                // Field hWS:Z
+      32: ifne          53
+      35: aload_0
+      36: invokevirtual #188                // Method jtC:()Z
+      39: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #76                 // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+      56: aload_1
+      57: invokevirtual #249                // Method com/bitwig/flt/app/jeR.runAtTheVeryEndOfCurrentEvent:(Ljava/lang/Runnable;)V
+      60: return
+
+  public boolean jtC();
+    Code:
+       0: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+       3: invokevirtual #247                // Method com/bitwig/flt/app/jeR.isEventDispatchThread:()Z
+       6: ireturn
+
+  public void oVA(java.lang.Runnable);
+    Code:
+       0: aload_0
+       1: getfield      #136                // Field rOT:LnNh;
+       4: aload_1
+       5: invokevirtual #320                // Method nNh.lsS:(Ljava/lang/Runnable;)V
+       8: return
+
+  public void hWS(int, int, int, int);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #235                // Method ccz.iW:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          56
+      30: aload_0
+      31: getfield      #114                // Field Rre:LeTu;
+      34: ifnull        41
+      37: iconst_1
+      38: goto          42
+      41: iconst_0
+      42: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      45: ifne          56
+      48: new           #76                 // class java/lang/AssertionError
+      51: dup
+      52: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      55: athrow
+      56: getstatic     #127                // Field hWS:Z
+      59: ifne          92
+      62: iload_2
+      63: iflt          77
+      66: iload_2
+      67: sipush        255
+      70: if_icmpgt     77
+      73: iconst_1
+      74: goto          78
+      77: iconst_0
+      78: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      81: ifne          92
+      84: new           #76                 // class java/lang/AssertionError
+      87: dup
+      88: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      91: athrow
+      92: getstatic     #127                // Field hWS:Z
+      95: ifne          127
+      98: iload_3
+      99: iflt          112
+     102: iload_3
+     103: bipush        127
+     105: if_icmpgt     112
+     108: iconst_1
+     109: goto          113
+     112: iconst_0
+     113: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     116: ifne          127
+     119: new           #76                 // class java/lang/AssertionError
+     122: dup
+     123: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     126: athrow
+     127: getstatic     #127                // Field hWS:Z
+     130: ifne          164
+     133: iload         4
+     135: iflt          149
+     138: iload         4
+     140: bipush        127
+     142: if_icmpgt     149
+     145: iconst_1
+     146: goto          150
+     149: iconst_0
+     150: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     153: ifne          164
+     156: new           #76                 // class java/lang/AssertionError
+     159: dup
+     160: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     163: athrow
+     164: aload_0
+     165: getfield      #114                // Field Rre:LeTu;
+     168: ifnonnull     172
+     171: return
+     172: getstatic     #127                // Field hWS:Z
+     175: ifne          214
+     178: iload_1
+     179: iflt          199
+     182: iload_1
+     183: aload_0
+     184: getfield      #135                // Field oVA:Ljava/util/List;
+     187: invokeinterface #364,  1          // InterfaceMethod java/util/List.size:()I
+     192: if_icmpge     199
+     195: iconst_1
+     196: goto          200
+     199: iconst_0
+     200: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     203: ifne          214
+     206: new           #76                 // class java/lang/AssertionError
+     209: dup
+     210: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     213: athrow
+     214: aload_0
+     215: getfield      #135                // Field oVA:Ljava/util/List;
+     218: iload_1
+     219: invokeinterface #360,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     224: checkcast     #37                 // class PlK
+     227: iload_2
+     228: iload_3
+     229: iload         4
+     231: invokevirtual #214                // Method PlK.hWS:(III)V
+     234: goto          252
+     237: astore        5
+     239: new           #33                 // class Nk
+     242: dup
+     243: aload_0
+     244: ldc           #14                 // String Could not send short MIDI message
+     246: aload         5
+     248: invokespecial #206                // Method Nk."<init>":(LLZA;Ljava/lang/String;Ljava/lang/Throwable;)V
+     251: athrow
+     252: return
+    Exception table:
+       from    to  target type
+         214   234   237   Class java/io/IOException
+
+  public void hWS(int, java.lang.String);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #235                // Method ccz.iW:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          56
+      30: aload_0
+      31: getfield      #114                // Field Rre:LeTu;
+      34: ifnull        41
+      37: iconst_1
+      38: goto          42
+      41: iconst_0
+      42: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      45: ifne          56
+      48: new           #76                 // class java/lang/AssertionError
+      51: dup
+      52: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      55: athrow
+      56: aload_0
+      57: getfield      #114                // Field Rre:LeTu;
+      60: ifnonnull     64
+      63: return
+      64: aload_2
+      65: invokestatic  #219                // Method Wp.hWS:(Ljava/lang/String;)[B
+      68: astore_3
+      69: goto          84
+      72: astore        4
+      74: new           #34                 // class ObM
+      77: dup
+      78: aload         4
+      80: invokespecial #209                // Method ObM."<init>":(Ljava/lang/Throwable;)V
+      83: athrow
+      84: aload_0
+      85: iload_1
+      86: aload_3
+      87: invokevirtual #174                // Method hWS:(I[B)V
+      90: return
+    Exception table:
+       from    to  target type
+          64    69    72   Class Vbw
+
+  public void hWS(int, byte[]);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          56
+      30: aload_0
+      31: getfield      #114                // Field Rre:LeTu;
+      34: ifnull        41
+      37: iconst_1
+      38: goto          42
+      41: iconst_0
+      42: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      45: ifne          56
+      48: new           #76                 // class java/lang/AssertionError
+      51: dup
+      52: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      55: athrow
+      56: aload_0
+      57: getfield      #114                // Field Rre:LeTu;
+      60: ifnonnull     64
+      63: return
+      64: iload_1
+      65: iflt          81
+      68: iload_1
+      69: aload_0
+      70: getfield      #135                // Field oVA:Ljava/util/List;
+      73: invokeinterface #364,  1          // InterfaceMethod java/util/List.size:()I
+      78: if_icmplt     91
+      81: new           #34                 // class ObM
+      84: dup
+      85: ldc           #13                 // String Could not send MIDI SysEx message - output port not available.
+      87: invokespecial #208                // Method ObM."<init>":(Ljava/lang/String;)V
+      90: athrow
+      91: aload_0
+      92: getfield      #135                // Field oVA:Ljava/util/List;
+      95: iload_1
+      96: invokeinterface #360,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     101: checkcast     #37                 // class PlK
+     104: aload_2
+     105: invokevirtual #215                // Method PlK.hWS:([B)V
+     108: goto          124
+     111: astore_3
+     112: new           #33                 // class Nk
+     115: dup
+     116: aload_0
+     117: ldc           #15                 // String Could not send sysex message
+     119: aload_3
+     120: invokespecial #206                // Method Nk."<init>":(LLZA;Ljava/lang/String;Ljava/lang/Throwable;)V
+     123: athrow
+     124: return
+    Exception table:
+       from    to  target type
+          91   108   111   Class java/io/IOException
+
+  private void hWS(java.lang.String, boolean);
+    Code:
+       0: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+       3: invokevirtual #250                // Method com/bitwig/flt/app/jeR.sHx:()LBVl;
+       6: astore_3
+       7: iload_2
+       8: ifeq          23
+      11: aload_3
+      12: aload_0
+      13: invokevirtual #160                // Method Cy2:()Ljava/lang/String;
+      16: aload_1
+      17: invokevirtual #149                // Method BVl.iW:(Ljava/lang/String;Ljava/lang/String;)V
+      20: goto          32
+      23: aload_3
+      24: aload_0
+      25: invokevirtual #160                // Method Cy2:()Ljava/lang/String;
+      28: aload_1
+      29: invokevirtual #148                // Method BVl.hWS:(Ljava/lang/String;Ljava/lang/String;)V
+      32: return
+
+  public void hWS(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_0
+       3: invokevirtual #180                // Method hWS:(Ljava/lang/String;Z)V
+       6: return
+
+  public void iW(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_1
+       3: invokevirtual #180                // Method hWS:(Ljava/lang/String;Z)V
+       6: return
+
+  public void lsS(java.lang.String);
+    Code:
+       0: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+       3: aload_1
+       4: invokevirtual #248                // Method com/bitwig/flt/app/jeR.oVA:(Ljava/lang/String;)V
+       7: return
+
+  public void hWS(java.lang.String, java.lang.String);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+      28: invokevirtual #276                // Method com/bitwig/flt/prefs/wLU.QhX:()Z
+      31: ifeq          62
+      34: aload_1
+      35: ifnull        55
+      38: aload_1
+      39: invokevirtual #308                // Method java/lang/String.isEmpty:()Z
+      42: ifne          55
+      45: aload_1
+      46: aload_2
+      47: invokedynamic #375,  0            // InvokeDynamic #8:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      52: goto          56
+      55: aload_2
+      56: astore_3
+      57: aload_0
+      58: aload_3
+      59: invokevirtual #193                // Method lsS:(Ljava/lang/String;)V
+      62: return
+
+  public void hWS(com.bitwig.flt.control_surface.proxy.ControlSurfaceObject);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+      28: invokevirtual #276                // Method com/bitwig/flt/prefs/wLU.QhX:()Z
+      31: ifeq          41
+      34: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+      37: aload_1
+      38: invokevirtual #245                // Method com/bitwig/flt/app/jeR.hWS:(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;)V
+      41: return
+
+  private eTu iW(java.util.Map);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          56
+      30: aload_0
+      31: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      34: ifnonnull     41
+      37: iconst_1
+      38: goto          42
+      41: iconst_0
+      42: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      45: ifne          56
+      48: new           #76                 // class java/lang/AssertionError
+      51: dup
+      52: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      55: athrow
+      56: getstatic     #127                // Field hWS:Z
+      59: ifne          88
+      62: aload_0
+      63: getfield      #114                // Field Rre:LeTu;
+      66: ifnonnull     73
+      69: iconst_1
+      70: goto          74
+      73: iconst_0
+      74: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      77: ifne          88
+      80: new           #76                 // class java/lang/AssertionError
+      83: dup
+      84: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      87: athrow
+      88: getstatic     #127                // Field hWS:Z
+      91: ifne          120
+      94: aload_0
+      95: getfield      #104                // Field FKC:Z
+      98: ifne          105
+     101: iconst_1
+     102: goto          106
+     105: iconst_0
+     106: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     109: ifne          120
+     112: new           #76                 // class java/lang/AssertionError
+     115: dup
+     116: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     119: athrow
+     120: getstatic     #127                // Field hWS:Z
+     123: ifne          152
+     126: aload_0
+     127: getfield      #137                // Field sNw:Z
+     130: ifne          137
+     133: iconst_1
+     134: goto          138
+     137: iconst_0
+     138: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     141: ifne          152
+     144: new           #76                 // class java/lang/AssertionError
+     147: dup
+     148: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     151: athrow
+     152: aload_0
+     153: iconst_1
+     154: putfield      #104                // Field FKC:Z
+     157: aload_0
+     158: iconst_1
+     159: putfield      #137                // Field sNw:Z
+     162: aload_0
+     163: new           #57                 // class com/bitwig/flt/control_surface/proxy/BitwigStudioHost
+     166: dup
+     167: aload_0
+     168: aload_0
+     169: getfield      #125                // Field ZtL:LrYJ;
+     172: aload_1
+     173: invokespecial #252                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost."<init>":(LLZA;LrYJ;Ljava/util/Map;)V
+     176: putfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     179: aload_0
+     180: iconst_0
+     181: putfield      #137                // Field sNw:Z
+     184: aload_0
+     185: getfield      #125                // Field ZtL:LrYJ;
+     188: aload_0
+     189: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     192: invokevirtual #330                // Method rYJ.hWS:(LOBl;)LeTu;
+     195: astore_2
+     196: aload_0
+     197: iconst_0
+     198: putfield      #104                // Field FKC:Z
+     201: aload_2
+     202: areturn
+     203: astore_2
+     204: aload_0
+     205: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     208: invokevirtual #255                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.disposeOnControlSurfaceThread:()V
+     211: aload_2
+     212: athrow
+     213: astore_3
+     214: aload_0
+     215: iconst_0
+     216: putfield      #104                // Field FKC:Z
+     219: aload_3
+     220: athrow
+    Exception table:
+       from    to  target type
+         184   196   203   Class ObM
+         184   196   213   any
+         203   214   213   any
+
+  public int xVV();
+    Code:
+       0: aload_0
+       1: getfield      #115                // Field SVx:I
+       4: ireturn
+
+  public rYJ Yqp();
+    Code:
+       0: aload_0
+       1: getfield      #125                // Field ZtL:LrYJ;
+       4: areturn
+
+  public com.bitwig.flt.prefs.wLU Ga1();
+    Code:
+       0: aload_0
+       1: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+       4: areturn
+
+  public Wdc yo3();
+    Code:
+       0: aload_0
+       1: getfield      #122                // Field XsJ:LWdc;
+       4: areturn
+
+  public aag lsS(int);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          29
+       6: iload_1
+       7: ifle          14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #76                 // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: aload_0
+      30: invokevirtual #171                // Method ZtL:()V
+      33: new           #47                 // class aag
+      36: dup
+      37: aload_0
+      38: getfield      #120                // Field VPX:Lcom/bitwig/base/platform/fhD;
+      41: iload_1
+      42: invokevirtual #239                // Method com/bitwig/base/platform/fhD.hWS:(I)Lcom/bitwig/base/platform/NativeMemoryBlock;
+      45: invokespecial #222                // Method aag."<init>":(Lcom/bitwig/base/platform/NativeMemoryBlock;)V
+      48: astore_2
+      49: aload_0
+      50: getfield      #113                // Field QsM:Ljava/util/List;
+      53: aload_2
+      54: invokeinterface #357,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      59: pop
+      60: aload_2
+      61: areturn
+
+  public com.bitwig.extension.api.graphics.FontFace hWS(vHQ);
+    Code:
+       0: aload_0
+       1: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+       4: invokevirtual #259                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.getRoot:()Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+       7: aload_1
+       8: invokestatic  #336                // Method zao.hWS:(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;LvHQ;)Lzao;
+      11: areturn
+
+  public com.bitwig.extension.api.graphics.Image iW(vHQ);
+    Code:
+       0: aload_0
+       1: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+       4: invokevirtual #259                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.getRoot:()Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+       7: aload_1
+       8: invokestatic  #202                // Method MbG.hWS:(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;LvHQ;)LMbG;
+      11: areturn
+
+  public com.bitwig.extension.api.graphics.Image hWS(vHQ, double);
+    Code:
+       0: aload_0
+       1: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+       4: invokevirtual #259                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.getRoot:()Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+       7: aload_1
+       8: dload_2
+       9: invokestatic  #203                // Method MbG.hWS:(Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;LvHQ;D)LMbG;
+      12: areturn
+
+  public com.bitwig.extension.api.graphics.Bitmap hWS(int, int, com.bitwig.extension.api.graphics.BitmapFormat);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          29
+       6: iload_1
+       7: ifle          14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      18: ifne          29
+      21: new           #76                 // class java/lang/AssertionError
+      24: dup
+      25: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      28: athrow
+      29: getstatic     #127                // Field hWS:Z
+      32: ifne          58
+      35: iload_2
+      36: ifle          43
+      39: iconst_1
+      40: goto          44
+      43: iconst_0
+      44: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      47: ifne          58
+      50: new           #76                 // class java/lang/AssertionError
+      53: dup
+      54: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      57: athrow
+      58: getstatic     #127                // Field hWS:Z
+      61: ifne          87
+      64: aload_3
+      65: ifnull        72
+      68: iconst_1
+      69: goto          73
+      72: iconst_0
+      73: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      76: ifne          87
+      79: new           #76                 // class java/lang/AssertionError
+      82: dup
+      83: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      86: athrow
+      87: aload_0
+      88: invokevirtual #171                // Method ZtL:()V
+      91: aload_3
+      92: invokestatic  #178                // Method hWS:(Lcom/bitwig/extension/api/graphics/BitmapFormat;)Lcom/bitwig/graphics/fq3;
+      95: astore        4
+      97: aload_0
+      98: getfield      #109                // Field MWL:Lcom/bitwig/graphics/nVJ;
+     101: iload_1
+     102: iload_2
+     103: aload         4
+     105: invokeinterface #351,  4          // InterfaceMethod com/bitwig/graphics/nVJ.hWS:(IILcom/bitwig/graphics/fq3;)I
+     110: istore        5
+     112: aload_0
+     113: iload         5
+     115: invokevirtual #190                // Method lsS:(I)Laag;
+     118: astore        6
+     120: aload_0
+     121: getfield      #109                // Field MWL:Lcom/bitwig/graphics/nVJ;
+     124: aload         6
+     126: invokevirtual #223                // Method aag.hWS:()Lcom/bitwig/base/platform/NativeMemoryBlock;
+     129: iload_1
+     130: iload_2
+     131: aload         4
+     133: iconst_0
+     134: invokeinterface #352,  6          // InterfaceMethod com/bitwig/graphics/nVJ.hWS:(Lcom/bitwig/base/platform/NativeMemoryBlock;IILcom/bitwig/graphics/fq3;Z)Lcom/bitwig/graphics/Bitmap;
+     139: astore        7
+     141: new           #70                 // class doH
+     144: dup
+     145: aload_0
+     146: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+     149: invokevirtual #259                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.getRoot:()Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+     152: aload         7
+     154: aload_3
+     155: aload         6
+     157: invokespecial #285                // Method doH."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Lcom/bitwig/graphics/Bitmap;Lcom/bitwig/extension/api/graphics/BitmapFormat;Laag;)V
+     160: areturn
+
+  public com.bitwig.extension.api.graphics.FontOptions QsM();
+    Code:
+       0: aload_0
+       1: invokevirtual #171                // Method ZtL:()V
+       4: aload_0
+       5: getfield      #109                // Field MWL:Lcom/bitwig/graphics/nVJ;
+       8: invokeinterface #353,  1          // InterfaceMethod com/bitwig/graphics/nVJ.iW:()Lcom/bitwig/graphics/Hjy;
+      13: astore_1
+      14: new           #72                 // class fj
+      17: dup
+      18: aload_0
+      19: getfield      #106                // Field Krn:Lcom/bitwig/flt/control_surface/proxy/BitwigStudioHost;
+      22: invokevirtual #259                // Method com/bitwig/flt/control_surface/proxy/BitwigStudioHost.getRoot:()Lcom/bitwig/flt/control_surface/proxy/RootControlSurfaceObject;
+      25: aload_1
+      26: invokespecial #299                // Method fj."<init>":(Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceObject;Lcom/bitwig/graphics/Hjy;)V
+      29: astore_2
+      30: aload_2
+      31: areturn
+
+  private static com.bitwig.graphics.fq3 hWS(com.bitwig.extension.api.graphics.BitmapFormat);
+    Code:
+       0: getstatic     #145                // Field uZA.hWS:[I
+       3: aload_0
+       4: invokevirtual #240                // Method com/bitwig/extension/api/graphics/BitmapFormat.ordinal:()I
+       7: iaload
+       8: lookupswitch  { // 2
+                     1: 36
+                     2: 40
+               default: 44
+          }
+      36: getstatic     #143                // Field com/bitwig/graphics/fq3.hWS:Lcom/bitwig/graphics/fq3;
+      39: areturn
+      40: getstatic     #144                // Field com/bitwig/graphics/fq3.iW:Lcom/bitwig/graphics/fq3;
+      43: areturn
+      44: new           #79                 // class java/lang/IllegalStateException
+      47: dup
+      48: aload_0
+      49: invokedynamic #376,  0            // InvokeDynamic #9:makeConcatWithConstants:(Lcom/bitwig/extension/api/graphics/BitmapFormat;)Ljava/lang/String;
+      54: invokespecial #304                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      57: athrow
+
+  public void hWS(ObM);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          53
+      30: aload_1
+      31: ifnull        38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #76                 // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: aload_1
+      54: instanceof    #33                 // class Nk
+      57: istore_2
+      58: iload_2
+      59: ifne          81
+      62: new           #38                 // class Qo3
+      65: dup
+      66: aload_0
+      67: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+      70: aload_0
+      71: getfield      #125                // Field ZtL:LrYJ;
+      74: aload_1
+      75: invokespecial #216                // Method Qo3."<init>":(Lcom/bitwig/flt/prefs/wLU;LrYJ;LObM;)V
+      78: invokevirtual #217                // Method Qo3.SVx:()V
+      81: aload_0
+      82: aload_1
+      83: invokevirtual #165                // Method Rre:(Ljava/lang/Throwable;)V
+      86: return
+
+  public void hWS(java.lang.Throwable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: new           #50                 // class cP
+      27: dup
+      28: aload_0
+      29: getfield      #107                // Field KzU:Lcom/bitwig/flt/prefs/wLU;
+      32: aload_0
+      33: getfield      #125                // Field ZtL:LrYJ;
+      36: aload_1
+      37: invokespecial #232                // Method cP."<init>":(Lcom/bitwig/flt/prefs/wLU;LrYJ;Ljava/lang/Throwable;)V
+      40: invokevirtual #233                // Method cP.SVx:()V
+      43: aload_0
+      44: aload_1
+      45: invokevirtual #165                // Method Rre:(Ljava/lang/Throwable;)V
+      48: return
+
+  private void Rre(java.lang.Throwable);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          53
+      30: aload_1
+      31: ifnull        38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #76                 // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: aload_0
+      54: getfield      #114                // Field Rre:LeTu;
+      57: ifnull        107
+      60: getstatic     #127                // Field hWS:Z
+      63: ifne          87
+      66: aload_0
+      67: getfield      #114                // Field Rre:LeTu;
+      70: invokevirtual #287                // Method eTu.hWS:()Z
+      73: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      76: ifne          87
+      79: new           #76                 // class java/lang/AssertionError
+      82: dup
+      83: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      86: athrow
+      87: aload_0
+      88: aconst_null
+      89: putfield      #114                // Field Rre:LeTu;
+      92: aload_0
+      93: getfield      #138                // Field uZO:Z
+      96: ifne          107
+      99: aload_0
+     100: getfield      #136                // Field rOT:LnNh;
+     103: aload_0
+     104: invokevirtual #318                // Method nNh.hWS:(LLZA;)V
+     107: aload_0
+     108: aload_1
+     109: invokestatic  #151                // Method ELX.lsS:(Ljava/lang/Throwable;)Ljava/lang/String;
+     112: invokevirtual #185                // Method iW:(Ljava/lang/String;)V
+     115: aload_0
+     116: aload_1
+     117: invokestatic  #150                // Method ELX.iW:(Ljava/lang/Throwable;)Ljava/lang/String;
+     120: ldc           #3                  // String \t
+     122: ldc           #4                  // String
+     124: invokevirtual #309                // Method java/lang/String.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+     127: invokevirtual #185                // Method iW:(Ljava/lang/String;)V
+     130: getstatic     #142                // Field ccz.oVA:LMcJ;
+     133: aload_0
+     134: invokevirtual #170                // Method Yqp:()LrYJ;
+     137: invokevirtual #323                // Method rYJ.Ga1:()Ljava/lang/String;
+     140: aload_1
+     141: invokevirtual #204                // Method McJ.lsS:(Ljava/lang/Object;Ljava/lang/Throwable;)V
+     144: return
+
+  public Ilf MWL();
+    Code:
+       0: aload_0
+       1: getfield      #136                // Field rOT:LnNh;
+       4: invokevirtual #321                // Method nNh.wPl:()LIlf;
+       7: areturn
+
+  public java.util.List euL();
+    Code:
+       0: aload_0
+       1: getfield      #134                // Field oO1:Ljava/util/List;
+       4: areturn
+
+  public aXt iMP();
+    Code:
+       0: aload_0
+       1: getfield      #117                // Field TVX:LJpm;
+       4: areturn
+
+  public boolean Eq();
+    Code:
+       0: aload_0
+       1: getfield      #117                // Field TVX:LJpm;
+       4: invokevirtual #156                // Method Jpm.getBoolValue:()Z
+       7: ireturn
+
+  public boolean OdZ();
+    Code:
+       0: aload_0
+       1: getfield      #132                // Field jtC:Z
+       4: ireturn
+
+  public int VPX();
+    Code:
+       0: aload_0
+       1: getfield      #118                // Field Tm2:I
+       4: ireturn
+
+  public boolean OWx();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #121                // Field WMU:Z
+      28: ireturn
+
+  public void TVX();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          48
+      30: aload_0
+      31: invokevirtual #198                // Method rOT:()Z
+      34: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      37: ifne          48
+      40: new           #76                 // class java/lang/AssertionError
+      43: dup
+      44: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      47: athrow
+      48: aload_0
+      49: iconst_1
+      50: putfield      #121                // Field WMU:Z
+      53: return
+
+  public void Tm2();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #166                // Method SVx:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          48
+      30: aload_0
+      31: invokevirtual #198                // Method rOT:()Z
+      34: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      37: ifne          48
+      40: new           #76                 // class java/lang/AssertionError
+      43: dup
+      44: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      47: athrow
+      48: aload_0
+      49: iconst_1
+      50: putfield      #110                // Field Mzk:Z
+      53: return
+
+  public boolean WMU();
+    Code:
+       0: aload_0
+       1: getfield      #110                // Field Mzk:Z
+       4: ireturn
+
+  public void hWS(com.bitwig.flt.control_surface.proxy.ClipLauncherControllerFeedbackFrame);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          53
+      30: aload_1
+      31: ifnull        38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #76                 // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: getstatic     #127                // Field hWS:Z
+      56: ifne          91
+      59: aload_0
+      60: getfield      #131                // Field jBo:Ljava/util/List;
+      63: aload_1
+      64: invokeinterface #359,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+      69: ifne          76
+      72: iconst_1
+      73: goto          77
+      76: iconst_0
+      77: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      80: ifne          91
+      83: new           #76                 // class java/lang/AssertionError
+      86: dup
+      87: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      90: athrow
+      91: getstatic     #127                // Field hWS:Z
+      94: ifne          125
+      97: aload_1
+      98: invokeinterface #344,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getTrackOrTrackGroupCount:()I
+     103: ifle          110
+     106: iconst_1
+     107: goto          111
+     110: iconst_0
+     111: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     114: ifne          125
+     117: new           #76                 // class java/lang/AssertionError
+     120: dup
+     121: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     124: athrow
+     125: getstatic     #127                // Field hWS:Z
+     128: ifne          159
+     131: aload_1
+     132: invokeinterface #342,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getSlotOrSceneCount:()I
+     137: ifle          144
+     140: iconst_1
+     141: goto          145
+     144: iconst_0
+     145: invokestatic  #236                // Method ccz.lsS:(Z)Z
+     148: ifne          159
+     151: new           #76                 // class java/lang/AssertionError
+     154: dup
+     155: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+     158: athrow
+     159: aload_0
+     160: getfield      #131                // Field jBo:Ljava/util/List;
+     163: aload_1
+     164: invokeinterface #357,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     169: pop
+     170: aload_1
+     171: invokeinterface #344,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getTrackOrTrackGroupCount:()I
+     176: istore_2
+     177: aload_1
+     178: invokeinterface #342,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getSlotOrSceneCount:()I
+     183: istore_3
+     184: iconst_0
+     185: istore        4
+     187: iload         4
+     189: iload_2
+     190: if_icmpge     260
+     193: aload_1
+     194: iload         4
+     196: invokeinterface #345,  2          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getTrackProxyAt:(I)Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     201: astore        5
+     203: aload         5
+     205: invokevirtual #262                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getTargetValue:()Lgky;
+     208: aload_0
+     209: getfield      #108                // Field LFd:LWnU;
+     212: invokevirtual #300                // Method gky.addListener:(LhI;)V
+     215: iconst_0
+     216: istore        6
+     218: iload         6
+     220: iload_3
+     221: if_icmpge     254
+     224: aload_1
+     225: iload         4
+     227: iload         6
+     229: invokeinterface #343,  3          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getSlotProxy:(II)Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     234: astore        7
+     236: aload         7
+     238: invokevirtual #262                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getTargetValue:()Lgky;
+     241: aload_0
+     242: getfield      #108                // Field LFd:LWnU;
+     245: invokevirtual #300                // Method gky.addListener:(LhI;)V
+     248: iinc          6, 1
+     251: goto          218
+     254: iinc          4, 1
+     257: goto          187
+     260: aload_0
+     261: invokevirtual #172                // Method aQJ:()V
+     264: return
+
+  public void iW(com.bitwig.flt.control_surface.proxy.ClipLauncherControllerFeedbackFrame);
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: getstatic     #127                // Field hWS:Z
+      27: ifne          53
+      30: aload_1
+      31: ifnull        38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      42: ifne          53
+      45: new           #76                 // class java/lang/AssertionError
+      48: dup
+      49: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      52: athrow
+      53: getstatic     #127                // Field hWS:Z
+      56: ifne          83
+      59: aload_0
+      60: getfield      #131                // Field jBo:Ljava/util/List;
+      63: aload_1
+      64: invokeinterface #359,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+      69: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      72: ifne          83
+      75: new           #76                 // class java/lang/AssertionError
+      78: dup
+      79: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      82: athrow
+      83: aload_0
+      84: getfield      #131                // Field jBo:Ljava/util/List;
+      87: aload_1
+      88: invokeinterface #363,  2          // InterfaceMethod java/util/List.remove:(Ljava/lang/Object;)Z
+      93: pop
+      94: aload_1
+      95: invokeinterface #344,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getTrackOrTrackGroupCount:()I
+     100: istore_2
+     101: aload_1
+     102: invokeinterface #342,  1          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getSlotOrSceneCount:()I
+     107: istore_3
+     108: iconst_0
+     109: istore        4
+     111: iload         4
+     113: iload_2
+     114: if_icmpge     184
+     117: aload_1
+     118: iload         4
+     120: invokeinterface #345,  2          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getTrackProxyAt:(I)Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     125: astore        5
+     127: aload         5
+     129: invokevirtual #262                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getTargetValue:()Lgky;
+     132: aload_0
+     133: getfield      #108                // Field LFd:LWnU;
+     136: invokevirtual #301                // Method gky.removeListener:(LhI;)V
+     139: iconst_0
+     140: istore        6
+     142: iload         6
+     144: iload_3
+     145: if_icmpge     178
+     148: aload_1
+     149: iload         4
+     151: iload         6
+     153: invokeinterface #343,  3          // InterfaceMethod com/bitwig/flt/control_surface/proxy/ClipLauncherControllerFeedbackFrame.getSlotProxy:(II)Lcom/bitwig/flt/control_surface/proxy/ControlSurfaceProxy;
+     158: astore        7
+     160: aload         7
+     162: invokevirtual #262                // Method com/bitwig/flt/control_surface/proxy/ControlSurfaceProxy.getTargetValue:()Lgky;
+     165: aload_0
+     166: getfield      #108                // Field LFd:LWnU;
+     169: invokevirtual #301                // Method gky.removeListener:(LhI;)V
+     172: iinc          6, 1
+     175: goto          142
+     178: iinc          4, 1
+     181: goto          111
+     184: aload_0
+     185: invokevirtual #172                // Method aQJ:()V
+     188: return
+
+  private void aQJ();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: invokestatic  #242                // Method com/bitwig/flt/app/jeR.Yqp:()Lcom/bitwig/flt/app/jeR;
+      27: invokevirtual #241                // Method com/bitwig/flt/app/jeR.Cy2:()LPC;
+      30: astore_1
+      31: aload_1
+      32: ifnonnull     36
+      35: return
+      36: aload_1
+      37: invokevirtual #210                // Method PC.Ga1:()V
+      40: return
+
+  public Zuc LFd();
+    Code:
+       0: aload_0
+       1: invokevirtual #161                // Method Ga1:()Lcom/bitwig/flt/prefs/wLU;
+       4: invokevirtual #278                // Method com/bitwig/flt/prefs/wLU.XDZ:()LZuc;
+       7: areturn
+
+  public java.util.List jBo();
+    Code:
+       0: getstatic     #127                // Field hWS:Z
+       3: ifne          24
+       6: aload_0
+       7: invokevirtual #188                // Method jtC:()Z
+      10: invokestatic  #236                // Method ccz.lsS:(Z)Z
+      13: ifne          24
+      16: new           #76                 // class java/lang/AssertionError
+      19: dup
+      20: invokespecial #302                // Method java/lang/AssertionError."<init>":()V
+      23: athrow
+      24: aload_0
+      25: getfield      #131                // Field jBo:Ljava/util/List;
+      28: invokestatic  #314                // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+      31: areturn
+
+  public GBX Mzk();
+    Code:
+       0: aload_0
+       1: getfield      #103                // Field Eq:LGBX;
+       4: areturn
+
+  public GBX uEr();
+    Code:
+       0: aload_0
+       1: getfield      #129                // Field iMP:LGBX;
+       4: areturn
+
+  public GBX Sp3();
+    Code:
+       0: aload_0
+       1: getfield      #112                // Field OdZ:LGBX;
+       4: areturn
+
+  private void hWS(ZsI);
+    Code:
+       0: aload_0
+       1: invokevirtual #172                // Method aQJ:()V
+       4: return
+
+  private void oVA(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #164                // Method Rre:(Ljava/lang/String;)Z
+       5: ifeq          9
+       8: return
+       9: aload_0
+      10: getfield      #114                // Field Rre:LeTu;
+      13: ifnull        24
+      16: aload_0
+      17: getfield      #114                // Field Rre:LeTu;
+      20: aload_1
+      21: invokevirtual #292                // Method eTu.hWS:(Ljava/lang/String;)V
+      24: return
+
+  private void oVA(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #194                // Method lsS:(Ljava/lang/Throwable;)V
+       5: return
+
+  private void zez();
+    Code:
+       0: aload_0
+       1: invokevirtual #169                // Method Y2L:()LuSF;
+       4: astore_1
+       5: aload_1
+       6: aload_0
+       7: invokevirtual #335                // Method uSF.hWS:(Lihf;)V
+      10: return
+
+  static {};
+    Code:
+       0: ldc           #30                 // class LZA
+       2: invokevirtual #303                // Method java/lang/Class.desiredAssertionStatus:()Z
+       5: ifne          12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: putstatic     #127                // Field hWS:Z
+      16: return
+}

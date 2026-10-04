@@ -1,0 +1,2594 @@
+Compiled from "OSCControllerforAWBExtension.java"
+public class com.armedwithbow.OSCControllerforAWBExtension extends com.bitwig.extension.controller.ControllerExtension {
+  private com.armedwithbow.ExtensionBase base;
+
+  private final int TOTAL_BUS_TRACKS = 18;
+
+  private final int TOTAL_FX_TRACKS = 6;
+
+  private final int FX_TRACKBANK_START = 21;
+
+  private final int FX_SENDS_START = 0;
+
+  private final int FX_SENDS_END = 5;
+
+  private final int BUS_SENDS_START = 6;
+
+  private final int BUS_SENDS_END = 24;
+
+  private final int SCENE_SLOTS = 50;
+
+  private com.bitwig.extension.controller.api.HardwareSurface hardwareSurface;
+
+  protected com.armedwithbow.OSCControllerforAWBExtension(com.armedwithbow.OSCControllerforAWBExtensionDefinition, com.bitwig.extension.controller.api.ControllerHost);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #29                 // Method com/bitwig/extension/controller/ControllerExtension."<init>":(Lcom/bitwig/extension/controller/ControllerExtensionDefinition;Lcom/bitwig/extension/controller/api/ControllerHost;)V
+       6: aload_0
+       7: bipush        18
+       9: putfield      #32                 // Field TOTAL_BUS_TRACKS:I
+      12: aload_0
+      13: bipush        6
+      15: putfield      #34                 // Field TOTAL_FX_TRACKS:I
+      18: aload_0
+      19: bipush        21
+      21: putfield      #36                 // Field FX_TRACKBANK_START:I
+      24: aload_0
+      25: iconst_0
+      26: putfield      #38                 // Field FX_SENDS_START:I
+      29: aload_0
+      30: iconst_5
+      31: putfield      #40                 // Field FX_SENDS_END:I
+      34: aload_0
+      35: bipush        6
+      37: putfield      #42                 // Field BUS_SENDS_START:I
+      40: aload_0
+      41: bipush        24
+      43: putfield      #44                 // Field BUS_SENDS_END:I
+      46: aload_0
+      47: bipush        50
+      49: putfield      #46                 // Field SCENE_SLOTS:I
+      52: return
+
+  public void init();
+    Code:
+       0: aload_0
+       1: new           #58                 // class com/armedwithbow/ExtensionBase
+       4: dup
+       5: aload_0
+       6: invokevirtual #60                 // Method getHost:()Lcom/bitwig/extension/api/Host;
+       9: checkcast     #64                 // class com/bitwig/extension/controller/api/ControllerHost
+      12: bipush        18
+      14: bipush        6
+      16: bipush        6
+      18: iconst_0
+      19: bipush        24
+      21: bipush        50
+      23: invokespecial #66                 // Method com/armedwithbow/ExtensionBase."<init>":(Lcom/bitwig/extension/controller/api/ControllerHost;IIIIII)V
+      26: putfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      29: aload_0
+      30: aload_0
+      31: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      34: getfield      #71                 // Field com/armedwithbow/ExtensionBase.extensionHardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+      37: putfield      #74                 // Field hardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+      40: new           #76                 // class com/armedwithbow/InterfaceGroup
+      43: dup
+      44: aload_0
+      45: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      48: ldc           #78                 // String audio source lines
+      50: ldc           #80                 // String mixed
+      52: bipush        13
+      54: iconst_0
+      55: iconst_0
+      56: iconst_1
+      57: invokestatic  #82                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      60: invokespecial #88                 // Method com/armedwithbow/InterfaceGroup."<init>":(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Ljava/lang/String;IIILjava/lang/Boolean;)V
+      63: astore_1
+      64: new           #76                 // class com/armedwithbow/InterfaceGroup
+      67: dup
+      68: aload_0
+      69: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      72: ldc           #91                 // String fx 1
+      74: ldc           #80                 // String mixed
+      76: bipush        21
+      78: aload_0
+      79: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      82: getfield      #93                 // Field com/armedwithbow/ExtensionBase.TOTAL_FX_TRACKS:I
+      85: iadd
+      86: bipush        21
+      88: iconst_0
+      89: iconst_1
+      90: invokestatic  #82                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      93: invokespecial #88                 // Method com/armedwithbow/InterfaceGroup."<init>":(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Ljava/lang/String;IIILjava/lang/Boolean;)V
+      96: astore_2
+      97: aload_1
+      98: ldc           #94                 // String vcfx
+     100: iconst_2
+     101: iconst_1
+     102: iconst_0
+     103: newarray       int
+     105: iconst_0
+     106: iconst_1
+     107: iconst_0
+     108: iconst_0
+     109: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     112: aload_1
+     113: ldc           #100                // String vcin
+     115: iconst_3
+     116: iconst_0
+     117: iconst_4
+     118: newarray       int
+     120: dup
+     121: iconst_1
+     122: iconst_1
+     123: iastore
+     124: dup
+     125: iconst_2
+     126: iconst_2
+     127: iastore
+     128: dup
+     129: iconst_3
+     130: iconst_3
+     131: iastore
+     132: iconst_1
+     133: iconst_0
+     134: iconst_0
+     135: iconst_1
+     136: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     139: aload_1
+     140: ldc           #102                // String pro2
+     142: iconst_5
+     143: bipush        7
+     145: iconst_1
+     146: newarray       int
+     148: dup
+     149: iconst_0
+     150: bipush        16
+     152: iastore
+     153: iconst_1
+     154: iconst_1
+     155: iconst_0
+     156: iconst_1
+     157: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     160: aload_1
+     161: ldc           #104                // String b1
+     163: bipush        9
+     165: iconst_2
+     166: iconst_1
+     167: newarray       int
+     169: dup
+     170: iconst_0
+     171: iconst_4
+     172: iastore
+     173: iconst_1
+     174: iconst_1
+     175: iconst_0
+     176: iconst_1
+     177: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     180: aload_1
+     181: ldc           #106                // String a1
+     183: bipush        10
+     185: iconst_3
+     186: iconst_1
+     187: newarray       int
+     189: dup
+     190: iconst_0
+     191: iconst_5
+     192: iastore
+     193: iconst_1
+     194: iconst_1
+     195: iconst_0
+     196: iconst_1
+     197: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     200: aload_1
+     201: ldc           #108                // String a2
+     203: bipush        11
+     205: iconst_4
+     206: iconst_1
+     207: newarray       int
+     209: dup
+     210: iconst_0
+     211: bipush        6
+     213: iastore
+     214: iconst_1
+     215: iconst_1
+     216: iconst_0
+     217: iconst_1
+     218: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     221: aload_1
+     222: ldc           #110                // String b2
+     224: bipush        12
+     226: iconst_5
+     227: iconst_1
+     228: newarray       int
+     230: dup
+     231: iconst_0
+     232: bipush        7
+     234: iastore
+     235: iconst_1
+     236: iconst_1
+     237: iconst_0
+     238: iconst_1
+     239: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     242: aload_1
+     243: ldc           #112                // String bus
+     245: bipush        8
+     247: bipush        6
+     249: iconst_0
+     250: newarray       int
+     252: iconst_1
+     253: iconst_1
+     254: iconst_1
+     255: iconst_0
+     256: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     259: aload_2
+     260: ldc           #114                // String splut
+     262: iconst_0
+     263: bipush        8
+     265: iconst_1
+     266: newarray       int
+     268: dup
+     269: iconst_0
+     270: bipush        9
+     272: iastore
+     273: iconst_1
+     274: iconst_0
+     275: iconst_0
+     276: iconst_1
+     277: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     280: aload_2
+     281: ldc           #116                // String spark
+     283: iconst_1
+     284: bipush        10
+     286: iconst_1
+     287: newarray       int
+     289: dup
+     290: iconst_0
+     291: bipush        11
+     293: iastore
+     294: iconst_1
+     295: iconst_0
+     296: iconst_0
+     297: iconst_1
+     298: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     301: aload_2
+     302: ldc           #118                // String deci
+     304: iconst_2
+     305: bipush        11
+     307: iconst_1
+     308: newarray       int
+     310: dup
+     311: iconst_0
+     312: bipush        12
+     314: iastore
+     315: iconst_1
+     316: iconst_0
+     317: iconst_0
+     318: iconst_1
+     319: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     322: aload_2
+     323: ldc           #120                // String fuzz
+     325: iconst_3
+     326: bipush        12
+     328: iconst_1
+     329: newarray       int
+     331: dup
+     332: iconst_0
+     333: bipush        13
+     335: iastore
+     336: iconst_1
+     337: iconst_0
+     338: iconst_0
+     339: iconst_1
+     340: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     343: aload_2
+     344: ldc           #122                // String verb
+     346: iconst_4
+     347: bipush        13
+     349: iconst_1
+     350: newarray       int
+     352: dup
+     353: iconst_0
+     354: bipush        14
+     356: iastore
+     357: iconst_1
+     358: iconst_0
+     359: iconst_0
+     360: iconst_1
+     361: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     364: aload_2
+     365: ldc           #124                // String mast
+     367: iconst_5
+     368: bipush        14
+     370: iconst_3
+     371: newarray       int
+     373: dup
+     374: iconst_0
+     375: bipush        15
+     377: iastore
+     378: dup
+     379: iconst_1
+     380: bipush        10
+     382: iastore
+     383: dup
+     384: iconst_2
+     385: bipush        8
+     387: iastore
+     388: iconst_1
+     389: iconst_0
+     390: iconst_0
+     391: iconst_1
+     392: invokevirtual #96                 // Method com/armedwithbow/InterfaceGroup.addModule:(Ljava/lang/String;II[IZZZZ)V
+     395: new           #126                // class com/armedwithbow/FXLayerHandler
+     398: dup
+     399: aload_0
+     400: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     403: aload_1
+     404: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     407: ldc           #94                 // String vcfx
+     409: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     414: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     417: iconst_1
+     418: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     421: invokespecial #144                // Method com/armedwithbow/FXLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     424: astore_3
+     425: new           #126                // class com/armedwithbow/FXLayerHandler
+     428: dup
+     429: aload_0
+     430: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     433: aload_1
+     434: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     437: ldc           #102                // String pro2
+     439: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     444: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     447: iconst_1
+     448: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     451: invokespecial #144                // Method com/armedwithbow/FXLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     454: astore        4
+     456: new           #147                // class com/armedwithbow/InstrumentLayerHandler
+     459: dup
+     460: aload_0
+     461: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     464: aload_1
+     465: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     468: ldc           #104                // String b1
+     470: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     475: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     478: iconst_2
+     479: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     482: invokespecial #149                // Method com/armedwithbow/InstrumentLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     485: astore        5
+     487: new           #147                // class com/armedwithbow/InstrumentLayerHandler
+     490: dup
+     491: aload_0
+     492: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     495: aload_1
+     496: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     499: ldc           #110                // String b2
+     501: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     506: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     509: iconst_2
+     510: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     513: invokespecial #149                // Method com/armedwithbow/InstrumentLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     516: astore        6
+     518: new           #147                // class com/armedwithbow/InstrumentLayerHandler
+     521: dup
+     522: aload_0
+     523: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     526: aload_1
+     527: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     530: ldc           #106                // String a1
+     532: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     537: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     540: iconst_2
+     541: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     544: invokespecial #149                // Method com/armedwithbow/InstrumentLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     547: astore        7
+     549: new           #147                // class com/armedwithbow/InstrumentLayerHandler
+     552: dup
+     553: aload_0
+     554: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     557: aload_1
+     558: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     561: ldc           #108                // String a2
+     563: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     568: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     571: iconst_2
+     572: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     575: invokespecial #149                // Method com/armedwithbow/InstrumentLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     578: astore        8
+     580: new           #126                // class com/armedwithbow/FXLayerHandler
+     583: dup
+     584: aload_0
+     585: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     588: aload_2
+     589: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     592: ldc           #116                // String spark
+     594: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     599: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     602: iconst_1
+     603: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     606: invokespecial #144                // Method com/armedwithbow/FXLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     609: astore        9
+     611: new           #126                // class com/armedwithbow/FXLayerHandler
+     614: dup
+     615: aload_0
+     616: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     619: aload_2
+     620: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     623: ldc           #114                // String splut
+     625: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     630: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     633: iconst_1
+     634: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     637: invokespecial #144                // Method com/armedwithbow/FXLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     640: astore        10
+     642: aload_0
+     643: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     646: getfield      #150                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+     649: iconst_0
+     650: invokeinterface #152,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createMasterTrack:(I)Lcom/bitwig/extension/controller/api/MasterTrack;
+     655: astore        11
+     657: aload         11
+     659: iconst_3
+     660: invokeinterface #156,  2          // InterfaceMethod com/bitwig/extension/controller/api/MasterTrack.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     665: astore        12
+     667: new           #126                // class com/armedwithbow/FXLayerHandler
+     670: dup
+     671: aload_0
+     672: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     675: aload         12
+     677: invokespecial #144                // Method com/armedwithbow/FXLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     680: astore        13
+     682: new           #126                // class com/armedwithbow/FXLayerHandler
+     685: dup
+     686: aload_0
+     687: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     690: aload         13
+     692: aload_0
+     693: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     696: iconst_0
+     697: iconst_1
+     698: iconst_0
+     699: iconst_4
+     700: invokevirtual #159                // Method com/armedwithbow/FXLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+     703: invokespecial #144                // Method com/armedwithbow/FXLayerHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+     706: astore        14
+     708: aload_1
+     709: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     712: ldc           #104                // String b1
+     714: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     719: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     722: aload_0
+     723: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     726: aload_1
+     727: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     730: ldc           #104                // String b1
+     732: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     737: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     740: iconst_1
+     741: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     744: iconst_0
+     745: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+     750: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+     753: invokevirtual #171                // Method com/armedwithbow/DynamicTrackModule.addRoutingDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/Device;)V
+     756: aload_1
+     757: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     760: ldc           #104                // String b1
+     762: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     767: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     770: aload_0
+     771: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     774: ldc           #175                // String b1 compelx mod
+     776: aload         5
+     778: iconst_0
+     779: invokevirtual #177                // Method com/armedwithbow/InstrumentLayerHandler.getInstDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+     782: iconst_0
+     783: invokevirtual #181                // Method com/armedwithbow/DynamicTrackModule.addModDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+     786: aload_1
+     787: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     790: ldc           #104                // String b1
+     792: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     797: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     800: aload_0
+     801: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     804: ldc           #185                // String b1 control
+     806: aload         5
+     808: aload_0
+     809: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     812: iconst_0
+     813: iconst_1
+     814: iconst_0
+     815: iconst_1
+     816: invokevirtual #187                // Method com/armedwithbow/InstrumentLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+     819: iconst_0
+     820: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+     825: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+     828: iconst_0
+     829: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+     832: aload_1
+     833: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     836: ldc           #104                // String b1
+     838: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     843: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     846: aload_0
+     847: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     850: ldc           #191                // String b1 time
+     852: aload         5
+     854: aload_0
+     855: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     858: iconst_0
+     859: iconst_1
+     860: iconst_0
+     861: iconst_2
+     862: invokevirtual #187                // Method com/armedwithbow/InstrumentLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+     865: iconst_1
+     866: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+     871: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+     874: iconst_1
+     875: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+     878: aload_1
+     879: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     882: ldc           #106                // String a1
+     884: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     889: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     892: aload_0
+     893: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     896: aload_1
+     897: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     900: ldc           #106                // String a1
+     902: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     907: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     910: iconst_1
+     911: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+     914: iconst_0
+     915: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+     920: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+     923: invokevirtual #171                // Method com/armedwithbow/DynamicTrackModule.addRoutingDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/Device;)V
+     926: aload_1
+     927: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     930: ldc           #106                // String a1
+     932: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     937: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     940: aload_0
+     941: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     944: ldc           #193                // String a1 compelx mod
+     946: aload         7
+     948: iconst_0
+     949: invokevirtual #177                // Method com/armedwithbow/InstrumentLayerHandler.getInstDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+     952: iconst_0
+     953: invokevirtual #181                // Method com/armedwithbow/DynamicTrackModule.addModDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+     956: aload_1
+     957: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+     960: ldc           #106                // String a1
+     962: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     967: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+     970: aload_0
+     971: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     974: ldc           #195                // String a1 control
+     976: aload         7
+     978: aload_0
+     979: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     982: iconst_0
+     983: iconst_1
+     984: iconst_0
+     985: iconst_1
+     986: invokevirtual #187                // Method com/armedwithbow/InstrumentLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+     989: iconst_0
+     990: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+     995: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+     998: iconst_0
+     999: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1002: aload_1
+    1003: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1006: ldc           #106                // String a1
+    1008: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1013: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1016: aload_0
+    1017: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1020: ldc           #197                // String a1 time
+    1022: aload         7
+    1024: aload_0
+    1025: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1028: iconst_0
+    1029: iconst_1
+    1030: iconst_0
+    1031: iconst_2
+    1032: invokevirtual #187                // Method com/armedwithbow/InstrumentLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1035: iconst_1
+    1036: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1041: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1044: iconst_1
+    1045: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1048: aload_1
+    1049: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1052: ldc           #108                // String a2
+    1054: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1059: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1062: aload_0
+    1063: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1066: aload_1
+    1067: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1070: ldc           #108                // String a2
+    1072: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1077: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1080: iconst_1
+    1081: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1084: iconst_0
+    1085: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1090: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1093: invokevirtual #171                // Method com/armedwithbow/DynamicTrackModule.addRoutingDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/Device;)V
+    1096: aload_1
+    1097: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1100: ldc           #108                // String a2
+    1102: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1107: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1110: aload_0
+    1111: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1114: ldc           #199                // String a2 compelx mod
+    1116: aload         8
+    1118: iconst_0
+    1119: invokevirtual #177                // Method com/armedwithbow/InstrumentLayerHandler.getInstDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+    1122: iconst_0
+    1123: invokevirtual #181                // Method com/armedwithbow/DynamicTrackModule.addModDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1126: aload_1
+    1127: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1130: ldc           #108                // String a2
+    1132: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1137: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1140: aload_0
+    1141: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1144: ldc           #201                // String a2 control
+    1146: aload         8
+    1148: aload_0
+    1149: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1152: iconst_0
+    1153: iconst_1
+    1154: iconst_0
+    1155: iconst_1
+    1156: invokevirtual #187                // Method com/armedwithbow/InstrumentLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1159: iconst_0
+    1160: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1165: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1168: iconst_0
+    1169: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1172: aload_1
+    1173: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1176: ldc           #108                // String a2
+    1178: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1183: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1186: aload_0
+    1187: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1190: ldc           #203                // String a2 time
+    1192: aload         8
+    1194: aload_0
+    1195: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1198: iconst_0
+    1199: iconst_1
+    1200: iconst_0
+    1201: iconst_2
+    1202: invokevirtual #187                // Method com/armedwithbow/InstrumentLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1205: iconst_1
+    1206: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1211: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1214: iconst_1
+    1215: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1218: aload_1
+    1219: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1222: ldc           #110                // String b2
+    1224: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1229: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1232: aload_0
+    1233: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1236: aload_1
+    1237: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1240: ldc           #110                // String b2
+    1242: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1247: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1250: iconst_1
+    1251: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1254: iconst_0
+    1255: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1260: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1263: invokevirtual #171                // Method com/armedwithbow/DynamicTrackModule.addRoutingDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/Device;)V
+    1266: aload_1
+    1267: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1270: ldc           #110                // String b2
+    1272: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1277: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1280: aload_0
+    1281: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1284: ldc           #205                // String b2 compelx mod
+    1286: aload         6
+    1288: iconst_0
+    1289: invokevirtual #177                // Method com/armedwithbow/InstrumentLayerHandler.getInstDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+    1292: iconst_0
+    1293: invokevirtual #181                // Method com/armedwithbow/DynamicTrackModule.addModDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1296: aload_1
+    1297: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1300: ldc           #110                // String b2
+    1302: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1307: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1310: aload_0
+    1311: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1314: ldc           #207                // String b2 control
+    1316: aload         6
+    1318: aload_0
+    1319: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1322: iconst_0
+    1323: iconst_1
+    1324: iconst_0
+    1325: iconst_1
+    1326: invokevirtual #187                // Method com/armedwithbow/InstrumentLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1329: iconst_0
+    1330: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1335: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1338: iconst_0
+    1339: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1342: aload_1
+    1343: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1346: ldc           #110                // String b2
+    1348: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1353: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1356: aload_0
+    1357: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1360: ldc           #209                // String b2 time
+    1362: aload         6
+    1364: aload_0
+    1365: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1368: iconst_0
+    1369: iconst_1
+    1370: iconst_0
+    1371: iconst_2
+    1372: invokevirtual #187                // Method com/armedwithbow/InstrumentLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1375: iconst_1
+    1376: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1381: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1384: iconst_1
+    1385: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1388: aload_1
+    1389: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1392: ldc           #94                 // String vcfx
+    1394: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1399: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1402: aload_0
+    1403: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1406: ldc           #211                // String vc params
+    1408: aload_3
+    1409: iconst_0
+    1410: invokevirtual #213                // Method com/armedwithbow/FXLayerHandler.getFXDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+    1413: iconst_0
+    1414: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1417: aload_1
+    1418: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1421: ldc           #102                // String pro2
+    1423: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1428: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1431: aload_0
+    1432: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1435: ldc           #216                // String p2 params
+    1437: aload         4
+    1439: iconst_0
+    1440: invokevirtual #213                // Method com/armedwithbow/FXLayerHandler.getFXDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+    1443: iconst_0
+    1444: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1447: aload_2
+    1448: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1451: ldc           #118                // String deci
+    1453: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1458: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1461: aload_0
+    1462: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1465: ldc           #118                // String deci
+    1467: aload_2
+    1468: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1471: ldc           #118                // String deci
+    1473: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1478: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1481: iconst_1
+    1482: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1485: iconst_0
+    1486: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1491: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1494: iconst_0
+    1495: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1498: aload_2
+    1499: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1502: ldc           #120                // String fuzz
+    1504: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1509: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1512: aload_0
+    1513: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1516: ldc           #120                // String fuzz
+    1518: aload_2
+    1519: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1522: ldc           #120                // String fuzz
+    1524: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1529: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1532: iconst_1
+    1533: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1536: iconst_0
+    1537: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1542: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1545: iconst_0
+    1546: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1549: aload_2
+    1550: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1553: ldc           #114                // String splut
+    1555: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1560: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1563: aload_0
+    1564: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1567: ldc           #218                // String splutter control
+    1569: aload         10
+    1571: aload_0
+    1572: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1575: iconst_0
+    1576: iconst_1
+    1577: iconst_0
+    1578: iconst_1
+    1579: invokevirtual #159                // Method com/armedwithbow/FXLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1582: iconst_0
+    1583: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1588: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1591: iconst_0
+    1592: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1595: aload_2
+    1596: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1599: ldc           #114                // String splut
+    1601: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1606: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1609: aload_0
+    1610: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1613: ldc           #220                // String splutter mod
+    1615: aload         10
+    1617: iconst_0
+    1618: invokevirtual #213                // Method com/armedwithbow/FXLayerHandler.getFXDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+    1621: iconst_0
+    1622: invokevirtual #181                // Method com/armedwithbow/DynamicTrackModule.addModDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1625: aload_2
+    1626: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1629: ldc           #116                // String spark
+    1631: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1636: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1639: aload_0
+    1640: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1643: ldc           #222                // String spark control
+    1645: aload         9
+    1647: aload_0
+    1648: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1651: iconst_0
+    1652: iconst_1
+    1653: iconst_0
+    1654: iconst_1
+    1655: invokevirtual #159                // Method com/armedwithbow/FXLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1658: iconst_0
+    1659: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1664: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1667: iconst_0
+    1668: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1671: aload_2
+    1672: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1675: ldc           #116                // String spark
+    1677: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1682: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1685: aload_0
+    1686: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1689: ldc           #224                // String spark mod
+    1691: aload         9
+    1693: iconst_0
+    1694: invokevirtual #213                // Method com/armedwithbow/FXLayerHandler.getFXDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+    1697: iconst_0
+    1698: invokevirtual #181                // Method com/armedwithbow/DynamicTrackModule.addModDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1701: aload_2
+    1702: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1705: ldc           #122                // String verb
+    1707: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1712: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1715: aload_0
+    1716: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1719: ldc           #226                // String verb params
+    1721: aload_2
+    1722: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1725: ldc           #122                // String verb
+    1727: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1732: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1735: iconst_1
+    1736: invokevirtual #140                // Method com/armedwithbow/DynamicTrackModule.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1739: iconst_0
+    1740: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1745: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1748: iconst_0
+    1749: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1752: aload_2
+    1753: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1756: ldc           #124                // String mast
+    1758: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1763: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1766: aload_0
+    1767: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1770: ldc           #228                // String mast params
+    1772: aload         13
+    1774: getfield      #230                // Field com/armedwithbow/FXLayerHandler.fxBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+    1777: iconst_0
+    1778: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1783: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1786: iconst_0
+    1787: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1790: aload_2
+    1791: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1794: ldc           #124                // String mast
+    1796: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1801: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1804: aload_0
+    1805: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1808: ldc           #234                // String um control
+    1810: aload         14
+    1812: aload_0
+    1813: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1816: iconst_1
+    1817: iconst_1
+    1818: iconst_0
+    1819: iconst_1
+    1820: invokevirtual #159                // Method com/armedwithbow/FXLayerHandler.getLayerDeviceBank:(Lcom/armedwithbow/ExtensionBase;IIII)Lcom/bitwig/extension/controller/api/DeviceBank;
+    1823: iconst_0
+    1824: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1829: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1832: iconst_1
+    1833: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1836: aload_2
+    1837: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1840: ldc           #124                // String mast
+    1842: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1847: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1850: aload_0
+    1851: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1854: ldc           #236                // String um mod
+    1856: aload         14
+    1858: getfield      #230                // Field com/armedwithbow/FXLayerHandler.fxBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+    1861: iconst_1
+    1862: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1867: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1870: iconst_1
+    1871: invokevirtual #181                // Method com/armedwithbow/DynamicTrackModule.addModDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1874: aload_2
+    1875: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1878: ldc           #124                // String mast
+    1880: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1885: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1888: aload_0
+    1889: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1892: ldc           #238                // String stut 2
+    1894: aload         13
+    1896: getfield      #230                // Field com/armedwithbow/FXLayerHandler.fxBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+    1899: iconst_1
+    1900: invokeinterface #163,  2          // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+    1905: checkcast     #169                // class com/bitwig/extension/controller/api/Device
+    1908: iconst_2
+    1909: invokevirtual #188                // Method com/armedwithbow/DynamicTrackModule.addParamDeviceMapper:(Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;Lcom/bitwig/extension/controller/api/Device;I)V
+    1912: aload_1
+    1913: getfield      #128                // Field com/armedwithbow/InterfaceGroup.modulesMap:Ljava/util/Map;
+    1916: ldc           #102                // String pro2
+    1918: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+    1923: checkcast     #138                // class com/armedwithbow/DynamicTrackModule
+    1926: aload_0
+    1927: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1930: bipush        20
+    1932: invokevirtual #240                // Method com/armedwithbow/DynamicTrackModule.createSceneMapper:(Lcom/armedwithbow/ExtensionBase;I)V
+    1935: aload_0
+    1936: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1939: getfield      #150                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+    1942: ldc           #244                // String OSC Controller for AWB Initialized
+    1944: invokeinterface #246,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.showPopupNotification:(Ljava/lang/String;)V
+    1949: aload_0
+    1950: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+    1953: getfield      #150                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+    1956: ldc           #244                // String OSC Controller for AWB Initialized
+    1958: invokeinterface #250,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+    1963: return
+
+  public void exit();
+    Code:
+       0: aload_0
+       1: invokevirtual #60                 // Method getHost:()Lcom/bitwig/extension/api/Host;
+       4: checkcast     #64                 // class com/bitwig/extension/controller/api/ControllerHost
+       7: ldc_w         #272                // String OSC Controller for AWB Exited
+      10: invokeinterface #246,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.showPopupNotification:(Ljava/lang/String;)V
+      15: return
+
+  public void flush();
+    Code:
+       0: aload_0
+       1: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+       4: ifnull        233
+       7: aload_0
+       8: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      11: getfield      #275                // Field com/armedwithbow/ExtensionBase.pendingOscMessages:Ljava/util/Map;
+      14: invokeinterface #278,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+      19: ifne          233
+      22: aload_0
+      23: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      26: getfield      #282                // Field com/armedwithbow/ExtensionBase.oscConnection:Lcom/bitwig/extension/api/opensoundcontrol/OscConnection;
+      29: invokeinterface #286,  1          // InterfaceMethod com/bitwig/extension/api/opensoundcontrol/OscConnection.startBundle:()V
+      34: aload_0
+      35: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      38: getfield      #275                // Field com/armedwithbow/ExtensionBase.pendingOscMessages:Ljava/util/Map;
+      41: invokeinterface #291,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+      46: invokeinterface #295,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      51: astore_2
+      52: goto          148
+      55: aload_2
+      56: invokeinterface #301,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      61: checkcast     #307                // class java/util/Map$Entry
+      64: astore_1
+      65: aload_1
+      66: invokeinterface #309,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      71: checkcast     #312                // class java/lang/String
+      74: astore_3
+      75: aload_1
+      76: invokeinterface #314,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      81: checkcast     #317                // class java/lang/Double
+      84: astore        4
+      86: aload_0
+      87: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      90: getfield      #282                // Field com/armedwithbow/ExtensionBase.oscConnection:Lcom/bitwig/extension/api/opensoundcontrol/OscConnection;
+      93: aload_3
+      94: iconst_1
+      95: anewarray     #319                // class java/lang/Object
+      98: dup
+      99: iconst_0
+     100: aload         4
+     102: aastore
+     103: invokeinterface #321,  3          // InterfaceMethod com/bitwig/extension/api/opensoundcontrol/OscConnection.sendMessage:(Ljava/lang/String;[Ljava/lang/Object;)V
+     108: aload_0
+     109: invokevirtual #60                 // Method getHost:()Lcom/bitwig/extension/api/Host;
+     112: checkcast     #64                 // class com/bitwig/extension/controller/api/ControllerHost
+     115: new           #325                // class java/lang/StringBuilder
+     118: dup
+     119: ldc_w         #327                // String  - Bundled:
+     122: invokespecial #329                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     125: aload_3
+     126: invokevirtual #331                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     129: ldc_w         #335                // String  ->
+     132: invokevirtual #331                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     135: aload         4
+     137: invokevirtual #337                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     140: invokevirtual #340                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     143: invokeinterface #250,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+     148: aload_2
+     149: invokeinterface #344,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     154: ifne          55
+     157: aload_0
+     158: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     161: getfield      #282                // Field com/armedwithbow/ExtensionBase.oscConnection:Lcom/bitwig/extension/api/opensoundcontrol/OscConnection;
+     164: invokeinterface #347,  1          // InterfaceMethod com/bitwig/extension/api/opensoundcontrol/OscConnection.endBundle:()V
+     169: aload_0
+     170: getfield      #69                 // Field base:Lcom/armedwithbow/ExtensionBase;
+     173: getfield      #275                // Field com/armedwithbow/ExtensionBase.pendingOscMessages:Ljava/util/Map;
+     176: invokeinterface #350,  1          // InterfaceMethod java/util/Map.clear:()V
+     181: goto          233
+     184: astore_1
+     185: aload_0
+     186: invokevirtual #60                 // Method getHost:()Lcom/bitwig/extension/api/Host;
+     189: checkcast     #64                 // class com/bitwig/extension/controller/api/ControllerHost
+     192: new           #325                // class java/lang/StringBuilder
+     195: dup
+     196: ldc_w         #353                // String ERROR: Failed to send OSC bundle:
+     199: invokespecial #329                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     202: aload_1
+     203: invokevirtual #355                // Method java/io/IOException.getMessage:()Ljava/lang/String;
+     206: invokevirtual #331                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     209: invokevirtual #340                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     212: invokeinterface #250,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+     217: aload_0
+     218: invokevirtual #60                 // Method getHost:()Lcom/bitwig/extension/api/Host;
+     221: checkcast     #64                 // class com/bitwig/extension/controller/api/ControllerHost
+     224: aload_1
+     225: invokevirtual #360                // Method java/io/IOException.toString:()Ljava/lang/String;
+     228: invokeinterface #250,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+     233: aload_0
+     234: getfield      #74                 // Field hardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+     237: ifnull        249
+     240: aload_0
+     241: getfield      #74                 // Field hardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+     244: invokeinterface #361,  1          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSurface.updateHardware:()V
+     249: return
+    Exception table:
+       from    to  target type
+          22   181   184   Class java/io/IOException
+}
+Compiled from "OSCControllerforAWBExtensionDefinition.java"
+public class com.armedwithbow.OSCControllerforAWBExtensionDefinition extends com.bitwig.extension.controller.ControllerExtensionDefinition {
+  private static final java.util.UUID DRIVER_ID;
+
+  static {};
+    Code:
+       0: ldc           #10                 // String 76988a50-19a4-4ded-baf3-6891f1e64e80
+       2: invokestatic  #12                 // Method java/util/UUID.fromString:(Ljava/lang/String;)Ljava/util/UUID;
+       5: putstatic     #18                 // Field DRIVER_ID:Ljava/util/UUID;
+       8: return
+
+  public com.armedwithbow.OSCControllerforAWBExtensionDefinition();
+    Code:
+       0: aload_0
+       1: invokespecial #23                 // Method com/bitwig/extension/controller/ControllerExtensionDefinition."<init>":()V
+       4: return
+
+  public java.lang.String getName();
+    Code:
+       0: ldc           #29                 // String OSC Controller for AWB
+       2: areturn
+
+  public java.lang.String getAuthor();
+    Code:
+       0: ldc           #32                 // String A_W_B
+       2: areturn
+
+  public java.lang.String getVersion();
+    Code:
+       0: ldc           #35                 // String 0.1
+       2: areturn
+
+  public java.util.UUID getId();
+    Code:
+       0: getstatic     #18                 // Field DRIVER_ID:Ljava/util/UUID;
+       3: areturn
+
+  public java.lang.String getHardwareVendor();
+    Code:
+       0: ldc           #40                 // String Armed With Bow
+       2: areturn
+
+  public java.lang.String getHardwareModel();
+    Code:
+       0: ldc           #43                 // String OSCAWBGlue01
+       2: areturn
+
+  public int getRequiredAPIVersion();
+    Code:
+       0: bipush        16
+       2: ireturn
+
+  public int getNumMidiInPorts();
+    Code:
+       0: iconst_2
+       1: ireturn
+
+  public int getNumMidiOutPorts();
+    Code:
+       0: iconst_0
+       1: ireturn
+
+  public void listAutoDetectionMidiPortNames(com.bitwig.extension.controller.AutoDetectionMidiPortNamesList, com.bitwig.extension.api.PlatformType);
+    Code:
+       0: return
+
+  public com.armedwithbow.OSCControllerforAWBExtension createInstance(com.bitwig.extension.controller.api.ControllerHost);
+    Code:
+       0: new           #57                 // class com/armedwithbow/OSCControllerforAWBExtension
+       3: dup
+       4: aload_0
+       5: aload_1
+       6: invokespecial #59                 // Method com/armedwithbow/OSCControllerforAWBExtension."<init>":(Lcom/armedwithbow/OSCControllerforAWBExtensionDefinition;Lcom/bitwig/extension/controller/api/ControllerHost;)V
+       9: areturn
+
+  public com.bitwig.extension.controller.ControllerExtension createInstance(com.bitwig.extension.controller.api.ControllerHost);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #65                 // Method createInstance:(Lcom/bitwig/extension/controller/api/ControllerHost;)Lcom/armedwithbow/OSCControllerforAWBExtension;
+       5: areturn
+}
+Compiled from "ExtensionBase.java"
+public class com.armedwithbow.ExtensionBase {
+  public java.util.Map<java.lang.String, java.lang.Double> pendingOscMessages;
+
+  public final com.bitwig.extension.controller.api.ControllerHost host;
+
+  public final com.bitwig.extension.controller.api.HardwareSurface extensionHardwareSurface;
+
+  public final com.bitwig.extension.controller.api.MidiIn oscPortIn;
+
+  public final com.bitwig.extension.controller.api.MidiIn scPortIn;
+
+  public final int TRACK_FADER_CC;
+
+  public final int ROUTING_BASE;
+
+  public final int CONTROLS_1_BASE;
+
+  public final int CONTROLS_2_BASE;
+
+  public final int CONTROLS_3_BASE;
+
+  public final int MOD_1_BASE;
+
+  public final int MOD_2_BASE;
+
+  public final int MOD_3_BASE;
+
+  public final int DIRECT_PARAM_BASE;
+
+  public final int FX_SENDS_BASE;
+
+  public final int BUS_SENDS_BASE;
+
+  public final int BUS_FADERS_BASE;
+
+  public final int TOTAL_BUS_TRACKS;
+
+  public final int TOTAL_FX_TRACKS;
+
+  public final int BUS_SENDS_START;
+
+  public final int BUS_SENDS_END;
+
+  public final int FX_SENDS_START;
+
+  public final int SCENE_SLOTS;
+
+  public com.bitwig.extension.api.opensoundcontrol.OscConnection oscConnection;
+
+  public final com.bitwig.extension.controller.api.TrackBank bus_fader_bank;
+
+  com.armedwithbow.ExtensionBase(com.bitwig.extension.controller.api.ControllerHost, int, int, int, int, int, int);
+    Code:
+       0: aload_0
+       1: invokespecial #42                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #45                 // class java/util/HashMap
+       8: dup
+       9: invokespecial #47                 // Method java/util/HashMap."<init>":()V
+      12: putfield      #48                 // Field pendingOscMessages:Ljava/util/Map;
+      15: aload_0
+      16: aload_1
+      17: putfield      #50                 // Field host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      20: aload_0
+      21: aload_1
+      22: invokeinterface #52,  1           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createHardwareSurface:()Lcom/bitwig/extension/controller/api/HardwareSurface;
+      27: putfield      #58                 // Field extensionHardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+      30: aload_0
+      31: aload_1
+      32: iconst_0
+      33: invokeinterface #60,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.getMidiInPort:(I)Lcom/bitwig/extension/controller/api/MidiIn;
+      38: putfield      #64                 // Field oscPortIn:Lcom/bitwig/extension/controller/api/MidiIn;
+      41: aload_0
+      42: aload_1
+      43: iconst_1
+      44: invokeinterface #60,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.getMidiInPort:(I)Lcom/bitwig/extension/controller/api/MidiIn;
+      49: putfield      #66                 // Field scPortIn:Lcom/bitwig/extension/controller/api/MidiIn;
+      52: aload_1
+      53: invokeinterface #68,  1           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.getOscModule:()Lcom/bitwig/extension/api/opensoundcontrol/OscModule;
+      58: astore        8
+      60: aload_0
+      61: getfield      #50                 // Field host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      64: ldc           #72                 // String We are live
+      66: invokeinterface #74,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      71: aload_0
+      72: aload         8
+      74: ldc           #78                 // String 127.0.0.1
+      76: sipush        9000
+      79: aload         8
+      81: invokeinterface #80,  1           // InterfaceMethod com/bitwig/extension/api/opensoundcontrol/OscModule.createAddressSpace:()Lcom/bitwig/extension/api/opensoundcontrol/OscAddressSpace;
+      86: invokeinterface #86,  4           // InterfaceMethod com/bitwig/extension/api/opensoundcontrol/OscModule.connectToUdpServer:(Ljava/lang/String;ILcom/bitwig/extension/api/opensoundcontrol/OscAddressSpace;)Lcom/bitwig/extension/api/opensoundcontrol/OscConnection;
+      91: putfield      #90                 // Field oscConnection:Lcom/bitwig/extension/api/opensoundcontrol/OscConnection;
+      94: aload_0
+      95: getfield      #50                 // Field host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      98: ldc           #92                 // String OSC connection initialised
+     100: invokeinterface #74,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+     105: aload_0
+     106: aload_1
+     107: iload         6
+     109: iconst_0
+     110: invokeinterface #94,  3           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createEffectTrackBank:(II)Lcom/bitwig/extension/controller/api/TrackBank;
+     115: putfield      #98                 // Field bus_fader_bank:Lcom/bitwig/extension/controller/api/TrackBank;
+     118: aload_0
+     119: bipush        9
+     121: putfield      #100                // Field TRACK_FADER_CC:I
+     124: aload_0
+     125: iconst_0
+     126: putfield      #102                // Field ROUTING_BASE:I
+     129: aload_0
+     130: bipush        10
+     132: putfield      #104                // Field CONTROLS_1_BASE:I
+     135: aload_0
+     136: bipush        20
+     138: putfield      #106                // Field CONTROLS_2_BASE:I
+     141: aload_0
+     142: bipush        30
+     144: putfield      #108                // Field CONTROLS_3_BASE:I
+     147: aload_0
+     148: bipush        40
+     150: putfield      #110                // Field MOD_1_BASE:I
+     153: aload_0
+     154: bipush        50
+     156: putfield      #112                // Field MOD_2_BASE:I
+     159: aload_0
+     160: bipush        60
+     162: putfield      #114                // Field MOD_3_BASE:I
+     165: aload_0
+     166: bipush        70
+     168: putfield      #116                // Field DIRECT_PARAM_BASE:I
+     171: aload_0
+     172: bipush        80
+     174: putfield      #118                // Field FX_SENDS_BASE:I
+     177: aload_0
+     178: bipush        100
+     180: putfield      #120                // Field BUS_SENDS_BASE:I
+     183: aload_0
+     184: bipush        120
+     186: putfield      #122                // Field BUS_FADERS_BASE:I
+     189: aload_0
+     190: iload_2
+     191: putfield      #124                // Field TOTAL_BUS_TRACKS:I
+     194: aload_0
+     195: iload_3
+     196: putfield      #126                // Field TOTAL_FX_TRACKS:I
+     199: aload_0
+     200: iload         4
+     202: putfield      #128                // Field BUS_SENDS_START:I
+     205: aload_0
+     206: iload         5
+     208: putfield      #130                // Field FX_SENDS_START:I
+     211: aload_0
+     212: iload         6
+     214: putfield      #132                // Field BUS_SENDS_END:I
+     217: aload_0
+     218: iload         7
+     220: putfield      #134                // Field SCENE_SLOTS:I
+     223: return
+
+  void sendOscMessage(java.lang.String, java.lang.Object);
+    Code:
+       0: aload_2
+       1: instanceof    #144                // class java/lang/Double
+       4: ifeq          25
+       7: aload_0
+       8: getfield      #48                 // Field pendingOscMessages:Ljava/util/Map;
+      11: aload_1
+      12: aload_2
+      13: checkcast     #144                // class java/lang/Double
+      16: invokeinterface #146,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      21: pop
+      22: goto          53
+      25: aload_2
+      26: instanceof    #152                // class java/lang/Integer
+      29: ifeq          53
+      32: aload_0
+      33: getfield      #48                 // Field pendingOscMessages:Ljava/util/Map;
+      36: aload_1
+      37: aload_2
+      38: checkcast     #152                // class java/lang/Integer
+      41: invokevirtual #154                // Method java/lang/Integer.doubleValue:()D
+      44: invokestatic  #158                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+      47: invokeinterface #146,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      52: pop
+      53: return
+}
+Compiled from "InterfaceGroup.java"
+public class com.armedwithbow.InterfaceGroup {
+  public final java.lang.String name;
+
+  public final java.lang.String type;
+
+  public final int groupSize;
+
+  public final int startIndex;
+
+  public final java.lang.Boolean useFlatTrack;
+
+  public com.bitwig.extension.controller.api.TrackBank groupTrackBank;
+
+  public java.util.Map<java.lang.String, com.armedwithbow.DynamicTrackModule> modulesMap;
+
+  private com.armedwithbow.ExtensionBase base;
+
+  com.armedwithbow.InterfaceGroup(com.armedwithbow.ExtensionBase, java.lang.String, java.lang.String, int, int, int, java.lang.Boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #24                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_2
+       6: putfield      #27                 // Field name:Ljava/lang/String;
+       9: aload_0
+      10: iload         4
+      12: putfield      #29                 // Field groupSize:I
+      15: aload_0
+      16: iload         5
+      18: putfield      #31                 // Field startIndex:I
+      21: aload_0
+      22: aload_3
+      23: putfield      #33                 // Field type:Ljava/lang/String;
+      26: aload_0
+      27: new           #35                 // class java/util/HashMap
+      30: dup
+      31: invokespecial #37                 // Method java/util/HashMap."<init>":()V
+      34: putfield      #38                 // Field modulesMap:Ljava/util/Map;
+      37: aload_0
+      38: aload         7
+      40: putfield      #40                 // Field useFlatTrack:Ljava/lang/Boolean;
+      43: aload_0
+      44: aload_1
+      45: putfield      #42                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      48: aload_3
+      49: dup
+      50: astore        8
+      52: invokevirtual #44                 // Method java/lang/String.hashCode:()I
+      55: lookupswitch  { // 3
+                  3282: 88
+             103910395: 101
+             110621003: 114
+               default: 218
+          }
+      88: aload         8
+      90: ldc           #50                 // String fx
+      92: invokevirtual #52                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      95: ifne          194
+      98: goto          218
+     101: aload         8
+     103: ldc           #56                 // String mixed
+     105: invokevirtual #52                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     108: ifne          158
+     111: goto          218
+     114: aload         8
+     116: ldc           #58                 // String track
+     118: invokevirtual #52                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     121: ifne          127
+     124: goto          218
+     127: aload_0
+     128: aload_1
+     129: getfield      #60                 // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+     132: aload_0
+     133: getfield      #29                 // Field groupSize:I
+     136: aload_1
+     137: getfield      #66                 // Field com/armedwithbow/ExtensionBase.TOTAL_BUS_TRACKS:I
+     140: aload_1
+     141: getfield      #69                 // Field com/armedwithbow/ExtensionBase.TOTAL_FX_TRACKS:I
+     144: iadd
+     145: iload         6
+     147: invokeinterface #72,  4           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createMainTrackBank:(III)Lcom/bitwig/extension/controller/api/TrackBank;
+     152: putfield      #78                 // Field groupTrackBank:Lcom/bitwig/extension/controller/api/TrackBank;
+     155: goto          218
+     158: aload_0
+     159: aload_1
+     160: getfield      #60                 // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+     163: aload_0
+     164: getfield      #29                 // Field groupSize:I
+     167: aload_1
+     168: getfield      #66                 // Field com/armedwithbow/ExtensionBase.TOTAL_BUS_TRACKS:I
+     171: aload_1
+     172: getfield      #69                 // Field com/armedwithbow/ExtensionBase.TOTAL_FX_TRACKS:I
+     175: iadd
+     176: iload         6
+     178: aload         7
+     180: invokevirtual #80                 // Method java/lang/Boolean.booleanValue:()Z
+     183: invokeinterface #86,  5           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createTrackBank:(IIIZ)Lcom/bitwig/extension/controller/api/TrackBank;
+     188: putfield      #78                 // Field groupTrackBank:Lcom/bitwig/extension/controller/api/TrackBank;
+     191: goto          218
+     194: aload_0
+     195: aload_1
+     196: getfield      #60                 // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+     199: aload_1
+     200: getfield      #66                 // Field com/armedwithbow/ExtensionBase.TOTAL_BUS_TRACKS:I
+     203: aload_1
+     204: getfield      #69                 // Field com/armedwithbow/ExtensionBase.TOTAL_FX_TRACKS:I
+     207: iadd
+     208: iload         6
+     210: invokeinterface #90,  3           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createEffectTrackBank:(II)Lcom/bitwig/extension/controller/api/TrackBank;
+     215: putfield      #78                 // Field groupTrackBank:Lcom/bitwig/extension/controller/api/TrackBank;
+     218: return
+
+  public void addModule(java.lang.String, int, int, int[], boolean, boolean, boolean, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #38                 // Field modulesMap:Ljava/util/Map;
+       4: aload_1
+       5: new           #102                // class com/armedwithbow/DynamicTrackModule
+       8: dup
+       9: aload_0
+      10: getfield      #42                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      13: aload_0
+      14: getfield      #31                 // Field startIndex:I
+      17: iload_2
+      18: iadd
+      19: aload_1
+      20: iload_3
+      21: aload         4
+      23: iload         5
+      25: invokestatic  #104                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      28: iload         6
+      30: invokestatic  #104                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      33: iload         7
+      35: invokestatic  #104                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      38: aload_0
+      39: getfield      #78                 // Field groupTrackBank:Lcom/bitwig/extension/controller/api/TrackBank;
+      42: aload_0
+      43: getfield      #31                 // Field startIndex:I
+      46: iload_2
+      47: iadd
+      48: invokeinterface #108,  2          // InterfaceMethod com/bitwig/extension/controller/api/TrackBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      53: checkcast     #114                // class com/bitwig/extension/controller/api/Track
+      56: iload         8
+      58: invokestatic  #104                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      61: invokespecial #116                // Method com/armedwithbow/DynamicTrackModule."<init>":(Lcom/armedwithbow/ExtensionBase;ILjava/lang/String;I[ILjava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/bitwig/extension/controller/api/Track;Ljava/lang/Boolean;)V
+      64: invokeinterface #119,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      69: pop
+      70: return
+
+  public void createBusFaderMappings();
+    Code:
+       0: aload_0
+       1: getfield      #38                 // Field modulesMap:Ljava/util/Map;
+       4: invokeinterface #136,  1          // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+       9: invokeinterface #140,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      14: astore_2
+      15: goto          36
+      18: aload_2
+      19: invokeinterface #146,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      24: checkcast     #102                // class com/armedwithbow/DynamicTrackModule
+      27: astore_1
+      28: aload_1
+      29: aload_0
+      30: getfield      #42                 // Field base:Lcom/armedwithbow/ExtensionBase;
+      33: invokevirtual #152                // Method com/armedwithbow/DynamicTrackModule.createBusFaderMappings:(Lcom/armedwithbow/ExtensionBase;)V
+      36: aload_2
+      37: invokeinterface #155,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      42: ifne          18
+      45: return
+}
+Compiled from "DynamicTrackModule.java"
+public class com.armedwithbow.DynamicTrackModule {
+  private com.armedwithbow.DeviceControlMapper[] deviceParamMappers;
+
+  private com.armedwithbow.DeviceControlMapper[] deviceModMappers;
+
+  private com.armedwithbow.DeviceControlMapper[] deviceRoutingMappers;
+
+  private com.armedwithbow.TrackSceneMapper trackSceneMapper;
+
+  private com.armedwithbow.EnvFollowerOscObserver[] envFollowerOscObservers;
+
+  private com.bitwig.extension.controller.api.AbsoluteHardwareKnob[] busKnobs;
+
+  private com.bitwig.extension.controller.api.AbsoluteHardwareKnob[] fxKnobs;
+
+  private com.bitwig.extension.controller.api.HardwareSlider[] busFaders;
+
+  private com.bitwig.extension.controller.api.AbsoluteHardwareKnob[] busGainKnobs;
+
+  private com.bitwig.extension.controller.api.HardwareSlider fader;
+
+  public final int index;
+
+  public final java.lang.String name;
+
+  public final int midiChannel;
+
+  public int[] busses;
+
+  public com.bitwig.extension.controller.api.Track track;
+
+  public com.bitwig.extension.controller.api.SendBank sends;
+
+  com.armedwithbow.DynamicTrackModule(com.armedwithbow.ExtensionBase, int, java.lang.String, int, int[], java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, com.bitwig.extension.controller.api.Track, java.lang.Boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #35                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iload_2
+       6: putfield      #38                 // Field index:I
+       9: aload_0
+      10: aload_3
+      11: putfield      #40                 // Field name:Ljava/lang/String;
+      14: aload_0
+      15: iload         4
+      17: putfield      #42                 // Field midiChannel:I
+      20: aload_0
+      21: aload         5
+      23: putfield      #44                 // Field busses:[I
+      26: aload_0
+      27: iconst_3
+      28: anewarray     #46                 // class com/armedwithbow/DeviceControlMapper
+      31: putfield      #48                 // Field deviceParamMappers:[Lcom/armedwithbow/DeviceControlMapper;
+      34: aload_0
+      35: iconst_3
+      36: anewarray     #46                 // class com/armedwithbow/DeviceControlMapper
+      39: putfield      #50                 // Field deviceModMappers:[Lcom/armedwithbow/DeviceControlMapper;
+      42: aload_0
+      43: iconst_1
+      44: anewarray     #46                 // class com/armedwithbow/DeviceControlMapper
+      47: putfield      #52                 // Field deviceRoutingMappers:[Lcom/armedwithbow/DeviceControlMapper;
+      50: aload_0
+      51: aload         9
+      53: putfield      #54                 // Field track:Lcom/bitwig/extension/controller/api/Track;
+      56: aload         10
+      58: invokevirtual #56                 // Method java/lang/Boolean.booleanValue:()Z
+      61: ifeq          82
+      64: aload_0
+      65: aload         5
+      67: arraylength
+      68: anewarray     #62                 // class com/armedwithbow/EnvFollowerOscObserver
+      71: putfield      #64                 // Field envFollowerOscObservers:[Lcom/armedwithbow/EnvFollowerOscObserver;
+      74: aload_0
+      75: aload_1
+      76: invokevirtual #66                 // Method createBusEnvelopeObservers:(Lcom/armedwithbow/ExtensionBase;)V
+      79: goto          90
+      82: aload_0
+      83: iconst_0
+      84: anewarray     #62                 // class com/armedwithbow/EnvFollowerOscObserver
+      87: putfield      #64                 // Field envFollowerOscObservers:[Lcom/armedwithbow/EnvFollowerOscObserver;
+      90: aload         6
+      92: invokevirtual #56                 // Method java/lang/Boolean.booleanValue:()Z
+      95: ifne          106
+      98: aload         7
+     100: invokevirtual #56                 // Method java/lang/Boolean.booleanValue:()Z
+     103: ifeq          121
+     106: aload_0
+     107: aload_1
+     108: aload         6
+     110: invokevirtual #56                 // Method java/lang/Boolean.booleanValue:()Z
+     113: aload         7
+     115: invokevirtual #56                 // Method java/lang/Boolean.booleanValue:()Z
+     118: invokevirtual #70                 // Method setupSends:(Lcom/armedwithbow/ExtensionBase;ZZ)V
+     121: aload         5
+     123: arraylength
+     124: ifle          132
+     127: aload_0
+     128: aload_1
+     129: invokevirtual #74                 // Method createBusFaderMappings:(Lcom/armedwithbow/ExtensionBase;)V
+     132: aload         8
+     134: invokevirtual #56                 // Method java/lang/Boolean.booleanValue:()Z
+     137: ifeq          145
+     140: aload_0
+     141: aload_1
+     142: invokevirtual #77                 // Method createFaderMapping:(Lcom/armedwithbow/ExtensionBase;)V
+     145: aload         10
+     147: invokevirtual #56                 // Method java/lang/Boolean.booleanValue:()Z
+     150: pop
+     151: return
+
+  com.bitwig.extension.controller.api.DeviceBank createDeviceBank(int);
+    Code:
+       0: aload_0
+       1: getfield      #54                 // Field track:Lcom/bitwig/extension/controller/api/Track;
+       4: iload_1
+       5: invokeinterface #102,  2          // InterfaceMethod com/bitwig/extension/controller/api/Track.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+      10: areturn
+
+  public void createSceneMapper(com.armedwithbow.ExtensionBase, int);
+    Code:
+       0: aload_0
+       1: new           #107                // class com/armedwithbow/TrackSceneMapper
+       4: dup
+       5: aload_1
+       6: aload_0
+       7: iload_2
+       8: invokespecial #109                // Method com/armedwithbow/TrackSceneMapper."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/armedwithbow/DynamicTrackModule;I)V
+      11: putfield      #112                // Field trackSceneMapper:Lcom/armedwithbow/TrackSceneMapper;
+      14: return
+
+  public void addParamDeviceMapper(com.armedwithbow.ExtensionBase, java.lang.String, com.bitwig.extension.controller.api.Device, int);
+    Code:
+       0: aload_0
+       1: getfield      #48                 // Field deviceParamMappers:[Lcom/armedwithbow/DeviceControlMapper;
+       4: iload         4
+       6: aaload
+       7: ifnull        42
+      10: aload_1
+      11: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      14: new           #121                // class java/lang/StringBuilder
+      17: dup
+      18: ldc           #123                // String Error. Attempting to add device to slot
+      20: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      23: iload         4
+      25: invokevirtual #128                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      28: ldc           #132                // String : slot already assigned!
+      30: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      33: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      36: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      41: return
+      42: aload_1
+      43: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      46: new           #121                // class java/lang/StringBuilder
+      49: dup
+      50: ldc           #146                // String Assinging
+      52: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      55: aload_2
+      56: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      59: ldc           #148                // String  to slot
+      61: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      64: iload         4
+      66: invokevirtual #128                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      69: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      72: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      77: iconst_m1
+      78: istore        5
+      80: iload         4
+      82: tableswitch   { // 0 to 2
+                     0: 108
+                     1: 117
+                     2: 126
+               default: 135
+          }
+     108: aload_1
+     109: getfield      #150                // Field com/armedwithbow/ExtensionBase.CONTROLS_1_BASE:I
+     112: istore        5
+     114: goto          160
+     117: aload_1
+     118: getfield      #153                // Field com/armedwithbow/ExtensionBase.CONTROLS_2_BASE:I
+     121: istore        5
+     123: goto          160
+     126: aload_1
+     127: getfield      #156                // Field com/armedwithbow/ExtensionBase.CONTROLS_3_BASE:I
+     130: istore        5
+     132: goto          160
+     135: aload_1
+     136: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+     139: new           #121                // class java/lang/StringBuilder
+     142: dup
+     143: ldc           #159                // String Error. Invalid slot assigment for device:
+     145: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     148: aload_2
+     149: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     152: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     155: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+     160: iload         5
+     162: ifle          188
+     165: aload_0
+     166: getfield      #48                 // Field deviceParamMappers:[Lcom/armedwithbow/DeviceControlMapper;
+     169: iload         4
+     171: new           #46                 // class com/armedwithbow/DeviceControlMapper
+     174: dup
+     175: aload_1
+     176: aload_3
+     177: aload_2
+     178: aload_0
+     179: iload         5
+     181: invokespecial #161                // Method com/armedwithbow/DeviceControlMapper."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/Device;Ljava/lang/String;Lcom/armedwithbow/DynamicTrackModule;I)V
+     184: aastore
+     185: goto          189
+     188: return
+     189: return
+
+  public void addModDeviceMapper(com.armedwithbow.ExtensionBase, java.lang.String, com.bitwig.extension.controller.api.Device, int);
+    Code:
+       0: aload_0
+       1: getfield      #50                 // Field deviceModMappers:[Lcom/armedwithbow/DeviceControlMapper;
+       4: iload         4
+       6: aaload
+       7: ifnull        51
+      10: aload_1
+      11: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      14: new           #121                // class java/lang/StringBuilder
+      17: dup
+      18: ldc           #169                // String Error. Attempting to add
+      20: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      23: aload_2
+      24: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      27: ldc           #148                // String  to slot
+      29: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      32: iload         4
+      34: invokevirtual #128                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      37: ldc           #132                // String : slot already assigned!
+      39: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      42: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      45: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      50: return
+      51: aload_1
+      52: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      55: new           #121                // class java/lang/StringBuilder
+      58: dup
+      59: ldc           #146                // String Assinging
+      61: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      64: aload_2
+      65: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      68: ldc           #148                // String  to slot
+      70: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      73: iload         4
+      75: invokevirtual #128                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      78: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      81: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      86: iconst_m1
+      87: istore        5
+      89: iload         4
+      91: tableswitch   { // 0 to 2
+                     0: 116
+                     1: 125
+                     2: 134
+               default: 143
+          }
+     116: aload_1
+     117: getfield      #171                // Field com/armedwithbow/ExtensionBase.MOD_1_BASE:I
+     120: istore        5
+     122: goto          168
+     125: aload_1
+     126: getfield      #174                // Field com/armedwithbow/ExtensionBase.MOD_2_BASE:I
+     129: istore        5
+     131: goto          168
+     134: aload_1
+     135: getfield      #177                // Field com/armedwithbow/ExtensionBase.MOD_3_BASE:I
+     138: istore        5
+     140: goto          168
+     143: aload_1
+     144: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+     147: new           #121                // class java/lang/StringBuilder
+     150: dup
+     151: ldc           #159                // String Error. Invalid slot assigment for device:
+     153: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     156: aload_2
+     157: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     160: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     163: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+     168: iload         5
+     170: ifle          196
+     173: aload_0
+     174: getfield      #50                 // Field deviceModMappers:[Lcom/armedwithbow/DeviceControlMapper;
+     177: iload         4
+     179: new           #46                 // class com/armedwithbow/DeviceControlMapper
+     182: dup
+     183: aload_1
+     184: aload_3
+     185: aload_2
+     186: aload_0
+     187: iload         5
+     189: invokespecial #161                // Method com/armedwithbow/DeviceControlMapper."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/Device;Ljava/lang/String;Lcom/armedwithbow/DynamicTrackModule;I)V
+     192: aastore
+     193: goto          197
+     196: return
+     197: return
+
+  public void addRoutingDeviceMapper(com.armedwithbow.ExtensionBase, com.bitwig.extension.controller.api.Device);
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field deviceRoutingMappers:[Lcom/armedwithbow/DeviceControlMapper;
+       4: iconst_0
+       5: aaload
+       6: ifnull        38
+       9: aload_1
+      10: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      13: new           #121                // class java/lang/StringBuilder
+      16: dup
+      17: ldc           #182                // String Error. Routing mapping already assigned for
+      19: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      22: aload_0
+      23: getfield      #40                 // Field name:Ljava/lang/String;
+      26: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      29: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      32: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      37: return
+      38: aload_1
+      39: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      42: new           #121                // class java/lang/StringBuilder
+      45: dup
+      46: ldc           #184                // String Assinging routing mapping for
+      48: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      51: aload_0
+      52: getfield      #40                 // Field name:Ljava/lang/String;
+      55: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      58: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      61: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      66: aload_0
+      67: getfield      #52                 // Field deviceRoutingMappers:[Lcom/armedwithbow/DeviceControlMapper;
+      70: iconst_0
+      71: new           #46                 // class com/armedwithbow/DeviceControlMapper
+      74: dup
+      75: aload_1
+      76: aload_2
+      77: new           #121                // class java/lang/StringBuilder
+      80: dup
+      81: aload_0
+      82: getfield      #40                 // Field name:Ljava/lang/String;
+      85: invokestatic  #186                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+      88: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      91: ldc           #190                // String  routing
+      93: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      96: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      99: aload_0
+     100: aload_1
+     101: getfield      #192                // Field com/armedwithbow/ExtensionBase.ROUTING_BASE:I
+     104: invokespecial #161                // Method com/armedwithbow/DeviceControlMapper."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/Device;Ljava/lang/String;Lcom/armedwithbow/DynamicTrackModule;I)V
+     107: aastore
+     108: return
+
+  public void createFaderMapping(com.armedwithbow.ExtensionBase);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: getfield      #195                // Field com/armedwithbow/ExtensionBase.extensionHardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+       5: new           #121                // class java/lang/StringBuilder
+       8: dup
+       9: aload_0
+      10: getfield      #40                 // Field name:Ljava/lang/String;
+      13: invokevirtual #199                // Method java/lang/String.toUpperCase:()Ljava/lang/String;
+      16: invokestatic  #186                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+      19: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      22: ldc           #202                // String _FADER
+      24: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      27: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      30: invokeinterface #204,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSurface.createHardwareSlider:(Ljava/lang/String;)Lcom/bitwig/extension/controller/api/HardwareSlider;
+      35: putfield      #210                // Field fader:Lcom/bitwig/extension/controller/api/HardwareSlider;
+      38: aload_0
+      39: getfield      #210                // Field fader:Lcom/bitwig/extension/controller/api/HardwareSlider;
+      42: aload_1
+      43: getfield      #212                // Field com/armedwithbow/ExtensionBase.scPortIn:Lcom/bitwig/extension/controller/api/MidiIn;
+      46: aload_0
+      47: getfield      #42                 // Field midiChannel:I
+      50: aload_1
+      51: getfield      #216                // Field com/armedwithbow/ExtensionBase.TRACK_FADER_CC:I
+      54: invokeinterface #219,  3          // InterfaceMethod com/bitwig/extension/controller/api/MidiIn.createAbsoluteCCValueMatcher:(II)Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;
+      59: invokeinterface #225,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSlider.setAdjustValueMatcher:(Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;)V
+      64: aload_0
+      65: getfield      #210                // Field fader:Lcom/bitwig/extension/controller/api/HardwareSlider;
+      68: aload_0
+      69: getfield      #54                 // Field track:Lcom/bitwig/extension/controller/api/Track;
+      72: invokeinterface #231,  1          // InterfaceMethod com/bitwig/extension/controller/api/Track.volume:()Lcom/bitwig/extension/controller/api/Parameter;
+      77: invokeinterface #235,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSlider.setBinding:(Lcom/bitwig/extension/controller/api/HardwareBindable;)Lcom/bitwig/extension/controller/api/HardwareBinding;
+      82: pop
+      83: return
+
+  public void createBusFaderMappings(com.armedwithbow.ExtensionBase);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #44                 // Field busses:[I
+       5: arraylength
+       6: anewarray     #226                // class com/bitwig/extension/controller/api/HardwareSlider
+       9: putfield      #239                // Field busFaders:[Lcom/bitwig/extension/controller/api/HardwareSlider;
+      12: iconst_0
+      13: istore_2
+      14: goto          131
+      17: aload_0
+      18: getfield      #239                // Field busFaders:[Lcom/bitwig/extension/controller/api/HardwareSlider;
+      21: iload_2
+      22: aload_1
+      23: getfield      #195                // Field com/armedwithbow/ExtensionBase.extensionHardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+      26: new           #121                // class java/lang/StringBuilder
+      29: dup
+      30: ldc           #241                // String SLIDER_
+      32: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      35: aload_0
+      36: getfield      #40                 // Field name:Ljava/lang/String;
+      39: invokevirtual #199                // Method java/lang/String.toUpperCase:()Ljava/lang/String;
+      42: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: ldc           #243                // String _
+      47: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      50: iload_2
+      51: invokevirtual #128                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      54: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      57: invokeinterface #204,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSurface.createHardwareSlider:(Ljava/lang/String;)Lcom/bitwig/extension/controller/api/HardwareSlider;
+      62: aastore
+      63: aload_0
+      64: getfield      #239                // Field busFaders:[Lcom/bitwig/extension/controller/api/HardwareSlider;
+      67: iload_2
+      68: aaload
+      69: aload_1
+      70: getfield      #245                // Field com/armedwithbow/ExtensionBase.oscPortIn:Lcom/bitwig/extension/controller/api/MidiIn;
+      73: aload_0
+      74: getfield      #42                 // Field midiChannel:I
+      77: aload_1
+      78: getfield      #248                // Field com/armedwithbow/ExtensionBase.BUS_FADERS_BASE:I
+      81: iload_2
+      82: iadd
+      83: invokeinterface #219,  3          // InterfaceMethod com/bitwig/extension/controller/api/MidiIn.createAbsoluteCCValueMatcher:(II)Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;
+      88: invokeinterface #225,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSlider.setAdjustValueMatcher:(Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;)V
+      93: aload_0
+      94: getfield      #239                // Field busFaders:[Lcom/bitwig/extension/controller/api/HardwareSlider;
+      97: iload_2
+      98: aaload
+      99: aload_1
+     100: getfield      #251                // Field com/armedwithbow/ExtensionBase.bus_fader_bank:Lcom/bitwig/extension/controller/api/TrackBank;
+     103: aload_0
+     104: getfield      #44                 // Field busses:[I
+     107: iload_2
+     108: iaload
+     109: invokeinterface #255,  2          // InterfaceMethod com/bitwig/extension/controller/api/TrackBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+     114: checkcast     #98                 // class com/bitwig/extension/controller/api/Track
+     117: invokeinterface #231,  1          // InterfaceMethod com/bitwig/extension/controller/api/Track.volume:()Lcom/bitwig/extension/controller/api/Parameter;
+     122: invokeinterface #235,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSlider.setBinding:(Lcom/bitwig/extension/controller/api/HardwareBindable;)Lcom/bitwig/extension/controller/api/HardwareBinding;
+     127: pop
+     128: iinc          2, 1
+     131: iload_2
+     132: aload_0
+     133: getfield      #44                 // Field busses:[I
+     136: arraylength
+     137: if_icmplt     17
+     140: return
+
+  public void createBusEnvelopeObservers(com.armedwithbow.ExtensionBase);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #44                 // Field busses:[I
+       5: arraylength
+       6: anewarray     #262                // class com/bitwig/extension/controller/api/AbsoluteHardwareKnob
+       9: putfield      #264                // Field busGainKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      12: iconst_0
+      13: istore_2
+      14: goto          234
+      17: iload_2
+      18: istore_3
+      19: new           #266                // class com/armedwithbow/ToolDeviceHandler
+      22: dup
+      23: aload_1
+      24: aload_1
+      25: getfield      #251                // Field com/armedwithbow/ExtensionBase.bus_fader_bank:Lcom/bitwig/extension/controller/api/TrackBank;
+      28: aload_0
+      29: getfield      #44                 // Field busses:[I
+      32: iload_3
+      33: iaload
+      34: invokeinterface #255,  2          // InterfaceMethod com/bitwig/extension/controller/api/TrackBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      39: checkcast     #98                 // class com/bitwig/extension/controller/api/Track
+      42: iconst_3
+      43: invokeinterface #102,  2          // InterfaceMethod com/bitwig/extension/controller/api/Track.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+      48: invokespecial #268                // Method com/armedwithbow/ToolDeviceHandler."<init>":(Lcom/armedwithbow/ExtensionBase;Lcom/bitwig/extension/controller/api/DeviceBank;)V
+      51: astore        4
+      53: aload         4
+      55: iconst_0
+      56: invokevirtual #271                // Method com/armedwithbow/ToolDeviceHandler.getToolDevice:(I)Lcom/bitwig/extension/controller/api/Device;
+      59: astore        5
+      61: aload_1
+      62: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      65: ldc_w         #275                // String Device matched successfully!
+      68: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      73: aload_0
+      74: getfield      #64                 // Field envFollowerOscObservers:[Lcom/armedwithbow/EnvFollowerOscObserver;
+      77: iload_3
+      78: new           #62                 // class com/armedwithbow/EnvFollowerOscObserver
+      81: dup
+      82: aload         5
+      84: aload_1
+      85: aload_0
+      86: getfield      #40                 // Field name:Ljava/lang/String;
+      89: iload_3
+      90: invokespecial #277                // Method com/armedwithbow/EnvFollowerOscObserver."<init>":(Lcom/bitwig/extension/controller/api/Device;Lcom/armedwithbow/ExtensionBase;Ljava/lang/String;I)V
+      93: aastore
+      94: aload_0
+      95: getfield      #264                // Field busGainKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      98: iload_2
+      99: aload_1
+     100: getfield      #195                // Field com/armedwithbow/ExtensionBase.extensionHardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+     103: new           #121                // class java/lang/StringBuilder
+     106: dup
+     107: ldc_w         #280                // String KNOB_
+     110: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     113: aload_0
+     114: getfield      #40                 // Field name:Ljava/lang/String;
+     117: invokevirtual #199                // Method java/lang/String.toUpperCase:()Ljava/lang/String;
+     120: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     123: ldc           #243                // String _
+     125: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     128: iload_2
+     129: invokevirtual #128                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     132: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     135: invokeinterface #282,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSurface.createAbsoluteHardwareKnob:(Ljava/lang/String;)Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     140: aastore
+     141: aload_0
+     142: getfield      #264                // Field busGainKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     145: iload_2
+     146: aaload
+     147: aload_1
+     148: getfield      #245                // Field com/armedwithbow/ExtensionBase.oscPortIn:Lcom/bitwig/extension/controller/api/MidiIn;
+     151: aload_0
+     152: getfield      #42                 // Field midiChannel:I
+     155: aload_1
+     156: getfield      #248                // Field com/armedwithbow/ExtensionBase.BUS_FADERS_BASE:I
+     159: iload_2
+     160: iadd
+     161: invokeinterface #219,  3          // InterfaceMethod com/bitwig/extension/controller/api/MidiIn.createAbsoluteCCValueMatcher:(II)Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;
+     166: invokeinterface #286,  2          // InterfaceMethod com/bitwig/extension/controller/api/AbsoluteHardwareKnob.setAdjustValueMatcher:(Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;)V
+     171: aload_0
+     172: getfield      #64                 // Field envFollowerOscObservers:[Lcom/armedwithbow/EnvFollowerOscObserver;
+     175: iload_3
+     176: aaload
+     177: getfield      #287                // Field com/armedwithbow/EnvFollowerOscObserver.remoteControlsPage:Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+     180: iconst_2
+     181: invokeinterface #291,  2          // InterfaceMethod com/bitwig/extension/controller/api/CursorRemoteControlsPage.getParameter:(I)Lcom/bitwig/extension/controller/api/RemoteControl;
+     186: aload_0
+     187: getfield      #264                // Field busGainKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     190: iload_2
+     191: aaload
+     192: invokeinterface #297,  2          // InterfaceMethod com/bitwig/extension/controller/api/RemoteControl.addBinding:(Lcom/bitwig/extension/controller/api/AbsoluteHardwareControl;)Lcom/bitwig/extension/controller/api/AbsoluteHardwareControlBinding;
+     197: pop
+     198: aload_1
+     199: getfield      #117                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+     202: ldc_w         #303                // String Created envelope observer for %s on bus channel %d
+     205: iconst_2
+     206: anewarray     #3                  // class java/lang/Object
+     209: dup
+     210: iconst_0
+     211: aload_0
+     212: getfield      #40                 // Field name:Ljava/lang/String;
+     215: aastore
+     216: dup
+     217: iconst_1
+     218: iload_3
+     219: invokestatic  #305                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     222: aastore
+     223: invokestatic  #310                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     226: invokeinterface #141,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+     231: iinc          2, 1
+     234: iload_2
+     235: aload_0
+     236: getfield      #44                 // Field busses:[I
+     239: arraylength
+     240: if_icmplt     17
+     243: return
+
+  public void setupSends(com.armedwithbow.ExtensionBase, boolean, boolean);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #54                 // Field track:Lcom/bitwig/extension/controller/api/Track;
+       5: invokeinterface #318,  1          // InterfaceMethod com/bitwig/extension/controller/api/Track.sendBank:()Lcom/bitwig/extension/controller/api/SendBank;
+      10: putfield      #322                // Field sends:Lcom/bitwig/extension/controller/api/SendBank;
+      13: iload_2
+      14: ifeq          187
+      17: aload_0
+      18: aload_1
+      19: getfield      #324                // Field com/armedwithbow/ExtensionBase.TOTAL_BUS_TRACKS:I
+      22: anewarray     #262                // class com/bitwig/extension/controller/api/AbsoluteHardwareKnob
+      25: putfield      #327                // Field busKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      28: iconst_0
+      29: istore        4
+      31: goto          178
+      34: aload_0
+      35: getfield      #327                // Field busKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      38: iload         4
+      40: aload_1
+      41: getfield      #195                // Field com/armedwithbow/ExtensionBase.extensionHardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+      44: new           #121                // class java/lang/StringBuilder
+      47: dup
+      48: ldc_w         #329                // String ABS_KNOB_
+      51: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      54: aload_0
+      55: getfield      #40                 // Field name:Ljava/lang/String;
+      58: invokevirtual #199                // Method java/lang/String.toUpperCase:()Ljava/lang/String;
+      61: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      64: ldc_w         #331                // String _BUS_
+      67: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      70: iload         4
+      72: invokevirtual #128                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      75: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      78: invokeinterface #282,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSurface.createAbsoluteHardwareKnob:(Ljava/lang/String;)Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      83: aastore
+      84: aload_0
+      85: getfield      #327                // Field busKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      88: iload         4
+      90: aaload
+      91: aload_1
+      92: getfield      #245                // Field com/armedwithbow/ExtensionBase.oscPortIn:Lcom/bitwig/extension/controller/api/MidiIn;
+      95: aload_0
+      96: getfield      #42                 // Field midiChannel:I
+      99: aload_1
+     100: getfield      #333                // Field com/armedwithbow/ExtensionBase.BUS_SENDS_BASE:I
+     103: iload         4
+     105: iadd
+     106: invokeinterface #219,  3          // InterfaceMethod com/bitwig/extension/controller/api/MidiIn.createAbsoluteCCValueMatcher:(II)Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;
+     111: invokeinterface #286,  2          // InterfaceMethod com/bitwig/extension/controller/api/AbsoluteHardwareKnob.setAdjustValueMatcher:(Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;)V
+     116: aload_0
+     117: getfield      #327                // Field busKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     120: iload         4
+     122: aaload
+     123: aload_0
+     124: getfield      #322                // Field sends:Lcom/bitwig/extension/controller/api/SendBank;
+     127: iload         4
+     129: aload_1
+     130: getfield      #336                // Field com/armedwithbow/ExtensionBase.BUS_SENDS_START:I
+     133: iadd
+     134: invokeinterface #339,  2          // InterfaceMethod com/bitwig/extension/controller/api/SendBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+     139: checkcast     #342                // class com/bitwig/extension/controller/api/Send
+     142: invokeinterface #344,  1          // InterfaceMethod com/bitwig/extension/controller/api/Send.value:()Lcom/bitwig/extension/controller/api/SettableRangedValue;
+     147: invokeinterface #348,  2          // InterfaceMethod com/bitwig/extension/controller/api/AbsoluteHardwareKnob.setBinding:(Lcom/bitwig/extension/controller/api/HardwareBindable;)Lcom/bitwig/extension/controller/api/HardwareBinding;
+     152: pop
+     153: aload_0
+     154: getfield      #322                // Field sends:Lcom/bitwig/extension/controller/api/SendBank;
+     157: invokeinterface #349,  1          // InterfaceMethod com/bitwig/extension/controller/api/SendBank.getSizeOfBank:()I
+     162: iload         4
+     164: aload_1
+     165: getfield      #336                // Field com/armedwithbow/ExtensionBase.BUS_SENDS_START:I
+     168: iadd
+     169: if_icmpge     175
+     172: goto          187
+     175: iinc          4, 1
+     178: iload         4
+     180: aload_1
+     181: getfield      #324                // Field com/armedwithbow/ExtensionBase.TOTAL_BUS_TRACKS:I
+     184: if_icmplt     34
+     187: iload_3
+     188: ifeq          361
+     191: aload_0
+     192: aload_1
+     193: getfield      #353                // Field com/armedwithbow/ExtensionBase.TOTAL_FX_TRACKS:I
+     196: anewarray     #262                // class com/bitwig/extension/controller/api/AbsoluteHardwareKnob
+     199: putfield      #356                // Field fxKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     202: iconst_0
+     203: istore        4
+     205: goto          352
+     208: aload_0
+     209: getfield      #356                // Field fxKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     212: iload         4
+     214: aload_1
+     215: getfield      #195                // Field com/armedwithbow/ExtensionBase.extensionHardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+     218: new           #121                // class java/lang/StringBuilder
+     221: dup
+     222: ldc_w         #329                // String ABS_KNOB_
+     225: invokespecial #125                // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     228: aload_0
+     229: getfield      #40                 // Field name:Ljava/lang/String;
+     232: invokevirtual #199                // Method java/lang/String.toUpperCase:()Ljava/lang/String;
+     235: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     238: ldc_w         #358                // String _FX_
+     241: invokevirtual #134                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     244: iload         4
+     246: invokevirtual #128                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     249: invokevirtual #137                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     252: invokeinterface #282,  2          // InterfaceMethod com/bitwig/extension/controller/api/HardwareSurface.createAbsoluteHardwareKnob:(Ljava/lang/String;)Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     257: aastore
+     258: aload_0
+     259: getfield      #356                // Field fxKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     262: iload         4
+     264: aaload
+     265: aload_1
+     266: getfield      #245                // Field com/armedwithbow/ExtensionBase.oscPortIn:Lcom/bitwig/extension/controller/api/MidiIn;
+     269: aload_0
+     270: getfield      #42                 // Field midiChannel:I
+     273: aload_1
+     274: getfield      #360                // Field com/armedwithbow/ExtensionBase.FX_SENDS_BASE:I
+     277: iload         4
+     279: iadd
+     280: invokeinterface #219,  3          // InterfaceMethod com/bitwig/extension/controller/api/MidiIn.createAbsoluteCCValueMatcher:(II)Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;
+     285: invokeinterface #286,  2          // InterfaceMethod com/bitwig/extension/controller/api/AbsoluteHardwareKnob.setAdjustValueMatcher:(Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;)V
+     290: aload_0
+     291: getfield      #356                // Field fxKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     294: iload         4
+     296: aaload
+     297: aload_0
+     298: getfield      #322                // Field sends:Lcom/bitwig/extension/controller/api/SendBank;
+     301: iload         4
+     303: aload_1
+     304: getfield      #363                // Field com/armedwithbow/ExtensionBase.FX_SENDS_START:I
+     307: iadd
+     308: invokeinterface #339,  2          // InterfaceMethod com/bitwig/extension/controller/api/SendBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+     313: checkcast     #342                // class com/bitwig/extension/controller/api/Send
+     316: invokeinterface #344,  1          // InterfaceMethod com/bitwig/extension/controller/api/Send.value:()Lcom/bitwig/extension/controller/api/SettableRangedValue;
+     321: invokeinterface #348,  2          // InterfaceMethod com/bitwig/extension/controller/api/AbsoluteHardwareKnob.setBinding:(Lcom/bitwig/extension/controller/api/HardwareBindable;)Lcom/bitwig/extension/controller/api/HardwareBinding;
+     326: pop
+     327: aload_0
+     328: getfield      #322                // Field sends:Lcom/bitwig/extension/controller/api/SendBank;
+     331: invokeinterface #349,  1          // InterfaceMethod com/bitwig/extension/controller/api/SendBank.getSizeOfBank:()I
+     336: iload         4
+     338: aload_1
+     339: getfield      #363                // Field com/armedwithbow/ExtensionBase.FX_SENDS_START:I
+     342: iadd
+     343: if_icmpge     349
+     346: goto          361
+     349: iinc          4, 1
+     352: iload         4
+     354: aload_1
+     355: getfield      #353                // Field com/armedwithbow/ExtensionBase.TOTAL_FX_TRACKS:I
+     358: if_icmplt     208
+     361: return
+}
+Compiled from "DeviceControlMapper.java"
+public class com.armedwithbow.DeviceControlMapper {
+  private final com.bitwig.extension.controller.api.CursorRemoteControlsPage remoteControlsPage;
+
+  static final int BANKSIZE = 8;
+
+  public final com.bitwig.extension.controller.api.AbsoluteHardwareKnob[] paramKnobs;
+
+  com.armedwithbow.DeviceControlMapper(com.armedwithbow.ExtensionBase, com.bitwig.extension.controller.api.Device, java.lang.String, com.armedwithbow.DynamicTrackModule, int);
+    Code:
+       0: aload_0
+       1: invokespecial #16                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_2
+       6: bipush        8
+       8: invokeinterface #19,  2           // InterfaceMethod com/bitwig/extension/controller/api/Device.createCursorRemoteControlsPage:(I)Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+      13: putfield      #25                 // Field remoteControlsPage:Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+      16: aload_0
+      17: bipush        8
+      19: anewarray     #27                 // class com/bitwig/extension/controller/api/AbsoluteHardwareKnob
+      22: putfield      #29                 // Field paramKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      25: iconst_0
+      26: istore        6
+      28: goto          161
+      31: aload_0
+      32: getfield      #29                 // Field paramKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      35: iload         6
+      37: aload_1
+      38: getfield      #31                 // Field com/armedwithbow/ExtensionBase.extensionHardwareSurface:Lcom/bitwig/extension/controller/api/HardwareSurface;
+      41: new           #37                 // class java/lang/StringBuilder
+      44: dup
+      45: ldc           #39                 // String ABS_KNOB_
+      47: invokespecial #41                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      50: aload_3
+      51: invokevirtual #44                 // Method java/lang/String.toUpperCase:()Ljava/lang/String;
+      54: invokevirtual #50                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      57: ldc           #54                 // String _DEVICE_P
+      59: invokevirtual #50                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      62: iload         6
+      64: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      67: invokevirtual #59                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      70: invokeinterface #62,  2           // InterfaceMethod com/bitwig/extension/controller/api/HardwareSurface.createAbsoluteHardwareKnob:(Ljava/lang/String;)Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      75: aastore
+      76: aload_0
+      77: getfield      #29                 // Field paramKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+      80: iload         6
+      82: aaload
+      83: aload_1
+      84: getfield      #68                 // Field com/armedwithbow/ExtensionBase.scPortIn:Lcom/bitwig/extension/controller/api/MidiIn;
+      87: aload         4
+      89: getfield      #72                 // Field com/armedwithbow/DynamicTrackModule.midiChannel:I
+      92: iload         5
+      94: iload         6
+      96: iadd
+      97: invokeinterface #77,  3           // InterfaceMethod com/bitwig/extension/controller/api/MidiIn.createAbsoluteCCValueMatcher:(II)Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;
+     102: invokeinterface #83,  2           // InterfaceMethod com/bitwig/extension/controller/api/AbsoluteHardwareKnob.setAdjustValueMatcher:(Lcom/bitwig/extension/controller/api/AbsoluteHardwareValueMatcher;)V
+     107: aload_0
+     108: getfield      #29                 // Field paramKnobs:[Lcom/bitwig/extension/controller/api/AbsoluteHardwareKnob;
+     111: iload         6
+     113: aaload
+     114: aload_0
+     115: getfield      #25                 // Field remoteControlsPage:Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+     118: iload         6
+     120: invokeinterface #87,  2           // InterfaceMethod com/bitwig/extension/controller/api/CursorRemoteControlsPage.getParameter:(I)Lcom/bitwig/extension/controller/api/RemoteControl;
+     125: invokeinterface #93,  2           // InterfaceMethod com/bitwig/extension/controller/api/AbsoluteHardwareKnob.setBinding:(Lcom/bitwig/extension/controller/api/HardwareBindable;)Lcom/bitwig/extension/controller/api/HardwareBinding;
+     130: pop
+     131: aload_0
+     132: getfield      #25                 // Field remoteControlsPage:Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+     135: iload         6
+     137: invokeinterface #87,  2           // InterfaceMethod com/bitwig/extension/controller/api/CursorRemoteControlsPage.getParameter:(I)Lcom/bitwig/extension/controller/api/RemoteControl;
+     142: invokeinterface #97,  1           // InterfaceMethod com/bitwig/extension/controller/api/RemoteControl.displayedValue:()Lcom/bitwig/extension/controller/api/StringValue;
+     147: aload_1
+     148: invokedynamic #103,  0            // InvokeDynamic #0:valueChanged:(Lcom/armedwithbow/ExtensionBase;)Lcom/bitwig/extension/callback/StringValueChangedCallback;
+     153: invokeinterface #107,  2          // InterfaceMethod com/bitwig/extension/controller/api/StringValue.addValueObserver:(Lcom/bitwig/extension/callback/ValueChangedCallback;)V
+     158: iinc          6, 1
+     161: iload         6
+     163: bipush        8
+     165: if_icmplt     31
+     168: return
+
+  private static void lambda$0(com.armedwithbow.ExtensionBase, java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #130                // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+       4: aload_1
+       5: invokeinterface #134,  2          // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      10: return
+}
+Compiled from "EnvFollowerOscObserver.java"
+public class com.armedwithbow.EnvFollowerOscObserver {
+  private double lastValue;
+
+  public com.bitwig.extension.controller.api.Device device;
+
+  public final java.lang.String address;
+
+  public final com.bitwig.extension.controller.api.CursorRemoteControlsPage remoteControlsPage;
+
+  com.armedwithbow.EnvFollowerOscObserver(com.bitwig.extension.controller.api.Device, com.armedwithbow.ExtensionBase, java.lang.String, int);
+    Code:
+       0: aload_0
+       1: invokespecial #16                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #19                 // Field device:Lcom/bitwig/extension/controller/api/Device;
+       9: aload_0
+      10: ldc           #21                 // String /envelopes/%s/%d
+      12: iconst_2
+      13: anewarray     #3                  // class java/lang/Object
+      16: dup
+      17: iconst_0
+      18: aload_3
+      19: aastore
+      20: dup
+      21: iconst_1
+      22: iload         4
+      24: invokestatic  #23                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      27: aastore
+      28: invokestatic  #29                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      31: putfield      #35                 // Field address:Ljava/lang/String;
+      34: aload_0
+      35: ldc2_w        #37                 // double -1.0d
+      38: putfield      #39                 // Field lastValue:D
+      41: aload_2
+      42: getfield      #41                 // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      45: aload_0
+      46: getfield      #35                 // Field address:Ljava/lang/String;
+      49: invokeinterface #47,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      54: aload_0
+      55: aload_1
+      56: bipush        8
+      58: invokeinterface #53,  2           // InterfaceMethod com/bitwig/extension/controller/api/Device.createCursorRemoteControlsPage:(I)Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+      63: putfield      #59                 // Field remoteControlsPage:Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+      66: aload_2
+      67: getfield      #41                 // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+      70: aload_0
+      71: getfield      #59                 // Field remoteControlsPage:Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+      74: invokeinterface #61,  1           // InterfaceMethod com/bitwig/extension/controller/api/CursorRemoteControlsPage.getParameterCount:()I
+      79: invokestatic  #67                 // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+      82: invokeinterface #47,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.println:(Ljava/lang/String;)V
+      87: aload_0
+      88: getfield      #59                 // Field remoteControlsPage:Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+      91: iconst_0
+      92: invokeinterface #70,  2           // InterfaceMethod com/bitwig/extension/controller/api/CursorRemoteControlsPage.getParameter:(I)Lcom/bitwig/extension/controller/api/RemoteControl;
+      97: invokeinterface #74,  1           // InterfaceMethod com/bitwig/extension/controller/api/RemoteControl.modulatedValue:()Lcom/bitwig/extension/controller/api/RangedValue;
+     102: invokeinterface #80,  1           // InterfaceMethod com/bitwig/extension/controller/api/RangedValue.markInterested:()V
+     107: aload_0
+     108: getfield      #59                 // Field remoteControlsPage:Lcom/bitwig/extension/controller/api/CursorRemoteControlsPage;
+     111: iconst_0
+     112: invokeinterface #70,  2           // InterfaceMethod com/bitwig/extension/controller/api/CursorRemoteControlsPage.getParameter:(I)Lcom/bitwig/extension/controller/api/RemoteControl;
+     117: invokeinterface #74,  1           // InterfaceMethod com/bitwig/extension/controller/api/RemoteControl.modulatedValue:()Lcom/bitwig/extension/controller/api/RangedValue;
+     122: aload_0
+     123: aload_2
+     124: invokedynamic #85,  0             // InvokeDynamic #0:valueChanged:(Lcom/armedwithbow/EnvFollowerOscObserver;Lcom/armedwithbow/ExtensionBase;)Lcom/bitwig/extension/callback/DoubleValueChangedCallback;
+     129: invokeinterface #89,  2           // InterfaceMethod com/bitwig/extension/controller/api/RangedValue.addValueObserver:(Lcom/bitwig/extension/callback/ValueChangedCallback;)V
+     134: return
+
+  private void lambda$0(com.armedwithbow.ExtensionBase, double);
+    Code:
+       0: dload_2
+       1: ldc2_w        #104                // double 512.0d
+       4: dmul
+       5: invokestatic  #106                // Method java/lang/Math.round:(D)J
+       8: l2d
+       9: ldc2_w        #104                // double 512.0d
+      12: ddiv
+      13: dstore        4
+      15: dload         4
+      17: aload_0
+      18: getfield      #39                 // Field lastValue:D
+      21: dcmpl
+      22: ifeq          46
+      25: aload_0
+      26: dload         4
+      28: putfield      #39                 // Field lastValue:D
+      31: aload_1
+      32: aload_0
+      33: getfield      #35                 // Field address:Ljava/lang/String;
+      36: aload_0
+      37: getfield      #39                 // Field lastValue:D
+      40: invokestatic  #112                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+      43: invokevirtual #117                // Method com/armedwithbow/ExtensionBase.sendOscMessage:(Ljava/lang/String;Ljava/lang/Object;)V
+      46: return
+}
+Compiled from "FXLayerHandler.java"
+public class com.armedwithbow.FXLayerHandler {
+  private final com.bitwig.extension.controller.api.DeviceMatcher matcher;
+
+  public final com.bitwig.extension.controller.api.DeviceBank fxBank;
+
+  com.armedwithbow.FXLayerHandler(com.armedwithbow.ExtensionBase, com.bitwig.extension.controller.api.DeviceBank);
+    Code:
+       0: aload_0
+       1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: getfield      #15                 // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+       9: ldc           #21                 // String a0913b7f-096b-4ac9-bddd-33c775314b42
+      11: invokestatic  #23                 // Method java/util/UUID.fromString:(Ljava/lang/String;)Ljava/util/UUID;
+      14: invokeinterface #29,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createBitwigDeviceMatcher:(Ljava/util/UUID;)Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      19: putfield      #35                 // Field matcher:Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      22: aload_2
+      23: aload_0
+      24: getfield      #35                 // Field matcher:Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      27: invokeinterface #37,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.setDeviceMatcher:(Lcom/bitwig/extension/controller/api/DeviceMatcher;)V
+      32: aload_0
+      33: aload_2
+      34: putfield      #43                 // Field fxBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+      37: return
+
+  com.bitwig.extension.controller.api.DeviceBank getLayerDeviceBank(com.armedwithbow.ExtensionBase, int, int, int, int);
+    Code:
+       0: aload_0
+       1: getfield      #43                 // Field fxBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+       4: iload_2
+       5: invokeinterface #54,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      10: checkcast     #58                 // class com/bitwig/extension/controller/api/Device
+      13: iload_3
+      14: invokeinterface #60,  2           // InterfaceMethod com/bitwig/extension/controller/api/Device.createLayerBank:(I)Lcom/bitwig/extension/controller/api/DeviceLayerBank;
+      19: iload         4
+      21: invokeinterface #64,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceLayerBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      26: checkcast     #67                 // class com/bitwig/extension/controller/api/DeviceLayer
+      29: iload         5
+      31: invokeinterface #69,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceLayer.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+      36: areturn
+
+  com.bitwig.extension.controller.api.Device getFXDevice(int);
+    Code:
+       0: aload_0
+       1: getfield      #43                 // Field fxBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+       4: iload_1
+       5: invokeinterface #54,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      10: checkcast     #58                 // class com/bitwig/extension/controller/api/Device
+      13: areturn
+}
+Compiled from "InstrumentLayerHandler.java"
+public class com.armedwithbow.InstrumentLayerHandler {
+  private final com.bitwig.extension.controller.api.DeviceMatcher matcher;
+
+  public final com.bitwig.extension.controller.api.DeviceBank instBank;
+
+  com.armedwithbow.InstrumentLayerHandler(com.armedwithbow.ExtensionBase, com.bitwig.extension.controller.api.DeviceBank);
+    Code:
+       0: aload_0
+       1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: getfield      #15                 // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+       9: ldc           #21                 // String 5024be2e-65d6-4d40-bbfe-8b2ea993c445
+      11: invokestatic  #23                 // Method java/util/UUID.fromString:(Ljava/lang/String;)Ljava/util/UUID;
+      14: invokeinterface #29,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createBitwigDeviceMatcher:(Ljava/util/UUID;)Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      19: putfield      #35                 // Field matcher:Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      22: aload_2
+      23: aload_0
+      24: getfield      #35                 // Field matcher:Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      27: invokeinterface #37,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.setDeviceMatcher:(Lcom/bitwig/extension/controller/api/DeviceMatcher;)V
+      32: aload_0
+      33: aload_2
+      34: putfield      #43                 // Field instBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+      37: return
+
+  com.bitwig.extension.controller.api.DeviceBank getLayerDeviceBank(com.armedwithbow.ExtensionBase, int, int, int, int);
+    Code:
+       0: aload_0
+       1: getfield      #43                 // Field instBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+       4: iload_2
+       5: invokeinterface #54,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      10: checkcast     #58                 // class com/bitwig/extension/controller/api/Device
+      13: iload_3
+      14: invokeinterface #60,  2           // InterfaceMethod com/bitwig/extension/controller/api/Device.createLayerBank:(I)Lcom/bitwig/extension/controller/api/DeviceLayerBank;
+      19: iload         4
+      21: invokeinterface #64,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceLayerBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      26: checkcast     #67                 // class com/bitwig/extension/controller/api/DeviceLayer
+      29: iload         5
+      31: invokeinterface #69,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceLayer.createDeviceBank:(I)Lcom/bitwig/extension/controller/api/DeviceBank;
+      36: areturn
+
+  com.bitwig.extension.controller.api.Device getInstDevice(int);
+    Code:
+       0: aload_0
+       1: getfield      #43                 // Field instBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+       4: iload_1
+       5: invokeinterface #54,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      10: checkcast     #58                 // class com/bitwig/extension/controller/api/Device
+      13: areturn
+}
+Compiled from "ToolDeviceHandler.java"
+public class com.armedwithbow.ToolDeviceHandler {
+  private final com.bitwig.extension.controller.api.DeviceMatcher matcher;
+
+  public final com.bitwig.extension.controller.api.DeviceBank toolBank;
+
+  com.armedwithbow.ToolDeviceHandler(com.armedwithbow.ExtensionBase, com.bitwig.extension.controller.api.DeviceBank);
+    Code:
+       0: aload_0
+       1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: getfield      #15                 // Field com/armedwithbow/ExtensionBase.host:Lcom/bitwig/extension/controller/api/ControllerHost;
+       9: ldc           #21                 // String e67b9c56-838d-4fba-8e3e-ae4e02cccbcb
+      11: invokestatic  #23                 // Method java/util/UUID.fromString:(Ljava/lang/String;)Ljava/util/UUID;
+      14: invokeinterface #29,  2           // InterfaceMethod com/bitwig/extension/controller/api/ControllerHost.createBitwigDeviceMatcher:(Ljava/util/UUID;)Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      19: putfield      #35                 // Field matcher:Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      22: aload_2
+      23: aload_0
+      24: getfield      #35                 // Field matcher:Lcom/bitwig/extension/controller/api/DeviceMatcher;
+      27: invokeinterface #37,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.setDeviceMatcher:(Lcom/bitwig/extension/controller/api/DeviceMatcher;)V
+      32: aload_0
+      33: aload_2
+      34: putfield      #43                 // Field toolBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+      37: return
+
+  com.bitwig.extension.controller.api.Device getToolDevice(int);
+    Code:
+       0: aload_0
+       1: getfield      #43                 // Field toolBank:Lcom/bitwig/extension/controller/api/DeviceBank;
+       4: iload_1
+       5: invokeinterface #54,  2           // InterfaceMethod com/bitwig/extension/controller/api/DeviceBank.getItemAt:(I)Lcom/bitwig/extension/controller/api/ObjectProxy;
+      10: checkcast     #58                 // class com/bitwig/extension/controller/api/Device
+      13: areturn
+}

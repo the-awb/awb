@@ -1,0 +1,14 @@
+{
+  "beat-twin": {
+    "commit": "802e4a400d4018e44dea39d08920125d4d2441ae",
+    "license": "MIT",
+    "controllerPath": "bitwig-controller/BeatTwin/BeatTwin.control.js",
+    "controllerSha256": "05b2e844a309bccab0e4a1e32c522c0b75ed274f37876748660f946628bb7f27"
+  },
+  "bitwig-control-deck": {
+    "commit": "2043a61b9e9c77cafa85fd7360e5c7e22f869220",
+    "license": "MIT",
+    "controllerPath": "controller/ControlDeck.control.js",
+    "controllerSha256": "edac3c2fccd297026caf397055c97bea6c5335b7bb257f73a37338975e11ea50"
+  }
+}

@@ -1,0 +1,464 @@
+{
+  "source": "Three user-provided Bitwig screenshots in this conversation, 4 October 2026",
+  "projectTab": "New 2*",
+  "provenance": "Visual transcription by assistant; inferred continuous flat indices are not new API observations",
+  "totalVisibleTracks": 65,
+  "tracks": [
+    {
+      "inferredFlatIndex": 0,
+      "visibleName": "Audio group",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 1,
+      "visibleName": "INS",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 2,
+      "visibleName": "Cello In",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 3,
+      "visibleName": "Line 1 (VC) Group",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 4,
+      "visibleName": "Cello 1",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 5,
+      "visibleName": "Pro 2",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 6,
+      "visibleName": "Pro2",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 7,
+      "visibleName": "Delays",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 8,
+      "visibleName": "Cello Delay BUS",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 9,
+      "visibleName": "DelB.1",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 10,
+      "visibleName": "DelA.1",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 11,
+      "visibleName": "DelA.2",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 12,
+      "visibleName": "DelB.2",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 13,
+      "visibleName": "SC IN",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 14,
+      "visibleName": "SC IN 1",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 15,
+      "visibleName": "SC IN 2",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "matches Stage 1 live probe"
+    },
+    {
+      "inferredFlatIndex": 16,
+      "visibleName": "SC IN 3",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 17,
+      "visibleName": "SC IN 4",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 18,
+      "visibleName": "Ambient sounds",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 19,
+      "visibleName": "Ambient 01",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 20,
+      "visibleName": "LH DRIVE",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 21,
+      "visibleName": "Splutter 5.0 (remote)",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 22,
+      "visibleName": "Spiral Sparkle",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 23,
+      "visibleName": "Shaped Decimate",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 24,
+      "visibleName": "FUZZ",
+      "nameTruncated": false,
+      "screenshot": 1,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 25,
+      "visibleName": "Reverb",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 26,
+      "visibleName": "Mast",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 27,
+      "visibleName": "Midi guitar + Bass",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 28,
+      "visibleName": "AudioToMidi Stream",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 29,
+      "visibleName": "Mic",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 30,
+      "visibleName": "Group 5",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 31,
+      "visibleName": "Audio 1",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 32,
+      "visibleName": "Audio 2",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 33,
+      "visibleName": "Record",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 34,
+      "visibleName": "Mast Record",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 35,
+      "visibleName": "Master Record A",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 36,
+      "visibleName": "Master Record B",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 37,
+      "visibleName": "Master Record C",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 38,
+      "visibleName": "Reverb RETURN",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 39,
+      "visibleName": "P2 record",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 40,
+      "visibleName": "AL Capture",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 41,
+      "visibleName": "Group 7",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 42,
+      "visibleName": "Windy reeds & trains 04",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 43,
+      "visibleName": "constructiona t batersea heavy a...",
+      "nameTruncated": true,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 44,
+      "visibleName": "bell",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 45,
+      "visibleName": "C1",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 46,
+      "visibleName": "C2",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 47,
+      "visibleName": "C3",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 48,
+      "visibleName": "C4",
+      "nameTruncated": false,
+      "screenshot": 2,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 49,
+      "visibleName": "B1 SC BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 50,
+      "visibleName": "A1 SC BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 51,
+      "visibleName": "A2 SC BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 52,
+      "visibleName": "B2 SC BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 53,
+      "visibleName": "Stutter BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 54,
+      "visibleName": "Splutter BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 55,
+      "visibleName": "Ubermod BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 56,
+      "visibleName": "Sparkle BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 57,
+      "visibleName": "Decimate BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 58,
+      "visibleName": "Fuzz BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 59,
+      "visibleName": "Verb BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 60,
+      "visibleName": "Mast BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 61,
+      "visibleName": "P2 SC BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 62,
+      "visibleName": "Environment BUS",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 63,
+      "visibleName": "---BLANK---",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    },
+    {
+      "inferredFlatIndex": 64,
+      "visibleName": "Master",
+      "nameTruncated": false,
+      "screenshot": 3,
+      "apiNameOrderCrosscheck": "expanded capture pending"
+    }
+  ],
+  "scope": "Names/order and visible indentation only; no device parameters, hidden routing or inferred activity from grey styling"
+}

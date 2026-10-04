@@ -1,0 +1,51 @@
+{
+  "threshold": 1e-09,
+  "minimumFrames": 32,
+  "sampleRate": 48000,
+  "phases": [
+    {
+      "nodes": 52,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 66.40697975835856,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-354",
+      "repeat": 1,
+      "scAverage": 62.59291087879854,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "svg-354",
+      "repeat": 2,
+      "scAverage": 62.170599208158606,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 52,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 66.61667657886031,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    }
+  ]
+}

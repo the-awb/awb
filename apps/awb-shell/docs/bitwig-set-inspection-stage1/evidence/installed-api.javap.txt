@@ -1,0 +1,2141 @@
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.AbsoluteHardwarControlBindable extends com.bitwig.extension.controller.api.HardwareBindable {
+  public default com.bitwig.extension.controller.api.AbsoluteHardwareControlBinding addBinding(com.bitwig.extension.controller.api.AbsoluteHardwareControl);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareControlBinding addBindingWithRange(com.bitwig.extension.controller.api.AbsoluteHardwareControl, double, double);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.AbsoluteHardwareControl extends com.bitwig.extension.controller.api.ContinuousHardwareControl {
+  public abstract void setAdjustValueMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher);
+  public abstract com.bitwig.extension.controller.api.DoubleValue value();
+  public abstract void disableTakeOver();
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareControlBinding addBindingWithRange(com.bitwig.extension.controller.api.AbsoluteHardwarControlBindable, double, double);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareControlBinding setBindingWithRange(com.bitwig.extension.controller.api.AbsoluteHardwarControlBindable, double, double);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.AbsoluteHardwareControlBinding extends com.bitwig.extension.controller.api.HardwareBinding,com.bitwig.extension.controller.api.HardwareBindingWithRange {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.AbsoluteHardwareKnob extends com.bitwig.extension.controller.api.AbsoluteHardwareControl {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher extends com.bitwig.extension.controller.api.ContinuousHardwareValueMatcher {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Action extends com.bitwig.extension.controller.api.HardwareActionBindable {
+  public abstract java.lang.String getId();
+  public abstract java.lang.String getName();
+  public abstract com.bitwig.extension.controller.api.ActionCategory getCategory();
+  public abstract java.lang.String getMenuItemText();
+  public abstract void invoke();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ActionCategory {
+  public abstract java.lang.String getId();
+  public abstract java.lang.String getName();
+  public abstract com.bitwig.extension.controller.api.Action[] getActions();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Application {
+  public static final java.lang.String PANEL_LAYOUT_ARRANGE;
+  public static final java.lang.String PANEL_LAYOUT_MIX;
+  public static final java.lang.String PANEL_LAYOUT_EDIT;
+  public abstract void createAudioTrack(int);
+  public abstract void createInstrumentTrack(int);
+  public abstract void createEffectTrack(int);
+  public abstract com.bitwig.extension.controller.api.Action[] getActions();
+  public abstract com.bitwig.extension.controller.api.Action getAction(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.ActionCategory[] getActionCategories();
+  public abstract com.bitwig.extension.controller.api.ActionCategory getActionCategory(java.lang.String);
+  public abstract void activateEngine();
+  public abstract void deactivateEngine();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasActiveEngine();
+  public abstract void addHasActiveEngineObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.StringValue projectName();
+  public abstract void addProjectNameObserver(com.bitwig.extension.callback.StringValueChangedCallback, int);
+  public abstract void nextProject();
+  public abstract void previousProject();
+  public abstract void navigateIntoTrackGroup(com.bitwig.extension.controller.api.Track);
+  public abstract void navigateToParentTrackGroup();
+  public abstract void undo();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable undoAction();
+  public abstract com.bitwig.extension.controller.api.BooleanValue canUndo();
+  public abstract void redo();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable redoAction();
+  public abstract com.bitwig.extension.controller.api.BooleanValue canRedo();
+  public abstract void setPanelLayout(java.lang.String);
+  public abstract void nextPanelLayout();
+  public abstract void previousPanelLayout();
+  public abstract com.bitwig.extension.controller.api.StringValue panelLayout();
+  public abstract void addPanelLayoutObserver(com.bitwig.extension.callback.StringValueChangedCallback, int);
+  public abstract com.bitwig.extension.controller.api.StringValue displayProfile();
+  public abstract void addDisplayProfileObserver(com.bitwig.extension.callback.StringValueChangedCallback, int);
+  public abstract void toggleInspector();
+  public abstract void toggleDevices();
+  public abstract void toggleMixer();
+  public abstract void toggleNoteEditor();
+  public abstract void toggleAutomationEditor();
+  public abstract void toggleBrowserVisibility();
+  public abstract void previousSubPanel();
+  public abstract void nextSubPanel();
+  public abstract void arrowKeyLeft();
+  public abstract void arrowKeyRight();
+  public abstract void arrowKeyUp();
+  public abstract void arrowKeyDown();
+  public abstract void enter();
+  public abstract void escape();
+  public abstract void selectAll();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectAllAction();
+  public abstract void selectNone();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectNoneAction();
+  public abstract void selectPrevious();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectPreviousAction();
+  public abstract void selectNext();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectNextAction();
+  public abstract void selectFirst();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectFirstAction();
+  public abstract void selectLast();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectLastAction();
+  public abstract void cut();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable cutAction();
+  public abstract void copy();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable copyAction();
+  public abstract void paste();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable pasteAction();
+  public abstract void duplicate();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable duplicateAction();
+  public abstract void remove();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable removeAction();
+  public abstract void rename();
+  public abstract void zoomIn();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomInAction();
+  public abstract void zoomOut();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomOutAction();
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable zoomLevel();
+  public abstract void zoomToSelection();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomToSelectionAction();
+  public abstract void zoomToSelectionOrAll();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomToSelectionOrAllAction();
+  public abstract void zoomToSelectionOrPrevious();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomToSelectionOrPreviousAction();
+  public abstract void zoomToFit();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomToFitAction();
+  public abstract void focusPanelToLeft();
+  public abstract void focusPanelToRight();
+  public abstract void focusPanelAbove();
+  public abstract void focusPanelBelow();
+  public abstract void toggleFullScreen();
+  public abstract void setPerspective(java.lang.String);
+  public abstract void nextPerspective();
+  public abstract void previousPerspective();
+  public abstract void addSelectedModeObserver(com.bitwig.extension.callback.StringValueChangedCallback, int, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue recordQuantizationGrid();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue recordQuantizeNoteLength();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Arpeggiator extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue mode();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue octaves();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isEnabled();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isFreeRunning();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue shuffle();
+  public abstract com.bitwig.extension.controller.api.SettableDoubleValue rate();
+  public abstract com.bitwig.extension.controller.api.SettableDoubleValue gateLength();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue enableOverlappingNotes();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue usePressureToVelocity();
+  public abstract void releaseNotes();
+  public abstract com.bitwig.extension.controller.api.SettableDoubleValue humanize();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue terminateNotesImmediately();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Arranger extends com.bitwig.extension.controller.api.TimelineEditor {
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isPlaybackFollowEnabled();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue hasDoubleRowTrackHeight();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue areCueMarkersVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isClipLauncherVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isTimelineVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isIoSectionVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue areEffectTracksVisible();
+  public abstract com.bitwig.extension.controller.api.CueMarkerBank createCueMarkerBank(int);
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomInLaneHeightsAllAction();
+  public abstract void zoomInLaneHeightsAll();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomOutLaneHeightsAllAction();
+  public abstract void zoomOutLaneHeightsAll();
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable zoomLaneHeightsAllStepper();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomInLaneHeightsSelectedAction();
+  public abstract void zoomInLaneHeightsSelected();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomOutLaneHeightsSelectedAction();
+  public abstract void zoomOutLaneHeightsSelected();
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable zoomLaneHeightsSelectedStepper();
+  public abstract void addPlaybackFollowObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addTrackRowHeightObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCueMarkerVisibilityObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void togglePlaybackFollow();
+  public abstract void toggleTrackRowHeight();
+  public abstract void toggleCueMarkerVisibility();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.AsyncTransferCompledCallback {
+  public abstract void asyncTransferCompleted(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Bank extends com.bitwig.extension.controller.api.ObjectProxy,com.bitwig.extension.controller.api.Scrollable {
+  public abstract int getSizeOfBank();
+  public abstract int getCapacityOfBank();
+  public abstract void setSizeOfBank(int);
+  public default void scrollPageForwards();
+  public default void scrollPageBackwards();
+  public abstract com.bitwig.extension.controller.api.ObjectProxy getItemAt(int);
+  public abstract com.bitwig.extension.controller.api.IntegerValue itemCount();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue cursorIndex();
+  public abstract void setSkipDisabledItems(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BeatTimeFormatter {
+  public abstract java.lang.String formatBeatTime(double, boolean, int, int, int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BeatTimeValue extends com.bitwig.extension.controller.api.DoubleValue {
+  public abstract void addRawValueObserver(com.bitwig.extension.callback.DoubleValueChangedCallback);
+  public abstract java.lang.String getFormatted(com.bitwig.extension.controller.api.BeatTimeFormatter);
+  public abstract java.lang.String getFormatted();
+  public abstract void addTimeObserver(java.lang.String, int, int, int, int, com.bitwig.extension.callback.StringValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BitwigBrowsingSession extends com.bitwig.extension.controller.api.BrowsingSession {
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getCreatorFilter();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getTagsFilter();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BooleanHardwareProperty extends com.bitwig.extension.controller.api.HardwareProperty {
+  public abstract boolean currentValue();
+  public abstract boolean lastSentValue();
+  public abstract void onUpdateHardware(java.util.function.Consumer);
+  public abstract void setValue(boolean);
+  public abstract void setValueSupplier(java.util.function.BooleanSupplier);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BooleanValue extends com.bitwig.extension.controller.api.Value,java.util.function.BooleanSupplier {
+  public abstract boolean get();
+  public default boolean getAsBoolean();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Browser extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract void addIsBrowsingObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void startBrowsing();
+  public abstract void cancelBrowsing();
+  public abstract void commitSelectedResult();
+  public abstract void activateSession(com.bitwig.extension.controller.api.BrowsingSession);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isWindowMinimized();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue shouldAudition();
+  public abstract com.bitwig.extension.controller.api.BrowsingSessionBank createSessionBank(int);
+  public abstract com.bitwig.extension.controller.api.CursorBrowsingSession createCursorSession();
+  public abstract com.bitwig.extension.controller.api.DeviceBrowsingSession getDeviceSession();
+  public abstract com.bitwig.extension.controller.api.PresetBrowsingSession getPresetSession();
+  public abstract com.bitwig.extension.controller.api.SampleBrowsingSession getSampleSession();
+  public abstract com.bitwig.extension.controller.api.MultiSampleBrowsingSession getMultiSampleSession();
+  public abstract com.bitwig.extension.controller.api.ClipBrowsingSession getClipSession();
+  public abstract com.bitwig.extension.controller.api.MusicBrowsingSession getMusicSession();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserColumn extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract void addExistsObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.IntegerValue entryCount();
+  public abstract void addEntryCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BrowserItem createCursorItem();
+  public abstract com.bitwig.extension.controller.api.BrowserItemBank createItemBank(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserFilterColumn extends com.bitwig.extension.controller.api.BrowserColumn {
+  public abstract com.bitwig.extension.controller.api.BrowserFilterItem getWildcardItem();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterItem createCursorItem();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterItemBank createItemBank(int);
+  public abstract com.bitwig.extension.controller.api.StringValue name();
+  public abstract void addNameObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public default com.bitwig.extension.controller.api.BrowserItemBank createItemBank(int);
+  public default com.bitwig.extension.controller.api.BrowserItem createCursorItem();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserFilterColumnBank extends com.bitwig.extension.controller.api.Bank {
+  public abstract int getSize();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getItem(int);
+  public abstract void scrollUp();
+  public abstract void scrollDown();
+  public abstract void scrollPageUp();
+  public abstract void scrollPageDown();
+  public abstract void addScrollPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void addCanScrollUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addEntryCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserFilterItem extends com.bitwig.extension.controller.api.BrowserItem {
+  public abstract com.bitwig.extension.controller.api.IntegerValue hitCount();
+  public abstract void addHitCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserFilterItemBank extends com.bitwig.extension.controller.api.BrowserItemBank {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserItem extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract void addExistsObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.StringValue name();
+  public abstract void addValueObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isSelected();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserItemBank extends com.bitwig.extension.controller.api.Bank {
+  public abstract int getSize();
+  public abstract com.bitwig.extension.controller.api.BrowserItem getItem(int);
+  public abstract void scrollUp();
+  public abstract void scrollDown();
+  public abstract void scrollPageUp();
+  public abstract void scrollPageDown();
+  public abstract void addScrollPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void addCanScrollUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserResultsColumn extends com.bitwig.extension.controller.api.BrowserColumn {
+  public abstract com.bitwig.extension.controller.api.BrowserResultsItem createCursorItem();
+  public abstract com.bitwig.extension.controller.api.BrowserResultsItemBank createItemBank(int);
+  public default com.bitwig.extension.controller.api.BrowserItemBank createItemBank(int);
+  public default com.bitwig.extension.controller.api.BrowserItem createCursorItem();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserResultsItem extends com.bitwig.extension.controller.api.BrowserItem {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowserResultsItemBank extends com.bitwig.extension.controller.api.BrowserItemBank {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowsingSession extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract void addIsAvailableObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addIsActiveObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void activate();
+  public abstract com.bitwig.extension.controller.api.BrowserResultsColumn getResults();
+  public abstract com.bitwig.extension.controller.api.CursorBrowserResultItem getCursorResult();
+  public abstract com.bitwig.extension.controller.api.BrowserResultsItem getSettledResult();
+  public abstract com.bitwig.extension.controller.api.CursorBrowserFilterColumn getCursorFilter();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumnBank createFilterBank(int);
+  public abstract com.bitwig.extension.controller.api.IntegerValue hitCount();
+  public abstract void addHitCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.BrowsingSessionBank extends com.bitwig.extension.controller.api.Bank {
+  public abstract int getSize();
+  public abstract com.bitwig.extension.controller.api.GenericBrowsingSession getSession(int);
+  public abstract void scrollUp();
+  public abstract void scrollDown();
+  public abstract void scrollPageUp();
+  public abstract void scrollPageDown();
+  public abstract void addScrollPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void addCanScrollUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addEntryCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ChainSelector extends com.bitwig.extension.controller.api.Cursor,com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue activeChainIndex();
+  public abstract com.bitwig.extension.controller.api.IntegerValue chainCount();
+  public abstract com.bitwig.extension.controller.api.DeviceLayer activeChain();
+  public abstract void cycleNext();
+  public abstract void cyclePrevious();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Channel extends com.bitwig.extension.controller.api.DeleteableObject,com.bitwig.extension.controller.api.DeviceChain {
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isActivated();
+  public abstract com.bitwig.extension.controller.api.Parameter getVolume();
+  public abstract com.bitwig.extension.controller.api.Parameter volume();
+  public abstract com.bitwig.extension.controller.api.Parameter getPan();
+  public abstract com.bitwig.extension.controller.api.Parameter pan();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getMute();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue mute();
+  public abstract com.bitwig.extension.controller.api.SoloValue getSolo();
+  public abstract com.bitwig.extension.controller.api.SoloValue solo();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isMutedBySolo();
+  public abstract void addVuMeterObserver(int, int, boolean, com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void addNoteObserver(com.bitwig.extension.callback.NotePlaybackCallback);
+  public abstract com.bitwig.extension.controller.api.PlayingNoteArrayValue playingNotes();
+  public abstract void addColorObserver(com.bitwig.extension.callback.ColorValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableColorValue color();
+  public abstract com.bitwig.extension.controller.api.SendBank sendBank();
+  public abstract com.bitwig.extension.controller.api.Send getSend(int);
+  public abstract void duplicate();
+  public abstract void selectInMixer();
+  public abstract void addIsSelectedInMixerObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void makeVisibleInArranger();
+  public abstract void makeVisibleInMixer();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ChannelBank extends com.bitwig.extension.controller.api.Bank,com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract com.bitwig.extension.controller.api.Channel getChannel(int);
+  public abstract void setChannelScrollStepSize(int);
+  public abstract void scrollChannelsPageUp();
+  public abstract void scrollChannelsPageDown();
+  public abstract void scrollChannelsUp();
+  public abstract void scrollChannelsDown();
+  public abstract void scrollToChannel(int);
+  public abstract com.bitwig.extension.controller.api.IntegerValue channelScrollPosition();
+  public abstract void addChannelScrollPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback, int);
+  public abstract com.bitwig.extension.controller.api.BooleanValue canScrollChannelsUp();
+  public abstract void addCanScrollChannelsUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BooleanValue canScrollChannelsDown();
+  public abstract void addCanScrollChannelsDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.IntegerValue channelCount();
+  public abstract void addChannelCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void scrollSendsPageUp();
+  public abstract void scrollSendsPageDown();
+  public abstract void scrollSendsUp();
+  public abstract void scrollSendsDown();
+  public abstract void scrollToSend(int);
+  public abstract void addCanScrollSendsUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollSendsDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addSendCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Clip extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract void scrollToKey(int);
+  public abstract void scrollKeysPageUp();
+  public abstract void scrollKeysPageDown();
+  public abstract void scrollKeysStepUp();
+  public abstract void scrollKeysStepDown();
+  public abstract void scrollToStep(int);
+  public abstract void scrollStepsPageForward();
+  public abstract void scrollStepsPageBackwards();
+  public abstract void scrollStepsStepForward();
+  public abstract void scrollStepsStepBackwards();
+  public abstract com.bitwig.extension.controller.api.BooleanValue canScrollKeysUp();
+  public abstract void addCanScrollKeysUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BooleanValue canScrollKeysDown();
+  public abstract void addCanScrollKeysDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BooleanValue canScrollStepsBackwards();
+  public abstract void addCanScrollStepsBackwardsObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BooleanValue canScrollStepsForwards();
+  public abstract void addCanScrollStepsForwardObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void toggleStep(int, int, int);
+  public abstract void toggleStep(int, int, int, int);
+  public abstract void setStep(int, int, int, double);
+  public abstract void setStep(int, int, int, int, double);
+  public abstract void clearStep(int, int);
+  public abstract void clearStep(int, int, int);
+  public abstract void clearStepsAtX(int, int);
+  public abstract void clearSteps(int);
+  public abstract void clearStepsAtY(int, int);
+  public abstract void clearSteps();
+  public abstract void moveStep(int, int, int, int);
+  public abstract void moveStep(int, int, int, int, int);
+  public abstract void selectStepContents(int, int, boolean);
+  public abstract void selectStepContents(int, int, int, boolean);
+  public abstract void setStepSize(double);
+  public abstract void addStepDataObserver(com.bitwig.extension.callback.StepDataChangedCallback);
+  public abstract void addNoteStepObserver(com.bitwig.extension.callback.NoteStepChangedCallback);
+  public abstract com.bitwig.extension.controller.api.IntegerValue playingStep();
+  public abstract void addPlayingStepObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void setName(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getShuffle();
+  public abstract com.bitwig.extension.controller.api.SettableRangedValue getAccent();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue getPlayStart();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue getPlayStop();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isLoopEnabled();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue getLoopStart();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue getLoopLength();
+  public abstract void addColorObserver(com.bitwig.extension.callback.ColorValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableColorValue color();
+  public abstract void duplicate();
+  public abstract void duplicateContent();
+  public abstract void transpose(int);
+  public abstract void quantize(double);
+  public abstract com.bitwig.extension.controller.api.Track getTrack();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue launchQuantization();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue useLoopStartAsQuantizationReference();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue launchLegato();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue launchMode();
+  public abstract com.bitwig.extension.controller.api.NoteStep getStep(int, int, int);
+  public abstract void launch();
+  public abstract void launchWithOptions(java.lang.String, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.ClipLauncherSlot clipLauncherSlot();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ClipBrowsingSession extends com.bitwig.extension.controller.api.BrowsingSession {
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getFileTypeFilter();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ClipLauncherSlot extends com.bitwig.extension.controller.api.ClipLauncherSlotOrScene {
+  public abstract com.bitwig.extension.controller.api.BooleanValue isSelected();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasContent();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isPlaying();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isPlaybackQueued();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isRecording();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isRecordingQueued();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isStopQueued();
+  public abstract void browseToInsertClip();
+  public abstract com.bitwig.extension.controller.api.SettableColorValue color();
+  public abstract void select();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectAction();
+  public abstract void record();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable recordAction();
+  public abstract void showInEditor();
+  public abstract void createEmptyClip(int);
+  public abstract void duplicateClip();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ClipLauncherSlotBank extends com.bitwig.extension.controller.api.ClipLauncherSlotOrSceneBank {
+  public abstract void select(int);
+  public abstract void record(int);
+  public abstract void showInEditor(int);
+  public abstract void createEmptyClip(int, int);
+  public abstract void deleteClip(int);
+  public abstract void duplicateClip(int);
+  public abstract void addIsSelectedObserver(com.bitwig.extension.callback.IndexedBooleanValueChangedCallback);
+  public abstract void addHasContentObserver(com.bitwig.extension.callback.IndexedBooleanValueChangedCallback);
+  public abstract void addPlaybackStateObserver(com.bitwig.extension.callback.ClipLauncherSlotBankPlaybackStateChangedCallback);
+  public abstract void addIsPlayingObserver(com.bitwig.extension.callback.IndexedBooleanValueChangedCallback);
+  public abstract void addIsRecordingObserver(com.bitwig.extension.callback.IndexedBooleanValueChangedCallback);
+  public abstract void addIsPlaybackQueuedObserver(com.bitwig.extension.callback.IndexedBooleanValueChangedCallback);
+  public abstract void addIsRecordingQueuedObserver(com.bitwig.extension.callback.IndexedBooleanValueChangedCallback);
+  public abstract void addIsStopQueuedObserver(com.bitwig.extension.callback.IndexedBooleanValueChangedCallback);
+  public abstract void addIsQueuedObserver(com.bitwig.extension.callback.IndexedBooleanValueChangedCallback);
+  public abstract void addColorObserver(com.bitwig.extension.callback.IndexedColorValueChangedCallback);
+  public abstract void setIndication(boolean);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isMasterTrackContentShownOnTrackGroups();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ClipLauncherSlotOrScene extends com.bitwig.extension.controller.api.DeleteableObject,com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract com.bitwig.extension.controller.api.StringValue name();
+  public abstract void launch();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable launchAction();
+  public abstract void launchWithOptions(java.lang.String, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable launchWithOptionsAction(java.lang.String, java.lang.String);
+  public abstract void launchLastClipWithOptions(java.lang.String, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable launchLastClipWithOptionsAction(java.lang.String, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.IntegerValue sceneIndex();
+  public abstract void copyFrom(com.bitwig.extension.controller.api.ClipLauncherSlotOrScene);
+  public abstract void moveTo(com.bitwig.extension.controller.api.ClipLauncherSlotOrScene);
+  public abstract com.bitwig.extension.controller.api.SettableColorValue color();
+  public abstract void setIndication(boolean);
+  public abstract com.bitwig.extension.controller.api.InsertionPoint replaceInsertionPoint();
+  public abstract com.bitwig.extension.controller.api.InsertionPoint nextSceneInsertionPoint();
+  public abstract com.bitwig.extension.controller.api.InsertionPoint previousSceneInsertionPoint();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ClipLauncherSlotOrSceneBank extends com.bitwig.extension.controller.api.Bank {
+  public abstract void launch(int);
+  public abstract void stop();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable stopAction();
+  public abstract void returnToArrangement();
+  public abstract void addNameObserver(com.bitwig.extension.callback.IndexedStringValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ColorHardwareProperty extends com.bitwig.extension.controller.api.HardwareProperty {
+  public abstract com.bitwig.extension.api.Color currentValue();
+  public abstract com.bitwig.extension.api.Color lastSentValue();
+  public abstract void onUpdateHardware(java.util.function.Consumer);
+  public abstract void setValue(com.bitwig.extension.api.Color);
+  public abstract void setValueSupplier(java.util.function.Supplier);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ColorValue extends com.bitwig.extension.controller.api.Value,java.util.function.Supplier {
+  public abstract float red();
+  public abstract float green();
+  public abstract float blue();
+  public abstract float alpha();
+  public default com.bitwig.extension.api.Color get();
+  public default java.lang.Object get();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ContinuousHardwareControl extends com.bitwig.extension.controller.api.HardwareBindingSource,com.bitwig.extension.controller.api.HardwareControl {
+  public abstract com.bitwig.extension.controller.api.HardwareButton hardwareButton();
+  public abstract void setHardwareButton(com.bitwig.extension.controller.api.HardwareButton);
+  public abstract com.bitwig.extension.controller.api.StringValue targetName();
+  public abstract com.bitwig.extension.controller.api.DoubleValue targetValue();
+  public abstract com.bitwig.extension.controller.api.StringValue targetDisplayedValue();
+  public abstract com.bitwig.extension.controller.api.DoubleValue modulatedTargetValue();
+  public abstract com.bitwig.extension.controller.api.StringValue modulatedTargetDisplayedValue();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isUpdatingTargetValue();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasTargetValue();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ContinuousHardwareValueMatcher extends com.bitwig.extension.controller.api.HardwareInputMatcher {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ControllerHost extends com.bitwig.extension.api.Host {
+  public abstract void restart();
+  public abstract void loadAPI(int);
+  public abstract void useBetaApi();
+  public abstract boolean shouldFailOnDeprecatedUse();
+  public abstract void setShouldFailOnDeprecatedUse(boolean);
+  public abstract void load(java.lang.String);
+  public abstract boolean platformIsWindows();
+  public abstract boolean platformIsMac();
+  public abstract boolean platformIsLinux();
+  public abstract void defineController(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+  public abstract void defineMidiPorts(int, int);
+  public abstract com.bitwig.extension.controller.api.MidiIn getMidiInPort(int);
+  public abstract com.bitwig.extension.controller.api.MidiOut getMidiOutPort(int);
+  public abstract com.bitwig.extension.controller.api.HardwareDevice hardwareDevice(int);
+  public abstract void addDeviceNameBasedDiscoveryPair(java.lang.String[], java.lang.String[]);
+  public abstract void defineSysexIdentityReply(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.Preferences getPreferences();
+  public abstract com.bitwig.extension.controller.api.DocumentState getDocumentState();
+  public abstract com.bitwig.extension.controller.api.NotificationSettings getNotificationSettings();
+  public abstract com.bitwig.extension.controller.api.Project getProject();
+  public abstract com.bitwig.extension.controller.api.Transport createTransport();
+  public abstract com.bitwig.extension.controller.api.Groove createGroove();
+  public abstract com.bitwig.extension.controller.api.Application createApplication();
+  public abstract com.bitwig.extension.controller.api.Arranger createArranger();
+  public abstract com.bitwig.extension.controller.api.Arranger createArranger(int);
+  public abstract com.bitwig.extension.controller.api.Mixer createMixer();
+  public abstract com.bitwig.extension.controller.api.Mixer createMixer(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.Mixer createMixer(int);
+  public abstract com.bitwig.extension.controller.api.Mixer createMixer(java.lang.String, int);
+  public abstract com.bitwig.extension.controller.api.DetailEditor createDetailEditor();
+  public abstract com.bitwig.extension.controller.api.DetailEditor createDetailEditor(int);
+  public abstract com.bitwig.extension.controller.api.TrackBank createTrackBank(int, int, int);
+  public abstract com.bitwig.extension.controller.api.TrackBank createTrackBank(int, int, int, boolean);
+  public abstract com.bitwig.extension.controller.api.TrackBank createMainTrackBank(int, int, int);
+  public abstract com.bitwig.extension.controller.api.TrackBank createEffectTrackBank(int, int);
+  public abstract com.bitwig.extension.controller.api.MasterTrack createMasterTrack(int);
+  public abstract com.bitwig.extension.controller.api.CursorTrack createArrangerCursorTrack(int, int);
+  public abstract com.bitwig.extension.controller.api.CursorTrack createCursorTrack(java.lang.String, int, int);
+  public abstract com.bitwig.extension.controller.api.CursorTrack createCursorTrack(java.lang.String, java.lang.String, int, int, boolean);
+  public abstract com.bitwig.extension.controller.api.SceneBank createSceneBank(int);
+  public abstract com.bitwig.extension.controller.api.CursorDevice createEditorCursorDevice();
+  public abstract com.bitwig.extension.controller.api.CursorDevice createEditorCursorDevice(int);
+  public abstract com.bitwig.extension.controller.api.Clip createCursorClip(int, int);
+  public abstract com.bitwig.extension.controller.api.Clip createLauncherCursorClip(int, int);
+  public abstract com.bitwig.extension.controller.api.Clip createArrangerCursorClip(int, int);
+  public abstract com.bitwig.extension.controller.api.UserControlBank createUserControls(int);
+  public abstract void scheduleTask(java.lang.Object, java.lang.Object[], long);
+  public abstract void scheduleTask(java.lang.Runnable, long);
+  public abstract void requestFlush();
+  public abstract void println(java.lang.String);
+  public abstract void errorln(java.lang.String);
+  public abstract void showPopupNotification(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.RemoteSocket createRemoteConnection(java.lang.String, int);
+  public abstract void connectToRemoteHost(java.lang.String, int, com.bitwig.extension.callback.ConnectionEstablishedCallback);
+  public abstract void sendDatagramPacket(java.lang.String, int, byte[]);
+  public abstract boolean addDatagramPacketObserver(java.lang.String, int, com.bitwig.extension.callback.DataReceivedCallback);
+  public abstract void defineController(java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.Transport createTransportSection();
+  public abstract com.bitwig.extension.controller.api.CursorTrack createCursorTrack(int, int);
+  public abstract com.bitwig.extension.controller.api.Groove createGrooveSection();
+  public abstract com.bitwig.extension.controller.api.Application createApplicationSection();
+  public abstract com.bitwig.extension.controller.api.Arranger createArrangerSection(int);
+  public abstract com.bitwig.extension.controller.api.Mixer createMixerSection(java.lang.String, int);
+  public abstract com.bitwig.extension.controller.api.TrackBank createTrackBankSection(int, int, int);
+  public abstract com.bitwig.extension.controller.api.TrackBank createMainTrackBankSection(int, int, int);
+  public abstract com.bitwig.extension.controller.api.TrackBank createEffectTrackBankSection(int, int);
+  public abstract com.bitwig.extension.controller.api.CursorTrack createCursorTrackSection(int, int);
+  public abstract com.bitwig.extension.controller.api.Track createMasterTrackSection(int);
+  public abstract com.bitwig.extension.controller.api.Clip createCursorClipSection(int, int);
+  public abstract com.bitwig.extension.controller.api.CursorDevice createCursorDeviceSection(int);
+  public abstract com.bitwig.extension.controller.api.CursorDevice createCursorDevice();
+  public abstract com.bitwig.extension.controller.api.UserControlBank createUserControlsSection(int);
+  public abstract void defineSysexDiscovery(java.lang.String, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.PopupBrowser createPopupBrowser();
+  public abstract com.bitwig.extension.controller.api.BeatTimeFormatter defaultBeatTimeFormatter();
+  public abstract void setDefaultBeatTimeFormatter(com.bitwig.extension.controller.api.BeatTimeFormatter);
+  public abstract com.bitwig.extension.controller.api.BeatTimeFormatter createBeatTimeFormatter(java.lang.String, int, int, int, int);
+  public abstract com.bitwig.extension.controller.api.HardwareSurface createHardwareSurface();
+  public abstract com.bitwig.extension.controller.api.HardwareActionMatcher createOrHardwareActionMatcher(com.bitwig.extension.controller.api.HardwareActionMatcher, com.bitwig.extension.controller.api.HardwareActionMatcher);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createOrRelativeHardwareValueMatcher(com.bitwig.extension.controller.api.RelativeHardwareValueMatcher, com.bitwig.extension.controller.api.RelativeHardwareValueMatcher);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createOrAbsoluteHardwareValueMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher, com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher);
+  public abstract com.bitwig.extension.controller.api.MidiExpressions midiExpressions();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable createAction(java.lang.Runnable, java.util.function.Supplier);
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable createAction(java.util.function.DoubleConsumer, java.util.function.Supplier);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable createRelativeHardwareControlStepTarget(com.bitwig.extension.controller.api.HardwareActionBindable, com.bitwig.extension.controller.api.HardwareActionBindable);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable createRelativeHardwareControlAdjustmentTarget(java.util.function.DoubleConsumer);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwarControlBindable createAbsoluteHardwareControlAdjustmentTarget(java.util.function.DoubleConsumer);
+  public abstract void deleteObjects(java.lang.String, com.bitwig.extension.controller.api.DeleteableObject...);
+  public abstract void deleteObjects(com.bitwig.extension.controller.api.DeleteableObject...);
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createInstrumentMatcher();
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createAudioEffectMatcher();
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createNoteEffectMatcher();
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createBitwigDeviceMatcher(java.util.UUID);
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createVST2DeviceMatcher(int);
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createVST3DeviceMatcher(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createActiveDeviceMatcher();
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createFirstDeviceInChainMatcher();
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createLastDeviceInChainMatcher();
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createOrDeviceMatcher(com.bitwig.extension.controller.api.DeviceMatcher...);
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createAndDeviceMatcher(com.bitwig.extension.controller.api.DeviceMatcher...);
+  public abstract com.bitwig.extension.controller.api.DeviceMatcher createNotDeviceMatcher(com.bitwig.extension.controller.api.DeviceMatcher);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CueMarker extends com.bitwig.extension.controller.api.DeleteableObject,com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract void launch(boolean);
+  public abstract com.bitwig.extension.controller.api.SettableStringValue name();
+  public abstract com.bitwig.extension.controller.api.ColorValue getColor();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue position();
+  public abstract com.bitwig.extension.controller.api.StringValue getName();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CueMarkerBank extends com.bitwig.extension.controller.api.Bank {
+  public abstract void scrollToMarker(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Cursor extends com.bitwig.extension.controller.api.RelativeHardwarControlBindable {
+  public abstract void selectPrevious();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectPreviousAction();
+  public abstract void selectNext();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectNextAction();
+  public abstract void selectFirst();
+  public abstract void selectLast();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasNext();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasPrevious();
+  public abstract void addCanSelectPreviousObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanSelectNextObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorBrowserFilterColumn extends com.bitwig.extension.controller.api.BrowserFilterColumn,com.bitwig.extension.controller.api.Cursor {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorBrowserFilterItem extends com.bitwig.extension.controller.api.BrowserFilterItem,com.bitwig.extension.controller.api.CursorBrowserItem {
+  public abstract void selectParent();
+  public abstract void selectFirstChild();
+  public abstract void selectLastChild();
+  public abstract void moveToPrevious();
+  public abstract void moveToNext();
+  public abstract void moveToFirst();
+  public abstract void moveToLast();
+  public abstract void moveToParent();
+  public abstract void moveToFirstChild();
+  public abstract void moveToLastChild();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorBrowserItem extends com.bitwig.extension.controller.api.BrowserItem,com.bitwig.extension.controller.api.Cursor {
+  public abstract com.bitwig.extension.controller.api.BrowserItemBank createSiblingsBank(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorBrowserResultItem extends com.bitwig.extension.controller.api.BrowserResultsItem,com.bitwig.extension.controller.api.CursorBrowserItem {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorBrowsingSession extends com.bitwig.extension.controller.api.Cursor,com.bitwig.extension.controller.api.GenericBrowsingSession {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorChannel extends com.bitwig.extension.controller.api.Channel,com.bitwig.extension.controller.api.Cursor {
+  public abstract void selectChannel(com.bitwig.extension.controller.api.Channel);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorClip extends com.bitwig.extension.controller.api.Clip,com.bitwig.extension.controller.api.Cursor {
+  public abstract void selectClip(com.bitwig.extension.controller.api.Clip);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorDevice extends com.bitwig.extension.controller.api.Cursor,com.bitwig.extension.controller.api.Device {
+  public abstract com.bitwig.extension.controller.api.Channel getChannel();
+  public abstract com.bitwig.extension.controller.api.Channel channel();
+  public abstract void selectParent();
+  public abstract void selectDevice(com.bitwig.extension.controller.api.Device);
+  public abstract void selectFirstInChannel(com.bitwig.extension.controller.api.Channel);
+  public abstract void selectLastInChannel(com.bitwig.extension.controller.api.Channel);
+  public abstract void selectFirstInSlot(java.lang.String);
+  public abstract void selectLastInSlot(java.lang.String);
+  public abstract void selectFirstInKeyPad(int);
+  public abstract void selectLastInKeyPad(int);
+  public abstract void selectFirstInLayer(int);
+  public abstract void selectLastInLayer(int);
+  public abstract void selectFirstInLayer(java.lang.String);
+  public abstract void selectLastInLayer(java.lang.String);
+}
+Compiled from "SourceFile"
+public final class com.bitwig.extension.controller.api.CursorDeviceFollowMode extends java.lang.Enum {
+  public static final com.bitwig.extension.controller.api.CursorDeviceFollowMode FOLLOW_SELECTION;
+  public static final com.bitwig.extension.controller.api.CursorDeviceFollowMode FIRST_DEVICE;
+  public static final com.bitwig.extension.controller.api.CursorDeviceFollowMode FIRST_INSTRUMENT;
+  public static final com.bitwig.extension.controller.api.CursorDeviceFollowMode FIRST_AUDIO_EFFECT;
+  public static final com.bitwig.extension.controller.api.CursorDeviceFollowMode FIRST_INSTRUMENT_OR_DEVICE;
+  public static final com.bitwig.extension.controller.api.CursorDeviceFollowMode LAST_DEVICE;
+  public static com.bitwig.extension.controller.api.CursorDeviceFollowMode[] values();
+  public static com.bitwig.extension.controller.api.CursorDeviceFollowMode valueOf(java.lang.String);
+  static {};
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorDeviceLayer extends com.bitwig.extension.controller.api.CursorChannel,com.bitwig.extension.controller.api.DeviceLayer {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorDeviceSlot extends com.bitwig.extension.controller.api.DeviceChain {
+  public abstract void selectSlot(java.lang.String);
+}
+Compiled from "SourceFile"
+public final class com.bitwig.extension.controller.api.CursorNavigationMode extends java.lang.Enum {
+  public static final com.bitwig.extension.controller.api.CursorNavigationMode NESTED;
+  public static final com.bitwig.extension.controller.api.CursorNavigationMode FLAT;
+  public static final com.bitwig.extension.controller.api.CursorNavigationMode GUI;
+  public static com.bitwig.extension.controller.api.CursorNavigationMode[] values();
+  public static com.bitwig.extension.controller.api.CursorNavigationMode valueOf(java.lang.String);
+  static {};
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorRemoteControlsPage extends com.bitwig.extension.controller.api.Cursor,com.bitwig.extension.controller.api.RemoteControlsPage {
+  public abstract com.bitwig.extension.controller.api.StringArrayValue pageNames();
+  public abstract void selectNextPage(boolean);
+  public abstract void selectPreviousPage(boolean);
+  public abstract void selectNextPageMatching(java.lang.String, boolean);
+  public abstract void selectPreviousPageMatching(java.lang.String, boolean);
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue selectedPageIndex();
+  public abstract com.bitwig.extension.controller.api.IntegerValue pageCount();
+  public abstract void createPresetPage();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable createPresetPageAction();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.CursorTrack extends com.bitwig.extension.controller.api.CursorChannel,com.bitwig.extension.controller.api.PinnableCursor,com.bitwig.extension.controller.api.Track {
+  public abstract void selectParent();
+  public abstract void selectFirstChild();
+  public abstract void setCursorNavigationMode(com.bitwig.extension.controller.api.CursorNavigationMode);
+  public abstract com.bitwig.extension.controller.api.PinnableCursorDevice createCursorDevice();
+  public abstract com.bitwig.extension.controller.api.PinnableCursorDevice createCursorDevice(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.PinnableCursorDevice createCursorDevice(java.lang.String, int);
+  public abstract com.bitwig.extension.controller.api.PinnableCursorDevice createCursorDevice(java.lang.String, java.lang.String, int, com.bitwig.extension.controller.api.CursorDeviceFollowMode);
+  public abstract com.bitwig.extension.controller.api.PinnableCursorClip createLauncherCursorClip(int, int);
+  public abstract com.bitwig.extension.controller.api.PinnableCursorClip createLauncherCursorClip(java.lang.String, java.lang.String, int, int);
+  public default com.bitwig.extension.controller.api.CursorDevice createCursorDevice(java.lang.String, int);
+  public default com.bitwig.extension.controller.api.CursorDevice createCursorDevice(java.lang.String);
+  public default com.bitwig.extension.controller.api.CursorDevice createCursorDevice();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DeleteableObject {
+  public abstract void deleteObject();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable deleteObjectAction();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DetailEditor extends com.bitwig.extension.controller.api.TimelineEditor {
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomInLaneHeightsAction();
+  public abstract void zoomInLaneHeights();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomOutLaneHeightsAction();
+  public abstract void zoomOutLaneHeights();
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable zoomLaneHeightsStepper();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Device extends com.bitwig.extension.controller.api.DeleteableObject,com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract com.bitwig.extension.controller.api.DeviceChain getDeviceChain();
+  public abstract com.bitwig.extension.controller.api.DeviceChain deviceChain();
+  public abstract com.bitwig.extension.controller.api.IntegerValue position();
+  public abstract void addPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isWindowOpen();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isExpanded();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isMacroSectionVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isRemoteControlsSectionVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isParameterPageSectionVisible();
+  public abstract com.bitwig.extension.controller.api.Parameter getParameter(int);
+  public abstract com.bitwig.extension.controller.api.CursorRemoteControlsPage createCursorRemoteControlsPage(int);
+  public abstract com.bitwig.extension.controller.api.CursorRemoteControlsPage createCursorRemoteControlsPage(java.lang.String, int, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.Parameter getEnvelopeParameter(int);
+  public abstract com.bitwig.extension.controller.api.Parameter getCommonParameter(int);
+  public abstract com.bitwig.extension.controller.api.ModulationSource getModulationSource(int);
+  public abstract com.bitwig.extension.controller.api.Macro getMacro(int);
+  public abstract void addHasSelectedDeviceObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void selectInEditor();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isPlugin();
+  public abstract void addIsPluginObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void previousParameterPage();
+  public abstract void nextParameterPage();
+  public abstract void addPreviousParameterPageEnabledObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addNextParameterPageEnabledObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void setParameterPage(int);
+  public abstract void switchToPreviousPreset();
+  public abstract void switchToNextPreset();
+  public abstract void switchToPreviousPresetCategory();
+  public abstract void switchToNextPresetCategory();
+  public abstract void switchToPreviousPresetCreator();
+  public abstract void switchToNextPresetCreator();
+  public abstract com.bitwig.extension.controller.api.Browser createDeviceBrowser(int, int);
+  public abstract com.bitwig.extension.controller.api.StringValue name();
+  public abstract void addNameObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.StringValue presetName();
+  public abstract void addPresetNameObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.StringValue presetCategory();
+  public abstract void addPresetCategoryObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.StringValue presetCreator();
+  public abstract void addPresetCreatorObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract void addSelectedPageObserver(int, com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void addActiveModulationSourceObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract void addPageNamesObserver(com.bitwig.extension.callback.StringArrayValueChangedCallback);
+  public abstract void addPresetNamesObserver(com.bitwig.extension.callback.StringArrayValueChangedCallback);
+  public abstract void loadPreset(int);
+  public abstract void addPresetCategoriesObserver(com.bitwig.extension.callback.StringArrayValueChangedCallback);
+  public abstract void setPresetCategory(int);
+  public abstract void addPresetCreatorsObserver(com.bitwig.extension.callback.StringArrayValueChangedCallback);
+  public abstract void setPresetCreator(int);
+  public abstract void toggleEnabledState();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isEnabled();
+  public abstract void addIsEnabledObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasSlots();
+  public abstract com.bitwig.extension.controller.api.StringArrayValue slotNames();
+  public abstract void addSlotsObserver(com.bitwig.extension.callback.StringArrayValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.DeviceSlot getCursorSlot();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isNested();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasLayers();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasDrumPads();
+  public abstract com.bitwig.extension.controller.api.DeviceLayerBank createLayerBank(int);
+  public abstract com.bitwig.extension.controller.api.DrumPadBank createDrumPadBank(int);
+  public abstract com.bitwig.extension.controller.api.CursorDeviceLayer createCursorLayer();
+  public abstract com.bitwig.extension.controller.api.ChainSelector createChainSelector();
+  public abstract com.bitwig.extension.controller.api.SpecificBitwigDevice createSpecificBitwigDevice(java.util.UUID);
+  public abstract com.bitwig.extension.controller.api.SpecificPluginDevice createSpecificVst2Device(int);
+  public abstract com.bitwig.extension.controller.api.SpecificPluginDevice createSpecificVst2Device(int...);
+  public abstract com.bitwig.extension.controller.api.SpecificPluginDevice createSpecificVst3Device(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.SpecificPluginDevice createSpecificVst3Device(java.lang.String...);
+  public abstract void addDirectParameterIdObserver(com.bitwig.extension.callback.StringArrayValueChangedCallback);
+  public abstract void addDirectParameterNameObserver(int, com.bitwig.extension.callback.DirectParameterNameChangedCallback);
+  public abstract com.bitwig.extension.controller.api.DirectParameterValueDisplayObserver addDirectParameterValueDisplayObserver(int, com.bitwig.extension.callback.DirectParameterDisplayedValueChangedCallback);
+  public abstract void addDirectParameterNormalizedValueObserver(com.bitwig.extension.callback.DirectParameterNormalizedValueChangedCallback);
+  public abstract void setDirectParameterValueNormalized(java.lang.String, java.lang.Number, java.lang.Number);
+  public abstract void incDirectParameterValueNormalized(java.lang.String, java.lang.Number, java.lang.Number);
+  public abstract com.bitwig.extension.controller.api.StringValue sampleName();
+  public abstract void addSampleNameObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.DeviceBank createSiblingsDeviceBank(int);
+  public abstract void browseToInsertBeforeDevice();
+  public abstract void browseToInsertAfterDevice();
+  public abstract void browseToReplaceDevice();
+  public abstract com.bitwig.extension.controller.api.InsertionPoint afterDeviceInsertionPoint();
+  public abstract com.bitwig.extension.controller.api.InsertionPoint beforeDeviceInsertionPoint();
+  public abstract com.bitwig.extension.controller.api.InsertionPoint replaceDeviceInsertionPoint();
+  public abstract com.bitwig.extension.controller.api.EnumValue deviceType();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DeviceBank extends com.bitwig.extension.controller.api.Bank {
+  public abstract com.bitwig.extension.controller.api.DeviceChain getDeviceChain();
+  public abstract com.bitwig.extension.controller.api.Device getDevice(int);
+  public abstract void scrollPageUp();
+  public abstract void scrollPageDown();
+  public abstract void scrollUp();
+  public abstract void scrollDown();
+  public abstract void scrollTo(int);
+  public abstract void addScrollPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback, int);
+  public abstract void addCanScrollUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addDeviceCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void browseToInsertDevice(int);
+  public abstract void setDeviceMatcher(com.bitwig.extension.controller.api.DeviceMatcher);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DeviceBrowsingSession extends com.bitwig.extension.controller.api.BrowsingSession {
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getCategoryFilter();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getDeviceTypeFilter();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getFileTypeFilter();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DeviceChain extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract void selectInEditor();
+  public abstract com.bitwig.extension.controller.api.SettableStringValue name();
+  public abstract void addNameObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract void addIsSelectedInEditorObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addIsSelectedObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.DeviceBank createDeviceBank(int);
+  public abstract com.bitwig.extension.controller.api.Browser createDeviceBrowser(int, int);
+  public abstract void select();
+  public abstract void browseToInsertAtStartOfChain();
+  public abstract void browseToInsertAtEndOfChain();
+  public abstract com.bitwig.extension.controller.api.InsertionPoint startOfDeviceChainInsertionPoint();
+  public abstract com.bitwig.extension.controller.api.InsertionPoint endOfDeviceChainInsertionPoint();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DeviceLayer extends com.bitwig.extension.controller.api.Channel {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DeviceLayerBank extends com.bitwig.extension.controller.api.ChannelBank {
+  public abstract com.bitwig.extension.controller.api.DeviceLayer getChannel(int);
+  public default com.bitwig.extension.controller.api.Channel getChannel(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DeviceMatcher {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DeviceSlot extends com.bitwig.extension.controller.api.DeviceChain {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DirectParameterValueDisplayObserver {
+  public abstract void setObservedParameterIds(java.lang.String[]);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DocumentState extends com.bitwig.extension.controller.api.Settings {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DoubleValue extends com.bitwig.extension.controller.api.Value,java.util.function.DoubleSupplier {
+  public abstract double get();
+  public default double getAsDouble();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DrumPad extends com.bitwig.extension.controller.api.Channel {
+  public abstract com.bitwig.extension.controller.api.InsertionPoint insertionPoint();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.DrumPadBank extends com.bitwig.extension.controller.api.ChannelBank {
+  public abstract void setIndication(boolean);
+  public abstract void clearMutedPads();
+  public abstract void clearSoloedPads();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasMutedPads();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasSoloedPads();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.EnumDefinition {
+  public abstract int getValueCount();
+  public abstract com.bitwig.extension.controller.api.EnumValueDefinition valueDefinitionAt(int);
+  public abstract com.bitwig.extension.controller.api.EnumValueDefinition valueDefinitionFor(java.lang.String);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.EnumValue extends com.bitwig.extension.controller.api.Value,java.util.function.Supplier {
+  public abstract java.lang.String get();
+  public abstract com.bitwig.extension.controller.api.EnumDefinition enumDefinition();
+  public default java.lang.Object get();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.EnumValueDefinition {
+  public abstract com.bitwig.extension.controller.api.EnumDefinition enumDefinition();
+  public abstract int getValueIndex();
+  public abstract java.lang.String getId();
+  public abstract java.lang.String getDisplayName();
+  public abstract java.lang.String getLimitedDisplayName(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.GenericBrowsingSession extends com.bitwig.extension.controller.api.BrowsingSession {
+  public abstract com.bitwig.extension.controller.api.StringValue name();
+  public abstract void addNameObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Groove {
+  public abstract com.bitwig.extension.controller.api.Parameter getEnabled();
+  public abstract com.bitwig.extension.controller.api.Parameter getShuffleAmount();
+  public abstract com.bitwig.extension.controller.api.Parameter getShuffleRate();
+  public abstract com.bitwig.extension.controller.api.Parameter getAccentAmount();
+  public abstract com.bitwig.extension.controller.api.Parameter getAccentRate();
+  public abstract com.bitwig.extension.controller.api.Parameter getAccentPhase();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareAction extends com.bitwig.extension.controller.api.HardwareBindingSource {
+  public abstract void setActionMatcher(com.bitwig.extension.controller.api.HardwareActionMatcher);
+  public abstract void setPressureActionMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher);
+  public abstract boolean isSupported();
+  public abstract void setShouldFireEvenWhenUsedAsNoteInput(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareActionBindable extends com.bitwig.extension.controller.api.HardwareBindable {
+  public abstract com.bitwig.extension.controller.api.HardwareActionBinding addBinding(com.bitwig.extension.controller.api.HardwareAction);
+  public abstract void invoke();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareActionBinding extends com.bitwig.extension.controller.api.HardwareBinding {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareActionMatcher extends com.bitwig.extension.controller.api.HardwareInputMatcher {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareBindable {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareBinding {
+  public abstract void removeBinding();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareBindingSource {
+  public abstract boolean canBindTo(java.lang.Object);
+  public abstract com.bitwig.extension.controller.api.HardwareBinding addBinding(com.bitwig.extension.controller.api.HardwareBindable);
+  public abstract void clearBindings();
+  public abstract com.bitwig.extension.controller.api.HardwareBinding setBinding(com.bitwig.extension.controller.api.HardwareBindable);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareBindingWithRange extends com.bitwig.extension.controller.api.HardwareBinding {
+  public abstract void setMinNormalizedValue(double);
+  public abstract void setMaxNormalizedValue(double);
+  public abstract void setNormalizedRange(double, double);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareBindingWithSensitivity extends com.bitwig.extension.controller.api.HardwareBinding {
+  public abstract void setSensitivity(double);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareButton extends com.bitwig.extension.controller.api.HardwareControl {
+  public abstract com.bitwig.extension.controller.api.HardwareAction pressedAction();
+  public abstract com.bitwig.extension.controller.api.HardwareAction releasedAction();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isPressed();
+  public abstract void setAftertouchControl(com.bitwig.extension.controller.api.AbsoluteHardwareControl);
+  public abstract void setRoundedCornerRadius(double);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareControl extends com.bitwig.extension.controller.api.HardwareElement {
+  public abstract java.lang.String getName();
+  public abstract void setName(java.lang.String);
+  public abstract void setIndexInGroup(int);
+  public abstract com.bitwig.extension.controller.api.HardwareAction beginTouchAction();
+  public abstract com.bitwig.extension.controller.api.HardwareAction endTouchAction();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isBeingTouched();
+  public abstract com.bitwig.extension.controller.api.HardwareLight backgroundLight();
+  public abstract void setBackgroundLight(com.bitwig.extension.controller.api.HardwareLight);
+}
+Compiled from "SourceFile"
+public final class com.bitwig.extension.controller.api.HardwareControlType extends java.lang.Enum {
+  public static final com.bitwig.extension.controller.api.HardwareControlType KNOB;
+  public static final com.bitwig.extension.controller.api.HardwareControlType SLIDER;
+  public static final com.bitwig.extension.controller.api.HardwareControlType ENCODER;
+  public static com.bitwig.extension.controller.api.HardwareControlType[] values();
+  public static com.bitwig.extension.controller.api.HardwareControlType valueOf(java.lang.String);
+  static {};
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareDevice {
+  public abstract com.bitwig.extension.controller.HardwareDeviceMatcher deviceMatcher();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareElement {
+  public abstract java.lang.String getId();
+  public abstract java.lang.String getLabel();
+  public abstract void setLabel(java.lang.String);
+  public abstract com.bitwig.extension.api.Color getLabelColor();
+  public abstract void setLabelColor(com.bitwig.extension.api.Color);
+  public abstract com.bitwig.extension.controller.api.RelativePosition getLabelPosition();
+  public abstract void setLabelPosition(com.bitwig.extension.controller.api.RelativePosition);
+  public abstract void setBounds(double, double, double, double);
+  public abstract double getX();
+  public abstract double getY();
+  public abstract double getWidth();
+  public abstract double getHeight();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareInputMatcher {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareLight extends com.bitwig.extension.controller.api.HardwareOutputElement {
+}
+Compiled from "SourceFile"
+public class com.bitwig.extension.controller.api.HardwareLightVisualState {
+  public static com.bitwig.extension.controller.api.HardwareLightVisualState createForColor(com.bitwig.extension.api.Color);
+  public static com.bitwig.extension.controller.api.HardwareLightVisualState createForColor(com.bitwig.extension.api.Color, com.bitwig.extension.api.Color);
+  public static com.bitwig.extension.controller.api.HardwareLightVisualState createBlinking(com.bitwig.extension.api.Color, com.bitwig.extension.api.Color, double, double);
+  public static com.bitwig.extension.controller.api.HardwareLightVisualState createBlinking(com.bitwig.extension.api.Color, com.bitwig.extension.api.Color, com.bitwig.extension.api.Color, com.bitwig.extension.api.Color, double, double);
+  public boolean isBlinking();
+  public com.bitwig.extension.api.Color getColor();
+  public com.bitwig.extension.api.Color getBlinkOffColor();
+  public double getOffBlinkTime();
+  public double getOnBlinkTime();
+  public com.bitwig.extension.api.Color getLabelColor();
+  public com.bitwig.extension.api.Color getLabelBlinkOffColor();
+  public int hashCode();
+  public boolean equals(java.lang.Object);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareOutputElement extends com.bitwig.extension.controller.api.HardwareElement {
+  public abstract void onUpdateHardware(java.lang.Runnable);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwarePixelDisplay extends com.bitwig.extension.controller.api.HardwareOutputElement {
+  public abstract com.bitwig.extension.api.graphics.Bitmap bitmap();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareProperty {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareSlider extends com.bitwig.extension.controller.api.AbsoluteHardwareControl {
+  public abstract void setIsHorizontal(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareSurface {
+  public abstract com.bitwig.extension.controller.api.HardwareSlider createHardwareSlider(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.HardwareSlider createHardwareSlider(java.lang.String, double);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareKnob createAbsoluteHardwareKnob(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareKnob createAbsoluteHardwareKnob(java.lang.String, double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareKnob createRelativeHardwareKnob(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.PianoKeyboard createPianoKeyboard(java.lang.String, int, int, int);
+  public abstract com.bitwig.extension.controller.api.HardwareButton createHardwareButton(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.OnOffHardwareLight createOnOffHardwareLight(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.MultiStateHardwareLight createMultiStateHardwareLight(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.HardwareTextDisplay createHardwareTextDisplay(java.lang.String, int);
+  public abstract com.bitwig.extension.controller.api.HardwarePixelDisplay createHardwarePixelDisplay(java.lang.String, com.bitwig.extension.api.graphics.Bitmap);
+  public abstract void setPhysicalSize(double, double);
+  public abstract void updateHardware();
+  public abstract void invalidateHardwareOutputState();
+  public abstract java.util.List hardwareControls();
+  public abstract com.bitwig.extension.controller.api.HardwareElement hardwareElementWithId(java.lang.String);
+  public abstract java.util.List hardwareOutputElements();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareTextDisplay extends com.bitwig.extension.controller.api.HardwareOutputElement {
+  public abstract com.bitwig.extension.controller.api.HardwareTextDisplayLine line(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.HardwareTextDisplayLine {
+  public abstract com.bitwig.extension.controller.api.StringHardwareProperty text();
+  public abstract com.bitwig.extension.controller.api.ColorHardwareProperty backgroundColor();
+  public abstract com.bitwig.extension.controller.api.ColorHardwareProperty textColor();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.InputPipe extends com.bitwig.extension.controller.api.Pipe {
+  public abstract void readAsync(com.bitwig.extension.api.MemoryBlock, com.bitwig.extension.controller.api.AsyncTransferCompledCallback, int);
+  public abstract int read(com.bitwig.extension.api.MemoryBlock, int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.InsertionPoint {
+  public abstract void copyTracks(com.bitwig.extension.controller.api.Track...);
+  public abstract void moveTracks(com.bitwig.extension.controller.api.Track...);
+  public abstract void copyDevices(com.bitwig.extension.controller.api.Device...);
+  public abstract void moveDevices(com.bitwig.extension.controller.api.Device...);
+  public abstract void copySlotsOrScenes(com.bitwig.extension.controller.api.ClipLauncherSlotOrScene...);
+  public abstract void moveSlotsOrScenes(com.bitwig.extension.controller.api.ClipLauncherSlotOrScene...);
+  public abstract void insertFile(java.lang.String);
+  public abstract void insertBitwigDevice(java.util.UUID);
+  public abstract void insertVST2Device(int);
+  public abstract void insertVST3Device(java.lang.String);
+  public abstract void paste();
+  public abstract void browse();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable browseAction();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.IntegerHardwareProperty extends com.bitwig.extension.controller.api.HardwareProperty {
+  public abstract int currentValue();
+  public abstract int lastSentValue();
+  public abstract void onUpdateHardware(java.util.function.IntConsumer);
+  public abstract void setValue(int);
+  public abstract void setValueSupplier(java.util.function.IntSupplier);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.IntegerValue extends com.bitwig.extension.controller.api.Value,java.util.function.IntSupplier {
+  public abstract int get();
+  public default int getAsInt();
+  public abstract void addValueObserver(com.bitwig.extension.callback.IntegerValueChangedCallback, int);
+}
+Compiled from "SourceFile"
+public abstract class com.bitwig.extension.controller.api.InternalHardwareLightState {
+  public com.bitwig.extension.controller.api.InternalHardwareLightState();
+  public abstract com.bitwig.extension.controller.api.HardwareLightVisualState getVisualState();
+  public abstract boolean equals(java.lang.Object);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Macro {
+  public abstract com.bitwig.extension.controller.api.Parameter getAmount();
+  public abstract com.bitwig.extension.controller.api.ModulationSource getModulationSource();
+  public abstract void addLabelObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.MasterTrack extends com.bitwig.extension.controller.api.Track {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.MidiExpressions {
+  public abstract java.lang.String createIsCCExpression(int);
+  public abstract java.lang.String createIsCCExpression(int, int);
+  public abstract java.lang.String createIsCCValueExpression(int, int, int);
+  public abstract java.lang.String createIsPitchBendExpression(int);
+  public abstract java.lang.String createIsNoteOnExpression(int, int);
+  public abstract java.lang.String createIsNoteOffExpression(int, int);
+  public abstract java.lang.String createIsPolyAftertouch(int, int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.MidiIn {
+  public abstract void setMidiCallback(com.bitwig.extension.callback.ShortMidiDataReceivedCallback);
+  public abstract void setSysexCallback(com.bitwig.extension.callback.SysexMidiDataReceivedCallback);
+  public abstract com.bitwig.extension.controller.api.NoteInput createNoteInput(java.lang.String, java.lang.String...);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createAbsoluteCCValueMatcher(int, int);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createAbsoluteCCValueMatcher(int);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createPolyAftertouchValueMatcher(int, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeSignedBitCCValueMatcher(int, int, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeSignedBit2CCValueMatcher(int, int, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeBinOffsetCCValueMatcher(int, int, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelative2sComplementCCValueMatcher(int, int, int);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createAbsolutePitchBendValueMatcher(int);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createSequencedValueMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher, com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher, boolean);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createAbsoluteValueMatcher(java.lang.String, java.lang.String, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeValueMatcher(java.lang.String, double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeSignedBitValueMatcher(java.lang.String, java.lang.String, int, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeSignedBitValueMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeSignedBit2ValueMatcher(java.lang.String, java.lang.String, int, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeSignedBit2ValueMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeBinOffsetValueMatcher(java.lang.String, java.lang.String, int, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelativeBinOffsetValueMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelative2sComplementValueMatcher(java.lang.String, java.lang.String, int, int);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareValueMatcher createRelative2sComplementValueMatcher(com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher, int);
+  public abstract com.bitwig.extension.controller.api.HardwareActionMatcher createCCActionMatcher(int, int, int);
+  public abstract com.bitwig.extension.controller.api.HardwareActionMatcher createCCActionMatcher(int, int);
+  public abstract com.bitwig.extension.controller.api.HardwareActionMatcher createNoteOnActionMatcher(int, int);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createNoteOnVelocityValueMatcher(int, int);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareValueMatcher createNoteOffVelocityValueMatcher(int, int);
+  public abstract com.bitwig.extension.controller.api.HardwareActionMatcher createNoteOffActionMatcher(int, int);
+  public abstract com.bitwig.extension.controller.api.HardwareActionMatcher createActionMatcher(java.lang.String);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.MidiOut {
+  public abstract void sendMidi(int, int, int);
+  public abstract void sendSysex(java.lang.String);
+  public abstract void sendSysex(byte[]);
+  public abstract void sendSysexBytes(byte[]);
+  public abstract void setShouldSendMidiBeatClock(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Mixer {
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isMeterSectionVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isIoSectionVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isSendSectionVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isClipLauncherSectionVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isDeviceSectionVisible();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isCrossFadeSectionVisible();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomInTrackWidthsAllAction();
+  public abstract void zoomInTrackWidthsAll();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomOutTrackWidthsAllAction();
+  public abstract void zoomOutTrackWidthsAll();
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable zoomTrackWidthsAllStepper();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomInTrackWidthsSelectedAction();
+  public abstract void zoomInTrackWidthsSelected();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomOutTrackWidthsSelectedAction();
+  public abstract void zoomOutTrackWidthsSelected();
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable zoomTrackWidthsSelectedStepper();
+  public abstract void addMeterSectionVisibilityObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addIoSectionVisibilityObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addSendsSectionVisibilityObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addClipLauncherSectionVisibilityObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addDeviceSectionVisibilityObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCrossFadeSectionVisibilityObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void toggleMeterSectionVisibility();
+  public abstract void toggleIoSectionVisibility();
+  public abstract void toggleSendsSectionVisibility();
+  public abstract void toggleClipLauncherSectionVisibility();
+  public abstract void toggleDeviceSectionVisibility();
+  public abstract void toggleCrossFadeSectionVisibility();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ModulationSource {
+  public abstract com.bitwig.extension.controller.api.BooleanValue isMapping();
+  public abstract void addIsMappingObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void toggleIsMapping();
+  public abstract com.bitwig.extension.controller.api.StringValue name();
+  public abstract void addNameObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BooleanValue isMapped();
+  public abstract void addIsMappedObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.MultiSampleBrowsingSession extends com.bitwig.extension.controller.api.BrowsingSession {
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getFileTypeFilter();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.MultiStateHardwareLight extends com.bitwig.extension.controller.api.HardwareLight {
+  public abstract com.bitwig.extension.controller.api.ObjectHardwareProperty state();
+  public abstract void setColorToStateFunction(java.util.function.Function);
+  public abstract void setColor(com.bitwig.extension.api.Color);
+  public abstract void setColorSupplier(java.util.function.Supplier);
+  public abstract com.bitwig.extension.controller.api.InternalHardwareLightState getBestLightStateForColor(com.bitwig.extension.api.Color);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.MusicBrowsingSession extends com.bitwig.extension.controller.api.BrowsingSession {
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getFileTypeFilter();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.NoteInput {
+  public abstract void setShouldConsumeEvents(boolean);
+  public abstract void setKeyTranslationTable(java.lang.Object[]);
+  public abstract void setVelocityTranslationTable(java.lang.Object[]);
+  public abstract void assignPolyphonicAftertouchToExpression(int, com.bitwig.extension.controller.api.NoteInput$NoteExpression, int);
+  public abstract void setUseExpressiveMidi(boolean, int, int);
+  public abstract void setUseMultidimensionalPolyphonicExpression(boolean, int);
+  public abstract void sendRawMidiEvent(int, int, int);
+  public abstract com.bitwig.extension.controller.api.NoteLatch noteLatch();
+  public abstract com.bitwig.extension.controller.api.Arpeggiator arpeggiator();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue includeInAllInputs();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.NoteLatch extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isEnabled();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue mode();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue mono();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue velocityThreshold();
+  public abstract com.bitwig.extension.controller.api.IntegerValue activeNotes();
+  public abstract void releaseNotes();
+}
+Compiled from "SourceFile"
+public final class com.bitwig.extension.controller.api.NoteOccurrence extends java.lang.Enum {
+  public static final com.bitwig.extension.controller.api.NoteOccurrence ALWAYS;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence FIRST;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence NOT_FIRST;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence PREV;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence NOT_PREV;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence PREV_CHANNEL;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence NOT_PREV_CHANNEL;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence PREV_KEY;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence NOT_PREV_KEY;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence FILL;
+  public static final com.bitwig.extension.controller.api.NoteOccurrence NOT_FILL;
+  public static com.bitwig.extension.controller.api.NoteOccurrence[] values();
+  public static com.bitwig.extension.controller.api.NoteOccurrence valueOf(java.lang.String);
+  static {};
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.NoteStep {
+  public abstract int x();
+  public abstract int y();
+  public abstract int channel();
+  public abstract com.bitwig.extension.controller.api.NoteStep$State state();
+  public abstract double velocity();
+  public abstract void setVelocity(double);
+  public abstract double releaseVelocity();
+  public abstract void setReleaseVelocity(double);
+  public abstract double velocitySpread();
+  public abstract void setVelocitySpread(double);
+  public abstract double duration();
+  public abstract void setDuration(double);
+  public abstract double pan();
+  public abstract void setPan(double);
+  public abstract double timbre();
+  public abstract void setTimbre(double);
+  public abstract double pressure();
+  public abstract void setPressure(double);
+  public abstract double gain();
+  public abstract void setGain(double);
+  public abstract double transpose();
+  public abstract void setTranspose(double);
+  public abstract boolean isIsSelected();
+  public abstract double chance();
+  public abstract void setChance(double);
+  public abstract boolean isChanceEnabled();
+  public abstract void setIsChanceEnabled(boolean);
+  public abstract boolean isOccurrenceEnabled();
+  public abstract void setIsOccurrenceEnabled(boolean);
+  public abstract com.bitwig.extension.controller.api.NoteOccurrence occurrence();
+  public abstract void setOccurrence(com.bitwig.extension.controller.api.NoteOccurrence);
+  public abstract boolean isRecurrenceEnabled();
+  public abstract void setIsRecurrenceEnabled(boolean);
+  public abstract int recurrenceLength();
+  public abstract int recurrenceMask();
+  public abstract void setRecurrence(int, int);
+  public abstract boolean isRepeatEnabled();
+  public abstract void setIsRepeatEnabled(boolean);
+  public abstract int repeatCount();
+  public abstract void setRepeatCount(int);
+  public abstract double repeatCurve();
+  public abstract void setRepeatCurve(double);
+  public abstract double repeatVelocityEnd();
+  public abstract void setRepeatVelocityEnd(double);
+  public abstract double repeatVelocityCurve();
+  public abstract void setRepeatVelocityCurve(double);
+  public abstract boolean isMuted();
+  public abstract void setIsMuted(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.NotificationSettings {
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getUserNotificationsEnabled();
+  public abstract void setShouldShowSelectionNotifications(boolean);
+  public abstract void setShouldShowChannelSelectionNotifications(boolean);
+  public abstract void setShouldShowTrackSelectionNotifications(boolean);
+  public abstract void setShouldShowDeviceSelectionNotifications(boolean);
+  public abstract void setShouldShowDeviceLayerSelectionNotifications(boolean);
+  public abstract void setShouldShowPresetNotifications(boolean);
+  public abstract void setShouldShowMappingNotifications(boolean);
+  public abstract void setShouldShowValueNotifications(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ObjectArrayValue extends com.bitwig.extension.controller.api.Value,java.util.function.Supplier {
+  public abstract java.lang.Object[] get();
+  public default java.lang.Object get(int);
+  public default boolean isEmpty();
+  public default java.lang.Object get();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ObjectHardwareProperty extends com.bitwig.extension.controller.api.HardwareProperty {
+  public abstract java.lang.Object currentValue();
+  public abstract java.lang.Object lastSentValue();
+  public abstract void onUpdateHardware(java.util.function.Consumer);
+  public abstract void setValue(java.lang.Object);
+  public abstract void setValueSupplier(java.util.function.Supplier);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ObjectProxy extends com.bitwig.extension.controller.api.Subscribable {
+  public abstract com.bitwig.extension.controller.api.BooleanValue exists();
+  public abstract com.bitwig.extension.controller.api.BooleanValue createEqualsValue(com.bitwig.extension.controller.api.ObjectProxy);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.OnOffHardwareLight extends com.bitwig.extension.controller.api.HardwareLight {
+  public abstract com.bitwig.extension.controller.api.BooleanHardwareProperty isOn();
+  public default void setOnColor(com.bitwig.extension.api.Color);
+  public default void setOffColor(com.bitwig.extension.api.Color);
+  public abstract void setOnVisualState(com.bitwig.extension.controller.api.HardwareLightVisualState);
+  public abstract void setOffVisualState(com.bitwig.extension.controller.api.HardwareLightVisualState);
+  public abstract void setStateToVisualStateFuncation(java.util.function.Function);
+  public abstract void setStateToVisualStateFunction(java.util.function.Function);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.OutputPipe extends com.bitwig.extension.controller.api.Pipe {
+  public abstract void writeAsync(com.bitwig.extension.api.MemoryBlock, com.bitwig.extension.controller.api.AsyncTransferCompledCallback, int);
+  public abstract int write(com.bitwig.extension.api.MemoryBlock, int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Parameter extends com.bitwig.extension.controller.api.ObjectProxy,com.bitwig.extension.controller.api.SettableRangedValue {
+  public abstract com.bitwig.extension.controller.api.SettableRangedValue value();
+  public abstract com.bitwig.extension.controller.api.RangedValue modulatedValue();
+  public abstract com.bitwig.extension.controller.api.StringValue name();
+  public abstract void addNameObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract void addValueDisplayObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract void reset();
+  public abstract void touch(boolean);
+  public abstract void setIndication(boolean);
+  public abstract void setLabel(java.lang.String);
+  public abstract void restoreAutomationControl();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.ParameterBank {
+  public abstract int getParameterCount();
+  public abstract com.bitwig.extension.controller.api.Parameter getParameter(int);
+  public abstract void setHardwareLayout(com.bitwig.extension.controller.api.HardwareControlType, int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PianoKeyboard extends com.bitwig.extension.controller.api.HardwareElement {
+  public abstract void setMidiIn(com.bitwig.extension.controller.api.MidiIn);
+  public abstract void setNoteInput(com.bitwig.extension.controller.api.NoteInput);
+  public abstract void setChannel(int);
+  public abstract void setIsVelocitySensitive(boolean);
+  public abstract void setSupportsPolyAftertouch(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PinnableCursor extends com.bitwig.extension.controller.api.Cursor {
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isPinned();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PinnableCursorClip extends com.bitwig.extension.controller.api.CursorClip,com.bitwig.extension.controller.api.PinnableCursor {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PinnableCursorDevice extends com.bitwig.extension.controller.api.CursorDevice,com.bitwig.extension.controller.api.PinnableCursor {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Pipe {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PlayingNote {
+  public abstract int pitch();
+  public abstract int velocity();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PlayingNoteArrayValue extends com.bitwig.extension.controller.api.ObjectArrayValue {
+  public default boolean isNotePlaying(int);
+  static {};
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PopupBrowser extends com.bitwig.extension.controller.api.ObjectProxy,com.bitwig.extension.controller.api.RelativeHardwarControlBindable {
+  public abstract com.bitwig.extension.controller.api.StringValue title();
+  public abstract com.bitwig.extension.controller.api.StringArrayValue contentTypeNames();
+  public abstract com.bitwig.extension.controller.api.StringValue selectedContentTypeName();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue selectedContentTypeIndex();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn smartCollectionColumn();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn locationColumn();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn deviceColumn();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn categoryColumn();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn tagColumn();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn deviceTypeColumn();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn fileTypeColumn();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn creatorColumn();
+  public abstract com.bitwig.extension.controller.api.BrowserResultsColumn resultsColumn();
+  public abstract com.bitwig.extension.controller.api.BooleanValue canAudition();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue shouldAudition();
+  public abstract void selectNextFile();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectNextFileAction();
+  public abstract void selectPreviousFile();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable selectPreviousFileAction();
+  public abstract void selectFirstFile();
+  public abstract void selectLastFile();
+  public abstract void cancel();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable cancelAction();
+  public abstract void commit();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable commitAction();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Preferences extends com.bitwig.extension.controller.api.Settings {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PresetBrowsingSession extends com.bitwig.extension.controller.api.BitwigBrowsingSession {
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getCategoryFilter();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getPresetTypeFilter();
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getFileTypeFilter();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.PrimaryDevice extends com.bitwig.extension.controller.api.Device {
+  public abstract void switchToDevice(com.bitwig.extension.controller.api.PrimaryDevice$DeviceType, com.bitwig.extension.controller.api.PrimaryDevice$ChainLocation);
+  public abstract void addCanSwitchToDeviceObserver(com.bitwig.extension.controller.api.PrimaryDevice$DeviceType, com.bitwig.extension.controller.api.PrimaryDevice$ChainLocation, com.bitwig.extension.callback.BooleanValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Project extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract com.bitwig.extension.controller.api.Track getRootTrackGroup();
+  public abstract com.bitwig.extension.controller.api.Track getShownTopLevelTrackGroup();
+  public abstract void createScene();
+  public abstract void createSceneFromPlayingLauncherClips();
+  public abstract com.bitwig.extension.controller.api.Parameter cueVolume();
+  public abstract com.bitwig.extension.controller.api.Parameter cueMix();
+  public abstract void unsoloAll();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasSoloedTracks();
+  public abstract void unmuteAll();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasMutedTracks();
+  public abstract void unarmAll();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasArmedTracks();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RangedValue extends com.bitwig.extension.controller.api.Value,java.util.function.DoubleSupplier {
+  public abstract double get();
+  public abstract double getRaw();
+  public default double getAsDouble();
+  public abstract com.bitwig.extension.controller.api.StringValue displayedValue();
+  public abstract void addValueObserver(int, com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void addRawValueObserver(com.bitwig.extension.callback.DoubleValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RelativeHardwarControlBindable extends com.bitwig.extension.controller.api.HardwareBindable {
+  public default com.bitwig.extension.controller.api.RelativeHardwareControlBinding addBinding(com.bitwig.extension.controller.api.RelativeHardwareControl);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareControlBinding addBindingWithSensitivity(com.bitwig.extension.controller.api.RelativeHardwareControl, double);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RelativeHardwareControl extends com.bitwig.extension.controller.api.ContinuousHardwareControl {
+  public abstract void setSensitivity(double);
+  public abstract void setAdjustValueMatcher(com.bitwig.extension.controller.api.RelativeHardwareValueMatcher);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareControlBinding addBindingWithSensitivity(com.bitwig.extension.controller.api.RelativeHardwarControlBindable, double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareControlBinding setBindingWithSensitivity(com.bitwig.extension.controller.api.RelativeHardwarControlBindable, double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareControlBinding addBindingWithRange(com.bitwig.extension.controller.api.SettableRangedValue, double, double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareControlBinding setBindingWithRange(com.bitwig.extension.controller.api.SettableRangedValue, double, double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareControlBinding addBindingWithRangeAndSensitivity(com.bitwig.extension.controller.api.SettableRangedValue, double, double, double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareControlBinding setBindingWithRangeAndSensitivity(com.bitwig.extension.controller.api.SettableRangedValue, double, double, double);
+  public abstract double getStepSize();
+  public abstract void setStepSize(double);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RelativeHardwareControlBinding extends com.bitwig.extension.controller.api.HardwareBindingWithSensitivity {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RelativeHardwareControlToRangedValueBinding extends com.bitwig.extension.controller.api.HardwareBindingWithRange,com.bitwig.extension.controller.api.RelativeHardwareControlBinding {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RelativeHardwareKnob extends com.bitwig.extension.controller.api.RelativeHardwareControl {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RelativeHardwareValueMatcher extends com.bitwig.extension.controller.api.ContinuousHardwareValueMatcher {
+}
+Compiled from "SourceFile"
+public final class com.bitwig.extension.controller.api.RelativePosition extends java.lang.Enum {
+  public static final com.bitwig.extension.controller.api.RelativePosition ABOVE;
+  public static final com.bitwig.extension.controller.api.RelativePosition BELOW;
+  public static final com.bitwig.extension.controller.api.RelativePosition LEFT;
+  public static final com.bitwig.extension.controller.api.RelativePosition RIGHT;
+  public static final com.bitwig.extension.controller.api.RelativePosition INSIDE;
+  public static com.bitwig.extension.controller.api.RelativePosition[] values();
+  public static com.bitwig.extension.controller.api.RelativePosition valueOf(java.lang.String);
+  static {};
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RemoteConnection {
+  public abstract void disconnect();
+  public abstract void setDisconnectCallback(com.bitwig.extension.callback.NoArgsCallback);
+  public abstract void setReceiveCallback(com.bitwig.extension.callback.DataReceivedCallback);
+  public abstract void send(byte[]);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RemoteControl extends com.bitwig.extension.controller.api.DeleteableObject,com.bitwig.extension.controller.api.Parameter {
+  public abstract com.bitwig.extension.controller.api.SettableStringValue name();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isBeingMapped();
+  public default com.bitwig.extension.controller.api.StringValue name();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RemoteControlsPage extends com.bitwig.extension.controller.api.ParameterBank {
+  public abstract com.bitwig.extension.controller.api.RemoteControl getParameter(int);
+  public abstract com.bitwig.extension.controller.api.StringValue getName();
+  public default com.bitwig.extension.controller.api.Parameter getParameter(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.RemoteSocket {
+  public abstract void setClientConnectCallback(com.bitwig.extension.callback.ConnectionEstablishedCallback);
+  public abstract int getPort();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SampleBrowsingSession extends com.bitwig.extension.controller.api.BrowsingSession {
+  public abstract com.bitwig.extension.controller.api.BrowserFilterColumn getFileTypeFilter();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Scene extends com.bitwig.extension.controller.api.ClipLauncherSlotOrScene {
+  public abstract com.bitwig.extension.controller.api.SettableStringValue getName();
+  public abstract com.bitwig.extension.controller.api.SettableStringValue name();
+  public abstract com.bitwig.extension.controller.api.IntegerValue clipCount();
+  public abstract void addClipCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void addPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void addIsSelectedInEditorObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void selectInEditor();
+  public abstract void showInEditor();
+  public default com.bitwig.extension.controller.api.StringValue name();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SceneBank extends com.bitwig.extension.controller.api.ClipLauncherSlotOrSceneBank {
+  public abstract com.bitwig.extension.controller.api.Scene getScene(int);
+  public abstract void scrollPageUp();
+  public abstract void scrollPageDown();
+  public abstract void scrollUp();
+  public abstract void scrollDown();
+  public abstract void scrollTo(int);
+  public abstract void addScrollPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback, int);
+  public abstract void addCanScrollUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addSceneCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract void launchScene(int);
+  public abstract void setIndication(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Scrollable extends com.bitwig.extension.controller.api.RelativeHardwarControlBindable {
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue scrollPosition();
+  public abstract void scrollIntoView(int);
+  public abstract void scrollBy(int);
+  public default void scrollForwards();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable scrollForwardsAction();
+  public default void scrollBackwards();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable scrollBackwardsAction();
+  public abstract void scrollByPages(int);
+  public default void scrollPageForwards();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable scrollPageForwardsAction();
+  public default void scrollPageBackwards();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable scrollPageBackwardsAction();
+  public abstract com.bitwig.extension.controller.api.BooleanValue canScrollBackwards();
+  public abstract com.bitwig.extension.controller.api.BooleanValue canScrollForwards();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Send extends com.bitwig.extension.controller.api.Parameter {
+  public abstract com.bitwig.extension.controller.api.SettableColorValue sendChannelColor();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isPreFader();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue sendMode();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SendBank extends com.bitwig.extension.controller.api.Bank {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableBeatTimeValue extends com.bitwig.extension.controller.api.BeatTimeValue,com.bitwig.extension.controller.api.RelativeHardwarControlBindable,com.bitwig.extension.controller.api.SettableDoubleValue {
+  public default void setRaw(double);
+  public default void incRaw(double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable beatStepper();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableBooleanValue extends com.bitwig.extension.controller.api.BooleanValue,com.bitwig.extension.controller.api.HardwareActionBindable {
+  public abstract void set(boolean);
+  public abstract void toggle();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable toggleAction();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable setToTrueAction();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable setToFalseAction();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableColorValue extends com.bitwig.extension.controller.api.ColorValue {
+  public abstract void set(float, float, float);
+  public abstract void set(float, float, float, float);
+  public abstract void set(com.bitwig.extension.api.Color);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableDoubleValue extends com.bitwig.extension.controller.api.DoubleValue {
+  public abstract void set(double);
+  public abstract void inc(double);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableEnumValue extends com.bitwig.extension.controller.api.EnumValue {
+  public abstract void set(java.lang.String);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableIntegerValue extends com.bitwig.extension.controller.api.IntegerValue,com.bitwig.extension.controller.api.RelativeHardwarControlBindable {
+  public abstract void set(int);
+  public abstract void inc(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableRangedValue extends com.bitwig.extension.controller.api.AbsoluteHardwarControlBindable,com.bitwig.extension.controller.api.RangedValue,com.bitwig.extension.controller.api.RelativeHardwarControlBindable {
+  public abstract void set(double);
+  public abstract void setImmediately(double);
+  public abstract void set(java.lang.Number, java.lang.Number);
+  public abstract void inc(double);
+  public abstract void inc(java.lang.Number, java.lang.Number);
+  public abstract void setRaw(double);
+  public abstract void incRaw(double);
+  public default com.bitwig.extension.controller.api.AbsoluteHardwareControlBinding addBinding(com.bitwig.extension.controller.api.AbsoluteHardwareControl);
+  public abstract com.bitwig.extension.controller.api.AbsoluteHardwareControlBinding addBindingWithRange(com.bitwig.extension.controller.api.AbsoluteHardwareControl, double, double);
+  public default com.bitwig.extension.controller.api.RelativeHardwareControlToRangedValueBinding addBinding(com.bitwig.extension.controller.api.RelativeHardwareControl);
+  public default com.bitwig.extension.controller.api.RelativeHardwareControlBinding addBindingWithRange(com.bitwig.extension.controller.api.RelativeHardwareControl, double, double);
+  public abstract com.bitwig.extension.controller.api.RelativeHardwareControlToRangedValueBinding addBindingWithRangeAndSensitivity(com.bitwig.extension.controller.api.RelativeHardwareControl, double, double, double);
+  public default com.bitwig.extension.controller.api.RelativeHardwareControlToRangedValueBinding addBindingWithSensitivity(com.bitwig.extension.controller.api.RelativeHardwareControl, double);
+  public default com.bitwig.extension.controller.api.RelativeHardwareControlBinding addBindingWithSensitivity(com.bitwig.extension.controller.api.RelativeHardwareControl, double);
+  public default com.bitwig.extension.controller.api.RelativeHardwareControlBinding addBinding(com.bitwig.extension.controller.api.RelativeHardwareControl);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableStringArrayValue extends com.bitwig.extension.controller.api.StringArrayValue {
+  public abstract void set(java.lang.String[]);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SettableStringValue extends com.bitwig.extension.controller.api.StringValue {
+  public abstract void set(java.lang.String);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Setting {
+  public abstract java.lang.String getCategory();
+  public abstract java.lang.String getLabel();
+  public abstract void enable();
+  public abstract void disable();
+  public abstract void show();
+  public abstract void hide();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Settings {
+  public abstract com.bitwig.extension.controller.api.Signal getSignalSetting(java.lang.String, java.lang.String, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.SettableRangedValue getNumberSetting(java.lang.String, java.lang.String, double, double, double, java.lang.String, double);
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue getEnumSetting(java.lang.String, java.lang.String, java.lang.String[], java.lang.String);
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue getEnumSetting(java.lang.String, java.lang.String, com.bitwig.extension.controller.api.EnumValueDefinition);
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue getEnumSettingForValue(java.lang.String, java.lang.String, com.bitwig.extension.controller.api.SettableEnumValue);
+  public abstract com.bitwig.extension.controller.api.SettableStringValue getStringSetting(java.lang.String, java.lang.String, int, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.SettableColorValue getColorSetting(java.lang.String, java.lang.String, com.bitwig.extension.api.Color);
+  public abstract com.bitwig.extension.controller.api.SettableColorValue getColorSettingForValue(java.lang.String, java.lang.String, com.bitwig.extension.controller.api.SettableColorValue);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getBooleanSetting(java.lang.String, java.lang.String, boolean);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getBooleanSettingForValue(java.lang.String, java.lang.String, com.bitwig.extension.controller.api.SettableBooleanValue);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Signal {
+  public abstract void addSignalObserver(com.bitwig.extension.callback.NoArgsCallback);
+  public abstract void fire();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SoloValue extends com.bitwig.extension.controller.api.SettableBooleanValue {
+  public abstract void toggle(boolean);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SourceSelector extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract com.bitwig.extension.controller.api.BooleanValue getHasNoteInputSelected();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasNoteInputSelected();
+  public abstract com.bitwig.extension.controller.api.BooleanValue getHasAudioInputSelected();
+  public abstract com.bitwig.extension.controller.api.BooleanValue hasAudioInputSelected();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SpecificBitwigDevice {
+  public abstract com.bitwig.extension.controller.api.Parameter createParameter(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.IntegerValue createIntegerOutputValue(java.lang.String);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SpecificDevice extends com.bitwig.extension.controller.api.ObjectProxy {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.SpecificPluginDevice {
+  public abstract com.bitwig.extension.controller.api.Parameter createParameter(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.StringArrayValue extends com.bitwig.extension.controller.api.ObjectArrayValue {
+  public abstract java.lang.String[] get();
+  public default java.lang.Object[] get();
+  public default java.lang.Object get();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.StringHardwareProperty extends com.bitwig.extension.controller.api.HardwareProperty {
+  public abstract java.lang.String currentValue();
+  public abstract java.lang.String lastSentValue();
+  public abstract void onUpdateHardware(java.util.function.Consumer);
+  public abstract void setValue(java.lang.String);
+  public abstract void setValueSupplier(java.util.function.Supplier);
+  public abstract int getMaxChars();
+  public abstract void setMaxChars(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.StringValue extends com.bitwig.extension.controller.api.Value,java.util.function.Supplier {
+  public abstract java.lang.String get();
+  public abstract java.lang.String getLimited(int);
+  public default java.lang.Object get();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Subscribable {
+  public abstract boolean isSubscribed();
+  public abstract void setIsSubscribed(boolean);
+  public abstract void subscribe();
+  public abstract void unsubscribe();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.TimeSignatureValue extends com.bitwig.extension.controller.api.Value,java.util.function.Supplier {
+  public abstract java.lang.String get();
+  public abstract void set(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue getNumerator();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue numerator();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue getDenominator();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue denominator();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue getTicks();
+  public abstract com.bitwig.extension.controller.api.SettableIntegerValue ticks();
+  public default java.lang.Object get();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.TimelineEditor {
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomInAction();
+  public abstract void zoomIn();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomOutAction();
+  public abstract void zoomOut();
+  public abstract com.bitwig.extension.controller.api.RelativeHardwarControlBindable zoomLevel();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomToFitAction();
+  public abstract void zoomToFit();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomToSelectionAction();
+  public abstract void zoomToSelection();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomToFitSelectionOrAllAction();
+  public abstract void zoomToFitSelectionOrAll();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable zoomToFitSelectionOrPreviousAction();
+  public abstract void zoomToFitSelectionOrPrevious();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Track extends com.bitwig.extension.controller.api.Channel {
+  public abstract com.bitwig.extension.controller.api.IntegerValue position();
+  public abstract void addPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.ClipLauncherSlotBank getClipLauncherSlots();
+  public abstract com.bitwig.extension.controller.api.ClipLauncherSlotBank clipLauncherSlotBank();
+  public abstract com.bitwig.extension.controller.api.ClipLauncherSlotBank getClipLauncher();
+  public abstract void addIsQueuedForStopObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getArm();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue arm();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getMonitor();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue monitor();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isMonitoring();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getAutoMonitor();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue autoMonitor();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue monitorMode();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue getCrossFadeMode();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue crossFadeMode();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isStopped();
+  public abstract com.bitwig.extension.controller.api.BooleanValue getIsMatrixStopped();
+  public abstract com.bitwig.extension.controller.api.BooleanValue getIsMatrixQueuedForStop();
+  public abstract com.bitwig.extension.controller.api.BooleanValue isQueuedForStop();
+  public abstract com.bitwig.extension.controller.api.SourceSelector getSourceSelector();
+  public abstract com.bitwig.extension.controller.api.SourceSelector sourceSelector();
+  public abstract void stop();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable stopAction();
+  public abstract void returnToArrangement();
+  public abstract void setName(java.lang.String);
+  public abstract void addPitchNamesObserver(com.bitwig.extension.callback.IndexedStringValueChangedCallback);
+  public abstract void playNote(int, int);
+  public abstract void startNote(int, int);
+  public abstract void stopNote(int, int);
+  public abstract void sendMidi(int, int, int);
+  public abstract com.bitwig.extension.controller.api.StringValue trackType();
+  public abstract void addTrackTypeObserver(int, java.lang.String, com.bitwig.extension.callback.StringValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BooleanValue isGroup();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isGroupExpanded();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getIsPreFader();
+  public abstract void addIsGroupObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getCanHoldNoteData();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue canHoldNoteData();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue getCanHoldAudioData();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue canHoldAudioData();
+  public abstract com.bitwig.extension.controller.api.CursorDevice createCursorDevice();
+  public abstract com.bitwig.extension.controller.api.CursorDevice createCursorDevice(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.CursorDevice createCursorDevice(java.lang.String, int);
+  public abstract com.bitwig.extension.controller.api.Device getPrimaryDevice();
+  public abstract com.bitwig.extension.controller.api.Device getPrimaryInstrument();
+  public abstract com.bitwig.extension.controller.api.TrackBank createTrackBank(int, int, int, boolean);
+  public abstract com.bitwig.extension.controller.api.TrackBank createMainTrackBank(int, int, int, boolean);
+  public abstract com.bitwig.extension.controller.api.TrackBank createEffectTrackBank(int, int, boolean);
+  public abstract com.bitwig.extension.controller.api.MasterTrack createMasterTrack(int);
+  public abstract com.bitwig.extension.controller.api.TrackBank createSiblingsTrackBank(int, int, int, boolean, boolean);
+  public abstract com.bitwig.extension.controller.api.InsertionPoint afterTrackInsertionPoint();
+  public abstract com.bitwig.extension.controller.api.InsertionPoint beforeTrackInsertionPoint();
+  public abstract com.bitwig.extension.controller.api.Track createParentTrack(int, int);
+  public abstract void addNoteSource(com.bitwig.extension.controller.api.NoteInput);
+  public abstract void removeNoteSource(com.bitwig.extension.controller.api.NoteInput);
+  public abstract void createNewLauncherClip(int, int);
+  public abstract void createNewLauncherClip(int);
+  public abstract void recordNewLauncherClip(int);
+  public abstract void selectSlot(int);
+  public abstract void launchLastClipWithOptions(java.lang.String, java.lang.String);
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable launchLastClipWithOptionsAction(java.lang.String, java.lang.String);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.TrackBank extends com.bitwig.extension.controller.api.ChannelBank {
+  public abstract com.bitwig.extension.controller.api.Track getTrack(int);
+  public abstract com.bitwig.extension.controller.api.Track getChannel(int);
+  public abstract void setTrackScrollStepSize(int);
+  public abstract void scrollTracksPageUp();
+  public abstract void scrollTracksPageDown();
+  public abstract void scrollTracksUp();
+  public abstract void scrollTracksDown();
+  public abstract void scrollToTrack(int);
+  public abstract void addTrackScrollPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback, int);
+  public abstract com.bitwig.extension.controller.api.SceneBank sceneBank();
+  public abstract void scrollScenesPageUp();
+  public abstract void scrollScenesPageDown();
+  public abstract void scrollScenesUp();
+  public abstract void scrollScenesDown();
+  public abstract void scrollToScene(int);
+  public abstract void addSceneScrollPositionObserver(com.bitwig.extension.callback.IntegerValueChangedCallback, int);
+  public abstract void addCanScrollTracksUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollTracksDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollScenesUpObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addCanScrollScenesDownObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract void addSceneCountObserver(com.bitwig.extension.callback.IntegerValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.ClipLauncherSlotOrSceneBank getClipLauncherScenes();
+  public abstract void launchScene(int);
+  public abstract void followCursorTrack(com.bitwig.extension.controller.api.CursorTrack);
+  public abstract void setShouldShowClipLauncherFeedback(boolean);
+  public default com.bitwig.extension.controller.api.Channel getChannel(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Transport extends com.bitwig.extension.controller.api.ObjectProxy {
+  public abstract void play();
+  public abstract void continuePlayback();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable playAction();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable continuePlaybackAction();
+  public abstract void stop();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable stopAction();
+  public abstract void togglePlay();
+  public abstract void restart();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable restartAction();
+  public abstract void record();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable recordAction();
+  public abstract void rewind();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable rewindAction();
+  public abstract void fastForward();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable fastForwardAction();
+  public abstract void tapTempo();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable tapTempoAction();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isPlaying();
+  public abstract void addIsPlayingObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isArrangerRecordEnabled();
+  public abstract void addIsRecordingObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isArrangerOverdubEnabled();
+  public abstract void addOverdubObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isClipLauncherOverdubEnabled();
+  public abstract void addLauncherOverdubObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue automationWriteMode();
+  public abstract void addAutomationWriteModeObserver(com.bitwig.extension.callback.EnumValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isArrangerAutomationWriteEnabled();
+  public abstract void addIsWritingArrangerAutomationObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isClipLauncherAutomationWriteEnabled();
+  public abstract void addIsWritingClipLauncherAutomationObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.BooleanValue isAutomationOverrideActive();
+  public abstract void addAutomationOverrideObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isArrangerLoopEnabled();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue arrangerLoopStart();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue arrangerLoopDuration();
+  public abstract void addIsLoopActiveObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isPunchInEnabled();
+  public abstract void addPunchInObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isPunchOutEnabled();
+  public abstract void addPunchOutObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isMetronomeEnabled();
+  public abstract void addClickObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isMetronomeTickPlaybackEnabled();
+  public abstract void addMetronomeTicksObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableRangedValue metronomeVolume();
+  public abstract void addMetronomeVolumeObserver(com.bitwig.extension.callback.DoubleValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isMetronomeAudibleDuringPreRoll();
+  public abstract void addPreRollClickObserver(com.bitwig.extension.callback.BooleanValueChangedCallback);
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue preRoll();
+  public abstract void addPreRollObserver(com.bitwig.extension.callback.EnumValueChangedCallback);
+  public abstract void toggleLoop();
+  public abstract void setLoop(boolean);
+  public abstract void togglePunchIn();
+  public abstract void togglePunchOut();
+  public abstract void toggleClick();
+  public abstract void setClick(boolean);
+  public abstract void toggleMetronomeTicks();
+  public abstract void toggleMetronomeDuringPreRoll();
+  public abstract void setPreRoll(java.lang.String);
+  public abstract void setMetronomeValue(java.lang.Number, java.lang.Number);
+  public abstract void toggleOverdub();
+  public abstract void setOverdub(boolean);
+  public abstract void toggleLauncherOverdub();
+  public abstract void setLauncherOverdub(boolean);
+  public abstract void setAutomationWriteMode(java.lang.String);
+  public abstract void toggleLatchAutomationWriteMode();
+  public abstract void toggleWriteArrangerAutomation();
+  public abstract void toggleWriteClipLauncherAutomation();
+  public abstract void resetAutomationOverrides();
+  public abstract void returnToArrangement();
+  public abstract com.bitwig.extension.controller.api.Parameter getTempo();
+  public abstract com.bitwig.extension.controller.api.Parameter tempo();
+  public abstract void increaseTempo(java.lang.Number, java.lang.Number);
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue getPosition();
+  public abstract com.bitwig.extension.controller.api.BeatTimeValue playPosition();
+  public abstract com.bitwig.extension.controller.api.DoubleValue playPositionInSeconds();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue playStartPosition();
+  public abstract com.bitwig.extension.controller.api.SettableDoubleValue playStartPositionInSeconds();
+  public abstract void launchFromPlayStartPosition();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable launchFromPlayStartPositionAction();
+  public abstract void jumpToPlayStartPosition();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable jumpToPlayStartPositionAction();
+  public abstract void jumpToPreviousCueMarker();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable jumpToPreviousCueMarkerAction();
+  public abstract void jumpToNextCueMarker();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable jumpToNextCueMarkerAction();
+  public abstract void setPosition(double);
+  public abstract void incPosition(double, boolean);
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue getInPosition();
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue getOutPosition();
+  public abstract void addCueMarkerAtPlaybackPosition();
+  public abstract com.bitwig.extension.controller.api.HardwareActionBindable addCueMarkerAtPlaybackPositionAction();
+  public abstract com.bitwig.extension.controller.api.Parameter getCrossfade();
+  public abstract com.bitwig.extension.controller.api.Parameter crossfade();
+  public abstract com.bitwig.extension.controller.api.TimeSignatureValue getTimeSignature();
+  public abstract com.bitwig.extension.controller.api.TimeSignatureValue timeSignature();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue clipLauncherPostRecordingAction();
+  public abstract void addClipLauncherPostRecordingActionObserver(com.bitwig.extension.callback.EnumValueChangedCallback);
+  public abstract void setClipLauncherPostRecordingAction(java.lang.String);
+  public abstract com.bitwig.extension.controller.api.SettableBeatTimeValue getClipLauncherPostRecordingTimeOffset();
+  public abstract com.bitwig.extension.controller.api.SettableEnumValue defaultLaunchQuantization();
+  public abstract com.bitwig.extension.controller.api.SettableBooleanValue isFillModeActive();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.UsbDevice extends com.bitwig.extension.controller.api.HardwareDevice {
+  public abstract com.bitwig.extension.controller.UsbDeviceMatcher deviceMatcher();
+  public abstract java.util.List ifaces();
+  public abstract com.bitwig.extension.controller.api.UsbInterface iface(int);
+  public default com.bitwig.extension.controller.HardwareDeviceMatcher deviceMatcher();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.UsbInputPipe extends com.bitwig.extension.controller.api.InputPipe,com.bitwig.extension.controller.api.UsbPipe {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.UsbInterface {
+  public abstract com.bitwig.extension.controller.UsbInterfaceMatcher interfaceMatcher();
+  public abstract java.util.List pipes();
+  public abstract com.bitwig.extension.controller.api.UsbPipe pipe(int);
+  public abstract int pipeCount();
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.UsbOutputPipe extends com.bitwig.extension.controller.api.OutputPipe,com.bitwig.extension.controller.api.UsbPipe {
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.UsbPipe extends com.bitwig.extension.controller.api.Pipe {
+  public abstract com.bitwig.extension.controller.api.UsbDevice device();
+  public abstract com.bitwig.extension.controller.UsbEndpointMatcher endpointMatcher();
+  public abstract byte endpointAddress();
+  public abstract com.bitwig.extension.controller.api.UsbTransferDirection direction();
+  public abstract com.bitwig.extension.controller.api.UsbTransferType transferType();
+}
+Compiled from "SourceFile"
+public final class com.bitwig.extension.controller.api.UsbTransferDirection extends java.lang.Enum {
+  public static final com.bitwig.extension.controller.api.UsbTransferDirection IN;
+  public static final com.bitwig.extension.controller.api.UsbTransferDirection OUT;
+  public static com.bitwig.extension.controller.api.UsbTransferDirection[] values();
+  public static com.bitwig.extension.controller.api.UsbTransferDirection valueOf(java.lang.String);
+  public static com.bitwig.extension.controller.api.UsbTransferDirection getForEndpointAddress(byte);
+  static {};
+}
+Compiled from "SourceFile"
+public final class com.bitwig.extension.controller.api.UsbTransferStatus extends java.lang.Enum {
+  public static final com.bitwig.extension.controller.api.UsbTransferStatus Completed;
+  public static final com.bitwig.extension.controller.api.UsbTransferStatus Error;
+  public static final com.bitwig.extension.controller.api.UsbTransferStatus TimedOut;
+  public static final com.bitwig.extension.controller.api.UsbTransferStatus Cancelled;
+  public static final com.bitwig.extension.controller.api.UsbTransferStatus Stall;
+  public static final com.bitwig.extension.controller.api.UsbTransferStatus NoDevice;
+  public static final com.bitwig.extension.controller.api.UsbTransferStatus Overflow;
+  public static com.bitwig.extension.controller.api.UsbTransferStatus[] values();
+  public static com.bitwig.extension.controller.api.UsbTransferStatus valueOf(java.lang.String);
+  static {};
+}
+Compiled from "SourceFile"
+public final class com.bitwig.extension.controller.api.UsbTransferType extends java.lang.Enum {
+  public static final com.bitwig.extension.controller.api.UsbTransferType BULK;
+  public static final com.bitwig.extension.controller.api.UsbTransferType INTERRUPT;
+  public static com.bitwig.extension.controller.api.UsbTransferType[] values();
+  public static com.bitwig.extension.controller.api.UsbTransferType valueOf(java.lang.String);
+  static {};
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.UserControlBank {
+  public abstract com.bitwig.extension.controller.api.Parameter getControl(int);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.controller.api.Value extends com.bitwig.extension.controller.api.Subscribable {
+  public abstract void markInterested();
+  public abstract void addValueObserver(com.bitwig.extension.callback.ValueChangedCallback);
+}
+Compiled from "SourceFile"
+public interface com.bitwig.extension.api.Host {
+  public abstract int getHostApiVersion();
+  public abstract java.lang.String getHostVendor();
+  public abstract java.lang.String getHostProduct();
+  public abstract java.lang.String getHostVersion();
+  public abstract com.bitwig.extension.api.PlatformType getPlatformType();
+  public abstract void setErrorReportingEMail(java.lang.String);
+  public abstract com.bitwig.extension.api.opensoundcontrol.OscModule getOscModule();
+  public abstract com.bitwig.extension.api.MemoryBlock allocateMemoryBlock(int);
+  public abstract com.bitwig.extension.api.graphics.Bitmap createBitmap(int, int, com.bitwig.extension.api.graphics.BitmapFormat);
+  public abstract com.bitwig.extension.api.graphics.FontFace loadFontFace(java.lang.String);
+  public abstract com.bitwig.extension.api.graphics.FontOptions createFontOptions();
+  public abstract com.bitwig.extension.api.graphics.Image loadPNG(java.lang.String);
+  public abstract com.bitwig.extension.api.graphics.Image loadSVG(java.lang.String, double);
+}

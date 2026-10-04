@@ -1,0 +1,261 @@
+{
+  "threshold": 1e-09,
+  "minimumFrames": 32,
+  "sampleRate": 48000,
+  "phases": [
+    {
+      "nodes": 36,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 50.2843095442828,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "svg-354",
+      "repeat": 1,
+      "scAverage": 43.757067674781844,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "canvas-32",
+      "repeat": 1,
+      "scAverage": 52.48730924269732,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "canvas-64",
+      "repeat": 1,
+      "scAverage": 52.38545712352504,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "canvas-354",
+      "repeat": 1,
+      "scAverage": 51.99153485214501,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "canvas-354",
+      "repeat": 2,
+      "scAverage": 52.635936513978834,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "canvas-64",
+      "repeat": 2,
+      "scAverage": 52.371469026453354,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "canvas-32",
+      "repeat": 2,
+      "scAverage": 51.61582320718204,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "svg-354",
+      "repeat": 2,
+      "scAverage": 45.18012364705404,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 36,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 49.51586624056275,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 58.221065588956755,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-354",
+      "repeat": 1,
+      "scAverage": 54.479132567637066,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-32",
+      "repeat": 1,
+      "scAverage": 61.06802004645853,
+      "silenceRunsFrames": [
+        1528
+      ],
+      "silenceRunsMs": [
+        31.833333333333332
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.833333333333332,
+      "totalSilenceMs": 31.833333333333332
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-64",
+      "repeat": 1,
+      "scAverage": 62.2567642660702,
+      "silenceRunsFrames": [
+        1526,
+        1527,
+        1529
+      ],
+      "silenceRunsMs": [
+        31.791666666666668,
+        31.8125,
+        31.854166666666668
+      ],
+      "silenceRunCount": 3,
+      "maxSilenceMs": 31.854166666666668,
+      "totalSilenceMs": 95.45833333333333
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-354",
+      "repeat": 1,
+      "scAverage": 62.3503802579992,
+      "silenceRunsFrames": [
+        1526
+      ],
+      "silenceRunsMs": [
+        31.791666666666668
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.791666666666668,
+      "totalSilenceMs": 31.791666666666668
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-354",
+      "repeat": 2,
+      "scAverage": 62.63956884496352,
+      "silenceRunsFrames": [
+        1526,
+        1523
+      ],
+      "silenceRunsMs": [
+        31.791666666666668,
+        31.729166666666668
+      ],
+      "silenceRunCount": 2,
+      "maxSilenceMs": 31.791666666666668,
+      "totalSilenceMs": 63.520833333333336
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-64",
+      "repeat": 2,
+      "scAverage": 62.18886806263643,
+      "silenceRunsFrames": [
+        1525,
+        1516,
+        1523
+      ],
+      "silenceRunsMs": [
+        31.770833333333332,
+        31.583333333333332,
+        31.729166666666668
+      ],
+      "silenceRunCount": 3,
+      "maxSilenceMs": 31.770833333333332,
+      "totalSilenceMs": 95.08333333333333
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas-32",
+      "repeat": 2,
+      "scAverage": 61.87991840138155,
+      "silenceRunsFrames": [
+        1528
+      ],
+      "silenceRunsMs": [
+        31.833333333333332
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.833333333333332,
+      "totalSilenceMs": 31.833333333333332
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-354",
+      "repeat": 2,
+      "scAverage": 54.79346293281107,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 58.256308877256494,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    }
+  ]
+}

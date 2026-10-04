@@ -22,6 +22,11 @@ const AWB_ICONS = {
     <rect x="2.5" y="4" width="19" height="16" rx="2"></rect>
     <path d="M4.5 12h2l2-5 3.5 10 3-7 2 2h2.5"></path>
   </svg>`,
+  rack: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="2.5" y="3" width="19" height="18" rx="2"></rect>
+    <path d="M7 12v6m5-6v6m5-6v6M5.5 15h3m2-1h3m2 3h3"></path>
+    <circle cx="7" cy="7.5" r="1.2"></circle><circle cx="12" cy="7.5" r="1.2"></circle><circle cx="17" cy="7.5" r="1.2"></circle>
+  </svg>`,
   tool: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <rect x="3" y="3" width="7.5" height="7.5" rx="1.4"></rect>
     <rect x="13.5" y="3" width="7.5" height="7.5" rx="1.4"></rect>

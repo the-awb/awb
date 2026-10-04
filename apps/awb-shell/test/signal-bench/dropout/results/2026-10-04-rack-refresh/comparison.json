@@ -1,0 +1,424 @@
+{
+  "rows": [
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "electronCPU": 0.8656699612192781,
+      "windowServerCPU": 1.3095448537449637,
+      "scAverage": 57.52570050707936,
+      "achievedHz": 0.0,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 8.882166,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        0,
+        0
+      ],
+      "paintDurationMsPerSecond": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-15",
+      "electronCPU": 49.43919676443222,
+      "windowServerCPU": 11.847452621677363,
+      "scAverage": 54.62874083799474,
+      "achievedHz": 14.996680874094427,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 8.022553,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        676,
+        676
+      ],
+      "paintDurationMsPerSecond": 25.941829465019538
+    },
+    {
+      "nodes": 44,
+      "condition": "svg-30",
+      "electronCPU": 86.17130782992379,
+      "windowServerCPU": 14.760504117123833,
+      "scAverage": 54.15697687934427,
+      "achievedHz": 29.989803469189233,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 8.186162,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        1351,
+        1351
+      ],
+      "paintDurationMsPerSecond": 56.630359243728165
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas2d-15",
+      "electronCPU": 31.02905684778988,
+      "windowServerCPU": 11.196050599375727,
+      "scAverage": 55.48450716804055,
+      "achievedHz": 14.999506692483287,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 7.903465,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        676,
+        676
+      ],
+      "paintDurationMsPerSecond": 38.672150513983745
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas2d-30",
+      "electronCPU": 43.47346419293484,
+      "windowServerCPU": 12.157985260466326,
+      "scAverage": 55.40110708124497,
+      "achievedHz": 29.99459909430901,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 8.584447,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        1351,
+        1351
+      ],
+      "paintDurationMsPerSecond": 76.91397971247136
+    },
+    {
+      "nodes": 56,
+      "condition": "idle",
+      "electronCPU": 0.8534770001367525,
+      "windowServerCPU": 7.715039262228842,
+      "scAverage": 68.5761724618765,
+      "achievedHz": 0.0,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 8.91494,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        0,
+        0
+      ],
+      "paintDurationMsPerSecond": 0.0
+    },
+    {
+      "nodes": 56,
+      "condition": "svg-15",
+      "electronCPU": 49.95726667435675,
+      "windowServerCPU": 16.135865277769312,
+      "scAverage": 67.41063007377309,
+      "achievedHz": 14.995084955942044,
+      "returnFaultsByPass": [
+        4,
+        0
+      ],
+      "bothPassesClean": false,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 10.818951,
+      "nativeOverruns": [
+        1,
+        0
+      ],
+      "nativeLate": [
+        2,
+        0
+      ],
+      "drawsByPass": [
+        676,
+        676
+      ],
+      "paintDurationMsPerSecond": 24.879037292888444
+    },
+    {
+      "nodes": 56,
+      "condition": "svg-30",
+      "electronCPU": 86.22795801618474,
+      "windowServerCPU": 18.20709502771297,
+      "scAverage": 67.7032395203189,
+      "achievedHz": 29.97959525171942,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 10.414199,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        1350,
+        1351
+      ],
+      "paintDurationMsPerSecond": 53.54937367022043
+    },
+    {
+      "nodes": 56,
+      "condition": "canvas2d-15",
+      "electronCPU": 30.076659984820047,
+      "windowServerCPU": 16.211390236523197,
+      "scAverage": 67.9011090859859,
+      "achievedHz": 14.994818465335781,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 9.932725,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        676,
+        676
+      ],
+      "paintDurationMsPerSecond": 35.675779632844446
+    },
+    {
+      "nodes": 56,
+      "condition": "canvas2d-30",
+      "electronCPU": 43.183043123304955,
+      "windowServerCPU": 16.449586624959522,
+      "scAverage": 68.35943172387118,
+      "achievedHz": 29.993970421458943,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 9.981037,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        1351,
+        1351
+      ],
+      "paintDurationMsPerSecond": 70.90610819801478
+    },
+    {
+      "nodes": 60,
+      "condition": "idle",
+      "electronCPU": 0.8099108667442556,
+      "windowServerCPU": 8.64273173762505,
+      "scAverage": 71.82336071398132,
+      "achievedHz": 0.0,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 9.478585,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        0,
+        0
+      ],
+      "paintDurationMsPerSecond": 0.0
+    },
+    {
+      "nodes": 60,
+      "condition": "svg-15",
+      "electronCPU": 49.43365924268791,
+      "windowServerCPU": 16.52167358076727,
+      "scAverage": 71.5596046399954,
+      "achievedHz": 14.995672982547749,
+      "returnFaultsByPass": [
+        5,
+        10
+      ],
+      "bothPassesClean": false,
+      "maxSilenceMs": 53.208333333333336,
+      "maxDspMs": 11.098534,
+      "nativeOverruns": [
+        2,
+        3
+      ],
+      "nativeLate": [
+        3,
+        8
+      ],
+      "drawsByPass": [
+        676,
+        676
+      ],
+      "paintDurationMsPerSecond": 24.858964318326734
+    },
+    {
+      "nodes": 60,
+      "condition": "svg-30",
+      "electronCPU": 86.39412680126024,
+      "windowServerCPU": 18.814800620654417,
+      "scAverage": 72.2111964727984,
+      "achievedHz": 29.989670234172074,
+      "returnFaultsByPass": [
+        9,
+        0
+      ],
+      "bothPassesClean": false,
+      "maxSilenceMs": 31.854166666666668,
+      "maxDspMs": 11.600451,
+      "nativeOverruns": [
+        3,
+        0
+      ],
+      "nativeLate": [
+        4,
+        0
+      ],
+      "drawsByPass": [
+        1351,
+        1351
+      ],
+      "paintDurationMsPerSecond": 52.1734528040028
+    },
+    {
+      "nodes": 60,
+      "condition": "canvas2d-15",
+      "electronCPU": 30.41887693421148,
+      "windowServerCPU": 16.663448777825433,
+      "scAverage": 71.56974969379917,
+      "achievedHz": 14.994751841019394,
+      "returnFaultsByPass": [
+        0,
+        0
+      ],
+      "bothPassesClean": true,
+      "maxSilenceMs": 0.0,
+      "maxDspMs": 10.204839,
+      "nativeOverruns": [
+        0,
+        0
+      ],
+      "nativeLate": [
+        0,
+        0
+      ],
+      "drawsByPass": [
+        676,
+        676
+      ],
+      "paintDurationMsPerSecond": 35.68031038402961
+    },
+    {
+      "nodes": 60,
+      "condition": "canvas2d-30",
+      "electronCPU": 43.087360196395714,
+      "windowServerCPU": 17.43575394848147,
+      "scAverage": 74.52327242969761,
+      "achievedHz": 29.993948442392657,
+      "returnFaultsByPass": [
+        107,
+        4
+      ],
+      "bothPassesClean": false,
+      "maxSilenceMs": 42.541666666666664,
+      "maxDspMs": 11.548167,
+      "nativeOverruns": [
+        38,
+        1
+      ],
+      "nativeLate": [
+        61,
+        1
+      ],
+      "drawsByPass": [
+        1351,
+        1351
+      ],
+      "paintDurationMsPerSecond": 71.25137593785149
+    }
+  ]
+}

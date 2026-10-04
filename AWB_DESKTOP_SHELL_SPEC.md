@@ -1513,6 +1513,17 @@ is retained here too. The shared dirty checkouts and live sets are
 preserved. Historical MOTU figures retain their original provenance; raw recordings
 remain local rather than entering Git. Runtime audio gates need a quiet window.
 
+## Bitwig set documentation investigation (4 October 2026)
+
+The [Stage 1 review](apps/awb-shell/docs/bitwig-set-inspection-stage1/stage1-review.md)
+compares Beat Twin and Bitwig Control Deck against the installed 4.3.10 host (API 17).
+Willy confirmed the open template instance and authorized a custom one-shot mapper.
+The [implementation and capture instructions](apps/awb-shell/docs/bitwig-set-inspection-stage2/README.md)
+are prepared: offline traversal/renderer checks pass; the expanded live capture awaits
+controller activation. Generic routing destinations and modulation assignments still
+need human annotation. This does not change shell ownership or gate the active mixer,
+SC bridge, follower, and audio/GUI load-testing work.
+
 ### Rack Instruments preparation — 4 October 2026
 
 The unexplained audio overrun wall remains step 0. Xcode System/Audio System Trace
@@ -1558,3 +1569,26 @@ loads, the eight-instrument/eight-destination rig, AWFollower input and the firs
 SC FX migration. Bitwig set documentation is handled by the separate investigator.
 Vault and Telegram tools are unavailable in this session; no external update is
 claimed for this branch move.
+
+### Shared working-tree checkpoint — 4 October 2026
+
+The shell Rack workspace, Toolkit Home registration, local mix editor, benchmark
+harnesses and compact knob/renderer/refresh evidence are now checkpointed on
+`integration/bw-sc`. This is the existing HTML/SVG and Three.js comparison rack;
+Canvas2D and the 15/30 Hz rate gate remain benchmark fixtures. The separately
+validated native SC Rack is still in `/Users/willy/awb-rack-comparison` at `d95fa01`;
+this checkpoint does not promote it into the shell workspace.
+
+The Bitwig documentation, candidate-source evidence and prepared one-shot mapper
+are checkpointed here too. The expanded live mapper capture still awaits controller
+activation; the repository fixture is explicitly mock evidence. The existing live
+controller and original template are unchanged by this commit.
+
+Checkpoint validation: Rack production build, 24/24 Rack model/mix/runtime tests,
+65/65 shell unit tests, all 12 additional benchmark syntax checks, Bitwig mapper
+mock traversal, 3/3 capture-renderer tests and installed-API initialization diagnostic.
+Bitwig tests ran in a disposable copy so their regenerated evidence did not replace
+the investigator's original captures. No hardware audio/load test was run. Step 0
+remains the Instruments investigation in an agreed quiet window. Raw PCM and bulk
+callback recordings stay local; obsolete unreferenced Lissajous builds are excluded.
+Vault and Telegram are unavailable in this session; no external update is claimed.

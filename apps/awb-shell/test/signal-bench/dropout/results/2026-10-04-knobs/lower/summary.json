@@ -1,0 +1,1621 @@
+{
+  "phases": 66,
+  "samplesSeconds": 671.116473242,
+  "audioCallbacks": 63905,
+  "focusSwitches": 0,
+  "cases": {
+    "0/idle": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 1.2691616713296445,
+        "min": 0.8788370638954404,
+        "max": 1.6594862787638487
+      },
+      "scAverage": {
+        "mean": 0.4276618979871273,
+        "min": 0.4236349828541279,
+        "max": 0.43168881312012675
+      },
+      "scPeak": {
+        "mean": 0.737221896648407,
+        "min": 0.700921893119812,
+        "max": 0.773521900177002
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.088004,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/svg-32": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 38.8656903649746,
+        "min": 37.98370018577815,
+        "max": 39.74768054417104
+      },
+      "scAverage": {
+        "mean": 0.39782422967255116,
+        "min": 0.397118753939867,
+        "max": 0.3985297054052353
+      },
+      "scPeak": {
+        "mean": 0.8633531332015991,
+        "min": 0.8473687767982483,
+        "max": 0.87933748960495
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.100095,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/svg-64": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 45.21430726186385,
+        "min": 43.57121613020894,
+        "max": 46.857398393518764
+      },
+      "scAverage": {
+        "mean": 0.38742540851235385,
+        "min": 0.38716222196817396,
+        "max": 0.3876885950565338
+      },
+      "scPeak": {
+        "mean": 0.8419874906539917,
+        "min": 0.7407468557357788,
+        "max": 0.9432281255722046
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.112524,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/svg-128": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 55.94250210319708,
+        "min": 51.65924808647246,
+        "max": 60.2257561199217
+      },
+      "scAverage": {
+        "mean": 0.3706836812198162,
+        "min": 0.3689776733517647,
+        "max": 0.37238968908786774
+      },
+      "scPeak": {
+        "mean": 0.7921406328678131,
+        "min": 0.7163437604904175,
+        "max": 0.8679375052452087
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.111471,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/svg-256": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 77.47702207986222,
+        "min": 68.1813485958779,
+        "max": 86.77269556384653
+      },
+      "scAverage": {
+        "mean": 0.3525932479649782,
+        "min": 0.3429093360900879,
+        "max": 0.3622771598398685
+      },
+      "scPeak": {
+        "mean": 0.8678953051567078,
+        "min": 0.7794749736785889,
+        "max": 0.9563156366348267
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.115014,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/svg-354": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 97.44355734888521,
+        "min": 84.73134081291087,
+        "max": 110.15577388485954
+      },
+      "scAverage": {
+        "mean": 0.3397754568606615,
+        "min": 0.33782472610473635,
+        "max": 0.3417261876165867
+      },
+      "scPeak": {
+        "mean": 0.9080062508583069,
+        "min": 0.7972968816757202,
+        "max": 1.0187156200408936
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.114224,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/canvas-32": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 27.927499131219825,
+        "min": 26.946808683833638,
+        "max": 28.908189578606013
+      },
+      "scAverage": {
+        "mean": 0.477463249862194,
+        "min": 0.4647450841963291,
+        "max": 0.490181415528059
+      },
+      "scPeak": {
+        "mean": 2.428654670715332,
+        "min": 2.3866593837738037,
+        "max": 2.4706499576568604
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.302322,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/canvas-64": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 24.25778290461963,
+        "min": 23.7154165403824,
+        "max": 24.80014926885686
+      },
+      "scAverage": {
+        "mean": 0.5038337722420693,
+        "min": 0.4845895655453205,
+        "max": 0.523077978938818
+      },
+      "scPeak": {
+        "mean": 2.3947170972824097,
+        "min": 2.385009288787842,
+        "max": 2.4044249057769775
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.295166,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/canvas-128": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 23.580411412496936,
+        "min": 23.43454949181217,
+        "max": 23.7262733331817
+      },
+      "scAverage": {
+        "mean": 0.4897065553814173,
+        "min": 0.4790032185614109,
+        "max": 0.5004098922014236
+      },
+      "scPeak": {
+        "mean": 2.3585578203201294,
+        "min": 2.3531343936920166,
+        "max": 2.363981246948242
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.300353,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/canvas-256": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 24.699363628978286,
+        "min": 24.121460419754495,
+        "max": 25.277266838202078
+      },
+      "scAverage": {
+        "mean": 0.4968129526823759,
+        "min": 0.4871177919209003,
+        "max": 0.5065081134438515
+      },
+      "scPeak": {
+        "mean": 2.470523476600647,
+        "min": 2.2856812477111816,
+        "max": 2.6553657054901123
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.321586,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "0/canvas-354": {
+      "passes": 2,
+      "nodes": [
+        0
+      ],
+      "electronCPU": {
+        "mean": 24.416910169897555,
+        "min": 24.216678234798056,
+        "max": 24.61714210499705
+      },
+      "scAverage": {
+        "mean": 0.49073290340602393,
+        "min": 0.4797737680375576,
+        "max": 0.5016920387744903
+      },
+      "scPeak": {
+        "mean": 2.2682437896728516,
+        "min": 2.249737501144409,
+        "max": 2.286750078201294
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 0.290127,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "44/idle": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 1.5796401754081015,
+        "min": 1.0864087879222804,
+        "max": 2.0728715628939227
+      },
+      "scAverage": {
+        "mean": 58.35173777530068,
+        "min": 58.12983161524723,
+        "max": 58.573643935354134
+      },
+      "scPeak": {
+        "mean": 65.83865356445312,
+        "min": 65.49583435058594,
+        "max": 66.18147277832031
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 7.067421,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "44/svg-32": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 36.19734817901351,
+        "min": 36.04838211621171,
+        "max": 36.34631424181531
+      },
+      "scAverage": {
+        "mean": 55.24535505395187,
+        "min": 55.05992949636359,
+        "max": 55.43078061154014
+      },
+      "scPeak": {
+        "mean": 70.13794326782227,
+        "min": 69.87767028808594,
+        "max": 70.3982162475586
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 7.516738,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "44/svg-64": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 43.85052445731861,
+        "min": 43.78421122522913,
+        "max": 43.9168376894081
+      },
+      "scAverage": {
+        "mean": 54.32475315897088,
+        "min": 53.54792113053171,
+        "max": 55.10158518741005
+      },
+      "scPeak": {
+        "mean": 69.21541595458984,
+        "min": 67.73467254638672,
+        "max": 70.69615936279297
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 7.548242,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "44/svg-128": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 58.03274628608489,
+        "min": 57.69112562454834,
+        "max": 58.374366947621425
+      },
+      "scAverage": {
+        "mean": 54.38632443076686,
+        "min": 54.297992505525286,
+        "max": 54.47465635600843
+      },
+      "scPeak": {
+        "mean": 71.88904571533203,
+        "min": 70.23323059082031,
+        "max": 73.54486083984375
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 7.852492,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "44/svg-256": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 87.84765707229192,
+        "min": 86.82867281606173,
+        "max": 88.86664132852212
+      },
+      "scAverage": {
+        "mean": 54.54496740040026,
+        "min": 54.16405547292609,
+        "max": 54.92587932787443
+      },
+      "scPeak": {
+        "mean": 75.04057312011719,
+        "min": 74.90428924560547,
+        "max": 75.1768569946289
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 8.022502,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "44/svg-354": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 113.87326935541549,
+        "min": 113.54337557472645,
+        "max": 114.20316313610451
+      },
+      "scAverage": {
+        "mean": 54.378033888967416,
+        "min": 54.068286393818106,
+        "max": 54.687781384116725
+      },
+      "scPeak": {
+        "mean": 73.96477890014648,
+        "min": 71.81167602539062,
+        "max": 76.11788177490234
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 8.129434,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "44/canvas-32": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 22.30162452449164,
+        "min": 21.816435723639916,
+        "max": 22.786813325343363
+      },
+      "scAverage": {
+        "mean": 61.26164330934223,
+        "min": 61.20935068632427,
+        "max": 61.313935932360195
+      },
+      "scPeak": {
+        "mean": 98.8096923828125,
+        "min": 97.15070343017578,
+        "max": 100.46868133544922
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 10.733192,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 1,
+        "overBudgetCallbacksIncludingProbe": 1
+      },
+      "switches": 0
+    },
+    "44/canvas-64": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 18.22496599540835,
+        "min": 17.96656174604621,
+        "max": 18.48337024477049
+      },
+      "scAverage": {
+        "mean": 62.12318530835603,
+        "min": 62.06869366294459,
+        "max": 62.177676953767474
+      },
+      "scPeak": {
+        "mean": 103.7380256652832,
+        "min": 99.97044372558594,
+        "max": 107.50560760498047
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 11.477394,
+      "audio": {
+        "frameGaps": 1,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 1,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 3,
+        "overBudgetCallbacksIncludingProbe": 2
+      },
+      "switches": 0
+    },
+    "44/canvas-128": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 18.1557564786528,
+        "min": 18.03612759357481,
+        "max": 18.27538536373079
+      },
+      "scAverage": {
+        "mean": 61.52772582204718,
+        "min": 61.288674003199525,
+        "max": 61.76677764089484
+      },
+      "scPeak": {
+        "mean": 91.60966873168945,
+        "min": 89.93791198730469,
+        "max": 93.28142547607422
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 9.962896,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "44/canvas-256": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 17.630053684833356,
+        "min": 17.497984737326053,
+        "max": 17.76212263234066
+      },
+      "scAverage": {
+        "mean": 60.71864685259367,
+        "min": 60.177269785027754,
+        "max": 61.26002392015959
+      },
+      "scPeak": {
+        "mean": 98.52524185180664,
+        "min": 92.04328155517578,
+        "max": 105.0072021484375
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 11.216139,
+      "audio": {
+        "frameGaps": 1,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 1,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 2,
+        "overBudgetCallbacksIncludingProbe": 2
+      },
+      "switches": 0
+    },
+    "44/canvas-354": {
+      "passes": 2,
+      "nodes": [
+        44
+      ],
+      "electronCPU": {
+        "mean": 18.548935272521433,
+        "min": 18.05730723208054,
+        "max": 19.040563312962327
+      },
+      "scAverage": {
+        "mean": 61.140471508628444,
+        "min": 61.00449461685984,
+        "max": 61.27644840039705
+      },
+      "scPeak": {
+        "mean": 94.82501602172852,
+        "min": 93.24132537841797,
+        "max": 96.40870666503906
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 10.29493,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "52/idle": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 1.0853749045791523,
+        "min": 0.9867574953522104,
+        "max": 1.1839923138060942
+      },
+      "scAverage": {
+        "mean": 65.71408291866905,
+        "min": 65.6584863160786,
+        "max": 65.7696795212595
+      },
+      "scPeak": {
+        "mean": 76.1530647277832,
+        "min": 76.13436889648438,
+        "max": 76.17176055908203
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 8.131262,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "52/svg-32": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 35.84413807606808,
+        "min": 35.378026526071,
+        "max": 36.310249626065165
+      },
+      "scAverage": {
+        "mean": 63.34576887833445,
+        "min": 63.24794478165476,
+        "max": 63.443592975014134
+      },
+      "scPeak": {
+        "mean": 77.84859848022461,
+        "min": 75.43505859375,
+        "max": 80.26213836669922
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 8.568414,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "52/svg-64": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 43.69865094217706,
+        "min": 43.183456461367726,
+        "max": 44.213845422986395
+      },
+      "scAverage": {
+        "mean": 62.79021348451313,
+        "min": 62.313878310354134,
+        "max": 63.26654865867213
+      },
+      "scPeak": {
+        "mean": 80.6449089050293,
+        "min": 80.44294738769531,
+        "max": 80.84687042236328
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 8.671926,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "52/svg-128": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 57.75301883623604,
+        "min": 57.6238683581998,
+        "max": 57.882169314272275
+      },
+      "scAverage": {
+        "mean": 62.90504872171502,
+        "min": 62.79190264250103,
+        "max": 63.01819480092902
+      },
+      "scPeak": {
+        "mean": 80.3286247253418,
+        "min": 79.7719497680664,
+        "max": 80.88529968261719
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 8.634435,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "52/svg-256": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 90.05736270795428,
+        "min": 88.21000171109577,
+        "max": 91.9047237048128
+      },
+      "scAverage": {
+        "mean": 63.90550021121376,
+        "min": 63.37024769030119,
+        "max": 64.44075273212634
+      },
+      "scPeak": {
+        "mean": 88.48973083496094,
+        "min": 87.97876739501953,
+        "max": 89.00069427490234
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 9.501719,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "52/svg-354": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 114.17217119867638,
+        "min": 114.07165026874397,
+        "max": 114.27269212860878
+      },
+      "scAverage": {
+        "mean": 64.00087261199951,
+        "min": 63.947650608263515,
+        "max": 64.05409461573551
+      },
+      "scPeak": {
+        "mean": 85.67826461791992,
+        "min": 84.52748107910156,
+        "max": 86.82904815673828
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 9.271982,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "52/canvas-32": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 20.684082660269787,
+        "min": 19.74130514225305,
+        "max": 21.626860178286528
+      },
+      "scAverage": {
+        "mean": 69.76458368803326,
+        "min": 69.75713970786647,
+        "max": 69.77202766820004
+      },
+      "scPeak": {
+        "mean": 104.86327743530273,
+        "min": 102.48013305664062,
+        "max": 107.24642181396484
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 11.447521,
+      "audio": {
+        "frameGaps": 5,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 5,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 11,
+        "overBudgetCallbacksIncludingProbe": 9
+      },
+      "switches": 0
+    },
+    "52/canvas-64": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 18.644955815299618,
+        "min": 17.86523030201902,
+        "max": 19.424681328580213
+      },
+      "scAverage": {
+        "mean": 70.55264934740569,
+        "min": 70.44084388331363,
+        "max": 70.66445481149773
+      },
+      "scPeak": {
+        "mean": 117.05259704589844,
+        "min": 109.98257446289062,
+        "max": 124.12261962890625
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 13.249638,
+      "audio": {
+        "frameGaps": 10,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 10,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 34,
+        "overBudgetCallbacksIncludingProbe": 27
+      },
+      "switches": 0
+    },
+    "52/canvas-128": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 18.315721972074783,
+        "min": 18.26402385854427,
+        "max": 18.367420085605296
+      },
+      "scAverage": {
+        "mean": 70.50316740337172,
+        "min": 70.28685981348941,
+        "max": 70.71947499325401
+      },
+      "scPeak": {
+        "mean": 108.92481231689453,
+        "min": 104.7470474243164,
+        "max": 113.10257720947266
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 12.071881,
+      "audio": {
+        "frameGaps": 10,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 10,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 28,
+        "overBudgetCallbacksIncludingProbe": 22
+      },
+      "switches": 0
+    },
+    "52/canvas-256": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 18.658361036480294,
+        "min": 18.456524081319845,
+        "max": 18.860197991640746
+      },
+      "scAverage": {
+        "mean": 70.87383280302349,
+        "min": 70.80352622584293,
+        "max": 70.94413938020405
+      },
+      "scPeak": {
+        "mean": 117.09915924072266,
+        "min": 114.70325469970703,
+        "max": 119.49506378173828
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 12.756229,
+      "audio": {
+        "frameGaps": 14,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 14,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 27,
+        "overBudgetCallbacksIncludingProbe": 25
+      },
+      "switches": 0
+    },
+    "52/canvas-354": {
+      "passes": 2,
+      "nodes": [
+        52
+      ],
+      "electronCPU": {
+        "mean": 17.056995150354908,
+        "min": 16.380318639186548,
+        "max": 17.733671661523267
+      },
+      "scAverage": {
+        "mean": 70.1363972613686,
+        "min": 69.73076810334858,
+        "max": 70.54202641938862
+      },
+      "scPeak": {
+        "mean": 112.02998352050781,
+        "min": 107.0759048461914,
+        "max": 116.98406219482422
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 12.487738,
+      "audio": {
+        "frameGaps": 4,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 4,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 17,
+        "overBudgetCallbacksIncludingProbe": 12
+      },
+      "switches": 0
+    }
+  },
+  "session": {
+    "port": 50841,
+    "sampleRate": 48000,
+    "blockSize": 64,
+    "scPID": 13646,
+    "toneNode": 1001
+  },
+  "protectedCount": 16,
+  "probe": {
+    "meanUs": {
+      "mean": 3.3183222527029543,
+      "min": 2.0500405405405404,
+      "max": 4.318597077244259
+    },
+    "maxUs": 102.973
+  },
+  "totals": {
+    "frameGaps": 45,
+    "residualCallbacks": 0,
+    "silentCallbacks": 0,
+    "overloadEvents": 45,
+    "rateChanges": 0,
+    "bufferChanges": 0,
+    "lateCallbacksIncludingProbe": 123,
+    "overBudgetCallbacksIncludingProbe": 100
+  },
+  "paired": {
+    "0/svg-32": {
+      "scAverageIncrement": {
+        "mean": -0.029837668314576155,
+        "min": -0.033159107714891445,
+        "max": -0.026516228914260864
+      },
+      "passes": [
+        -0.033159107714891445,
+        -0.026516228914260864
+      ]
+    },
+    "0/svg-64": {
+      "scAverageIncrement": {
+        "mean": -0.04023648947477343,
+        "min": -0.04452659115195279,
+        "max": -0.03594638779759407
+      },
+      "passes": [
+        -0.04452659115195279,
+        -0.03594638779759407
+      ]
+    },
+    "0/svg-128": {
+      "scAverageIncrement": {
+        "mean": -0.0569782167673111,
+        "min": -0.06271113976836207,
+        "max": -0.051245293766260136
+      },
+      "passes": [
+        -0.06271113976836207,
+        -0.051245293766260136
+      ]
+    },
+    "0/svg-256": {
+      "scAverageIncrement": {
+        "mean": -0.0750686500221491,
+        "min": -0.08072564676403998,
+        "max": -0.06941165328025822
+      },
+      "passes": [
+        -0.06941165328025822,
+        -0.08072564676403998
+      ]
+    },
+    "0/svg-354": {
+      "scAverageIncrement": {
+        "mean": -0.08788644112646579,
+        "min": -0.08996262550354006,
+        "max": -0.08581025674939152
+      },
+      "passes": [
+        -0.08996262550354006,
+        -0.08581025674939152
+      ]
+    },
+    "0/canvas-32": {
+      "scAverageIncrement": {
+        "mean": 0.049801351875066735,
+        "min": 0.03305627107620235,
+        "max": 0.06654643267393112
+      },
+      "passes": [
+        0.03305627107620235,
+        0.06654643267393112
+      ]
+    },
+    "0/canvas-64": {
+      "scAverageIncrement": {
+        "mean": 0.07617187425494196,
+        "min": 0.052900752425193764,
+        "max": 0.09944299608469015
+      },
+      "passes": [
+        0.052900752425193764,
+        0.09944299608469015
+      ]
+    },
+    "0/canvas-128": {
+      "scAverageIncrement": {
+        "mean": 0.062044657394289965,
+        "min": 0.04731440544128418,
+        "max": 0.07677490934729575
+      },
+      "passes": [
+        0.04731440544128418,
+        0.07677490934729575
+      ]
+    },
+    "0/canvas-256": {
+      "scAverageIncrement": {
+        "mean": 0.0691510546952486,
+        "min": 0.06348280906677245,
+        "max": 0.07481930032372475
+      },
+      "passes": [
+        0.07481930032372475,
+        0.06348280906677245
+      ]
+    },
+    "0/canvas-354": {
+      "scAverageIncrement": {
+        "mean": 0.06307100541889665,
+        "min": 0.04808495491743087,
+        "max": 0.07805705592036244
+      },
+      "passes": [
+        0.04808495491743087,
+        0.07805705592036244
+      ]
+    },
+    "44/svg-32": {
+      "scAverageIncrement": {
+        "mean": -3.1063827213488153,
+        "min": -3.142863323813991,
+        "max": -3.0699021188836397
+      },
+      "passes": [
+        -3.142863323813991,
+        -3.0699021188836397
+      ]
+    },
+    "44/svg-64": {
+      "scAverageIncrement": {
+        "mean": -4.026984616329798,
+        "min": -4.5819104847155145,
+        "max": -3.4720587479440823
+      },
+      "passes": [
+        -3.4720587479440823,
+        -4.5819104847155145
+      ]
+    },
+    "44/svg-128": {
+      "scAverageIncrement": {
+        "mean": -3.9654133445338218,
+        "min": -4.098987579345703,
+        "max": -3.8318391097219404
+      },
+      "passes": [
+        -4.098987579345703,
+        -3.8318391097219404
+      ]
+    },
+    "44/svg-256": {
+      "scAverageIncrement": {
+        "mean": -3.8067703749004203,
+        "min": -4.409588462428047,
+        "max": -3.2039522873727933
+      },
+      "passes": [
+        -4.409588462428047,
+        -3.2039522873727933
+      ]
+    },
+    "44/svg-354": {
+      "scAverageIncrement": {
+        "mean": -3.973703886333265,
+        "min": -4.061545221429121,
+        "max": -3.885862551237409
+      },
+      "passes": [
+        -3.885862551237409,
+        -4.061545221429121
+      ]
+    },
+    "44/canvas-32": {
+      "scAverageIncrement": {
+        "mean": 2.9099055340415525,
+        "min": 2.6357067509701366,
+        "max": 3.1841043171129684
+      },
+      "passes": [
+        2.6357067509701366,
+        3.1841043171129684
+      ]
+    },
+    "44/canvas-64": {
+      "scAverageIncrement": {
+        "mean": 3.771447533055351,
+        "min": 3.4950497275904553,
+        "max": 4.047845338520247
+      },
+      "passes": [
+        3.4950497275904553,
+        4.047845338520247
+      ]
+    },
+    "44/canvas-128": {
+      "scAverageIncrement": {
+        "mean": 3.1759880467465003,
+        "min": 3.1588423879522978,
+        "max": 3.1931337055407027
+      },
+      "passes": [
+        3.1931337055407027,
+        3.1588423879522978
+      ]
+    },
+    "44/canvas-256": {
+      "scAverageIncrement": {
+        "mean": 2.3669090772929913,
+        "min": 1.6036258496736195,
+        "max": 3.130192304912363
+      },
+      "passes": [
+        1.6036258496736195,
+        3.130192304912363
+      ]
+    },
+    "44/canvas-354": {
+      "scAverageIncrement": {
+        "mean": 2.7887337333277635,
+        "min": 2.7028044650429166,
+        "max": 2.8746630016126105
+      },
+      "passes": [
+        2.7028044650429166,
+        2.8746630016126105
+      ]
+    },
+    "52/svg-32": {
+      "scAverageIncrement": {
+        "mean": -2.368314040334603,
+        "min": -2.4105415344238352,
+        "max": -2.326086546245371
+      },
+      "passes": [
+        -2.4105415344238352,
+        -2.326086546245371
+      ]
+    },
+    "52/svg-64": {
+      "scAverageIncrement": {
+        "mean": -2.923869434155918,
+        "min": -3.4558012109053706,
+        "max": -2.3919376574064657
+      },
+      "passes": [
+        -2.3919376574064657,
+        -3.4558012109053706
+      ]
+    },
+    "52/svg-128": {
+      "scAverageIncrement": {
+        "mean": -2.809034196954027,
+        "min": -2.8665836735775656,
+        "max": -2.751484720330488
+      },
+      "passes": [
+        -2.8665836735775656,
+        -2.751484720330488
+      ]
+    },
+    "52/svg-256": {
+      "scAverageIncrement": {
+        "mean": -1.8085827074552832,
+        "min": -2.288238625777403,
+        "max": -1.3289267891331633
+      },
+      "passes": [
+        -2.288238625777403,
+        -1.3289267891331633
+      ]
+    },
+    "52/svg-354": {
+      "scAverageIncrement": {
+        "mean": -1.7132103066695379,
+        "min": -1.715584905523997,
+        "max": -1.7108357078150789
+      },
+      "passes": [
+        -1.7108357078150789,
+        -1.715584905523997
+      ]
+    },
+    "52/canvas-32": {
+      "scAverageIncrement": {
+        "mean": 4.050500769364206,
+        "min": 3.9874601866069668,
+        "max": 4.113541352121445
+      },
+      "passes": [
+        4.113541352121445,
+        3.9874601866069668
+      ]
+    },
+    "52/canvas-64": {
+      "scAverageIncrement": {
+        "mean": 4.838566428736634,
+        "min": 4.671164362054128,
+        "max": 5.00596849541914
+      },
+      "passes": [
+        5.00596849541914,
+        4.671164362054128
+      ]
+    },
+    "52/canvas-128": {
+      "scAverageIncrement": {
+        "mean": 4.789084484702663,
+        "min": 4.62837349741082,
+        "max": 4.949795471994506
+      },
+      "passes": [
+        4.62837349741082,
+        4.949795471994506
+      ]
+    },
+    "52/canvas-256": {
+      "scAverageIncrement": {
+        "mean": 5.15974988435444,
+        "min": 5.145039909764336,
+        "max": 5.1744598589445445
+      },
+      "passes": [
+        5.145039909764336,
+        5.1744598589445445
+      ]
+    },
+    "52/canvas-354": {
+      "scAverageIncrement": {
+        "mean": 4.422314342699551,
+        "min": 3.9610885820890758,
+        "max": 4.883540103310025
+      },
+      "passes": [
+        4.883540103310025,
+        3.9610885820890758
+      ]
+    }
+  },
+  "baseline": "idle"
+}

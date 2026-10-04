@@ -1,0 +1,119 @@
+{
+  "threshold": 1e-09,
+  "minimumFrames": 32,
+  "sampleRate": 48000,
+  "phases": [
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 56.438000402506994,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "webgl-354",
+      "repeat": 1,
+      "scAverage": 60.7324003411468,
+      "silenceRunsFrames": [
+        1516
+      ],
+      "silenceRunsMs": [
+        31.583333333333332
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.583333333333332,
+      "totalSilenceMs": 31.583333333333332
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas2d-354",
+      "repeat": 1,
+      "scAverage": 54.908686598377116,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "worker-354",
+      "repeat": 1,
+      "scAverage": 60.85029898250804,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "worker-354",
+      "repeat": 2,
+      "scAverage": 60.531913375854494,
+      "silenceRunsFrames": [
+        1528,
+        1527,
+        1517
+      ],
+      "silenceRunsMs": [
+        31.833333333333332,
+        31.8125,
+        31.604166666666668
+      ],
+      "silenceRunCount": 3,
+      "maxSilenceMs": 31.833333333333332,
+      "totalSilenceMs": 95.25
+    },
+    {
+      "nodes": 44,
+      "condition": "canvas2d-354",
+      "repeat": 2,
+      "scAverage": 55.36011536727995,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 44,
+      "condition": "webgl-354",
+      "repeat": 2,
+      "scAverage": 61.57567149506518,
+      "silenceRunsFrames": [
+        1529,
+        1523,
+        1521,
+        1513,
+        1526
+      ],
+      "silenceRunsMs": [
+        31.854166666666668,
+        31.729166666666668,
+        31.6875,
+        31.520833333333332,
+        31.791666666666668
+      ],
+      "silenceRunCount": 5,
+      "maxSilenceMs": 31.854166666666668,
+      "totalSilenceMs": 158.58333333333334
+    },
+    {
+      "nodes": 44,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 57.106769674628445,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    }
+  ]
+}

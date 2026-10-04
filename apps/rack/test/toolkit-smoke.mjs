@@ -1,0 +1,41 @@
+import {createRequire} from 'node:module';
+import {mkdtemp,mkdir,readFile,writeFile,rm} from 'node:fs/promises';
+import path from 'node:path';import os from 'node:os';import assert from 'node:assert/strict';
+const {app,BrowserWindow}=createRequire(import.meta.url)('electron');
+const dir=await mkdtemp(path.join(os.tmpdir(),'rack-toolkit-'));
+app.setPath('userData',dir);process.argv.push('--osc-port=0');
+await import('../../awb-shell/shell/main.mjs');
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const until=async(fn,label)=>{for(let i=0;i<120;i++){const result=await fn();if(result)return result;await wait(50);}throw Error('Timed out: '+label);};
+app.whenReady().then(async()=>{
+ const timeout=setTimeout(()=>{app.removeAllListeners('window-all-closed');app.exit(1);},30000);let status=0;
+ try{
+  const home=await until(()=>BrowserWindow.getAllWindows().find(w=>w.webContents.getURL().endsWith('/home/index.html')),'Toolkit Home');
+  const homeJS=s=>home.webContents.executeJavaScript(s,true);
+  await until(()=>homeJS('Boolean(window.awbHost && document.querySelector("[data-tool=rack]"))').catch(()=>false),'Rack card');
+  const snapshot=await homeJS('awbHost.request("shell.snapshot")');
+  assert.ok(snapshot.tools.find(t=>t.id==='rack'));assert.equal(snapshot.failures.length,0,JSON.stringify(snapshot.failures));
+  assert.equal(await homeJS('document.querySelector("[data-tool=rack]").textContent'),'Open Rack');
+  await homeJS('document.querySelector("[data-tool=rack]").click()');
+  const rack=await until(()=>BrowserWindow.getAllWindows().find(w=>w.webContents.getURL().startsWith('http://127.0.0.1:')),'Rack window');
+  const js=s=>rack.webContents.executeJavaScript(s,true);
+  await until(()=>js('Boolean(window.rackDebug && document.querySelector(".connected") && document.querySelector("canvas"))').catch(()=>false),'Rack ready');
+  assert.equal(await js('rackDebug.store.controls.length'),354);assert.equal(await js('rackDebug.store.snapshots.length'),11);assert.equal(await js('!!document.querySelector(".mix-panel")'),true);assert.equal(await js('document.querySelector(".status-mode").textContent'),'OUTPUT OFF');
+  await homeJS('document.querySelector("[data-tool=rack]").click()');await wait(100);assert.equal(BrowserWindow.getAllWindows().filter(w=>w.webContents.getURL().startsWith('http://127.0.0.1:')).length,1,'Open Rack focuses the existing view');
+  const button=async text=>{await js(`[...document.querySelectorAll('button')].find(b=>b.textContent===${JSON.stringify(text)}).click()`);await wait(100);};
+  await button('HTML / SVG');await button('Snapshot all');await until(()=>js('rackDebug.store.snapshots.length===12'),'captured mix');await button('Edit mix');await until(()=>js('!!rackDebug.editSession'),'edit mode');
+  rack.webContents.debugger.attach('1.3');const cdp=(method,params)=>rack.webContents.debugger.sendCommand(method,params);
+  const point=await js(`(()=>{const input=document.querySelector('[data-mix-control="in0/fx/splut"] [data-mix-field=amount]');input.scrollIntoView();const r=input.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+  await cdp('Input.dispatchMouseEvent',{type:'mousePressed',...point,button:'left',clickCount:1});await cdp('Input.dispatchMouseEvent',{type:'mouseReleased',...point,button:'left',clickCount:1});await js('document.activeElement.select()');await cdp('Input.insertText',{text:'29'});await wait(100);
+  assert.equal(await js('rackDebug.store.get("in0/fx/splut")'),29,'edit changes live commanded amount');await button('Done');
+  const active=(await homeJS('awbHost.request("shell.snapshot")')).views.find(v=>v.toolID==='rack');assert.equal(active.lifecycle,'ready');
+  const firstURL=rack.webContents.getURL();await homeJS(`awbHost.request('shell.close',{viewID:${JSON.stringify(active.viewID)}})`);await until(()=>rack.isDestroyed(),'runtime window closes');
+  const library=JSON.parse(await readFile(path.join(dir,'tool-runtimes/rack-library.json'),'utf8'));assert.equal(library.values['in0/fx/splut'],29);assert.equal(library.snapshots.at(-1).targets['in0/fx/splut'].value,29);
+  await until(async()=>(await homeJS('awbHost.request("shell.snapshot")')).views.every(v=>v.toolID!=='rack'),'view released');
+  await homeJS('document.querySelector("[data-tool=rack]").click()');const reopened=await until(()=>BrowserWindow.getAllWindows().find(w=>w.webContents.getURL().startsWith('http://127.0.0.1:')),'reopened Rack');
+  await until(()=>reopened.webContents.executeJavaScript('Boolean(window.rackDebug&&document.querySelector(".connected"))').catch(()=>false),'reopened runtime');
+  const state=await reopened.webContents.executeJavaScript('({value:rackDebug.store.get("in0/fx/splut"),mixes:rackDebug.store.snapshots.length,mode:document.querySelector(".status-mode").textContent})');assert.deepEqual(state,{value:29,mixes:12,mode:'OUTPUT OFF'});assert.notEqual(reopened.webContents.getURL(),firstURL,'reopen starts a fresh local runtime');
+  const result={passed:true,homeTools:snapshot.tools.length,registryFailures:0,launchFromHome:true,controls:354,singleView:true,liveEditing:true,savedAndReopened:true,reopenedState:state};await mkdir('apps/rack/test/artifacts',{recursive:true});await writeFile('apps/rack/test/artifacts/toolkit-verification.json',JSON.stringify(result,null,2));await writeFile('apps/rack/test/artifacts/toolkit-home.png',(await home.webContents.capturePage()).toPNG());console.log('RACK_TOOLKIT_PASS '+JSON.stringify(result));
+ }catch(e){console.error(e);status=1;}finally{clearTimeout(timeout);if(status){app.removeAllListeners('window-all-closed');app.exit(status);}else app.quit();}
+}).catch(e=>{console.error(e);app.exit(1);});
+app.on('will-quit',()=>{void rm(dir,{recursive:true,force:true});});

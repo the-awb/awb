@@ -1,0 +1,271 @@
+{
+  "phases": 10,
+  "samplesSeconds": 452.51233445700007,
+  "audioCallbacks": 42489,
+  "focusSwitches": 0,
+  "cases": {
+    "56/idle": {
+      "passes": 2,
+      "nodes": [
+        56
+      ],
+      "electronCPU": {
+        "mean": 0.8098102336480961,
+        "min": 0.7986809358913042,
+        "max": 0.820939531404888
+      },
+      "scAverage": {
+        "mean": 68.47148329830733,
+        "min": 68.29336049006535,
+        "max": 68.64960610654933
+      },
+      "scPeak": {
+        "mean": 83.51471328735352,
+        "min": 82.58133697509766,
+        "max": 84.44808959960938
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 8.998529,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "56/svg-15": {
+      "passes": 2,
+      "nodes": [
+        56
+      ],
+      "electronCPU": {
+        "mean": 47.84801840194486,
+        "min": 45.410396384949955,
+        "max": 50.28564041893977
+      },
+      "scAverage": {
+        "mean": 67.61379567314597,
+        "min": 66.7904182434082,
+        "max": 68.43717310288373
+      },
+      "scPeak": {
+        "mean": 91.04654312133789,
+        "min": 86.25169372558594,
+        "max": 95.84139251708984
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 10.237073,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "56/svg-30": {
+      "passes": 2,
+      "nodes": [
+        56
+      ],
+      "electronCPU": {
+        "mean": 85.02488018058024,
+        "min": 83.24001193582139,
+        "max": 86.8097484253391
+      },
+      "scAverage": {
+        "mean": 68.52086137173444,
+        "min": 67.76266441119493,
+        "max": 69.27905833227395
+      },
+      "scPeak": {
+        "mean": 97.94049072265625,
+        "min": 97.1644058227539,
+        "max": 98.7165756225586
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 10.532084,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 1,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "56/canvas2d-15": {
+      "passes": 2,
+      "nodes": [
+        56
+      ],
+      "electronCPU": {
+        "mean": 29.163309515130482,
+        "min": 28.009420165300824,
+        "max": 30.31719886496014
+      },
+      "scAverage": {
+        "mean": 68.28842173958358,
+        "min": 68.24151310640222,
+        "max": 68.33533037276496
+      },
+      "scPeak": {
+        "mean": 92.70423889160156,
+        "min": 89.51168060302734,
+        "max": 95.89679718017578
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 10.241282,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    },
+    "56/canvas2d-30": {
+      "passes": 2,
+      "nodes": [
+        56
+      ],
+      "electronCPU": {
+        "mean": 41.153225725543905,
+        "min": 41.103881191798635,
+        "max": 41.202570259289175
+      },
+      "scAverage": {
+        "mean": 69.0481646507574,
+        "min": 68.8699681001551,
+        "max": 69.22636120135968
+      },
+      "scPeak": {
+        "mean": 92.43483352661133,
+        "min": 91.10054016113281,
+        "max": 93.76912689208984
+      },
+      "opacityHz": {
+        "mean": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "maxDspMs": 10.004215,
+      "audio": {
+        "frameGaps": 0,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "lateCallbacksIncludingProbe": 0,
+        "overBudgetCallbacksIncludingProbe": 0
+      },
+      "switches": 0
+    }
+  },
+  "session": {
+    "port": 57200,
+    "sampleRate": 48000,
+    "blockSize": 64,
+    "scPID": 21065,
+    "toneNode": 1001
+  },
+  "protectedCount": 16,
+  "probe": {
+    "meanUs": {
+      "mean": 2.898332392149329,
+      "min": 2.1165629874734107,
+      "max": 3.4640207351555135
+    },
+    "maxUs": 58.086
+  },
+  "totals": {
+    "frameGaps": 0,
+    "residualCallbacks": 0,
+    "silentCallbacks": 0,
+    "overloadEvents": 0,
+    "rateChanges": 0,
+    "bufferChanges": 0,
+    "lateCallbacksIncludingProbe": 1,
+    "overBudgetCallbacksIncludingProbe": 0
+  },
+  "paired": {
+    "56/svg-15": {
+      "scAverageIncrement": {
+        "mean": -0.8576876251613754,
+        "min": -1.502942246657156,
+        "max": -0.2124330036655948
+      },
+      "passes": [
+        -0.2124330036655948,
+        -1.502942246657156
+      ]
+    },
+    "56/svg-30": {
+      "scAverageIncrement": {
+        "mean": 0.04937807342709988,
+        "min": -0.5306960788704203,
+        "max": 0.62945222572462
+      },
+      "passes": [
+        0.62945222572462,
+        -0.5306960788704203
+      ]
+    },
+    "56/canvas2d-15": {
+      "scAverageIncrement": {
+        "mean": -0.1830615587237503,
+        "min": -0.4080930001471046,
+        "max": 0.041969882699604
+      },
+      "passes": [
+        -0.4080930001471046,
+        0.041969882699604
+      ]
+    },
+    "56/canvas2d-30": {
+      "scAverageIncrement": {
+        "mean": 0.576681352450052,
+        "min": 0.5766076100897521,
+        "max": 0.5767550948103519
+      },
+      "passes": [
+        0.5767550948103519,
+        0.5766076100897521
+      ]
+    }
+  },
+  "baseline": "idle"
+}

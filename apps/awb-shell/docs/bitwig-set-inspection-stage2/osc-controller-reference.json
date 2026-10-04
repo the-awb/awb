@@ -1,0 +1,323 @@
+{
+  "installedExtension": "/Users/willy/Documents/Bitwig Studio/Extensions/OSCControllerforAWB.bwextension",
+  "installedSha256": "33dc3f363f52ef5e888817470edbe4b93e39beb1a7289eb45a1999b1efc19adc",
+  "sourceRoot": "/Volumes/ARMED WITH SOUND/Bitwig Scripting/OSC Controller for AWB",
+  "sourceGitHead": "d9d4c2bccaced6c8fa5e4bb8b5d667f2186d840b",
+  "sourceDirty": true,
+  "sourceHashes": {
+    "src/main/java/com/armedwithbow/OSCControllerforAWBExtensionDefinition.java": "676167488018555f1e04f1377aee4b256ccec588fb01d605f25782957f7fc16f",
+    "src/main/java/com/armedwithbow/JSONhandler.java": "b97726480116602c0a26e92e7eec0bfd0e1dc9a180d133a3d9bccca67b828ab4",
+    "src/main/java/com/armedwithbow/EnvFollowerOscObserver.java": "35186085796ba49b9b1069c0a5be9c85ffa6124394d09a0e2a2807024042d5a3",
+    "src/main/java/com/armedwithbow/ToolDeviceHandler.java": "e6614ea4f9e9320e52aeb2b8a84e44457df3549adf5de4c4fa169f4d1a68540b",
+    "src/main/java/com/armedwithbow/DeviceControlMapper.java": "12521d5c43b7b0f06e71439cebc69849b668895c17890a9a18223d6f1e456939",
+    "src/main/java/com/armedwithbow/FXLayerHandler.java": "ebf4e22f24727a0cc93ba4b18ffc7581955feab6101fca93f38beeb8117adb18",
+    "src/main/java/com/armedwithbow/ExtensionBase.java": "d0f0acbc238412b6e55b2ff4c2c89e45263ee3d2f5e8ba9c5d33c6b1cff4c92d",
+    "src/main/java/com/armedwithbow/SpecificDeviceBankHandler.java": "23079a65a9ce9483c88cc2788d2e28951f364f70d709ee16abbd3b0cb21f626f",
+    "src/main/java/com/armedwithbow/DynamicTrackModule.java": "dfe93b792640e3e633b74a204cbeef47b83d186d421e73986cff6a72759fbaf7",
+    "src/main/java/com/armedwithbow/InterfaceGroup.java": "92394b1e5586d0e584c79aeb50eaa56d51427bb832fee33f420b939491488bfc",
+    "src/main/java/com/armedwithbow/TrackSceneMapper.java": "80b49a408cf11421566ebfa77e335c3da5860e46240d4554520fe7d9238af87f",
+    "src/main/java/com/armedwithbow/OSCControllerforAWBExtension.java": "47cbbcbc31dacc584fcd847c003b6be35dd6bb25f9c8e92c8eb6accff783a654",
+    "src/main/java/com/armedwithbow/InstrumentLayerHandler.java": "a65d73363bca9d9db152362357e48d4fe0b49ae07b487393fb642cf75fc2cb02"
+  },
+  "classChecks": [
+    {
+      "path": "com/armedwithbow/InstrumentLayerHandler.class",
+      "sha256": "48c425d81603eae9987df433c7311f06414fd1b926d9423ab7e076f68e61e477",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/DeviceControlMapper.class",
+      "sha256": "e10ce168fe9352957dec44ac0bdc75793bc422764a84da4da8bb39e743ee7c2f",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/ExtensionBase.class",
+      "sha256": "3bdaa3d6f9f6f5fe256f6cd526b7a885a001aeb42c33f7ff61c0e1af0dcfb604",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/OSCControllerforAWBExtension.class",
+      "sha256": "aad55f33bbe3d38dce0eee76c4c0f9e64c893797a6c0f90b6439919b4de267f0",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/EnvFollowerOscObserver.class",
+      "sha256": "09c6c4e208dda84b0bfc8f7eb66502ba914b722395ef7223b45bf254e60414ec",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/OSCControllerforAWBExtensionDefinition.class",
+      "sha256": "ef96d15e423c713562ade199384b6d5e18ce5d3750b4c18f205ca33d39fc5824",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/SpecificDeviceBankHandler.class",
+      "sha256": "bd3aec732f50b4f876ed581be42cdc293a05a05da825a40339932f84b626112a",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/TrackSceneMapper.class",
+      "sha256": "0adfa4592202f5a502991b231aaa313759d67d449ed3adedec350c6ccb976f89",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/DynamicTrackModule.class",
+      "sha256": "a11ac235313a8f1889f5a2184c5801c3c4aff4469af3c71642dabb6a5ea6c4c8",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/InterfaceGroup.class",
+      "sha256": "677683a9153af2ecb96f169eb8aae6a6b9218818858dc433c739ad459d6ca71d",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/ToolDeviceHandler.class",
+      "sha256": "8e46fb7ad902e82ba4fa2d5862154fe686d09cc7f12df76f08141811ecb477dc",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/FXLayerHandler.class",
+      "sha256": "5f887ee36043409d7845ae8dc5513e6b64d4a7afceed62db58f41f9dc6e603d5",
+      "matchesLocalBuild": true
+    },
+    {
+      "path": "com/armedwithbow/JSONhandler.class",
+      "sha256": "fa881fe18b40eed13df67db1b9c4498507f9478124292d5291e254dba9b3b034",
+      "matchesLocalBuild": true
+    }
+  ],
+  "evidenceBoundary": "All local build class bytes match installed extension; selected mappings checked against javap. Dirty Java sources are reference evidence, not a claim of a clean released revision.",
+  "modules": [
+    {
+      "key": "vcfx",
+      "group": "audio_in",
+      "flatIndex": 2,
+      "screenshotTrackLabel": "Cello In",
+      "midiChannelZeroBased": 1,
+      "effectBankBusIndices": [],
+      "mapBusSends": false,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": false
+    },
+    {
+      "key": "vcin",
+      "group": "audio_in",
+      "flatIndex": 3,
+      "screenshotTrackLabel": "Line 1 (VC) Group",
+      "midiChannelZeroBased": 0,
+      "effectBankBusIndices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "pro2",
+      "group": "audio_in",
+      "flatIndex": 5,
+      "screenshotTrackLabel": "Pro 2",
+      "midiChannelZeroBased": 7,
+      "effectBankBusIndices": [
+        16
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "b1",
+      "group": "audio_in",
+      "flatIndex": 9,
+      "screenshotTrackLabel": "DelB.1",
+      "midiChannelZeroBased": 2,
+      "effectBankBusIndices": [
+        4
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "a1",
+      "group": "audio_in",
+      "flatIndex": 10,
+      "screenshotTrackLabel": "DelA.1",
+      "midiChannelZeroBased": 3,
+      "effectBankBusIndices": [
+        5
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "a2",
+      "group": "audio_in",
+      "flatIndex": 11,
+      "screenshotTrackLabel": "DelA.2",
+      "midiChannelZeroBased": 4,
+      "effectBankBusIndices": [
+        6
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "b2",
+      "group": "audio_in",
+      "flatIndex": 12,
+      "screenshotTrackLabel": "DelB.2",
+      "midiChannelZeroBased": 5,
+      "effectBankBusIndices": [
+        7
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "bus",
+      "group": "audio_in",
+      "flatIndex": 8,
+      "screenshotTrackLabel": "Cello Delay BUS",
+      "midiChannelZeroBased": 6,
+      "effectBankBusIndices": [],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": true,
+      "mapEnvelopeFollower": false
+    },
+    {
+      "key": "splut",
+      "group": "fx_1",
+      "flatIndex": 21,
+      "screenshotTrackLabel": "Splutter 5.0 (remote)",
+      "midiChannelZeroBased": 8,
+      "effectBankBusIndices": [
+        9
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "spark",
+      "group": "fx_1",
+      "flatIndex": 22,
+      "screenshotTrackLabel": "Spiral Sparkle",
+      "midiChannelZeroBased": 10,
+      "effectBankBusIndices": [
+        11
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "deci",
+      "group": "fx_1",
+      "flatIndex": 23,
+      "screenshotTrackLabel": "Shaped Decimate",
+      "midiChannelZeroBased": 11,
+      "effectBankBusIndices": [
+        12
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "fuzz",
+      "group": "fx_1",
+      "flatIndex": 24,
+      "screenshotTrackLabel": "FUZZ",
+      "midiChannelZeroBased": 12,
+      "effectBankBusIndices": [
+        13
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "verb",
+      "group": "fx_1",
+      "flatIndex": 25,
+      "screenshotTrackLabel": "Reverb",
+      "midiChannelZeroBased": 13,
+      "effectBankBusIndices": [
+        14
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    },
+    {
+      "key": "mast",
+      "group": "fx_1",
+      "flatIndex": 26,
+      "screenshotTrackLabel": "Mast",
+      "midiChannelZeroBased": 14,
+      "effectBankBusIndices": [
+        15,
+        10,
+        8
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true
+    }
+  ],
+  "sendContract": {
+    "fxIndices": [
+      0,
+      5
+    ],
+    "busIndices": [
+      6,
+      23
+    ],
+    "totalConfigured": 24,
+    "destinationsStatus": "Source configured categories; actual destination identity still needs host/UI verification"
+  },
+  "remoteControls": {
+    "countPerPage": 8,
+    "paramCcBases": [
+      10,
+      20,
+      30
+    ],
+    "modCcBases": [
+      40,
+      50,
+      60
+    ],
+    "routingCcBase": 0,
+    "currentPageOnly": true
+  },
+  "envelopes": {
+    "addressPattern": "/envelopes/{moduleKey}/{localBusIndex}",
+    "target": "127.0.0.1:9000",
+    "value": "remote control 0 modulated value, rounded to 1/512",
+    "busGainControl": "remote control 2 on matched Tool device",
+    "status": "Source/installed bytecode configuration; no messages intercepted or values measured"
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "threshold": 1e-09,
+  "minimumFrames": 32,
+  "sampleRate": 48000,
+  "phases": [
+    {
+      "nodes": 60,
+      "condition": "idle",
+      "repeat": 1,
+      "scAverage": 73.93493309246718,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 60,
+      "condition": "svg-15",
+      "repeat": 1,
+      "scAverage": 71.74424119837144,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 60,
+      "condition": "svg-30",
+      "repeat": 1,
+      "scAverage": 74.28316166287377,
+      "silenceRunsFrames": [
+        2040,
+        1529,
+        1529,
+        63,
+        1024,
+        1508,
+        57,
+        1024,
+        1525,
+        2023,
+        1528,
+        2042,
+        1530,
+        1557,
+        1026,
+        3065,
+        1529,
+        1527,
+        1527,
+        1528
+      ],
+      "silenceRunsMs": [
+        42.5,
+        31.854166666666668,
+        31.854166666666668,
+        1.3125,
+        21.333333333333332,
+        31.416666666666668,
+        1.1875,
+        21.333333333333332,
+        31.770833333333332,
+        42.145833333333336,
+        31.833333333333332,
+        42.541666666666664,
+        31.875,
+        32.4375,
+        21.375,
+        63.854166666666664,
+        31.854166666666668,
+        31.8125,
+        31.8125,
+        31.833333333333332
+      ],
+      "silenceRunCount": 20,
+      "maxSilenceMs": 63.854166666666664,
+      "totalSilenceMs": 607.9375
+    },
+    {
+      "nodes": 60,
+      "condition": "canvas2d-15",
+      "repeat": 1,
+      "scAverage": 71.34118813907399,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 60,
+      "condition": "canvas2d-30",
+      "repeat": 1,
+      "scAverage": 72.15542598051184,
+      "silenceRunsFrames": [
+        1529
+      ],
+      "silenceRunsMs": [
+        31.854166666666668
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.854166666666668,
+      "totalSilenceMs": 31.854166666666668
+    },
+    {
+      "nodes": 60,
+      "condition": "canvas2d-30",
+      "repeat": 2,
+      "scAverage": 72.58046180679953,
+      "silenceRunsFrames": [
+        1526
+      ],
+      "silenceRunsMs": [
+        31.791666666666668
+      ],
+      "silenceRunCount": 1,
+      "maxSilenceMs": 31.791666666666668,
+      "totalSilenceMs": 31.791666666666668
+    },
+    {
+      "nodes": 60,
+      "condition": "canvas2d-15",
+      "repeat": 2,
+      "scAverage": 73.32413605281285,
+      "silenceRunsFrames": [
+        2550,
+        3592,
+        2040,
+        1526,
+        69,
+        512,
+        1527,
+        1513,
+        1526,
+        1527,
+        1529,
+        1528
+      ],
+      "silenceRunsMs": [
+        53.125,
+        74.83333333333333,
+        42.5,
+        31.791666666666668,
+        1.4375,
+        10.666666666666666,
+        31.8125,
+        31.520833333333332,
+        31.791666666666668,
+        31.8125,
+        31.854166666666668,
+        31.833333333333332
+      ],
+      "silenceRunCount": 12,
+      "maxSilenceMs": 74.83333333333333,
+      "totalSilenceMs": 404.9791666666667
+    },
+    {
+      "nodes": 60,
+      "condition": "svg-30",
+      "repeat": 2,
+      "scAverage": 71.548798013721,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 60,
+      "condition": "svg-15",
+      "repeat": 2,
+      "scAverage": 70.77175582795454,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    },
+    {
+      "nodes": 60,
+      "condition": "idle",
+      "repeat": 2,
+      "scAverage": 71.2744141527887,
+      "silenceRunsFrames": [],
+      "silenceRunsMs": [],
+      "silenceRunCount": 0,
+      "maxSilenceMs": 0.0,
+      "totalSilenceMs": 0.0
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "createdByThisInvestigation": [
+    {
+      "path": "/Users/willy/Documents/Bitwig Studio/Controller Scripts/AWB Investigation BeatTwin/BeatTwin.control.js",
+      "sha256": "05b2e844a309bccab0e4a1e32c522c0b75ed274f37876748660f946628bb7f27"
+    },
+    {
+      "path": "/Users/willy/Documents/Bitwig Studio/Controller Scripts/AWB Investigation BeatTwin/LICENSE",
+      "sha256": "9ead13b198c3b8f8d55c0cf6459e3c4c059b162d7838121a3b7c4a70603d6669"
+    },
+    {
+      "path": "/Users/willy/Documents/Bitwig Studio/Controller Scripts/AWB Investigation ControlDeck/ControlDeck.control.js",
+      "sha256": "edac3c2fccd297026caf397055c97bea6c5335b7bb257f73a37338975e11ea50"
+    },
+    {
+      "path": "/Users/willy/Documents/Bitwig Studio/Controller Scripts/AWB Investigation ControlDeck/LICENSE",
+      "sha256": "7c46bb150f1a64f63900e29f06861f831e9c102d316dae423f616064aa7db8ea"
+    },
+    {
+      "path": "/Users/willy/Documents/Bitwig Studio/Controller Scripts/AWB Inspection Probe/InspectionProbe.control.js",
+      "sha256": "29331264272cf483cd68cfde2be8dd4d2959a9567f1f269f83362ef2d8f7c96c"
+    }
+  ]
+}

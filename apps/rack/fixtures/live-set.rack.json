@@ -1,0 +1,2318 @@
+{
+  "schema": "awb.rack-library/1",
+  "config": {
+    "schema": "awb.rack/1",
+    "name": "Live set · send rack",
+    "instruments": [
+      {
+        "id": "in0",
+        "label": "IN0"
+      },
+      {
+        "id": "in1",
+        "label": "IN1"
+      },
+      {
+        "id": "b1",
+        "label": "B1"
+      },
+      {
+        "id": "a1",
+        "label": "A1"
+      },
+      {
+        "id": "a2",
+        "label": "A2"
+      },
+      {
+        "id": "b2",
+        "label": "B2"
+      },
+      {
+        "id": "delbus",
+        "label": "DELBUS"
+      },
+      {
+        "id": "p2",
+        "label": "P2"
+      },
+      {
+        "id": "splut",
+        "label": "SPLUT"
+      },
+      {
+        "id": "spark",
+        "label": "SPARK"
+      },
+      {
+        "id": "deci",
+        "label": "DECI"
+      },
+      {
+        "id": "fuzz",
+        "label": "FUZZ"
+      },
+      {
+        "id": "verb",
+        "label": "VERB"
+      },
+      {
+        "id": "mast",
+        "label": "MAST"
+      }
+    ],
+    "regions": [
+      {
+        "id": "fx",
+        "label": "FX sends",
+        "kind": "fx",
+        "scope": "instrument",
+        "widget": "knob",
+        "destinations": [
+          "splut",
+          "spark",
+          "deci",
+          "fuzz",
+          "verb",
+          "mast"
+        ],
+        "min": 0,
+        "max": 127,
+        "step": 1,
+        "curve": "linear",
+        "address": "/sends/{instrument}/fx/{index}"
+      },
+      {
+        "id": "bus",
+        "label": "Bus sends",
+        "kind": "bus",
+        "scope": "instrument",
+        "widget": "knob",
+        "destinations": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "b1",
+          "a1",
+          "a2",
+          "b2",
+          "stut",
+          "splut",
+          "um",
+          "spark",
+          "deci",
+          "fuzz",
+          "verb",
+          "mast",
+          "p2",
+          "envir"
+        ],
+        "min": 0,
+        "max": 127,
+        "step": 1,
+        "curve": "linear",
+        "address": "/sends/{instrument}/bus/{index}"
+      },
+      {
+        "id": "levels",
+        "label": "Bus levels",
+        "kind": "levels",
+        "scope": "global",
+        "widget": "fader",
+        "destinations": [
+          "c1",
+          "c2",
+          "c3",
+          "c4",
+          "b1",
+          "a1",
+          "a2",
+          "b2",
+          "stut",
+          "splut",
+          "um",
+          "spark",
+          "deci",
+          "fuzz",
+          "verb",
+          "mast",
+          "p2",
+          "envir"
+        ],
+        "min": 0,
+        "max": 127,
+        "step": 1,
+        "curve": "linear",
+        "address": "/levels/busses/{destination}"
+      }
+    ],
+    "output": {
+      "mode": "legacy",
+      "host": "127.0.0.1",
+      "port": 8080
+    },
+    "notes": [
+      "Matches the loaded surface: 6 FX sends and 18 bus destinations.",
+      "ENVIR is not mapped in transition.js; legacy output blocks it.",
+      "transition.js uses DECI channel 13 / FUZZ 12; the extension uses DECI 12 / FUZZ 13. This preset preserves the surface addresses."
+    ]
+  },
+  "values": {},
+  "snapshots": [
+    {
+      "id": "imported-0",
+      "sceneID": "0",
+      "label": "INIT",
+      "duration": 1000,
+      "targets": {
+        "in0/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/verb": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/fx/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/fx/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/fx/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/fx/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/fx/verb": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "p2/fx/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/fx/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/fx/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/fx/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/fx/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/fx/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/fx/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/a1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/verb": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/mast": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/p2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/envir": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        }
+      }
+    },
+    {
+      "id": "imported-1",
+      "sceneID": "1",
+      "label": "open",
+      "duration": 1000,
+      "targets": {
+        "in0/bus/c1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/c2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/c3": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/c4": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/stut": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/b1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/a1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/a2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/um": {
+          "value": 88,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/spark": {
+          "value": 88,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/deci": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/fuzz": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/verb": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/deci": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/fuzz": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/verb": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/a2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/b2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/fuzz": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/verb": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/fx/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/c3": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/deci": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/fuzz": {
+          "value": 88,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/verb": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/deci": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/verb": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/fx/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/b1": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/a1": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/a2": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/um": {
+          "value": 50,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/spark": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/deci": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/verb": {
+          "value": 76,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/fuzz": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/verb": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/fx/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/spark": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c3": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c4": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/stut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/splut": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/a1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/a2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/verb": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        }
+      }
+    },
+    {
+      "id": "imported-2",
+      "sceneID": "2",
+      "label": "attune",
+      "duration": 24000,
+      "targets": {
+        "in0/bus/b1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/b1": {
+          "value": 88,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/b1": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c3": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b1": {
+          "value": 95,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/verb": {
+          "value": 88,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        }
+      }
+    },
+    {
+      "id": "imported-3",
+      "sceneID": "3",
+      "label": "arise",
+      "duration": 24000,
+      "targets": {
+        "in0/bus/c1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "delbus/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/fx/mast": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "splut/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "spark/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "deci/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "fuzz/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "verb/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "mast/bus/c1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/c4": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/um": {
+          "value": 76,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/spark": {
+          "value": 50,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/deci": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/fuzz": {
+          "value": 88,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/verb": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/mast": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        }
+      }
+    },
+    {
+      "id": "imported-4",
+      "sceneID": "4",
+      "label": "defrag",
+      "duration": 40000,
+      "targets": {
+        "global/levels/b1": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/a1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/a2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b2": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/um": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/spark": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/deci": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        }
+      }
+    },
+    {
+      "id": "imported-5",
+      "sceneID": "5",
+      "label": "stillness",
+      "duration": 12000,
+      "targets": {
+        "in1/fx/verb": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in1/fx/mast": {
+          "value": 63,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/stut": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b1": {
+          "value": 127,
+          "fraction": 0,
+          "alignment": "L"
+        },
+        "global/levels/a1": {
+          "value": 127,
+          "fraction": 0,
+          "alignment": "L"
+        },
+        "global/levels/a2": {
+          "value": 127,
+          "fraction": 0,
+          "alignment": "L"
+        },
+        "global/levels/b2": {
+          "value": 127,
+          "fraction": 0,
+          "alignment": "L"
+        },
+        "global/levels/um": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/spark": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/deci": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/fuzz": {
+          "value": 0,
+          "fraction": 1,
+          "alignment": "J"
+        }
+      }
+    },
+    {
+      "id": "imported-6",
+      "sceneID": "6",
+      "label": "renew",
+      "duration": 16000,
+      "targets": {}
+    },
+    {
+      "id": "imported-7",
+      "sceneID": "7",
+      "label": "settle",
+      "duration": 24000,
+      "targets": {
+        "in0/bus/b1": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/a1": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/a2": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "in0/bus/b2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/a2": {
+          "value": 76,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b1/bus/b2": {
+          "value": 88,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a1/bus/b1": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "a2/bus/b1": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "b2/bus/b1": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/b1": {
+          "value": 88,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/a1": {
+          "value": 101,
+          "fraction": 1,
+          "alignment": "J"
+        },
+        "global/levels/a2": {
+          "value": 127,
+          "fraction": 1,
+          "alignment": "J"
+        }
+      }
+    },
+    {
+      "id": "imported-8",
+      "sceneID": "8",
+      "label": "[empty]",
+      "duration": 24000,
+      "targets": {}
+    },
+    {
+      "id": "imported-9",
+      "sceneID": "9",
+      "label": "[empty]",
+      "duration": 24000,
+      "targets": {}
+    },
+    {
+      "id": "imported-10",
+      "sceneID": "10",
+      "label": "RESET",
+      "duration": 24000,
+      "targets": {}
+    }
+  ]
+}

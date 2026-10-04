@@ -1,0 +1,2143 @@
+{
+  "artifactKind": "actual host partial witness; not complete set documentation",
+  "capture": {
+    "run": "1791134079845",
+    "host": {
+      "api": 17,
+      "hostVersion": "4.3.10",
+      "limits": {
+        "tracksPerWindow": 8,
+        "maxWindows": 2,
+        "devicesPerChain": 12,
+        "sends": 8,
+        "layers": 8,
+        "directParameters": 16
+      },
+      "sideEffects": "bank window navigation only; no UI selection or musical state writes"
+    },
+    "probeSha256": "29331264272cf483cd68cfde2be8dd4d2959a9567f1f269f83362ef2d8f7c96c",
+    "generatedAt": "2026-10-04T17:25:20.497179+00:00",
+    "settling": "Consecutive equal snapshots after bounded waits. This is not a callback-completeness proof.",
+    "selectionSideEffects": "none from this probe",
+    "playback": "probe aborts if host reports playing"
+  },
+  "sourceAssociation": {
+    "status": "observed",
+    "value": {
+      "mappingTargetConfirmed": true,
+      "templateInstanceOf": "awb 5.2 (ef script)"
+    },
+    "evidence": [
+      {
+        "kind": "human-confirmation",
+        "source": "Willy, this conversation",
+        "date": "2026-10-04",
+        "statement": "the open set is the one we want to map and it is an instance of template awb 5.2 (ef script)",
+        "mappingTargetConfirmed": true,
+        "templateName": "awb 5.2 (ef script)",
+        "instanceFilePath": null,
+        "instanceFileHash": null
+      }
+    ],
+    "instanceFileIdentity": {
+      "status": "unresolved",
+      "path": null,
+      "sha256": null,
+      "reason": "The open instance is confirmed as the target; its file path/hash have not been captured. The template file hash is separate provenance."
+    }
+  },
+  "tracks": [
+    {
+      "captureRef": "window:0/slot:0",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 0,
+      "position": 0,
+      "name": "Audio group",
+      "type": "Group",
+      "isGroup": true,
+      "parent": {
+        "name": "Audio group Master",
+        "position": 11
+      },
+      "volume": {
+        "normalized": 0.7937005259840999,
+        "display": "0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "C3",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "C4",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "B1 SC BUS",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "A1 SC BUS",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "A2 SC BUS",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "B2 SC BUS",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    },
+    {
+      "captureRef": "window:0/slot:1",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 1,
+      "position": 1,
+      "name": "INS",
+      "type": "Group",
+      "isGroup": true,
+      "parent": {
+        "name": "INS Master",
+        "position": 2
+      },
+      "volume": {
+        "normalized": 0.7937005259840999,
+        "display": "0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    },
+    {
+      "captureRef": "window:0/slot:2",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 2,
+      "position": 2,
+      "name": "Cello In",
+      "type": "Group",
+      "isGroup": true,
+      "parent": {
+        "name": "Cello In Master",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0.7937005259840999,
+        "display": "0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": true,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0.4960629940032959,
+          "display": "-18.3 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 1,
+          "display": "0.0 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 2,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": [
+          {
+            "index": 0,
+            "exists": true,
+            "name": "Time",
+            "position": 0,
+            "type": "note-effect",
+            "plugin": false,
+            "enabled": false,
+            "nested": false,
+            "hasLayers": false,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "init"
+          },
+          {
+            "index": 1,
+            "exists": true,
+            "name": "FX Layer",
+            "position": 1,
+            "type": "audio-effect",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "VC chain 5.0 (remote)"
+          }
+        ]
+      }
+    },
+    {
+      "captureRef": "window:0/slot:3",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 3,
+      "position": 3,
+      "name": "Line 1 (VC) Group",
+      "type": "Group",
+      "isGroup": true,
+      "parent": {
+        "name": "Line 1 (VC) Group Master",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0.7937005259840999,
+        "display": "0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    },
+    {
+      "captureRef": "window:0/slot:4",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 4,
+      "position": 4,
+      "name": "Cello 1",
+      "type": "Hybrid",
+      "isGroup": false,
+      "parent": {
+        "name": "Line 1 (VC) Group",
+        "position": 0
+      },
+      "volume": {
+        "normalized": 0.8137005259840999,
+        "display": "+0.6 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": true,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 1,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": [
+          {
+            "index": 0,
+            "exists": true,
+            "name": "Scheps 73 Mono",
+            "position": 0,
+            "type": "audio-effect",
+            "plugin": true,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": false,
+            "hasDrumPads": false,
+            "hasSlots": true,
+            "slotNames": [
+              "FX"
+            ],
+            "sampleName": "",
+            "presetName": "init"
+          }
+        ]
+      }
+    },
+    {
+      "captureRef": "window:0/slot:5",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 5,
+      "position": 5,
+      "name": "Pro 2",
+      "type": "Group",
+      "isGroup": true,
+      "parent": {
+        "name": "Pro 2 Master",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0.7937005259840999,
+        "display": "0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": true
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0.4960629940032959,
+          "display": "-18.3 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 1,
+          "display": "0.0 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 1,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": [
+          {
+            "index": 0,
+            "exists": true,
+            "name": "Time",
+            "position": 0,
+            "type": "note-effect",
+            "plugin": false,
+            "enabled": false,
+            "nested": false,
+            "hasLayers": false,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "init"
+          }
+        ]
+      }
+    },
+    {
+      "captureRef": "window:0/slot:6",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 6,
+      "position": 6,
+      "name": "Pro2",
+      "type": "Audio",
+      "isGroup": false,
+      "parent": {
+        "name": "Pro 2",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0.7707418735600998,
+        "display": "-0.8 dB"
+      },
+      "mute": true,
+      "inputFlags": {
+        "audio": true,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 1,
+          "display": "0.0 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    },
+    {
+      "captureRef": "window:0/slot:7",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 7,
+      "position": 7,
+      "name": "Delays",
+      "type": "Group",
+      "isGroup": true,
+      "parent": {
+        "name": "Delays Master",
+        "position": 5
+      },
+      "volume": {
+        "normalized": 0.8100000000000002,
+        "display": "+0.5 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    },
+    {
+      "captureRef": "window:8/slot:0",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 0,
+      "position": 8,
+      "name": "Cello Delay BUS",
+      "type": "Hybrid",
+      "isGroup": false,
+      "parent": {
+        "name": "Delays",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0,
+        "display": "-Inf dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": true,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 1,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": [
+          {
+            "index": 0,
+            "exists": true,
+            "name": "Scheps 73 Stereo",
+            "position": 0,
+            "type": "audio-effect",
+            "plugin": true,
+            "enabled": false,
+            "nested": false,
+            "hasLayers": false,
+            "hasDrumPads": false,
+            "hasSlots": true,
+            "slotNames": [
+              "FX"
+            ],
+            "sampleName": "",
+            "presetName": "init"
+          }
+        ]
+      }
+    },
+    {
+      "captureRef": "window:8/slot:1",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 1,
+      "position": 9,
+      "name": "DelB.1",
+      "type": "Hybrid",
+      "isGroup": false,
+      "parent": {
+        "name": "Delays",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0.7837005259840999,
+        "display": "-0.3 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": true
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 3,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": [
+          {
+            "index": 0,
+            "exists": true,
+            "name": "FX Layer",
+            "position": 0,
+            "type": "audio-effect",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "delb1 routing 5.0 (remote)"
+          },
+          {
+            "index": 1,
+            "exists": true,
+            "name": "Minimal Delay",
+            "position": 1,
+            "type": "instrument",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": true,
+            "slotNames": [
+              "FX"
+            ],
+            "sampleName": "",
+            "presetName": "minimal delay 5.0 (remote)"
+          },
+          {
+            "index": 2,
+            "exists": true,
+            "name": "FX Layer",
+            "position": 2,
+            "type": "audio-effect",
+            "plugin": false,
+            "enabled": false,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "Env Gen 5.0 (remote)"
+          }
+        ]
+      }
+    },
+    {
+      "captureRef": "window:8/slot:2",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 2,
+      "position": 10,
+      "name": "DelA.1",
+      "type": "Hybrid",
+      "isGroup": false,
+      "parent": {
+        "name": "Delays",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0.7978740157480315,
+        "display": "+0.1 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": true
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 2,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": [
+          {
+            "index": 0,
+            "exists": true,
+            "name": "FX Layer",
+            "position": 0,
+            "type": "audio-effect",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "delA.1 5.0 (remote)"
+          },
+          {
+            "index": 1,
+            "exists": true,
+            "name": "Minimal Delay",
+            "position": 1,
+            "type": "instrument",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": true,
+            "slotNames": [
+              "FX"
+            ],
+            "sampleName": "",
+            "presetName": "minimal delay 5.0 (remote)"
+          }
+        ]
+      }
+    },
+    {
+      "captureRef": "window:8/slot:3",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 3,
+      "position": 11,
+      "name": "DelA.2",
+      "type": "Hybrid",
+      "isGroup": false,
+      "parent": {
+        "name": "Delays",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0.7937005259840999,
+        "display": "0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": true
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 3,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": [
+          {
+            "index": 0,
+            "exists": true,
+            "name": "FX Layer",
+            "position": 0,
+            "type": "audio-effect",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "delA.2 5.0 (remote)"
+          },
+          {
+            "index": 1,
+            "exists": true,
+            "name": "Minimal Delay",
+            "position": 1,
+            "type": "instrument",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": true,
+            "slotNames": [
+              "FX"
+            ],
+            "sampleName": "",
+            "presetName": "minimal delay 5.0 (remote)"
+          },
+          {
+            "index": 2,
+            "exists": true,
+            "name": "Peak Limiter",
+            "position": 2,
+            "type": "audio-effect",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": false,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "init"
+          }
+        ]
+      }
+    },
+    {
+      "captureRef": "window:8/slot:4",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 4,
+      "position": 12,
+      "name": "DelB.2",
+      "type": "Instrument",
+      "isGroup": false,
+      "parent": {
+        "name": "Delays",
+        "position": 1
+      },
+      "volume": {
+        "normalized": 0.7950000000000002,
+        "display": "+0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": true
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 2,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": [
+          {
+            "index": 0,
+            "exists": true,
+            "name": "FX Layer",
+            "position": 0,
+            "type": "audio-effect",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": false,
+            "slotNames": [],
+            "sampleName": "",
+            "presetName": "delB.2 5.0 (remote)"
+          },
+          {
+            "index": 1,
+            "exists": true,
+            "name": "Minimal Delay",
+            "position": 1,
+            "type": "instrument",
+            "plugin": false,
+            "enabled": true,
+            "nested": false,
+            "hasLayers": true,
+            "hasDrumPads": false,
+            "hasSlots": true,
+            "slotNames": [
+              "FX"
+            ],
+            "sampleName": "",
+            "presetName": "minimal delay 5.0 (remote)"
+          }
+        ]
+      }
+    },
+    {
+      "captureRef": "window:8/slot:5",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 5,
+      "position": 13,
+      "name": "SC IN",
+      "type": "Group",
+      "isGroup": true,
+      "parent": {
+        "name": "SC IN Master",
+        "position": 4
+      },
+      "volume": {
+        "normalized": 0.6749999999999999,
+        "display": "-4.2 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": false,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    },
+    {
+      "captureRef": "window:8/slot:6",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 6,
+      "position": 14,
+      "name": "SC IN 1",
+      "type": "Audio",
+      "isGroup": false,
+      "parent": {
+        "name": "SC IN",
+        "position": 2
+      },
+      "volume": {
+        "normalized": 0.7937005259840999,
+        "display": "0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": true,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0.30499999999999955,
+          "display": "-30.9 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 1,
+          "display": "0.0 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    },
+    {
+      "captureRef": "window:8/slot:7",
+      "observationStatus": "observed host cache; UI comparison pending",
+      "parentIdentityStatus": "unresolved; parent position has its own context",
+      "bankIndex": 7,
+      "position": 15,
+      "name": "SC IN 2",
+      "type": "Audio",
+      "isGroup": false,
+      "parent": {
+        "name": "SC IN",
+        "position": 2
+      },
+      "volume": {
+        "normalized": 0.7937005259840999,
+        "display": "0.0 dB"
+      },
+      "mute": false,
+      "inputFlags": {
+        "audio": true,
+        "note": false
+      },
+      "routingStatus": "input/output destinations unresolved",
+      "sends": [
+        {
+          "index": 0,
+          "label": "Splutter 5.0 (remote)",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 1,
+          "label": "Spiral Sparkle",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 2,
+          "label": "Shaped Decimate",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 3,
+          "label": "FUZZ",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 4,
+          "label": "Reverb",
+          "normalized": 0.24500000000000002,
+          "display": "-36.7 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 5,
+          "label": "Mast",
+          "normalized": 0.9700000000000004,
+          "display": "-0.8 dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 6,
+          "label": "C1",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        },
+        {
+          "index": 7,
+          "label": "C2",
+          "normalized": 0,
+          "display": "-Inf dB",
+          "preFader": false,
+          "mode": "AUTO",
+          "destinationStatus": "unresolved: label is not a verified edge"
+        }
+      ],
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    }
+  ],
+  "selectedDevice": {
+    "device": {
+      "index": 0,
+      "exists": true,
+      "name": "FX Layer",
+      "position": 0,
+      "type": "audio-effect",
+      "plugin": false,
+      "enabled": true,
+      "nested": false,
+      "hasLayers": true,
+      "hasDrumPads": false,
+      "hasSlots": false,
+      "slotNames": [],
+      "sampleName": "",
+      "presetName": "delb1 routing 5.0 (remote)"
+    },
+    "layerTotal": 2,
+    "layers": [
+      {
+        "index": 0,
+        "name": "Cello In",
+        "chain": {
+          "total": 1,
+          "offset": 0,
+          "limit": 12,
+          "truncated": false,
+          "devices": [
+            {
+              "index": 0,
+              "exists": true,
+              "name": "Audio Receiver",
+              "position": 0,
+              "type": "audio-effect",
+              "plugin": false,
+              "enabled": true,
+              "nested": true,
+              "hasLayers": false,
+              "hasDrumPads": false,
+              "hasSlots": true,
+              "slotNames": [
+                "Source FX"
+              ],
+              "sampleName": "",
+              "presetName": "init"
+            }
+          ]
+        }
+      },
+      {
+        "index": 1,
+        "name": "Mic",
+        "chain": {
+          "total": 1,
+          "offset": 0,
+          "limit": 12,
+          "truncated": false,
+          "devices": [
+            {
+              "index": 0,
+              "exists": true,
+              "name": "Audio Receiver",
+              "position": 0,
+              "type": "audio-effect",
+              "plugin": false,
+              "enabled": true,
+              "nested": true,
+              "hasLayers": false,
+              "hasDrumPads": false,
+              "hasSlots": true,
+              "slotNames": [
+                "Source FX"
+              ],
+              "sampleName": "",
+              "presetName": "init"
+            }
+          ]
+        }
+      }
+    ],
+    "slot": {
+      "exists": false,
+      "name": "",
+      "chain": {
+        "total": 0,
+        "offset": 0,
+        "limit": 12,
+        "truncated": false,
+        "devices": []
+      }
+    },
+    "parameterTotal": 2,
+    "parameterLimit": 16,
+    "parameters": [
+      {
+        "id": "CONTENTS/MIX",
+        "name": "Mix",
+        "normalized": 1,
+        "numericStatus": "observed",
+        "display": "100 %"
+      },
+      {
+        "id": "CONTENTS/GAIN",
+        "name": "Gain",
+        "normalized": 0.5,
+        "numericStatus": "observed",
+        "display": "0.0 dB"
+      }
+    ]
+  },
+  "coverage": {
+    "reportedFlatBankEntries": 65,
+    "returnedTracks": 16,
+    "truncated": true,
+    "deviceLimitPerChain": 12,
+    "sendLimit": 8,
+    "layerLimit": 8,
+    "selectedParameterLimit": 16,
+    "routingDestinationIdentities": "unresolved",
+    "allNestedTraversal": "unimplemented",
+    "modulationAssignments": "unavailable through reviewed general API; specific device exceptions unresolved",
+    "fxMasterCoverage": "unresolved: full flat bank not traversed",
+    "controlledFixture": "unresolved",
+    "UIComparison": "unresolved"
+  },
+  "disabledDevices": [
+    {
+      "track": "window:0/slot:2",
+      "trackName": "Cello In",
+      "deviceIndex": 0,
+      "name": "Time"
+    },
+    {
+      "track": "window:0/slot:5",
+      "trackName": "Pro 2",
+      "deviceIndex": 0,
+      "name": "Time"
+    },
+    {
+      "track": "window:8/slot:0",
+      "trackName": "Cello Delay BUS",
+      "deviceIndex": 0,
+      "name": "Scheps 73 Stereo"
+    },
+    {
+      "track": "window:8/slot:1",
+      "trackName": "DelB.1",
+      "deviceIndex": 2,
+      "name": "FX Layer"
+    }
+  ],
+  "humanAnnotations": []
+}

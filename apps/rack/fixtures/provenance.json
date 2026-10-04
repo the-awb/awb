@@ -1,0 +1,7 @@
+{
+  "surface": "itsawd 4v w room mic.json",
+  "bridge": "osc-config/transition.js",
+  "sceneData": "osc-config/config.json",
+  "scope": "Commanded mixer targets; imported scene IDs do not define SC compositions.",
+  "unmapped": []
+}

@@ -10,3 +10,7 @@ artifacts
 apps/awb-shell/test/signal-bench/**/callback-audit.bin*
 apps/awb-shell/test/signal-bench/**/input-return.bin*
 **/__pycache__/
+
+# Earlier loopback capture names; preserve raw recordings locally.
+apps/awb-shell/test/signal-bench/**/*.audit.gz
+apps/awb-shell/test/signal-bench/**/*.input.gz
