@@ -623,3 +623,18 @@ Before implementation, freeze only these joins:
 Do not wait for one universal tool-state schema, automation design, tabs, headless sclang or final
 installer packaging. Those are later decisions and would obscure the useful first test: two real
 tools, one shell, no duplicated ownership.
+
+### Rack Instruments preparation — 4 October 2026
+
+The unexplained audio overrun wall remains step 0. Xcode System/Audio System Trace
+capability probes and an isolated phase-marker/clock-alignment harness are prepared;
+no new hardware load results are claimed. Definitive captures await an agreed quiet
+window with other builds/tests, downloads and Bitwig audio activity paused.
+
+The native rack's isolated functional preflight passed 47 SC contracts, 88 offline
+audio assertions and 26 Node tests. Continuous SC-originated value feedback is still
+a separate implementation boundary; the current bridge supports edits plus explicit
+sync. The [readiness and measurement protocol](apps/awb-shell/docs/rack-instruments-readiness.md)
+records commands, evidence boundaries and pending topology/follower questions.
+Bitwig inspection is owned by the separate agent; production renderers and the live
+SC class library have not been changed by this preparation.
