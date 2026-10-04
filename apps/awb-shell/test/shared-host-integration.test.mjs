@@ -12,7 +12,7 @@ const waitFor = async ( predicate, timeout = 3000 ) => {
   }
 };
 
-test( 'two views share SynthDef transfers and one NodeManager subscription', async () => {
+test( 'two views share SynthDef transfers and one NodeManager subscription', async ( context ) => {
   const osc = dgram.createSocket( 'udp4' ); const counts = { list: 0, describe: 0, subscribe: 0 };
   osc.on( 'message', ( packet, rinfo ) => decodeOscPacket( packet ).forEach( ( message ) => {
     const [ clientID, replyPort, ...rest ] = message.args;
@@ -41,7 +41,8 @@ test( 'two views share SynthDef transfers and one NodeManager subscription', asy
   } ) );
   await new Promise( ( resolve ) => osc.bind( 0, '127.0.0.1', resolve ) );
   const relay = await createOscWebSocketRelay( { oscPort: osc.address().port } );
-  await waitFor( () => counts.subscribe === 1 );
+  context.after( async () => { await relay.close(); osc.close(); } );
+  await waitFor( () => counts.subscribe === 1 && relay.hostSnapshot().nodeManager.status === 'ready' );
   assert.equal( relay.hostSnapshot().nodeManager.status, 'ready', 'host connects before any tool view exists' );
   const grants = [
     relay.grant( { allowedPrefixes: [ '/awb/timeline/', '/awb/synthdef/' ],
@@ -64,5 +65,5 @@ test( 'two views share SynthDef transfers and one NodeManager subscription', asy
   assert.equal( relay.hostSnapshot().synthDefs.status, 'ready' );
   assert.equal( relay.hostSnapshot().nodeManager.status, 'ready' );
   assert.equal( relay.hostSnapshot().scsynth.status, 'unavailable' );
-  sockets.forEach( ( socket ) => socket.terminate() ); grants.forEach( ( grant ) => grant.release() ); await relay.close(); osc.close();
+  sockets.forEach( ( socket ) => socket.terminate() ); grants.forEach( ( grant ) => grant.release() );
 } );

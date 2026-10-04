@@ -647,3 +647,5 @@ session terminology while making tool runtime ownership use `ToolInstance`.
 Eighteen targeted Node tests passed, including Score Studio's 50/50 transport
 assertions. Existing scope/rack work is reconciled separately in the working tree;
 this merge does not promote the WIP SC classes or claim a new hardware load result.
+
+The combined shell/scope working-tree unit suite passed 65/65. Its shared-host test now waits for the subscription reply and closes its resources on failure; the prior request-only readiness assertion was a race. Hardware and GUI load measurements still await the quiet window.
