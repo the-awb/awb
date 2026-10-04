@@ -1,0 +1,14 @@
+{
+  "tool-artifacts/scope/0.1.0/shell-runtime.mjs": "a863ea71eab4b28a422f011533d0eddb11297f5df1d888a1edbf1334d0e324d0",
+  "tool-artifacts/scope/0.1.0/tool-manifest.json": "ce362c25e5f7fa5ee55164bdfee8a5ea3450a691297c946fef6a998c7ef19361",
+  "tool-artifacts/scope/0.1.0/capture.mjs": "c57f9cb44298563773f0a6fd92d485ca8e0b023171a78b71051307ded926b678",
+  "tool-artifacts/scope/0.1.0/README.md": "a2221e5f964830dcfe3c49b50ef92903fb593029d66a69af64fe0fcdb972348a",
+  "tool-artifacts/scope/0.1.0/server.mjs": "e71ea23d187f4e880f6e9ffb37980443650c2bea6d3650d9c5c4d9d17b8dea9f",
+  "tool-artifacts/scope/0.1.0/tests/capture.test.mjs": "f7354ac19d624390d1cd52408552be3c00dc20c7f0be57bd559be7b257b8ba7e",
+  "tool-artifacts/scope/0.1.0/tests/protocol.test.mjs": "925d2eade3772e4c51a862a17d27b67471243d164fd9658741b5527d7fe26943",
+  "tool-artifacts/scope/0.1.0/tests/server.test.mjs": "27c525b288fa715675da2fba9e90334e83721995a8a58655041fb31dac93d0ed",
+  "tool-artifacts/scope/0.1.0/public/protocol.js": "88f31031f86fa54f2f7e80d4a41cc63abf9baa1bbbfd5e03ffa6406b435e2d68",
+  "tool-artifacts/scope/0.1.0/public/scope.css": "0edb413cc36c744821bf8de7fa9f5074ebf677c130d319ee06786aad55400a1d",
+  "tool-artifacts/scope/0.1.0/public/index.html": "104850672ee427a909f363702387160fe8e2dfe3959d8a42732cf416cd3ca576",
+  "tool-artifacts/scope/0.1.0/public/scope.js": "5f842ecff8787d9e557712ab68774dc8b2c77bb6f0e0ef7d89346fd42df1d7dc"
+}

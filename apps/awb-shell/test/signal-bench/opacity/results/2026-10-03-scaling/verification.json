@@ -1,0 +1,28 @@
+{
+  "phases": 102,
+  "complete": true,
+  "captureNodeGroupCleanup": true,
+  "privateSCPID": 39503,
+  "privateSCProcessAbsent": true,
+  "productionHashes": {
+    "apps/awb-shell/shell/main.mjs": true,
+    "apps/awb-shell/sc/AWBHeadlessHost.scd": true,
+    "apps/awb-shell/sc/AWBScBusAudio.scd": true,
+    "apps/awb-shell/src/signalCaptureBroker.mjs": true,
+    "apps/awb-shell/src/scSignalSource.mjs": true,
+    "apps/awb-shell/.build/sc-bus-reader.node": true,
+    "tool-artifacts/scope/0.1.0/server.mjs": true,
+    "tool-artifacts/scope/0.1.0/public/scope.js": true,
+    "tool-artifacts/scope/0.1.0/public/index.html": true,
+    "tool-artifacts/scope/0.1.0/public/scope.css": true,
+    "tool-artifacts/scope/0.1.0/public/scope-opacity.js": true,
+    "tool-artifacts/scope/0.1.0/public/protocol.js": true,
+    "tool-artifacts/shared-loop/0.1.0/public/scope-history.js": true,
+    "tool-artifacts/shared-loop/0.1.0/public/scope-metadata.js": true,
+    "tool-artifacts/shared-loop/0.1.0/public/scope-painter.js": true,
+    "tool-artifacts/shared-loop/0.1.0/public/scope-trace.js": true
+  },
+  "docsLinksResolve": true,
+  "fixtureOnly": true,
+  "unrelatedToolViews": 0
+}

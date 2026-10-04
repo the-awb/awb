@@ -1,0 +1,12 @@
+{
+  "schema": "awb.tool/1",
+  "id": "scope",
+  "name": "Scope",
+  "version": "0.1.0",
+  "renderer": { "entry": "public/index.html", "preloadProtocol": 1 },
+  "runtime": { "schema": "awb.local-runtime/1", "entry": "shell-runtime.mjs" },
+  "view": { "defaultWidth": 800, "defaultHeight": 720, "allowMultiple": true },
+  "launchProfiles": [ { "id": "hosted", "label": "Open scope" } ],
+  "capabilities": {},
+  "documentKinds": []
+}

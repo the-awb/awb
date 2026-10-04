@@ -1,0 +1,26 @@
+{
+  "synthetic": true,
+  "rate": 44100,
+  "results": [
+    {
+      "variant": "before",
+      "metadataHz": 29.896359287743092,
+      "paintHz": 29.896359287743092,
+      "pixelsChanged": false,
+      "sourceAdvanced": true,
+      "format": "minmax",
+      "missing": 320,
+      "frozen": true
+    },
+    {
+      "variant": "after",
+      "metadataHz": 7.976071784646062,
+      "paintHz": 29.91026919242273,
+      "pixelsChanged": false,
+      "sourceAdvanced": true,
+      "format": "minmax",
+      "missing": 320,
+      "frozen": true
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+compiling class library...
+	Found 855 primitives.
+	Compiling directory '/Applications/SuperCollider.app/Contents/Resources/SCClassLibrary'
+	Compiling directory '/Library/Application Support/SuperCollider/Extensions'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/Extensions'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/crucial-library'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ddwGUIEnhancements'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/redSampler'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/TraerPhysics'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ExtraWindows'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/SignalBox'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/Convolve'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/BandSplitter'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/SoundFileAnalysis'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/FreeAfter'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/JSONlib'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ddwCommon'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ddwMixerChannel'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ddwMIDI'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ddwSensitivity'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/dewdrop_lib'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/miSCellaneous_lib'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/Feedback'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/TuningLib'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ListeningClocks'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/XML'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/wslib'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/KDTree'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/SuperSampler'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/EventArray'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/astronomy'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/splines'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/cycle'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/TimeStretch'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/JITLibExtensions'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/Hilbert'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/SuperOM'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/SCLOrkSynths'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/faust'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/VectorSpace'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ZArchive'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/DissonanceLib'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/Spectrogram'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/PV_Control'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/Mx'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/GraphicalModule'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/PitchCircle'
+	Compiling directory '/private/tmp/awb-scope-sc-main/awbCollider'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ddwPatterns'
+	Compiling directory '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/Modality-toolkit'
+ERROR: Class extension for nonexistent class 'Document'
+     In file:'../../../../../Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/ddwGUIEnhancements/Document-scanFor.sc'
+	numentries = 3233846 / 88716080 = 0.036
+	14360 method selectors, 6178 classes
+	method table size 71597704 bytes, big table size 709728640
+	Number of Symbols 35628
+	Byte Code Size 1653191
+	compiled 1623 files in 1.76 seconds
+
+Info: 54 methods are currently overwritten by extensions. To see which, execute:
+MethodOverride.printAll
+
+compile done
+localhost : setting clientID to 0.
+internal : setting clientID to 0.
+NodeManager: Projected container | Total: 1
+NodeManager: Projected container | Total: 2
+No existing sequence library found at: /private/tmp/awb-scope-sc-main/awbCollider/Classes/EventSequences.scd
+Loaded 29 presets from: /private/tmp/awb-scope-sc-main/awbCollider/Classes/EventPresets.scd
+No preset file found at: /private/tmp/awb-scope-sc-main/awbCollider/Classes/UniversalPresets.scd
+Class tree inited in 0.08 seconds
+WARNING: Extension in '/Users/willy/Library/Application Support/SuperCollider/downloaded-quarks/DissonanceLib/classes/numberExtras.sc' overwrites SimpleNumber:factorial in main class library.
+WARNING: Extension in '/private/tmp/awb-scope-sc-main/awbCollider/classes WIP/NodeManager.sc' overwrites Meta_Synth:new in main class library.
+WARNING: Extension in '/private/tmp/awb-scope-sc-main/awbCollider/classes WIP/NodeManager.sc' overwrites Meta_Synth:newPaused in main class library.
+WARNING: Extension in '/private/tmp/awb-scope-sc-main/awbCollider/classes WIP/NodeManager.sc' overwrites Meta_Synth:replace in main class library.
+Intentional overwrites must be put in a 'SystemOverwrites' subfolder.
+
+
+*** Welcome to SuperCollider 3.12.2. *** For help type cmd-d.
+AWB_SCOPE_INSTANCE_CLASSES_PASS Tool=true ToolInstance=true ToolSession=false
+cleaning up OSC

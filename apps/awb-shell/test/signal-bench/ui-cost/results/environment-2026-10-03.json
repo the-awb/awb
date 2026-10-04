@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-03",
+  "branch": "design/score-studio-layout",
+  "scopePhases": 36,
+  "startupLaunches": 8,
+  "privateBuilds": 2,
+  "runtimeGuardCount": 140,
+  "startupGuardCount": 138,
+  "benchmarkSHA256": {
+    "apps/awb-shell/test/signal-bench/ui-cost/run.mjs": "21c5703ce988d45ee30b0034f9b93db484319385fe08fb8ab435e18f52703d5d",
+    "apps/awb-shell/test/signal-bench/ui-cost/measure.mjs": "c99fcadb9be451455622ce5e850f2675a4c6f523c1af18e4923f11abb9d52435",
+    "apps/awb-shell/test/signal-bench/ui-cost/summarise.mjs": "3d09697f2edd0b7cd5e4ec2a5c8e4b5ddf0cbd7aae8e0f2975dbd32d2145bd6e",
+    "apps/awb-shell/test/signal-bench/ui-cost/producer.scd": "f87d2ee3475cb9086b151649f0774e85267186145826c74f88a6804028c769cc",
+    "apps/awb-shell/test/startup-cost/run.mjs": "c38afcf2e4d97d563227d1b8ac2b8ade80264e0691d830ebd22ac262d64d640e",
+    "apps/awb-shell/test/startup-cost/full-build.mjs": "5ae2b73c869ee624991ae7df4e2db9a5e3797aa7b695dcf485daf2f7ce500252"
+  }
+}

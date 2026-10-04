@@ -18,6 +18,10 @@ const AWB_ICONS = {
   lissajous: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M 20.60 12.00 L 20.18 13.79 L 18.96 15.50 L 17.05 17.05 L 14.66 18.39 L 12.00 19.45 L 9.34 20.18 L 6.95 20.55 L 5.04 20.55 L 3.82 20.18 L 3.40 19.45 L 3.82 18.39 L 5.04 17.05 L 6.95 15.50 L 9.34 13.79 L 12.00 12.00 L 14.66 10.21 L 17.05 8.50 L 18.96 6.95 L 20.18 5.61 L 20.60 4.55 L 20.18 3.82 L 18.96 3.45 L 17.05 3.45 L 14.66 3.82 L 12.00 4.55 L 9.34 5.61 L 6.95 6.95 L 5.04 8.50 L 3.82 10.21 L 3.40 12.00 L 3.82 13.79 L 5.04 15.50 L 6.95 17.05 L 9.34 18.39 L 12.00 19.45 L 14.66 20.18 L 17.05 20.55 L 18.96 20.55 L 20.18 20.18 L 20.60 19.45 L 20.18 18.39 L 18.96 17.05 L 17.05 15.50 L 14.66 13.79 L 12.00 12.00 L 9.34 10.21 L 6.95 8.50 L 5.04 6.95 L 3.82 5.61 L 3.40 4.55 L 3.82 3.82 L 5.04 3.45 L 6.95 3.45 L 9.34 3.82 L 12.00 4.55 L 14.66 5.61 L 17.05 6.95 L 18.96 8.50 L 20.18 10.21 L 20.60 12.00 Z"></path>
   </svg>`,
+  scope: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="2.5" y="4" width="19" height="16" rx="2"></rect>
+    <path d="M4.5 12h2l2-5 3.5 10 3-7 2 2h2.5"></path>
+  </svg>`,
   tool: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <rect x="3" y="3" width="7.5" height="7.5" rx="1.4"></rect>
     <rect x="13.5" y="3" width="7.5" height="7.5" rx="1.4"></rect>

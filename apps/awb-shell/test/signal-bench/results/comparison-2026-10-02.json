@@ -1,0 +1,434 @@
+{
+  "idle": {
+    "before": {
+      "mainCPU": 0.4257276806549129,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 0.4257276806549129,
+      "KiBs": 0.0,
+      "rssMiB": 206.138671875
+    },
+    "after": {
+      "mainCPU": 0.3649810141485788,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 0.3649810141485788,
+      "KiBs": 0.0,
+      "rssMiB": 207.732421875
+    }
+  },
+  "capture-control": {
+    "before": {
+      "mainCPU": 4.5014736674842695,
+      "rendererCPU": 0,
+      "gpuCPU": 0.06084232843283309,
+      "electronCPU": 4.562315995917103,
+      "KiBs": 0.0,
+      "rssMiB": 206.591796875
+    },
+    "after": {
+      "mainCPU": 2.3110372571400717,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 2.3110372571400717,
+      "KiBs": 0.0,
+      "rssMiB": 208.40625
+    }
+  },
+  "capture-audio": {
+    "before": {
+      "mainCPU": 4.913334156489546,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 4.913334156489546,
+      "KiBs": 0.0,
+      "rssMiB": 208.09765625
+    },
+    "after": {
+      "mainCPU": 3.9451129667987286,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 3.9451129667987286,
+      "KiBs": 0.0,
+      "rssMiB": 210.408203125
+    }
+  },
+  "control-raw-shared-1": {
+    "before": {
+      "mainCPU": 5.6561413794626745,
+      "rendererCPU": 5.899396201391031,
+      "gpuCPU": 7.845587711576677,
+      "electronCPU": 20.0093101393634,
+      "KiBs": 19.991225976452796,
+      "rssMiB": 331.66796875
+    },
+    "after": {
+      "mainCPU": 5.510574634219482,
+      "rendererCPU": 5.874075668440147,
+      "gpuCPU": 7.75140831122226,
+      "electronCPU": 19.74163738819614,
+      "KiBs": 5.5069819789201695,
+      "rssMiB": 332.65234375
+    }
+  },
+  "control-raw-shared-6": {
+    "before": {
+      "mainCPU": 5.468699892581791,
+      "rendererCPU": 6.198035798924538,
+      "gpuCPU": 8.506952735191945,
+      "electronCPU": 20.720496326309927,
+      "KiBs": 20.077154565572652,
+      "rssMiB": 346.533203125
+    },
+    "after": {
+      "mainCPU": 4.07750737245871,
+      "rendererCPU": 5.294737960542779,
+      "gpuCPU": 7.7291385458312085,
+      "electronCPU": 17.527396407398207,
+      "KiBs": 20.293011128927876,
+      "rssMiB": 349.20703125
+    }
+  },
+  "control-raw-canvases-6": {
+    "before": {
+      "mainCPU": 5.354793022371137,
+      "rendererCPU": 6.632746371394914,
+      "gpuCPU": 11.987609937615712,
+      "electronCPU": 24.52278819651012,
+      "KiBs": 20.001822592788663,
+      "rssMiB": 344.55078125
+    },
+    "after": {
+      "mainCPU": 4.135920138476598,
+      "rendererCPU": 5.960870529286961,
+      "gpuCPU": 11.55731918259176,
+      "electronCPU": 22.140746818276337,
+      "KiBs": 20.23057475538196,
+      "rssMiB": 345.1171875
+    }
+  },
+  "control-raw-windows-6": {
+    "before": {
+      "mainCPU": 6.378917592944156,
+      "rendererCPU": 31.955415938516058,
+      "gpuCPU": 26.9740286003044,
+      "electronCPU": 67.98146406512812,
+      "KiBs": 120.12687784462449,
+      "rssMiB": 749.1953125
+    },
+    "after": {
+      "mainCPU": 5.655308846515333,
+      "rendererCPU": 28.76270557466866,
+      "gpuCPU": 26.207923753711064,
+      "electronCPU": 62.875921148916824,
+      "KiBs": 33.0919703869728,
+      "rssMiB": 748.3984375
+    }
+  },
+  "control-wide-shared-1": {
+    "before": {
+      "mainCPU": 5.269825694744114,
+      "rendererCPU": 5.632717958145668,
+      "gpuCPU": 7.752394072582463,
+      "electronCPU": 19.26063459507724,
+      "KiBs": 4.5781652196352205,
+      "rssMiB": 351.154296875
+    },
+    "after": {
+      "mainCPU": 4.136554154632391,
+      "rendererCPU": 4.9883227584455145,
+      "gpuCPU": 7.056715838867694,
+      "electronCPU": 16.66824769828282,
+      "KiBs": 2.9352931214814753,
+      "rssMiB": 353.47265625
+    }
+  },
+  "control-wide-shared-6": {
+    "before": {
+      "mainCPU": 5.407952291472014,
+      "rendererCPU": 5.954888885061738,
+      "gpuCPU": 10.14743964476129,
+      "electronCPU": 22.057099329043208,
+      "KiBs": 4.581048927044465,
+      "rssMiB": 358.126953125
+    },
+    "after": {
+      "mainCPU": 4.1358037570418,
+      "rendererCPU": 5.169985981467413,
+      "gpuCPU": 9.366957605503938,
+      "electronCPU": 19.159355081496052,
+      "KiBs": 4.769135989627344,
+      "rssMiB": 360.650390625
+    }
+  },
+  "control-wide-canvases-6": {
+    "before": {
+      "mainCPU": 5.291751130395868,
+      "rendererCPU": 6.325678563076796,
+      "gpuCPU": 13.320341564810905,
+      "electronCPU": 25.546009581656342,
+      "KiBs": 4.597429425378264,
+      "rssMiB": 346.359375
+    },
+    "after": {
+      "mainCPU": 4.680594395987956,
+      "rendererCPU": 6.200269240892666,
+      "gpuCPU": 13.190768369556235,
+      "electronCPU": 24.61871402761025,
+      "KiBs": 4.778425594306707,
+      "rssMiB": 348.166015625
+    }
+  },
+  "control-wide-windows-6": {
+    "before": {
+      "mainCPU": 6.626366626790779,
+      "rendererCPU": 31.91624131082844,
+      "gpuCPU": 27.296163971627074,
+      "electronCPU": 68.45284810392756,
+      "KiBs": 27.499377861308925,
+      "rssMiB": 754.056640625
+    },
+    "after": {
+      "mainCPU": 6.2642112254062265,
+      "rendererCPU": 31.564377379383657,
+      "gpuCPU": 27.428750376545278,
+      "electronCPU": 67.87249760353413,
+      "KiBs": 17.652295160440424,
+      "rssMiB": 753.666015625
+    }
+  },
+  "output-raw-shared-1": {
+    "before": {
+      "mainCPU": 6.934935673837163,
+      "rendererCPU": 10.828230761680217,
+      "gpuCPU": 10.341573130150586,
+      "electronCPU": 29.990554297869608,
+      "KiBs": 1128.9474421878067,
+      "rssMiB": 364.158203125
+    },
+    "after": {
+      "mainCPU": 6.497423321652863,
+      "rendererCPU": 9.776424559716165,
+      "gpuCPU": 10.383319946807992,
+      "electronCPU": 28.17523417767257,
+      "KiBs": 191.872219790879,
+      "rssMiB": 352.494140625
+    }
+  },
+  "output-raw-shared-6": {
+    "before": {
+      "mainCPU": 6.612548532982361,
+      "rendererCPU": 11.70915756270466,
+      "gpuCPU": 14.864564616671785,
+      "electronCPU": 35.0064882229739,
+      "KiBs": 1123.065446291238,
+      "rssMiB": 367.275390625
+    },
+    "after": {
+      "mainCPU": 6.38595329290854,
+      "rendererCPU": 11.312479885064562,
+      "gpuCPU": 14.596670700315888,
+      "electronCPU": 34.11974780814823,
+      "KiBs": 1130.5328265193234,
+      "rssMiB": 369.20703125
+    }
+  },
+  "output-raw-canvases-6": {
+    "before": {
+      "mainCPU": 6.313139943521701,
+      "rendererCPU": 12.321734719715671,
+      "gpuCPU": 22.76169717293414,
+      "electronCPU": 43.21749551987241,
+      "KiBs": 1130.828072894144,
+      "rssMiB": 369.15625
+    },
+    "after": {
+      "mainCPU": 5.886742039817503,
+      "rendererCPU": 11.95663005874555,
+      "gpuCPU": 22.272150719371474,
+      "electronCPU": 41.75443956835298,
+      "KiBs": 1133.8479375934405,
+      "rssMiB": 370.9375
+    }
+  },
+  "output-raw-windows-6": {
+    "before": {
+      "mainCPU": 8.137773322917516,
+      "rendererCPU": 60.001122421257556,
+      "gpuCPU": 48.64423171381438,
+      "electronCPU": 127.71464382686929,
+      "KiBs": 6806.065155224705,
+      "rssMiB": 864.345703125
+    },
+    "after": {
+      "mainCPU": 8.543271376190448,
+      "rendererCPU": 52.4095922595977,
+      "gpuCPU": 46.7168853995986,
+      "electronCPU": 114.21330542436601,
+      "KiBs": 1148.8752687657761,
+      "rssMiB": 791.685546875
+    }
+  },
+  "output-wide-shared-1": {
+    "before": {
+      "mainCPU": 6.388459503540932,
+      "rendererCPU": 10.099858697583686,
+      "gpuCPU": 12.655314961967443,
+      "electronCPU": 30.482163317841156,
+      "KiBs": 145.6811349247592,
+      "rssMiB": 355.0625
+    },
+    "after": {
+      "mainCPU": 6.926163229630447,
+      "rendererCPU": 9.721384554720586,
+      "gpuCPU": 12.941571526343429,
+      "electronCPU": 30.743568719236443,
+      "KiBs": 28.508480029987584,
+      "rssMiB": 354.927734375
+    }
+  },
+  "output-wide-shared-6": {
+    "before": {
+      "mainCPU": 5.826401753803152,
+      "rendererCPU": 10.921079850212307,
+      "gpuCPU": 31.426781338666025,
+      "electronCPU": 49.387684887658864,
+      "KiBs": 144.7045395669803,
+      "rssMiB": 355.859375
+    },
+    "after": {
+      "mainCPU": 6.202329395229928,
+      "rendererCPU": 12.222231130360285,
+      "gpuCPU": 31.680578017308505,
+      "electronCPU": 51.503702469872245,
+      "KiBs": 145.2078929208662,
+      "rssMiB": 357.7265625
+    }
+  },
+  "output-wide-canvases-6": {
+    "before": {
+      "mainCPU": 5.891280000110777,
+      "rendererCPU": 12.814474515297052,
+      "gpuCPU": 40.082235873092685,
+      "electronCPU": 60.06345879615153,
+      "KiBs": 144.4746590806653,
+      "rssMiB": 358.833984375
+    },
+    "after": {
+      "mainCPU": 5.888226973956325,
+      "rendererCPU": 13.112276722744127,
+      "gpuCPU": 40.0044284470221,
+      "electronCPU": 60.340441809927974,
+      "KiBs": 145.15177154424663,
+      "rssMiB": 359.599609375
+    }
+  },
+  "output-wide-windows-6": {
+    "before": {
+      "mainCPU": 7.723987496891251,
+      "rendererCPU": 55.16259950616554,
+      "gpuCPU": 66.71768786170861,
+      "electronCPU": 135.56451466767868,
+      "KiBs": 874.8790073430453,
+      "rssMiB": 796.53125
+    },
+    "after": {
+      "mainCPU": 8.293062959431396,
+      "rendererCPU": 51.27582428437875,
+      "gpuCPU": 64.34373440619144,
+      "electronCPU": 128.33144116098782,
+      "KiBs": 171.30691749251793,
+      "rssMiB": 782.671875
+    }
+  },
+  "two-audio-adapters": {
+    "before": {
+      "mainCPU": 6.266895938808489,
+      "rendererCPU": 22.268771235476468,
+      "gpuCPU": 60.539396905584454,
+      "electronCPU": 91.20459179230915,
+      "KiBs": 288.7266994182763,
+      "rssMiB": 444.966796875
+    },
+    "after": {
+      "mainCPU": 6.264162376431502,
+      "rendererCPU": 22.928099446791293,
+      "gpuCPU": 60.39142468590234,
+      "electronCPU": 91.77310504664567,
+      "KiBs": 291.21927300718016,
+      "rssMiB": 449.322265625
+    }
+  },
+  "frozen-control": {
+    "before": {
+      "mainCPU": 5.10412832523452,
+      "rendererCPU": 0.7291906914110104,
+      "gpuCPU": 0,
+      "electronCPU": 6.38010877788251,
+      "KiBs": 4.593026668102309,
+      "rssMiB": 336.212890625
+    },
+    "after": {
+      "mainCPU": 4.801811057363328,
+      "rendererCPU": 0.6685967795780186,
+      "gpuCPU": 0,
+      "electronCPU": 5.956631820476884,
+      "KiBs": 4.765374901135406,
+      "rssMiB": 338.751953125
+    }
+  },
+  "looper-no-viewer": {
+    "before": {
+      "mainCPU": 1.3992347677263792,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 1.3992347677263792,
+      "KiBs": 0.0,
+      "rssMiB": 265.533203125
+    },
+    "after": {
+      "mainCPU": 1.2753389910610293,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 1.2753389910610293,
+      "KiBs": 0.0,
+      "rssMiB": 266.306640625
+    }
+  },
+  "looper-playback": {
+    "before": {
+      "mainCPU": 1.4562135056017835,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 1.4562135056017835,
+      "KiBs": 0.0,
+      "rssMiB": 265.51953125
+    },
+    "after": {
+      "mainCPU": 1.6404828396253142,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "electronCPU": 1.6404828396253142,
+      "KiBs": 0.0,
+      "rssMiB": 266.302734375
+    }
+  },
+  "looper-gui-scope-raw-peer": {
+    "before": {
+      "mainCPU": 9.58668407546542,
+      "rendererCPU": 20.021980060101676,
+      "gpuCPU": 22.085151117513156,
+      "electronCPU": 53.87778864134438,
+      "KiBs": 0.0,
+      "rssMiB": 452.546875
+    },
+    "after": {
+      "mainCPU": 8.637234343187728,
+      "rendererCPU": 17.943187104273463,
+      "gpuCPU": 20.619202601317035,
+      "electronCPU": 49.14600835232571,
+      "KiBs": 0.0,
+      "rssMiB": 453.498046875
+    }
+  }
+}

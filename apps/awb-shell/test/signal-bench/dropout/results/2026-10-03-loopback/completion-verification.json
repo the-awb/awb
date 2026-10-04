@@ -1,0 +1,49 @@
+{
+  "runs": [
+    {
+      "run": "v2-smoke",
+      "phases": 5,
+      "cleanReturnPhases": 5,
+      "hashesVerified": true,
+      "nativeSCCodeVerified": true,
+      "recorderReliable": true
+    },
+    {
+      "run": "steady",
+      "phases": 40,
+      "cleanReturnPhases": 39,
+      "hashesVerified": true,
+      "nativeSCCodeVerified": true,
+      "recorderReliable": true
+    },
+    {
+      "run": "upper",
+      "phases": 16,
+      "cleanReturnPhases": 6,
+      "hashesVerified": true,
+      "nativeSCCodeVerified": true,
+      "recorderReliable": true
+    },
+    {
+      "run": "focus",
+      "phases": 24,
+      "cleanReturnPhases": 21,
+      "hashesVerified": true,
+      "nativeSCCodeVerified": true,
+      "recorderReliable": true
+    },
+    {
+      "run": "long",
+      "phases": 16,
+      "cleanReturnPhases": 15,
+      "hashesVerified": true,
+      "nativeSCCodeVerified": true,
+      "recorderReliable": true
+    }
+  ],
+  "comparisonPhases": 96,
+  "smokePhases": 5,
+  "gzipHashesVerified": true,
+  "localReportLinksVerified": true,
+  "activeSCOrProbeProcesses": []
+}

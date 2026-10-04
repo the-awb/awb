@@ -5,3 +5,8 @@ artifacts
 *.tgz
 *.log
 .DS_Store
+
+# Local scope benchmark callback/PCM recordings and Python cache.
+apps/awb-shell/test/signal-bench/**/callback-audit.bin*
+apps/awb-shell/test/signal-bench/**/input-return.bin*
+**/__pycache__/

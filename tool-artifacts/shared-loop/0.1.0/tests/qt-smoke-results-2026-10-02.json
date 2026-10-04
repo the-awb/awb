@@ -1,0 +1,790 @@
+{
+  "complete": true,
+  "machine": "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz",
+  "sampleRate": 48000,
+  "blockSize": 64,
+  "configuredPaintHz": 30,
+  "versions": {
+    "electron": "44.4.1",
+    "node": "24.21.0",
+    "sc": "3.12.2"
+  },
+  "phases": [
+    {
+      "implementation": "qt",
+      "kind": "control",
+      "mode": "short",
+      "layout": "canvases",
+      "count": 6,
+      "repeat": 1,
+      "seconds": 3.098586832,
+      "processes": [
+        {
+          "pid": 53532,
+          "role": "main",
+          "corePercent": 0.322727764048021,
+          "rssMiB": 75.8125
+        },
+        {
+          "pid": 53535,
+          "role": "sclang",
+          "corePercent": 3.22727764048021,
+          "rssMiB": 220.55859375
+        },
+        {
+          "pid": 53540,
+          "role": "scsynth",
+          "corePercent": 0.6454555280960411,
+          "rssMiB": 31.7265625
+        },
+        {
+          "pid": 53533,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 32.14453125
+        },
+        {
+          "pid": 53534,
+          "role": "helper-Utility",
+          "corePercent": 0,
+          "rssMiB": 25.0546875
+        }
+      ],
+      "states": {
+        "config": {
+          "kind": "control",
+          "mode": "short",
+          "layout": "canvases",
+          "count": 6,
+          "views": 6,
+          "windows": 1,
+          "frames": 32
+        },
+        "area": 148800,
+        "hashes": [
+          "b700886657ceecacf9afe307455c27bf0218ca0f585a44ac503f19bc3b77585f",
+          "c19d699247b1d672ee08d0c3780c3137f4c700fc5b0699f08ebcc8c7d7aade2d",
+          "a21f5441b6cee064c5034016e7698e600257c41ccfd9a81f15cf48bfd969485a",
+          "0bdd239a216a154340a02b742e29c4945be6464b0886019c2c64026bc1ea49ab",
+          "77fd8a4039a0e0d2e0068f5549876b2e2314254a35d0b57f86445dd6a474cf1b",
+          "c7e035702bb7924f9d3525592883f38de3519574af6f5424056e9912e0a516da"
+        ]
+      },
+      "mainCPU": 0.322727764048021,
+      "rendererCPU": 0,
+      "gpuProcessCPU": 0,
+      "sclangCPU": 3.22727764048021,
+      "electronCPU": 0.322727764048021,
+      "scsynthProcessCPU": 0.6454555280960411,
+      "scAudioCPU": 0.28932425379753113,
+      "scPeakCPU": 0.6473718881607056,
+      "traffic": null,
+      "freshCaptureHz": 23.4375
+    },
+    {
+      "implementation": "electron",
+      "kind": "control",
+      "mode": "short",
+      "layout": "canvases",
+      "count": 6,
+      "repeat": 1,
+      "seconds": 3.1002724209999997,
+      "processes": [
+        {
+          "pid": 53532,
+          "role": "main",
+          "corePercent": 5.160836799896171,
+          "rssMiB": 116.84765625
+        },
+        {
+          "pid": 53535,
+          "role": "sclang",
+          "corePercent": 0.32255229999350393,
+          "rssMiB": 221.4765625
+        },
+        {
+          "pid": 53540,
+          "role": "scsynth",
+          "corePercent": 0.9676568999805325,
+          "rssMiB": 31.73046875
+        },
+        {
+          "pid": 53594,
+          "role": "renderer-0",
+          "corePercent": 8.386359799831284,
+          "rssMiB": 80.05078125
+        },
+        {
+          "pid": 53533,
+          "role": "helper-GPU",
+          "corePercent": 14.192301199714475,
+          "rssMiB": 60.8359375
+        },
+        {
+          "pid": 53534,
+          "role": "helper-Utility",
+          "corePercent": 0.6451045999870222,
+          "rssMiB": 32.35546875
+        }
+      ],
+      "states": [
+        {
+          "kind": "control",
+          "layout": "canvases",
+          "laneCount": 6,
+          "selected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "paint": true,
+          "paintFrames": 128,
+          "strokes": 10740,
+          "channels": 6,
+          "sourceFrames": 128,
+          "frames": 128,
+          "missingSourceFrames": 0,
+          "sourceEnd": 6880,
+          "rate": 750,
+          "format": "samples",
+          "connection": "Live",
+          "footerFits": true,
+          "plots": [
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            }
+          ]
+        }
+      ],
+      "mainCPU": 5.160836799896171,
+      "rendererCPU": 8.386359799831284,
+      "gpuProcessCPU": 14.192301199714475,
+      "sclangCPU": 0.32255229999350393,
+      "electronCPU": 28.384602399428953,
+      "scsynthProcessCPU": 0.9676568999805325,
+      "scAudioCPU": 0.24046900495886803,
+      "scPeakCPU": 0.5557781457901001,
+      "traffic": {
+        "bytesPerSecond": 20532.389208386925,
+        "framesPerSecond": 23.54631789952629,
+        "subscribers": 1
+      },
+      "frameRates": [
+        30.31991619939002
+      ],
+      "freshCaptureHz": 23.4375
+    },
+    {
+      "implementation": "qt",
+      "kind": "control",
+      "mode": "wide",
+      "layout": "canvases",
+      "count": 6,
+      "repeat": 1,
+      "seconds": 3.105381367000002,
+      "processes": [
+        {
+          "pid": 53532,
+          "role": "main",
+          "corePercent": 0.6440432795963219,
+          "rssMiB": 132.859375
+        },
+        {
+          "pid": 53535,
+          "role": "sclang",
+          "corePercent": 7.728519355155906,
+          "rssMiB": 232.05078125
+        },
+        {
+          "pid": 53540,
+          "role": "scsynth",
+          "corePercent": 0.6440432795963256,
+          "rssMiB": 31.703125
+        },
+        {
+          "pid": 53533,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 62.75390625
+        },
+        {
+          "pid": 53534,
+          "role": "helper-Utility",
+          "corePercent": 0,
+          "rssMiB": 32.359375
+        }
+      ],
+      "states": {
+        "config": {
+          "kind": "control",
+          "mode": "wide",
+          "layout": "canvases",
+          "count": 6,
+          "views": 6,
+          "windows": 1,
+          "frames": 2048
+        },
+        "area": 148800,
+        "hashes": [
+          "a705d0980fe6a63e51e5f0fdc77a688ceed2bda5c1761d7c7ce8c180e9b8b343",
+          "6ae42e6d3a01e73b2593308fb129e95e25e958ca1b18c2ae701b474ff8c25ccd",
+          "0301f3801c49af2870d38f5b6660cd7f2bb562e2f088299c74ce76799d443a51",
+          "3f3e739a3e0cba7753c64d5ba3b6da8930b4af23906f70b401758fdde0f077c5",
+          "9d7d732d057f4ded5eb5efe3612e1a0ddc8faf7226e794103e57585f3cbcdc47",
+          "d11bd41831778aa22882c2ee277dfcd0c456f07ba870c104c92e03533b85fde7"
+        ]
+      },
+      "mainCPU": 0.6440432795963219,
+      "rendererCPU": 0,
+      "gpuProcessCPU": 0,
+      "sclangCPU": 7.728519355155906,
+      "electronCPU": 0.6440432795963219,
+      "scsynthProcessCPU": 0.6440432795963256,
+      "scAudioCPU": 0.2926233721276124,
+      "scPeakCPU": 0.6602062582969666,
+      "traffic": null,
+      "freshCaptureHz": 0.3662109375
+    },
+    {
+      "implementation": "electron",
+      "kind": "control",
+      "mode": "wide",
+      "layout": "canvases",
+      "count": 6,
+      "repeat": 1,
+      "seconds": 3.097808792,
+      "processes": [
+        {
+          "pid": 53532,
+          "role": "main",
+          "corePercent": 4.519323476695721,
+          "rssMiB": 133.51953125
+        },
+        {
+          "pid": 53535,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 229.81640625
+        },
+        {
+          "pid": 53540,
+          "role": "scsynth",
+          "corePercent": 0.6456176395279603,
+          "rssMiB": 31.703125
+        },
+        {
+          "pid": 53610,
+          "role": "renderer-0",
+          "corePercent": 7.747411674335516,
+          "rssMiB": 84.01953125
+        },
+        {
+          "pid": 53533,
+          "role": "helper-GPU",
+          "corePercent": 17.10886744749093,
+          "rssMiB": 65.74609375
+        },
+        {
+          "pid": 53534,
+          "role": "helper-Utility",
+          "corePercent": 0.3228088197639792,
+          "rssMiB": 32.4765625
+        }
+      ],
+      "states": [
+        {
+          "kind": "control",
+          "layout": "canvases",
+          "laneCount": 6,
+          "selected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "paint": true,
+          "paintFrames": 203,
+          "strokes": 17040,
+          "channels": 6,
+          "sourceFrames": 2048,
+          "frames": 128,
+          "missingSourceFrames": 0,
+          "sourceEnd": 17504,
+          "rate": 750,
+          "format": "minmax",
+          "connection": "Live",
+          "footerFits": true,
+          "plots": [
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            }
+          ]
+        }
+      ],
+      "mainCPU": 4.519323476695721,
+      "rendererCPU": 7.747411674335516,
+      "gpuProcessCPU": 17.10886744749093,
+      "sclangCPU": 0,
+      "electronCPU": 29.698411418286145,
+      "scsynthProcessCPU": 0.6456176395279603,
+      "scAudioCPU": 0.2208353728055954,
+      "scPeakCPU": 0.5088562369346619,
+      "traffic": {
+        "bytesPerSecond": 4713.008768554106,
+        "framesPerSecond": 23.565043842770525,
+        "subscribers": 1
+      },
+      "frameRates": [
+        30.3440290578141
+      ],
+      "freshCaptureHz": 23.4375
+    },
+    {
+      "implementation": "qt",
+      "kind": "output",
+      "mode": "short",
+      "layout": "canvases",
+      "count": 6,
+      "repeat": 1,
+      "seconds": 3.099405778999997,
+      "processes": [
+        {
+          "pid": 53532,
+          "role": "main",
+          "corePercent": 1.6132124531345489,
+          "rssMiB": 131.1171875
+        },
+        {
+          "pid": 53535,
+          "role": "sclang",
+          "corePercent": 4.83963735940366,
+          "rssMiB": 238.46484375
+        },
+        {
+          "pid": 53540,
+          "role": "scsynth",
+          "corePercent": 0.9679274718807318,
+          "rssMiB": 31.70703125
+        },
+        {
+          "pid": 53533,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 63.41015625
+        },
+        {
+          "pid": 53534,
+          "role": "helper-Utility",
+          "corePercent": 0,
+          "rssMiB": 32.41015625
+        }
+      ],
+      "states": {
+        "config": {
+          "kind": "output",
+          "mode": "short",
+          "layout": "canvases",
+          "count": 6,
+          "views": 6,
+          "windows": 1,
+          "frames": 1024
+        },
+        "area": 148800,
+        "hashes": [
+          "17f55736fa8cc030cb5148f7ef4d14e07d286257f9e81882b4ff3cb4715c4c8b",
+          "b96808736dd0350238def44c0f22743b6ebcf8962a53e2fb701cb3287ad50664",
+          "a809931504da84dd95c452d0f123d703849e19d95a1ad3cb909d0af600d4ce3a",
+          "80aaee347d2f3edb66ccf92e8ed6168c609e3a37e022e59ba54942eed1c82292",
+          "b3550d4ac20fed70616aed874c5c89b0e53aee62e88368e7a68e6fc43db356fb",
+          "7f54c04659014fa5dc34487efdf1c54fc4e1632d20413eabd94279eaf1fe4485"
+        ]
+      },
+      "mainCPU": 1.6132124531345489,
+      "rendererCPU": 0,
+      "gpuProcessCPU": 0,
+      "sclangCPU": 4.83963735940366,
+      "electronCPU": 1.6132124531345489,
+      "scsynthProcessCPU": 0.9679274718807318,
+      "scAudioCPU": 0.2925436981022358,
+      "scPeakCPU": 0.6687187552452087,
+      "traffic": null,
+      "freshCaptureHz": 46.875
+    },
+    {
+      "implementation": "electron",
+      "kind": "output",
+      "mode": "short",
+      "layout": "canvases",
+      "count": 6,
+      "repeat": 1,
+      "seconds": 3.0961549779999986,
+      "processes": [
+        {
+          "pid": 53532,
+          "role": "main",
+          "corePercent": 5.49068122261159,
+          "rssMiB": 136.25
+        },
+        {
+          "pid": 53535,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 233.234375
+        },
+        {
+          "pid": 53540,
+          "role": "scsynth",
+          "corePercent": 0.6459624967778349,
+          "rssMiB": 31.71484375
+        },
+        {
+          "pid": 53624,
+          "role": "renderer-0",
+          "corePercent": 11.950306190389936,
+          "rssMiB": 92.484375
+        },
+        {
+          "pid": 53533,
+          "role": "helper-GPU",
+          "corePercent": 18.086949909779364,
+          "rssMiB": 66.37890625
+        },
+        {
+          "pid": 53534,
+          "role": "helper-Utility",
+          "corePercent": 1.2919249935556698,
+          "rssMiB": 32.6171875
+        }
+      ],
+      "states": [
+        {
+          "kind": "output",
+          "layout": "canvases",
+          "laneCount": 6,
+          "selected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "paint": true,
+          "paintFrames": 128,
+          "strokes": 10740,
+          "channels": 6,
+          "sourceFrames": 1024,
+          "frames": 1024,
+          "missingSourceFrames": 0,
+          "sourceEnd": 1558528,
+          "rate": 48000,
+          "format": "samples",
+          "connection": "Live",
+          "footerFits": true,
+          "plots": [
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            }
+          ]
+        }
+      ],
+      "mainCPU": 5.49068122261159,
+      "rendererCPU": 11.950306190389936,
+      "gpuProcessCPU": 18.086949909779364,
+      "sclangCPU": 0,
+      "electronCPU": 36.81986231633656,
+      "scsynthProcessCPU": 0.6459624967778349,
+      "scAudioCPU": 0.22972666223843893,
+      "scPeakCPU": 0.6403218507766724,
+      "traffic": {
+        "bytesPerSecond": 1171763.0499050561,
+        "framesPerSecond": 47.478243513170824,
+        "subscribers": 1
+      },
+      "frameRates": [
+        30.360237348558215
+      ],
+      "freshCaptureHz": 46.875
+    },
+    {
+      "implementation": "qt",
+      "kind": "output",
+      "mode": "wide",
+      "layout": "canvases",
+      "count": 6,
+      "repeat": 1,
+      "seconds": 3.0970823219999946,
+      "processes": [
+        {
+          "pid": 53532,
+          "role": "main",
+          "corePercent": 0.3228845397155067,
+          "rssMiB": 137.5546875
+        },
+        {
+          "pid": 53535,
+          "role": "sclang",
+          "corePercent": 5.489037175163606,
+          "rssMiB": 240.6875
+        },
+        {
+          "pid": 53540,
+          "role": "scsynth",
+          "corePercent": 0.9686536191465183,
+          "rssMiB": 31.71484375
+        },
+        {
+          "pid": 53533,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 63.9375
+        },
+        {
+          "pid": 53534,
+          "role": "helper-Utility",
+          "corePercent": 0,
+          "rssMiB": 32.453125
+        }
+      ],
+      "states": {
+        "config": {
+          "kind": "output",
+          "mode": "wide",
+          "layout": "canvases",
+          "count": 6,
+          "views": 6,
+          "windows": 1,
+          "frames": 16384
+        },
+        "area": 148800,
+        "hashes": [
+          "4cb0937d568fbe6a2e385ed5b6e1d289612a81ed6af24a6877e7720b970c2cc5",
+          "46adf32ac920c2823def2bd23c4611ba9914dcfd9f8a753d5fe7c51b312da477",
+          "4e6b41e62db66ecb78b43a63d9bb82882c8b89feadc4e5a27e2637a5183a19e9",
+          "5339418c9a6f6d1637b48cbfe8dd97b64378e3614239411c44daaca6ca21873f",
+          "beb73ca64b7dd3acc82b0363c2b5b3eb095485eb43018e4ac05f32cca38a6d3d",
+          "ff624cc7b77e4384894d654b409a84c397b17df0d775367bbcbab88a22615f1c"
+        ]
+      },
+      "mainCPU": 0.3228845397155067,
+      "rendererCPU": 0,
+      "gpuProcessCPU": 0,
+      "sclangCPU": 5.489037175163606,
+      "electronCPU": 0.3228845397155067,
+      "scsynthProcessCPU": 0.9686536191465183,
+      "scAudioCPU": 0.2975527122616768,
+      "scPeakCPU": 1.2907781600952148,
+      "traffic": null,
+      "freshCaptureHz": 2.9296875
+    },
+    {
+      "implementation": "electron",
+      "kind": "output",
+      "mode": "wide",
+      "layout": "canvases",
+      "count": 6,
+      "repeat": 1,
+      "seconds": 3.1052709930000058,
+      "processes": [
+        {
+          "pid": 53532,
+          "role": "main",
+          "corePercent": 5.152529372176428,
+          "rssMiB": 139.38671875
+        },
+        {
+          "pid": 53535,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 237.64453125
+        },
+        {
+          "pid": 53540,
+          "role": "scsynth",
+          "corePercent": 0.6440661715220544,
+          "rssMiB": 31.71484375
+        },
+        {
+          "pid": 53699,
+          "role": "renderer-0",
+          "corePercent": 12.559290344680049,
+          "rssMiB": 93.171875
+        },
+        {
+          "pid": 53533,
+          "role": "helper-GPU",
+          "corePercent": 28.982977718492418,
+          "rssMiB": 66.875
+        },
+        {
+          "pid": 53534,
+          "role": "helper-Utility",
+          "corePercent": 1.288132343044107,
+          "rssMiB": 32.63671875
+        }
+      ],
+      "states": [
+        {
+          "kind": "output",
+          "layout": "canvases",
+          "laneCount": 6,
+          "selected": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "paint": true,
+          "paintFrames": 127,
+          "strokes": 10656,
+          "channels": 6,
+          "sourceFrames": 16384,
+          "frames": 1024,
+          "missingSourceFrames": 0,
+          "sourceEnd": 1996800,
+          "rate": 48000,
+          "format": "minmax",
+          "connection": "Live",
+          "footerFits": true,
+          "plots": [
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            },
+            {
+              "width": 620,
+              "height": 40,
+              "dpr": 1
+            }
+          ]
+        }
+      ],
+      "mainCPU": 5.152529372176428,
+      "rendererCPU": 12.559290344680049,
+      "gpuProcessCPU": 28.982977718492418,
+      "sclangCPU": 0,
+      "electronCPU": 47.982929778393,
+      "scsynthProcessCPU": 0.6440661715220544,
+      "scAudioCPU": 0.2428875851134459,
+      "scPeakCPU": 0.5826281309127808,
+      "traffic": {
+        "bytesPerSecond": 150348.23081542214,
+        "framesPerSecond": 47.33886360687095,
+        "subscribers": 1
+      },
+      "frameRates": [
+        30.27111006153653
+      ],
+      "freshCaptureHz": 46.875
+    }
+  ]
+}

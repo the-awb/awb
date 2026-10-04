@@ -1,0 +1,37 @@
+{
+  "apps/awb-shell/src/signalCaptureBroker.mjs": {
+    "before": "b66150a19bfc4191201976faa34f88ad55cb9bd5906976ef4a12ee82d16c4a92",
+    "after": "b66150a19bfc4191201976faa34f88ad55cb9bd5906976ef4a12ee82d16c4a92",
+    "unchanged": true
+  },
+  "apps/awb-shell/src/scSignalSource.mjs": {
+    "before": "6aeed55e8a0d2accf353402a0d9e2bd7dcf4426e5ddc7bd954d7afb4d210048f",
+    "after": "6aeed55e8a0d2accf353402a0d9e2bd7dcf4426e5ddc7bd954d7afb4d210048f",
+    "unchanged": true
+  },
+  "apps/awb-shell/sc/AWBScBusAudio.scd": {
+    "before": "e7e207a763d8f5f100fafad44e39cd3e2a123128133dd6b85a0fd95df2f46b74",
+    "after": "e7e207a763d8f5f100fafad44e39cd3e2a123128133dd6b85a0fd95df2f46b74",
+    "unchanged": true
+  },
+  "tool-artifacts/shared-loop/0.1.0/public/scope.js": {
+    "before": "b5de060de28e21c9b935d421982b5c6345c47d641afcd9f6b6834bc22a6c6876",
+    "after": "b5de060de28e21c9b935d421982b5c6345c47d641afcd9f6b6834bc22a6c6876",
+    "unchanged": true
+  },
+  "tool-artifacts/shared-loop/0.1.0/public/scope-trace.js": {
+    "before": "da82f5457fb8313d3fb1ca321e013bd8553bd0719f311d2d0b42d57caccb91e5",
+    "after": "da82f5457fb8313d3fb1ca321e013bd8553bd0719f311d2d0b42d57caccb91e5",
+    "unchanged": true
+  },
+  "tool-artifacts/scope/0.1.0/capture.mjs": {
+    "before": "c57f9cb44298563773f0a6fd92d485ca8e0b023171a78b71051307ded926b678",
+    "after": "c57f9cb44298563773f0a6fd92d485ca8e0b023171a78b71051307ded926b678",
+    "unchanged": true
+  },
+  "tool-artifacts/scope/0.1.0/public/protocol.js": {
+    "before": "88f31031f86fa54f2f7e80d4a41cc63abf9baa1bbbfd5e03ffa6406b435e2d68",
+    "after": "88f31031f86fa54f2f7e80d4a41cc63abf9baa1bbbfd5e03ffa6406b435e2d68",
+    "unchanged": true
+  }
+}

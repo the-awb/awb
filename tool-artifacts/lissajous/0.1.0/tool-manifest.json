@@ -31,7 +31,8 @@
     "media": [
       "audio-input",
       "system-audio",
-      "native-audio"
+      "native-audio",
+      "sc-bus-audio"
     ],
     "connections": []
   },

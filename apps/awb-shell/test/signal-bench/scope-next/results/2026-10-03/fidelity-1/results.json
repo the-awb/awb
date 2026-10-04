@@ -1,0 +1,908 @@
+{
+  "synthetic": true,
+  "pageCases": [
+    {
+      "stage": "baseline",
+      "selection": "all",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "baseline",
+      "selection": "all",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "baseline",
+      "selection": "noise",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "baseline",
+      "selection": "noise",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "baseline",
+      "selection": "fast",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "baseline",
+      "selection": "fast",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "geometry",
+      "selection": "all",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "geometry",
+      "selection": "all",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "geometry",
+      "selection": "noise",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "geometry",
+      "selection": "noise",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "geometry",
+      "selection": "fast",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "geometry",
+      "selection": "fast",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "cached",
+      "selection": "all",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "cached",
+      "selection": "all",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "cached",
+      "selection": "noise",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "cached",
+      "selection": "noise",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "cached",
+      "selection": "fast",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "cached",
+      "selection": "fast",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "ring",
+      "selection": "all",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "ring",
+      "selection": "all",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "ring",
+      "selection": "noise",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "ring",
+      "selection": "noise",
+      "mode": "stepped",
+      "identical": true
+    },
+    {
+      "stage": "ring",
+      "selection": "fast",
+      "mode": "connected",
+      "identical": true
+    },
+    {
+      "stage": "ring",
+      "selection": "fast",
+      "mode": "stepped",
+      "identical": true
+    }
+  ],
+  "traceCases": [
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "connected",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 1.25,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 1,
+      "dpr": 2,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 1.25,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 128,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 2048,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 512,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    },
+    {
+      "mode": "stepped",
+      "gain": 16,
+      "dpr": 2,
+      "frames": 13,
+      "identical": true,
+      "changedBytes": 0,
+      "maxDelta": 0
+    }
+  ],
+  "errors": []
+}

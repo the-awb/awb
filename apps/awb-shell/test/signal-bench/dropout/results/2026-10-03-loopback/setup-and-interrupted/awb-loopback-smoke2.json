@@ -1,0 +1,910 @@
+{
+  "complete": true,
+  "session": {
+    "port": 53201,
+    "sampleRate": 48000,
+    "blockSize": 64,
+    "scPID": 83297,
+    "toneNode": 1001
+  },
+  "seconds": 3,
+  "repeats": 1,
+  "targets": [
+    30
+  ],
+  "phases": [
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "stopped",
+      "seconds": 3.077761881999999,
+      "electronCPU": 0.9747342760806837,
+      "processes": [
+        {
+          "pid": 83224,
+          "role": "main",
+          "corePercent": 0.3249114253602255
+        },
+        {
+          "pid": 83229,
+          "role": "sclang",
+          "corePercent": 0.3249114253602219
+        },
+        {
+          "pid": 83297,
+          "role": "scsynth",
+          "corePercent": 34.44061108818425
+        },
+        {
+          "pid": 83317,
+          "role": "scope",
+          "corePercent": 0.3249114253602291
+        },
+        {
+          "pid": 83228,
+          "role": "home",
+          "corePercent": 0.3249114253602291
+        },
+        {
+          "pid": 83227,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83303,
+          "role": "input-recorder",
+          "corePercent": 0.3249114253602282
+        },
+        {
+          "pid": 83315,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 83225,
+          "role": "GPU",
+          "corePercent": 0
+        },
+        {
+          "pid": 83226,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "scAverage": 33.65893300374349,
+      "scPeak": 37.11140441894531,
+      "opacityHz": 0,
+      "sourceAdvances": false,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 917,
+        "lastSequence": 1211,
+        "firstEntryNs": 124176569963314,
+        "lastEntryNs": 124179705889195
+      },
+      "audio": {
+        "callbacks": 295,
+        "seconds": 3.135925881,
+        "frames": 151040,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0757738649544435e-9,
+        "meanRMS": 0.002236106045740755,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.5601339694915257,
+        "maxDspMs": 3.965342,
+        "meanAuditUs": 2.616562711864407,
+        "maxAuditUs": 15.628,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 730,
+        "lastSequence": 1021
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "widgets",
+      "seconds": 3.0801593999999968,
+      "electronCPU": 24.99870623578769,
+      "processes": [
+        {
+          "pid": 83224,
+          "role": "main",
+          "corePercent": 7.791804541024736
+        },
+        {
+          "pid": 83229,
+          "role": "sclang",
+          "corePercent": 0
+        },
+        {
+          "pid": 83297,
+          "role": "scsynth",
+          "corePercent": 31.167218164098955
+        },
+        {
+          "pid": 83317,
+          "role": "scope",
+          "corePercent": 10.389072721366315
+        },
+        {
+          "pid": 83228,
+          "role": "home",
+          "corePercent": 0
+        },
+        {
+          "pid": 83227,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83303,
+          "role": "input-recorder",
+          "corePercent": 0.3246585225426976
+        },
+        {
+          "pid": 83315,
+          "role": "focus-helper",
+          "corePercent": 0
+        },
+        {
+          "pid": 83225,
+          "role": "GPU",
+          "corePercent": 5.84385340576855
+        },
+        {
+          "pid": 83226,
+          "role": "Utility",
+          "corePercent": 0.973975567628092
+        }
+      ],
+      "scAverage": 30.067896207173664,
+      "scPeak": 36.73714828491211,
+      "opacityHz": 14.908802537668517,
+      "sourceAdvances": true,
+      "sourceGapFrames": 0,
+      "auditRange": {
+        "firstSequence": 1390,
+        "lastSequence": 1684,
+        "firstEntryNs": 124181615270497,
+        "lastEntryNs": 124184751003010
+      },
+      "audio": {
+        "callbacks": 295,
+        "seconds": 3.135732513,
+        "frames": 151040,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.040700597747246e-9,
+        "meanRMS": 0.0022360020331741496,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.2026517423728813,
+        "maxDspMs": 3.929382,
+        "meanAuditUs": 2.6932305084745765,
+        "maxAuditUs": 12.462,
+        "events": []
+      },
+      "focusEvents": [],
+      "inputRange": {
+        "firstSequence": 1202,
+        "lastSequence": 1493
+      }
+    },
+    {
+      "target": 30,
+      "nodes": 20,
+      "repeat": 1,
+      "condition": "focus",
+      "seconds": 3.019153759000001,
+      "electronCPU": 26.828709786158317,
+      "processes": [
+        {
+          "pid": 83224,
+          "role": "main",
+          "corePercent": 7.94924734404691
+        },
+        {
+          "pid": 83229,
+          "role": "sclang",
+          "corePercent": 0.33121863933528084
+        },
+        {
+          "pid": 83297,
+          "role": "scsynth",
+          "corePercent": 29.809677540175894
+        },
+        {
+          "pid": 83317,
+          "role": "scope",
+          "corePercent": 10.9302150980645
+        },
+        {
+          "pid": 83228,
+          "role": "home",
+          "corePercent": 0
+        },
+        {
+          "pid": 83227,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 83303,
+          "role": "input-recorder",
+          "corePercent": 0.33121863933528817
+        },
+        {
+          "pid": 83315,
+          "role": "focus-helper",
+          "corePercent": 0.6624372786705758
+        },
+        {
+          "pid": 83225,
+          "role": "GPU",
+          "corePercent": 6.955591426041042
+        },
+        {
+          "pid": 83226,
+          "role": "Utility",
+          "corePercent": 0.9936559180058646
+        }
+      ],
+      "scAverage": 28.99849491119385,
+      "scPeak": 42.84551239013672,
+      "opacityHz": 14.881433793823785,
+      "sourceAdvances": true,
+      "sourceGapFrames": 17408,
+      "auditRange": {
+        "firstSequence": 1835,
+        "lastSequence": 2123,
+        "firstEntryNs": 124186361685644,
+        "lastEntryNs": 124189433560845
+      },
+      "audio": {
+        "callbacks": 289,
+        "seconds": 3.071875201,
+        "frames": 147968,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 9.955798217081702e-10,
+        "meanRMS": 0.0022360227799879465,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 3.096683062283737,
+        "maxDspMs": 4.591016,
+        "meanAuditUs": 3.8706020761245674,
+        "maxAuditUs": 31.497,
+        "events": []
+      },
+      "focusEvents": [
+        {
+          "at": 117.34534500000154,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 740.6311910000004,
+          "destination": "scope",
+          "pid": 83224,
+          "confirmed": true
+        },
+        {
+          "at": 1325.0381820000002,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        },
+        {
+          "at": 1918.3901250000017,
+          "destination": "scope",
+          "pid": 83224,
+          "confirmed": true
+        },
+        {
+          "at": 2486.1001639999995,
+          "destination": "VS Code",
+          "pid": 30128,
+          "confirmed": true
+        }
+      ],
+      "inputRange": {
+        "firstSequence": 1647,
+        "lastSequence": 1932
+      }
+    }
+  ],
+  "calibration": [
+    {
+      "target": 30,
+      "nodes": 20,
+      "avg": 34.84050369262695,
+      "fixed": true
+    }
+  ],
+  "loopback": {
+    "path": "/private/tmp/awb-loopback-smoke2.input",
+    "recorderPID": 83303,
+    "channel": 6,
+    "pilotBus": 2,
+    "inputClean": {
+      "callbacks": 94,
+      "frames": 48128,
+      "seconds": 0.991897435,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.00223599212877537,
+      "peak": 0.003162384033203125,
+      "maxResidual": 2.3362244415490313e-7,
+      "residualCallbacks": 0,
+      "silentCallbacks": 0,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.1534574468085106,
+      "maxRecorderUs": 2.696
+    },
+    "inputMute": {
+      "callbacks": 32,
+      "frames": 16384,
+      "seconds": 0.33072761,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.0019351322689651908,
+      "peak": 0.003162384033203125,
+      "maxResidual": 0.000046372413635253906,
+      "residualCallbacks": 2,
+      "silentCallbacks": 9,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.15390625,
+      "maxRecorderUs": 2.525
+    },
+    "inputPhase": {
+      "callbacks": 75,
+      "frames": 38400,
+      "seconds": 0.789382716,
+      "rate": 48000,
+      "channel": 6,
+      "rms": 0.002235937700941803,
+      "peak": 0.003162384033203125,
+      "maxResidual": 0.000034394769181765356,
+      "residualCallbacks": 2,
+      "silentCallbacks": 0,
+      "frameGaps": 0,
+      "meanRecorderUs": 2.1308000000000002,
+      "maxRecorderUs": 2.709
+    }
+  },
+  "detector": {
+    "clean": {
+      "callbacks": 94,
+      "seconds": 0.992086525,
+      "frames": 48128,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 0,
+      "residualHits": 0,
+      "silentCallbacks": 0,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 9.892826054874737e-10,
+      "meanRMS": 0.002236194087738002,
+      "maxPeak": 0.003162277629598975,
+      "meanDspMs": 0.05696226595744681,
+      "maxDspMs": 0.065532,
+      "meanAuditUs": 3.6022021276595746,
+      "maxAuditUs": 4.149,
+      "events": []
+    },
+    "injectedMute": {
+      "callbacks": 31,
+      "seconds": 0.320095613,
+      "frames": 15872,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 2,
+      "residualHits": 49,
+      "silentCallbacks": 9,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 0.00004646098750527017,
+      "meanRMS": 0.0016701339677711578,
+      "maxPeak": 0.003162277163937688,
+      "meanDspMs": 0.07105119354838708,
+      "maxDspMs": 0.435111,
+      "meanAuditUs": 3.6326129032258065,
+      "maxAuditUs": 4.094,
+      "events": [
+        {
+          "seq": 422,
+          "entryNs": 124171290090911,
+          "outputNs": 124171300798565,
+          "sampleTime": 249994,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 435111,
+          "auditNs": 3042,
+          "peak": 0.002586998976767063,
+          "rms": 0.00044957232969275316,
+          "residual": 0.00004646098750527017,
+          "residualHits": 26,
+          "zeroRun": 448,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.269501
+        },
+        {
+          "seq": 423,
+          "entryNs": 124171300791674,
+          "outputNs": 124171311464866,
+          "sampleTime": 250506,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 55582,
+          "auditNs": 3451,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 960,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.614159
+        },
+        {
+          "seq": 424,
+          "entryNs": 124171311527043,
+          "outputNs": 124171322131168,
+          "sampleTime": 251018,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 59134,
+          "auditNs": 3828,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 1472,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.541163
+        },
+        {
+          "seq": 425,
+          "entryNs": 124171322164718,
+          "outputNs": 124171332797470,
+          "sampleTime": 251530,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58354,
+          "auditNs": 3721,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 1984,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.570677
+        },
+        {
+          "seq": 426,
+          "entryNs": 124171332736882,
+          "outputNs": 124171343463771,
+          "sampleTime": 252042,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58190,
+          "auditNs": 3848,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 2496,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.664851
+        },
+        {
+          "seq": 427,
+          "entryNs": 124171343497284,
+          "outputNs": 124171354130073,
+          "sampleTime": 252554,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58631,
+          "auditNs": 3771,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 3008,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.570387
+        },
+        {
+          "seq": 428,
+          "entryNs": 124171354161467,
+          "outputNs": 124171364796374,
+          "sampleTime": 253066,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58049,
+          "auditNs": 3916,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 3520,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.572942
+        },
+        {
+          "seq": 429,
+          "entryNs": 124171364830331,
+          "outputNs": 124171375462676,
+          "sampleTime": 253578,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 58625,
+          "auditNs": 3799,
+          "peak": 0,
+          "rms": 0,
+          "residual": 0,
+          "residualHits": 0,
+          "zeroRun": 4032,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.569921
+        },
+        {
+          "seq": 430,
+          "entryNs": 124171375524307,
+          "outputNs": 124171386128977,
+          "sampleTime": 254090,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 61988,
+          "auditNs": 3833,
+          "peak": 0.0031622631940990686,
+          "rms": 0.0021339510029818793,
+          "residual": 0.00003323034961529329,
+          "residualHits": 23,
+          "zeroRun": 4033,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.538849
+        }
+      ]
+    },
+    "injectedPhase": {
+      "callbacks": 28,
+      "seconds": 0.288060519,
+      "frames": 14336,
+      "sampleRate": 48000,
+      "hardwareFrames": 512,
+      "frameGaps": 0,
+      "gapFrames": 0,
+      "lateCallbacks": 0,
+      "maxLateMs": 0,
+      "residualCallbacks": 2,
+      "residualHits": 3,
+      "silentCallbacks": 0,
+      "overBudgetCallbacks": 0,
+      "overloadEvents": 0,
+      "rateChanges": 0,
+      "bufferChanges": 0,
+      "maxResidual": 0.00003458677716781987,
+      "meanRMS": 0.0022356585210109602,
+      "maxPeak": 0.003162277629598975,
+      "meanDspMs": 0.05916082142857143,
+      "maxDspMs": 0.063844,
+      "meanAuditUs": 3.7697857142857143,
+      "maxAuditUs": 3.871,
+      "events": [
+        {
+          "seq": 454,
+          "entryNs": 124171631515072,
+          "outputNs": 124171642149115,
+          "sampleTime": 266378,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 63844,
+          "auditNs": 3819,
+          "peak": 0.0031622645910829306,
+          "rms": 0.002227746937202427,
+          "residual": 0.00001621850556108792,
+          "residualHits": 1,
+          "zeroRun": 0,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.56638
+        },
+        {
+          "seq": 468,
+          "entryNs": 124171780847721,
+          "outputNs": 124171791479742,
+          "sampleTime": 273546,
+          "frames": 512,
+          "sampleRate": 48000,
+          "dspNs": 61627,
+          "auditNs": 3848,
+          "peak": 0.003162265056744218,
+          "rms": 0.002237297878765642,
+          "residual": 0.00003458677716781987,
+          "residualHits": 2,
+          "zeroRun": 0,
+          "overloads": 0,
+          "rateChanges": 0,
+          "bufferChanges": 0,
+          "device": 154,
+          "timestampFlags": 7,
+          "hardwareFrames": 512,
+          "status": 0,
+          "gap": 0,
+          "latenessMs": -10.566546
+        }
+      ]
+    },
+    "residualThreshold": 0.00001,
+    "silenceRunThreshold": 32
+  },
+  "audit": [
+    0,
+    0,
+    0
+  ],
+  "versions": {
+    "electron": "44.4.1",
+    "node": "24.21.0"
+  },
+  "machine": "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz",
+  "window": {
+    "width": 2250,
+    "height": 1250,
+    "dpr": 1
+  },
+  "widget": {
+    "count": 128,
+    "size": 96,
+    "hz": 15,
+    "sourceChannels": 16
+  },
+  "focusDestination": {
+    "pid": 30128,
+    "name": "existing VS Code"
+  },
+  "focusProbe": "/private/tmp/awb-focus-probe",
+  "persistentFocus": true,
+  "fixedNodeCounts": [
+    20
+  ],
+  "exclusiveSC": true,
+  "scInventories": [
+    {
+      "at": "2026-10-03T22:05:21.550Z",
+      "processes": [
+        {
+          "pid": 83229,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83297,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:05:27.624Z",
+      "processes": [
+        {
+          "pid": 83229,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83297,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:05:32.359Z",
+      "processes": [
+        {
+          "pid": 83229,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83297,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:05:37.404Z",
+      "processes": [
+        {
+          "pid": 83229,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83297,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-03T22:05:42.090Z",
+      "processes": [
+        {
+          "pid": 83229,
+          "command": "/Applications/SuperCollider.app/Contents/MacOS/sclang"
+        },
+        {
+          "pid": 83297,
+          "command": "/private/tmp/awb-audit-scsynth"
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    "stopped",
+    "widgets",
+    "focus"
+  ],
+  "helperPID": 83315,
+  "unrelatedTools": 0,
+  "cleanup": true,
+  "beforeSC": [
+    1,
+    106,
+    2,
+    2,
+    273,
+    0.4467196464538574,
+    0.5173312425613403,
+    48000,
+    48000.23044769819
+  ],
+  "afterSC": [
+    1,
+    106,
+    2,
+    2,
+    274,
+    22.238353729248047,
+    76.6894302368164,
+    48000,
+    48001.49996783843
+  ],
+  "hostSurvives": true,
+  "sourceHashes": {
+    "apps/awb-shell/shell/main.mjs": "e33d8610140dbb0e830ee65f3d04560235036c93f37028bba8104209b86e395c",
+    "apps/awb-shell/sc/AWBHeadlessHost.scd": "e3f9b161d8b51385bf431837c5b3b7181c25378eb0eac0fcec73281e9e6d0ab6",
+    "apps/awb-shell/sc/AWBScBusAudio.scd": "e7e207a763d8f5f100fafad44e39cd3e2a123128133dd6b85a0fd95df2f46b74",
+    "apps/awb-shell/src/signalCaptureBroker.mjs": "b66150a19bfc4191201976faa34f88ad55cb9bd5906976ef4a12ee82d16c4a92",
+    "apps/awb-shell/src/scSignalSource.mjs": "6aeed55e8a0d2accf353402a0d9e2bd7dcf4426e5ddc7bd954d7afb4d210048f",
+    "apps/awb-shell/.build/sc-bus-reader.node": "106a3e644c9f65194ed0cb686bf9b0552d57b7c975899c123f78d7cff9ad6d0e",
+    "tool-artifacts/scope/0.1.0/server.mjs": "9225fcff0a7a111765161b139ededf4c86ba7897b23fd1707a71915ee19613a0",
+    "tool-artifacts/scope/0.1.0/public/scope.js": "2e965e505db89f87aec3f696dd673c7cbd1e43048323b0bb2f9526863d394a68",
+    "tool-artifacts/scope/0.1.0/public/index.html": "66f879efc757c21270f2c805b737b580eaabbe6458cc30ecec2be16ea0d2fa63",
+    "tool-artifacts/scope/0.1.0/public/scope.css": "ea884dec7eb3aca48bad5a9c6f0f96cb1fdaf38df29720f936e2fe0efd61680a",
+    "tool-artifacts/scope/0.1.0/public/scope-opacity.js": "875ee6c777fc4fa4f9ae5e0386d905731bde429262ee3c2a5456f4943691010b",
+    "tool-artifacts/scope/0.1.0/public/protocol.js": "88f31031f86fa54f2f7e80d4a41cc63abf9baa1bbbfd5e03ffa6406b435e2d68",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-history.js": "ffa2e3e5c70e68a8088b9d6d5c9f7888ba0322cc57835c86155eb269e276ba42",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-metadata.js": "ece9bd97757f5d89cfa145d1db47df39f025035587486798aa177e093284410d",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-painter.js": "284a99f10417dcc676b9bd1c9a146202c10de152e69d1eab4a4d120fdf63b119",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-trace.js": "da82f5457fb8313d3fb1ca321e013bd8553bd0719f311d2d0b42d57caccb91e5"
+  },
+  "protectedCount": 16,
+  "fixtureOnlyInstrumentation": true
+}

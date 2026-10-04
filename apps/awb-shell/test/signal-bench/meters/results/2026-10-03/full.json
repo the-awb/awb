@@ -1,0 +1,6851 @@
+{
+  "complete": true,
+  "phases": [
+    {
+      "rate": "idle",
+      "channels": 0,
+      "view": "idle",
+      "repeat": 1,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.147641877,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 0.6506559881057957,
+          "rssMiB": 114.5546875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16266399702645976,
+          "rssMiB": 226.93359375
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.813319985132241,
+          "rssMiB": 58.58984375
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 0,
+          "rssMiB": 69.06640625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.32532799405289786,
+          "rssMiB": 81.6015625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.1796875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0.6506559881057957,
+          "rssMiB": 68.62109375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0,
+          "rssMiB": 32.5390625
+        }
+      ],
+      "electronCPU": 1.6266399702644891,
+      "mainCPU": 0.6506559881057957,
+      "rendererCPU": 0,
+      "gpuCPU": 0.6506559881057957,
+      "sclangCPU": 0.16266399702645976,
+      "scProcessCPU": 0.813319985132241,
+      "rssMiB": 432.5625,
+      "scAudioCPU": 0.3669374908010165,
+      "scPeakCPU": 0.8175656199455261,
+      "packetHz": 0,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": false,
+      "pixelsChanged": null,
+      "canvasBytes": 0,
+      "state": {
+        "now": 7635,
+        "packets": 0,
+        "gapFrames": 0,
+        "sourceEnd": 0,
+        "connection": "Stopped",
+        "error": null,
+        "view": "both",
+        "wavePaints": 4,
+        "meterUpdates": 0,
+        "widgetPaints": 0,
+        "labels": 1,
+        "meterAppendMs": 0,
+        "meterDrawMs": 0,
+        "waveMs": 1.7000000029802322,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 0,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 0,
+          "transformCalls": 0,
+          "derivedFrames": 0
+        },
+        "derived": [],
+        "sources": [],
+        "polling": false
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 1,
+      "view": "capture",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.144251381999998,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.812180364335232,
+          "rssMiB": 120.375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16275375759031385,
+          "rssMiB": 226.93359375
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9765225455419049,
+          "rssMiB": 58.57421875
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 2.1157988486741255,
+          "rssMiB": 78.59765625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.48826127277095155,
+          "rssMiB": 85.4453125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.1796875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0.8137687879515874,
+          "rssMiB": 70.0390625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.4647838183128554,
+          "rssMiB": 32.75
+        }
+      ],
+      "electronCPU": 12.694793092044755,
+      "mainCPU": 7.812180364335232,
+      "rendererCPU": 2.1157988486741255,
+      "gpuCPU": 0.8137687879515874,
+      "sclangCPU": 0.16275375759031385,
+      "scProcessCPU": 0.9765225455419049,
+      "rssMiB": 453.38671875,
+      "scAudioCPU": 0.4086153022944927,
+      "scPeakCPU": 0.6530531048774719,
+      "packetHz": 46.64751267064628,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 1536,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 15367,
+        "packets": 347,
+        "gapFrames": 1536,
+        "sourceEnd": 357888,
+        "channels": 1,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 6,
+        "meterUpdates": 1,
+        "widgetPaints": 1,
+        "labels": 3,
+        "meterAppendMs": 0.09999999403953552,
+        "meterDrawMs": 3.8999999910593033,
+        "waveMs": 4.4000000059604645,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 695,
+          "transformCalls": 695,
+          "derivedFrames": 347
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 347,
+            "ageMs": 17
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 1,
+            "generation": 14202624,
+            "nodeID": 1002,
+            "subscribers": 1,
+            "sourceEnd": 358400,
+            "ageMs": 9,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 1,
+      "view": "waves",
+      "repeat": 1,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.146903603000003,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.670024885373166,
+          "rssMiB": 120.56640625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16268353378958597,
+          "rssMiB": 226.93359375
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8134176689479443,
+          "rssMiB": 58.57421875
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 6.995391952952347,
+          "rssMiB": 87.1875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.6507341351583574,
+          "rssMiB": 77.80078125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.1796875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.6700248853731665,
+          "rssMiB": 73.19921875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.3014682703167157,
+          "rssMiB": 32.76953125
+        }
+      ],
+      "electronCPU": 22.287644129173753,
+      "mainCPU": 6.670024885373166,
+      "rendererCPU": 6.995391952952347,
+      "gpuCPU": 6.6700248853731665,
+      "sclangCPU": 0.16268353378958597,
+      "scProcessCPU": 0.8134176689479443,
+      "rssMiB": 457.703125,
+      "scAudioCPU": 0.35835393766562146,
+      "scPeakCPU": 0.6959062218666077,
+      "packetHz": 46.78551262402194,
+      "waveHz": 30.007259820924418,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.743808986045011,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 4.662418320764214,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 22769.5,
+        "packets": 694,
+        "gapFrames": 1536,
+        "sourceEnd": 713216,
+        "channels": 1,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 228,
+        "meterUpdates": 1,
+        "widgetPaints": 1,
+        "labels": 61,
+        "meterAppendMs": 0.09999999403953552,
+        "meterDrawMs": 3.8999999910593033,
+        "waveMs": 42.39999996125698,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 1389,
+          "transformCalls": 1389,
+          "derivedFrames": 694
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 694,
+            "ageMs": 19
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 1,
+            "generation": 14202624,
+            "nodeID": 1002,
+            "subscribers": 1,
+            "sourceEnd": 713728,
+            "ageMs": 11,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 1,
+      "view": "meters",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.145282661999998,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.322690016890883,
+          "rssMiB": 121.27734375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16272644481979387,
+          "rssMiB": 226.88671875
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.976358668918785,
+          "rssMiB": 58.58203125
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 3.7427082308553388,
+          "rssMiB": 89.35546875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.32545288963959496,
+          "rssMiB": 78.71875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.1796875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 3.4172553412157436,
+          "rssMiB": 73.29296875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.4645380033781765,
+          "rssMiB": 32.7734375
+        }
+      ],
+      "electronCPU": 16.272644481979736,
+      "mainCPU": 7.322690016890883,
+      "rendererCPU": 3.7427082308553388,
+      "gpuCPU": 3.4172553412157436,
+      "sclangCPU": 0.16272644481979387,
+      "scProcessCPU": 0.976358668918785,
+      "rssMiB": 461.59765625,
+      "scAudioCPU": 0.4223308141032855,
+      "scPeakCPU": 0.7860000133514404,
+      "packetHz": 46.79457182969026,
+      "waveHz": 0,
+      "meterHz": 7.906669033292493,
+      "widgetPaintsHz": 7.906669033292493,
+      "metadataHz": 7.906669033292493,
+      "meterAppendMsPerSecond": 0.19363270669137964,
+      "meterDrawMsPerSecond": 0.9520274895938261,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 30172.89999999106,
+        "packets": 1041,
+        "gapFrames": 1536,
+        "sourceEnd": 1068544,
+        "channels": 1,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 228,
+        "meterUpdates": 60,
+        "widgetPaints": 60,
+        "labels": 120,
+        "meterAppendMs": 1.399999961256981,
+        "meterDrawMs": 11.699999943375587,
+        "waveMs": 42.39999996125698,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 2084,
+          "transformCalls": 2084,
+          "derivedFrames": 1042
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1042,
+            "ageMs": 0
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 1,
+            "generation": 14202624,
+            "nodeID": 1002,
+            "subscribers": 1,
+            "sourceEnd": 1069568,
+            "ageMs": 0,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 1,
+      "view": "both",
+      "repeat": 1,
+      "layout": {
+        "footer": 709.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.144449062,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.672689379681282,
+          "rssMiB": 121.87109375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16274852145565197,
+          "rssMiB": 226.88671875
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.813742607278202,
+          "rssMiB": 58.58203125
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 8.137426072782048,
+          "rssMiB": 93.5546875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.4882455643669225,
+          "rssMiB": 80.86328125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.1796875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 7.974677551326407,
+          "rssMiB": 73.41796875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.4647366931007682,
+          "rssMiB": 32.77734375
+        }
+      ],
+      "electronCPU": 24.73777526125743,
+      "mainCPU": 6.672689379681282,
+      "rendererCPU": 8.137426072782048,
+      "gpuCPU": 7.974677551326407,
+      "sclangCPU": 0.16274852145565197,
+      "scProcessCPU": 0.813742607278202,
+      "rssMiB": 468.6640625,
+      "scAudioCPU": 0.3877853602170944,
+      "scPeakCPU": 0.7962937355041504,
+      "packetHz": 46.13870650295425,
+      "waveHz": 29.844967493169705,
+      "meterHz": 7.904883281974679,
+      "widgetPaintsHz": 7.5822349847512225,
+      "metadataHz": 7.904883281974679,
+      "meterAppendMsPerSecond": 0.032264827799211915,
+      "meterDrawMsPerSecond": 0.8711503986570645,
+      "waveMsPerSecond": 5.065578274581582,
+      "gapFrames": 4608,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 37578.29999999702,
+        "packets": 1384,
+        "gapFrames": 6144,
+        "sourceEnd": 1424384,
+        "channels": 1,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 449,
+        "meterUpdates": 119,
+        "widgetPaints": 117,
+        "labels": 179,
+        "meterAppendMs": 1.7999999523162842,
+        "meterDrawMs": 18.899999916553497,
+        "waveMs": 80,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 2771,
+          "transformCalls": 2771,
+          "derivedFrames": 1384
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1384,
+            "ageMs": 10
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 1,
+            "generation": 14202624,
+            "nodeID": 1002,
+            "subscribers": 1,
+            "sourceEnd": 1424896,
+            "ageMs": 1,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 4,
+      "view": "capture",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.229367743999996,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.939607600729253,
+          "rssMiB": 127.10546875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.0234375
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8026496757742202,
+          "rssMiB": 58.58984375
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 2.8895388327871987,
+          "rssMiB": 101.70703125
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 82.140625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.1796875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 71.32421875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 2.08688915701298,
+          "rssMiB": 32.78515625
+        }
+      ],
+      "electronCPU": 10.91603559052943,
+      "mainCPU": 5.939607600729253,
+      "rendererCPU": 2.8895388327871987,
+      "gpuCPU": 0,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.8026496757742202,
+      "rssMiB": 481.2421875,
+      "scAudioCPU": 0.3565644087890784,
+      "scPeakCPU": 0.8627062439918518,
+      "packetHz": 45.58667026698606,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 8192,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 720000,
+      "state": {
+        "now": 45168.79999999702,
+        "packets": 1729,
+        "gapFrames": 16896,
+        "sourceEnd": 363008,
+        "channels": 4,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 452,
+        "meterUpdates": 119,
+        "widgetPaints": 117,
+        "labels": 180,
+        "meterAppendMs": 1.7999999523162842,
+        "meterDrawMs": 18.899999916553497,
+        "waveMs": 81.70000000298023,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 720000,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 3463,
+          "transformCalls": 3463,
+          "derivedFrames": 1729
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 343,
+            "ageMs": 6
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 4,
+            "generation": 15104621,
+            "nodeID": 1003,
+            "subscribers": 1,
+            "sourceEnd": 363008,
+            "ageMs": 6,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 4,
+      "view": "waves",
+      "repeat": 1,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.157646159000003,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.333589003485966,
+          "rssMiB": 127.40234375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.09765625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9743983082286034,
+          "rssMiB": 58.58984375
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 9.25678392817179,
+          "rssMiB": 111.4921875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 82.79296875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 8.282385619943186,
+          "rssMiB": 73.48828125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 2.1111963344953213,
+          "rssMiB": 32.80859375
+        }
+      ],
+      "electronCPU": 25.983954886096267,
+      "mainCPU": 6.333589003485966,
+      "rendererCPU": 9.25678392817179,
+      "gpuCPU": 8.282385619943186,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.9743983082286034,
+      "rssMiB": 494.18359375,
+      "scAudioCPU": 0.3936666212975979,
+      "scPeakCPU": 0.6971437335014343,
+      "packetHz": 46.37083789530144,
+      "waveHz": 29.94783280738218,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.88948283635337,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 9.950408942960483,
+      "gapFrames": 3072,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 720000,
+      "state": {
+        "now": 52582.19999998808,
+        "packets": 2071,
+        "gapFrames": 22016,
+        "sourceEnd": 718336,
+        "channels": 4,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 674,
+        "meterUpdates": 119,
+        "widgetPaints": 117,
+        "labels": 239,
+        "meterAppendMs": 1.7999999523162842,
+        "meterDrawMs": 18.899999916553497,
+        "waveMs": 156.59999983012676,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 720000,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 4152,
+          "transformCalls": 4152,
+          "derivedFrames": 2072
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 686,
+            "ageMs": 0
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 4,
+            "generation": 15104621,
+            "nodeID": 1003,
+            "subscribers": 1,
+            "sourceEnd": 719360,
+            "ageMs": 0,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 4,
+      "view": "meters",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.145283720999992,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.159962338214068,
+          "rssMiB": 127.62890625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16272641677758917,
+          "rssMiB": 227.15625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9763585006655566,
+          "rssMiB": 58.58984375
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.369971753660558,
+          "rssMiB": 119.65234375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 83.16015625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 4.068160419439816,
+          "rssMiB": 71.59765625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 2.440896251663892,
+          "rssMiB": 32.8125
+        }
+      ],
+      "electronCPU": 19.038990762978337,
+      "mainCPU": 7.159962338214068,
+      "rendererCPU": 5.369971753660558,
+      "gpuCPU": 4.068160419439816,
+      "sclangCPU": 0.16272641677758917,
+      "scProcessCPU": 0.9763585006655566,
+      "rssMiB": 501.05078125,
+      "scAudioCPU": 0.41510509699583054,
+      "scPeakCPU": 0.7182937264442444,
+      "packetHz": 46.48235123222178,
+      "waveHz": 0,
+      "meterHz": 7.908455591593289,
+      "widgetPaintsHz": 31.31102826059384,
+      "metadataHz": 7.908455591593289,
+      "meterAppendMsPerSecond": 0.03227941105893249,
+      "meterDrawMsPerSecond": 1.5816911178376571,
+      "waveMsPerSecond": 0,
+      "gapFrames": 2560,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 59985,
+        "packets": 2416,
+        "gapFrames": 24576,
+        "sourceEnd": 1074176,
+        "channels": 4,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 674,
+        "meterUpdates": 178,
+        "widgetPaints": 350,
+        "labels": 298,
+        "meterAppendMs": 2.1999999433755875,
+        "meterDrawMs": 31.299999862909317,
+        "waveMs": 156.59999983012676,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 4841,
+          "transformCalls": 4841,
+          "derivedFrames": 2416
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1030,
+            "ageMs": 11
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 4,
+            "generation": 15104621,
+            "nodeID": 1003,
+            "subscribers": 1,
+            "sourceEnd": 1074176,
+            "ageMs": 11,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 4,
+      "view": "both",
+      "repeat": 1,
+      "layout": {
+        "footer": 709.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.143933025000006,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.6732498276216115,
+          "rssMiB": 127.79296875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16276219091759675,
+          "rssMiB": 227.2265625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8138109545880055,
+          "rssMiB": 58.58984375
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 10.416780218726416,
+          "rssMiB": 128.34765625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16276219091760036,
+          "rssMiB": 79.33984375
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 9.765731455056008,
+          "rssMiB": 74.796875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 2.278670672846405,
+          "rssMiB": 32.81640625
+        }
+      ],
+      "electronCPU": 29.297194365168043,
+      "mainCPU": 6.6732498276216115,
+      "rendererCPU": 10.416780218726416,
+      "gpuCPU": 9.765731455056008,
+      "sclangCPU": 0.16276219091759675,
+      "scProcessCPU": 0.8138109545880055,
+      "rssMiB": 509.29296875,
+      "scAudioCPU": 0.40609031294782955,
+      "scPeakCPU": 0.7025343775749207,
+      "packetHz": 46.96199467441297,
+      "waveHz": 30.016945049624788,
+      "meterHz": 7.907689824901153,
+      "widgetPaintsHz": 31.469377874606632,
+      "metadataHz": 7.907689824901153,
+      "meterAppendMsPerSecond": 0.06455256855633071,
+      "meterDrawMsPerSecond": 1.3071895415217518,
+      "waveMsPerSecond": 10.6995884768853,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 67387.59999999404,
+        "packets": 2763,
+        "gapFrames": 24576,
+        "sourceEnd": 1429504,
+        "channels": 4,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 896,
+        "meterUpdates": 237,
+        "widgetPaints": 585,
+        "labels": 357,
+        "meterAppendMs": 2.6999999284744263,
+        "meterDrawMs": 42.099999845027924,
+        "waveMs": 236.39999981224537,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 5536,
+          "transformCalls": 5536,
+          "derivedFrames": 2763
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1377,
+            "ageMs": 9
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 4,
+            "generation": 15104621,
+            "nodeID": 1003,
+            "subscribers": 1,
+            "sourceEnd": 1430016,
+            "ageMs": 0,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 16,
+      "view": "capture",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.139460105999999,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 9.284203987952415,
+          "rssMiB": 143.23046875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16288077171847457,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9772846303107824,
+          "rssMiB": 58.58984375
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 3.2576154343692747,
+          "rssMiB": 142.31640625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1628807717184637,
+          "rssMiB": 79.92578125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 71.87890625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.3030461737477097,
+          "rssMiB": 32.890625
+        }
+      ],
+      "electronCPU": 14.007746367787863,
+      "mainCPU": 9.284203987952415,
+      "rendererCPU": 3.2576154343692747,
+      "gpuCPU": 0,
+      "sclangCPU": 0.16288077171847457,
+      "scProcessCPU": 0.9772846303107824,
+      "rssMiB": 536.44140625,
+      "scAudioCPU": 0.4533732781807582,
+      "scPeakCPU": 0.7443000078201294,
+      "packetHz": 46.52214648008013,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 2048,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 2880000,
+      "state": {
+        "now": 74875.79999999702,
+        "packets": 3111,
+        "gapFrames": 26624,
+        "sourceEnd": 357376,
+        "channels": 16,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 900,
+        "meterUpdates": 237,
+        "widgetPaints": 585,
+        "labels": 358,
+        "meterAppendMs": 2.6999999284744263,
+        "meterDrawMs": 42.099999845027924,
+        "waveMs": 239.19999980926514,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 2880000,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 6233,
+          "transformCalls": 6233,
+          "derivedFrames": 3111
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 346,
+            "ageMs": 20
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 16,
+            "generation": 3602266,
+            "nodeID": 1004,
+            "subscribers": 1,
+            "sourceEnd": 357888,
+            "ageMs": 10,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 16,
+      "view": "waves",
+      "repeat": 1,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.14828615,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 8.13234758112226,
+          "rssMiB": 143.5625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8132347581122232,
+          "rssMiB": 58.58984375
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 11.547933565193611,
+          "rssMiB": 142.37890625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 80.546875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 11.873227468438502,
+          "rssMiB": 85.71484375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.1385286613571177,
+          "rssMiB": 32.89453125
+        }
+      ],
+      "electronCPU": 32.69203727611149,
+      "mainCPU": 8.13234758112226,
+      "rendererCPU": 11.547933565193611,
+      "gpuCPU": 11.873227468438502,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.8132347581122232,
+      "rssMiB": 551.296875,
+      "scAudioCPU": 0.4148116086920102,
+      "scPeakCPU": 0.9669281244277954,
+      "packetHz": 46.62267894890151,
+      "waveHz": 30.006291641853565,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.904883281993681,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 32.78106699846274,
+      "gapFrames": 1024,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 2880000,
+      "state": {
+        "now": 82276.69999998808,
+        "packets": 3457,
+        "gapFrames": 27648,
+        "sourceEnd": 712704,
+        "channels": 16,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 1122,
+        "meterUpdates": 237,
+        "widgetPaints": 585,
+        "labels": 417,
+        "meterAppendMs": 2.6999999284744263,
+        "meterDrawMs": 42.099999845027924,
+        "waveMs": 480.0999997407198,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 2880000,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 6927,
+          "transformCalls": 6927,
+          "derivedFrames": 3458
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 693,
+            "ageMs": 4
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 16,
+            "generation": 3602266,
+            "nodeID": 1004,
+            "subscribers": 1,
+            "sourceEnd": 713728,
+            "ageMs": 4,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 16,
+      "view": "meters",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.141713117999999,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 8.955156149968527,
+          "rssMiB": 146.85546875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9769261254511117,
+          "rssMiB": 58.58984375
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.210272669072595,
+          "rssMiB": 141.5390625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 80.52734375
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.350019815432216,
+          "rssMiB": 74.703125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.1397471463596303,
+          "rssMiB": 32.8984375
+        }
+      ],
+      "electronCPU": 21.65519578083297,
+      "mainCPU": 8.955156149968527,
+      "rendererCPU": 5.210272669072595,
+      "gpuCPU": 6.350019815432216,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.9769261254511117,
+      "rssMiB": 542.72265625,
+      "scAudioCPU": 0.43720801547169685,
+      "scPeakCPU": 0.9253125190734863,
+      "packetHz": 46.96047896458761,
+      "waveHz": 0,
+      "meterHz": 7.9074346022845114,
+      "widgetPaintsHz": 124.90519147282065,
+      "metadataHz": 7.9074346022845114,
+      "meterAppendMsPerSecond": 0.09682573126670778,
+      "meterDrawMsPerSecond": 3.1952490740887245,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 89685.09999999404,
+        "packets": 3805,
+        "gapFrames": 27648,
+        "sourceEnd": 1069056,
+        "channels": 16,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 1122,
+        "meterUpdates": 296,
+        "widgetPaints": 1519,
+        "labels": 476,
+        "meterAppendMs": 3.599999949336052,
+        "meterDrawMs": 68.09999978542328,
+        "waveMs": 480.0999997407198,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 7621,
+          "transformCalls": 7621,
+          "derivedFrames": 3805
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1040,
+            "ageMs": 2
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 16,
+            "generation": 3602266,
+            "nodeID": 1004,
+            "subscribers": 1,
+            "sourceEnd": 1069056,
+            "ageMs": 2,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 16,
+      "view": "both",
+      "repeat": 1,
+      "layout": {
+        "footer": 767.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.147782999999996,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.8076926267566815,
+          "rssMiB": 146.66796875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16266026305742726,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.813301315287158,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 12.36217999236473,
+          "rssMiB": 141.85546875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16266026305743086,
+          "rssMiB": 81.26953125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 16.59134683185794,
+          "rssMiB": 92.6484375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.1386218414020162,
+          "rssMiB": 32.90234375
+        }
+      ],
+      "electronCPU": 38.0625015554388,
+      "mainCPU": 7.8076926267566815,
+      "rendererCPU": 12.36217999236473,
+      "gpuCPU": 16.59134683185794,
+      "sclangCPU": 0.16266026305742726,
+      "scProcessCPU": 0.813301315287158,
+      "rssMiB": 561.54296875,
+      "scAudioCPU": 0.40332872048020363,
+      "scPeakCPU": 2.1408655643463135,
+      "packetHz": 46.645542133837004,
+      "waveHz": 29.917485644460974,
+      "meterHz": 7.881488153648321,
+      "widgetPaintsHz": 124.3344967912276,
+      "metadataHz": 7.881488153648321,
+      "meterAppendMsPerSecond": 0.11259268599181968,
+      "meterDrawMsPerSecond": 2.7826478674367467,
+      "waveMsPerSecond": 30.57695711324051,
+      "gapFrames": 3072,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 97134.19999998808,
+        "packets": 4151,
+        "gapFrames": 30720,
+        "sourceEnd": 1426432,
+        "channels": 16,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 1345,
+        "meterUpdates": 355,
+        "widgetPaints": 2449,
+        "labels": 535,
+        "meterAppendMs": 4.599999949336052,
+        "meterDrawMs": 89.49999983608723,
+        "waveMs": 704.8999997973442,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 8313,
+          "transformCalls": 8313,
+          "derivedFrames": 4151
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1386,
+            "ageMs": 8
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 16,
+            "generation": 3602266,
+            "nodeID": 1004,
+            "subscribers": 1,
+            "sourceEnd": 1426432,
+            "ageMs": 8,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 1,
+      "view": "capture",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.148102543000001,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.879554267382358,
+          "rssMiB": 146.4921875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.1626518089127419,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8132590445637239,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 0.4879554267382257,
+          "rssMiB": 141.875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1626518089127437,
+          "rssMiB": 81.890625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 77.5546875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.4879554267382329,
+          "rssMiB": 32.90625
+        }
+      ],
+      "electronCPU": 6.018116929771559,
+      "mainCPU": 4.879554267382358,
+      "rendererCPU": 0.4879554267382257,
+      "gpuCPU": 0,
+      "sclangCPU": 0.1626518089127419,
+      "scProcessCPU": 0.8132590445637239,
+      "rssMiB": 546.91796875,
+      "scAudioCPU": 0.35991796602805454,
+      "scPeakCPU": 0.8054437637329102,
+      "packetHz": 23.379554982263787,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 104667.29999999702,
+        "packets": 4327,
+        "gapFrames": 30720,
+        "sourceEnd": 5600,
+        "channels": 1,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 1349,
+        "meterUpdates": 356,
+        "widgetPaints": 2450,
+        "labels": 537,
+        "meterAppendMs": 4.799999937415123,
+        "meterDrawMs": 89.6999998241663,
+        "waveMs": 707.5999998003244,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 8491,
+          "transformCalls": 8491,
+          "derivedFrames": 4327
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 174,
+            "ageMs": 39
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 1,
+            "generation": 55963,
+            "nodeID": 1005,
+            "subscribers": 1,
+            "sourceEnd": 5600,
+            "ageMs": 39,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 1,
+      "view": "waves",
+      "repeat": 1,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.141383961,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.559232931503746,
+          "rssMiB": 146.5390625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.6513189902148188,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 4.559232931503731,
+          "rssMiB": 139.85546875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 82.078125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 5.861870911933354,
+          "rssMiB": 82.48046875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.48848924266111404,
+          "rssMiB": 32.90625
+        }
+      ],
+      "electronCPU": 15.468826017601945,
+      "mainCPU": 4.559232931503746,
+      "rendererCPU": 4.559232931503731,
+      "gpuCPU": 5.861870911933354,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.6513189902148188,
+      "rssMiB": 550.05859375,
+      "scAudioCPU": 0.3321417185167472,
+      "scPeakCPU": 0.7406530976295471,
+      "packetHz": 23.390114853518245,
+      "waveHz": 23.55142599043906,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.904245709119958,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 2.129306998220616,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 112069.79999999702,
+        "packets": 4501,
+        "gapFrames": 30720,
+        "sourceEnd": 11168,
+        "channels": 1,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 1523,
+        "meterUpdates": 356,
+        "widgetPaints": 2450,
+        "labels": 596,
+        "meterAppendMs": 4.799999937415123,
+        "meterDrawMs": 89.6999998241663,
+        "waveMs": 724.9999996870756,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 8665,
+          "transformCalls": 8665,
+          "derivedFrames": 4501
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 348,
+            "ageMs": 19
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 1,
+            "generation": 55963,
+            "nodeID": 1005,
+            "subscribers": 1,
+            "sourceEnd": 11168,
+            "ageMs": 19,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 1,
+      "view": "meters",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.143685331999993,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.55752508256879,
+          "rssMiB": 146.55859375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16276875294889673,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8138437647444258,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 1.9532250353866307,
+          "rssMiB": 132.8984375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16276875294888588,
+          "rssMiB": 82.11328125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 2.7670688001310566,
+          "rssMiB": 78.41796875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.4883062588466577,
+          "rssMiB": 32.9140625
+        }
+      ],
+      "electronCPU": 9.92889392988202,
+      "mainCPU": 4.55752508256879,
+      "rendererCPU": 1.9532250353866307,
+      "gpuCPU": 2.7670688001310566,
+      "sclangCPU": 0.16276875294889673,
+      "scProcessCPU": 0.8138437647444258,
+      "rssMiB": 539.1015625,
+      "scAudioCPU": 0.33699682851632434,
+      "scPeakCPU": 0.898659348487854,
+      "packetHz": 23.39879617231345,
+      "waveHz": 0,
+      "meterHz": 7.907179396161096,
+      "widgetPaintsHz": 7.907179396161096,
+      "metadataHz": 7.907179396161096,
+      "meterAppendMsPerSecond": 0.016137102251261276,
+      "meterDrawMsPerSecond": 0.8875405420624465,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 119471.69999998808,
+        "packets": 4674,
+        "gapFrames": 30720,
+        "sourceEnd": 16704,
+        "channels": 1,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 1523,
+        "meterUpdates": 415,
+        "widgetPaints": 2509,
+        "labels": 655,
+        "meterAppendMs": 4.999999955296516,
+        "meterDrawMs": 96.39999978244305,
+        "waveMs": 724.9999996870756,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 8838,
+          "transformCalls": 8838,
+          "derivedFrames": 4674
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 521,
+            "ageMs": 39
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 1,
+            "generation": 55963,
+            "nodeID": 1005,
+            "subscribers": 1,
+            "sourceEnd": 16704,
+            "ageMs": 39,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 1,
+      "view": "both",
+      "repeat": 1,
+      "layout": {
+        "footer": 709.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.144752015999998,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.882214924521713,
+          "rssMiB": 146.6171875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16274049748405323,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.813702487420295,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.207695919489819,
+          "rssMiB": 134.27734375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.32548099496811367,
+          "rssMiB": 80.48046875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.672360396846327,
+          "rssMiB": 82.96875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.4882214924521705,
+          "rssMiB": 32.9140625
+        }
+      ],
+      "electronCPU": 17.57597372827814,
+      "mainCPU": 4.882214924521713,
+      "rendererCPU": 5.207695919489819,
+      "gpuCPU": 6.672360396846327,
+      "sclangCPU": 0.16274049748405323,
+      "scProcessCPU": 0.813702487420295,
+      "rssMiB": 543.45703125,
+      "scAudioCPU": 0.3577483619252841,
+      "scPeakCPU": 1.0966500043869019,
+      "packetHz": 23.3893602606479,
+      "waveHz": 23.3893602606479,
+      "meterHz": 7.90399070877067,
+      "widgetPaintsHz": 7.90399070877067,
+      "metadataHz": 7.90399070877067,
+      "meterAppendMsPerSecond": 0.08065296641602725,
+      "meterDrawMsPerSecond": 0.8871826401908824,
+      "waveMsPerSecond": 2.6454172705634034,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 126876.59999999404,
+        "packets": 4848,
+        "gapFrames": 30720,
+        "sourceEnd": 22272,
+        "channels": 1,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 1697,
+        "meterUpdates": 474,
+        "widgetPaints": 2568,
+        "labels": 714,
+        "meterAppendMs": 5.499999955296516,
+        "meterDrawMs": 103.59999983012676,
+        "waveMs": 745.299999460578,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 9012,
+          "transformCalls": 9012,
+          "derivedFrames": 4848
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 695,
+            "ageMs": 23
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 1,
+            "generation": 55963,
+            "nodeID": 1005,
+            "subscribers": 1,
+            "sourceEnd": 22272,
+            "ageMs": 23,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 4,
+      "view": "capture",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.149078447999986,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.878779845418547,
+          "rssMiB": 146.80078125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16262599484728202,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8131299742364246,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 0.48787798454186054,
+          "rssMiB": 134.5234375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16262599484728565,
+          "rssMiB": 80.95703125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 78.8125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.48787798454185693,
+          "rssMiB": 32.91796875
+        }
+      ],
+      "electronCPU": 6.017161809349551,
+      "mainCPU": 4.878779845418547,
+      "rendererCPU": 0.48787798454186054,
+      "gpuCPU": 0,
+      "sclangCPU": 0.16262599484728202,
+      "scProcessCPU": 0.8131299742364246,
+      "rssMiB": 540.2109375,
+      "scAudioCPU": 0.37174202377597493,
+      "scPeakCPU": 1.4652187824249268,
+      "packetHz": 23.38219405609625,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 720000,
+      "state": {
+        "now": 134405.89999999106,
+        "packets": 5023,
+        "gapFrames": 30720,
+        "sourceEnd": 5600,
+        "channels": 4,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 1700,
+        "meterUpdates": 475,
+        "widgetPaints": 2569,
+        "labels": 716,
+        "meterAppendMs": 5.499999955296516,
+        "meterDrawMs": 103.6999998241663,
+        "waveMs": 745.6999994516373,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 720000,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 9188,
+          "transformCalls": 9188,
+          "derivedFrames": 5024
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 175,
+            "ageMs": 0
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 4,
+            "generation": 9205286,
+            "nodeID": 1006,
+            "subscribers": 1,
+            "sourceEnd": 5632,
+            "ageMs": 0,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 4,
+      "view": "waves",
+      "repeat": 1,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.3281937449999965,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.26662031663191,
+          "rssMiB": 146.83203125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.7901148734503521,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 4.424643291321992,
+          "rssMiB": 135.4921875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 81.6015625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.162896012912777,
+          "rssMiB": 95.609375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.4740689240702134,
+          "rssMiB": 32.91796875
+        }
+      ],
+      "electronCPU": 15.328228544936891,
+      "mainCPU": 4.26662031663191,
+      "rendererCPU": 4.424643291321992,
+      "gpuCPU": 6.162896012912777,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.7901148734503521,
+      "rssMiB": 558.65234375,
+      "scAudioCPU": 0.3270835566023986,
+      "scPeakCPU": 0.6598874926567078,
+      "packetHz": 23.16952893847178,
+      "waveHz": 23.326079809677672,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.984094431500411,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 3.005776736950813,
+      "gapFrames": 32,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 720000,
+      "state": {
+        "now": 141996.19999998808,
+        "packets": 5200,
+        "gapFrames": 30752,
+        "sourceEnd": 11296,
+        "channels": 4,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 1877,
+        "meterUpdates": 475,
+        "widgetPaints": 2569,
+        "labels": 777,
+        "meterAppendMs": 5.499999955296516,
+        "meterDrawMs": 103.6999998241663,
+        "waveMs": 768.2999995201826,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 720000,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 9364,
+          "transformCalls": 9364,
+          "derivedFrames": 5200
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 351,
+            "ageMs": 39
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 4,
+            "generation": 9205286,
+            "nodeID": 1006,
+            "subscribers": 1,
+            "sourceEnd": 11296,
+            "ageMs": 39,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 4,
+      "view": "meters",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.147711366999982,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.717202592767722,
+          "rssMiB": 147.05859375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.1626621583712978,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8133107918565035,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 2.114608058826929,
+          "rssMiB": 136.34765625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 82.03125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 3.41590532579734,
+          "rssMiB": 81.58984375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.48798647511390425,
+          "rssMiB": 32.921875
+        }
+      ],
+      "electronCPU": 10.735702452505896,
+      "mainCPU": 4.717202592767722,
+      "rendererCPU": 2.114608058826929,
+      "gpuCPU": 3.41590532579734,
+      "sclangCPU": 0.1626621583712978,
+      "scProcessCPU": 0.8133107918565035,
+      "rssMiB": 546.1484375,
+      "scAudioCPU": 0.34706168497602147,
+      "scPeakCPU": 0.7157906293869019,
+      "packetHz": 23.375032241468702,
+      "waveHz": 0,
+      "meterHz": 7.899148826427355,
+      "widgetPaintsHz": 31.59659530570942,
+      "metadataHz": 7.899148826427355,
+      "meterAppendMsPerSecond": 0.09672427518748565,
+      "meterDrawMsPerSecond": 1.4669847858942717,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 149413.19999998808,
+        "packets": 5374,
+        "gapFrames": 30752,
+        "sourceEnd": 16864,
+        "channels": 4,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 1878,
+        "meterUpdates": 534,
+        "widgetPaints": 2805,
+        "labels": 836,
+        "meterAppendMs": 6.299999967217445,
+        "meterDrawMs": 115.49999985098839,
+        "waveMs": 768.3999995142221,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 9538,
+          "transformCalls": 9538,
+          "derivedFrames": 5374
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 525,
+            "ageMs": 33
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 4,
+            "generation": 9205286,
+            "nodeID": 1006,
+            "subscribers": 1,
+            "sourceEnd": 16864,
+            "ageMs": 33,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 4,
+      "view": "both",
+      "repeat": 1,
+      "layout": {
+        "footer": 709.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.14337391699999,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.53441813234173,
+          "rssMiB": 147.17578125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.1627770038924149,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8138850194620166,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.859972140126545,
+          "rssMiB": 138.0078125
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 81.66015625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 8.138850194620195,
+          "rssMiB": 91.17578125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.48833101167721216,
+          "rssMiB": 32.921875
+        }
+      ],
+      "electronCPU": 20.02157147876568,
+      "mainCPU": 5.53441813234173,
+      "rendererCPU": 5.859972140126545,
+      "gpuCPU": 8.138850194620195,
+      "sclangCPU": 0.1627770038924149,
+      "scProcessCPU": 0.8138850194620166,
+      "rssMiB": 557.140625,
+      "scAudioCPU": 0.38681978980700177,
+      "scPeakCPU": 0.7540500164031982,
+      "packetHz": 23.57157848854692,
+      "waveHz": 23.57157848854692,
+      "meterHz": 7.911009218758897,
+      "widgetPaintsHz": 31.64403687503559,
+      "metadataHz": 7.911009218758897,
+      "meterAppendMsPerSecond": 0.17759409556933908,
+      "meterDrawMsPerSecond": 1.4368976033804157,
+      "waveMsPerSecond": 3.132113857325696,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 156812.89999999106,
+        "packets": 5548,
+        "gapFrames": 30752,
+        "sourceEnd": 22432,
+        "channels": 4,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 2053,
+        "meterUpdates": 593,
+        "widgetPaints": 3041,
+        "labels": 895,
+        "meterAppendMs": 7.500000029802322,
+        "meterDrawMs": 127.3999999165535,
+        "waveMs": 791.8999995440245,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 9712,
+          "transformCalls": 9712,
+          "derivedFrames": 5548
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 699,
+            "ageMs": 7
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 4,
+            "generation": 9205286,
+            "nodeID": 1006,
+            "subscribers": 1,
+            "sourceEnd": 22432,
+            "ageMs": 7,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 16,
+      "view": "capture",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.139984905999998,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.02607344585546,
+          "rssMiB": 147.46484375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16286684988798228,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9772010993279082,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 0.9772010993279227,
+          "rssMiB": 138.1875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16286684988798592,
+          "rssMiB": 82.00390625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 82
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.6514673995519437,
+          "rssMiB": 32.92578125
+        }
+      ],
+      "electronCPU": 7.817608794623313,
+      "mainCPU": 6.02607344585546,
+      "rendererCPU": 0.9772010993279227,
+      "gpuCPU": 0,
+      "sclangCPU": 0.16286684988798228,
+      "scProcessCPU": 0.9772010993279082,
+      "rssMiB": 548.78125,
+      "scAudioCPU": 0.42452753707766533,
+      "scPeakCPU": 0.700584352016449,
+      "packetHz": 23.424500411914277,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 2880000,
+      "state": {
+        "now": 164300.79999999702,
+        "packets": 5723,
+        "gapFrames": 30752,
+        "sourceEnd": 5568,
+        "channels": 16,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 2056,
+        "meterUpdates": 594,
+        "widgetPaints": 3045,
+        "labels": 897,
+        "meterAppendMs": 7.500000029802322,
+        "meterDrawMs": 127.7999999076128,
+        "waveMs": 792.3999995440245,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 2880000,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 9887,
+          "transformCalls": 9887,
+          "derivedFrames": 5723
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 174,
+            "ageMs": 39
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13568301,
+            "nodeID": 1007,
+            "subscribers": 1,
+            "sourceEnd": 5568,
+            "ageMs": 39,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 16,
+      "view": "waves",
+      "repeat": 1,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.150592667999997,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.365336607590809,
+          "rssMiB": 148.140625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16258595780577859,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8129297890289073,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.690508523202366,
+          "rssMiB": 139.625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 81.7578125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 7.966711932483324,
+          "rssMiB": 106.67578125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.812929789028911,
+          "rssMiB": 32.9296875
+        }
+      ],
+      "electronCPU": 19.83548685230541,
+      "mainCPU": 5.365336607590809,
+      "rendererCPU": 5.690508523202366,
+      "gpuCPU": 7.966711932483324,
+      "sclangCPU": 0.16258595780577859,
+      "scProcessCPU": 0.8129297890289073,
+      "rssMiB": 575.328125,
+      "scAudioCPU": 0.39429107308387756,
+      "scPeakCPU": 0.7025343775749207,
+      "packetHz": 23.38219405609625,
+      "waveHz": 23.38219405609625,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.901569025853216,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 5.337590494646412,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 2880000,
+      "state": {
+        "now": 171704.69999998808,
+        "packets": 5897,
+        "gapFrames": 30752,
+        "sourceEnd": 11136,
+        "channels": 16,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 2230,
+        "meterUpdates": 594,
+        "widgetPaints": 3045,
+        "labels": 956,
+        "meterAppendMs": 7.500000029802322,
+        "meterDrawMs": 127.7999999076128,
+        "waveMs": 834.299999460578,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 2880000,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 10061,
+          "transformCalls": 10061,
+          "derivedFrames": 5897
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 348,
+            "ageMs": 21
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13568301,
+            "nodeID": 1007,
+            "subscribers": 1,
+            "sourceEnd": 11136,
+            "ageMs": 21,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 16,
+      "view": "meters",
+      "repeat": 1,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.1405527130000115,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.536960855008936,
+          "rssMiB": 147.734375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.390625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9771107391192181,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 3.25703579706407,
+          "rssMiB": 139.4296875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16285178985320423,
+          "rssMiB": 82.58203125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.514071594128168,
+          "rssMiB": 91.2421875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.8142589492660175,
+          "rssMiB": 32.9296875
+        }
+      ],
+      "electronCPU": 16.285178985320396,
+      "mainCPU": 5.536960855008936,
+      "rendererCPU": 3.25703579706407,
+      "gpuCPU": 6.514071594128168,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.9771107391192181,
+      "rssMiB": 560.1171875,
+      "scAudioCPU": 0.39292824516693753,
+      "scPeakCPU": 1.2262687683105469,
+      "packetHz": 23.417690854214275,
+      "waveHz": 0,
+      "meterHz": 7.913564495562066,
+      "widgetPaintsHz": 126.61703192899306,
+      "metadataHz": 7.913564495562066,
+      "meterAppendMsPerSecond": 0.17765144930349086,
+      "meterDrawMsPerSecond": 3.3107769756175194,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 179106.39999999106,
+        "packets": 6070,
+        "gapFrames": 30752,
+        "sourceEnd": 16672,
+        "channels": 16,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 2230,
+        "meterUpdates": 653,
+        "widgetPaints": 3989,
+        "labels": 1015,
+        "meterAppendMs": 8.600000038743019,
+        "meterDrawMs": 155.29999986290932,
+        "waveMs": 834.299999460578,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 10234,
+          "transformCalls": 10234,
+          "derivedFrames": 6070
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 521,
+            "ageMs": 39
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13568301,
+            "nodeID": 1007,
+            "subscribers": 1,
+            "sourceEnd": 16672,
+            "ageMs": 39,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 16,
+      "view": "both",
+      "repeat": 1,
+      "layout": {
+        "footer": 767.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.146347253999993,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.369042560770362,
+          "rssMiB": 147.8125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.1626982594172802,
+          "rssMiB": 227.40625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9761895565036957,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 6.670628636108633,
+          "rssMiB": 140.37890625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1626982594172838,
+          "rssMiB": 83.4609375
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 12.690464234548116,
+          "rssMiB": 108.734375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.8134912970864226,
+          "rssMiB": 32.93359375
+        }
+      ],
+      "electronCPU": 25.706324987930817,
+      "mainCPU": 5.369042560770362,
+      "rendererCPU": 6.670628636108633,
+      "gpuCPU": 12.690464234548116,
+      "sclangCPU": 0.1626982594172802,
+      "scProcessCPU": 0.9761895565036957,
+      "rssMiB": 579.51953125,
+      "scAudioCPU": 0.402501634011666,
+      "scPeakCPU": 0.7006499767303467,
+      "packetHz": 23.39275631201097,
+      "waveHz": 23.39275631201097,
+      "meterHz": 8.066467693796886,
+      "widgetPaintsHz": 129.06348310075018,
+      "metadataHz": 8.066467693796886,
+      "meterAppendMsPerSecond": 0.25812697004789187,
+      "meterDrawMsPerSecond": 3.0652577284508062,
+      "waveMsPerSecond": 5.2916028066499585,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 186511.69999998808,
+        "packets": 6244,
+        "gapFrames": 30752,
+        "sourceEnd": 22240,
+        "channels": 16,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 2404,
+        "meterUpdates": 713,
+        "widgetPaints": 4949,
+        "labels": 1075,
+        "meterAppendMs": 10.500000074505806,
+        "meterDrawMs": 179.29999992251396,
+        "waveMs": 874.199999421835,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 10408,
+          "transformCalls": 10408,
+          "derivedFrames": 6244
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 695,
+            "ageMs": 23
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13568301,
+            "nodeID": 1007,
+            "subscribers": 1,
+            "sourceEnd": 22240,
+            "ageMs": 23,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 16,
+      "view": "both",
+      "repeat": 2,
+      "layout": {
+        "footer": 767.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.1440746419999925,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.208270059294616,
+          "rssMiB": 147.8359375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16275843935296852,
+          "rssMiB": 227.4375
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8137921967647992,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 6.998612892177169,
+          "rssMiB": 142.38671875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16275843935295767,
+          "rssMiB": 83.828125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 12.532399830177722,
+          "rssMiB": 109.37890625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.8137921967647848,
+          "rssMiB": 32.93359375
+        }
+      ],
+      "electronCPU": 25.715833417767247,
+      "mainCPU": 5.208270059294616,
+      "rendererCPU": 6.998612892177169,
+      "gpuCPU": 12.532399830177722,
+      "sclangCPU": 0.16275843935296852,
+      "scProcessCPU": 0.8137921967647992,
+      "rssMiB": 582.5625,
+      "scAudioCPU": 0.38871555651227635,
+      "scPeakCPU": 0.6853593587875366,
+      "packetHz": 23.4040836090711,
+      "waveHz": 23.4040836090711,
+      "meterHz": 7.908966185134371,
+      "widgetPaintsHz": 126.54345896214994,
+      "metadataHz": 7.908966185134371,
+      "meterAppendMsPerSecond": 0.14526671959599402,
+      "meterDrawMsPerSecond": 3.2120087241810906,
+      "waveMsPerSecond": 5.568557821822103,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 193913.69999998808,
+        "packets": 6417,
+        "gapFrames": 30752,
+        "sourceEnd": 27776,
+        "channels": 16,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 2578,
+        "meterUpdates": 772,
+        "widgetPaints": 5893,
+        "labels": 1134,
+        "meterAppendMs": 11.500000029802322,
+        "meterDrawMs": 203.19999998807907,
+        "waveMs": 915.5999994575977,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 10582,
+          "transformCalls": 10582,
+          "derivedFrames": 6418
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 869,
+            "ageMs": 0
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13568301,
+            "nodeID": 1007,
+            "subscribers": 1,
+            "sourceEnd": 27808,
+            "ageMs": 0,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 16,
+      "view": "meters",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.143837763000017,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.208470866973956,
+          "rssMiB": 147.8515625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16276471459293249,
+          "rssMiB": 227.4375
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9765882875576094,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 3.0925295772657755,
+          "rssMiB": 142.6484375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16276471459293432,
+          "rssMiB": 84.22265625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.8361180129033094,
+          "rssMiB": 93.3125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.6510588583717445,
+          "rssMiB": 32.9375
+        }
+      ],
+      "electronCPU": 15.95094203010772,
+      "mainCPU": 5.208470866973956,
+      "rendererCPU": 3.0925295772657755,
+      "gpuCPU": 6.8361180129033094,
+      "sclangCPU": 0.16276471459293249,
+      "scProcessCPU": 0.9765882875576094,
+      "rssMiB": 567.171875,
+      "scAudioCPU": 0.3952299865583579,
+      "scPeakCPU": 0.7657687664031982,
+      "packetHz": 23.38407947357135,
+      "waveHz": 0,
+      "meterHz": 7.902206166931008,
+      "widgetPaintsHz": 126.43529867089613,
+      "metadataHz": 7.902206166931008,
+      "meterAppendMsPerSecond": 0.14514255840478837,
+      "meterDrawMsPerSecond": 3.418913693836569,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 201320,
+        "packets": 6591,
+        "gapFrames": 30752,
+        "sourceEnd": 33344,
+        "channels": 16,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 2578,
+        "meterUpdates": 831,
+        "widgetPaints": 6837,
+        "labels": 1193,
+        "meterAppendMs": 12.599999994039536,
+        "meterDrawMs": 229.3000000268221,
+        "waveMs": 915.5999994575977,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 10755,
+          "transformCalls": 10755,
+          "derivedFrames": 6591
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 1042,
+            "ageMs": 32
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13568301,
+            "nodeID": 1007,
+            "subscribers": 1,
+            "sourceEnd": 33344,
+            "ageMs": 32,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 16,
+      "view": "waves",
+      "repeat": 2,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.146996524999995,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.693837609579581,
+          "rssMiB": 147.96875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.4765625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9760864473565087,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 6.019199758698437,
+          "rssMiB": 142.78125
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1626810745594169,
+          "rssMiB": 84.5
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 8.947459100767905,
+          "rssMiB": 110.32421875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.8134053727970809,
+          "rssMiB": 32.9375
+        }
+      ],
+      "electronCPU": 21.63658291640242,
+      "mainCPU": 5.693837609579581,
+      "rendererCPU": 6.019199758698437,
+      "gpuCPU": 8.947459100767905,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.9760864473565087,
+      "rssMiB": 584.7109375,
+      "scAudioCPU": 0.4096430391073227,
+      "scPeakCPU": 0.7888875007629395,
+      "packetHz": 23.555225710678872,
+      "waveHz": 23.393888548276962,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.905520957693595,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 5.904940152564709,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 208728.29999999702,
+        "packets": 6765,
+        "gapFrames": 30752,
+        "sourceEnd": 38912,
+        "channels": 16,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 2751,
+        "meterUpdates": 832,
+        "widgetPaints": 6853,
+        "labels": 1253,
+        "meterAppendMs": 12.599999994039536,
+        "meterDrawMs": 229.60000002384186,
+        "waveMs": 958.6999995708466,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 10929,
+          "transformCalls": 10929,
+          "derivedFrames": 6765
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 1216,
+            "ageMs": 12
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13568301,
+            "nodeID": 1007,
+            "subscribers": 1,
+            "sourceEnd": 38912,
+            "ageMs": 12,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 16,
+      "view": "capture",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.142641902000003,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.6978740676066755,
+          "rssMiB": 148.171875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.54296875
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8139820096580945,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 0.813982009658109,
+          "rssMiB": 142.99609375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16279640193161962,
+          "rssMiB": 85.53515625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 94.08984375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.6511856077264785,
+          "rssMiB": 32.94140625
+        }
+      ],
+      "electronCPU": 7.325838086922883,
+      "mainCPU": 5.6978740676066755,
+      "rendererCPU": 0.813982009658109,
+      "gpuCPU": 0,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.8139820096580945,
+      "rssMiB": 569.93359375,
+      "scAudioCPU": 0.40641148885091144,
+      "scPeakCPU": 0.8523374795913696,
+      "packetHz": 23.41315334804713,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 216129.79999999702,
+        "packets": 6938,
+        "gapFrames": 30752,
+        "sourceEnd": 44448,
+        "channels": 16,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 2752,
+        "meterUpdates": 832,
+        "widgetPaints": 6853,
+        "labels": 1254,
+        "meterAppendMs": 12.599999994039536,
+        "meterDrawMs": 229.60000002384186,
+        "waveMs": 958.7999995648861,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 11102,
+          "transformCalls": 11102,
+          "derivedFrames": 6938
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 1389,
+            "ageMs": 27
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13568301,
+            "nodeID": 1007,
+            "subscribers": 1,
+            "sourceEnd": 44448,
+            "ageMs": 27,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 4,
+      "view": "both",
+      "repeat": 2,
+      "layout": {
+        "footer": 709.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.149649779,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.6913810148211965,
+          "rssMiB": 148.70703125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.69921875
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8130544306887403,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.6913810148211965,
+          "rssMiB": 142.94921875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 83.5390625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 8.130544306887431,
+          "rssMiB": 102.24609375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.4878326584132427,
+          "rssMiB": 32.94140625
+        }
+      ],
+      "electronCPU": 20.001138994943066,
+      "mainCPU": 5.6913810148211965,
+      "rendererCPU": 5.6913810148211965,
+      "gpuCPU": 8.130544306887431,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.8130544306887403,
+      "rssMiB": 576.58203125,
+      "scAudioCPU": 0.39098407824834186,
+      "scPeakCPU": 0.7272655963897705,
+      "packetHz": 23.37880107057662,
+      "waveHz": 23.37880107057662,
+      "meterHz": 8.061655541578146,
+      "widgetPaintsHz": 32.246622166312584,
+      "metadataHz": 8.061655541578146,
+      "meterAppendMsPerSecond": 0.11286318046516673,
+      "meterDrawMsPerSecond": 1.4833446201308909,
+      "waveMsPerSecond": 3.19241557956907,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 223661.89999999106,
+        "packets": 7113,
+        "gapFrames": 30752,
+        "sourceEnd": 5600,
+        "channels": 4,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 2926,
+        "meterUpdates": 892,
+        "widgetPaints": 7093,
+        "labels": 1315,
+        "meterAppendMs": 13.5,
+        "meterDrawMs": 242.30000001192093,
+        "waveMs": 982.3999995142221,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 11277,
+          "transformCalls": 11277,
+          "derivedFrames": 7113
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 174,
+            "ageMs": 44
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 4,
+            "generation": 11319322,
+            "nodeID": 1008,
+            "subscribers": 1,
+            "sourceEnd": 5600,
+            "ageMs": 44,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 4,
+      "view": "meters",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.1458934500000035,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.0202800945076715,
+          "rssMiB": 148.48046875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16271027282452774,
+          "rssMiB": 227.7734375
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9762616369471954,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 2.603364365192502,
+          "rssMiB": 142.4375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 83.6015625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 4.067756820613281,
+          "rssMiB": 94.15625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.48813081847359047,
+          "rssMiB": 32.9453125
+        }
+      ],
+      "electronCPU": 13.179532098787044,
+      "mainCPU": 6.0202800945076715,
+      "rendererCPU": 2.603364365192502,
+      "gpuCPU": 4.067756820613281,
+      "sclangCPU": 0.16271027282452774,
+      "scProcessCPU": 0.9762616369471954,
+      "rssMiB": 567.8203125,
+      "scAudioCPU": 0.4282076930006345,
+      "scPeakCPU": 27.46695899963379,
+      "packetHz": 23.401817272121296,
+      "waveHz": 0,
+      "meterHz": 7.908200319544438,
+      "widgetPaintsHz": 31.63280127817775,
+      "metadataHz": 7.908200319544438,
+      "meterAppendMsPerSecond": 0.032278369132186964,
+      "meterDrawMsPerSecond": 1.694614351783168,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 231063.29999999702,
+        "packets": 7287,
+        "gapFrames": 30752,
+        "sourceEnd": 11168,
+        "channels": 4,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 2927,
+        "meterUpdates": 951,
+        "widgetPaints": 7329,
+        "labels": 1374,
+        "meterAppendMs": 13.700000002980232,
+        "meterDrawMs": 255.50000002980232,
+        "waveMs": 982.4999995082617,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 11451,
+          "transformCalls": 11451,
+          "derivedFrames": 7287
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 348,
+            "ageMs": 22
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 4,
+            "generation": 11319322,
+            "nodeID": 1008,
+            "subscribers": 1,
+            "sourceEnd": 11168,
+            "ageMs": 22,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 4,
+      "view": "waves",
+      "repeat": 2,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.147992323999992,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.855570095536145,
+          "rssMiB": 148.50390625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16265472487601448,
+          "rssMiB": 227.8359375
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9759283492560147,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.367605920908117,
+          "rssMiB": 142.48828125
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16265472487600363,
+          "rssMiB": 84.1171875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 7.319462619420146,
+          "rssMiB": 110.42578125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.6506188995040145,
+          "rssMiB": 32.9453125
+        }
+      ],
+      "electronCPU": 19.355912260244427,
+      "mainCPU": 5.855570095536145,
+      "rendererCPU": 5.367605920908117,
+      "gpuCPU": 7.319462619420146,
+      "sclangCPU": 0.16265472487601448,
+      "scProcessCPU": 0.9759283492560147,
+      "rssMiB": 584.6796875,
+      "scAudioCPU": 0.40110402057568234,
+      "scPeakCPU": 0.6469406485557556,
+      "packetHz": 23.39539836717379,
+      "waveHz": 23.39539836717379,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.906031172355281,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 3.130142959723146,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 238465.39999999106,
+        "packets": 7460,
+        "gapFrames": 30752,
+        "sourceEnd": 16704,
+        "channels": 4,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 3101,
+        "meterUpdates": 951,
+        "widgetPaints": 7329,
+        "labels": 1433,
+        "meterAppendMs": 13.700000002980232,
+        "meterDrawMs": 255.50000002980232,
+        "waveMs": 1005.9999995529652,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 11625,
+          "transformCalls": 11625,
+          "derivedFrames": 7461
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 522,
+            "ageMs": 1
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 4,
+            "generation": 11319322,
+            "nodeID": 1008,
+            "subscribers": 1,
+            "sourceEnd": 16736,
+            "ageMs": 1,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 4,
+      "view": "capture",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.466433750000026,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.330052867239199,
+          "rssMiB": 148.5546875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.15464474525853986,
+          "rssMiB": 227.90625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.7732237262927131,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 0.618578981034187,
+          "rssMiB": 142.44140625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1546447452585433,
+          "rssMiB": 83.82421875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0.15464474525853986,
+          "rssMiB": 94.1875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.4639342357756265,
+          "rssMiB": 32.953125
+        }
+      ],
+      "electronCPU": 5.721855574566095,
+      "mainCPU": 4.330052867239199,
+      "rendererCPU": 0.618578981034187,
+      "gpuCPU": 0.15464474525853986,
+      "sclangCPU": 0.15464474525853986,
+      "scProcessCPU": 0.7732237262927131,
+      "rssMiB": 568.16015625,
+      "scAudioCPU": 0.33422234654426575,
+      "scPeakCPU": 0.8871187567710876,
+      "packetHz": 22.576806907262018,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 160,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 246226.79999999702,
+        "packets": 7637,
+        "gapFrames": 30912,
+        "sourceEnd": 22528,
+        "channels": 4,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 3102,
+        "meterUpdates": 951,
+        "widgetPaints": 7329,
+        "labels": 1435,
+        "meterAppendMs": 13.700000002980232,
+        "meterDrawMs": 255.50000002980232,
+        "waveMs": 1006.0999995619059,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 11801,
+          "transformCalls": 11801,
+          "derivedFrames": 7637
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 698,
+            "ageMs": 36
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 4,
+            "generation": 11319322,
+            "nodeID": 1008,
+            "subscribers": 1,
+            "sourceEnd": 22528,
+            "ageMs": 36,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 1,
+      "view": "both",
+      "repeat": 2,
+      "layout": {
+        "footer": 709.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.378066729000013,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.546832329009936,
+          "rssMiB": 148.5703125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.15678732168999493,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.7839366084499886,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 4.860406972389954,
+          "rssMiB": 142.48046875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1567873216899984,
+          "rssMiB": 83.89453125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.585067510979926,
+          "rssMiB": 98.31640625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.6271492867599867,
+          "rssMiB": 32.95703125
+        }
+      ],
+      "electronCPU": 16.776243420829804,
+      "mainCPU": 4.546832329009936,
+      "rendererCPU": 4.860406972389954,
+      "gpuCPU": 6.585067510979926,
+      "sclangCPU": 0.15678732168999493,
+      "scProcessCPU": 0.7839366084499886,
+      "rssMiB": 572.41796875,
+      "scAudioCPU": 0.3500550140937169,
+      "scPeakCPU": 0.8482031226158142,
+      "packetHz": 22.986720509435425,
+      "waveHz": 22.986720509435425,
+      "meterHz": 7.9210996350081535,
+      "widgetPaintsHz": 7.9210996350081535,
+      "metadataHz": 7.9210996350081535,
+      "meterAppendMsPerSecond": 0.04659470558684926,
+      "meterDrawMsPerSecond": 0.8231731058046519,
+      "waveMsPerSecond": 2.4073930309547755,
+      "gapFrames": 96,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 253994.39999999106,
+        "packets": 7815,
+        "gapFrames": 31008,
+        "sourceEnd": 5792,
+        "channels": 1,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 3278,
+        "meterUpdates": 1012,
+        "widgetPaints": 7390,
+        "labels": 1497,
+        "meterAppendMs": 14.000000014901161,
+        "meterDrawMs": 262.8000000715256,
+        "waveMs": 1024.8999995738268,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 11979,
+          "transformCalls": 11979,
+          "derivedFrames": 7815
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 177,
+            "ageMs": 30
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 1,
+            "generation": 1573907,
+            "nodeID": 1009,
+            "subscribers": 1,
+            "sourceEnd": 5792,
+            "ageMs": 30,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 1,
+      "view": "meters",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.157250926000008,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 4.547483988636145,
+          "rssMiB": 148.5703125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8120507122564627,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 2.111331851866786,
+          "rssMiB": 142.5546875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16241014245129037,
+          "rssMiB": 84.078125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 2.92338256412322,
+          "rssMiB": 94.2734375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.4872304273538748,
+          "rssMiB": 32.9609375
+        }
+      ],
+      "electronCPU": 10.231838974431316,
+      "mainCPU": 4.547483988636145,
+      "rendererCPU": 2.111331851866786,
+      "gpuCPU": 2.92338256412322,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.8120507122564627,
+      "rssMiB": 568.63671875,
+      "scAudioCPU": 0.35367699588338536,
+      "scPeakCPU": 0.6447093486785889,
+      "packetHz": 22.848316143439767,
+      "waveHz": 0,
+      "meterHz": 8.045181740647806,
+      "widgetPaintsHz": 8.045181740647806,
+      "metadataHz": 8.045181740647806,
+      "meterAppendMsPerSecond": 0.09654218232636426,
+      "meterDrawMsPerSecond": 0.8527892520408822,
+      "waveMsPerSecond": 0,
+      "gapFrames": 128,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 261415.59999999404,
+        "packets": 7985,
+        "gapFrames": 31136,
+        "sourceEnd": 11360,
+        "channels": 1,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 3278,
+        "meterUpdates": 1072,
+        "widgetPaints": 7450,
+        "labels": 1557,
+        "meterAppendMs": 14.600000023841858,
+        "meterDrawMs": 269.69999998807907,
+        "waveMs": 1024.8999995738268,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 12149,
+          "transformCalls": 12149,
+          "derivedFrames": 7985
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 347,
+            "ageMs": 26
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 1,
+            "generation": 1573907,
+            "nodeID": 1009,
+            "subscribers": 1,
+            "sourceEnd": 11360,
+            "ageMs": 26,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 1,
+      "view": "waves",
+      "repeat": 2,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.148855145999987,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.366852725660266,
+          "rssMiB": 148.61328125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16263190077757944,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9757914046654911,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.041588924105078,
+          "rssMiB": 142.62109375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 84.5390625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.667907931880902,
+          "rssMiB": 98.32421875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.48789570233275276,
+          "rssMiB": 32.9609375
+        }
+      ],
+      "electronCPU": 17.564245283978998,
+      "mainCPU": 5.366852725660266,
+      "rendererCPU": 5.041588924105078,
+      "gpuCPU": 6.667907931880902,
+      "sclangCPU": 0.16263190077757944,
+      "scProcessCPU": 0.9757914046654911,
+      "rssMiB": 573.2578125,
+      "scAudioCPU": 0.38860973467429477,
+      "scPeakCPU": 0.8698687553405762,
+      "packetHz": 23.536998226664515,
+      "waveHz": 23.536998226664515,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 8.060615831049493,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 2.321457360303154,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 268824.299999997,
+        "packets": 8157,
+        "gapFrames": 31200,
+        "sourceEnd": 16928,
+        "channels": 1,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 3450,
+        "meterUpdates": 1072,
+        "widgetPaints": 7450,
+        "labels": 1617,
+        "meterAppendMs": 14.600000023841858,
+        "meterDrawMs": 269.69999998807907,
+        "waveMs": 1042.2999995946884,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 12321,
+          "transformCalls": 12321,
+          "derivedFrames": 8157
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 519,
+            "ageMs": 12
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 1,
+            "generation": 1573907,
+            "nodeID": 1009,
+            "subscribers": 1,
+            "sourceEnd": 16928,
+            "ageMs": 12,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "control",
+      "channels": 1,
+      "view": "capture",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.140235249999969,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 5.048666498567791,
+          "rssMiB": 148.62890625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16286020963123077,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8143010481560959,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 0.4885806288936489,
+          "rssMiB": 142.62890625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 84.78515625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 94.19140625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.4885806288936633,
+          "rssMiB": 32.96484375
+        }
+      ],
+      "electronCPU": 6.0258277563551035,
+      "mainCPU": 5.048666498567791,
+      "rendererCPU": 0.4885806288936489,
+      "gpuCPU": 0,
+      "sclangCPU": 0.16286020963123077,
+      "scProcessCPU": 0.8143010481560959,
+      "rssMiB": 569.3984375,
+      "scAudioCPU": 0.36837083473801613,
+      "scPeakCPU": 0.7381500005722046,
+      "packetHz": 23.415800012896522,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 276223.5,
+        "packets": 8330,
+        "gapFrames": 31200,
+        "sourceEnd": 22464,
+        "channels": 1,
+        "rate": "control",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 3450,
+        "meterUpdates": 1072,
+        "widgetPaints": 7450,
+        "labels": 1618,
+        "meterAppendMs": 14.600000023841858,
+        "meterDrawMs": 269.69999998807907,
+        "waveMs": 1042.2999995946884,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 12494,
+          "transformCalls": 12494,
+          "derivedFrames": 8330
+        },
+        "derived": [
+          {
+            "profile": "scope:32:1",
+            "subscribers": 1,
+            "frames": 692,
+            "ageMs": 27
+          }
+        ],
+        "sources": [
+          {
+            "rate": "control",
+            "bus": 32,
+            "channels": 1,
+            "generation": 1573907,
+            "nodeID": 1009,
+            "subscribers": 1,
+            "sourceEnd": 22464,
+            "ageMs": 27,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 16,
+      "view": "both",
+      "repeat": 2,
+      "layout": {
+        "footer": 767.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.141646118999983,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 8.141139855863477,
+          "rssMiB": 149.57421875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16282279711726605,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9769367827036108,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 13.188646566498841,
+          "rssMiB": 145.734375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16282279711726969,
+          "rssMiB": 84.47265625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 16.445102508844247,
+          "rssMiB": 98.4453125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.1397595798208913,
+          "rssMiB": 32.96875
+        }
+      ],
+      "electronCPU": 39.07747130814472,
+      "mainCPU": 8.141139855863477,
+      "rendererCPU": 13.188646566498841,
+      "gpuCPU": 16.445102508844247,
+      "sclangCPU": 0.16282279711726605,
+      "scProcessCPU": 0.9769367827036108,
+      "rssMiB": 577.39453125,
+      "scAudioCPU": 0.42725744222601253,
+      "scPeakCPU": 0.9720844030380249,
+      "packetHz": 46.81723520012585,
+      "waveHz": 30.0276060249083,
+      "meterHz": 7.749059619331175,
+      "widgetPaintsHz": 123.0163214568824,
+      "metadataHz": 7.749059619331175,
+      "meterAppendMsPerSecond": 0.17758262253096369,
+      "meterDrawMsPerSecond": 2.9381851061441955,
+      "waveMsPerSecond": 33.06265438736001,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 283722.799999997,
+        "packets": 8679,
+        "gapFrames": 31200,
+        "sourceEnd": 357888,
+        "channels": 16,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 3672,
+        "meterUpdates": 1130,
+        "widgetPaints": 8370,
+        "labels": 1677,
+        "meterAppendMs": 15.90000006556511,
+        "meterDrawMs": 294.8999999910593,
+        "waveMs": 1285.6999996304512,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 13192,
+          "transformCalls": 13192,
+          "derivedFrames": 8679
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 348,
+            "ageMs": 21
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13664593,
+            "nodeID": 1010,
+            "subscribers": 1,
+            "sourceEnd": 358400,
+            "ageMs": 8,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 16,
+      "view": "meters",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.155721213000012,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.635173584655286,
+          "rssMiB": 152.6171875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8122525090058805,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 4.873515054035283,
+          "rssMiB": 145.2421875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16245050180117684,
+          "rssMiB": 84.79296875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 6.498020072047044,
+          "rssMiB": 94.5234375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0.9747030108070538,
+          "rssMiB": 32.97265625
+        }
+      ],
+      "electronCPU": 20.14386222334584,
+      "mainCPU": 7.635173584655286,
+      "rendererCPU": 4.873515054035283,
+      "gpuCPU": 6.498020072047044,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.8122525090058805,
+      "rssMiB": 576.34765625,
+      "scAudioCPU": 0.4102126856644948,
+      "scPeakCPU": 0.9857344031333923,
+      "packetHz": 46.40035964288155,
+      "waveHz": 0,
+      "meterHz": 8.027743882851478,
+      "widgetPaintsHz": 126.9989082267104,
+      "metadataHz": 8.027743882851478,
+      "meterAppendMsPerSecond": 0.09633292802969022,
+      "meterDrawMsPerSecond": 3.066598157507375,
+      "waveMsPerSecond": 0,
+      "gapFrames": 3072,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 291156.799999997,
+        "packets": 9023,
+        "gapFrames": 35808,
+        "sourceEnd": 714752,
+        "channels": 16,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 3672,
+        "meterUpdates": 1190,
+        "widgetPaints": 9321,
+        "labels": 1737,
+        "meterAppendMs": 16.700000062584877,
+        "meterDrawMs": 318.3999999463558,
+        "waveMs": 1285.6999996304512,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 13883,
+          "transformCalls": 13883,
+          "derivedFrames": 9023
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 692,
+            "ageMs": 19
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13664593,
+            "nodeID": 1010,
+            "subscribers": 1,
+            "sourceEnd": 715264,
+            "ageMs": 6,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 16,
+      "view": "waves",
+      "repeat": 2,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.2327018219999735,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.219982807642185,
+          "rssMiB": 151.8359375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9626643743523008,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 11.070640305051358,
+          "rssMiB": 147.37109375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16044406239204895,
+          "rssMiB": 85.4921875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 12.514636866579824,
+          "rssMiB": 99.6015625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.1231084367443391,
+          "rssMiB": 32.9765625
+        }
+      ],
+      "electronCPU": 32.08881247840976,
+      "mainCPU": 7.219982807642185,
+      "rendererCPU": 11.070640305051358,
+      "gpuCPU": 12.514636866579824,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.9626643743523008,
+      "rssMiB": 583.4765625,
+      "scAudioCPU": 0.3995576947927475,
+      "scPeakCPU": 0.809249997138977,
+      "packetHz": 44.80101676066407,
+      "waveHz": 29.86734450710938,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.784573834299786,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 30.08976089858736,
+      "gapFrames": 13312,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 298655.39999999106,
+        "packets": 9357,
+        "gapFrames": 54240,
+        "sourceEnd": 1075200,
+        "channels": 16,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 3895,
+        "meterUpdates": 1190,
+        "widgetPaints": 9321,
+        "labels": 1796,
+        "meterAppendMs": 16.700000062584877,
+        "meterDrawMs": 318.3999999463558,
+        "waveMs": 1513.399999588728,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 14563,
+          "transformCalls": 14563,
+          "derivedFrames": 9357
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1026,
+            "ageMs": 9
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13664593,
+            "nodeID": 1010,
+            "subscribers": 1,
+            "sourceEnd": 1075712,
+            "ageMs": 1,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 16,
+      "view": "capture",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.142710943000042,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 8.30252318125395,
+          "rssMiB": 151.92578125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16279457218144602,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9767674330886906,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 2.9303022992660863,
+          "rssMiB": 148.328125
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.16279457218144783,
+          "rssMiB": 86.15234375
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 94.48046875
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.1395620052701512,
+          "rssMiB": 32.98046875
+        }
+      ],
+      "electronCPU": 12.535182057971635,
+      "mainCPU": 8.30252318125395,
+      "rendererCPU": 2.9303022992660863,
+      "gpuCPU": 0,
+      "sclangCPU": 0.16279457218144602,
+      "scProcessCPU": 0.9767674330886906,
+      "rssMiB": 580.06640625,
+      "scAudioCPU": 0.4385395683348179,
+      "scPeakCPU": 0.8936062455177307,
+      "packetHz": 46.991570584177865,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 214016,
+      "state": {
+        "now": 306057.5,
+        "packets": 9704,
+        "gapFrames": 54240,
+        "sourceEnd": 1430528,
+        "channels": 16,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 3896,
+        "meterUpdates": 1190,
+        "widgetPaints": 9321,
+        "labels": 1797,
+        "meterAppendMs": 16.700000062584877,
+        "meterDrawMs": 318.3999999463558,
+        "waveMs": 1513.9999995827675,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 214016,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 15256,
+          "transformCalls": 15256,
+          "derivedFrames": 9704
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1373,
+            "ageMs": 4
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 16,
+            "generation": 13664593,
+            "nodeID": 1010,
+            "subscribers": 1,
+            "sourceEnd": 1430528,
+            "ageMs": 4,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 4,
+      "view": "both",
+      "repeat": 2,
+      "layout": {
+        "footer": 709.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.5438536510000125,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.418236445978815,
+          "rssMiB": 152.9140625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.15281515347569707,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9168909208541145,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 10.085800129395299,
+          "rssMiB": 144.6796875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.3056303069513738,
+          "rssMiB": 83
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 9.62735466896825,
+          "rssMiB": 96.6015625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 2.1394121486596096,
+          "rssMiB": 32.984375
+        }
+      ],
+      "electronCPU": 28.57643369995335,
+      "mainCPU": 6.418236445978815,
+      "rendererCPU": 10.085800129395299,
+      "gpuCPU": 9.62735466896825,
+      "sclangCPU": 0.15281515347569707,
+      "scProcessCPU": 0.9168909208541145,
+      "rssMiB": 576.37890625,
+      "scAudioCPU": 0.40190977106491727,
+      "scPeakCPU": 0.7069968581199646,
+      "packetHz": 45.86947636130361,
+      "waveHz": 29.519960034502326,
+      "meterHz": 7.871989342533953,
+      "widgetPaintsHz": 31.185188549269125,
+      "metadataHz": 7.871989342533953,
+      "meterAppendMsPerSecond": 0.1665228460627514,
+      "meterDrawMsPerSecond": 1.3170443802444785,
+      "waveMsPerSecond": 9.461525663363096,
+      "gapFrames": 8704,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 313973,
+        "packets": 10066,
+        "gapFrames": 62944,
+        "sourceEnd": 378368,
+        "channels": 4,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 4127,
+        "meterUpdates": 1252,
+        "widgetPaints": 9567,
+        "labels": 1860,
+        "meterAppendMs": 17.900000020861626,
+        "meterDrawMs": 331.20000000298023,
+        "waveMs": 1589.4999996125698,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 15982,
+          "transformCalls": 15982,
+          "derivedFrames": 10066
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 360,
+            "ageMs": 9
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 4,
+            "generation": 10415281,
+            "nodeID": 1011,
+            "subscribers": 1,
+            "sourceEnd": 378368,
+            "ageMs": 9,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 4,
+      "view": "meters",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.347268630000006,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.774567535516444,
+          "rssMiB": 151.98828125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.1575480822213094,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.7877404111065609,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 5.0415386310820125,
+          "rssMiB": 144.66796875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 83.4453125
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 3.7811539733115374,
+          "rssMiB": 94.5703125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 2.2056731510983734,
+          "rssMiB": 32.98828125
+        }
+      ],
+      "electronCPU": 17.802933291008365,
+      "mainCPU": 6.774567535516444,
+      "rendererCPU": 5.0415386310820125,
+      "gpuCPU": 3.7811539733115374,
+      "sclangCPU": 0.1575480822213094,
+      "scProcessCPU": 0.7877404111065609,
+      "rssMiB": 573.859375,
+      "scAudioCPU": 0.3962237623830636,
+      "scPeakCPU": 0.778181254863739,
+      "packetHz": 45.323122606860984,
+      "waveHz": 0,
+      "meterHz": 7.97061811362038,
+      "widgetPaintsHz": 31.569899195123856,
+      "metadataHz": 7.97061811362038,
+      "meterAppendMsPerSecond": 0.0937719815334622,
+      "meterDrawMsPerSecond": 1.5159803153369877,
+      "waveMsPerSecond": 0,
+      "gapFrames": 10752,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 321578.09999999404,
+        "packets": 10412,
+        "gapFrames": 73696,
+        "sourceEnd": 743424,
+        "channels": 4,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 4127,
+        "meterUpdates": 1313,
+        "widgetPaints": 9809,
+        "labels": 1921,
+        "meterAppendMs": 18.500000044703484,
+        "meterDrawMs": 343.40000005066395,
+        "waveMs": 1589.4999996125698,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 16678,
+          "transformCalls": 16678,
+          "derivedFrames": 10412
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 706,
+            "ageMs": 8
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 4,
+            "generation": 10415281,
+            "nodeID": 1011,
+            "subscribers": 1,
+            "sourceEnd": 743424,
+            "ageMs": 8,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 4,
+      "view": "waves",
+      "repeat": 2,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.168434067000053,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.808859354547075,
+          "rssMiB": 152.44140625
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9726941935067147,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 10.0511733329028,
+          "rssMiB": 144.703125
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.162115698917787,
+          "rssMiB": 83.8984375
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 8.754247741560476,
+          "rssMiB": 97.609375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 2.269619784849018,
+          "rssMiB": 32.9921875
+        }
+      ],
+      "electronCPU": 28.046015912777158,
+      "mainCPU": 6.808859354547075,
+      "rendererCPU": 10.0511733329028,
+      "gpuCPU": 8.754247741560476,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.9726941935067147,
+      "rssMiB": 577.84375,
+      "scAudioCPU": 0.40373676891128224,
+      "scPeakCPU": 0.762121856212616,
+      "packetHz": 46.18236440923929,
+      "waveHz": 30.042506951339053,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.830227875614966,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 10.610757787161285,
+      "gapFrames": 5120,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 329040.89999999106,
+        "packets": 10757,
+        "gapFrames": 78816,
+        "sourceEnd": 1101824,
+        "channels": 4,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 4351,
+        "meterUpdates": 1313,
+        "widgetPaints": 9809,
+        "labels": 1980,
+        "meterAppendMs": 18.500000044703484,
+        "meterDrawMs": 343.40000005066395,
+        "waveMs": 1667.6999996751547,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 17372,
+          "transformCalls": 17372,
+          "derivedFrames": 10757
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1051,
+            "ageMs": 8
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 4,
+            "generation": 10415281,
+            "nodeID": 1011,
+            "subscribers": 1,
+            "sourceEnd": 1101824,
+            "ageMs": 8,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 4,
+      "view": "capture",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.137881544000003,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.005674464674867,
+          "rssMiB": 152.5
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.1629226619691796,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9775359718151065,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 3.258453239383708,
+          "rssMiB": 144.6875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1629226619691832,
+          "rssMiB": 84.44140625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 94.48828125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 2.280917267568565,
+          "rssMiB": 32.9921875
+        }
+      ],
+      "electronCPU": 12.707967633596324,
+      "mainCPU": 7.005674464674867,
+      "rendererCPU": 3.258453239383708,
+      "gpuCPU": 0,
+      "sclangCPU": 0.1629226619691796,
+      "scProcessCPU": 0.9775359718151065,
+      "rssMiB": 575.30859375,
+      "scAudioCPU": 0.40150945136944455,
+      "scPeakCPU": 0.7598531246185303,
+      "packetHz": 46.69650503327207,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 1536,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 53504,
+      "state": {
+        "now": 336435.6999999881,
+        "packets": 11102,
+        "gapFrames": 80352,
+        "sourceEnd": 1456640,
+        "channels": 4,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 4351,
+        "meterUpdates": 1313,
+        "widgetPaints": 9809,
+        "labels": 1981,
+        "meterAppendMs": 18.500000044703484,
+        "meterDrawMs": 343.40000005066395,
+        "waveMs": 1667.6999996751547,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 53504,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 18063,
+          "transformCalls": 18063,
+          "derivedFrames": 11102
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1396,
+            "ageMs": 5
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 4,
+            "generation": 10415281,
+            "nodeID": 1011,
+            "subscribers": 1,
+            "sourceEnd": 1456640,
+            "ageMs": 5,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 1,
+      "view": "both",
+      "repeat": 2,
+      "layout": {
+        "footer": 709.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.148235795999994,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.156524482783545,
+          "rssMiB": 152.7421875
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16264828369962206,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9758897021977468,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 8.295062468680928,
+          "rssMiB": 144.73046875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1626482836996257,
+          "rssMiB": 84.44921875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 8.295062468680928,
+          "rssMiB": 96.58203125
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.4638345532966275,
+          "rssMiB": 32.9921875
+        }
+      ],
+      "electronCPU": 25.373132257141656,
+      "mainCPU": 7.156524482783545,
+      "rendererCPU": 8.295062468680928,
+      "gpuCPU": 8.295062468680928,
+      "sclangCPU": 0.16264828369962206,
+      "scProcessCPU": 0.9758897021977468,
+      "rssMiB": 577.6953125,
+      "scAudioCPU": 0.41447751472393674,
+      "scPeakCPU": 0.7628812789916992,
+      "packetHz": 46.4448709057916,
+      "waveHz": 29.995645793323746,
+      "meterHz": 7.902078730499266,
+      "widgetPaintsHz": 7.579544904764602,
+      "metadataHz": 7.902078730499266,
+      "meterAppendMsPerSecond": 0.09676014916223774,
+      "meterDrawMsPerSecond": 0.7418278054376941,
+      "waveMsPerSecond": 5.225047970653589,
+      "gapFrames": 2560,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 343935.59999999404,
+        "packets": 11450,
+        "gapFrames": 82912,
+        "sourceEnd": 357888,
+        "channels": 1,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "both",
+        "wavePaints": 4573,
+        "meterUpdates": 1372,
+        "widgetPaints": 9866,
+        "labels": 2041,
+        "meterAppendMs": 19.10000005364418,
+        "meterDrawMs": 349.90000009536743,
+        "waveMs": 1706.2999996691942,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 18763,
+          "transformCalls": 18763,
+          "derivedFrames": 11451
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 347,
+            "ageMs": 1
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 1,
+            "generation": 1288431,
+            "nodeID": 1012,
+            "subscribers": 1,
+            "sourceEnd": 358912,
+            "ageMs": 1,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 1,
+      "view": "meters",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.1500451020000035,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.829218209528472,
+          "rssMiB": 152.77734375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16260043356021342,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9756026013612082,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 3.739809971884663,
+          "rssMiB": 139.6875
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1626004335602026,
+          "rssMiB": 84.84375
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 2.9268078040836394,
+          "rssMiB": 94.53515625
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.4634039020418268,
+          "rssMiB": 32.9921875
+        }
+      ],
+      "electronCPU": 15.121840321098803,
+      "mainCPU": 6.829218209528472,
+      "rendererCPU": 3.739809971884663,
+      "gpuCPU": 2.9268078040836394,
+      "sclangCPU": 0.16260043356021342,
+      "scProcessCPU": 0.9756026013612082,
+      "rssMiB": 571.03515625,
+      "scAudioCPU": 0.4110429435968399,
+      "scPeakCPU": 18.274669647216797,
+      "packetHz": 46.91202785697161,
+      "waveHz": 0,
+      "meterHz": 7.899276168356044,
+      "widgetPaintsHz": 7.899276168356044,
+      "metadataHz": 7.899276168356044,
+      "meterAppendMsPerSecond": 0.08060486366519994,
+      "meterDrawMsPerSecond": 1.0801051332369602,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 351344.799999997,
+        "packets": 11798,
+        "gapFrames": 82912,
+        "sourceEnd": 714240,
+        "channels": 1,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "meters",
+        "wavePaints": 4573,
+        "meterUpdates": 1431,
+        "widgetPaints": 9925,
+        "labels": 2100,
+        "meterAppendMs": 19.800000086426735,
+        "meterDrawMs": 358.1000002473593,
+        "waveMs": 1706.2999996691942,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 19457,
+          "transformCalls": 19457,
+          "derivedFrames": 11798
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 694,
+            "ageMs": 6
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 1,
+            "generation": 1288431,
+            "nodeID": 1012,
+            "subscribers": 1,
+            "sourceEnd": 714240,
+            "ageMs": 6,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 1,
+      "view": "waves",
+      "repeat": 2,
+      "layout": {
+        "footer": 648.6875,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.1467095459999985,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 6.832924133747547,
+          "rssMiB": 153.02734375
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8134433492556754,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 7.9717448227055385,
+          "rssMiB": 140.6953125
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 85.0390625
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 7.80905615285438,
+          "rssMiB": 96.58984375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.6268866985113293,
+          "rssMiB": 32.99609375
+        }
+      ],
+      "electronCPU": 24.240611807818794,
+      "mainCPU": 6.832924133747547,
+      "rendererCPU": 7.9717448227055385,
+      "gpuCPU": 7.80905615285438,
+      "sclangCPU": 0,
+      "scProcessCPU": 0.8134433492556754,
+      "rssMiB": 574.546875,
+      "scAudioCPU": 0.4146885387599468,
+      "scPeakCPU": 0.8042625188827515,
+      "packetHz": 46.947599380440145,
+      "waveHz": 30.007743933889575,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 7.905265875056932,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 4.90449147060942,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": true,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 358748.299999997,
+        "packets": 12145,
+        "gapFrames": 82912,
+        "sourceEnd": 1069568,
+        "channels": 1,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "waves",
+        "wavePaints": 4795,
+        "meterUpdates": 1431,
+        "widgetPaints": 9925,
+        "labels": 2159,
+        "meterAppendMs": 19.800000086426735,
+        "meterDrawMs": 358.1000002473593,
+        "waveMs": 1742.8999996185303,
+        "waveWidth": 620,
+        "waveHeight": 240,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 20151,
+          "transformCalls": 20151,
+          "derivedFrames": 12145
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1041,
+            "ageMs": 10
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 1,
+            "generation": 1288431,
+            "nodeID": 1012,
+            "subscribers": 1,
+            "sourceEnd": 1069568,
+            "ageMs": 10,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "audio",
+      "channels": 1,
+      "view": "capture",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.147471722999995,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 7.157413971564812,
+          "rssMiB": 153.2578125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.16266849935374308,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.8133424967687299,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 2.114690491598747,
+          "rssMiB": 140.6484375
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0.1626684993537467,
+          "rssMiB": 84.546875
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 94.49609375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 1.6266849935374599,
+          "rssMiB": 32.99609375
+        }
+      ],
+      "electronCPU": 11.061457956054763,
+      "mainCPU": 7.157413971564812,
+      "rendererCPU": 2.114690491598747,
+      "gpuCPU": 0,
+      "sclangCPU": 0.16266849935374308,
+      "scProcessCPU": 0.8133424967687299,
+      "rssMiB": 572.14453125,
+      "scAudioCPU": 0.4162950913111369,
+      "scPeakCPU": 0.6838312745094299,
+      "packetHz": 46.94532724601289,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": true,
+      "pixelsChanged": null,
+      "canvasBytes": 13376,
+      "state": {
+        "now": 366153,
+        "packets": 12492,
+        "gapFrames": 82912,
+        "sourceEnd": 1424896,
+        "channels": 1,
+        "rate": "audio",
+        "connection": "Live",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 4795,
+        "meterUpdates": 1431,
+        "widgetPaints": 9925,
+        "labels": 2160,
+        "meterAppendMs": 19.800000086426735,
+        "meterDrawMs": 358.1000002473593,
+        "waveMs": 1742.8999996185303,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 13376,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 20845,
+          "transformCalls": 20845,
+          "derivedFrames": 12492
+        },
+        "derived": [
+          {
+            "profile": "scope:1024:1",
+            "subscribers": 1,
+            "frames": 1388,
+            "ageMs": 7
+          }
+        ],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 32,
+            "channels": 1,
+            "generation": 1288431,
+            "nodeID": 1012,
+            "subscribers": 1,
+            "sourceEnd": 1424896,
+            "ageMs": 7,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "rate": "idle",
+      "channels": 0,
+      "view": "idle",
+      "repeat": 2,
+      "layout": {
+        "footer": 860,
+        "height": 872,
+        "width": 1100,
+        "scrollWidth": 1100,
+        "scrollHeight": 872
+      },
+      "seconds": 6.14220925700001,
+      "processes": [
+        {
+          "pid": 94321,
+          "role": "main",
+          "corePercent": 0.48842360695887127,
+          "rssMiB": 153.08203125
+        },
+        {
+          "pid": 94326,
+          "role": "sclang",
+          "corePercent": 0.1628078689862808,
+          "rssMiB": 227.9140625
+        },
+        {
+          "pid": 94392,
+          "role": "scsynth",
+          "corePercent": 0.9768472139176992,
+          "rssMiB": 58.59765625
+        },
+        {
+          "pid": 94403,
+          "role": "renderer-scope",
+          "corePercent": 0,
+          "rssMiB": 139.9140625
+        },
+        {
+          "pid": 94325,
+          "role": "renderer-home",
+          "corePercent": 0,
+          "rssMiB": 84.74609375
+        },
+        {
+          "pid": 94324,
+          "role": "renderer-worker",
+          "corePercent": 0,
+          "rssMiB": 66.19921875
+        },
+        {
+          "pid": 94322,
+          "role": "helper-GPU",
+          "corePercent": 0,
+          "rssMiB": 94.49609375
+        },
+        {
+          "pid": 94323,
+          "role": "helper-Utility",
+          "corePercent": 0,
+          "rssMiB": 32.99609375
+        }
+      ],
+      "electronCPU": 0.48842360695887127,
+      "mainCPU": 0.48842360695887127,
+      "rendererCPU": 0,
+      "gpuCPU": 0,
+      "sclangCPU": 0.1628078689862808,
+      "scProcessCPU": 0.9768472139176992,
+      "rssMiB": 571.43359375,
+      "scAudioCPU": 0.39202714463075,
+      "scPeakCPU": 0.6522937417030334,
+      "packetHz": 0,
+      "waveHz": 0,
+      "meterHz": 0,
+      "widgetPaintsHz": 0,
+      "metadataHz": 0,
+      "meterAppendMsPerSecond": 0,
+      "meterDrawMsPerSecond": 0,
+      "waveMsPerSecond": 0,
+      "gapFrames": 0,
+      "sourceAdvances": false,
+      "pixelsChanged": null,
+      "canvasBytes": 0,
+      "state": {
+        "now": 373610.1999999881,
+        "packets": 12492,
+        "gapFrames": 82912,
+        "sourceEnd": 0,
+        "connection": "Stopped",
+        "error": null,
+        "view": "capture",
+        "wavePaints": 4795,
+        "meterUpdates": 1431,
+        "widgetPaints": 9925,
+        "labels": 2161,
+        "meterAppendMs": 19.800000086426735,
+        "meterDrawMs": 358.1000002473593,
+        "waveMs": 1742.8999996185303,
+        "waveWidth": 0,
+        "waveHeight": 0,
+        "canvasBytes": 0,
+        "node": "undefined"
+      },
+      "broker": {
+        "stats": {
+          "rawFrames": 20845,
+          "transformCalls": 20845,
+          "derivedFrames": 12492
+        },
+        "derived": [],
+        "sources": [],
+        "polling": false
+      }
+    }
+  ],
+  "session": {
+    "port": 56198,
+    "sampleRate": 48000,
+    "blockSize": 64,
+    "scPID": 94392
+  },
+  "seconds": 6,
+  "repeats": 2,
+  "machine": "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz",
+  "logicalCores": 12,
+  "versions": {
+    "electron": "44.4.1",
+    "node": "24.21.0"
+  },
+  "plot": {
+    "width": 620,
+    "height": 240,
+    "dpr": 1
+  },
+  "widget": {
+    "width": 88,
+    "height": 38,
+    "dpr": 1,
+    "hz": 8
+  },
+  "gpuFeatures": {
+    "2d_canvas": "enabled",
+    "direct_rendering_display_compositor": "disabled_off_ok",
+    "gpu_compositing": "enabled",
+    "multiple_raster_threads": "enabled_on",
+    "opengl": "enabled_on",
+    "rasterization": "enabled",
+    "raw_draw": "disabled_off_ok",
+    "skia_graphite": "enabled_on",
+    "trees_in_viz": "disabled_off",
+    "video_decode": "enabled",
+    "video_encode": "enabled",
+    "webgl": "enabled",
+    "webgpu": "enabled",
+    "webnn": "disabled_off"
+  },
+  "display": {
+    "width": 2560,
+    "height": 1415
+  },
+  "cleanup": true,
+  "hostSurvives": true,
+  "unrelatedTools": 0,
+  "beforeSC": [
+    1,
+    98,
+    1,
+    2,
+    278,
+    0.38495883345603943,
+    0.512793779373169,
+    48000,
+    48000.313855310895
+  ],
+  "afterSC": [
+    1,
+    98,
+    1,
+    2,
+    284,
+    0.3917766809463501,
+    0.7109156250953674,
+    48000,
+    48001.338579390256
+  ],
+  "sourceHashes": {
+    "apps/awb-shell/shell/main.mjs": "e33d8610140dbb0e830ee65f3d04560235036c93f37028bba8104209b86e395c",
+    "apps/awb-shell/sc/AWBHeadlessHost.scd": "e3f9b161d8b51385bf431837c5b3b7181c25378eb0eac0fcec73281e9e6d0ab6",
+    "apps/awb-shell/sc/AWBScBusAudio.scd": "e7e207a763d8f5f100fafad44e39cd3e2a123128133dd6b85a0fd95df2f46b74",
+    "apps/awb-shell/src/signalCaptureBroker.mjs": "b66150a19bfc4191201976faa34f88ad55cb9bd5906976ef4a12ee82d16c4a92",
+    "apps/awb-shell/src/scSignalSource.mjs": "6aeed55e8a0d2accf353402a0d9e2bd7dcf4426e5ddc7bd954d7afb4d210048f",
+    "apps/awb-shell/.build/sc-bus-reader.node": "106a3e644c9f65194ed0cb686bf9b0552d57b7c975899c123f78d7cff9ad6d0e",
+    "tool-artifacts/scope/0.1.0/public/scope.js": "950a1e881069bb97fc9b4e5a83b524f0b662360d7280309e51a9fbc3552a5fdc",
+    "tool-artifacts/scope/0.1.0/public/index.html": "0a1b5dbadd81a56687722baa7e2ef0c4c5ecbe5d80f879387885e2713efe7928",
+    "tool-artifacts/scope/0.1.0/public/scope.css": "4d6f4feff76faa8da8992e6437b38a5399b8fe97768c0626eba334524b51a5a4",
+    "tool-artifacts/scope/0.1.0/public/protocol.js": "88f31031f86fa54f2f7e80d4a41cc63abf9baa1bbbfd5e03ffa6406b435e2d68",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-history.js": "ffa2e3e5c70e68a8088b9d6d5c9f7888ba0322cc57835c86155eb269e276ba42",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-metadata.js": "ece9bd97757f5d89cfa145d1db47df39f025035587486798aa177e093284410d",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-painter.js": "adbecd5275e3aff7e93f1aa21f3fc460e7ca83c79b0262e84562c1ffb595b1de",
+    "tool-artifacts/shared-loop/0.1.0/public/scope-trace.js": "da82f5457fb8313d3fb1ca321e013bd8553bd0719f311d2d0b42d57caccb91e5"
+  },
+  "protectedCount": 14,
+  "fixtureOnlyInstrumentation": true
+}

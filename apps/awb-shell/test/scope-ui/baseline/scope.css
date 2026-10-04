@@ -1,0 +1,12 @@
+@import url('/style.css');
+main{padding:20px 26px}header{margin-bottom:18px;gap:18px}h1{font-size:26px;margin-top:7px}header p{margin:6px 0 0;font-size:11px;max-width:none}#connection{font-size:11px;color:#8aa29d;white-space:nowrap}#connection.live{color:#6ce0c1}.scope-display{background:#111a1e;border:1px solid #263538;border-radius:7px;padding:12px 15px}.scope-display canvas{height:160px;margin:0}.scope-ruler{display:flex;justify-content:space-between;color:#738c8d;font-size:10px;padding-top:9px}.scope-controls{display:flex;align-items:center;gap:14px;margin-top:15px;flex-wrap:wrap}.scope-controls button{font-size:12px;padding:7px 13px}.scope-controls label{display:flex;gap:9px;margin:0;font-size:11px}select{color:#d8e3df;background:#182326;border:1px solid #344344;border-radius:4px;padding:5px 8px}#level{margin-left:auto;font-size:11px;font-variant-numeric:tabular-nums}footer{margin-top:18px;padding-top:12px;gap:14px}.clipping{color:#ff9f8a!important}@media(max-width:480px){main{padding:18px 14px}.scope-controls{gap:10px;flex-wrap:wrap}#level{margin-left:0}h1{font-size:22px}}
+
+.scope-navigation{display:flex;align-items:center;gap:12px;margin-top:12px;color:#738c8d;font-size:10px;font-variant-numeric:tabular-nums}.scope-navigation label{display:flex;flex:1;gap:12px;margin:0;min-width:0;font-size:10px}.scope-navigation input{flex:1;min-width:30px}.scope-navigation>span{min-width:56px}.scope-navigation>span:last-child{text-align:right}input:disabled{opacity:.35}
+
+.scope-resolution{margin:10px 0 0;font-size:10px;color:#8aa29d;font-variant-numeric:tabular-nums}footer{margin-top:10px}
+
+.scope-navigation>span{min-width:76px;white-space:nowrap}.scope-resolution{max-width:none}
+
+.signal-picker{margin-top:12px}.signal-picker[hidden]{display:none}.signal-picker label{display:flex;gap:12px;margin:0;font-size:11px}.control-scope .scope-display canvas{height:240px}
+
+.paint-rate{float:right;margin-top:6px}.paint-rate label{display:flex;align-items:center;gap:6px;margin:0;font-size:10px}.paint-rate select{padding:2px 6px;font-size:10px}footer{clear:both}

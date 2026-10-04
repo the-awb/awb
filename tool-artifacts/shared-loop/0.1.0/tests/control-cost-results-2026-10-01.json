@@ -1,0 +1,487 @@
+{
+  "protocol": "awb.scope.v4",
+  "controlCostOnly": true,
+  "controlDisplayGain": 1,
+  "controlZoom": 0.0625,
+  "scopePollMs": 8,
+  "audioCaptureFrames": 1024,
+  "controlCaptureFrames": 32,
+  "display": {
+    "width": 2560,
+    "height": 1415
+  },
+  "machine": "Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz",
+  "scVersion": "3.12.2",
+  "sampleRate": 48000,
+  "phases": [
+    {
+      "name": "idle-server-no-bridge-no-viewer",
+      "seconds": 5.1227850010000004,
+      "traffic": null,
+      "scAudioCPU": 0.12983887009322642,
+      "scPeakCPU": 0.5318437218666077,
+      "processes": {
+        "electronMain": {
+          "corePercent": 0.39041263680001864,
+          "rssMiB": 76.15234375
+        },
+        "sclang": {
+          "corePercent": 0.19520631840000985,
+          "rssMiB": 201.09765625
+        },
+        "scsynth": {
+          "corePercent": 0.585618955200029,
+          "rssMiB": 31.3671875
+        }
+      },
+      "wireBytesPerSnapshot": null
+    },
+    {
+      "name": "scope-tap-node-reader-no-viewer",
+      "seconds": 5.119320686999999,
+      "traffic": {
+        "binaryBytesPerSecond": 0,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 0,
+        "framesPerSecond": 0
+      },
+      "scAudioCPU": 0.192409510910511,
+      "scPeakCPU": 0.6923062205314636,
+      "processes": {
+        "electronMain": {
+          "corePercent": 2.930076257596244,
+          "rssMiB": 84.26171875
+        },
+        "sclang": {
+          "corePercent": 0.19533841717308323,
+          "rssMiB": 201.0703125
+        },
+        "scsynth": {
+          "corePercent": 0.5860152515192492,
+          "rssMiB": 31.33984375
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21534,
+        "output": 45921
+      }
+    },
+    {
+      "name": "control-streaming-no-canvas-paint",
+      "seconds": 5.122554380999998,
+      "traffic": {
+        "binaryBytesPerSecond": 4763.248603177691,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 285.79491619066147,
+        "framesPerSecond": 23.816243015888453
+      },
+      "scAudioCPU": 0.18320941627025605,
+      "scPeakCPU": 0.49998751282691956,
+      "processes": {
+        "electronMain": {
+          "corePercent": 3.709087027064594,
+          "rssMiB": 128.625
+        },
+        "sclang": {
+          "corePercent": 0,
+          "rssMiB": 201.08984375
+        },
+        "scsynth": {
+          "corePercent": 0.5856453200628303,
+          "rssMiB": 31.33984375
+        },
+        "controlRenderer": {
+          "corePercent": 4.099517240439816,
+          "rssMiB": 78.91796875
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21489,
+        "output": 45900
+      },
+      "rendererDiagnostics": {
+        "strokes": 0,
+        "visibleChannels": "0,1,2,3,4,5",
+        "sourceEnd": 11072,
+        "missingSourceFrames": 2016,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "control-connected-idle-no-new-publications-no-canvas-paint",
+      "seconds": 5.114910529,
+      "traffic": {
+        "binaryBytesPerSecond": 0,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 0,
+        "framesPerSecond": 0
+      },
+      "scAudioCPU": 0.12797396294772626,
+      "scPeakCPU": 0.6095625162124634,
+      "processes": {
+        "electronMain": {
+          "corePercent": 3.1281094574938932,
+          "rssMiB": 127.54296875
+        },
+        "sclang": {
+          "corePercent": 0.19550684109336858,
+          "rssMiB": 201.109375
+        },
+        "scsynth": {
+          "corePercent": 0.5865205232801057,
+          "rssMiB": 31.34765625
+        },
+        "controlRenderer": {
+          "corePercent": 0,
+          "rssMiB": 78.546875
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21489,
+        "output": 45900
+      },
+      "rendererDiagnostics": {
+        "strokes": 0,
+        "visibleChannels": "0,1,2,3,4,5",
+        "sourceEnd": 11072,
+        "missingSourceFrames": 2016,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "control-draw-1-lanes-repeat-1",
+      "seconds": 5.1270037490000036,
+      "traffic": {
+        "binaryBytesPerSecond": 4759.114912829759,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 285.5468947697855,
+        "framesPerSecond": 23.795574564148797
+      },
+      "scAudioCPU": 0.19140715152025223,
+      "scPeakCPU": 0.8107593655586243,
+      "processes": {
+        "electronMain": {
+          "corePercent": 4.291005249272733,
+          "rssMiB": 129.640625
+        },
+        "sclang": {
+          "corePercent": 0,
+          "rssMiB": 201.046875
+        },
+        "scsynth": {
+          "corePercent": 0.5851370794462813,
+          "rssMiB": 31.34765625
+        },
+        "controlRenderer": {
+          "corePercent": 7.606782032801667,
+          "rssMiB": 84.2578125
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21469,
+        "output": 45929
+      },
+      "rendererDiagnostics": {
+        "strokes": 4396,
+        "visibleChannels": "0",
+        "sourceEnd": 16512,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "control-draw-4-lanes-repeat-1",
+      "seconds": 5.122371405999998,
+      "traffic": {
+        "binaryBytesPerSecond": 4802.463166022134,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 288.14778996132804,
+        "framesPerSecond": 24.01231583011067
+      },
+      "scAudioCPU": 0.18595891296863556,
+      "scPeakCPU": 0.6921749711036682,
+      "processes": {
+        "electronMain": {
+          "corePercent": 3.7092195184723784,
+          "rssMiB": 129.921875
+        },
+        "sclang": {
+          "corePercent": 0,
+          "rssMiB": 201.06640625
+        },
+        "scsynth": {
+          "corePercent": 0.5856662397587963,
+          "rssMiB": 31.34765625
+        },
+        "controlRenderer": {
+          "corePercent": 7.808883196783956,
+          "rssMiB": 90.2109375
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21519,
+        "output": 45930
+      },
+      "rendererDiagnostics": {
+        "strokes": 6260,
+        "visibleChannels": "2,3,4,5",
+        "sourceEnd": 21952,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "control-draw-6-lanes-repeat-1",
+      "seconds": 5.128626344999997,
+      "traffic": {
+        "binaryBytesPerSecond": 4757.609222942915,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 285.4565533765749,
+        "framesPerSecond": 23.788046114714575
+      },
+      "scAudioCPU": 0.18287349492311478,
+      "scPeakCPU": 0.6096468567848206,
+      "processes": {
+        "electronMain": {
+          "corePercent": 3.509711721843137,
+          "rssMiB": 130.0625
+        },
+        "sclang": {
+          "corePercent": 0.19498398454684096,
+          "rssMiB": 201.0703125
+        },
+        "scsynth": {
+          "corePercent": 0.5849519536405229,
+          "rssMiB": 31.34765625
+        },
+        "controlRenderer": {
+          "corePercent": 8.189327350967307,
+          "rssMiB": 93.15234375
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21526,
+        "output": 45886
+      },
+      "rendererDiagnostics": {
+        "strokes": 7536,
+        "visibleChannels": "0,1,2,3,4,5",
+        "sourceEnd": 27360,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "control-draw-6-lanes-repeat-2",
+      "seconds": 5.126382608,
+      "traffic": {
+        "binaryBytesPerSecond": 4759.691553635203,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 285.58149321811214,
+        "framesPerSecond": 23.79845776817601
+      },
+      "scAudioCPU": 0.18773908391594887,
+      "scPeakCPU": 0.5529749989509583,
+      "processes": {
+        "electronMain": {
+          "corePercent": 3.511247867435799,
+          "rssMiB": 130.17578125
+        },
+        "sclang": {
+          "corePercent": 0,
+          "rssMiB": 201.0703125
+        },
+        "scsynth": {
+          "corePercent": 0.585207977905968,
+          "rssMiB": 31.34765625
+        },
+        "controlRenderer": {
+          "corePercent": 8.583050342620854,
+          "rssMiB": 95.12109375
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21510,
+        "output": 45914
+      },
+      "rendererDiagnostics": {
+        "strokes": 7488,
+        "visibleChannels": "0,1,2,3,4,5",
+        "sourceEnd": 32768,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "control-draw-4-lanes-repeat-2",
+      "seconds": 5.124188833000008,
+      "traffic": {
+        "binaryBytesPerSecond": 4800.759847407435,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 288.0455908444461,
+        "framesPerSecond": 24.003799237037175
+      },
+      "scAudioCPU": 0.19439151138067245,
+      "scPeakCPU": 0.5651906132698059,
+      "processes": {
+        "electronMain": {
+          "corePercent": 3.7079039471846027,
+          "rssMiB": 130.7890625
+        },
+        "sclang": {
+          "corePercent": 0.19515283932550567,
+          "rssMiB": 201.0703125
+        },
+        "scsynth": {
+          "corePercent": 0.5854585179765169,
+          "rssMiB": 31.34765625
+        },
+        "controlRenderer": {
+          "corePercent": 8.58672493032224,
+          "rssMiB": 88.26953125
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21519,
+        "output": 45878
+      },
+      "rendererDiagnostics": {
+        "strokes": 6260,
+        "visibleChannels": "2,3,4,5",
+        "sourceEnd": 38208,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "control-draw-1-lanes-repeat-2",
+      "seconds": 5.114136949000007,
+      "traffic": {
+        "binaryBytesPerSecond": 4771.088502972345,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 286.2653101783407,
+        "framesPerSecond": 23.855442514861725
+      },
+      "scAudioCPU": 0.18898426964879037,
+      "scPeakCPU": 0.5792437791824341,
+      "processes": {
+        "electronMain": {
+          "corePercent": 3.9107282811248676,
+          "rssMiB": 130.36328125
+        },
+        "sclang": {
+          "corePercent": 0,
+          "rssMiB": 201.0703125
+        },
+        "scsynth": {
+          "corePercent": 0.5866092421687293,
+          "rssMiB": 31.34765625
+        },
+        "controlRenderer": {
+          "corePercent": 7.821456562249753,
+          "rssMiB": 90.01171875
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21518,
+        "output": 45893
+      },
+      "rendererDiagnostics": {
+        "strokes": 4382,
+        "visibleChannels": "0",
+        "sourceEnd": 43616,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "control-streaming-no-canvas-paint-repeat",
+      "seconds": 5.115973805000001,
+      "traffic": {
+        "binaryBytesPerSecond": 4769.37547572138,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 286.1625285432828,
+        "framesPerSecond": 23.8468773786069
+      },
+      "scAudioCPU": 0.18899907544255257,
+      "scPeakCPU": 0.6070312261581421,
+      "processes": {
+        "electronMain": {
+          "corePercent": 4.300256576470092,
+          "rssMiB": 130.41796875
+        },
+        "sclang": {
+          "corePercent": 0.19546620802136822,
+          "rssMiB": 201.0703125
+        },
+        "scsynth": {
+          "corePercent": 0.5863986240641046,
+          "rssMiB": 31.34765625
+        },
+        "controlRenderer": {
+          "corePercent": 4.300256576470092,
+          "rssMiB": 91.28515625
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21515,
+        "output": 45886
+      },
+      "rendererDiagnostics": {
+        "strokes": 0,
+        "visibleChannels": "0",
+        "sourceEnd": 49024,
+        "missingSourceFrames": 0,
+        "transport": "binary-v4"
+      }
+    },
+    {
+      "name": "scope-tap-node-reader-no-viewer-repeat",
+      "seconds": 5.114831326999993,
+      "traffic": {
+        "binaryBytesPerSecond": 0,
+        "statusBytesPerSecond": 0,
+        "ackBytesPerSecond": 0,
+        "framesPerSecond": 0
+      },
+      "scAudioCPU": 0.18758339583873748,
+      "scPeakCPU": 2.405165672302246,
+      "processes": {
+        "electronMain": {
+          "corePercent": 2.9326480270851776,
+          "rssMiB": 130.7578125
+        },
+        "sclang": {
+          "corePercent": 0,
+          "rssMiB": 201.0703125
+        },
+        "scsynth": {
+          "corePercent": 0.5865296054170365,
+          "rssMiB": 31.34765625
+        }
+      },
+      "wireBytesPerSnapshot": {
+        "mic": 21548,
+        "output": 45890
+      }
+    }
+  ],
+  "encoding": {
+    "json": {
+      "pairMicroseconds": 241.14852733333342,
+      "bytesPerPair": 67229
+    },
+    "binary-copy": {
+      "pairMicroseconds": 8.302992333333046,
+      "bytesPerPair": 12288
+    },
+    "binary-wrap": {
+      "pairMicroseconds": 0.8212736666658506,
+      "bytesPerPair": 12288
+    },
+    "binary-packet": {
+      "pairMicroseconds": 11.811177999998714,
+      "bytesPerPair": 12496
+    }
+  }
+}

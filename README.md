@@ -20,6 +20,7 @@ apps/
   score-studio/         clean score authoring and browser-runtime development host
 tool-artifacts/
   lissajous/            installed versioned renderer builds; editable source stays in lissajous-viz
+  scope/                standalone audio/control bus scopes using the shell signal engine
 ```
 
 The packages live here because more than one application needs them. Score Studio lives here too:
@@ -31,6 +32,8 @@ are consumers, not subdirectories of this repository.
 
 ```sh
 npm install
+npm run build         # prepare workspace artifacts explicitly
+npm start --workspace @awb/desktop-shell  # launch without rebuilding
 npm run verify
 npm run test:browser   # optional Playwright static-distribution check
 npm run pack:packages  # writes private, consumer-ready tarballs to artifacts/
