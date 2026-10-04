@@ -649,3 +649,5 @@ assertions. Existing scope/rack work is reconciled separately in the working tre
 this merge does not promote the WIP SC classes or claim a new hardware load result.
 
 The combined shell/scope working-tree unit suite passed 65/65. Its shared-host test now waits for the subscription reply and closes its resources on failure; the prior request-only readiness assertion was a race. Hardware and GUI load measurements still await the quiet window.
+
+Post-merge native rack renderer and normal-shell gates passed against the migrated framework: both renderers, exact ToolInstance/owner identity, native import/export and sparse SC recall/explicit sync. Server command dispatch is stubbed in those GUI checks; no hardware audio was booted. The Instruments prepare-only fixture also passed again with 16 protected production hashes unchanged. Native rack source is checkpointed separately in `/Users/willy/awb-rack-comparison` (`8ad3a83`, shell merge `444d377`).
