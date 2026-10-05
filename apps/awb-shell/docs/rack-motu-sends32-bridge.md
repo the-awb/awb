@@ -61,3 +61,50 @@ Use the single-case command in the [earlier report](rack-motu-native-bridge-and-
 All 28 recorder captures were reliable. Current read-back verified all 36 source guard entries; every control fit the scroll region, NodeManager tracked each instance, all moving phases had zero React app/rack/control renders, and all SC-origin cases sent zero echoed commands. Two Node syntax checks and 6/6 phase-alignment tests passed. None of the 261 captured owned process IDs remained alive; independent MOTU read-back confirmed restoration to 44.1 kHz.
 
 Telegram notification was unavailable in this session; no external notification was sent.
+
+## Transport-only batching follow-up — 5 October 2026
+
+The outgoing batching and shutdown EPIPE fix are committed as `6a9bc49` on
+`integration/bw-sc`. At Willy's request this follow-up leaves Bitwig running and
+makes no CPU/audio-performance claim. It starts private sclang instances with
+the actual ToolInstance/Tool/NodeManager and the same eight-channel/32-send rack,
+including all 32 pass processors. Audio dispatch is stubbed: the outgoing SC
+server commands are captured and checked, and no scsynth server is booted. No
+MOTU sample-rate, buffer, routing or Bitwig state is changed.
+
+The previous runtime at `fba7843` and the batched runtime each run twice for
+45 seconds, with order reversed. The same 296 controls change every 32 ms:
+416,472 requested changes per run. WebSocket input, Node's 16 ms coalescing,
+OSC transport, SC revision fences and bidirectional feedback are real. Graphics
+are absent. Final SC commanded values and the stubbed server gain/level writes
+must match all 296 targets; accepted revisions must equal transmitted commands.
+
+| Runtime | Control passes | Sent and accepted commands, both runs | UDP packets, both runs | Missing commands | UDP buffer drops |
+|---|---:|---:|---:|---:|---:|
+| Previous | 2/2 | 682,443 | 682,443 | 0 | 0 |
+| Batched | 2/2 | 826,834 | 55,860 | 0 | 0 |
+
+The batched runs accepted 412,853 and 413,981
+commands in 27,893 and 27,967 packets respectively:
+**93.24% fewer packets per retained command** than one-message packets.
+Both had zero bridge failures, disarming, sync errors or final-value mismatches.
+All batched control packets were bounded at 1,200 bytes. The queue preserves
+retained commands; it does not promise to send every calculated intermediate
+value. Across the two runs it retained 21.2% more intermediate commands
+than the previous runtime; these counts are transport observations on a busy
+machine, not a controlled CPU/latency comparison.
+
+The previous runtime also passed in this audio-free environment. The original
+combined DSP/graphics receiver failure therefore was **not reproduced**, and
+these results do not establish that batching fixes it at that earlier limit.
+They establish correct sustained batching at the requested message workload,
+with substantially fewer packets. A quiet-window repeat with the original
+hardware DSP load remains the test for the earlier capacity failure. SC's
+repeated full gain-vector writes and transition step scheduling remain unchanged.
+
+All four sclang instances exited cleanly. All 27 protected implementation/class
+source hashes remained unchanged during capture. The committed [transport
+summary](../test/signal-bench/dropout/results/2026-10-05-sends32-batching/transport-summary.json)
+retains endpoint snapshots, command/packet counts, revision accounting and source
+provenance; its analysis folder retains the historical runner. Raw logs and
+private fixtures remain in `/private/tmp/awb-transport-batching-6a9bc49-20261005`.

@@ -15,9 +15,12 @@ bytes, preserved command order, bounded queues and drained shutdown. Existing
 including actual sclang reception and the 296-command/21-packet boundary test.
 The shutdown logger also tolerates a closed launcher pipe (EPIPE).
 
-Next: compare the previous and batched 8-channel/32-send heavy transport with
-actual sclang classes and stubbed audio dispatch, while Bitwig work continues.
-This is a transport-correctness gate; CPU/audio performance awaits a quiet window.
+The transport-only previous/batched comparison is complete: both batched runs
+passed with 826,834 accepted commands in 55,860 packets, zero missing commands,
+zero UDP buffer drops and correct final values. Both previous-runtime runs also
+passed without DSP/graphics load, so the original failure is not reproduced.
+See the follow-up in the [32-send report](rack-motu-sends32-bridge.md). The original
+hardware/DSP repeat remains pending a quiet window; Bitwig stayed running.
 SC's repeated per-send gain-vector writes and transition step scheduling remain
 separate follow-ups. The user's live class configuration remains unchanged.
 
