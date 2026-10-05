@@ -6,14 +6,14 @@ import {startRuntime} from '../runtime/shell-runtime.mjs';
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 test('OSC scalars roundtrip and malformed packets are rejected',()=>{const m={address:'/test',args:['rack',0,1,.125,-12,4294967296]};assert.deepEqual(decodeOSC(encodeOSC(m)),m);assert.throws(()=>decodeOSC(Buffer.from('bad')));assert.throws(()=>encodeOSC({address:'/test',args:[NaN]}));assert.throws(()=>encodeOSC({address:'/test',args:['embedded\0nul']}));});
 
-test('actual ToolInstance bridge coalesces feedback, fences stale writes and preserves sparse recall',{timeout:30000,skip:!process.env.AWB_RACK_SC_TEST_ROOT},async()=>{
+test('actual ToolInstance bridge coalesces feedback, fences stale writes and preserves sparse recall',{timeout:60000,skip:!process.env.AWB_RACK_SC_TEST_ROOT},async()=>{
   const build=process.env.AWB_RACK_SC_TEST_ROOT??path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
   const dir=await mkdtemp(path.join(os.tmpdir(),'rack-sc-bridge-'));let child,runtime,bridge,socket,log='';
   try {
     await rm(path.join(build,'test/bridge-ready.json'),{force:true});
     child=spawn('/Applications/SuperCollider.app/Contents/MacOS/sclang',['-l',path.join(build,'sclang_conf.yaml'),path.join(build,'test/bridge.scd')]);
     child.stdout.on('data',b=>log+=b);child.stderr.on('data',b=>log+=b);
-    let binding;for(let i=0;i<100;i++){try{binding=JSON.parse(await readFile(path.join(build,'test/bridge-ready.json'),'utf8'));break;}catch{}if(child.exitCode!==null)throw Error(log);await wait(50);}assert.ok(binding,log);
+    let binding;for(let i=0;i<400;i++){try{binding=JSON.parse(await readFile(path.join(build,'test/bridge-ready.json'),'utf8'));break;}catch{}if(child.exitCode!==null)throw Error(log);await wait(50);}assert.ok(binding,log);
     runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),scBinding:{...binding,libraryRoot:dir}});
     assert.equal(runtime.state().sc.instanceID,binding.instanceID);assert.equal(runtime.store.controls.length,16);assert.equal(runtime.store.get('a/fx/mast'),0);assert.equal(runtime.store.get('global/channel-levels/a'),1);
     await assert.rejects(startRuntime({runtimeDirectory:path.join(dir,'competing'),scBinding:{...binding,libraryRoot:dir}}),/already open/);
@@ -97,4 +97,44 @@ test('old SC classes fail attach with an explicit recompile instruction',async()
   socket.on('message',(bytes,remote)=>{const m=decodeOSC(bytes);if(m.args[1]==='sync')socket.send(encodeOSC({address:'/awb/rack/state',args:['sendRack:old',m.args[2],'begin',0,'Old rack','old',4,1,1,1]}),remote.port,remote.address);});
   const bridge=await createSCBridge({instanceID:'sendRack:old',port:socket.address().port});
   try{await assert.rejects(bridge.sync(),/load this workspace SC rack classes and recompile/);}finally{bridge.close();await wait(10);socket.close();}
+});
+
+
+test('native runtime sends an eight-channel, 32-send flush as bounded OSC bundles',{timeout:10000},async t=>{
+ const {decodeOscPacket}=await import('../../awb-shell/services/oscCodec.mjs');
+ const dir=await mkdtemp(path.join(os.tmpdir(),'rack-sc-batching-')),socket=dgram.createSocket('udp4');
+ const packets=[],commands=[];let runtime;
+ await new Promise(resolve=>socket.bind(0,'127.0.0.1',resolve));
+ const instanceID='sendRack:batching',channels=Array.from({length:8},(_,i)=>`c${i}`),slots=Array.from({length:32},(_,i)=>`fx${i}`);
+ socket.on('message',(bytes,remote)=>{
+  const messages=decodeOscPacket(bytes);
+  if(messages.some(m=>['send','level','return'].includes(m.args[1])))packets.push(bytes);
+  for(const m of messages){
+   const reply=(address,args)=>socket.send(encodeOSC({address,args}),remote.port,remote.address);
+   if(m.args[1]==='sync'){
+    const state=(kind,...a)=>reply('/awb/rack/state',[instanceID,m.args[2],kind,...a]);
+    state('begin',0,'Batch rack','batching',4,8,32,0,1);
+    channels.forEach((id,i)=>state('channel',id,id,1,0,0,i));
+    slots.forEach((id,i)=>state('slot',id,id,'fx',1,0,1,'',i,.01,.1,1,1,-60));
+    channels.forEach(id=>state('sends',id,...slots.map(()=>0)));state('end',0);
+   }else if(m.args[1]==='watch')reply('/awb/rack/watch',[instanceID,m.args[2],0]);
+   else if(['send','level','return'].includes(m.args[1]))commands.push(m);
+  }
+ });
+ try{
+  runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),scBinding:{instanceID,port:socket.address().port,libraryID:'batching',libraryRoot:dir}});
+  await runtime.command({type:'arm',armed:true});
+  const changes=[...channels.flatMap(c=>slots.map((s,i)=>({id:`${c}/fx/${s}`,value:(i+1)/1000}))),...slots.map(id=>({id:`global/levels/${id}`,value:.5})),...channels.map(id=>({id:`global/channel-levels/${id}`,value:.75}))];
+  await runtime.command({type:'batch',changes});
+  // Capture is a barrier: all earlier values must leave Node before it completes.
+  await runtime.command({type:'capture',label:'batch barrier'});
+  for(let i=0;i<100&&commands.length!==296;i++)await wait(10);
+  assert.equal(commands.length,296);assert.equal(runtime.state().sent,296);assert.equal(runtime.state().failures,0);
+  assert.ok(packets.length<32);assert.ok(packets.every(p=>p.length<=1200));
+  assert.ok(runtime.state().oscOutput.bundles>0);
+  assert.deepEqual(commands.map(m=>[m.args[1]==='send'?`${m.args[2]}/fx/${m.args[3]}`:m.args[1]==='return'?`global/levels/${m.args[3]}`:`global/channel-levels/${m.args[2]}`,m.args[4]]),changes.map(c=>[c.id,Math.fround(c.value)]));
+  t.diagnostic(`296 retained commands delivered in ${packets.length} UDP packets, with all values and order verified`);
+  const prior=commands.length;runtime.store.set('c0/fx/fx0',.75,'sc-feedback');await wait(40);
+  assert.equal(commands.length,prior,'SC feedback must not echo');
+ }finally{await runtime?.stop();await wait(10);socket.close();await rm(dir,{recursive:true,force:true});}
 });

@@ -1,5 +1,28 @@
 # Rack Instruments preparation — 4 October 2026
 
+## Current checkpoint — 5 October 2026
+
+The historical preparation below is superseded by the [native bridge/Xcode
+results](rack-motu-native-bridge-and-xcode.md) and [corrected eight-channel,
+32-send results](rack-motu-sends32-bridge.md). Xcode narrowed the overrun wall:
+long DSP callbacks spent almost all their time assigned to a CPU; the hardware
+cause remains unresolved. Dense GUI-origin traffic overflowed the UDP receiver.
+
+Outgoing OSC batching is now implemented by default in the shared Shell sender
+and Rack runtime: a 2 ms collection window, immediate bundles bounded at 1,200
+bytes, preserved command order, bounded queues and drained shutdown. Existing
+16 ms rack coalescing remains. Validation passes 75 Shell and 29 Rack checks,
+including actual sclang reception and the 296-command/21-packet boundary test.
+The shutdown logger also tolerates a closed launcher pipe (EPIPE).
+
+Next: compare the previous and batched 8-channel/32-send heavy transport with
+actual sclang classes and stubbed audio dispatch, while Bitwig work continues.
+This is a transport-correctness gate; CPU/audio performance awaits a quiet window.
+SC's repeated per-send gain-vector writes and transition step scheduling remain
+separate follow-ups. The user's live class configuration remains unchanged.
+
+## Historical preparation
+
 Step 0 remains finding the unexplained audio overrun wall with Xcode tools. No new MOTU load measurements have been made during this preparation. This checkpoint commits the Instruments wrapper and runbook; it depends on the existing rack/scope benchmark work in this working checkout, checkpointed on `integration/bw-sc` at `94c4265`. Willy has another agent working on Bitwig set inspection; its work can continue while the load tests wait for a quiet window.
 
 ## Ready and verified

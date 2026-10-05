@@ -132,3 +132,28 @@ test( 'starting a replacement capture releases the view previous source', async 
   await access.start( 'view-a', { deviceUID: 'second' } );
   assert.deepEqual( released, [ 'first' ] );
 } );
+
+
+test('relay batches ordered commands by default, keeps grants separate, and drains before disconnect',async()=>{
+ const osc=dgram.createSocket('udp4'),packets=[];
+ osc.on('message',bytes=>packets.push({bytes,messages:decodeOscPacket(bytes)}));
+ await new Promise(resolve=>osc.bind(0,'127.0.0.1',resolve));
+ const relay=await createOscWebSocketRelay({oscPort:osc.address().port});
+ const access=relay.grant({allowedPrefixes:['/test/'],clientIdentityAddresses:['/test/hello'],disconnectAddresses:['/test/disconnect']});
+ const socket=new WebSocket(access.endpoint),frames=[];
+ socket.on('message',data=>frames.push(JSON.parse(data)));
+ try{
+  await new Promise(resolve=>socket.once('open',resolve));
+  await waitFor(()=>frames.some(f=>f.address==='/awb/bridge/ready'));
+  socket.send(JSON.stringify({address:'/test/hello',args:['batch-client']}));
+  for(let i=0;i<32;i++)socket.send(JSON.stringify({address:'/test/value',args:[i]}));
+  socket.send(JSON.stringify({address:'/forbidden',args:[999]}));
+  socket.close();
+  await waitFor(()=>packets.some(p=>p.messages.some(m=>m.address==='/test/disconnect')));
+  const relevant=packets.filter(p=>p.messages.some(m=>m.address.startsWith('/test/')));
+  const messages=relevant.flatMap(p=>p.messages);
+  assert.deepEqual(messages,[{address:'/test/hello',args:['batch-client']},...Array.from({length:32},(_,i)=>({address:'/test/value',args:[i]})),{address:'/test/disconnect',args:['batch-client']}]);
+  assert.ok(relevant.length<34);assert.ok(relevant.some(p=>p.messages.length>1));
+  assert.ok(relevant.every(p=>p.bytes.length<=1200));
+ }finally{socket.terminate();access.release();await relay.close();osc.close();}
+});

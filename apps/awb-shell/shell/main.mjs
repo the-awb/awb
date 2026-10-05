@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import path from 'node:path';
 import process from 'node:process';
+import { guardStdioPipes } from '../src/stdioErrors.mjs';
 import { readFile, stat, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -29,6 +30,7 @@ import {
   permitsDisplayMediaRequest, permitsMediaCheck, permitsMediaRequest, responseHeadersForTool
 } from '../src/rendererPolicy.mjs';
 
+guardStdioPipes();
 const require = createRequire( import.meta.url );
 const { app, BrowserWindow, desktopCapturer, dialog, ipcMain, MessageChannelMain, session, webContents } = require( 'electron/main' );
 const shellRoot = path.dirname( fileURLToPath( import.meta.url ) );

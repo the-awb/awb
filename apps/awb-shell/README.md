@@ -489,6 +489,28 @@ The [headless audio deadline comparison](docs/scope-headless-dropouts.md) tests 
 
 [Headless-only audio rerun](docs/scope-headless-dropouts-ide-closed.md): 18 comparison phases after closing the SC IDE and its server, with a persistent focus helper and recorded SC process inventories.
 
+### OSC output batching
+
+The shell's shared OSC relay and Rack's Node runtime use the same bounded output
+sender by default. Commands collected over a 2 ms window are sent in immediate
+OSC bundles capped at 1,200 bytes. Single commands remain plain OSC messages;
+existing larger individual messages remain intact as standalone UDP packets.
+The queue preserves order and every retained command, checks capacity across
+pending/in-flight work, and drains before disconnect. This transport layer does
+not quantize values or throttle automation to the graphics refresh rate.
+
+Rack's existing 16 ms latest-value coalescing feeds whole flushes into the sender,
+including send-all. `/api/state` exposes `oscOutput` message/packet/bundle counts
+and queue occupancy; `sent` remains a count of logical commands, not UDP packets.
+SC still handles scalar controls and still writes a full send-gain array for each
+send change. Grouping those server writes and quantized transition scheduling
+remain separate follow-ups. The earlier high-load measurements predate batching;
+no new MOTU audio ceiling is established by these transport tests.
+
+The shell also tolerates a lost launcher log pipe during cleanup; an EPIPE from
+stdout/stderr no longer causes an uncaught-exception dialog. Other stream errors
+continue to surface.
+
 ### Native SC Rack
 
 The Rack workspace now bundles `AWBSendRackTool : Tool` and a bidirectional OSC

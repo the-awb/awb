@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import dgram from 'node:dgram';
 import { WebSocket, WebSocketServer } from 'ws';
 import { decodeOscPacket, encodeOscMessage } from './oscCodec.mjs';
+import { createOscOutput } from './oscOutput.mjs';
 import { SynthDefContextBroker } from './synthDefContextBroker.mjs';
 import { NodeManagerProjection } from './nodeManagerProjection.mjs';
 import { HostControlProjection } from './hostControlProjection.mjs';
@@ -11,42 +12,45 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
   oscHost = '127.0.0.1', oscPort, allowedPrefixes = null, clientIdentityAddress = null,
   disconnectAddress = null, clientIdentityAddresses = [], disconnectAddresses = [], hostToken = '' } ) {
   if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) throw new Error( 'Invalid relay OSC port.' );
-  const clients = new Set(); const grants = new Map();
+  const clients = new Set(); const closingClients = new Set(); const grants = new Map();
   const server = new WebSocketServer( { host, port, maxPayload: MAX_FRAME_BYTES } );
   const send = ( browser, address, args = [] ) => { if ( browser.readyState === WebSocket.OPEN ) browser.send( JSON.stringify( { address, args } ) ); };
   const sharedUdp = dgram.createSocket( 'udp4' );
+  const outputFor = socket => createOscOutput({
+    encodeMessage: ({address, args}) => encodeOscMessage(address, args),
+    sendPacket: bytes => new Promise((resolve, reject) => socket.send(bytes, oscPort, oscHost, error => error ? reject(error) : resolve()))
+  });
+  const sharedOutput = outputFor(sharedUdp);
+  const sendShared = (address, args) => sharedOutput.send({address, args}).catch(error => {
+    synthDefs.markUnavailable(error.message); nodeManager.markUnavailable(error.message);
+  });
   const browsers = new Map();
   const hostListeners = new Set();
   const hostChanged = () => { for ( const listener of hostListeners ) listener(); };
   const synthDefs = new SynthDefContextBroker( {
-    sendOsc: ( address, args ) => sharedUdp.send( encodeOscMessage( address,
-      address === '/awb/synthdef/hello' ? [ args[ 0 ], sharedUdp.address().port ] : args ), oscPort, oscHost ),
+    sendOsc: ( address, args ) => sendShared(address, address === '/awb/synthdef/hello' ? [ args[ 0 ], sharedUdp.address().port ] : args),
     sendClient: ( clientKey, address, args ) => { const browser = browsers.get( clientKey ); if ( browser ) send( browser, address, args ); },
     onChange: hostChanged
   } );
   const nodeManager = new NodeManagerProjection( {
-    sendOsc: ( address, args ) => sharedUdp.send( encodeOscMessage( address,
-      address === '/awb/nm/subscribe' ? [ args[ 0 ], sharedUdp.address().port, ...args.slice( 1 ) ] : args ), oscPort, oscHost ),
+    sendOsc: ( address, args ) => sendShared(address, address === '/awb/nm/subscribe' ? [ args[ 0 ], sharedUdp.address().port, ...args.slice( 1 ) ] : args),
     onChange: hostChanged
   } );
   const hostControl = new HostControlProjection( {
     token: hostToken,
-    sendOsc: ( address, args ) => sharedUdp.send( encodeOscMessage( address,
-      [ args[ 0 ], sharedUdp.address().port, ...args.slice( 1 ) ] ), oscPort, oscHost ),
+    sendOsc: ( address, args ) => sendShared(address, [ args[ 0 ], sharedUdp.address().port, ...args.slice( 1 ) ]),
     onChange: ( snapshot ) => { nodeManager.setHostStatus( snapshot.nodeManager ); hostChanged(); }
   } );
   const closeClient = ( client, notify = true ) => {
     if ( client.closing ) return; client.closing = true; clients.delete( client );
     const finish = () => { try { client.udp.close(); } catch {} };
     const clientDisconnects = client.policy.disconnects.filter( ( address ) => !address.startsWith( '/awb/synthdef/' ) );
-    if ( notify && clientDisconnects.length && client.clientID ) {
-      let remaining = clientDisconnects.length;
-      const sent = () => { remaining -= 1; if ( remaining === 0 ) finish(); };
-      clientDisconnects.forEach( ( address ) => client.udp.send(
-        encodeOscMessage( address, [ client.clientID ] ), oscPort, oscHost, sent
-      ) );
+    if (notify && client.clientID) {
+      for (const address of clientDisconnects) client.output.send({address, args: [client.clientID]}).catch(() => {});
     }
-    else finish();
+    client.finished = client.output.close().finally(finish);
+    closingClients.add(client.finished); client.finished.finally(() => closingClients.delete(client.finished));
+
   };
   server.on( 'connection', ( browser, request ) => {
     const token = new URL( request.url, `http://${ host }` ).searchParams.get( 'token' ); const policy = grants.get( token );
@@ -54,7 +58,8 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     const allowed = ( address ) => policy.allowedAddresses.has( address )
       || policy.allowedPrefixes.some( ( prefix ) => address.startsWith( prefix ) );
     const udp = dgram.createSocket( 'udp4' ); const clientKey = crypto.randomUUID();
-    const client = { udp, clientID: null, clientKey, token, policy, closing: false, browser }; clients.add( client ); browsers.set( clientKey, browser );
+    const output = outputFor(udp);
+    const client = { udp, output, clientID: null, clientKey, token, policy, closing: false, browser }; clients.add( client ); browsers.set( clientKey, browser );
     udp.on( 'message', ( packet ) => {
       try { decodeOscPacket( packet ).filter( ( message ) => allowed( message.address ) || message.address.startsWith( '/awb/bridge/' ) ).forEach( ( message ) => send( browser, message.address, message.args ) ); }
       catch ( error ) { send( browser, '/awb/bridge/error', [ 'invalidOsc', error.message ] ); }
@@ -62,6 +67,7 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     udp.on( 'error', ( error ) => send( browser, '/awb/bridge/error', [ 'udpError', error.message ] ) );
     udp.bind( 0, host, () => send( browser, '/awb/bridge/ready', [ udp.address().port ] ) );
     browser.on( 'message', ( data ) => {
+      if (client.closing) return;
       try {
         if ( data.length > MAX_FRAME_BYTES ) throw new Error( 'frameTooLarge' );
         const frame = JSON.parse( data.toString() );
@@ -70,7 +76,7 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
         if ( frame.address.startsWith( '/awb/nm/' ) ) throw new Error( 'hostOwnedProtocol' );
         if ( !Array.isArray( frame.args ) || frame.args.some( ( value ) => !( typeof value === 'string' || typeof value === 'number' && Number.isFinite( value ) ) ) ) throw new Error( 'invalidArguments' );
         if ( policy.identities.has( frame.address ) && typeof frame.args[ 0 ] === 'string' ) client.clientID = frame.args[ 0 ];
-        udp.send( encodeOscMessage( frame.address, frame.args ), oscPort, oscHost );
+        output.send({address: frame.address, args: frame.args}).catch(error => send(browser, '/awb/bridge/error', ['udpError', error.message]));
       } catch ( error ) { send( browser, '/awb/bridge/error', [ error.message, 'Frame was not forwarded.' ] ); }
     } );
     browser.on( 'close', () => { synthDefs.detach( clientKey ); browsers.delete( clientKey ); closeClient( client ); } );
@@ -125,7 +131,8 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     close: async () => {
       legacyPolicy?.release(); hostControl.close(); synthDefs.close(); nodeManager.close(); grants.clear(); for ( const browser of server.clients ) browser.terminate();
       for ( const client of [ ...clients ] ) closeClient( client );
-      await new Promise( ( resolve ) => setImmediate( resolve ) );
+      await Promise.all([...closingClients]);
+      await sharedOutput.close();
       try { sharedUdp.close(); } catch {}
       await new Promise( ( resolve ) => {
         const timer = setTimeout( resolve, 500 );

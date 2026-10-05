@@ -53,6 +53,15 @@ Both existing renderers consume the same native matrix. Sends remain compact ver
 
 Existing full/selected snapshots, inline timing/alignment fields and keyboard navigation work with SC gains. Amount edits audition live when armed. Null mix targets preserve the existing value; zero explicitly clears it. The local JSON mix library is associated with your compositional SC scene IDs. It does not define Bitwig scenes or launch SC compositions.
 
+Outgoing Node OSC now uses the shared Shell batching sender. The runtime submits
+its retained 16 ms control flush together; a 2 ms transport window packs commands
+into immediate bundles capped at 1,200 bytes. Scalar messages and revision fences
+are unchanged, so loaded SC rack classes need no protocol migration. Existing
+large individual messages stay intact. Send-all uses the same batching path.
+The general sender preserves every command; latest-value deduplication remains
+in the rack. Message/packet/bundle counts are exposed as `oscOutput` in runtime
+state. Bundling does not yet consolidate SC's per-send gain-array writes.
+
 OSC commands carry the exact ToolInstance identity. SC publishes changed controls at
 most once per 33 ms, coalescing repeated changes to the latest value. Both renderers
 receive per-control store updates; the React rack structure stays mounted. GUI echoes

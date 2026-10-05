@@ -1,5 +1,6 @@
 import dgram from 'node:dgram';
 import crypto from 'node:crypto';
+import {createOscOutput} from '../../awb-shell/services/oscOutput.mjs';
 
 const pad=b=>Buffer.concat([b,Buffer.alloc((4-b.length%4)%4)]);
 const str=s=>pad(Buffer.from(`${s}\0`));
@@ -22,7 +23,7 @@ export function envBinding(env=process.env) {
 }
 export async function createSCBridge(binding,{onError=()=>{},onUpdate=()=>{},timeout=1800,heartbeat=3000}={}) {
   if(!binding||typeof binding.instanceID!=='string'||!/^sendRack:[a-zA-Z0-9_-]+$/.test(binding.instanceID)||!Number.isInteger(binding.port)||binding.port<1||binding.port>65535)throw Error('Invalid native SC rack binding.');
-  const socket=dgram.createSocket('udp4'),requests=new Map(),frames=new Map(),watchToken=crypto.randomUUID();let closed=false,watchTimer,watchRequest,lastWatch=0,watchFailed=false;
+  const socket=dgram.createSocket('udp4'),requests=new Map(),frames=new Map(),watchToken=crypto.randomUUID();let closed=false,closeTask=null,watchTimer,watchRequest,lastWatch=0,watchFailed=false;
   const recover=()=>onUpdate({kind:'recover'});
   const clearFrames=()=>{for(const f of frames.values())clearTimeout(f.timer);frames.clear();};
   const update=(args)=>{
@@ -40,7 +41,8 @@ export async function createSCBridge(binding,{onError=()=>{},onUpdate=()=>{},tim
     if(f.header&&f.end===f.header.revision&&f.changes.size===f.header.count){clearTimeout(f.timer);frames.delete(id);onUpdate({kind:'values',...f.header,changes:[...f.changes.values()]});}
   };
   socket.on('error',error=>onError(error.message));
-  const send=message=>new Promise((resolve,reject)=>socket.send(encodeOSC(message),binding.port,'127.0.0.1',e=>e?reject(e):resolve()));
+  const output=createOscOutput({encodeMessage:encodeOSC,sendPacket:bytes=>new Promise((resolve,reject)=>socket.send(bytes,binding.port,'127.0.0.1',e=>e?reject(e):resolve()))});
+  const send=message=>output.send(message);
   const finish=(id,request)=>{
     const h=request.header;
     if(!h||request.end===undefined||request.channels.size!==h.channelCount||request.slots.size!==h.slotCount||request.sends.size!==h.channelCount||request.processors.size!==h.processorCount)return;
@@ -75,9 +77,9 @@ export async function createSCBridge(binding,{onError=()=>{},onUpdate=()=>{},tim
       const renew=()=>{if(lastWatch&&Date.now()-lastWatch>heartbeat*3&&!watchFailed){watchFailed=true;onError('SC feedback heartbeat timed out.');}send({address:'/awb/rack/control',args:[binding.instanceID,'watch',watchToken]}).catch(e=>onError(e.message));};
       return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{watchRequest=null;clearInterval(watchTimer);watchTimer=null;reject(Error('SC feedback subscription timed out.'));},timeout);watchRequest={resolve:()=>{clearTimeout(timer);resolve();},reject:e=>{clearTimeout(timer);reject(e);}};watchTimer=setInterval(renew,heartbeat);renew();});
     },
-    send,control:async(op,args=[])=>{if(closed)throw Error('SC bridge is closed.');await send({address:'/awb/rack/control',args:[binding.instanceID,op,...args]});},
+    send,sendBatch:messages=>output.sendMany(messages.map(message=>({message}))),outputStats:()=>output.snapshot(),control:async(op,args=[])=>{if(closed)throw Error('SC bridge is closed.');await send({address:'/awb/rack/control',args:[binding.instanceID,op,...args]});},
     sync(){if(closed)return Promise.reject(Error('SC bridge is closed.'));const id=crypto.randomUUID();return new Promise((resolve,reject)=>{const request={resolve,reject,channels:new Map(),slots:new Map(),sends:new Map(),processors:new Set(),timer:setTimeout(()=>{requests.delete(id);reject(Error('SC rack Sync timed out; the bound ToolInstance may be closed.'));},timeout)};requests.set(id,request);send({address:'/awb/rack/control',args:[binding.instanceID,'sync',id]}).catch(error=>{clearTimeout(request.timer);requests.delete(id);reject(error);});});},
-    close(){if(closed)return;closed=true;clearInterval(watchTimer);clearFrames();watchRequest?.reject(Error('SC bridge closed.'));watchRequest=null;for(const r of requests.values()){clearTimeout(r.timer);r.reject(Error('SC bridge closed.'));}requests.clear();socket.send(encodeOSC({address:'/awb/rack/control',args:[binding.instanceID,'unwatch',watchToken]}),binding.port,'127.0.0.1',()=>socket.close());}
+    close(){if(closed)return closeTask;closed=true;clearInterval(watchTimer);clearFrames();watchRequest?.reject(Error('SC bridge closed.'));watchRequest=null;for(const r of requests.values()){clearTimeout(r.timer);r.reject(Error('SC bridge closed.'));}requests.clear();send({address:'/awb/rack/control',args:[binding.instanceID,'unwatch',watchToken]}).catch(()=>{});closeTask=output.close().then(()=>new Promise(resolve=>socket.close(resolve)));return closeTask;}
   };
 }
 export function documentFromState(state,snapshots=[]) {

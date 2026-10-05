@@ -8,6 +8,7 @@ import {WebSocketServer} from 'ws';
 import {RackStore,defaultConfig,wireMessage,createRecall} from '../src/model.mjs';
 
 import {encodeOSC,createSCBridge,documentFromState,envBinding} from './sc-bridge.mjs';
+import {createOscOutput} from '../../awb-shell/services/oscOutput.mjs';
 export {encodeOSC} from './sc-bridge.mjs';
 const MIME={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.map':'application/json','.svg':'image/svg+xml'};
 export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sendPacket,scBinding=envBinding()}={}){
@@ -36,13 +37,31 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
   let store;try{store=new RackStore(document);}catch(e){bridge?.close();await unlock();throw e;}
   const token=crypto.randomUUID(),udp=dgram.createSocket('udp4'),peers=new Set();
   const root=path.resolve(fileURLToPath(new URL('../dist/',import.meta.url)));let armed=false,recall=null,saveTimer,flushTimer,closed=false,writeQueue=Promise.resolve(),transmitQueue=Promise.resolve();const pending=new Map();let sent=0,failures=0;
-  const state=()=>({document:store.document(),armed,token,libraryPath,sent,failures,sc:scState});
+  const output=createOscOutput({encodeMessage:encodeOSC,sendPacket:(bytes,packets)=>sendPacket?sendPacket(bytes,packets.length===1?packets[0]:{controls:packets}):new Promise((resolve,reject)=>udp.send(bytes,store.config.output.port,store.config.output.host,e=>e?reject(e):resolve()))});
+  const state=()=>({document:store.document(),armed,token,libraryPath,sent,failures,sc:scState,oscOutput:bridge&&!sendPacket?bridge.outputStats():output.snapshot()});
   const broadcast=message=>{const text=JSON.stringify(message);for(const ws of peers)if(ws.readyState===1)ws.send(text);};
   reportSCError=message=>{failures++;armed=false;broadcast({type:'armed',armed});broadcast({type:'error',message:`SC: ${message}`});};
   const save=()=>{const text=JSON.stringify(store.document(),null,2)+'\n';writeQueue=writeQueue.catch(()=>{}).then(async()=>{await writeFile(libraryPath+'.tmp',text);await rename(libraryPath+'.tmp',libraryPath);}).catch(e=>{broadcast({type:'error',message:`Save failed: ${e.message}`});throw e;});return writeQueue;};
   const queueSave=()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>save().catch(()=>{}),300);};
-  const transmit=async(id,value,scRevision=scState?.revision)=>{try{const d=store.byID.get(id),message=wireMessage(d,value,store.config);if(!message)return;if(bridge)message.args.push(scRevision);const packet={id,value,message,endpoint:store.config.output,armed};broadcast({type:'wire',...packet});if(armed){const bytes=encodeOSC(message);if(sendPacket)await sendPacket(bytes,packet);else if(bridge)await bridge.send(message);else await new Promise((resolve,reject)=>udp.send(bytes,store.config.output.port,store.config.output.host,e=>e?reject(e):resolve()));sent++;}}catch(e){failures++;broadcast({type:'error',message:`${id}: ${e.message}`});}};
-  const flush=async()=>{clearTimeout(flushTimer);flushTimer=null;const changes=[...pending].map(([id,change])=>({id,...change}));pending.clear();if(changes.length)broadcast({type:'patch',changes});transmitQueue=transmitQueue.then(async()=>{for(const {id,value,origin,scRevision}of changes)if(!origin.startsWith('sc-'))await transmit(id,value,scRevision);});return await transmitQueue;};
+  const transmitMany=async(changes)=>{
+    const packets=[];
+    for(const {id,value,scRevision=scState?.revision} of changes){
+      try{
+        const d=store.byID.get(id),message=wireMessage(d,value,store.config);if(!message)continue;
+        if(bridge)message.args.push(scRevision);
+        const packet={id,value,message,endpoint:store.config.output,armed};broadcast({type:'wire',...packet});
+        if(armed)packets.push(packet);
+      }catch(e){failures++;broadcast({type:'error',message:`${id}: ${e.message}`});}
+    }
+    if(!packets.length)return;
+    try{
+      if(bridge&&!sendPacket)await bridge.sendBatch(packets.map(p=>p.message));
+      else await output.sendMany(packets.map(p=>({message:p.message,context:p})));
+      sent+=packets.length;
+    }catch(e){if(bridge)reportSCError(e.message);else {failures++;broadcast({type:'error',message:`OSC: ${e.message}`});}}
+  };
+  const flush=async()=>{clearTimeout(flushTimer);flushTimer=null;const changes=[...pending].map(([id,change])=>({id,...change}));pending.clear();if(changes.length)broadcast({type:'patch',changes});transmitQueue=transmitQueue.then(()=>transmitMany(changes.filter(c=>!c.origin.startsWith('sc-'))));return await transmitQueue;};
+
   const unsub=store.subscribeAll(event=>{if(event.kind==='value'){pending.set(event.id,{value:event.value,origin:event.origin,scRevision:scState?.revision});if(!flushTimer)flushTimer=setTimeout(()=>void flush(),16);}else broadcast({type:'document',document:store.document()});queueSave();});
   const compatible=(doc)=>{
     if(!bridge){if(doc.config.output.mode==='sc')throw Error('Open this rack from its SC ToolInstance to bind native routing.');return;}
@@ -104,7 +123,7 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
     if(c.type==='snapshot'){store.updateSnapshot(c.snapshot);await save();return;}
     if(c.type==='delete-snapshot'){store.snapshots=store.snapshots.filter(s=>s.id!==c.id);store.notifyMeta();await save();return;}
     if(c.type==='recall'){const s=store.snapshots.find(s=>s.id===c.id);if(!s)throw Error('Unknown snapshot.');recall?.stop();broadcast({type:'recall',active:true,id:s.id});let finished=false;const next=createRecall(store,{...s,duration:c.direct?0:s.duration},{onFinish:()=>{finished=true;recall=null;broadcast({type:'recall',active:false});}});recall=finished?null:next;return;}
-    if(c.type==='send-all'){await flush();for(const d of store.controls)await transmit(d.id,store.get(d.id));return;}
+    if(c.type==='send-all'){await flush();transmitQueue=transmitQueue.then(()=>transmitMany(store.controls.map(d=>({id:d.id,value:store.get(d.id)}))));await transmitQueue;return;}
     if(c.type==='save'){await save();return;}
     throw Error('Unknown Rack command.');
   };
@@ -128,5 +147,5 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
     catch(e){bridge.close();unsub();clearTimeout(saveTimer);clearTimeout(flushTimer);await new Promise(r=>wss.close(r));await new Promise(r=>server.close(r));await unlock();throw e;}
   }
   return {url:`http://127.0.0.1:${server.address().port}/`,libraryPath,store,command,state,
-    async stop(){if(closed)return;closed=true;recall?.stop();clearTimeout(saveTimer);clearTimeout(flushTimer);pending.clear();unsub();armed=false;await transmitQueue;bridge?.close();try{await save();}finally{for(const ws of peers)ws.terminate();await new Promise(r=>wss.close(r));await new Promise(r=>server.close(r));try{udp.close();}catch{};await unlock();}}};
+    async stop(){if(closed)return;closed=true;recall?.stop();clearTimeout(saveTimer);clearTimeout(flushTimer);pending.clear();unsub();armed=false;await transmitQueue;await bridge?.close();await output.close();try{await save();}finally{for(const ws of peers)ws.terminate();await new Promise(r=>wss.close(r));await new Promise(r=>server.close(r));try{udp.close();}catch{};await unlock();}}};
 }
