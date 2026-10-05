@@ -1,18 +1,19 @@
 (
-var server=Server.default, instance, rack, reservation, responder, work, controls, channels, fixed, large, wide;
+var server=Server.default, instance, rack, reservation, responder, work, controls, channels, fixed, large, wide, manySends, sendCount, dynamic;
 large=("AWB_NATIVE_RACK_SIZE".getenv ? "small")=="large";wide="AWB_NATIVE_RACK_SIZE".getenv=="32";
+manySends="AWB_NATIVE_RACK_SIZE".getenv=="sends32";sendCount=if("AWB_NATIVE_MAST".getenv=="extra"){33}{32};dynamic=if(manySends){sendCount-6}{3};
 channels=Array.fill(if(large){14}{if(wide){32}{8}},{|i|("ch"++i).asSymbol});
 fixed=if(large){Array.fill(21,{|i|("fixed"++i).asSymbol})}{[\splut,\spark,\deci,\fuzz,\verb,\mast]};
 Routine({var channelJSON,slotJSON,json,sourceJSON, tone=Library.at(\awbBenchTone);
  reservation=Bus.audio(server,256); // Keep existing explicit source/load buses outside the rack allocation.
  NodeManager.enable;
- instance=AWBSendRackTool.open((name:"Live rack bridge benchmark",libraryID:"live-bridge-bench",width:2,channels:channels,fixedFX:fixed,dynamicFX:3,fixedFollowers:[],spareFollowers:0,cleanSlot:false,out:8), (server:server,track:true));
+ instance=AWBSendRackTool.open((name:"Live rack bridge benchmark",libraryID:"live-bridge-bench",width:2,channels:channels,fixedFX:fixed,dynamicFX:dynamic,fixedFollowers:[],spareFollowers:0,cleanSlot:false,out:8), (server:server,track:true));
  rack=instance.tool;while{rack.ready.not}{0.01.wait};
  rack.fxIDs.do{|id|rack.setFX(id,\pass,(fade:0.02,tail:0,limiter:false))};server.sync;
  SynthDef(\awbBenchRackVoice,{|out=0,freq=110|Out.ar(out,SinOsc.ar([freq,freq+0.7])*0.00001)}).send(server);server.sync;
  channels.do{|id,i|rack.synth(\awbBenchRackVoice,[\out,rack.inputFor(id).index,\freq,113+(i*41)],rack.sourceGroup,"Benchmark source")};server.sync;0.1.wait;
  controls=[];rack.slotIDs.do{|slot|channels.do{|channel|controls=controls.add([\send,channel,slot])}};
- rack.fxIDs.copyRange(0,if(large){17}{8}).do{|slot|controls=controls.add([\return,nil,slot])};
+ rack.fxIDs.copyRange(0,if(large){17}{if(manySends){sendCount-1}{8}}).do{|slot|controls=controls.add([\return,nil,slot])};
  if(large.not){channels.do{|channel|controls=controls.add([\level,channel,nil])}};
  responder=OSCFunc({|msg,time,address|
   if(address.ip=="127.0.0.1"){

@@ -9,14 +9,14 @@ const exec=promisify(execFile),here=dirname(fileURLToPath(import.meta.url));
 if(Number(process.versions.node.split('.')[0])<22)throw Error('Node 22+ is required.');
 const argument=name=>process.argv.find(a=>a.startsWith('--'+name+'='))?.slice(name.length+3);
 const run=process.argv.includes('--run'),quiet=process.argv.includes('--quiet-window');
-process.env.AWB_NATIVE_RACK_SIZE??='small';process.env.AWB_NATIVE_BRIDGE??='on';process.env.AWB_NATIVE_DIRECTION??='gui';
-for(const [key,allowed] of [['AWB_NATIVE_RACK_SIZE',['small','large','32']],['AWB_NATIVE_BRIDGE',['off','on']],['AWB_NATIVE_DIRECTION',['gui','sc']]])if(!allowed.includes(process.env[key]))throw Error('Invalid '+key);
+process.env.AWB_NATIVE_RACK_SIZE??='small';process.env.AWB_NATIVE_BRIDGE??='on';process.env.AWB_NATIVE_DIRECTION??='gui';process.env.AWB_NATIVE_MAST??='include';
+for(const [key,allowed] of [['AWB_NATIVE_RACK_SIZE',['small','large','32','sends32']],['AWB_NATIVE_BRIDGE',['off','on']],['AWB_NATIVE_DIRECTION',['gui','sc']],['AWB_NATIVE_MAST',['include','extra']]])if(!allowed.includes(process.env[key]))throw Error('Invalid '+key);
 
 const mode=argument('trace-mode')??'off';
 if(!['off','System Trace','Audio System Trace'].includes(mode))throw Error('trace-mode must be off, System Trace, or Audio System Trace.');
 if(run&&!quiet)throw Error('Measured runs require --quiet-window after agreeing a quiet window with Willy.');
 if(process.argv.includes('--help')){
- console.log('Native rack benchmark. Environment: AWB_NATIVE_RACK_SIZE=small|large|32, AWB_NATIVE_BRIDGE=off|on, AWB_NATIVE_DIRECTION=gui|sc. Default: fixture preparation only, no Electron/SC launch.\n--run --quiet-window: actual measurement.\n--trace-mode="off|System Trace|Audio System Trace"\n--output=/absolute/fresh/stem.json\nPass normal refresh-run options such as --load-nodes=60 --seconds=30 --repeats=2 --conditions=idle,canvas2d-15,canvas2d-30');
+ console.log('Native rack benchmark. Environment: AWB_NATIVE_RACK_SIZE=small|large|32|sends32, AWB_NATIVE_MAST=include|extra (sends32 only), AWB_NATIVE_BRIDGE=off|on, AWB_NATIVE_DIRECTION=gui|sc. Default: fixture preparation only, no Electron/SC launch.\n--run --quiet-window: actual measurement.\n--trace-mode="off|System Trace|Audio System Trace"\n--output=/absolute/fresh/stem.json\nPass normal refresh-run options such as --load-nodes=60 --seconds=30 --repeats=2 --conditions=idle,canvas2d-15,canvas2d-30');
  process.exit(0);
 }
 const output=resolve(argument('output')??join('/private/tmp','awb-instruments-'+crypto.randomUUID()+'.json'));
@@ -65,7 +65,7 @@ try {
  const nativeFiles=['native-rack-fixture.mjs','native-producer.scd','native-run.mjs'].map(name=>join(here,name));
  const rackRoot=resolve(here,'../../../../rack');nativeFiles.push(join(rackRoot,'sc/classes/AWBSendRackTool.sc'),join(rackRoot,'sc/classes/AWBSendRackVoice.sc'),join(rackRoot,'runtime/sc-bridge.mjs'),join(rackRoot,'runtime/shell-runtime.mjs'));
  const nativeGuards={};for(const path of nativeFiles)nativeGuards[path]=crypto.createHash('sha256').update(await readFile(path)).digest('hex');
- provenance.native={size:process.env.AWB_NATIVE_RACK_SIZE,bridge:process.env.AWB_NATIVE_BRIDGE,direction:process.env.AWB_NATIVE_DIRECTION,guards:nativeGuards,note:'Real native rack; pass FX; private sclang include config; no production data writes.'};
+ provenance.native={size:process.env.AWB_NATIVE_RACK_SIZE,mast:process.env.AWB_NATIVE_MAST,bridge:process.env.AWB_NATIVE_BRIDGE,direction:process.env.AWB_NATIVE_DIRECTION,guards:nativeGuards,note:'Real native rack; pass FX; private sclang include config; no production data writes.'};
  provenance.note='Native integration benchmark extension of the matched refresh harness; real SC writes and framed SC feedback when bridge is on. Source guards cover the native helper, SC classes and runtime.';
  await writeFile(join(output+'.instruments','provenance.json'),JSON.stringify(provenance,null,2)+'\n');
  await writeFile(join(output+'.instruments','generated-runner.mjs'),runner);

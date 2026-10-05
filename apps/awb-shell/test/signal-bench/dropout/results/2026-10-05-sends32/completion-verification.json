@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-10-05T04:00:43.750192+00:00",
+  "captures": 28,
+  "functionalPasses": 20,
+  "recordersReliable": true,
+  "smoke": {
+    "pass": 0,
+    "size": "sends32",
+    "bridge": "on",
+    "direction": "sc",
+    "condition": "canvas2d-15",
+    "stem": "/private/tmp/awb-native-sends32-adf3f93-20261005/smoke-canvas2d-15",
+    "startedAt": 1791170794.198189,
+    "complete": true,
+    "udpBefore": "udp:\n\t27180051 datagrams received\n\t\t0 with incomplete header\n\t\t0 with bad data length field\n\t\t0 with bad checksum\n\t\t1 with no checksum\n\t\t450 checksummed in software\n\t\t\t450 datagrams (9264 bytes) over IPv4\n\t\t\t0 datagram (0 byte) over IPv6\n\t\t119184 dropped due to no socket\n\t\t1147 broadcast/multicast datagrams undelivered\n\t\t0 IPv6 multicast datagram undelivered\n\t\t0 time multicast source filter matched\n\t\t492406 dropped due to full socket buffers\n\t\t0 not for hashed pcb\n\t\t26567314 delivered\n\t26890910 datagrams output\n\t\t1791 checksummed in software\n\t\t\t0 datagram (0 byte) over IPv4\n\t\t\t1791 datagrams (287555 bytes) over IPv6\n\t65 open UDP sockets\n",
+    "exitCode": 0,
+    "endedAt": 1791170822.602138,
+    "udpAfter": "udp:\n\t27269674 datagrams received\n\t\t0 with incomplete header\n\t\t0 with bad data length field\n\t\t0 with bad checksum\n\t\t1 with no checksum\n\t\t450 checksummed in software\n\t\t\t450 datagrams (9264 bytes) over IPv4\n\t\t\t0 datagram (0 byte) over IPv6\n\t\t119250 dropped due to no socket\n\t\t1147 broadcast/multicast datagrams undelivered\n\t\t0 IPv6 multicast datagram undelivered\n\t\t0 time multicast source filter matched\n\t\t492406 dropped due to full socket buffers\n\t\t0 not for hashed pcb\n\t\t26656871 delivered\n\t26980531 datagrams output\n\t\t1791 checksummed in software\n\t\t\t0 datagram (0 byte) over IPv4\n\t\t\t1791 datagrams (287555 bytes) over IPv6\n\t69 open UDP sockets\n",
+    "functionalPass": true,
+    "functionalFailureCount": 0,
+    "analysisExitCode": 0,
+    "returnClean": true,
+    "recorderReliable": true,
+    "badReturnCallbacks": 0,
+    "silentReturnCallbacks": 0
+  },
+  "ownedPIDCount": 261,
+  "ownedPIDsStillAlive": [],
+  "MOTUQuery": "MOTU device 159 rate 44100",
+  "restoration": {
+    "setExitCode": 0,
+    "setOutput": "MOTU device 159 rate 48000\nset 44100 status 0\n",
+    "queryExitCode": 0,
+    "queryOutput": "MOTU device 159 rate 44100\n",
+    "original": 44100.0,
+    "time": 1791172769.5172632
+  },
+  "currentGuardEntriesVerified": 36,
+  "allControlsVisible": true,
+  "allNodeManagerTracked": true,
+  "allMovingAppRendersZero": true,
+  "allMovingRackControlRendersZero": true,
+  "allSCOriginEchoesZero": true,
+  "correctedTopologyVerified": true,
+  "finalChecks": {
+    "nodeSyntaxChecks": {
+      "native-run.mjs": "passed",
+      "native-rack-fixture.mjs": "passed"
+    },
+    "phaseAlignmentTests": {
+      "passed": 6,
+      "failed": 0
+    }
+  }
+}

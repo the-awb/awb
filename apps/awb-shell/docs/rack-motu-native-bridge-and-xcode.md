@@ -2,6 +2,8 @@
 
 The tested implementation is `ea338b9` on `integration/bw-sc`. The practical 8-channel bridge passes the control tests; continuous whole-matrix GUI automation overflows the current dense bridge, while SC-origin automation passes at every tested size. These measurements separate renderer cost, transport correctness, and audio delivery. A run with wrong control values or a disarmed bridge is a capacity failure, even if its CPU or returned audio looks favourable.
 
+The requested additional topology was subsequently clarified as **32 sends per channel**, rather than 32 channels. The [corrected eight-channel, 32-send test](rack-motu-sends32-bridge.md) reports that profile. The original wide-channel measurements below remain valid as a separate experiment.
+
 ## Setup and scope
 
 Intel i7-8700B (6 physical/12 logical cores), Intel UHD 630, 32 GB RAM; MOTU 1248; SC 3.12.2; Electron 44.4.1. The MOTU temporarily ran at 48 kHz with 512 hardware frames (10.667 ms), SC block size 64, then returned to its original 44.1 kHz setting. No MOTU routing changes. Output 2 returns digitally to input 6. A quiet 997 Hz pilot measures real delivered audio independently of SC's generated output.
