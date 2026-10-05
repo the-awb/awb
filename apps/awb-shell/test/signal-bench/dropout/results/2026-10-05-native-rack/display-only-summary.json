@@ -1,0 +1,1037 @@
+{
+  "stem": "/private/tmp/rack-off2-20261004-ea338b9",
+  "returnReportHash": "1e6e8b1a02c4ada637469da6ba0fed6208219e466aa723c5d789aaf807c06316",
+  "complete": true,
+  "cases": [
+    {
+      "condition": "idle",
+      "repeat": 1,
+      "electronCPU": 0.8429843346945515,
+      "scAverage": 72.78081981952374,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 6.544220493021071
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 0.5545949570358892
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.08873519312574235
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 73.11779913561163
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 0.13310278968861328
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.13310278968861342
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.5750496779819254
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 0.022183798281435588
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": false,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4227,
+        "frames": 2164224,
+        "seconds": 45.076382045,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022352715585218052,
+        "peak": 0.003162384033203125,
+        "maxResidual": 0.0041045544700454625,
+        "residualCallbacks": 10,
+        "silentCallbacks": 4,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.796202507688668,
+        "maxRecorderUs": 31.175
+      },
+      "audio": {
+        "callbacks": 4219,
+        "seconds": 45.097558198,
+        "frames": 2160128,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 5,
+        "gapFrames": 5120,
+        "lateCallbacks": 5,
+        "maxLateMs": 1.252964,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 5,
+        "overloadEvents": 5,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0882817017346391e-09,
+        "meanRMS": 0.0022360486453313873,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.773772303389429,
+        "maxDspMs": 11.927977,
+        "meanAuditUs": 2.393557004029391,
+        "maxAuditUs": 31.752
+      }
+    },
+    {
+      "condition": "svg-15",
+      "repeat": 1,
+      "electronCPU": 46.09672013130137,
+      "scAverage": 71.10217626235064,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 10.691969996978878
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 1.2786273398448007
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.08818119585136566
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 71.33858744375473
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 30.135923682204194
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.08818119585136566
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.300672638807642
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 14.593987913401005
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": true,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4255,
+        "frames": 2178560,
+        "seconds": 45.374855602,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360677452885032,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3607899170404942e-07,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.5534742655699176,
+        "maxRecorderUs": 30.63
+      },
+      "audio": {
+        "callbacks": 4256,
+        "seconds": 45.385514962,
+        "frames": 2179072,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1082386917882214e-09,
+        "meanRMS": 0.0022360495282310318,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.570600478853383,
+        "maxDspMs": 9.923648,
+        "meanAuditUs": 2.9285812969924816,
+        "maxAuditUs": 38.763
+      }
+    },
+    {
+      "condition": "svg-30",
+      "repeat": 1,
+      "electronCPU": 81.27836895991899,
+      "scAverage": 71.31811429192038,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 12.727959159804524
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 1.5414483411526216
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.08808276235157654
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 71.65532717300903
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 54.63333334856651
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.11010345293947311
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.14507591057052
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 24.99348381726038
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": false,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4259,
+        "frames": 2180608,
+        "seconds": 45.417597285,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022352862322417353,
+        "peak": 0.003162384033203125,
+        "maxResidual": 0.004996065988499604,
+        "residualCallbacks": 7,
+        "silentCallbacks": 4,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.451446583705095,
+        "maxRecorderUs": 32.173
+      },
+      "audio": {
+        "callbacks": 4259,
+        "seconds": 45.43883516,
+        "frames": 2180608,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 1,
+        "gapFrames": 1024,
+        "lateCallbacks": 2,
+        "maxLateMs": 0.699785,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 2,
+        "overloadEvents": 1,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1246618254745488e-09,
+        "meanRMS": 0.0022360512258951856,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.604344884714722,
+        "maxDspMs": 10.719978,
+        "meanAuditUs": 3.26716553181498,
+        "maxAuditUs": 33.781
+      }
+    },
+    {
+      "condition": "canvas2d-15",
+      "repeat": 1,
+      "electronCPU": 29.12477331896796,
+      "scAverage": 72.37427498312557,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 10.252096588432279
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 1.1905660554309385
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.0881900781800696
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 72.62452938128725
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 17.3734454014737
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.08819007818006948
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.4771838095161653
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 10.472571783883255
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": true,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4254,
+        "frames": 2178048,
+        "seconds": 45.364240838,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360648043997927,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3654683231101592e-07,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.6953754113775272,
+        "maxRecorderUs": 28.887
+      },
+      "audio": {
+        "callbacks": 4255,
+        "seconds": 45.37492047,
+        "frames": 2178560,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1034715060101452e-09,
+        "meanRMS": 0.0022360500669329508,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.705501732784959,
+        "maxDspMs": 10.23258,
+        "meanAuditUs": 2.7874171562867214,
+        "maxAuditUs": 37.534
+      }
+    },
+    {
+      "condition": "canvas2d-30",
+      "repeat": 1,
+      "electronCPU": 41.61051283765053,
+      "scAverage": 71.7569740744198,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 11.466596012496717
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 1.256915332138888
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.08820458471150094
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 72.30570831725282
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 23.616777556504356
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.11025573088937607
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.3892222092061384
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 16.62656421811791
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": true,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4253,
+        "frames": 2177536,
+        "seconds": 45.353512872,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360662603483124,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3541660187486463e-07,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.6369113566893956,
+        "maxRecorderUs": 53.878
+      },
+      "audio": {
+        "callbacks": 4255,
+        "seconds": 45.374879998,
+        "frames": 2178560,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.207838677165507e-09,
+        "meanRMS": 0.002236050119901118,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.669032812455934,
+        "maxDspMs": 10.01108,
+        "meanAuditUs": 3.048109518213866,
+        "maxAuditUs": 35.156
+      }
+    },
+    {
+      "condition": "canvas2d-30",
+      "repeat": 2,
+      "electronCPU": 42.39744999659946,
+      "scAverage": 72.15772431317498,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 11.178110841536498
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 1.4551386894308707
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.06614266770140179
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 72.55850646843936
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 24.12002615511171
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.06614266770140326
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.3889960217294668
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 16.75614248435548
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": true,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4254,
+        "frames": 2178048,
+        "seconds": 45.364171364,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236064824992078,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3809074474988312e-07,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.6241212976022565,
+        "maxRecorderUs": 32.885
+      },
+      "audio": {
+        "callbacks": 4255,
+        "seconds": 45.374873451,
+        "frames": 2178560,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1461698456657898e-09,
+        "meanRMS": 0.002236050104333425,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.697887936780258,
+        "maxDspMs": 10.292921,
+        "meanAuditUs": 3.0194900117508814,
+        "maxAuditUs": 35.305
+      }
+    },
+    {
+      "condition": "canvas2d-15",
+      "repeat": 2,
+      "electronCPU": 30.297656464959843,
+      "scAverage": 72.2074467827292,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 10.157977912976532
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 1.1898715993511477
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.08813863698897412
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 72.67030619740908
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 18.46504444919008
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.1101732962362174
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.3661488733290978
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 10.5325671201824
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": true,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4256,
+        "frames": 2179072,
+        "seconds": 45.38557284,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236064728966052,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3764652679135034e-07,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.6946181860902256,
+        "maxRecorderUs": 29.542
+      },
+      "audio": {
+        "callbacks": 4258,
+        "seconds": 45.406935989,
+        "frames": 2180096,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1079352340084836e-09,
+        "meanRMS": 0.002236052303451323,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.707395242367308,
+        "maxDspMs": 10.278735,
+        "meanAuditUs": 2.773835368717708,
+        "maxAuditUs": 29.696
+      }
+    },
+    {
+      "condition": "svg-30",
+      "repeat": 2,
+      "electronCPU": 81.93379420957044,
+      "scAverage": 71.1557285084444,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 13.08297681733175
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 1.409613663820566
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.08810085398878549
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 71.49384301189933
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 55.32733630495725
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.08810085398878549
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.0572102478654242
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 25.108743386803837
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": false,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4258,
+        "frames": 2180096,
+        "seconds": 45.406807242,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.002236062621392997,
+        "peak": 0.003162384033203125,
+        "maxResidual": 0.010353445188246022,
+        "residualCallbacks": 2,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.4487928604978864,
+        "maxRecorderUs": 31.18
+      },
+      "audio": {
+        "callbacks": 4260,
+        "seconds": 45.428194482,
+        "frames": 2181120,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 1,
+        "maxLateMs": 0.171885,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 1,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.1461698456657898e-09,
+        "meanRMS": 0.0022360488668219324,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.585105796948357,
+        "maxDspMs": 10.852238,
+        "meanAuditUs": 3.209813615023474,
+        "maxAuditUs": 35.956
+      }
+    },
+    {
+      "condition": "svg-15",
+      "repeat": 2,
+      "electronCPU": 45.80817588120803,
+      "scAverage": 71.36122117884018,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 10.372909057713935
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 1.2993665273996509
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.0880926459253982
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 71.68539062179433
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 29.819360645747906
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.0880926459253999
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.2112738814742507
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 14.601356062135068
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": true,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4259,
+        "frames": 2180608,
+        "seconds": 45.417597028,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360685291851643,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3477706596669243e-07,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.5780403850669171,
+        "maxRecorderUs": 33.746
+      },
+      "audio": {
+        "callbacks": 4259,
+        "seconds": 45.417523337,
+        "frames": 2180608,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.0874077072814403e-09,
+        "meanRMS": 0.0022360494173314475,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.607249632073256,
+        "maxDspMs": 9.966819,
+        "meanAuditUs": 2.897589340220709,
+        "maxAuditUs": 39.829
+      }
+    },
+    {
+      "condition": "idle",
+      "repeat": 2,
+      "electronCPU": 0.9538311031926261,
+      "scAverage": 73.66943011763533,
+      "processes": [
+        {
+          "pid": 176,
+          "role": "WindowServer",
+          "corePercent": 0.9538311031932782
+        },
+        {
+          "pid": 48552,
+          "role": "main",
+          "corePercent": 0.35491389886237523
+        },
+        {
+          "pid": 48559,
+          "role": "sclang",
+          "corePercent": 0.08872847471559381
+        },
+        {
+          "pid": 48624,
+          "role": "scsynth",
+          "corePercent": 74.08827638752072
+        },
+        {
+          "pid": 48631,
+          "role": "rack",
+          "corePercent": 0.48800661093576303
+        },
+        {
+          "pid": 48558,
+          "role": "home",
+          "corePercent": 0.08872847471559381
+        },
+        {
+          "pid": 48557,
+          "role": "worker",
+          "corePercent": 0
+        },
+        {
+          "pid": 48627,
+          "role": "input-recorder",
+          "corePercent": 1.486201951486195
+        },
+        {
+          "pid": 48555,
+          "role": "GPU",
+          "corePercent": 0.02218211867889402
+        },
+        {
+          "pid": 48556,
+          "role": "Utility",
+          "corePercent": 0
+        }
+      ],
+      "recorderReliable": true,
+      "returnClean": true,
+      "input": {
+        "recorderVersion": 2,
+        "captureDrops": 0,
+        "recorderOverBudgetCallbacks": 0,
+        "callbacks": 4228,
+        "frames": 2164736,
+        "seconds": 45.087020946,
+        "rate": 48000,
+        "channel": 6,
+        "rms": 0.0022360691653537843,
+        "peak": 0.003162384033203125,
+        "maxResidual": 2.3654683231101592e-07,
+        "residualCallbacks": 0,
+        "silentCallbacks": 0,
+        "frameGaps": 0,
+        "meanRecorderUs": 1.9360132450331125,
+        "maxRecorderUs": 23.25
+      },
+      "audio": {
+        "callbacks": 4229,
+        "seconds": 45.097548736,
+        "frames": 2165248,
+        "sampleRate": 48000,
+        "hardwareFrames": 512,
+        "frameGaps": 0,
+        "gapFrames": 0,
+        "lateCallbacks": 0,
+        "maxLateMs": 0,
+        "residualCallbacks": 0,
+        "residualHits": 0,
+        "silentCallbacks": 0,
+        "overBudgetCallbacks": 0,
+        "overloadEvents": 0,
+        "rateChanges": 0,
+        "bufferChanges": 0,
+        "maxResidual": 1.207838677165507e-09,
+        "meanRMS": 0.0022360501444646467,
+        "maxPeak": 0.003162277629598975,
+        "meanDspMs": 7.859577071175218,
+        "maxDspMs": 9.286149,
+        "meanAuditUs": 2.1473535114684323,
+        "maxAuditUs": 24.488
+      }
+    }
+  ]
+}

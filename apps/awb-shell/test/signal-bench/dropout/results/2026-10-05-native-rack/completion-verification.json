@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-10-05T03:14:34.531013+00:00",
+  "nativeCaptures": 84,
+  "allReportsComplete": true,
+  "allProtectedCounts16": true,
+  "ownedPIDCount": 756,
+  "ownedPIDsStillAlive": {},
+  "ownedStrays": [],
+  "MOTUQuery": "MOTU device 159 rate 44100",
+  "MOTURestoration": {
+    "setExitCode": 0,
+    "setOutput": "MOTU device 159 rate 48000\nset 44100 status 0\n",
+    "setError": "",
+    "queryExitCode": 0,
+    "queryOutput": "MOTU device 159 rate 44100\n",
+    "queryError": "",
+    "time": 1791169989.2269928
+  },
+  "recordersReliable": true,
+  "functionalPasses": 68,
+  "sourceGuardsVerified": true,
+  "allNodeManagerTracked": true,
+  "allVisible": true,
+  "allMovingAppRendersZero": true,
+  "allSCOriginSentDeltaZero": true,
+  "finalChecks": {
+    "nodeSyntaxChecks": {
+      "native-run.mjs": "passed",
+      "native-rack-fixture.mjs": "passed",
+      "instruments-run.mjs": "passed"
+    },
+    "phaseAlignmentTests": {
+      "passed": 6,
+      "failed": 0
+    },
+    "currentSourceGuardHashesVerified": 36,
+    "allMovingRackControlRendersZero": true,
+    "gitDiffCheck": "passed"
+  }
+}

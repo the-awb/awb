@@ -126,3 +126,8 @@ env -u ELECTRON_RUN_AS_NODE \
 python3 apps/awb-shell/test/signal-bench/dropout/refresh-analyse.py \
  /private/tmp/refresh repeat56
 ```
+
+
+## Native data bridge and Xcode follow-up
+
+The [5 October native rack and Xcode report](rack-motu-native-bridge-and-xcode.md) adds real bidirectional SC data-bridge tests for 8 channels, 32 channels and the dense 354-control profile, plus audio-thread scheduler correlation. It separates transport correctness from CPU cost and returned audio; the earlier display-only measurements above remain historical evidence.

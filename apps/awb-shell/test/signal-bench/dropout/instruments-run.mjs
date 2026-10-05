@@ -41,7 +41,7 @@ try {
  const once=(needle,value)=>{if(traced.split(needle).length!==2)throw Error('Phase hook fixture drift: '+needle);traced=traced.replace(needle,value);};
  traced="import {openPhaseTrace,closePhaseTrace,abortPhaseTrace} from './instrument-phase.mjs';\\n"+traced;
  once('const phaseStartedAt=new Date().toISOString();','await openPhaseTrace({target,nodes,repeat,condition,seconds}); const phaseStartedAt=new Date().toISOString();');
- once("if(['focus','stopped-focus','focus-noop','spawn-noop'].includes(condition))", "await closePhaseTrace(r); if(['focus','stopped-focus','focus-noop','spawn-noop'].includes(condition))");
+ once("if(['focus','stopped-focus','focus-noop','spawn-noop'].includes(condition))", "if(recorder&&targets.length*cases.length*repeats===1){const recording=recorder;recorder=null;const stopped=new Promise((resolve,reject)=>recording.once('exit',code=>code===0?resolve():reject(Error('Input recorder exited '+code))));recording.kill('SIGTERM');await stopped;}await closePhaseTrace(r); if(['focus','stopped-focus','focus-noop','spawn-noop'].includes(condition))");
  once('}finally{if(recorder){','}finally{await abortPhaseTrace();if(recorder){');
  once("schedulerTrace:'xctrace unavailable: Command Line Tools only'", "schedulerTrace:process.env.AWB_PHASE_TRACE_MODE==='off'?'untraced comparator':process.env.AWB_PHASE_TRACE_MODE");
  await writeFile(traceMeasure,traced);

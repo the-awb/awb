@@ -128,3 +128,8 @@ The [focused renderer investigation](rack-motu-renderer-diagnostics.md) compares
 ## Matched 15/30 Hz follow-up
 
 The [HTML/SVG versus Canvas2D refresh-rate comparison](rack-motu-refresh-head-to-head.md) measures both views at actual 15 and 30 Hz with unchanged 31.25 Hz incoming updates. It retains per-pass returned-audio results, verified matched viewport dimensions, CPU costs and the excluded viewport-change captures. Canvas2D at 15 Hz was clean in both 60-node passes; the other moving conditions were not. The user subsequently confirmed about eight manual switches only during the early attempts, with none during the final non-resizable 60-node repeat. Those final measurements remain intact; exact interaction timing in earlier captures is unknown. The user also reported possible download/extraction or other background work, which was not controlled or comprehensively traced. This limits attribution of the refresh-rate audio outcomes solely to rendering. The rate gate is fixture-only; production rendering is unchanged.
+
+
+## Native data bridge and Xcode follow-up
+
+The [5 October native rack and Xcode report](rack-motu-native-bridge-and-xcode.md) adds real bidirectional SC data-bridge tests for 8 channels, 32 channels and the dense 354-control profile, plus audio-thread scheduler correlation. It separates transport correctness from CPU cost and returned audio; the earlier display-only measurements above remain historical evidence.
