@@ -1758,7 +1758,7 @@ if ( gotLock ) {
     await createHomeWindow();
     if ( initialRequest ) await launchFromHome( initialRequest );
   } ).catch( reportFatal );
-  app.on( 'activate', () => createHomeWindow().catch( reportFatal ) );
+  app.on( 'activate', () => { if ( !quitting ) createHomeWindow().catch( reportFatal ); } );
   app.on( 'window-all-closed', () => { if ( !quitting ) createHomeWindow().catch( reportFatal ); } );
   app.on( 'before-quit', ( event ) => {
     quitting = true;

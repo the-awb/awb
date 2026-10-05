@@ -36,13 +36,21 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
   if(!bridge&&document.config.output.mode==='sc')throw Error('Native SC rack requires its ToolInstance binding.');
   let store;try{store=new RackStore(document);}catch(e){bridge?.close();await unlock();throw e;}
   const token=crypto.randomUUID(),udp=dgram.createSocket('udp4'),peers=new Set();
-  const root=path.resolve(fileURLToPath(new URL('../dist/',import.meta.url)));let armed=false,recall=null,saveTimer,flushTimer,closed=false,writeQueue=Promise.resolve(),transmitQueue=Promise.resolve();const pending=new Map();let sent=0,failures=0;
+  const root=path.resolve(fileURLToPath(new URL('../dist/',import.meta.url)));let armed=false,recall=null,saveTimer,flushTimer,closed=false,writeQueue=Promise.resolve(),transmitQueue=Promise.resolve();const pending=new Map(),localVersions=new Map();let sent=0,failures=0;
   const output=createOscOutput({encodeMessage:encodeOSC,sendPacket:(bytes,packets)=>sendPacket?sendPacket(bytes,packets.length===1?packets[0]:{controls:packets}):new Promise((resolve,reject)=>udp.send(bytes,store.config.output.port,store.config.output.host,e=>e?reject(e):resolve()))});
   const state=()=>({document:store.document(),armed,token,libraryPath,sent,failures,sc:scState,oscOutput:bridge&&!sendPacket?bridge.outputStats():output.snapshot()});
   const broadcast=message=>{const text=JSON.stringify(message);for(const ws of peers)if(ws.readyState===1)ws.send(text);};
   reportSCError=message=>{failures++;armed=false;broadcast({type:'armed',armed});broadcast({type:'error',message:`SC: ${message}`});};
   const save=()=>{const text=JSON.stringify(store.document(),null,2)+'\n';writeQueue=writeQueue.catch(()=>{}).then(async()=>{await writeFile(libraryPath+'.tmp',text);await rename(libraryPath+'.tmp',libraryPath);}).catch(e=>{broadcast({type:'error',message:`Save failed: ${e.message}`});throw e;});return writeQueue;};
   const queueSave=()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>save().catch(()=>{}),300);};
+  const cacheSCValue=(id,value)=>{
+    if(!scState)return;
+    const [channel,region,destination]=id.split('/');
+    if(region==='fx'||region==='followers')scState.sends[channel][scState.slots.findIndex(s=>s.id===destination)]=value;
+    else if(region==='state')scState.channels.find(c=>c.id===channel)[destination]=value;
+    else if(region==='channel-levels')scState.channels.find(c=>c.id===destination).level=value;
+    else if(region==='levels'||region==='control-levels')scState.slots.find(s=>s.id===destination).level=value;
+  };
   const transmitMany=async(changes)=>{
     const packets=[];
     for(const {id,value,scRevision=scState?.revision} of changes){
@@ -50,7 +58,12 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
         const d=store.byID.get(id),message=wireMessage(d,value,store.config);if(!message)continue;
         if(bridge)message.args.push(scRevision);
         const packet={id,value,message,endpoint:store.config.output,armed};broadcast({type:'wire',...packet});
-        if(armed)packets.push(packet);
+        if(armed){
+          packets.push(packet);
+          // GUI values are authoritative commanded state; SC acknowledges revisions
+          // without returning these values. Explicit Sync still reads actual SC state.
+          if(bridge)cacheSCValue(id,value);
+        }
       }catch(e){failures++;broadcast({type:'error',message:`${id}: ${e.message}`});}
     }
     if(!packets.length)return;
@@ -62,25 +75,31 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
   };
   const flush=async()=>{clearTimeout(flushTimer);flushTimer=null;const changes=[...pending].map(([id,change])=>({id,...change}));pending.clear();if(changes.length)broadcast({type:'patch',changes});transmitQueue=transmitQueue.then(()=>transmitMany(changes.filter(c=>!c.origin.startsWith('sc-'))));return await transmitQueue;};
 
-  const unsub=store.subscribeAll(event=>{if(event.kind==='value'){pending.set(event.id,{value:event.value,origin:event.origin,scRevision:scState?.revision});if(!flushTimer)flushTimer=setTimeout(()=>void flush(),16);}else broadcast({type:'document',document:store.document()});queueSave();});
+  const unsub=store.subscribeAll(event=>{if(event.kind==='value'){if(!event.origin.startsWith('sc-'))localVersions.set(event.id,(localVersions.get(event.id)??0)+1);pending.set(event.id,{value:event.value,origin:event.origin,scRevision:scState?.revision});if(!flushTimer)flushTimer=setTimeout(()=>void flush(),16);}else broadcast({type:'document',document:store.document()});queueSave();});
   const compatible=(doc)=>{
     if(!bridge){if(doc.config.output.mode==='sc')throw Error('Open this rack from its SC ToolInstance to bind native routing.');return;}
     const current=store.config;
     if(doc.config.output.mode!=='sc'||doc.config.output.libraryID!==current.output.libraryID||JSON.stringify(doc.config.instruments)!==JSON.stringify(current.instruments)||JSON.stringify(doc.config.regions)!==JSON.stringify(current.regions))throw Error('Stable SC topology is defined by the ToolInstance. Open a new rack to change channels or capacity.');
   };
   let syncingSC=null;const updatesDuringSync=[];
-  const syncSC=()=>{if(syncingSC)return syncingSC;syncingSC=(async()=>{
+  const syncSC=({recovery=false}={})=>{if(syncingSC)return syncingSC;syncingSC=(async()=>{
     if(!bridge)throw Error('No native SC rack is bound.');
-    recall?.stop();recall=null;await flush();
+    if(!recovery){recall?.stop();recall=null;}
+    const versions=new Map(localVersions);await flush();
     let next;try{next=await bridge.sync();}catch(e){reportSCError(e.message);throw e;}const doc=documentFromState(next,store.snapshots);
     compatible(doc);scState=next;
-    for(const [id,value]of Object.entries(doc.values))store.set(id,value,'sc-sync');
-    broadcast({type:'sc',sc:scState});broadcast({type:'recall',active:false});await save();return {revision:scState.revision};
+    for(const [id,value]of Object.entries(doc.values)){
+      // A recovery snapshot may predate a gesture made while awaiting SC.
+      // Preserve that gesture (and its pending transmission), including recalls.
+      if(recovery&&localVersions.get(id)!==versions.get(id))cacheSCValue(id,store.get(id));
+      else store.set(id,value,'sc-sync');
+    }
+    broadcast({type:'sc',sc:scState});if(!recovery)broadcast({type:'recall',active:false});await save();return {revision:scState.revision};
   })().finally(()=>{syncingSC=null;for(const event of updatesDuringSync.splice(0))applySCUpdate(event);});return syncingSC;
   };
   applySCUpdate=event=>{
     if(closed)return;
-    const recover=()=>void syncSC().catch(()=>{});
+    const recover=()=>void syncSC({recovery:true}).catch(()=>{});
     if(syncingSC){if(updatesDuringSync.length<64)updatesDuringSync.push(event);else updatesDuringSync.splice(0,updatesDuringSync.length,{kind:'recover'});return;}
     if(event.kind==='recover'){recover();return;}
     if(event.kind==='heartbeat'){if(event.revision>scState.revision)recover();return;}
@@ -92,12 +111,8 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
     }
     scState.revision=event.revision;
     for(const {id,value,source} of event.changes){
-      const [channel,region,destination]=id.split('/');
-      if(region==='fx'||region==='followers')scState.sends[channel][scState.slots.findIndex(s=>s.id===destination)]=value;
-      else if(region==='state')scState.channels.find(c=>c.id===channel)[destination]=value;
-      else if(region==='channel-levels')scState.channels.find(c=>c.id===destination).level=value;
-      else if(region==='levels')scState.slots.find(s=>s.id===destination).level=value;
-      // Echoes confirm SC receipt; they must not rewind a newer local gesture or recall.
+      cacheSCValue(id,value);
+      // Retain suppression for older classes that still echo originating values.
       if(source!==bridge.watchToken){recall?.override(id);store.set(id,value,'sc-feedback');}
     }
   };
@@ -108,6 +123,13 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
     if(c.type==='arm'){armed=c.armed===true;broadcast({type:'armed',armed});return;}
     if(c.type==='stop'){recall?.stop();recall=null;broadcast({type:'recall',active:false});return;}
     if(c.type==='sync-sc')return await syncSC();
+    if(c.type==='enable-control-send'){
+      if(!bridge||!armed)throw Error('Enable output before changing an SC control send.');
+      const slot=scState.slots.find(s=>s.id===c.slotID);if(!slot||slot.kind!=='follower'||typeof c.enabled!=='boolean')throw Error('Invalid control send enable command.');
+      await flush();await bridge.control(c.type,[c.slotID,c.enabled?1:0]);const result=await syncSC();
+      if(scState.slots.find(s=>s.id===c.slotID).controlEnabled!==(c.enabled?1:0))throw Error('SC did not apply control send enable change.');
+      return result;
+    }
     if(['set-fx','clear-fx','set-follower','clear-follower'].includes(c.type)){
       if(!bridge||!armed)throw Error('Enable output before changing an SC processor.');
       const slot=scState.slots.find(s=>s.id===c.slotID);if(!slot||slot.kind!==(c.type.includes('follower')?'follower':'fx'))throw Error('Unknown SC slot.');

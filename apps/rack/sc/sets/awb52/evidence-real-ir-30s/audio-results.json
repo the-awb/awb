@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "audioChecks": 24,
+  "fullLoad": true,
+  "sampleRate": 44100,
+  "checks": [
+    {
+      "label": "14 diagnostic channels at 44.1 kHz",
+      "measured": null
+    },
+    {
+      "label": "Actual post-close window rendered",
+      "measured": null
+    },
+    {
+      "label": "All samples finite",
+      "measured": null
+    },
+    {
+      "label": "Mono VC duplicates its signal to stereo",
+      "measured": null
+    },
+    {
+      "label": "Stereo Pro 2 preserves different sides",
+      "measured": 0.024999987495721947
+    },
+    {
+      "label": "Explicit Mast carries both persistent channels",
+      "measured": 0.027726013892499436
+    },
+    {
+      "label": "Deci produces audio on its isolated return",
+      "measured": 0.009727993198504925
+    },
+    {
+      "label": "Deci reaches the limited master",
+      "measured": 0.007248856234948113
+    },
+    {
+      "label": "Fuzz produces audio on its isolated return",
+      "measured": 0.11928790724035349
+    },
+    {
+      "label": "Fuzz reaches the limited master",
+      "measured": 0.08632898712361894
+    },
+    {
+      "label": "Spark produces audio on its isolated return",
+      "measured": 0.015472012108971058
+    },
+    {
+      "label": "Spark reaches the limited master",
+      "measured": 0.014021103291081657
+    },
+    {
+      "label": "Verb produces audio on its isolated return",
+      "measured": 0.0947092955909623
+    },
+    {
+      "label": "Verb reaches the limited master",
+      "measured": 0.08846380270873767
+    },
+    {
+      "label": "Deci silent without a send",
+      "measured": null
+    },
+    {
+      "label": "Fuzz silent without a send",
+      "measured": null
+    },
+    {
+      "label": "VC mute silences post-fader audio",
+      "measured": null
+    },
+    {
+      "label": "VC mute leaves Pro 2 active",
+      "measured": null
+    },
+    {
+      "label": "VC solo suppresses Pro 2 post-fader audio",
+      "measured": null
+    },
+    {
+      "label": "VC solo leaves VC active",
+      "measured": null
+    },
+    {
+      "label": "Deci replacement on stable pipe still reaches master",
+      "measured": 0.02393698639929657
+    },
+    {
+      "label": "Verb tail survives removal of its input send",
+      "measured": 0.053695236110941555
+    },
+    {
+      "label": "Master is finite and bounded",
+      "measured": 0.2365354597568512
+    },
+    {
+      "label": "Close silences every observed bus and output",
+      "measured": null
+    }
+  ]
+}

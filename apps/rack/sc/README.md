@@ -91,7 +91,7 @@ From `apps/rack`, with Node 22 first in PATH:
 python3 sc/test/run.py --gui --shell
 ```
 
-The runner creates a temporary SC class configuration containing core classes, the two rack classes and exact copies of 22 real AWB dependency files, with hashes/provenance. It runs native contracts, offline scsynth renders, Node tests, the real OSC bridge, both renderers and the ordinary Shell preload/runtime/file-grant boundary. No audio device is opened. Logs, float WAVs, JSON results and screenshots stay in the printed evidence directory.
+The runner creates a temporary SC class configuration containing core classes, the rack classes, exact copies of 21 real AWB dependency files and a private copy of the existing EnvDetect3 extension, with hashes/provenance. It runs native contracts, offline scsynth renders, Node tests, the real OSC bridge, both renderers and the ordinary Shell preload/runtime/file-grant boundary. No audio device is opened. Logs, float WAVs, JSON results and screenshots stay in the printed evidence directory.
 
 Set `AWB_COLLIDER_ROOT`, `SUPERCOLLIDER_APP` or `AWB_NODE` for other locations. `npm test` runs the ordinary Node tests; the actual sclang bridge test is enabled by the isolated runner. Tests require macOS SuperCollider/Electron for this first implementation.
 
@@ -126,3 +126,149 @@ Evidence: `/private/tmp/awb-rack-feedback-shared-20261004`. GUI/OSC checks use
 stubbed server dispatch; offline DSP checks render real audio separately. No hardware
 audio or integrated live CPU measurement was run. Step 0 remains the quiet-window
 Instruments investigation.
+
+## Control sends and independent envelopes — 5 October 2026
+
+Each control send now has an audio input bus, a separate stable KR measurement
+bus, and a shared **amount fader** in the rack's “Control send amounts” panel.
+The fader uses 0–1 for 0–100%. It scales the detector output before independent
+followers read it; it does not adjust audio output or replace the per-instrument
+send knobs. Both HTML/SVG and Three.js use the existing isolated control-store
+updates and batched OSC output. Amounts participate in full/selected snapshots,
+sparse recalls, SC-origin feedback, revision fencing and explicit Sync.
+
+The new path is:
+
+`channel / direct voice audio → control-send audio bus → Peak detector → amount → stable KR bus → independent followers`
+
+The detector uses `Amplitude.kr`, with the settings confirmed by the user:
++14.4 dB, rise 5.62 ms, fall 23.4 ms. Stereo inputs use the mean of rectified
+channels; sources on each audio channel sum before rectification. RMS mode is
+rejected. Measurement retains headroom rather than normalizing or clipping it.
+These are the captured Bitwig settings applied to an SC detector, **not a proven
+sample-for-sample Bitwig detector clone**. Bitwig stereo linking, time-constant
+interpretation and the upstream Gate/Compressor transfer remain uncalibrated.
+The screenshot's Amount maps to the control channel level; its old Bitwig fader
+was retained as a visual cue, with no audio output destination.
+
+```supercollider
+~instance = AWBSendRackTool.open(AWBControlSendProfile.configure((
+    libraryID: "my-control-set", channels: [\vc, \pro2],
+    fixedFX: [\verb, \deci, \spark, \fuzz, \mast], dynamicFX: 3,
+    spareFollowers: 3
+)), (server: s));
+~rack = ~instance.tool;
+~rack.whenReady({ |rack|
+    AWBControlSendProfile.install(rack);
+    // Explicit audio routing: FX names do not imply FX-return observation.
+    rack.setSend(\vc, \c1, 1);
+    rack.setControlAmount(\c1, 0.5);
+    rack.gui;
+});
+// Inside a later SynthDef, map a control with rack.followerFor(\c1, \short).
+```
+
+The opt-in profile replaces `fixedFollowers` with sixteen fixed control sends:
+C1–C4 plus twelve named modulation pipes, separate from the FX destinations.
+It installs 25 independent envelopes copied from the active statements in
+`BaseLaunch with efKR.scd`: three time scales for each C send and the named FX
+followers. The commented alternative presets are excluded. Amounts start at
+100%; audio send gains remain zero until routed explicitly. Spare sends remain
+unassigned and do not create detector DSP. The profile is not automatically
+added to the historical AWB 5.2 dropout fixture.
+
+`setDetector(id, settings)` activates/edits measurement; `measurementFor(id)`
+returns the raw KR bus. Existing AWFollower instances can read that bus, provided
+their nodes run after the rack detector group. The rack-owned alternative is
+`setControlFollower(sendID, followerID, settings)` and
+`followerFor(sendID, followerID)`. It uses the existing `EnvDetect3.kr` and the
+actual AWFollower linear/square-root blend. It does not call that blend logarithmic,
+clip its output or require Param/MIDI. Settings edits preserve the DSP node and
+envelope state. Multiple followers share one measurement but own separate outputs.
+All new DSP nodes and buses belong to the rack ToolInstance / NodeManager.
+
+`clearControlFollower` zeros and retains its output address for reassignment;
+`clearDetector` zeros the shared source and lets remaining follower tails decay.
+Rack close removes the graph, zeros owned KR outputs and waits for server
+acknowledgement before releasing addresses. The existing `setFollower` / curve
+GUI remains the earlier single-follower audio detector/shaper API; it is separate
+from the new independent envelope bank. Full GUI editing of detector and named
+consumer settings is still to be added; detector status and amount faders are visible.
+
+Validation: 68 native SC contracts, 88 existing audio assertions, 17 new real DSP
+assertions, 31 Node tests, both real Electron renderer checks and the normal Shell
+check pass in `/private/tmp/awb-control-sends-20261005-complete`. The new checks cover
+cancellation before detection, independent envelopes, amount zero/half scale,
+stable outputs across reassignment, cleanup and an exact EnvDetect3 reference
+comparison. Both GUI views send amount-fader values to SC and the full snapshot
+contains them. No audio device was opened; integrated live DSP/dropout cost and
+Bitwig detector-response calibration remain unrun.
+
+The exact BaseLaunch input mapping is exposed by
+`AWBControlSendProfile.baseLaunchBuses(rack)` as a dictionary of stable KR Bus
+objects. Its sixteen keys are `ef_m0`–`ef_m3` (C1–C4), `ef_b1`, `ef_b2`,
+`ef_a1`, `ef_a2`, `ef_splut`, `ef_spark`, `ef_deci`, `ef_fuzz`, `ef_verb`,
+`ef_mast0` (Mast), `ef_mast1` (UM), and `ef_mast2` (Stutter). It does not overwrite
+the live AWBase dictionary or its existing OSC receiver objects.
+
+The first-pass set example now enables this bank with `controlSends: true`.
+That option defaults to no additional spare control sends, giving eight FX
+slots plus sixteen control slots: **24 audio destinations per channel**.
+Set `controlSpareCount` explicitly if more slots are wanted. The historical
+fixture without `controlSends` retains its earlier three spare follower slots.
+
+Each control slot has Pause/Resume in the routing panel, backed by
+`rack.setControlSendEnabled(id, false/true)`. Pausing stops its detector and all
+owned envelopes, zeros their KR outputs, retains their state/addresses, and
+leaves the amount setting unchanged. Resume continues the retained state.
+A zero amount alone does not pause DSP: downstream release tails still run.
+The channel's audio writer to that pipe remains part of its fixed SynthDef;
+reducing writer cost requires a smaller topology or wrapper variant.
+
+For the cost comparison, `sc/sets/awb52/run.py --measure-controls --quiet-window`
+creates an owned, muted server and measures eight persistent stereo input strips
+with 8 versus 24 audio writers, then detector and envelope overhead independently.
+It uses the actual FX/IRs by default, never runs alongside an intentionally active
+Bitwig engine, and keeps the sources/FX sounding internally while replacing only
+the channel strips at the same node positions. This is separate from a per-voice
+24-port wrapper comparison. Direct voices can still choose packed variants.
+
+
+## Measured cost: 8 versus 24 destinations — 5 October 2026
+
+Eight persistent stereo channel strips and eight synthetic sources, with all
+five active FX chains fully wet, nine VST instances and six PartConv processors.
+Actual IRs are capped at 30 seconds. 44.1 kHz, SC blocks 64, driver frames 512,
+four hardware outputs, 256 MiB RT pool. Hardware output muted; GUI and bridge off.
+Bitwig was closed with user agreement before booting the owned test server.
+
+| Condition | Mean SC average CPU | Maximum SC peak CPU |
+| --- | ---: | ---: |
+| 8 audio writers per channel; control DSP paused | 47.88% | 87.39% |
+| 24 audio writers per channel; control DSP paused | 48.22% | 88.41% |
+| 24 writers plus 16 Peak detectors | 49.42% | 98.76% |
+| 24 writers plus 16 detectors and 25 KR followers | 49.58% | 90.19% |
+
+Each condition has two 8-second sample windows after 3 seconds of settling,
+first in forward then reverse order. Only the channel strips change for the
+8-versus-24 case; sources and FX stay running at the same node positions.
+Extra writers add 512 UGens across the eight strips; paused detector/follower
+nodes remain allocated and appear in the server's total node/UGen counts.
+
+Full-bank overhead is +1.71 percentage points, or roughly 3.6% more processing
+relative to the 47.88% baseline. The two paired full-bank increments are +1.57
+and +1.84 points. The routing-only mean increase is +0.35 points, but the repeat
+increments are +1.12 and -0.43: drift is larger than this increment, so its exact
+size is unresolved. Detectors and envelope deltas should likewise not be read
+as precise component costs from these short windows.
+
+This is a useful first cost marker for **persistent channels**, not a result for
+32/64 independent voices each running a full 24-port wrapper. Packed voice
+variants still reduce writers when only a few destinations are needed. Highest
+SC peak CPU is 98.76% in the detector-only condition; this run did not record
+callback deadlines or MOTU return audio, so it cannot establish dropout freedom.
+No changes were installed into the live class path. The owned server exited.
+
+Machine-readable result: `control-routing-cost.json`; retained logs/provenance:
+`evidence-control-routing-cost/`; raw float audio/score:
+`/private/tmp/awb52-control-routing-cost-20261005`.

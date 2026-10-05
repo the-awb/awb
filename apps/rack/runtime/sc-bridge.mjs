@@ -62,7 +62,7 @@ export async function createSCBridge(binding,{onError=()=>{},onUpdate=()=>{},tim
       const [instanceID,id,kind,...a]=args,request=requests.get(id);if(!request)return;
       if(kind==='begin'){const [revision,name,libraryID,maxGain,channelCount,slotCount,processorCount,feedbackProtocol]=a;if(feedbackProtocol!==1){clearTimeout(request.timer);requests.delete(id);request.reject(Error('SC rack feedback protocol unavailable: load this workspace SC rack classes and recompile.'));return;}if(![channelCount,slotCount,processorCount].every(n=>Number.isInteger(n)&&n>=0&&n<=64))throw Error('Invalid SC state counts.');request.header={revision,name,libraryID,maxGain,channelCount,slotCount,processorCount,feedbackProtocol};}
       else if(kind==='channel'){const [id,label,level,mute,solo,order]=a;request.channels.set(id,{id,label,level,mute,solo,order});}
-      else if(kind==='slot'){const [id,label,kind,fixed,active,level,processor,order,attack,release,scale,blend,floorDb]=a;request.slots.set(id,{id,label,kind,fixed,active,level,processor,order,settings:{attack,release,scale,blend,floorDb}});}
+      else if(kind==='slot'){const [id,label,kind,fixed,active,level,processor,order,attack,release,scale,blend,floorDb,detectorActive=0,rise=.00562,fall=.0234,gainDb=14.4,consumerCount=0,controlEnabled=1]=a;request.slots.set(id,{id,label,kind,fixed,active,level,processor,order,settings:{attack,release,scale,blend,floorDb},detectorActive,detector:{rise,fall,gainDb},consumerCount,controlEnabled});}
       else if(kind==='sends'){request.sends.set(a[0],a.slice(1));}
       else if(kind==='processor'){request.processors.add(a[0]);}
       else if(kind==='end'){request.end=a[0];}
@@ -90,12 +90,14 @@ export function documentFromState(state,snapshots=[]) {
   const region=(id,label,kind,scope,destinations,max=state.maxGain,step=.001)=>({id,label,kind,scope,destinations,min:0,max,step,curve:'linear',widget:scope==='global'?'fader':'knob',address:'/awb/rack/control'});
   const fx=state.slots.filter(s=>s.kind==='fx'),followers=state.slots.filter(s=>s.kind==='follower'),regions=[];
   if(fx.length)regions.push(region('fx','FX sends','fx','instrument',fx.map(s=>s.id)));
-  if(followers.length)regions.push(region('followers','Follower sends','followers','instrument',followers.map(s=>s.id)));
+  if(followers.length)regions.push(region('followers','Control sends','followers','instrument',followers.map(s=>s.id)));
   regions.push(region('state','Mute / Solo','channel-state','instrument',['mute','solo'],1,1));
   if(fx.length)regions.push(region('levels','FX returns','levels','global',fx.map(s=>s.id)));
+  if(followers.length)regions.push(region('control-levels','Control send amounts','levels','global',followers.map(s=>s.id),1));
   regions.push(region('channel-levels','Channel faders','channel-levels','global',state.channels.map(c=>c.id)));
   const config={schema:'awb.rack/1',name:state.name,instruments:state.channels.map(({id,label})=>({id,label})),regions,output:{mode:'sc',host:'127.0.0.1',port:state.port,instanceID:state.instanceID,libraryID:state.libraryID}},values={};
   for(const c of state.channels){const sends=state.sends[c.id];if(!Array.isArray(sends)||sends.length!==state.slots.length||sends.some(v=>!Number.isFinite(v)||v<0||v>state.maxGain)||![0,1].includes(c.mute)||![0,1].includes(c.solo))throw Error('Incomplete SC rack mix.');state.slots.forEach((s,i)=>values[`${c.id}/${s.kind==='fx'?'fx':'followers'}/${s.id}`]=sends[i]);values[`${c.id}/state/mute`]=c.mute;values[`${c.id}/state/solo`]=c.solo;values[`global/channel-levels/${c.id}`]=c.level;}
   for(const s of fx)values[`global/levels/${s.id}`]=s.level;
+  for(const s of followers){if(s.level>1)throw Error("Control send amount exceeds 100%.");values[`global/control-levels/${s.id}`]=s.level;}
   return {schema:'awb.rack-library/1',config,values,snapshots};
 }

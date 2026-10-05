@@ -35,6 +35,17 @@ def main():
     for source in sources.glob('*.scd'): shutil.copy2(str(source), str(build/'test'/source.name))
     for source in (rack_root/'sc/classes').glob('*.sc'): shutil.copy2(str(source), str(build/'sc/classes'/source.name))
     shutil.copy2(str(sources/'verify_audio.py'), str(build/'test/verify_audio.py'))
+    # Copy only the existing detector extension into the isolated fixture.
+    extension = Path('/Library/Application Support/SuperCollider/Extensions/EnvDetect3')
+    (build/'plugins').mkdir(exist_ok=True)
+    for name, target in [('EnvDetect3.sc',build/'sc/classes'),('EnvDetect3.scx',build/'plugins')]:
+        original=extension/name
+        if not original.is_file(): raise RuntimeError('Missing control follower test dependency: '+str(original))
+        shutil.copy2(str(original), str(target/name))
+        provenance[name]=dict(source=str(original),sha256=hashlib.sha256(original.read_bytes()).hexdigest())
+    (build/'framework-provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
+    shutil.copy2(str(sources/'verify_controls.py'),str(build/'test/verify_controls.py'))
+
     app = Path(os.environ.get('SUPERCOLLIDER_APP', '/Applications/SuperCollider.app/Contents'))
     config = 'includePaths:\n'+''.join('  - '+json.dumps(str(p))+'\n' for p in [app/'Resources/SCClassLibrary',build/'framework',build/'sc/classes'])+'excludeDefaultPaths: true\nexcludePaths: []\npostInlineWarnings: false\n'
     (build/'sclang_conf.yaml').write_text(config)
@@ -55,9 +66,11 @@ def main():
     try:
         log = run('contract',[str(app/'MacOS/sclang'),'-l',str(build/'sclang_conf.yaml'),str(build/'test/contract.scd')])
         if 'AWB_RACK_CONTRACT_RESULT=PASS' not in log: raise RuntimeError('Contract completion marker missing')
-        for script in ['audio','stereo']:
+        for script in ['audio','stereo','control-sends']:
             run(script+'-score',[str(app/'MacOS/sclang'),'-l',str(build/'sclang_conf.yaml'),str(build/'test'/(script+'.scd'))])
-            run(script+'-render',[str(app/'Resources/scsynth'),'-N',str(build/'test'/(script+'.osc')),'_',str(build/'test'/(script+'.wav')),'48000','WAV','float','-o','8','-i','0','-z','64','-U',str(app/'Resources/plugins'),'-D','0','-V','-1'])
+            run(script+'-render',[str(app/'Resources/scsynth'),'-N',str(build/'test'/(script+'.osc')),'_',str(build/'test'/(script+'.wav')),'48000','WAV','float','-o','8','-i','0','-z','64','-U',str(app/'Resources/plugins')+':'+str(build/'plugins'),'-D','0','-V','-1'])
+        run('verify-controls',[sys.executable,str(build/'test/verify_controls.py')])
+        summary['controls']=json.loads((build/'test/control-results.json').read_text())
         run('verify-audio',[sys.executable,str(build/'test/verify_audio.py')])
         run('build',[str(Path(node).parent/'npm'),'run','build'])
         run('node',[node,'--test','test/model.test.mjs','test/runtime.test.mjs','test/mixes.test.mjs','test/sc-bridge.test.mjs'])

@@ -1,0 +1,217 @@
+{
+  "passed": true,
+  "evidence": "/private/tmp/awb52-realir30-check-20261005",
+  "fullLoad": true,
+  "memoryPoolKiB": 262144,
+  "hardwareAudio": true,
+  "irMode": "real",
+  "irMaxSeconds": 30,
+  "existingCacheWarnings": [
+    "ERROR: /Library/Audio/Plug-Ins/VST/FL Studio VSTi.vst: not a plugin",
+    "ERROR: /Library/Audio/Plug-Ins/VST/FL Studio VSTi.vst: not a plugin"
+  ],
+  "irProvenance": [
+    {
+      "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+      "sourceFrames": 463050,
+      "usedFrames": 463050,
+      "sourceSeconds": 10.5,
+      "usedSeconds": 10.5,
+      "channels": 2,
+      "sampleRate": 44100,
+      "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+    },
+    {
+      "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+      "sourceFrames": 962182,
+      "usedFrames": 962182,
+      "sourceSeconds": 21.818185941043083,
+      "usedSeconds": 21.818185941043083,
+      "channels": 2,
+      "sampleRate": 44100,
+      "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+    },
+    {
+      "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+      "sourceFrames": 3301490,
+      "usedFrames": 1323000,
+      "sourceSeconds": 74.86371882086168,
+      "usedSeconds": 30.0,
+      "channels": 1,
+      "sampleRate": 44100,
+      "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+    }
+  ],
+  "contractChecks": 22,
+  "audio": {
+    "passed": true,
+    "audioChecks": 24,
+    "fullLoad": true,
+    "sampleRate": 44100,
+    "checks": [
+      {
+        "label": "14 diagnostic channels at 44.1 kHz",
+        "measured": null
+      },
+      {
+        "label": "Actual post-close window rendered",
+        "measured": null
+      },
+      {
+        "label": "All samples finite",
+        "measured": null
+      },
+      {
+        "label": "Mono VC duplicates its signal to stereo",
+        "measured": null
+      },
+      {
+        "label": "Stereo Pro 2 preserves different sides",
+        "measured": 0.024999987495721947
+      },
+      {
+        "label": "Explicit Mast carries both persistent channels",
+        "measured": 0.027726013892499436
+      },
+      {
+        "label": "Deci produces audio on its isolated return",
+        "measured": 0.009727993198504925
+      },
+      {
+        "label": "Deci reaches the limited master",
+        "measured": 0.007248856234948113
+      },
+      {
+        "label": "Fuzz produces audio on its isolated return",
+        "measured": 0.11928790724035349
+      },
+      {
+        "label": "Fuzz reaches the limited master",
+        "measured": 0.08632898712361894
+      },
+      {
+        "label": "Spark produces audio on its isolated return",
+        "measured": 0.015472012108971058
+      },
+      {
+        "label": "Spark reaches the limited master",
+        "measured": 0.014021103291081657
+      },
+      {
+        "label": "Verb produces audio on its isolated return",
+        "measured": 0.0947092955909623
+      },
+      {
+        "label": "Verb reaches the limited master",
+        "measured": 0.08846380270873767
+      },
+      {
+        "label": "Deci silent without a send",
+        "measured": null
+      },
+      {
+        "label": "Fuzz silent without a send",
+        "measured": null
+      },
+      {
+        "label": "VC mute silences post-fader audio",
+        "measured": null
+      },
+      {
+        "label": "VC mute leaves Pro 2 active",
+        "measured": null
+      },
+      {
+        "label": "VC solo suppresses Pro 2 post-fader audio",
+        "measured": null
+      },
+      {
+        "label": "VC solo leaves VC active",
+        "measured": null
+      },
+      {
+        "label": "Deci replacement on stable pipe still reaches master",
+        "measured": 0.02393698639929657
+      },
+      {
+        "label": "Verb tail survives removal of its input send",
+        "measured": 0.053695236110941555
+      },
+      {
+        "label": "Master is finite and bounded",
+        "measured": 0.2365354597568512
+      },
+      {
+        "label": "Close silences every observed bus and output",
+        "measured": null
+      }
+    ]
+  },
+  "liveCPU": {
+    "sampleRate": 44100.0,
+    "memoryPoolKiB": 262144,
+    "outputChannels": 4,
+    "blockSize": 64,
+    "hardwareFramesRequested": 512,
+    "hardwareOutputMuted": true,
+    "gui": false,
+    "summary": [
+      {
+        "condition": "fully-wet-active-input",
+        "repeat": 1,
+        "statusSamples": 32,
+        "meanAvgCPU": 46.122745513916,
+        "maxReportedPeakCPU": 83.822456359863,
+        "synths": 21,
+        "ugens": 332
+      },
+      {
+        "condition": "fully-wet-active-input",
+        "repeat": 2,
+        "statusSamples": 32,
+        "meanAvgCPU": 47.18522858619684,
+        "maxReportedPeakCPU": 69.191062927246,
+        "synths": 21,
+        "ugens": 332
+      },
+      {
+        "condition": "fully-wet-silent-input",
+        "repeat": 1,
+        "statusSamples": 32,
+        "meanAvgCPU": 44.550019383430346,
+        "maxReportedPeakCPU": 69.427879333496,
+        "synths": 21,
+        "ugens": 332
+      },
+      {
+        "condition": "fully-wet-silent-input",
+        "repeat": 2,
+        "statusSamples": 32,
+        "meanAvgCPU": 45.98620367050156,
+        "maxReportedPeakCPU": 69.46167755127,
+        "synths": 21,
+        "ugens": 332
+      },
+      {
+        "condition": "idle",
+        "repeat": 0,
+        "statusSamples": 32,
+        "meanAvgCPU": 0.08615999366156747,
+        "maxReportedPeakCPU": 0.26638296246529,
+        "synths": 1,
+        "ugens": 9
+      }
+    ],
+    "note": "Fully wet actual-file IRs, first 30 seconds maximum; original gains, synthetic excitation, hardware output muted, GUI closed. SC DSP status percentage, not total machine CPU; no callback/dropout audit or MOTU return capture. Silent input may retain long tails."
+  },
+  "cacheUnchanged": true,
+  "sourceIRsUnchanged": true,
+  "evidenceHashes": {
+    "score.log": "69dc7f0ad6be509deb8a212876902f3a410256ad0ae450e83889dbcb64e89c4b",
+    "render.log": "f5915eb0dc07df56db2ebe608d2518a713f8ff84154b3a8844d0c5ab5ae9b60e",
+    "audio-results.json": "afb40befec622825555345d642eefdd15681100c8647cdb82486efa05300a5a2",
+    "measure.log": "4f249b685146985388ddcf96dbf48648c0e6d5fccc48f598b0daf8e7c6ba7955",
+    "live-cpu.json": "d23b759fba37cea8619a057aaad94e07d270cf09d56dcd3818a593c370aaa722",
+    "framework-provenance.json": "07975e340b6d611ec77d68ea2b181f4d99d42a1c5e2bedc3c47d983840fb3817"
+  }
+}

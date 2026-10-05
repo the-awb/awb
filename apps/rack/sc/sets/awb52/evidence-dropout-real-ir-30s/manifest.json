@@ -1,0 +1,13 @@
+{
+  "measuredRun": "/private/tmp/awb52-dropout-realir30-20261005-e",
+  "rawOutputAudit": "/private/tmp/awb52-dropout-realir30-20261005-e/output.audit",
+  "rawReturnPCM": "/private/tmp/awb52-dropout-realir30-20261005-e/return.input",
+  "files": {
+    "measured-dropout.scd": "9e5e245d5fc8ad5dcc2257a413a1b41e710deeeb46f8b1ef37bad96941f93580",
+    "process.log": "15f1dded2bea725b9756fbb55f03b4e8871206d2c7af0cb0075a4987cab0b2b1",
+    "instrumented-AWBFirstPassSet.sc": "8a1eaf48df50eb5112c8b159d1315f8e653672dddea12650f0f41f9f080c08bf",
+    "fixture-compile.log": "65ece5ac7ddb89cbdf2c772672b202e97ab56f70e21350d7985f2923df111276",
+    "analysis.json": "87184362cf1a40c2b77b8d31d569176e6b66c27e7d215b23516026d0e24d2d33"
+  },
+  "note": "Measured fixture retained exactly. Reusable fixture adds setup-error cleanup, compile-checked without booting audio; reusable runner defaults to the adjacent fixture file. Runtime graph and capture loop unchanged."
+}

@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "passed": true,
+  "rawEvidence": "/private/tmp/awb52-control-routing-cost-20261005",
+  "configuration": {
+    "sampleRate": 44100.0,
+    "outputChannels": 4,
+    "hardwareFramesRequested": 512,
+    "blockSize": 64,
+    "hardwareOutputMuted": true,
+    "instrumentChannels": 8,
+    "fxDestinations": 8,
+    "controlDestinations": 16,
+    "gui": false
+  },
+  "conditions": [
+    {
+      "condition": "eight",
+      "meanAvgCPU": 47.87737717628471,
+      "maxPeakCPU": 87.390502929688,
+      "samples": 80,
+      "synths": [
+        74
+      ],
+      "ugens": [
+        1005
+      ],
+      "repeats": [
+        {
+          "repeat": 1,
+          "meanAvgCPU": 47.92311010360717,
+          "maxPeakCPU": 81.138603210449
+        },
+        {
+          "repeat": 2,
+          "meanAvgCPU": 47.83164424896225,
+          "maxPeakCPU": 87.390502929688
+        }
+      ]
+    },
+    {
+      "condition": "twentyfour",
+      "meanAvgCPU": 48.22323336601257,
+      "maxPeakCPU": 88.408248901367,
+      "samples": 80,
+      "synths": [
+        74
+      ],
+      "ugens": [
+        1517
+      ],
+      "repeats": [
+        {
+          "repeat": 1,
+          "meanAvgCPU": 49.044987678527875,
+          "maxPeakCPU": 75.254241943359
+        },
+        {
+          "repeat": 2,
+          "meanAvgCPU": 47.401479053497276,
+          "maxPeakCPU": 88.408248901367
+        }
+      ]
+    },
+    {
+      "condition": "detectors",
+      "meanAvgCPU": 49.42071666717526,
+      "maxPeakCPU": 98.757369995117,
+      "samples": 80,
+      "synths": [
+        74
+      ],
+      "ugens": [
+        1517
+      ],
+      "repeats": [
+        {
+          "repeat": 1,
+          "meanAvgCPU": 48.96685752868655,
+          "maxPeakCPU": 98.757369995117
+        },
+        {
+          "repeat": 2,
+          "meanAvgCPU": 49.87457580566397,
+          "maxPeakCPU": 96.825126647949
+        }
+      ]
+    },
+    {
+      "condition": "full",
+      "meanAvgCPU": 49.584196996688924,
+      "maxPeakCPU": 90.191673278809,
+      "samples": 80,
+      "synths": [
+        74
+      ],
+      "ugens": [
+        1517
+      ],
+      "repeats": [
+        {
+          "repeat": 1,
+          "meanAvgCPU": 49.49294595718395,
+          "maxPeakCPU": 87.29704284668
+        },
+        {
+          "repeat": 2,
+          "meanAvgCPU": 49.6754480361939,
+          "maxPeakCPU": 90.191673278809
+        }
+      ]
+    }
+  ],
+  "fullBankAddedPercentagePoints": 1.7068198204042133,
+  "routingOnlyAddedPercentagePoints": 0.34585618972786136,
+  "limitations": [
+    "Eight persistent stereo channel strips, not 24-port per-voice wrappers",
+    "Two 8-second sampling windows per condition after 3-second settling",
+    "Routing-only increment smaller than between-repeat drift",
+    "No GUI or data bridge, no hardware dropout audit",
+    "SC peak CPU is not a callback/deadline trace"
+  ]
+}

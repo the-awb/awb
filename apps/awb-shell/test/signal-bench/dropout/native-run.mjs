@@ -9,8 +9,8 @@ const exec=promisify(execFile),here=dirname(fileURLToPath(import.meta.url));
 if(Number(process.versions.node.split('.')[0])<22)throw Error('Node 22+ is required.');
 const argument=name=>process.argv.find(a=>a.startsWith('--'+name+'='))?.slice(name.length+3);
 const run=process.argv.includes('--run'),quiet=process.argv.includes('--quiet-window');
-process.env.AWB_NATIVE_RACK_SIZE??='small';process.env.AWB_NATIVE_BRIDGE??='on';process.env.AWB_NATIVE_DIRECTION??='gui';process.env.AWB_NATIVE_MAST??='include';
-for(const [key,allowed] of [['AWB_NATIVE_RACK_SIZE',['small','large','32','sends32']],['AWB_NATIVE_BRIDGE',['off','on']],['AWB_NATIVE_DIRECTION',['gui','sc']],['AWB_NATIVE_MAST',['include','extra']]])if(!allowed.includes(process.env[key]))throw Error('Invalid '+key);
+process.env.AWB_NATIVE_RACK_SIZE??='small';process.env.AWB_NATIVE_BRIDGE??='on';process.env.AWB_NATIVE_DIRECTION??='gui';process.env.AWB_NATIVE_MAST??='include';process.env.AWB_NATIVE_SAMPLE_RATE??='48000';process.env.AWB_NATIVE_OUTPUT_CHANNELS??='10';
+for(const [key,allowed] of [['AWB_NATIVE_RACK_SIZE',['small','large','32','sends32']],['AWB_NATIVE_BRIDGE',['off','on']],['AWB_NATIVE_DIRECTION',['gui','sc']],['AWB_NATIVE_MAST',['include','extra']],['AWB_NATIVE_SAMPLE_RATE',['44100','48000']],['AWB_NATIVE_OUTPUT_CHANNELS',['4','10']]])if(!allowed.includes(process.env[key]))throw Error('Invalid '+key);
 
 const mode=argument('trace-mode')??'off';
 if(!['off','System Trace','Audio System Trace'].includes(mode))throw Error('trace-mode must be off, System Trace, or Audio System Trace.');
@@ -64,8 +64,10 @@ try {
  for(const name of ['refresh-run.mjs','refresh-measure.mjs','refresh-renderers.mjs','instrument-phase.mjs','phase-clock.cpp','instruments-run.mjs','phase-align.py','phase-align-test.py'])provenance.sources[name]=crypto.createHash('sha256').update(await readFile(join(here,name))).digest('hex');
  const nativeFiles=['native-rack-fixture.mjs','native-producer.scd','native-run.mjs'].map(name=>join(here,name));
  const rackRoot=resolve(here,'../../../../rack');nativeFiles.push(join(rackRoot,'sc/classes/AWBSendRackTool.sc'),join(rackRoot,'sc/classes/AWBSendRackVoice.sc'),join(rackRoot,'runtime/sc-bridge.mjs'),join(rackRoot,'runtime/shell-runtime.mjs'));
+ nativeFiles.push(resolve(here,'../../../services/oscOutput.mjs'),join(here,'input-record.cpp'));
+ if(process.env.AWB_INPUT_RECORDER)nativeFiles.push(process.env.AWB_INPUT_RECORDER);
  const nativeGuards={};for(const path of nativeFiles)nativeGuards[path]=crypto.createHash('sha256').update(await readFile(path)).digest('hex');
- provenance.native={size:process.env.AWB_NATIVE_RACK_SIZE,mast:process.env.AWB_NATIVE_MAST,bridge:process.env.AWB_NATIVE_BRIDGE,direction:process.env.AWB_NATIVE_DIRECTION,guards:nativeGuards,note:'Real native rack; pass FX; private sclang include config; no production data writes.'};
+ provenance.native={size:process.env.AWB_NATIVE_RACK_SIZE,mast:process.env.AWB_NATIVE_MAST,bridge:process.env.AWB_NATIVE_BRIDGE,direction:process.env.AWB_NATIVE_DIRECTION,sampleRate:Number(process.env.AWB_NATIVE_SAMPLE_RATE),outputChannels:Number(process.env.AWB_NATIVE_OUTPUT_CHANNELS),guards:nativeGuards,note:'Real native rack; pass FX; private sclang include config; no production data writes.'};
  provenance.note='Native integration benchmark extension of the matched refresh harness; real SC writes and framed SC feedback when bridge is on. Source guards cover the native helper, SC classes and runtime.';
  await writeFile(join(output+'.instruments','provenance.json'),JSON.stringify(provenance,null,2)+'\n');
  await writeFile(join(output+'.instruments','generated-runner.mjs'),runner);

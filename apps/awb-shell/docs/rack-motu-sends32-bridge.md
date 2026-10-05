@@ -108,3 +108,153 @@ summary](../test/signal-bench/dropout/results/2026-10-05-sends32-batching/transp
 retains endpoint snapshots, command/packet counts, revision accounting and source
 provenance; its analysis folder retains the historical runner. Raw logs and
 private fixtures remain in `/private/tmp/awb-transport-batching-6a9bc49-20261005`.
+
+## Real DSP batching, origin filtering and rate/output follow-up — 5 October 2026
+
+The corrected eight-channel/32-destination rack now passes **48/48 live control
+checks**, with real sclang, scsynth, both GUI renderers, bidirectional SC feedback
+and the MOTU loopback. The 40 moving captures accepted all **16,539,907 retained
+commands**; the eight idle captures also passed. There were no final GUI/SC/server
+value mismatches, bridge errors or disarmed captures. OSC used 1,118,631 packets
+including idle/status traffic, approximately **93.2% fewer packets per retained
+command** than individual-message transport. Coalescing intentionally discards
+superseded intermediate values; these are not missing retained commands.
+
+This establishes correctness for the combined corrected implementation at the
+previous heavy-message workload. It does not isolate the contribution of
+batching from origin filtering and recovery, or imply that audio is clean.
+
+### What was corrected
+
+SC no longer sends GUI-origin control values back to the originating watcher.
+It still sends revision acknowledgement frames; other watchers and SC-originated
+changes receive values. Node maintains its commanded SC state locally. Explicit
+Sync still reads the complete SC state.
+
+The first hardware attempt uncovered another bug: an automatic recovery snapshot
+could overwrite a newer gesture while awaiting SC, despite every command arriving.
+One negative SVG run had 296 extra GUI value changes and incorrect final targets.
+Recovery now preserves controls edited during the pending snapshot and keeps
+recalls running, including their browser active status. Explicit Sync retains its
+full-read behavior. The corrected captures have exactly the requested store value
+changes and zero React app/rack/control renders. **31/31 focused Rack tests** pass,
+including private real-sclang origin tests and the delayed-recovery regression.
+The user's installed SC class configuration remains unchanged.
+
+The ten original 48 kHz/ten-output captures precede the tiny recovery recall-status
+fix; the subsequent 38 captures use the final runtime. No recall is exercised in
+these workloads. Both source variants are retained in the evidence.
+
+### Matched 60-node comparison
+
+Every capture lasts 45 seconds; each condition has two passes. All eight instrument
+channels and 32 destinations are present; 296 controls move every 32 ms, with
+312 controls mounted. The viewport is 2250 × 1322 at DPR 1, fixed and visible.
+The real rack uses pass processors plus synthetic DSP stress nodes, not the migrated
+Bitwig FX chains. Hardware buffers remain 512 frames and SC blocks 64 frames.
+The diagnostic pilot uses output channel 2 and returns on MOTU input channel 6.
+Four outputs means **two stereo pairs**, with rack master on 0/1; ten outputs means
+five pairs, with rack master on 8/9. Device routing was preserved.
+
+The table counts return callbacks with residual faults, **not distinct audible
+glitches**. Silent callback counts and exact callback events are retained separately.
+Clean cases also have no silent callbacks, output timestamp gaps or DSP-budget
+overruns.
+
+| Rate / SC output channels | Idle faults, pass 1 / 2 | Canvas2D 15 Hz faults | SVG 30 Hz faults |
+|---|---:|---:|---:|
+| 48 kHz / 10 | 0 / 0 | 12 / 8 | 67 / 52 |
+| 48 kHz / 4 | 0 / 0 | 26 / 9 | 43 / 46 |
+| 44.1 kHz / 10 | 0 / 0 | 0 / 0 | 0 / 0 |
+| 44.1 kHz / 4 | 0 / 0 | 0 / 0 | 0 / 1 |
+
+The one four-output/44.1 kHz SVG fault had no observed output callback lateness,
+timestamp gap or nominal-budget overrun. Its cause is unresolved; this isolated
+return fault is different from the repeated output overruns in the noisier cases.
+
+The full four-condition comparison at 48 kHz/ten outputs gives these means:
+
+| Surface | Electron CPU | sclang CPU | SC load | Return residual callbacks, pass 1 / 2 |
+|---|---:|---:|---:|---:|
+| Canvas2D 15 Hz | 75.0% | 56.0% | 74.0% | 12 / 8 |
+| Canvas2D 30 Hz | 89.2% | 58.5% | 77.0% | 60 / 21 |
+| SVG 15 Hz | 97.2% | 57.9% | 76.4% | 27 / 10 |
+| SVG 30 Hz | 141.4% | 63.2% | 81.1% | 67 / 52 |
+
+Electron includes its main, renderer, GPU and utility processes. CPU percentages
+are one-core equivalents. WindowServer, sclang, scsynth and the recorder are
+retained separately; SC load is elapsed DSP time and is not additive with process
+CPU. Hardware GPU utilization, power and clocks were not measured.
+
+### Observed bands near the boundary
+
+Local boundary tests use Canvas2D at 15 Hz and the same real bridge. A band describes
+these two captures, not a guaranteed safe operating limit. Background activity can
+move the boundary, as Willy explicitly expects. A consistently faulty band means
+faults occurred in both repeats, not uninterrupted failure throughout the run.
+
+| Rate / outputs | Zero faults in both repeats | Intermittent faults | Faults in both repeats |
+|---|---|---|---|
+| 48 kHz / 10 | 56 nodes | Not observed at the tested increments | 58 and 60 nodes |
+| 48 kHz / 4 | 54 nodes | 56 nodes: 5 / 0 residual callbacks | 58 and 60 nodes |
+| 44.1 kHz / 10 | 60 nodes | 62: 0 / 8; 64: 14 / 0 residual callbacks | 68 nodes: 39 / 20 |
+| 44.1 kHz / 4 | 60 and 62 nodes | Not observed at the tested increments | 64 nodes: 193 / 4 |
+
+Adjacent faulty return callbacks are also grouped in the JSON evidence. This is
+only sequence adjacency, not a perceptual glitch count. For example, the marginal
+48 kHz/four-output 56-node pair has two contiguous fault groups then zero; the
+44.1 kHz/ten-output 62-node pair has zero then four. The 44.1 kHz/four-output
+64-node pair has 50 groups then one, demonstrating substantial variation even
+within the band where both repeats fail. The added 68-node ten-output pair has
+22 then 13 groups.
+
+**44.1 kHz gives useful headroom.** At 512 frames the nominal callback budget grows
+from 10.67 ms to 11.61 ms, about 8.8%. Reducing outputs from ten to four gives no
+consistent improvement across these comparisons. The differing clean boundaries
+are not evidence that fewer outputs are inherently slower or faster.
+
+The audio wall remains after reliable command transport. At 48 kHz/60 nodes,
+both Canvas2D 15 Hz runs have output timestamp gaps and DSP callbacks exceeding
+the hardware-period budget, while the generated pilot samples remain waveform
+clean. The issue is therefore not confined to the return recording. Average
+Canvas2D CPU savings remain real, but average CPU cannot establish deadline safety.
+These runs use the existing callback audit without a new Instruments scheduler
+trace; they do not identify the remaining scheduling/hardware mechanism.
+
+Willy confirms no computer interaction. Background mediaanalysisd and mds_stores
+remain active, potentially including work triggered by test files. Around one
+58-node pair, mediaanalysisd CPU time changes from 11.81 seconds to 75.60 seconds
+and mds_stores from 18.65 to 21.15 seconds. These snapshots cover the surrounding
+capture/startup interval, not exactly the measured phase; they document variation,
+not causation. System services were not suspended. The 38 rate/output captures
+show zero global UDP full-socket-buffer-drop increments, while no-socket counters
+increase around startup/teardown; global counters do not identify a specific socket.
+
+### Evidence and reproduction
+
+- [48 captures, control endpoints, callback events, CPU, background counters, source variants and report hashes](../test/signal-bench/dropout/results/2026-10-05-batched-dsp-rates/native-summary.json)
+- [Hardware restoration, source verification and process cleanup](../test/signal-bench/dropout/results/2026-10-05-batched-dsp-rates/completion-verification.json)
+- [Focused test log](../test/signal-bench/dropout/results/2026-10-05-batched-dsp-rates/rack-tests.log)
+
+The evidence retains the negative recovery-race manifest and historical capture/
+analysis drivers. Raw reports, samples and copied fixtures remain under
+`/private/tmp/awb-native-batched-dsp-v3-20261005` and
+`/private/tmp/awb-native-rate-output-boundaries-20261005`; scratch files are not
+durable backups. The base commit is `ebb9374`; the tested origin/recovery and
+rate/output harness changes remain working-tree changes, not a new commit.
+
+Use the existing single-case command with `AWB_NATIVE_RACK_SIZE=sends32`,
+`AWB_NATIVE_MAST=include`, `AWB_NATIVE_BRIDGE=on`, `AWB_NATIVE_DIRECTION=gui`,
+`AWB_NATIVE_SAMPLE_RATE=44100|48000` and `AWB_NATIVE_OUTPUT_CHANNELS=4|10`.
+Set the MOTU to the same nominal rate and wait for read-back before capture.
+The producer and recorder verify observed rate/output count. For 44.1 kHz, rebuild
+`input-record.cpp` with Xcode clang and CoreAudio/CoreFoundation frameworks; set
+`AWB_INPUT_RECORDER` to that fresh binary. The older 48-kHz-only recorder was left
+unchanged. Use fresh output/audit/input paths, `--trace-mode=off`,
+`--run --quiet-window`, `--seconds=45`, and the selected `--load-nodes` and condition.
+
+All 48 recordings were reliable; current source read-back verified 46 guard paths.
+None of the 432 recorded owned process IDs remains alive. Independent MOTU
+read-back confirms 44.1 kHz. SC's per-send full gain-vector writes and automation
+step scheduling are unchanged. No Telegram tool was available, so no external
+notification was sent.

@@ -1,0 +1,42 @@
+(
+var server,instance,c,messages=List.new,checks=0,failures=List.new,check,reject,a,b,port,borrowed,closedResource=0,before,preset,clone,held;
+check={|ok,label|checks=checks+1;if(ok){("PASS "++label).postln}{failures.add(label);("FAIL "++label).postln}};
+reject={|fn,label|var caught=false;try{fn.value}{caught=true};check.value(caught,label)};
+try{
+ server=Server(\stageContract,NetAddr("127.0.0.1",59999),ServerOptions.new.numOutputBusChannels_(4).numInputBusChannels_(0));
+ SynthDef(\stageGain,{|in=0,out=0,gain=1|Out.ar(out,In.ar(in,2)*gain)}).add;
+ AWBChain.registerStageFactory(\gain,(name:"Gain",controls:[(id:\gain,min:0,max:2,default:1)]),{|s|s.addSynth(\process,\stageGain,[\in,s.input.index,\out,s.output.index]);s.bindInput(\process);s.bind(\gain,\process,\gain);});
+ AWBChain.registerStageFactory(\wide,(name:"Four",inputWidth:4,outputWidth:4),{|s|s.addSynth(\process,\stageGain,[\in,s.input.index,\out,s.output.index]);s.bindInput(\process);});
+ borrowed=Bus.audio(server,2);
+ instance=AWBChain.open((factory:\serial,stages:[(id:\a,factory:\gain),(id:\b,factory:\gain)]),(server:server,input:borrowed,sendFunction:{|msg|messages.add(msg)},track:true));c=instance.tool;
+ check.value(c.ready and:{c.stages.size==2},"managed Chain opens");a=c.stageAt(\a);b=c.stageAt(\b);port=a.output.index;
+ check.value(a.input===borrowed and:{b.input===a.output},"matching ports connect without input copy nodes");
+ check.value(a.output!==c.output and:{b.output!==c.output},"each stage has independent stable output");
+ check.value(NodeManager.instance.watchedEntries[a.group].owner===instance,"stage Group has native owner");
+ a.set(\gain,0.25);check.value(c.get('a/gain')==0.25,"stage controls are namespaced");
+ c.moveStage(\a,1);check.value(c.stages.first===b and:{a.input===b.output},"move reconnects serial inputs");check.value(a.output.index==port,"move retains output bus identity");
+ check.value(a.get(\gain)==0.25,"move retains values and DSP nodes");
+ reject.value({c.reorder([\a,\a])},"duplicate order rejected");check.value(c.stages.first===b,"invalid order leaves topology unchanged");
+ before=messages.size;reject.value({c.insertStage((id:\wrong,factory:\wide),1)},"width mismatch requires explicit matrix");check.value(messages.size==before and:{c.stages.size==2},"invalid matrix plan allocates nothing");
+ c.insertStage((id:\x,factory:\gain,values:(gain:0.5)),1);check.value(c.stages.collect(_.id).asArray==[\b,\x,\a],"insert between stages");check.value(c.stageAt(\x).get(\gain)==0.5,"insert restores configured values");
+ c.stageAt(\x).ownResource(\item,{closedResource=closedResource+1});before=c.stageAt(\x).output;c.removeStage(\x);
+ check.value(a.input===b.output and:{before.index.isNil},"remove bypasses predecessor and recycles output");check.value(closedResource==1,"removed stage resource released once");
+ reject.value({c.get('x/gain')},"removed controls are inaccessible");check.value(instance.config[\stages].collect{|s|s[\id]}.asArray==[\b,\a],"Tool configuration follows topology");
+ c.setRoute(\a,[[0,1],[1,0]]);check.value(a.input!==b.output and:{a.input.numChannels==2},"explicit matrix uses stage-width routing bus");c.setRoute(\a,nil);check.value(a.input===b.output,"removing matrix restores direct connection");
+ reject.value({c.setRoute(\a,[[1,0,0]])},"invalid route dimensions rejected");reject.value({c.setRoute(\a,[[inf,0],[0,1]])},"nonfinite route rejected");
+ c.insertStage((id:\four,factory:\wide),1,(four:[[1,0],[0,1],[0,0],[0,0]],a:[[1,0,0,0],[0,1,0,0]]));check.value(c.stageAt(\four).input.numChannels==4 and:{a.input.numChannels==2},"explicit matrices bridge two and four channels");
+ c.removeStage(\four,(a:\direct));check.value(a.input===b.output,"remove wide stage with new compatible mapping");
+ AWBChain.registerStageFactory(\broken,(),{|s|s.bus;s.ownResource(\bad,{closedResource=closedResource+1});Error("factory failed").throw});
+ before=instance.ownedObjects.size;reject.value({c.insertStage((id:\broken,factory:\broken),1)},"failed insertion rejected");check.value(c.stages.size==2 and:{instance.ownedObjects.size==before} and:{closedResource==2},"failed insertion leaves graph and ownership intact");
+ c.replaceStage(\a,(factory:\gain,values:(gain:0.75)));check.value(c.get('a/gain')==0.75 and:{c.controls.size==2},"replacement installs new controls without old cleanup deleting them");
+ before=c.stageAt(\a);reject.value({c.replaceStage(\a,(factory:\broken))},"failed replacement rejected");check.value(c.stageAt(\a)===before and:{c.get('a/gain')==0.75},"failed replacement preserves old node and binding");
+ AWBChain.registerStageFactory(\held,(controls:[(id:\gain,min:0,max:2,default:0.5)]),{|s|held=s;s.holdReady;s.addSynth(\process,\stageGain,[\in,s.input.index,\out,s.output.index]);s.bindInput(\process);s.bind(\gain,\process,\gain);});
+ c.insertStage((id:\wait,factory:\held),1);check.value(c.editing,"async stage holds topology commit");reject.value({c.removeStage(\a)},"pending edit cannot overlap");held.releaseReady;check.value(c.editing.not and:{held.get(\gain)==0.5},"dependency release commits defaults and topology");c.removeStage(\wait);
+ preset=c.promotionCandidate;clone=AWBChain.open(preset[\config],(server:server,sendFunction:{},track:false));clone.tool.applyPresetConfig(preset[\config],preset[\selectedState]);check.value(clone.tool.get('a/gain')==0.75 and:{clone.tool.stages.size==2},"saved edited graph reconstructs with its values");clone.close;
+ check.value(c.parseMatrixJSON("[[0.5, -1],[1e-3,0]]")==[[0.5,-1],[0.001,0]],"OSC matrix JSON preserves numeric meaning");reject.value({c.parseMatrixJSON("[[bad]]")},"nonnumeric JSON gains rejected");
+ c.removeStage(\b);c.removeStage(\a);check.value(c.stages.isEmpty and:{c.controls.isEmpty},"empty Chain is a managed bypass");
+ closedResource=0;clone=AWBChain.open((factory:\serial,stages:[(id:\a,factory:\gain)]),(server:server,sendFunction:{},track:false));clone.tool.stageAt(\a).ownResource(\old,{closedResource=closedResource+1});clone.tool.replaceStage(\a,(factory:\held));held.ownResource(\new,{closedResource=closedResource+1});check.value(clone.tool.editing,"replacement waits for async dependency");clone.close;check.value(closedResource==2 and:{clone.ownedObjects.isEmpty},"close during replacement cleans active and retiring stages");
+ instance.close;check.value(borrowed.index.notNil and:{instance.ownedObjects.isEmpty},"close leaves external bus and clears ownership");borrowed.free;
+ ("AWB_CHAIN_STAGE_CHECKS="++checks).postln;if(failures.isEmpty){"AWB_CHAIN_STAGE_RESULT=PASS".postln;0.exit}{1.exit};
+}{|error|error.reportError;1.exit};
+)

@@ -1,0 +1,182 @@
+{
+  "passed": true,
+  "evidence": "/private/tmp/awb52-complete-check-20261005",
+  "fullLoad": true,
+  "memoryPoolKiB": 131072,
+  "hardwareAudio": true,
+  "existingCacheWarnings": [
+    "ERROR: /Library/Audio/Plug-Ins/VST/FL Studio VSTi.vst: not a plugin",
+    "ERROR: /Library/Audio/Plug-Ins/VST/FL Studio VSTi.vst: not a plugin"
+  ],
+  "contractChecks": 18,
+  "audio": {
+    "passed": true,
+    "audioChecks": 24,
+    "fullLoad": true,
+    "sampleRate": 44100,
+    "checks": [
+      {
+        "label": "14 diagnostic channels at 44.1 kHz",
+        "measured": null
+      },
+      {
+        "label": "Actual post-close window rendered",
+        "measured": null
+      },
+      {
+        "label": "All samples finite",
+        "measured": null
+      },
+      {
+        "label": "Mono VC duplicates its signal to stereo",
+        "measured": null
+      },
+      {
+        "label": "Stereo Pro 2 preserves different sides",
+        "measured": 0.024999987495721947
+      },
+      {
+        "label": "Explicit Mast carries both persistent channels",
+        "measured": 0.027717451566134754
+      },
+      {
+        "label": "Deci produces audio on its isolated return",
+        "measured": 0.009727993198504925
+      },
+      {
+        "label": "Deci reaches the limited master",
+        "measured": 0.007251809662570394
+      },
+      {
+        "label": "Fuzz produces audio on its isolated return",
+        "measured": 0.11928790724035349
+      },
+      {
+        "label": "Fuzz reaches the limited master",
+        "measured": 0.08632911308202898
+      },
+      {
+        "label": "Spark produces audio on its isolated return",
+        "measured": 0.015194413772237446
+      },
+      {
+        "label": "Spark reaches the limited master",
+        "measured": 0.014177516089985893
+      },
+      {
+        "label": "Verb produces audio on its isolated return",
+        "measured": 0.029271091340451173
+      },
+      {
+        "label": "Verb reaches the limited master",
+        "measured": 0.026728000274725605
+      },
+      {
+        "label": "Deci silent without a send",
+        "measured": null
+      },
+      {
+        "label": "Fuzz silent without a send",
+        "measured": null
+      },
+      {
+        "label": "VC mute silences post-fader audio",
+        "measured": null
+      },
+      {
+        "label": "VC mute leaves Pro 2 active",
+        "measured": null
+      },
+      {
+        "label": "VC solo suppresses Pro 2 post-fader audio",
+        "measured": null
+      },
+      {
+        "label": "VC solo leaves VC active",
+        "measured": null
+      },
+      {
+        "label": "Deci replacement on stable pipe still reaches master",
+        "measured": 0.007194427189973413
+      },
+      {
+        "label": "Verb tail survives removal of its input send",
+        "measured": 0.020989062721059215
+      },
+      {
+        "label": "Master is finite and bounded",
+        "measured": 0.1687176525592804
+      },
+      {
+        "label": "Close silences every observed bus and output",
+        "measured": null
+      }
+    ]
+  },
+  "cacheUnchanged": true,
+  "liveCPU": {
+    "sampleRate": 44100.0,
+    "memoryPoolKiB": 262144,
+    "outputChannels": 4,
+    "blockSize": 64,
+    "hardwareFramesRequested": 512,
+    "hardwareOutputMuted": true,
+    "gui": false,
+    "summary": [
+      {
+        "condition": "fully-wet-active-input",
+        "repeat": 1,
+        "statusSamples": 32,
+        "meanAvgCPU": 22.765368878841407,
+        "maxReportedPeakCPU": 29.711359024048,
+        "synths": 21,
+        "ugens": 332
+      },
+      {
+        "condition": "fully-wet-active-input",
+        "repeat": 2,
+        "statusSamples": 32,
+        "meanAvgCPU": 22.79304653406144,
+        "maxReportedPeakCPU": 28.569995880127,
+        "synths": 21,
+        "ugens": 332
+      },
+      {
+        "condition": "fully-wet-silent-input",
+        "repeat": 1,
+        "statusSamples": 32,
+        "meanAvgCPU": 22.65503090620056,
+        "maxReportedPeakCPU": 30.262229919434,
+        "synths": 21,
+        "ugens": 332
+      },
+      {
+        "condition": "fully-wet-silent-input",
+        "repeat": 2,
+        "statusSamples": 32,
+        "meanAvgCPU": 22.528207361698,
+        "maxReportedPeakCPU": 30.301626205444,
+        "synths": 21,
+        "ugens": 332
+      },
+      {
+        "condition": "idle",
+        "repeat": 0,
+        "statusSamples": 32,
+        "meanAvgCPU": 0.08465911238454266,
+        "maxReportedPeakCPU": 0.26621928811073,
+        "synths": 1,
+        "ugens": 9
+      }
+    ],
+    "note": "SC status-reported DSP load, not machine CPU; short synthetic excitation; no GUI, ADC audio, callback audit or returned-audio capture. Full wet all branches, generated IRs. Not original Bitwig maximum or dropout safety."
+  },
+  "evidenceHashes": {
+    "score.log": "94356428284240623f67a8f9b670dc4c3d7f00b7247844a553cda04cdc17b668",
+    "render.log": "f5915eb0dc07df56db2ebe608d2518a713f8ff84154b3a8844d0c5ab5ae9b60e",
+    "audio-results.json": "e764f0b1ebb914c6f0ffa15378ea424491dc0f8a4c88fbf6805333320726ee11",
+    "measure.log": "91147b1fbe843cc97542b2eb817fd8ba52928a8031615571e1d3492494ebc9bb",
+    "live-cpu.json": "eb51585ebaadfea9d3c2405bf0efd059332366d4a181e7949785dc96fd8d550b",
+    "framework-provenance.json": "07975e340b6d611ec77d68ea2b181f4d99d42a1c5e2bedc3c47d983840fb3817"
+  }
+}

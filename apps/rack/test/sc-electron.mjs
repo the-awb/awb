@@ -13,14 +13,14 @@ app.whenReady().then(async()=>{
     runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),scBinding:binding});
     win=new BrowserWindow({width:1600,height:1050,show:false,webPreferences:{backgroundThrottling:false,sandbox:true,contextIsolation:true,nodeIntegration:false}});const errors=[];win.webContents.on('console-message',e=>{if(e.level==='error')errors.push(e.message);});await win.loadURL(runtime.url);win.showInactive();const js=s=>win.webContents.executeJavaScript(s,true);
     for(let i=0;i<100;i++){if(await js('!!(window.rackDebug&&document.querySelector(".connected"))'))break;await wait(50);}
-    assert.equal(await js('rackDebug.store.controls.length'),16);assert.equal(await js('document.querySelectorAll("[data-rack-scope=instrument]").length'),2);assert.equal(await js('document.querySelectorAll("canvas").length'),1);
+    assert.equal(await js('rackDebug.store.controls.length'),18);assert.equal(await js('document.querySelectorAll("[data-rack-scope=instrument]").length'),2);assert.equal(await js('document.querySelectorAll("canvas").length'),1);
     win.webContents.debugger.attach('1.3');const cdp=(m,p)=>win.webContents.debugger.sendCommand(m,p);
     const button=async text=>{await js(`[...document.querySelectorAll('button')].find(b=>b.textContent===${JSON.stringify(text)}).click()`);await wait(120);};
     const click=async selector=>{const point=await js(`(()=>{const el=document.querySelector(${JSON.stringify(selector)});el.scrollIntoView({block:'nearest',inline:'nearest'});const r=el.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);await cdp('Input.dispatchMouseEvent',{type:'mousePressed',...point,button:'left',clickCount:1});await cdp('Input.dispatchMouseEvent',{type:'mouseReleased',...point,button:'left',clickCount:1});await wait(50);};
     const text=async(selector,value)=>{await click(selector);await js('document.activeElement.select()');await cdp('Input.insertText',{text:value});await wait(100);};
     const key=async key=>{await cdp('Input.dispatchKeyEvent',{type:'keyDown',key});await cdp('Input.dispatchKeyEvent',{type:'keyUp',key});await wait(50);};
     await button('Enable output');await js("rackDebug.set('a/fx/mast',.375);rackDebug.set('b/fx/mast',.25)");await wait(100);
-    await button('Snapshot all');assert.equal(Object.values(runtime.store.snapshots[0].targets).filter(Boolean).length,16);
+    await button('Snapshot all');assert.equal(Object.values(runtime.store.snapshots[0].targets).filter(Boolean).length,18);
     await button('Select snapshot');await click('[data-control="a/fx/mast"] svg');await button('Make snapshot');assert.equal(Object.values(runtime.store.snapshots[1].targets).filter(Boolean).length,1);assert.equal(runtime.store.snapshots[1].targets['b/fx/mast'],null);
     for(const view of ['HTML / SVG','Three.js canvas']){
       await button(view);await js('rackDebug.reset()');
@@ -32,6 +32,10 @@ app.whenReady().then(async()=>{
       assert.equal(feedback.app,0);assert.equal(feedback.svg,0);assert.equal(feedback.canvas,0);
       if(view==='HTML / SVG'){assert.ok(feedback.paints>0);assert.equal(Number(await js(`document.querySelector('[data-control="a/fx/mast"] svg').getAttribute("aria-valuenow")`)),value);}else assert.ok(feedback.frames>0);
       evidence[view+' SC feedback']={value,feedback};
+      await js("rackDebug.set('global/control-levels/env',.28)");await wait(120);
+      await runtime.command({type:'sync-sc'});assert.ok(Math.abs(runtime.store.get('global/control-levels/env')-.28)<1e-6);
+      assert.equal(await js('rackDebug.appStats.renders'),0);
+      evidence[view+' control amount']={liveSCValue:.28};
       await button('Edit mix');
       await text('[data-mix-control="a/fx/mast"] [data-mix-field="amount"]','.55');assert.ok(Math.abs(runtime.store.get('a/fx/mast')-.55)<1e-6);
       await key('ArrowDown');assert.equal(await js('document.activeElement.closest("[data-mix-control]").dataset.mixControl'),'a/fx/fx1');
@@ -45,7 +49,7 @@ app.whenReady().then(async()=>{
     await js('[...document.querySelectorAll(".native-slot")].find(e=>e.querySelector("strong").textContent==="FX 1").querySelector("button").click()');await wait(200);assert.equal(runtime.state().sc.slots.find(s=>s.id==='fx1').active,1);
     await js("rackDebug.reset();rackDebug.set('a/fx/mast',.75)");await wait(120);assert.equal(await js('rackDebug.appStats.renders'),0);assert.equal(await js('rackDebug.svgStats.rackRenders'),0);assert.equal(await js('rackDebug.canvasStats.hostRenders'),0);
     await button('Sync from SC');assert.ok(Math.abs(runtime.store.get('a/fx/mast')-.75)<1e-6);assert.equal(runtime.store.snapshots[1].targets['a/fx/mast'].value,.6);assert.deepEqual(errors,[]);
-    await mkdir(artifacts,{recursive:true});await writeFile(path.join(artifacts,'sc-rack.png'),(await win.webContents.capturePage()).toPNG());evidence.passed=true;evidence.errors=errors;evidence.controls=16;await writeFile(path.join(artifacts,'sc-electron.json'),JSON.stringify(evidence,null,2));console.log('AWB_RACK_SC_GUI_RESULT=PASS');
+    await mkdir(artifacts,{recursive:true});await writeFile(path.join(artifacts,'sc-rack.png'),(await win.webContents.capturePage()).toPNG());evidence.passed=true;evidence.errors=errors;evidence.controls=18;await writeFile(path.join(artifacts,'sc-electron.json'),JSON.stringify(evidence,null,2));console.log('AWB_RACK_SC_GUI_RESULT=PASS');
   }catch(e){console.error(e);status=1;await mkdir(artifacts,{recursive:true});if(win)await writeFile(path.join(artifacts,'sc-failure.png'),(await win.webContents.capturePage()).toPNG());}
   finally{clearTimeout(timeout);win?.destroy();await runtime?.stop();if(child&&child.exitCode===null)child.kill('SIGTERM');await rm(dir,{recursive:true,force:true});app.exit(status);}
 }).catch(e=>{console.error(e);app.exit(1);});

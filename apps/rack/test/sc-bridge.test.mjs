@@ -15,7 +15,7 @@ test('actual ToolInstance bridge coalesces feedback, fences stale writes and pre
     child.stdout.on('data',b=>log+=b);child.stderr.on('data',b=>log+=b);
     let binding;for(let i=0;i<400;i++){try{binding=JSON.parse(await readFile(path.join(build,'test/bridge-ready.json'),'utf8'));break;}catch{}if(child.exitCode!==null)throw Error(log);await wait(50);}assert.ok(binding,log);
     runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),scBinding:{...binding,libraryRoot:dir}});
-    assert.equal(runtime.state().sc.instanceID,binding.instanceID);assert.equal(runtime.store.controls.length,16);assert.equal(runtime.store.get('a/fx/mast'),0);assert.equal(runtime.store.get('global/channel-levels/a'),1);
+    assert.equal(runtime.state().sc.instanceID,binding.instanceID);assert.equal(runtime.store.controls.length,18);assert.equal(runtime.store.get('a/fx/mast'),0);assert.equal(runtime.store.get('global/channel-levels/a'),1);
     await assert.rejects(startRuntime({runtimeDirectory:path.join(dir,'competing'),scBinding:{...binding,libraryRoot:dir}}),/already open/);
     assert.match(runtime.libraryPath,/rack-library-sc-bridge-test.json$/);
     // Preview changes are local only; Sync restores the authoritative SC command state.
@@ -23,6 +23,11 @@ test('actual ToolInstance bridge coalesces feedback, fences stale writes and pre
     await runtime.command({type:'arm',armed:true});
     await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.375},{id:'b/fx/mast',value:.25},{id:'global/channel-levels/a',value:.7},{id:'a/state/mute',value:1},{id:'b/state/solo',value:1},{id:'a/followers/env',value:.4},{id:'global/levels/mast',value:.9}]});
     await runtime.command({type:'sync-sc'});assert.equal(runtime.store.get('a/fx/mast'),.375);assert.ok(Math.abs(runtime.store.get('global/channel-levels/a')-.7)<1e-6);assert.equal(runtime.store.get('a/state/mute'),1);assert.equal(runtime.store.get('b/state/solo'),1);assert.ok(Math.abs(runtime.store.get('a/followers/env')-.4)<1e-6);assert.ok(Math.abs(runtime.store.get('global/levels/mast')-.9)<1e-6);assert.equal(runtime.state().sent,7);
+    assert.equal(runtime.store.get('global/control-levels/env'),1);
+    await runtime.command({type:'batch',changes:[{id:'global/control-levels/env',value:.35}]});
+    await runtime.command({type:'sync-sc'});assert.ok(Math.abs(runtime.store.get('global/control-levels/env')-.35)<1e-6);
+    await runtime.command({type:'enable-control-send',slotID:'env',enabled:false});assert.equal(runtime.state().sc.slots.find(s=>s.id==='env').controlEnabled,0);
+    await runtime.command({type:'enable-control-send',slotID:'env',enabled:true});
     socket=dgram.createSocket('udp4');
     const observed=[];const unsubscribe=runtime.store.subscribe('a/fx/mast',()=>observed.push(runtime.store.get('a/fx/mast')));
     const sentBefore=runtime.state().sent;
@@ -52,7 +57,7 @@ test('actual ToolInstance bridge coalesces feedback, fences stale writes and pre
     await runtime.command({type:'clear-follower',slotID:'follow1'});assert.equal(runtime.state().sc.slots.find(s=>s.id==='follow1').active,0);
     const stale=runtime.store.document();stale.config.output.instanceID='sendRack:old';stale.config.output.port=59999;await runtime.command({type:'document',document:stale});assert.equal(runtime.store.config.output.instanceID,binding.instanceID);assert.equal(runtime.store.config.output.port,binding.port);await runtime.command({type:'arm',armed:true});
     const changed=runtime.store.document();changed.config.instruments.push({id:'c',label:'C'});await assert.rejects(runtime.command({type:'document',document:changed}),/Stable SC topology/);
-    await runtime.command({type:'capture',label:'full'});assert.equal(Object.values(runtime.store.snapshots[1].targets).filter(Boolean).length,16);
+    await runtime.command({type:'capture',label:'full'});assert.equal(Object.values(runtime.store.snapshots[1].targets).filter(Boolean).length,18);
     await runtime.stop();runtime=null;
     runtime=await startRuntime({runtimeDirectory:path.join(dir,'again'),scBinding:{...binding,libraryRoot:dir}});assert.equal(runtime.store.snapshots.length,2);assert.equal(runtime.state().armed,false);assert.equal(runtime.store.get('a/fx/mast'),.375);
     await runtime.command({type:'arm',armed:true});
@@ -84,8 +89,11 @@ test('feedback frames tolerate reordering, reject other tokens and recover incom
     await send(bridge.watchToken,'one','end',1);
     await send(bridge.watchToken,'one','begin',0,1,1,0);await wait(30);
     assert.deepEqual(events.filter(e=>e.kind==='values').map(e=>e.changes),[[{id:'a/fx/mast',value:.5,source:''}]]);
-    await send(bridge.watchToken,'lost','begin',1,2,2,0);await send(bridge.watchToken,'lost','value','a/fx/mast',.6,'');await send(bridge.watchToken,'lost','end',2);await wait(380);
-    assert.equal(events.filter(e=>e.kind==='recover').length,1);assert.equal(events.filter(e=>e.kind==='values').length,1);
+    await send(bridge.watchToken,'ack','end',2);
+    await send(bridge.watchToken,'ack','begin',1,2,0,0);await wait(30);
+    assert.deepEqual(events.filter(e=>e.kind==='values').at(-1),{kind:'values',baseRevision:1,revision:2,count:0,metadata:false,changes:[]},'revision-only acknowledgement needs no control values');
+    await send(bridge.watchToken,'lost','begin',2,3,2,0);await send(bridge.watchToken,'lost','value','a/fx/mast',.6,'');await send(bridge.watchToken,'lost','end',3);await wait(380);
+    assert.equal(events.filter(e=>e.kind==='recover').length,1);assert.equal(events.filter(e=>e.kind==='values').length,2);
     assert.deepEqual(errors,[]);
     socket.removeAllListeners('message');await wait(230);assert.ok(errors.some(e=>e.includes('heartbeat timed out')));
   }finally{bridge.close();await wait(10);socket.close();}
@@ -137,4 +145,93 @@ test('native runtime sends an eight-channel, 32-send flush as bounded OSC bundle
   const prior=commands.length;runtime.store.set('c0/fx/fx0',.75,'sc-feedback');await wait(40);
   assert.equal(commands.length,prior,'SC feedback must not echo');
  }finally{await runtime?.stop();await wait(10);socket.close();await rm(dir,{recursive:true,force:true});}
+});
+
+
+test('actual eight-channel 32-send feedback acknowledges its origin without values',{timeout:60000,skip:!process.env.AWB_RACK_SC_TEST_ROOT},async t=>{
+  const build=process.env.AWB_RACK_SC_TEST_ROOT,dir=await mkdtemp(path.join(os.tmpdir(),'rack-origin-'));
+  let child,runtime,observer,log='';const events=[],errors=[];
+  const until=async check=>{for(let i=0;i<400;i++){if(check())return;if(child?.exitCode!==null&&!check())throw Error(log);await wait(10);}throw Error('Origin feedback timeout: '+log);};
+  try{
+    await rm(path.join(build,'test/origin-ready.json'),{force:true});
+    child=spawn('/Applications/SuperCollider.app/Contents/MacOS/sclang',['-l',path.join(build,'sclang_conf.yaml'),path.join(build,'test/bridge-origin.scd')]);
+    child.stdout.on('data',b=>log+=b);child.stderr.on('data',b=>log+=b);
+    let binding;for(let i=0;i<400;i++){try{binding=JSON.parse(await readFile(path.join(build,'test/origin-ready.json'),'utf8'));break;}catch{}if(child.exitCode!==null)throw Error(log);await wait(50);}assert.ok(binding,log);
+    runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),scBinding:{...binding,libraryRoot:dir}});
+    observer=await createSCBridge(binding,{onUpdate:e=>events.push(e),onError:e=>errors.push(e)});await observer.watch();
+    const initial=await observer.sync();await wait(80);events.length=0;
+    const ids=[...initial.channels.flatMap(c=>initial.slots.map(s=>`${c.id}/fx/${s.id}`)),...initial.slots.map(s=>`global/levels/${s.id}`),...initial.channels.map(c=>`global/channel-levels/${c.id}`)];
+    const message=(id,value,revision)=>{const [a,b,c]=id.split('/');return {address:'/awb/rack/control',args:[binding.instanceID,b==='fx'?'send':b==='levels'?'return':'level',b==='channel-levels'?c:a,c??a,value,revision]};};
+    const before=runtime.state().sent;
+    await observer.sendBatch(ids.map(id=>message(id,.25,initial.revision)));
+    await until(()=>runtime.store.get('global/channel-levels/c7')===.25&&events.some(e=>e.kind==='values'));
+    const own=events.filter(e=>e.kind==='values');
+    assert.equal(own.reduce((n,e)=>n+e.count,0),0,'all 296 originating controls omitted on the wire');
+    assert.equal(own.at(-1).revision-initial.revision,296,'empty frames still acknowledge all accepted revisions');
+    assert.ok(ids.every(id=>runtime.store.get(id)===.25),'another GUI receives all 296 controls');
+    assert.equal(runtime.state().sent,before,'foreign GUI feedback is not retransmitted');
+    events.length=0;let duplicateValues=0;
+    const unsubscribe=runtime.store.subscribeAll(e=>{if(e.kind==='value'&&e.origin==='sc-feedback')duplicateValues++;});
+    await runtime.command({type:'arm',armed:true});
+    await runtime.command({type:'batch',changes:ids.map(id=>({id,value:.5}))});
+    await runtime.command({type:'capture',label:'origin barrier'});
+    await until(()=>events.filter(e=>e.kind==='values').reduce((n,e)=>n+e.count,0)===296);
+    await wait(80);unsubscribe();
+    assert.equal(duplicateValues,0,'own acknowledgement never changes the local store');
+    assert.equal(runtime.state().sc.sends.c0[0],.5,'GUI commanded-state cache does not depend on echoes');
+    assert.equal(runtime.state().sc.channels[0].level,.5);assert.equal(runtime.state().sc.slots[0].level,.5);
+    const received=events.filter(e=>e.kind==='values').flatMap(e=>e.changes);
+    assert.equal(received.length,296);assert.ok(received.every(c=>c.source!==observer.watchToken&&c.value===.5));
+    // A coalesced frame contains an own gesture and a real language-side change.
+    const revision=(await observer.sync()).revision;events.length=0;
+    await observer.sendBatch([message('c0/fx/fx0',.75,revision),{address:'/awb/rack/origin-test',args:[binding.instanceID,'external-level',.625]}]);
+    await until(()=>events.some(e=>e.kind==='values'&&e.changes.some(c=>c.id==='global/channel-levels/c1')));
+    assert.deepEqual(events.filter(e=>e.kind==='values').flatMap(e=>e.changes),[{id:'global/channel-levels/c1',value:.625,source:''}],'mixed frame preserves SC value and omits own value');
+    await until(()=>runtime.store.get('c0/fx/fx0')===.75&&runtime.store.get('global/channel-levels/c1')===.625);
+    const final=await observer.sync();assert.equal(final.sends.c0[0],.75);assert.equal(final.channels[1].level,.625);
+    assert.deepEqual(errors,[]);assert.equal(runtime.state().failures,0);
+    await runtime.stop();runtime=null;
+    await observer.send({address:'/awb/rack/origin-test',args:[binding.instanceID,'finish']});
+    await until(()=>child.exitCode!==null);assert.equal(child.exitCode,0,log);assert.match(log,/AWB_RACK_ORIGIN_FINISHED=PASS/);
+    t.diagnostic('296 own values omitted; 296 foreign values delivered; mixed SC/GUI frame and full Sync verified, without audio');
+  }finally{await runtime?.stop();await observer?.close();if(child&&child.exitCode===null)child.kill('SIGTERM');await rm(dir,{recursive:true,force:true});}
+});
+
+
+test('automatic SC recovery preserves new gestures and keeps recalls running',{timeout:10000},async()=>{
+  const {decodeOscPacket}=await import('../../awb-shell/services/oscCodec.mjs');
+  const dir=await mkdtemp(path.join(os.tmpdir(),'rack-recover-')),socket=dgram.createSocket('udp4');
+  await new Promise(r=>socket.bind(0,'127.0.0.1',r));
+  const instanceID='sendRack:recovery';let ws;const notifications=[];let runtime,endpoint,token,hold=false,release=null;const sends=[];
+  socket.on('message',(bytes,remote)=>{for(const m of decodeOscPacket(bytes)){
+    const reply=(address,args)=>socket.send(encodeOSC({address,args}),remote.port,remote.address);
+    if(m.args[1]==='sync'){
+      const state=()=>{const send=(kind,...a)=>reply('/awb/rack/state',[instanceID,m.args[2],kind,...a]);
+        send('begin',1,'Recovery rack','recovery',4,1,1,0,1);send('channel','a','A',1,0,0,0);
+        send('slot','mast','Mast','fx',1,0,1,'',0,.01,.1,1,1,-60);send('sends','a',.125);send('end',1);};
+      if(hold){hold=false;release=state;}else state();
+    }else if(m.args[1]==='watch'){endpoint=remote;token=m.args[2];reply('/awb/rack/watch',[instanceID,token,1]);}
+    else if(m.args[1]==='send')sends.push(m.args[4]);
+  }});
+  const recover=async()=>{
+    hold=true;release=null;
+    // Metadata requests a full snapshot; use one frame ID for both packets.
+    const id='recover-'+Date.now();
+    for(const [kind,a]of [['begin',[1,2,0,1]],['end',[2]]])await new Promise((resolve,reject)=>socket.send(encodeOSC({address:'/awb/rack/update',args:[instanceID,token,id,kind,...a]}),endpoint.port,endpoint.address,e=>e?reject(e):resolve()));
+    for(let i=0;i<100&&!release;i++)await wait(5);assert.ok(release,'snapshot must be in flight');
+  };
+  try{
+    runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),scBinding:{instanceID,port:socket.address().port,libraryID:'recovery',libraryRoot:dir}});await runtime.command({type:'arm',armed:true});
+    await recover();await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.75}]});release();await wait(100);
+    assert.equal(runtime.store.get('a/fx/mast'),.75,'old recovery snapshot cannot rewind a newer gesture');
+    assert.equal(runtime.state().sc.sends.a[0],.75);assert.equal(sends.at(-1),Math.fround(.75),'new gesture remains queued for SC');
+    await runtime.command({type:'sync-sc'});assert.equal(runtime.store.get('a/fx/mast'),.125,'explicit Sync still applies SC state');
+    const {WebSocket}=await import('ws');ws=new WebSocket(runtime.url.replace('http','ws')+'ws?token='+runtime.state().token);ws.on('message',b=>notifications.push(JSON.parse(b)));await new Promise((resolve,reject)=>{ws.once('open',resolve);ws.once('error',reject);});
+    await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:1}]});
+    const {snapshotID}=await runtime.command({type:'capture',label:'recover recall',ids:['a/fx/mast'],duration:300,targetDuration:300});
+    await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:0}]});await runtime.command({type:'recall',id:snapshotID});
+    await wait(60);await recover();await wait(60);release();await wait(30);
+    assert.equal(notifications.filter(m=>m.type==='recall').at(-1)?.active,true,'recovery must not tell the browser that an active recall stopped');await wait(270);
+    assert.equal(runtime.store.get('a/fx/mast'),1,'automatic recovery must not stop a recall');assert.equal(runtime.state().failures,0);
+  }finally{await runtime?.stop();await wait(10);socket.close();await rm(dir,{recursive:true,force:true});}
 });

@@ -18,3 +18,7 @@ apps/awb-shell/test/signal-bench/**/*.input.gz
 # Native rack GUI profiles and local mix libraries.
 .rack-sc-user-data/
 .rack-sc-libraries/
+
+# Native Chain GUI profiles.
+.chain-user-data/
+.vite-chain/

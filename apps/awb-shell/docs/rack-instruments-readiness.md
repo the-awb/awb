@@ -20,7 +20,42 @@ passed with 826,834 accepted commands in 55,860 packets, zero missing commands,
 zero UDP buffer drops and correct final values. Both previous-runtime runs also
 passed without DSP/graphics load, so the original failure is not reproduced.
 See the follow-up in the [32-send report](rack-motu-sends32-bridge.md). The original
-hardware/DSP repeat remains pending a quiet window; Bitwig stayed running.
+hardware/DSP repeat is now complete; Bitwig was closed for the new captures.
+All 48 real-DSP captures pass control delivery, including every retained command
+and final GUI/SC/server value. All 48 recordings are reliable. See the latest
+section of the same report for the matched rate/output matrix and graded bands.
+At 15 Hz Canvas2D, 44.1 kHz/ten outputs is clean at 60 nodes, intermittent at
+62–64 and faulty in both repeats at 68; four outputs is clean at 62 and faulty
+in both repeats at 64. These are observed bands under background load.
+Origin-aware feedback now omits GUI-origin values before OSC encoding for the
+originating watcher. The existing 33 ms publication window returns begin/end
+revision acknowledgements even when there are zero values. SC-origin changes
+and other watchers' edits still send values; explicit Sync remains a full read.
+Node caches GUI commanded values locally rather than waiting for their echoes.
+This takes effect after sclang loads the updated rack class; the installed class
+configuration and live processes have not been changed.
+
+Automatic recovery now preserves newer GUI gestures while waiting for an SC
+snapshot, retains their pending writes and keeps recalls active in the browser.
+A real hardware attempt exposed the snapshot race even with correct delivery;
+that negative capture is retained separately. Explicit Sync remains a full read.
+
+Focused validation: 31/31 Rack tests pass with private real-sclang fixtures,
+including eight channels and 32 sends (296 controls), zero own echoed values,
+all 296 values delivered to a second watcher, mixed-origin publication, stale
+write fencing, sparse recall, incomplete-frame recovery, delayed snapshot
+recovery during a gesture/recall, and explicit Sync. This is not the full
+repository suite. The latest live DSP comparison uses the actual updated classes
+through private configs, leaving the user's installed class configuration alone.
+
+The corrected live workload retains Canvas2D CPU savings, but output callback
+deadline faults still occur near the DSP limit. 44.1 kHz gives more margin than
+48 kHz at 512 hardware frames; reducing SC outputs from ten to four has no
+consistent benefit. The user confirms no computer interaction; recorded macOS
+background work varies. These callback-audited captures add no new Instruments
+scheduler trace or claim about the remaining hardware/scheduling cause.
+All 432 recorded owned process IDs are gone and MOTU read-back confirms 44.1 kHz.
+
 SC's repeated per-send gain-vector writes and transition step scheduling remain
 separate follow-ups. The user's live class configuration remains unchanged.
 

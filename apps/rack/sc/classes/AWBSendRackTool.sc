@@ -1,6 +1,6 @@
 AWBSendRackTool : Tool {
     var <instance, <server, <config, <channels, <slots, <slotIDs, <fxIDs, <followerIDs;
-    var <rootGroup, <sourceGroup, channelGroup, fxGroup, followerGroup, masterGroup, <masterBus;
+    var <rootGroup, <sourceGroup, channelGroup, fxGroup, detectorGroup, followerGroup, masterGroup, <masterBus;
     var <ready=false, <closed=false, prefix, definitions, sources, variants, processors;
     var ownedNodes, ownedBuses, options, responder, shellPID, closePending=false, publishPending=false, quitHook, <revision=0;
     var watchers, feedbackValues, metadataPending=false, publishedRevision=0, commandSource;
@@ -128,7 +128,9 @@ AWBSendRackTool : Tool {
     addSlot { |id,label,kind,fixed|
         if(slots.includesKey(id)){Error("Duplicate destination ID").throw};
         slots[id]=(id:id,label:label,kind:kind,fixed:fixed,bus:this.bus,
-            controlBus:if(kind==\follower){this.bus(\control,1)}{nil},level:1.0,
+            controlBus:if(kind==\follower){this.bus(\control,1)}{nil},
+            measurementBus:if(kind==\follower){this.bus(\control,1)}{nil},detector:nil,controlEnabled:true,
+            consumers:IdentityDictionary.new,level:1.0,
             active:nil,retiring:List.new);
         slotIDs=slotIDs.add(id);
     }
@@ -164,7 +166,7 @@ AWBSendRackTool : Tool {
         ^this;
     }
     makeSupportDefs {
-        var width=config[\width],size=slotIDs.size;
+        var width=config[\width],size=slotIDs.size,detectorClass,def;
         this.installDef(\channel,SynthDef((prefix++"Channel").asSymbol,{|in=0,post=0,level=1,enabled=1,fade=0.02|
             var signal=In.ar(in,width)*Lag.kr(level*enabled,fade);
             var buses=NamedControl.ir(\sendBuses,Array.fill(size,0)).asArray;
@@ -188,8 +190,24 @@ AWBSendRackTool : Tool {
         this.installDef(\master,SynthDef((prefix++"Master").asSymbol,{|in=0,out=0,level=1|
             var sig=In.ar(in,width)*level;if(config[\masterLimit] ? true){sig=Limiter.ar(sig,0.99,0.01)};Out.ar(out,sig)
         }));
-        this.installDef(\follower,SynthDef((prefix++"Follower").asSymbol,{|in=0,out=0,attack=0.01,release=0.1,scale=1,blend=1,curve=1,floorDb = -60|
-            var amplitude=Amplitude.kr(Mix(In.ar(in,width).abs)/width,attack,release)*scale;
+        // Match AWFollower's krFollower, including its linear/sqrt blend.
+        // This optional path requires the existing EnvDetect3 plugin.
+        if(\EnvDetect3.asClass.notNil){
+            detectorClass=\EnvDetect3.asClass;
+            def=SynthDef((prefix++"ControlFollower").asSymbol,{|in=0,out=0,attack=0.2,release=0.4,scale=1,blend=0.66|
+                var signal=detectorClass.kr(In.kr(in,1)*scale,attack,release);
+                ReplaceOut.kr(out,(blend*signal)+((1-blend)*signal.sqrt));
+            });
+            this.installDef(\controlFollower,def);
+        };
+        // A control send receives mixed audio. Keep the short detector separate
+        // from the musical envelope; never measure individual voices here.
+        this.installDef(\measurement,SynthDef((prefix++"Measurement").asSymbol,{|in=0,out=0,rise=0.00562,fall=0.0234,gainDb=14.4,amount=1|
+            var signal=Mix(In.ar(in,width).abs)/width;
+            ReplaceOut.kr(out,Amplitude.kr(signal*gainDb.dbamp,rise,fall)*amount);
+        }));
+        this.installDef(\follower,SynthDef((prefix++"Follower").asSymbol,{|in=0,out=0,attack=0.01,release=0.1,scale=1,blend=1,curve=1,floorDb = -60,amount=1|
+            var amplitude=Amplitude.kr(Mix(In.ar(in,width).abs)/width,attack,release)*amount*scale;
             var linear=amplitude.clip(0,1);
             var logCurve=amplitude.max(1e-12).ampdb.clip(floorDb,-0.00001).linlin(floorDb,0,0,1);
             var shaped=Select.kr(curve,[linear,logCurve,linear.sqrt]);
@@ -202,6 +220,7 @@ AWBSendRackTool : Tool {
         sourceGroup=this.group(rootGroup,"Voices");
         channelGroup=this.group(rootGroup,"Channels");
         fxGroup=this.group(rootGroup,"FX");
+        detectorGroup=this.group(rootGroup,"Control send detectors");
         followerGroup=this.group(rootGroup,"Followers");
         masterGroup=this.group(rootGroup,"Master");
         fxIDs.do{|id|slots[id][\group]=this.group(fxGroup,"Slot "++id)};
@@ -211,7 +230,10 @@ AWBSendRackTool : Tool {
                 \sendBuses,slotIDs.collect{|id|slots[id][\bus].index},\sendGains,channel[\gains],\fade,config[\fade]],channelGroup,channel[\label]);
         };
         this.synth(definitions[\master].name,[\in,masterBus.index,\out,config[\out]],masterGroup,"Master output");
-        followerIDs.do{|id|this.dispatch(slots[id][\controlBus].setMsg(0))};
+        followerIDs.do{|id|
+            this.dispatch(slots[id][\controlBus].setMsg(0));
+            this.dispatch(slots[id][\measurementBus].setMsg(0));
+        };
         ready=true;
         if(config[\cleanSlot].notNil and:{config[\cleanSlot]!=false}){this.setFX(config[\cleanSlot],\pass,(limiter:false,fade:config[\fade]))};
         this.publish;
@@ -224,6 +246,94 @@ AWBSendRackTool : Tool {
     postFor { |id|this.requireOpen;^this.channelAt(id)[\post] }
     destinationFor { |id|this.requireOpen;^this.slotAt(id)[\bus] }
     controlFor { |id|var slot=this.slotAt(id);this.requireOpen;if(slot[\kind]!=\follower){Error("Not a follower slot").throw};^slot[\controlBus] }
+    measurementFor { |id|
+        var slot=this.slotAt(id);this.requireOpen;
+        if(slot[\kind]!=\follower){Error("Not a control send").throw};^slot[\measurementBus];
+    }
+    setDetector { |id,settings|
+        var slot=this.slotAt(id),current,args;
+        this.requireOpen;if(slot[\kind]!=\follower){Error("Not a control send").throw};
+        current=(mode:\peak,rise:0.00562,fall:0.0234,gainDb:14.4);
+        if(slot[\detector].notNil){current.putAll(slot[\detector][\settings])};
+        settings=settings ? ();
+        if(settings.keys.any{|key|[\mode,\rise,\fall,\gainDb].includes(key).not}){Error("Unknown detector setting").throw};
+        current.putAll(settings);
+        if(current[\mode]!=\peak){Error("Only Peak detector mode is implemented").throw};
+        [\rise,\fall].do{|key|
+            var value=current[key];
+            if(value.isNumber.not or:{value.isNaN} or:{value<0} or:{value>1}){Error("Detector time must be finite, 0-1 seconds").throw};
+        };
+        if(current[\gainDb].isNumber.not or:{current[\gainDb].isNaN} or:{current[\gainDb]< -60} or:{current[\gainDb]>60}){Error("Detector gain must be finite, -60 to 60 dB").throw};
+        args=[\rise,current[\rise],\fall,current[\fall],\gainDb,current[\gainDb]];
+        if(slot[\detector].isNil){
+            slot[\detector]=(node:this.synth(definitions[\measurement].name,
+                [\in,slot[\bus].index,\out,slot[\measurementBus].index,\amount,slot[\level]]++args,detectorGroup,"Detector "++id),settings:current);
+        }{
+            this.dispatch(slot[\detector][\node].setMsg(*args));slot[\detector][\settings]=current;
+        };
+        if(slot[\controlEnabled].not){this.dispatch(slot[\detector][\node].runMsg(false))};
+        this.publish;^slot[\detector];
+    }
+    clearDetector { |id|
+        var slot=this.slotAt(id),detector=slot[\detector];
+        this.measurementFor(id);
+        if(detector.notNil){this.removeControlNode(detector[\node])};
+        slot[\detector]=nil;this.dispatch(slot[\measurementBus].setMsg(0));this.publish;^this;
+    }
+    setControlSendEnabled { |id,enabled|
+        var slot=this.slotAt(id);this.measurementFor(id);
+        if(enabled.isKindOf(Boolean).not){Error("Control send enabled must be a Boolean").throw};
+        slot[\controlEnabled]=enabled;
+        if(slot[\detector].notNil){this.dispatch(slot[\detector][\node].runMsg(enabled))};
+        this.dispatch(slot[\group].runMsg(enabled));
+        if(enabled.not){
+            this.dispatch(slot[\measurementBus].setMsg(0));this.dispatch(slot[\controlBus].setMsg(0));
+            slot[\consumers].values.do{|consumer|this.dispatch(consumer[\bus].setMsg(0))};
+        };
+        this.publish;^this;
+    }
+    removeControlNode { |node|
+        this.dispatch(node.freeMsg);instance.disown(node);ownedNodes.remove(node);^this;
+    }
+    setControlFollower { |sendID,id,settings|
+        var slot=this.slotAt(sendID),current,consumer,args;
+        this.measurementFor(sendID);id=this.itemID(id);settings=settings ? ();
+        consumer=slot[\consumers][id];
+        current=(attack:0.2,release:0.4,scale:1,blend:0.66);
+        if(consumer.notNil){current.putAll(consumer[\settings])};
+        if(settings.keys.any{|key|[\attack,\release,\scale,\blend].includes(key).not}){Error("Unknown control follower setting").throw};
+        current.putAll(settings);
+        [\attack,\release].do{|key|
+            var value=current[key];
+            if(value.isNumber.not or:{value.isNaN} or:{value<0} or:{value>60}){Error("Follower time must be finite, 0-60 seconds").throw};
+        };
+        if(current[\scale].isNumber.not or:{current[\scale].isNaN} or:{current[\scale]<0} or:{current[\scale]>64}){Error("Follower scale must be finite, 0-64").throw};
+        if(current[\blend].isNumber.not or:{current[\blend].isNaN} or:{current[\blend]<0} or:{current[\blend]>1}){Error("Follower blend must be finite, 0-1").throw};
+        if(consumer.isNil and:{slot[\consumers].size>=32}){Error("Control send follower capacity exceeded").throw};
+        if(definitions[\controlFollower].isNil){Error("Control followers require the EnvDetect3 class and server plugin").throw};
+        args=[\attack,current[\attack],\release,current[\release],\scale,current[\scale],\blend,current[\blend]];
+        if(slot[\detector].isNil){this.setDetector(sendID)};
+        if(consumer.isNil){
+            consumer=(bus:this.bus(\control,1),node:nil,settings:current);
+            slot[\consumers][id]=consumer;
+        };
+        if(consumer[\node].isNil){
+            consumer[\node]=this.synth(definitions[\controlFollower].name,
+                [\in,slot[\measurementBus].index,\out,consumer[\bus].index]++args,slot[\group],"Follower "++sendID++"/"++id);
+        }{this.dispatch(consumer[\node].setMsg(*args))};
+        consumer[\settings]=current;this.publish;^consumer;
+    }
+    followerFor { |sendID,id|
+        var consumer;this.measurementFor(sendID);consumer=this.slotAt(sendID)[\consumers][id.asSymbol];
+        if(consumer.isNil){Error("Unknown control follower").throw};^consumer[\bus];
+    }
+    clearControlFollower { |sendID,id|
+        var consumer;this.measurementFor(sendID);consumer=this.slotAt(sendID)[\consumers][id.asSymbol];
+        if(consumer.isNil){Error("Unknown control follower").throw};
+        if(consumer[\node].notNil){this.removeControlNode(consumer[\node]);consumer[\node]=nil};
+        // Retain the output address so downstream mappings never point at a reused bus.
+        this.dispatch(consumer[\bus].setMsg(0));this.publish;^this;
+    }
     setSend { |channelID,destinationID,gain|
         var channel=this.channelAt(channelID),index=slotIDs.indexOf(destinationID.asSymbol);
         this.requireOpen;gain=AWBSendRackVoice.gain(gain);
@@ -255,9 +365,18 @@ AWBSendRackTool : Tool {
         if(processors.includesKey(id).not and:{processors.size>=64}){Error("Processor registry is full").throw};
         processors[id]=factory;if(ready){this.publish};^this;
     }
+    setControlAmount { |id,value|
+        var slot=this.slotAt(id);this.measurementFor(id);value=AWBSendRackVoice.gain(value);
+        if(value>1){Error("Control send amount must be 0-1").throw};
+        slot[\level]=value;
+        [slot[\detector],slot[\active]].reject(_.isNil).do{|processor|
+            this.dispatch(processor[\node].setMsg(\amount,value));
+        };
+        this.publishValue("global/control-levels/"++id.asString,value);^value;
+    }
     setReturn { |id,value|
         var slot=this.slotAt(id);
-        this.requireOpen;value=AWBSendRackVoice.gain(value);
+        this.requireOpen;if(slot[\kind]==\follower){^this.setControlAmount(id,value)};value=AWBSendRackVoice.gain(value);
         if(slot[\kind]!=\fx or:{value>config[\maxGain]}){Error("Invalid FX return level").throw};
         slot[\level]=value;
         ([slot[\active]]++slot[\retiring]).reject(_.isNil).do{|gen|this.dispatch([\n_set,gen[\return].nodeID,\level,value])};
@@ -342,7 +461,7 @@ AWBSendRackTool : Tool {
         if(settings[\blend].notNil and:{settings[\blend].isNumber.not or:{settings[\blend].isNaN} or:{settings[\blend]<0} or:{settings[\blend]>1}}){Error("Follower blend must be 0-1").throw};
         if(settings[\floorDb].notNil and:{settings[\floorDb].isNumber.not or:{settings[\floorDb].isNaN} or:{settings[\floorDb]>=0} or:{settings[\floorDb]< -120}}){Error("Follower floor must be negative dB").throw};
         this.clearFollower(id);
-        args=[\in,slot[\bus].index,\out,slot[\controlBus].index,\curve,[\linear,\log,\sqrt].indexOf(curve)];
+        args=[\in,slot[\bus].index,\out,slot[\controlBus].index,\amount,slot[\level],\curve,[\linear,\log,\sqrt].indexOf(curve)];
         [\attack,\release,\scale,\blend,\floorDb].do{|key|if(settings[key].notNil){args=args.addAll([key,settings[key]])}};
         slot[\active]=(node:this.synth(definitions[\follower].name,args,slot[\group],"Follower "++id),settings:settings.copy.put(\curve,curve));
         this.publish;^slot[\active];
@@ -404,7 +523,7 @@ AWBSendRackTool : Tool {
         ^(channels:channels.values.collect{|channel|
             (id:channel[\id],level:channel[\level],mute:channel[\mute],solo:channel[\solo],
                 sends:Dictionary.newFrom(slotIDs.collect{|id,i|[id,channel[\gains][i]]}.flat))
-        }.asArray,returns:Dictionary.newFrom(fxIDs.collect{|id|[id,slots[id][\level]]}.flat));
+        }.asArray,returns:Dictionary.newFrom(slotIDs.collect{|id|[id,slots[id][\level]]}.flat));
     }
     applyMix { |mix|
         var actions=List.new;
@@ -418,7 +537,7 @@ AWBSendRackTool : Tool {
             [\mute,\solo].do{|key|if(item[key].notNil){if(item[key].isKindOf(Boolean).not){Error("Mix mute/solo must be booleans").throw};actions.add({if(key==\mute){this.setMute(item[\id],item[key])}{this.setSolo(item[\id],item[key])}})}};
         };
         (mix[\returns] ? ()).keysValuesDo{|id,value|
-            if(value.notNil){if(this.slotAt(id)[\kind]!=\fx){Error("Mix return is not FX").throw};AWBSendRackVoice.gain(value);if(value>config[\maxGain]){Error("Return exceeds range").throw};actions.add({this.setReturn(id,value)})};
+            if(value.notNil){AWBSendRackVoice.gain(value);if(value>if(this.slotAt(id)[\kind]==\follower){1}{config[\maxGain]}){Error("Return exceeds range").throw};actions.add({this.setReturn(id,value)})};
         };
         actions.do(_.value);^this;
     }
@@ -440,7 +559,7 @@ AWBSendRackTool : Tool {
         id=switch(op,
             "send",{message[3].asString++"/"++if(this.slotAt(message[4])[\kind]==\fx){"fx"}{"followers"}++"/"++message[4].asString},
             "level",{"global/channel-levels/"++message[3].asString},
-            "return",{"global/levels/"++message[4].asString},
+            "return",{"global/"++if(this.slotAt(message[4])[\kind]==\follower){"control-levels"}{"levels"}++"/"++message[4].asString},
             {message[3].asString++"/state/"++op});
         ^watcher.isNil or:{message[6]>=(watcher[\fences][id] ? 0)};
     }
@@ -467,9 +586,12 @@ AWBSendRackTool : Tool {
                     this.changed(\routingChanged,revision);
                     watchers.keys.copy.do{|key|
                         var watcher=watchers[key],address=watcher[\address],token=watcher[\token];
+                        var changes=feedbackValues.reject{|item|item[1]==token};
                         if(watcher[\expires]<Main.elapsedTime){watchers.removeAt(key)}{
-                            address.sendMsg('/awb/rack/update',instance.instanceID,token,revision.asString,"begin",publishedRevision,revision,feedbackValues.size,metadataPending.asInteger);
-                            feedbackValues.keysValuesDo{|id,item|address.sendMsg('/awb/rack/update',instance.instanceID,token,revision.asString,"value",id,item[0],item[1])};
+                            // The originating GUI already owns these values. An empty frame
+                            // acknowledges its revision without echoing control values.
+                            address.sendMsg('/awb/rack/update',instance.instanceID,token,revision.asString,"begin",publishedRevision,revision,changes.size,metadataPending.asInteger);
+                            changes.keysValuesDo{|id,item|address.sendMsg('/awb/rack/update',instance.instanceID,token,revision.asString,"value",id,item[0],item[1])};
                             address.sendMsg('/awb/rack/update',instance.instanceID,token,revision.asString,"end",revision);
                         };
                     };
@@ -497,6 +619,7 @@ AWBSendRackTool : Tool {
                         "clear-fx",{this.clearFX(message[3].asSymbol)},
                         "set-follower",{this.setFollower(message[3].asSymbol,if(message.size>4){(curve:message[4].asSymbol,attack:message[5],release:message[6],scale:message[7],blend:message[8],floorDb:message[9])}{nil})},
                         "clear-follower",{this.clearFollower(message[3].asSymbol)},
+                        "enable-control-send",{if([0,1].includes(message[4]).not){Error("Control send enabled must be 0 or 1").throw};this.setControlSendEnabled(message[3].asSymbol,message[4]==1)},
                         {Error("Unknown rack operation").throw});};
                 }{|error|address.sendMsg('/awb/rack/error',instance.instanceID,error.errorString)};
                 commandSource=nil;
@@ -511,8 +634,8 @@ AWBSendRackTool : Tool {
             address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"channel",channel[\id].asString,channel[\label],channel[\level],channel[\mute].asInteger,channel[\solo].asInteger,order);
         };
         slotIDs.do{|id,order|
-            var slot=slots[id],settings=slot[\active].tryPerform(\at,\settings) ? ();
-            address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"slot",id.asString,slot[\label],slot[\kind].asString,slot[\fixed].asInteger,slot[\active].notNil.asInteger,slot[\level],if(slot[\active].isNil){""}{if(slot[\kind]==\fx){slot[\active][\processor].asString}{slot[\active][\settings][\curve].asString}},order,settings[\attack] ? 0.01,settings[\release] ? 0.1,settings[\scale] ? 1,settings[\blend] ? 1,settings[\floorDb] ? -60);
+            var slot=slots[id],settings=slot[\active].tryPerform(\at,\settings) ? (),detector=slot[\detector].tryPerform(\at,\settings) ? ();
+            address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"slot",id.asString,slot[\label],slot[\kind].asString,slot[\fixed].asInteger,slot[\active].notNil.asInteger,slot[\level],if(slot[\active].isNil){""}{if(slot[\kind]==\fx){slot[\active][\processor].asString}{slot[\active][\settings][\curve].asString}},order,settings[\attack] ? 0.01,settings[\release] ? 0.1,settings[\scale] ? 1,settings[\blend] ? 1,settings[\floorDb] ? -60,slot[\detector].notNil.asInteger,detector[\rise] ? 0.00562,detector[\fall] ? 0.0234,detector[\gainDb] ? 14.4,slot[\consumers].values.count{|consumer|consumer[\node].notNil},slot[\controlEnabled].asInteger);
         };
         channels.values.do{|channel|address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"sends",channel[\id].asString,*channel[\gains])};
         processors.keys.do{|id|address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"processor",id.asString)};
@@ -546,6 +669,7 @@ AWBSendRackTool : Tool {
         responder.tryPerform(\free);responder=nil;
         if(quitHook.notNil){ServerQuit.remove(quitHook,server);quitHook=nil};
         if(rootGroup.notNil){this.dispatch(rootGroup.freeMsg)};
+        ownedBuses.select{|bus|bus.rate==\control and:{bus.index.notNil}}.do{|bus|this.dispatch(bus.setMsg(0))};
         ownedNodes.copy.do{|node|instance.disown(node)};ownedNodes.clear;
         // Do not return addresses to the allocator until the server has acknowledged graph removal.
         if(options[\sendFunction].notNil or:{server.serverRunning.not}){

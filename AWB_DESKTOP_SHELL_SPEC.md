@@ -1618,3 +1618,303 @@ normal Shell import/export/ToolInstance gate. Evidence is retained in
 and no hardware audio/load test was run. Step 0 remains the quiet-window Instruments
 investigation. The realistic eight-channel rig, mixed GUI workload, AWFollower
 input and first FX migration remain subsequent work. Vault/Telegram are unavailable.
+
+### AWB 5.2 first SC FX slice — 5 October 2026
+
+The optional first-pass adapter now lives in `apps/rack/sc/sets/awb52`. It wraps the
+existing native Rack ToolInstance rather than adding a host. VC is mono and Pro 2
+stereo, with Verb, Deci, Spark, Fuzz and explicit Mast plus three dynamic FX and
+three reserved follower pipes. Nine original hosted plugin instances are used;
+MDMX Fuzz is approximated natively and the three stereo convolution branches use
+generated 2.5/4/8-second IRs. UM/input Scheps, real IRs and Select-4/modulator
+mapping remain outside this slice. The stopped capture has some inconsistent
+normalized/display pairs, so no exact preset equivalence is claimed.
+
+The requested full-load mode enables every parallel branch, sets wet/dry to 100%
+and disables explicit plugin bypasses while retaining gains/limiting. A private
+class/library runner passes 18 SC contracts and 24 real offline audio checks.
+Two live fully wet active-input repeats report 22.77% and 22.79% average SC DSP
+load, with nine VST instances and six PartConv processors (21 synths / 332 UGens).
+The matched silent-input repeats report 22.66% and 22.53%; idle is 0.08%. This is
+44.1 kHz, four outputs, 64 SC frames / 512 actual hardware frames and a 256 MiB
+real-time pool on MOTU 1248. Synthetic input is used and hardware output muted;
+there is no GUI, actual ADC recording, callback audit or returned-audio capture.
+These are prototype cost readings, not dropout boundaries or the original set's
+maximum. Compact logs/provenance and validation are retained with the adapter.
+
+The reusable live runner exits normally after the owned engine quits; private
+classes leave the installed language configuration unchanged. Async plugin
+replacement still needs onset/readiness gating before performance reliance.
+Original IRs and modulation mapping are the next fidelity boundaries. No commit
+or live class installation is made by this checkpoint. Vault/Telegram tools are
+unavailable; no external status update is claimed.
+
+### Actual convolution IRs with 30-second cap — 5 October 2026
+
+The optional AWB 5.2 adapter now supports the user's actual audio files from
+`Samples/Convology samples`: Mulching 1 (10.5 s stereo), Composite Earth b
+(21.8182 s stereo) and the fourth Inchindown impulse (74.8637 s mono). Per the
+user's revised limit, Inchindown reads only its first 30 s; the shorter IRs stay
+complete. Source files are read-only and their hashes remain unchanged. Stereo
+sides are preserved, and the mono IR is applied independently to both input
+channels. No automatic resampling or Bitwig crop/fade/normalization/width match
+is claimed. The runner defaults to actual IR files and a configurable 30-second
+cap; `--ir-mode=generated` retains the historical stand-in comparison.
+
+Focused validation passes 22 SC contracts and 24 real offline audio checks,
+including exact read paths/frame limits/channel selections and post-close silence.
+Two matched live fully wet active-input repeats report 46.12% and 47.19% average
+SC DSP load versus the earlier generated-IR 22.77% / 22.79%. Reported peak DSP is
+83.82% / 69.19%. Silent-input repeats are 44.55% / 45.99%, potentially retaining
+long tails, and idle is 0.086%. Settings stay 44.1 kHz, four outputs, 64 SC frames,
+512 actual hardware frames and a 256 MiB pool, with nine plugins and six PartConv
+processors (21 synths / 332 UGens). Synthetic input, muted hardware output and no
+GUI are used. This is a capped full-branch cost test, not a callback/return-audio
+reliability result or the complete original Bitwig set.
+
+Evidence is retained under `apps/rack/sc/sets/awb52/evidence-real-ir-30s` and
+`real-ir-30s-validation.json`, separately from the short-IR baseline. Both owned
+processes exit; the installed live class paths are unchanged. Async plugin onset
+gating, actual Bitwig trims/normalization and modulation mappings remain follow-up
+work. Changes are uncommitted. Vault/Telegram tools remain unavailable.
+
+
+### Actual-IR rack dropout and peak timing — 5 October 2026
+
+The full active first-pass graph (two synthetic-input channels, nine hosted plugins,
+six PartConvs, actual IRs capped at 30 s) now has three 60-second callback/returned-
+audio captures. All steady windows are clean at 45.37–46.14% average SC DSP and
+82.13–84.67% reported peak. Settings are 44.1 kHz, four outputs / three inputs,
+64 SC frames / 512 hardware frames and a 256 MiB pool; GUI/data bridge are off.
+The native output audit and independent v2 MOTU recorder are calibrated using
+injected mute/phase faults, and recorder loss/deadline misses are zero.
+
+Startup is a distinct boundary: one 20.347 ms callback during asynchronous plugin
+loading misses its 11.610 ms period, skips 1,024 output frames and coincides with
+three return discontinuity callbacks. IR preparation itself has no deadline fault
+in this boot. Normal-processing peaks occur roughly 41 / 22.5 / 21.4 s into the
+three windows and remain below their hardware deadlines. This locates the startup
+fault in plugin loading, without attributing it to a particular plugin or allocator.
+Future previously-unopened plugin loading into dynamic slots needs a separate
+sounding-audio test; readiness gating alone does not establish freedom from stalls.
+
+Evidence, exact measured fixture and a reusable private harness are retained under
+`apps/rack/sc/sets/awb52/dropout-real-ir-30s.md`, `dropout-real-ir-30s.json` and
+`evidence-dropout-real-ir-30s`. Raw audio/audits remain private under the recorded
+run directory. All owned processes exit and protected source/IR hashes match.
+No live class installation, commit, GUI/bridge cost or physical-input reliability
+claim is made. Vault/Telegram tools are unavailable; no external update was sent.
+
+
+### Control-send detector and envelope slice — 5 October 2026
+
+Implemented on `integration/bw-sc`, uncommitted: distinct audio-fed control sends
+with stable KR measurement outputs; each send has its own 0–100% amount fader,
+separate from input-channel levels and per-instrument send gains. Both rack views
+use existing batched OSC / sparse mixes / snapshot capture and SC feedback.
+The new detector uses the user-confirmed Peak / +14.4 dB / 5.62 ms rise / 23.4 ms
+fall settings. The downstream native consumers reuse EnvDetect3 and AWFollower's
+linear/sqrt blend, with independent envelopes and native rack ownership.
+
+An opt-in BaseLaunch profile provides 16 fixed semantic control sends, 25 envelope
+presets and the configured spare capacity. Names do not infer audio routes from
+FX returns. Existing single-follower API stays separate. Historical AWB 5.2 dropout
+fixtures remain unchanged unless explicitly configured with this profile.
+
+Verified: 68 native contracts, 105 offline DSP assertions, 31 Node tests, both
+Electron renderers and normal Shell integration. Evidence:
+`/private/tmp/awb-control-sends-20261005-complete`; implementation/API/boundaries in
+`apps/rack/sc/README.md`. Remaining: detector-response calibration against Bitwig
+(including stereo linking and Gate/Compressor preconditioning), full GUI editing
+of named envelope settings, and integrated GUI/bridge cost and hardware dropout auditing with this bank.
+No live class installation or audio-device run. Vault and Telegram tools are not
+attached, so corresponding external updates could not be sent.
+
+
+The fixed bank now exposes all sixteen exact BaseLaunch `ef_*` sources and is
+enabled in the first-pass set example. Its SC-only configuration uses eight FX
+plus sixteen control destinations (24 audio writers); spare controls require an
+explicit `controlSpareCount`. Every control send has native/GUI pause-resume:
+paused detector/envelope DSP is stopped and KR outputs zeroed while bus identities
+and amount settings remain stable. Amount zero alone preserves envelope tails.
+
+Cost investigation now separates the user's primary concern, extra audio writers
+per line, from control-send DSP. The owned live harness compares eight persistent
+stereo channels with 8 versus 24 writers before enabling sixteen detectors and
+25 independent envelopes, with forward/reverse condition order and no GUI/bridge.
+The actual FX rack and 30-second IR cap remain active. This is not a per-voice
+wrapper cost test or a dropout-boundary run; smaller voice wrappers remain available.
+
+
+Live writer-cost comparison complete (user-approved quiet window, Bitwig closed):
+eight persistent stereo channels, actual 30-second-capped IR/FX rack, 44.1 kHz,
+512 driver frames / 64 SC blocks, four outputs, muted hardware, GUI/bridge off.
+Mean SC CPU is 47.88% (8 writers), 48.22% (24 writers), 49.42% (+16 detectors),
+49.58% (+25 envelopes). Full-bank overhead +1.71 percentage points; paired repeats
++1.57/+1.84. Routing-only increment is below repeat drift and cannot be assigned
+precisely. Peak reaches 98.76%; no callback/return-gap auditing in this cost run.
+Per-voice 24-port wrapper scaling remains unmeasured here. Results/provenance in
+`apps/rack/sc/sets/awb52/control-routing-cost.json` and
+`evidence-control-routing-cost/`; the owned server exits. No commit or install.
+
+
+### Native Chain and editable stages — 5 October 2026
+
+Implemented on `integration/bw-sc`, uncommitted: `AWBChain : Tool` owns its root
+Group, processing nodes, resources, named controls and private mono/stereo ports.
+The original registered-factory API is retained. A managed `serial` configuration
+adds stages with individual Groups and stable output buses. Movement preserves
+nodes, values and bus identities. Replacement constructs a new stage. Equal-width
+inputs borrow their predecessor's output; explicit matrices handle conversion,
+splitting and summing. Root output stays fixed, including empty-chain passthrough.
+Each stage may contain owned subgroups, internal buses and ordinary SC code.
+
+The normal Shell's compact React panel supports insert, remove, move, replace and
+per-input/output matrix editing. Width-changing edits preview every affected
+connection before applying them. Graph edits validate the proposed topology,
+prepare paused nodes and held resources, reconnect/order in a server bundle, then
+retire removed nodes. Existing graph/ownership survives invalid plans and factory
+construction failure. Closing during an asynchronous replacement disposes both
+active and retiring resources. Unexpected server failures still use the normal
+Chain failure/closure path; this is not a general server transaction mechanism.
+
+The bridge acknowledges structural commands and synchronises confirmed SC state;
+SC-origin topology changes update the panel. Value edits retain per-control React
+subscriptions, coalescing and the Shell's bounded OSC output queue. Originating
+GUI writes do not echo back through SC. Native ToolInstance promotion/settings
+include edited topology, routes and values; registered factory code is separate.
+`AWBChainFuzz.managedConfig` is the editable example; `.config` remains compatible.
+
+Limits: 32 stages, 128 controls, 1–32 channels per stage port, 4096 explicit matrix
+coefficients. The editor manages serial stage connections; parallel routing lives
+inside a stage. Structural changes currently switch immediately and free retired
+Groups. Click suppression and audible tail retirement are deferred policy work.
+AWBase, DynamicTrackContainer and existing rack FX/follower ownership are unchanged.
+The previous Shell activation/shutdown fix remains included in the dirty work.
+
+Focused verification: 39 original native contracts plus 39 editable-stage checks,
+27 original offline DSP assertions plus 44 managed-graph audio assertions,
+11 Node tests including both real-sclang transport fixtures, production build,
+and fixed/editable panels through the normal Shell. Audio checks verify actual
+non-commuting stage order, insertion/removal/replacement, 2↔4 channel matrices,
+empty bypass, silence after closure and no unwanted output channels. GUI checks
+exercise routing previews/matrix editing, SC topology feedback and isolated
+control renders. The earlier 15 focused Shell manifest/runtime checks are retained
+historical evidence, not rerun for this stage-only extension.
+
+Current evidence with source hashes: `/private/tmp/awb-chain-stages-20261005`;
+previous fixed-Chain evidence: `/private/tmp/awb-chain-final-20261005`.
+API/ownership details: `apps/chain/README.md`. No hardware performance run,
+live class installation or commit. Vault and Telegram tools are not attached.
+
+### Fresh AWBCoreTool foundation — 5 October 2026
+
+The new live-set root is `AWBCoreTool : Tool`, implemented alongside the legacy
+AWBCore classes on `integration/bw-sc`, uncommitted. Source and usage are in
+`apps/core/README.md` and `apps/core/sc/classes/`. Existing AWBase, Param,
+AWFollower, AWBlender, DynamicTrackContainer, BaseLaunch and live class paths
+remain unchanged. This is the first slice of a fresh Core, not a completed
+migration of the existing live set.
+
+Implemented: native ToolInstance/NodeManager ownership, configurable ordered
+phase Groups, named allocated/borrowed buses and parameters, custom cleanup,
+child Chain/rack Tool wrappers, and tracked Event/EventPreset/Pattern/event Stream/
+UGen Function playback. Stream emissions belong to Core while retaining tracked
+player provenance. Finished notes/players are removed through native lifecycle
+observation. Notes require explicit destinations; Core has no automatic hardware
+output. Root closure disposes child Tools and owned resources, preserving borrowed
+ports. EventPreset playback consumes musical data under Core ownership rather
+than invoking old Playlist bookkeeping.
+
+`AWParam` owns an input control bus, an effective output control bus and one
+processing Synth. Base remains a Synth control/state; modulation amount and
+modulation curve are separate controls. `setBase(value, dur=0, curve)` and
+`setAmount(value, dur=0, curve)` independently transition from their current
+interpolated value. `set` aliases base. Numeric SC Env curvature and linear curves
+are supported. The processor uses native control-rate UGens and internal state,
+with explicit serial retriggers rather than sending intermediate values from
+sclang. Base transitions and modulation depth operate in normalized parameter
+space; output is mapped through an ascending linear/positive exponential
+ControlSpec. Final output clips to range, while input summation preserves depth
+above one full range before scaling.
+
+Source writers execute before the processor, which clears the summed input after
+consuming it. Borrowed-bus connections apply individual depth/curve using route
+Synths, with no additional buses. Source ownership/order is explicit. Base,
+amount and effective readback are distinct from requested targets; cached state
+is timestamped. Observation is opt in, normally 8 Hz; coalesced queries briefly
+request 64 Hz replies and reject stale command generations. Read timeouts/closure
+report explicit errors. MIDI remains an attached source: `createMidiSource`
+creates an `AWMidiCCIn` through `addSource`, following legacy Param argument
+order and range mapping. Optional pickup uses current base proximity/crossing,
+coalescing pending candidates; external base edits rearm pickup. Removing a
+source or closing its parameter disposes the MIDI callback. No dedicated
+MIDI-specific Param class is needed.
+No MIDI hardware initialization or outgoing Bitwig bridge is installed.
+
+Preset promotion currently covers Core group declarations and parameter targets.
+Its metadata identifies this scope; runtime child tools, bus links, modulation
+connections, MIDI bindings, envelopes in flight and arbitrary factories are not
+silently serialized as a whole live-set preset. There is no separate Core/Param
+panel or automatic AWParam-backed Chain GUI binding in this slice.
+
+Verification: **70 SC contracts**, **38 actual offline DSP assertions**,
+**31 language/UDP assertions**, plus a peer-side query-coalescing assertion
+(12 callbacks and three pending CC candidates each share one read request;
+latched CC edits add no reads). MIDI source tests cover attachment/reassignment,
+range mapping, UID/channel/CC filtering through the language MIDI dispatcher,
+idempotent callback registration, pickup and late-read safety after removal. The offline render uses installed SC
+3.12.2 at 44.1 kHz/64-sample blocks. Protocol tests use a private emulated OSC peer
+and validate callbacks, stale replies, timeout/close and tracked playback
+ownership; they are not a live scsynth/hardware readback test. Evidence, source
+hashes, logs and rendered audio: `/private/tmp/awb-core-midi-source-v2-20261005`.
+Python syntax and whitespace checks pass. No hardware DSP/CPU benchmark, live
+MIDI test, class installation or commit has been performed.
+
+Next migration slice: one real rack control-send detector → follower → specialised
+AWBlender/AWParam → Chain control path, preserving the old weighted processing and
+MIDI behaviour for comparison. DynamicTrackContainer will retain its named control
+dictionary and MIDI/access helpers, referencing authoritative Rack/Chain/AWParam
+controls; duplicate bus creation and Bitwig forwarding can then be removed.
+AWFollower and specialised AWBlender migration remain separate passes. The new
+set manifest must then describe graph connections and keep compositional Scenes
+separate from mix presets. Core/Param GUI bindings and shared/batched observation
+need their own implementation and cost checks. Engine control-query work remains
+separate; this slice requires no SuperCollider engine patch.
+
+The repository status/usage documents are updated. A Vault/Telegram connector is
+not available in this session, so the human-facing Vault mirror and completion
+notification could not be updated/sent.
+
+### SC workstream commit checkpoint — 6 October 2026
+
+This checkpoint commits the first-pass FX adapter and compact measured evidence,
+control-send detector/envelope bank, origin-aware rack bridge and recovery fix,
+editable native Chain/panel, and fresh Core/AWParam with attachable MIDI sources.
+Earlier “uncommitted/no commit” statements above describe their original test
+checkpoints; these workstream changes are now included in this checkpoint.
+The independent Bitwig inspection and Lissajous changes remain outside it.
+No live SC class installation or hardware run is performed by this commit.
+
+Agreed design: keep one concrete live-set Tool, with AWBase-style construction
+helpers and named registries. Rename `AWBCoreTool` to `AWBaseTool` and restore
+relevant logging/convenience methods in the next slice; no universal Context
+class or separate Base/Tool adapter is needed. Rack/Chain remain independently
+usable Tools. DynamicTrackContainer becomes a thin named-control and MIDI access
+layer, with no duplicate parameter state or bus ownership. Continuous modulation
+and selection (`SelectN`, informed by DelayContainer and incoming Bitwig mapping)
+remain subsequent implementation choices rather than completed features.
+
+The user reports a newly compiled scsynth supporting mapping/live-control
+queries (`getMappedn`, `getLive`, etc.). Verify its command/reply contract and
+control-only readback semantics before integrating AWParam; the engine build
+has not been independently verified in this workstream.
+
+Pre-commit isolated Core rerun passes 70 SC contracts, 38 offline DSP assertions
+and 31 language/UDP assertions plus peer-side coalescing verification. Evidence:
+`/private/tmp/awb-core-commit-20261006`. Chain rerun passes 78 native/stage checks, 71 offline DSP assertions and 11 Node
+bridge/model tests plus production build (`/private/tmp/awb-chain-commit-20261006`).
+Rack rerun passes its native contract suite, 105 offline DSP assertions and 31
+Node tests plus production build (`/private/tmp/awb-rack-commit-20261006`).
+Previous hardware load captures and GUI checks remain historical evidence.
+Vault and Telegram connectors are unavailable, so no external update is claimed.

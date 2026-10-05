@@ -1,0 +1,17 @@
+{
+  "completed": true,
+  "captures": 48,
+  "functionalPasses": 48,
+  "reliableRecordings": 48,
+  "guardPathsCheckedAgainstCurrentSource": 46,
+  "guardDifferences": [],
+  "ownedProcessIDsChecked": 432,
+  "remainingOwnedProcesses": [],
+  "hardwareReadback": "MOTU device 159 rate 44100",
+  "focusedNodeTests": {
+    "passed": 31,
+    "failed": 0,
+    "scope": "Rack, real private sclang bridge and delayed automatic recovery; no complete repository suite"
+  },
+  "checkedAt": 1791203886.9983768
+}

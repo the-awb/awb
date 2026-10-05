@@ -7,7 +7,7 @@ fixed=if(large){Array.fill(21,{|i|("fixed"++i).asSymbol})}{[\splut,\spark,\deci,
 Routine({var channelJSON,slotJSON,json,sourceJSON, tone=Library.at(\awbBenchTone);
  reservation=Bus.audio(server,256); // Keep existing explicit source/load buses outside the rack allocation.
  NodeManager.enable;
- instance=AWBSendRackTool.open((name:"Live rack bridge benchmark",libraryID:"live-bridge-bench",width:2,channels:channels,fixedFX:fixed,dynamicFX:dynamic,fixedFollowers:[],spareFollowers:0,cleanSlot:false,out:8), (server:server,track:true));
+ instance=AWBSendRackTool.open((name:"Live rack bridge benchmark",libraryID:"live-bridge-bench",width:2,channels:channels,fixedFX:fixed,dynamicFX:dynamic,fixedFollowers:[],spareFollowers:0,cleanSlot:false,out:if(("AWB_NATIVE_OUTPUT_CHANNELS".getenv ? "10").asInteger==4){0}{8}), (server:server,track:true));
  rack=instance.tool;while{rack.ready.not}{0.01.wait};
  rack.fxIDs.do{|id|rack.setFX(id,\pass,(fade:0.02,tail:0,limiter:false))};server.sync;
  SynthDef(\awbBenchRackVoice,{|out=0,freq=110|Out.ar(out,SinOsc.ar([freq,freq+0.7])*0.00001)}).send(server);server.sync;
@@ -37,6 +37,7 @@ Routine({var channelJSON,slotJSON,json,sourceJSON, tone=Library.at(\awbBenchTone
  slotJSON=rack.fxIDs.collect{|id|"{\"id\":\"%\",\"node\":%}".format(id,rack.slots[id][\active][\return].nodeID)}.join(",");
  sourceJSON=[ToolInstance,Tool,NodeManager].collect{|class|class.filenameSymbol.asString.asCompileString}.join(",");
  json="{\"port\":%,\"sampleRate\":%,\"blockSize\":%,\"scPID\":%,\"toneNode\":%,\"rackPort\":%,\"instanceID\":\"%\",\"libraryID\":\"live-bridge-bench\",\"rackChannels\":[%],\"rackSlots\":[%],\"movingControls\":%,\"nodeManagerEnabled\":%,\"nodeManagerTracked\":%,\"ownedObjects\":%,\"coreClassSources\":[%]}".format(server.addr.port,server.sampleRate,server.options.blockSize,server.pid,tone.nodeID,NetAddr.langPort,instance.instanceID,channelJSON,slotJSON,controls.size,NodeManager.isEnabled.asString,NodeManager.instance.registry.includesKey(instance).asString,instance.ownedObjects.size,sourceJSON);
+ json=json.drop(-1)++",\"outputChannels\":"++server.options.numOutputBusChannels++"}";
  File.use("METER_COST_SESSION".getenv,"w",{|f|f.write(json)});
  Library.put(\awbBenchRack,instance);Library.put(\awbBenchRackReserve,reservation);Library.put(\awbBenchRackResponder,responder);
  "AWB_NATIVE_RACK_BENCH_READY".postln;

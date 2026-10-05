@@ -1,0 +1,4879 @@
+{
+  "scope": "real DSP/MOTU loopback, 8 instrument channels, 32 destinations, GUI-origin batched bridge with own-value echo suppression",
+  "nodes": 60,
+  "seconds": 45,
+  "runs": [
+    {
+      "repeat": 1,
+      "condition": "canvas2d-15",
+      "stem": "/private/tmp/awb-native-batched-dsp-v2-20261005/pass1-canvas2d-15",
+      "started": 1791199502.173611,
+      "exitCode": 0,
+      "analysisExit": 0,
+      "summary": {
+        "functionalPass": true,
+        "functionalFailures": [],
+        "accepted": 412193,
+        "sent": 412193,
+        "packets": 27871,
+        "failures": 0,
+        "armed": true,
+        "returnClean": false,
+        "recorderReliable": true,
+        "badReturnCallbacks": 31,
+        "scAverage": 77.07134893080767,
+        "electronCPU": 78.14423994419526,
+        "paintHz": 14.995068288651732
+      },
+      "finished": 1791199573.1040618
+    },
+    {
+      "repeat": 1,
+      "condition": "idle",
+      "stem": "/private/tmp/awb-native-batched-dsp-v2-20261005/pass1-idle",
+      "started": 1791199573.104657,
+      "exitCode": 0,
+      "analysisExit": 0,
+      "summary": {
+        "functionalPass": true,
+        "functionalFailures": [],
+        "accepted": 0,
+        "sent": 0,
+        "packets": 15,
+        "failures": 0,
+        "armed": true,
+        "returnClean": true,
+        "recorderReliable": true,
+        "badReturnCallbacks": 0,
+        "scAverage": 75.28002699451334,
+        "electronCPU": 0.8431230663575833,
+        "paintHz": 0
+      },
+      "finished": 1791199640.415126
+    },
+    {
+      "repeat": 1,
+      "condition": "svg-15",
+      "stem": "/private/tmp/awb-native-batched-dsp-v2-20261005/pass1-svg-15",
+      "started": 1791199640.415699,
+      "exitCode": 0,
+      "analysisExit": 0,
+      "summary": {
+        "functionalPass": false,
+        "functionalFailures": [
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/splut",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/splut",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/splut",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/splut",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/splut",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/splut",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/splut",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/splut",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/spark",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/spark",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/spark",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/spark",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/spark",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/spark",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/spark",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/spark",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/deci",
+            "want": 0.984
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/deci",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/deci",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/deci",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/deci",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/deci",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/deci",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/deci",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fuzz",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fuzz",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fuzz",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fuzz",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fuzz",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fuzz",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fuzz",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fuzz",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/verb",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/verb",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/verb",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/verb",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/verb",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/verb",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/verb",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/verb",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/mast",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/mast",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/mast",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/mast",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/mast",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/mast",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/mast",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/mast",
+            "want": 0.008
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx1",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx1",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx1",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx1",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx1",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx1",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx1",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx1",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx2",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx2",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx2",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx2",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx2",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx2",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx2",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx2",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx3",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx3",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx3",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx3",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx3",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx3",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx3",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx3",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx4",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx4",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx4",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx4",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx4",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx4",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx4",
+            "want": 0.984
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx4",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx5",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx5",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx5",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx5",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx5",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx5",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx5",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx5",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx6",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx6",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx6",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx6",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx6",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx6",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx6",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx6",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx7",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx7",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx7",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx7",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx7",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx7",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx7",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx7",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx8",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx8",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx8",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx8",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx8",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx8",
+            "want": 0.008
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx8",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx8",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx9",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx9",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx9",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx9",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx9",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx9",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx9",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx9",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx10",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx10",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx10",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx10",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx10",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx10",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx10",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx10",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx11",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx11",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx11",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx11",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx11",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx11",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx11",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx11",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx12",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx12",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx12",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx12",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx12",
+            "want": 0.984
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx12",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx12",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx12",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx13",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx13",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx13",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx13",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx13",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx13",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx13",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx13",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx14",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx14",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx14",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx14",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx14",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx14",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx14",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx14",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx15",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx15",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx15",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx15",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx15",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx15",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx15",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx15",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx16",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx16",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx16",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx16",
+            "want": 0.008
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx16",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx16",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx16",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx16",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx17",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx17",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx17",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx17",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx17",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx17",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx17",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx17",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx18",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx18",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx18",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx18",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx18",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx18",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx18",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx18",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx19",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx19",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx19",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx19",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx19",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx19",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx19",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx19",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx20",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx20",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx20",
+            "want": 0.984
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx20",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx20",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx20",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx20",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx20",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx21",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx21",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx21",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx21",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx21",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx21",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx21",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx21",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx22",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx22",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx22",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx22",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx22",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx22",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx22",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx22",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx23",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx23",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx23",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx23",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx23",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx23",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx23",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx23",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx24",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx24",
+            "want": 0.008
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx24",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx24",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx24",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx24",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx24",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx24",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx25",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx25",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx25",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx25",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx25",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx25",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx25",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx25",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch0/fx/fx26",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch1/fx/fx26",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch2/fx/fx26",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch3/fx/fx26",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch4/fx/fx26",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch5/fx/fx26",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch6/fx/fx26",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "ch7/fx/fx26",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/splut",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/spark",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/deci",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fuzz",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/verb",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/mast",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx1",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx2",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx3",
+            "want": 0.984
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx4",
+            "want": 0.764
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx5",
+            "want": 0.543
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx6",
+            "want": 0.323
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx7",
+            "want": 0.10200000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx8",
+            "want": 0.134
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx9",
+            "want": 0.354
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx10",
+            "want": 0.5750000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx11",
+            "want": 0.795
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx12",
+            "want": 0.9530000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx13",
+            "want": 0.732
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx14",
+            "want": 0.512
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx15",
+            "want": 0.291
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx16",
+            "want": 0.07100000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx17",
+            "want": 0.165
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx18",
+            "want": 0.386
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx19",
+            "want": 0.606
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx20",
+            "want": 0.8270000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx21",
+            "want": 0.921
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx22",
+            "want": 0.7010000000000001
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx23",
+            "want": 0.48
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx24",
+            "want": 0.26
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx25",
+            "want": 0.039
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/levels/fx26",
+            "want": 0.197
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/channel-levels/ch0",
+            "want": 0.417
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/channel-levels/ch1",
+            "want": 0.638
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/channel-levels/ch2",
+            "want": 0.858
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/channel-levels/ch3",
+            "want": 0.89
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/channel-levels/ch4",
+            "want": 0.669
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/channel-levels/ch5",
+            "want": 0.449
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/channel-levels/ch6",
+            "want": 0.228
+          },
+          {
+            "kind": "gui-final",
+            "id": "global/channel-levels/ch7",
+            "want": 0.008
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/splut",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/splut",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/splut",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/splut",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/splut",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/splut",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/splut",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/splut",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/spark",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/spark",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/spark",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/spark",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/spark",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/spark",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/spark",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/spark",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/deci",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/deci",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/deci",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/deci",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/deci",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/deci",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/deci",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/deci",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fuzz",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fuzz",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fuzz",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fuzz",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fuzz",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fuzz",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fuzz",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fuzz",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/verb",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/verb",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/verb",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/verb",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/verb",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/verb",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/verb",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/verb",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/mast",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/mast",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/mast",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/mast",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/mast",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/mast",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/mast",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/mast",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx1",
+            "want": 0.228,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx1",
+            "want": 0.449,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx1",
+            "want": 0.669,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx1",
+            "want": 0.89,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx1",
+            "want": 0.858,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx1",
+            "want": 0.638,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx1",
+            "want": 0.417,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx1",
+            "want": 0.197,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx2",
+            "want": 0.039,
+            "got": 0.00800000037997961
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx2",
+            "want": 0.26,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx2",
+            "want": 0.48,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx2",
+            "want": 0.7010000000000001,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx2",
+            "want": 0.921,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx2",
+            "want": 0.8270000000000001,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx2",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx2",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx3",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx3",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx3",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx3",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx3",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx3",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx3",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx3",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx4",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx4",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx4",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx4",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx4",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx4",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx4",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx4",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx5",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx5",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx5",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx5",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx5",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx5",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx5",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx5",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx6",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx6",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx6",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx6",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx6",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx6",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx6",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx6",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx7",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx7",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx7",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx7",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx7",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx7",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx7",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx7",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx8",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx8",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx8",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx8",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx8",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx8",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx8",
+            "want": 0.228,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx8",
+            "want": 0.449,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx9",
+            "want": 0.669,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx9",
+            "want": 0.89,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx9",
+            "want": 0.858,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx9",
+            "want": 0.638,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx9",
+            "want": 0.417,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx9",
+            "want": 0.197,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx9",
+            "want": 0.039,
+            "got": 0.00800000037997961
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx9",
+            "want": 0.26,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx10",
+            "want": 0.48,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx10",
+            "want": 0.7010000000000001,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx10",
+            "want": 0.921,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx10",
+            "want": 0.8270000000000001,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx10",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx10",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx10",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx10",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx11",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx11",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx11",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx11",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx11",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx11",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx11",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx11",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx12",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx12",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx12",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx12",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx12",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx12",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx12",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx12",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx13",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx13",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx13",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx13",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx13",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx13",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx13",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx13",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx14",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx14",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx14",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx14",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx14",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx14",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx14",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx14",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx15",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx15",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx15",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx15",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx15",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx15",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx15",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx15",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx16",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx16",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx16",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx16",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx16",
+            "want": 0.228,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx16",
+            "want": 0.449,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx16",
+            "want": 0.669,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx16",
+            "want": 0.89,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx17",
+            "want": 0.858,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx17",
+            "want": 0.638,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx17",
+            "want": 0.417,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx17",
+            "want": 0.197,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx17",
+            "want": 0.039,
+            "got": 0.00800000037997961
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx17",
+            "want": 0.26,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx17",
+            "want": 0.48,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx17",
+            "want": 0.7010000000000001,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx18",
+            "want": 0.921,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx18",
+            "want": 0.8270000000000001,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx18",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx18",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx18",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx18",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx18",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx18",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx19",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx19",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx19",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx19",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx19",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx19",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx19",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx19",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx20",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx20",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx20",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx20",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx20",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx20",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx20",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx20",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx21",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx21",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx21",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx21",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx21",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx21",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx21",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx21",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx22",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx22",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx22",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx22",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx22",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx22",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx22",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx22",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx23",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx23",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx23",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx23",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx23",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx23",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx23",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx23",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx24",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx24",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx24",
+            "want": 0.228,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx24",
+            "want": 0.449,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx24",
+            "want": 0.669,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx24",
+            "want": 0.89,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx24",
+            "want": 0.858,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx24",
+            "want": 0.638,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx25",
+            "want": 0.417,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx25",
+            "want": 0.197,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx25",
+            "want": 0.039,
+            "got": 0.00800000037997961
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx25",
+            "want": 0.26,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx25",
+            "want": 0.48,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx25",
+            "want": 0.7010000000000001,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx25",
+            "want": 0.921,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx25",
+            "want": 0.8270000000000001,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch0/fx/fx26",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch1/fx/fx26",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch2/fx/fx26",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch3/fx/fx26",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch4/fx/fx26",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch5/fx/fx26",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch6/fx/fx26",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "ch7/fx/fx26",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/splut",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/spark",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/deci",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fuzz",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/verb",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/mast",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx1",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx2",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx3",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx4",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx5",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx6",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx7",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx8",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx9",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx10",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx11",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx12",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx13",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx14",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx15",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx16",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx17",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx18",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx19",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx20",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx21",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx22",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx23",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx24",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx25",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/levels/fx26",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/channel-levels/ch0",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/channel-levels/ch1",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/channel-levels/ch2",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/channel-levels/ch3",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/channel-levels/ch4",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/channel-levels/ch5",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/channel-levels/ch6",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "sc-final",
+            "id": "global/channel-levels/ch7",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/splut",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/spark",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/deci",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fuzz",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/verb",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/mast",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx1",
+            "want": 0.228,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx2",
+            "want": 0.039,
+            "got": 0.00800000037997961
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx3",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx4",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx5",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx6",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx7",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx8",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx9",
+            "want": 0.669,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx10",
+            "want": 0.48,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx11",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx12",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx13",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx14",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx15",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx16",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx17",
+            "want": 0.858,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx18",
+            "want": 0.921,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx19",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx20",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx21",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx22",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx23",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx24",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx25",
+            "want": 0.417,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch0/fx/fx26",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/splut",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/spark",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/deci",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fuzz",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/verb",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/mast",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx1",
+            "want": 0.449,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx2",
+            "want": 0.26,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx3",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx4",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx5",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx6",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx7",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx8",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx9",
+            "want": 0.89,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx10",
+            "want": 0.7010000000000001,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx11",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx12",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx13",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx14",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx15",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx16",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx17",
+            "want": 0.638,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx18",
+            "want": 0.8270000000000001,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx19",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx20",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx21",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx22",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx23",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx24",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx25",
+            "want": 0.197,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch1/fx/fx26",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/splut",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/spark",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/deci",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fuzz",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/verb",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/mast",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx1",
+            "want": 0.669,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx2",
+            "want": 0.48,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx3",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx4",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx5",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx6",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx7",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx8",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx9",
+            "want": 0.858,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx10",
+            "want": 0.921,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx11",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx12",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx13",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx14",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx15",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx16",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx17",
+            "want": 0.417,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx18",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx19",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx20",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx21",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx22",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx23",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx24",
+            "want": 0.228,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx25",
+            "want": 0.039,
+            "got": 0.00800000037997961
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch2/fx/fx26",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/splut",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/spark",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/deci",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fuzz",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/verb",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/mast",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx1",
+            "want": 0.89,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx2",
+            "want": 0.7010000000000001,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx3",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx4",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx5",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx6",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx7",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx8",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx9",
+            "want": 0.638,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx10",
+            "want": 0.8270000000000001,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx11",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx12",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx13",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx14",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx15",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx16",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx17",
+            "want": 0.197,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx18",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx19",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx20",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx21",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx22",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx23",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx24",
+            "want": 0.449,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx25",
+            "want": 0.26,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch3/fx/fx26",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/splut",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/spark",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/deci",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fuzz",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/verb",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/mast",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx1",
+            "want": 0.858,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx2",
+            "want": 0.921,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx3",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx4",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx5",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx6",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx7",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx8",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx9",
+            "want": 0.417,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx10",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx11",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx12",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx13",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx14",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx15",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx16",
+            "want": 0.228,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx17",
+            "want": 0.039,
+            "got": 0.00800000037997961
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx18",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx19",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx20",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx21",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx22",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx23",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx24",
+            "want": 0.669,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx25",
+            "want": 0.48,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch4/fx/fx26",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/splut",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/spark",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/deci",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fuzz",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/verb",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/mast",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx1",
+            "want": 0.638,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx2",
+            "want": 0.8270000000000001,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx3",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx4",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx5",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx6",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx7",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx8",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx9",
+            "want": 0.197,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx10",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx11",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx12",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx13",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx14",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx15",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx16",
+            "want": 0.449,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx17",
+            "want": 0.26,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx18",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx19",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx20",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx21",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx22",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx23",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx24",
+            "want": 0.89,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx25",
+            "want": 0.7010000000000001,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch5/fx/fx26",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/splut",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/spark",
+            "want": 0.543,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/deci",
+            "want": 0.354,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fuzz",
+            "want": 0.165,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/verb",
+            "want": 0.039,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/mast",
+            "want": 0.228,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx1",
+            "want": 0.417,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx2",
+            "want": 0.606,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx3",
+            "want": 0.795,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx4",
+            "want": 0.984,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx5",
+            "want": 0.795,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx6",
+            "want": 0.606,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx7",
+            "want": 0.417,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx8",
+            "want": 0.228,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx9",
+            "want": 0.039,
+            "got": 0.00800000037997961
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx10",
+            "want": 0.165,
+            "got": 0.19699999690055847
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx11",
+            "want": 0.354,
+            "got": 0.38600000739097595
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx12",
+            "want": 0.543,
+            "got": 0.574999988079071
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx13",
+            "want": 0.732,
+            "got": 0.7639999985694885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx14",
+            "want": 0.921,
+            "got": 0.953000009059906
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx15",
+            "want": 0.858,
+            "got": 0.8270000219345093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx16",
+            "want": 0.669,
+            "got": 0.6380000114440918
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx17",
+            "want": 0.48,
+            "got": 0.4490000009536743
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx18",
+            "want": 0.291,
+            "got": 0.25999999046325684
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx19",
+            "want": 0.10200000000000001,
+            "got": 0.07100000232458115
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx20",
+            "want": 0.10200000000000001,
+            "got": 0.1340000033378601
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx21",
+            "want": 0.291,
+            "got": 0.3230000138282776
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx22",
+            "want": 0.48,
+            "got": 0.5120000243186951
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx23",
+            "want": 0.669,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx24",
+            "want": 0.858,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx25",
+            "want": 0.921,
+            "got": 0.8899999856948853
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch6/fx/fx26",
+            "want": 0.732,
+            "got": 0.7009999752044678
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/splut",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/spark",
+            "want": 0.764,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/deci",
+            "want": 0.5750000000000001,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fuzz",
+            "want": 0.386,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/verb",
+            "want": 0.197,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/mast",
+            "want": 0.008,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx1",
+            "want": 0.197,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx2",
+            "want": 0.386,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx3",
+            "want": 0.5750000000000001,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx4",
+            "want": 0.764,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx5",
+            "want": 0.9530000000000001,
+            "got": 0.984000027179718
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx6",
+            "want": 0.8270000000000001,
+            "got": 0.7950000166893005
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx7",
+            "want": 0.638,
+            "got": 0.6060000061988831
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx8",
+            "want": 0.449,
+            "got": 0.4169999957084656
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx9",
+            "want": 0.26,
+            "got": 0.2280000001192093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx10",
+            "want": 0.07100000000000001,
+            "got": 0.039000000804662704
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx11",
+            "want": 0.134,
+            "got": 0.16500000655651093
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx12",
+            "want": 0.323,
+            "got": 0.3540000021457672
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx13",
+            "want": 0.512,
+            "got": 0.5429999828338623
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx14",
+            "want": 0.7010000000000001,
+            "got": 0.7319999933242798
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx15",
+            "want": 0.89,
+            "got": 0.9210000038146973
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx16",
+            "want": 0.89,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx17",
+            "want": 0.7010000000000001,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx18",
+            "want": 0.512,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx19",
+            "want": 0.323,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx20",
+            "want": 0.134,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx21",
+            "want": 0.07100000000000001,
+            "got": 0.10199999809265137
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx22",
+            "want": 0.26,
+            "got": 0.29100000858306885
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx23",
+            "want": 0.449,
+            "got": 0.47999998927116394
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx24",
+            "want": 0.638,
+            "got": 0.6690000295639038
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx25",
+            "want": 0.8270000000000001,
+            "got": 0.8579999804496765
+          },
+          {
+            "kind": "server-send-final",
+            "id": "ch7/fx/fx26",
+            "want": 0.9530000000000001,
+            "got": 0.9210000038146973
+          }
+        ],
+        "accepted": 412232,
+        "sent": 412232,
+        "packets": 27876,
+        "failures": 0,
+        "armed": true,
+        "returnClean": false,
+        "recorderReliable": true,
+        "badReturnCallbacks": 18,
+        "scAverage": 76.76590845444623,
+        "electronCPU": 98.25496200830824,
+        "paintHz": 14.995230806770037
+      },
+      "finished": 1791199711.522304
+    }
+  ],
+  "complete": false,
+  "baseCommit": "ebb9374965331014568cbedb8f9681d0318d545f",
+  "deviceBefore": "MOTU device 159 rate 48000",
+  "originalRate": 44100,
+  "rateSet": "MOTU device 159 rate 48000\nset 48000 status 0",
+  "deviceRestoration": "MOTU device 159 rate 48000\nset 44100 status 0",
+  "deviceAfter": "MOTU device 159 rate 44100"
+}
