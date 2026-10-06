@@ -1,0 +1,45 @@
+(
+var dir=thisProcess.nowExecutingPath.dirname,bench,server,events=List.new,seq=0,now=0.1,emit,windows=List.new;
+bench=thisProcess.interpreter.executeFile(dir+/+"definitions.scd");
+server=Server(\sendLayoutNRT,NetAddr("127.0.0.1",59997),ServerOptions.new.numInputBusChannels_(0).numOutputBusChannels_(160));
+emit={|message|seq=seq+1;events.add([if(message[0]==\d_recv){0}{now},seq,message])};
+events.add([0.01,0,[\g_new,1,0,0]]);
+try{
+ [8,16,24,32].do{|size,caseIndex|
+  var a,b,monitor,portsA,portsB,checks;
+  now=0.1+(caseIndex*1.5);
+  a=bench[\make].value(server,size,\monolithic,(sendFunction:emit,scheduleFunction:{},watchNodes:false));
+  b=bench[\make].value(server,size,\split,(sendFunction:emit,scheduleFunction:{},watchNodes:false));
+  b[\pauseZero]="AWB_SEND_LAYOUT_PAUSE_ZERO".getenv=="1";
+  portsA=a[\rack].slotIDs.collect{|id|a[\rack].destinationFor(id).index}
+   ++a[\rack].channels.keys.asArray.sort.collect{|id|a[\rack].postFor(id).index};
+  portsB=b[\rack].slotIDs.collect{|id|b[\rack].destinationFor(id).index}
+   ++b[\rack].channels.keys.asArray.sort.collect{|id|b[\rack].postFor(id).index};
+  monitor=SynthDef(("layoutMonitor"++size).asSymbol,{
+   portsA.do{|bus,i|Out.ar(i*2,In.ar(bus,2))};
+   portsB.do{|bus,i|Out.ar(80+(i*2),In.ar(bus,2))};
+  });emit.value([\d_recv,monitor.asBytes]);emit.value([\g_new,80000+caseIndex,1,1]);
+  emit.value([\s_new,monitor.name,81000+caseIndex,1,80000+caseIndex]);
+  [\full,\zero,\sparse,\moving].do{|profile,i|
+   now=0.13+(caseIndex*1.5)+(i*0.26);
+   [a,b].do{|state|bench[\update].value(state,profile,0.4)};
+   windows.add([now+0.10,now+0.18,size,profile]);
+   if(profile==\moving){
+    3.do{|step|now=now+0.04;[a,b].do{|state|bench[\update].value(state,profile,0.7+(step*0.5))}};
+   };
+  };
+  now=1.20+(caseIndex*1.5);
+  [a,b].do{|state|state[\rack].setLevel(\c0,0.3);state[\rack].setMute(\c1,true);state[\rack].setSolo(\c2,true)};
+  windows.add([now+0.10,now+0.18,size,\faderMuteSolo]);
+  now=1.40+(caseIndex*1.5);[a,b].do{|state|bench[\close].value(state)};
+  windows.add([now+0.025,now+0.065,size,\closed]);
+  now=1.48+(caseIndex*1.5);emit.value([\n_free,80000+caseIndex]);
+ };
+ now=6.2;emit.value([\c_set,0,0]);
+ events=events.sort{|a,b|if(a[0]==b[0]){a[1]<b[1]}{a[0]<b[0]}};
+ Score.write(events.collect{|event|[event[0],event[2]]}.asArray,dir+/+"layout.osc");
+ File.use(dir+/+"windows.json","w",{|file|
+  file.write("["++windows.collect{|row|"["++row.collect{|v|if(v.isKindOf(Symbol)){v.asString.asCompileString}{v.asString}}.join(",")++"]"}.join(",")++"]")});
+ "SEND_LAYOUT_SCORE=PASS".postln;0.exit;
+}{|error|error.reportError;1.exit};
+)

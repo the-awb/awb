@@ -1,0 +1,236 @@
+{
+  "schema": 1,
+  "branchIDs": [
+    "earth",
+    "composite",
+    "texture",
+    "shimmer",
+    "echo"
+  ],
+  "configuration": {
+    "base": 0,
+    "amount": 0,
+    "modCurve": 0,
+    "basePole": true,
+    "bases": [
+      0.495,
+      0,
+      0.14,
+      0.14,
+      0
+    ],
+    "profiles": [
+      [
+        0.03,
+        0.78,
+        -0.34,
+        -0.42,
+        0.4
+      ],
+      [
+        -0.87,
+        1.0,
+        0.51,
+        0.24,
+        0.31
+      ],
+      [
+        -0.99,
+        0.45,
+        -0.22,
+        0.73,
+        0.92
+      ],
+      [
+        -1.02,
+        -0.26,
+        -1.0,
+        -0.56,
+        1.12
+      ]
+    ]
+  },
+  "branchToolGainDb": [
+    2.5,
+    -0.4,
+    0,
+    0,
+    0
+  ],
+  "convolutionWetGainDb": [
+    0,
+    -8.4,
+    null,
+    null,
+    -20
+  ],
+  "source": "apps/awb-shell/docs/bitwig-set-inspection-stage2/live-evidence/modulation-ui-capture.jsonl",
+  "sourceSha256": "73765a4d1e000c53923f5e456b9a58b3cf369d6ef9c214de99233577461224e6",
+  "targets": [
+    {
+      "pole": 1,
+      "branch": "Conv earth",
+      "line": 261,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Conv earth › Tool › Volume",
+      "amount": 0.03,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 1,
+      "branch": "Earth comp",
+      "line": 261,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Earth comp › Tool › Volume",
+      "amount": 0.78,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 1,
+      "branch": "Things texture",
+      "line": 261,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Things texture › Tool › Volume",
+      "amount": -0.34,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 1,
+      "branch": "Shimmer",
+      "line": 261,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Shimmer › Tool › Volume",
+      "amount": -0.42,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 1,
+      "branch": "Inichindown",
+      "line": 261,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Inichindown › Tool › Volume",
+      "amount": 0.4,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 2,
+      "branch": "Conv earth",
+      "line": 262,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Conv earth › Tool › Volume",
+      "amount": -0.87,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 2,
+      "branch": "Earth comp",
+      "line": 262,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Earth comp › Tool › Volume",
+      "amount": 1.0,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 2,
+      "branch": "Things texture",
+      "line": 262,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Things texture › Tool › Volume",
+      "amount": 0.51,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 2,
+      "branch": "Shimmer",
+      "line": 262,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Shimmer › Tool › Volume",
+      "amount": 0.24,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 2,
+      "branch": "Inichindown",
+      "line": 262,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Inichindown › Tool › Volume",
+      "amount": 0.31,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 3,
+      "branch": "Conv earth",
+      "line": 263,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Conv earth › Tool › Volume",
+      "amount": -0.99,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 3,
+      "branch": "Earth comp",
+      "line": 263,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Earth comp › Tool › Volume",
+      "amount": 0.45,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 3,
+      "branch": "Things texture",
+      "line": 263,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Things texture › Tool › Volume",
+      "amount": -0.22,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 3,
+      "branch": "Shimmer",
+      "line": 263,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Shimmer › Tool › Volume",
+      "amount": 0.73,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 3,
+      "branch": "Inichindown",
+      "line": 263,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Inichindown › Tool › Volume",
+      "amount": 0.92,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 4,
+      "branch": "Conv earth",
+      "line": 264,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Conv earth › Tool › Volume",
+      "amount": -1.02,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 4,
+      "branch": "Earth comp",
+      "line": 264,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Earth comp › Tool › Volume",
+      "amount": -0.26,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 4,
+      "branch": "Things texture",
+      "line": 264,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Things texture › Tool › Volume",
+      "amount": -1.0,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 4,
+      "branch": "Shimmer",
+      "line": 264,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Shimmer › Tool › Volume",
+      "amount": -0.56,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    },
+    {
+      "pole": 4,
+      "branch": "Inichindown",
+      "line": 264,
+      "address": "FX Layer › verb selection 4.5 › Instrument Layer › Inichindown › Tool › Volume",
+      "amount": 1.12,
+      "evidence": "hover sweep 2026-10-06, row highlighted"
+    }
+  ],
+  "notes": [
+    "basePole true is provisional: position zero is baseline, S1..S4 at .25,.5,.75,1; use false for four poles starting at zero",
+    "Tool amplitude law (2 * normalized)^3 inferred from captured normalized/display pairs; not exact Bitwig DSP equivalence",
+    "Existing AWFollower/AWBlender source remains borrowed and explicitly attached; no automatic connection"
+  ]
+}

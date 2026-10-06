@@ -1,8 +1,8 @@
 {
-  "snapshot": "/Users/willy/awb/apps/awb-shell/docs/bitwig-set-inspection-stage2/target-capture/snapshot.json",
-  "sha256": "bcb646d3c9dd25f931f3e27793c898bfa6a56b740f08e88f4e1680c5741dd022",
+  "snapshot": "/Users/willy/awb/apps/rack/sc/sets/awb52/source-snapshot.json",
+  "sha256": "8d961a4d8074b55d06daacd5305a817775ae31c3921368d4c7e68e8cc629ab29",
   "cache": "/Users/willy/Library/Application Support/vstplugin/sc/cache_amd64.ini",
-  "cacheSha256": "60f3251a757ba796db3e87f509aee1af7101bf7d8f21c5a33d21d4a0cc9c8234",
+  "cacheSha256": "8219ea7b0a24c35a3baca658330c9db2d8982976b5fe027c64b466ed5ddf97e6",
   "host": {
     "version": "4.3.10",
     "api": 17

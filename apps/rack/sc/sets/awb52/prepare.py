@@ -20,6 +20,7 @@ def sc(x):
   if not math.isfinite(x):raise ValueError('Non-finite specification')
   return repr(x)
  if isinstance(x,list):return '['+', '.join(sc(v)for v in x)+']'
+ if any(not re.fullmatch(r'[A-Za-z_]\w*',k)for k in x):return 'Event.newFrom(['+', '.join(sc(k)+'.asSymbol, '+sc(v)for k,v in x.items())+'])'
  return '('+', '.join(k+': '+sc(v)for k,v in x.items())+')'
 def cache_plugins(path):
  out={}
@@ -30,9 +31,10 @@ def cache_plugins(path):
   p=fields.get('path');
   if p and pathlib.Path(p).exists():out[p]={'name':fields['name'],'parameterNames':params,'version':fields['version'],'sdk':fields['sdkversion']}
  return out
-def build(snapshot,cache):
- tracks={t['index']:t for t in snapshot['tracks']};devices={i:list(walk(tracks[i]['chain']))for i in [2,5,22,23,24,25]};components={};plugins=cache_plugins(cache)
+def build(snapshot,cache,shared=False):
+ tracks={t['index']:t for t in snapshot['tracks']};devices={i:list(walk(tracks[i]['chain']))for i in ([2,5,22,23,24,25]+([64]if shared else []))};components={};plugins=cache_plugins(cache)
  selected={'spiral':(22,'++spiralstretch',0),'upper':(22,'++pitchdelay',0),'lower':(22,'++pitchdelay',1),'delay':(22,'++delay',0),'tailDeci':(22,'++decimate',0),'deci':(23,'++decimate',0),'sparkTexture':(22,'Things Texture',0),'verbTexture':(25,'Things Texture',0),'shimmer':(25,'ValhallaShimmer',0)}
+ if shared:selected['um']=(64,'ValhallaUberMod',0)
  for role,(index,name,occurrence)in selected.items():
   d=[d for d in devices[index]if d['name']==name][occurrence];candidate=[(p,info)for p,info in plugins.items()if info['name']==name];candidate.sort(key=lambda v:('.vst3'in v[0],v[0]));assert candidate,'Missing installed plugin '+name;p,info=candidate[0];params=[]
   for param in d['parameters']['items']:
@@ -49,7 +51,37 @@ def build(snapshot,cache):
   initial.append({'id':channel,'level':amp(tracks[i]['volume']['display']),'sends':sends})
  return {'schema':1,'rack':{'name':'AWB 5.2 — SC first pass','libraryID':'awb52-first-pass','width':2,'out':0,'channels':[{'id':'vc','label':'VC IN (mono)'},{'id':'pro2','label':'Pro 2 IN (stereo)'}],'fixedFX':['verb','deci','spark','fuzz','mast'],'dynamicFX':3,'fixedFollowers':[],'spareFollowers':3,'cleanSlot':'mast','tail':8},'inputWidths':{'vc':1,'pro2':2},'components':components,'initialMix':{'channels':initial,'returns':{key:amp(tracks[i]['volume']['display'])for key,i in [('verb',25),('deci',23),('spark',22),('fuzz',24)]}},'containerGains':{'spark':amp('-7.7 dB')*amp('-6.7 dB'),'deci':amp('-10.3 dB'),'fuzz':amp('-5.0 dB')},'irSeconds':[2.5,4.0,8.0],'fftSize':2048,'unresolved':['Select-4/modulator destinations and branch gain mapping','MDMX Fuzz: native approximation, no transferred plugin state','Convolution IRs: generated stand-ins, not captured Bitwig IRs','Layer mixer gains and device state blobs not captured','Input Scheps processing and UM omitted','Deci dry/wet starts at captured zero; audition explicitly','Verb parent Tool volume captured -Inf; audition mode opens it explicitly','Send destinations inferred from labels; capture does not prove edges','Some normalized/display pairs disagree (e.g. upper wetdry 0 versus 73.5); captured mode is unverified']}
 def main():
- p=argparse.ArgumentParser();p.add_argument('--snapshot',type=pathlib.Path,required=True);p.add_argument('--cache',type=pathlib.Path,default=pathlib.Path.home()/'Library/Application Support/vstplugin/sc/cache_amd64.ini');p.add_argument('--ir-directory',type=pathlib.Path);p.add_argument('--ir-max-seconds',type=float,default=30);p.add_argument('--output',type=pathlib.Path,required=True);a=p.parse_args();raw=a.snapshot.read_bytes();s=json.loads(raw);spec=build(s,a.cache);a.output.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--snapshot',type=pathlib.Path,required=True);p.add_argument('--cache',type=pathlib.Path,default=pathlib.Path.home()/'Library/Application Support/vstplugin/sc/cache_amd64.ini');p.add_argument('--ir-directory',type=pathlib.Path);p.add_argument('--ir-max-seconds',type=float,default=30);p.add_argument('--verb-profile',type=pathlib.Path);p.add_argument('--fx-profile',type=pathlib.Path);p.add_argument('--cello-scheps',action='store_true');p.add_argument('--fuzz-plugin',action='store_true');p.add_argument('--shared-fx',action='store_true');p.add_argument('--output',type=pathlib.Path,required=True);a=p.parse_args();raw=a.snapshot.read_bytes();s=json.loads(raw);spec=build(s,a.cache,a.shared_fx);a.output.mkdir(parents=True,exist_ok=True)
+ if a.verb_profile:
+  profile=json.loads(a.verb_profile.read_text());assert profile['schema']==1 and profile['branchIDs']==['earth','composite','texture','shimmer','echo']
+  spec['verbMix']=profile['configuration'];spec['verbMixProvenance']={k:profile[k] for k in ['source','sourceSha256','targets','notes']}
+  spec['unresolved']=[v for v in spec['unresolved']if not v.startswith('Select-4/')];spec['unresolved'].append('Verb Select-4 depths captured; zero-position policy and inferred Tool gain taper need host comparison')
+ if a.fx_profile:
+  profile=json.loads(a.fx_profile.read_text());assert profile['schema']==1
+  spec['fxModulationProvenance']=profile
+  bases={role:{item['parameterNames'][pairs[0]]:pairs[1] for pairs in zip(item['params'][::2],item['params'][1::2])}for role,item in spec['components'].items()}
+  spec['fxMixes']={'deci':{'gainDb':-10.3,'basePole':True,'pluginBases':bases,'defaults':{'depth':.49606299214065075,'folding':.49606299214065075,'lfoRate':.04}},'spark':{'gainDb':-7.7,'basePole':True,'pluginBases':bases,'defaults':{'aTail':.34645670652389526,'tailDepth':.5,'tailFolding':.5}}}
+  spec['unresolved']=[v for v in spec['unresolved']if not v.startswith('Select-4/')]
+  spec['unresolved']+=profile['assumptions']
+ baselines=[]
+ for enabled,role,filename,descriptor in [(a.cello_scheps,'celloScheps','scheps73-baseline.json','scheps73-plugin.ini'),(a.fuzz_plugin,'fuzz','fuzz-baseline.json','fuzz-plugin.ini'),(a.shared_fx,'stereoScheps','scheps73-stereo-baseline.json','scheps73-stereo-plugin.ini')]:
+  if enabled:
+   baseline=json.loads((pathlib.Path(__file__).parent/filename).read_text());assert baseline['normalizedValuesVerified']
+   item=dict(baseline['hosting']);item['name']=baseline['pluginName'];ordered=sorted(baseline['parameters'],key=lambda v:v['index']);item['parameterNames']=[v['name']for v in ordered];item['params']=[x for v in ordered for x in [v['index'],v['normalized']]];item['displays']={v['name']:v['display']for v in ordered}
+   assert pathlib.Path(item['path']).exists(),'Restored Waves shell is missing'
+   spec['components'][role]=item;spec[role+'Provenance']=baseline;baselines.append(descriptor)
+ if baselines:
+  cache_dir=(a.output/'waves-cache').resolve();cache_dir.mkdir(exist_ok=True)
+  (cache_dir/'cache_amd64.ini').write_text('[version]\n0.6.0\n[ignore]\nn=0\n[plugins]\nn='+str(len(baselines))+'\n'+''.join((pathlib.Path(__file__).parent/f).read_text()for f in baselines));spec['pluginCacheDirectory']=str(cache_dir)
+ if a.fuzz_plugin or a.shared_fx:
+  more=json.loads((pathlib.Path(__file__).parent/'additional-modulation-profile.json').read_text());spec['additionalModulationProvenance']=more;spec.setdefault('fxMixes',{})
+  if a.fuzz_plugin:
+   config=more['fuzz'].copy();item=spec['components']['fuzz'];config['pluginBases']=dict(zip(item['parameterNames'],item['params'][1::2]));spec['fxMixes']['fuzz']=config
+  if a.shared_fx:
+   config=more['um'].copy();item=spec['components']['um'];config['pluginBases']=dict(zip(item['parameterNames'],item['params'][1::2]));spec['sharedFX']=config
+  spec['unresolved']+=more['assumptions']
+ spec['unresolved']=[v for v in spec['unresolved']if not (a.fuzz_plugin and v.startswith('MDMX Fuzz:')) and not ((a.shared_fx or a.cello_scheps)and v.startswith('Input Scheps'))]
+ if a.cello_scheps and not a.shared_fx:spec['unresolved'].append('UM shared processing omitted')
  if a.ir_directory:
   if not math.isfinite(a.ir_max_seconds)or not 0<a.ir_max_seconds<=180:raise ValueError('IR cap must be in (0,180] seconds')
   names=['Mulching 1.wav','composite earth b.wav','214216__acs272__world-s-longest-echo-4th-impulse.wav'];spec['irFiles']=[str((a.ir_directory/n).resolve())for n in names];spec['irMaxSeconds']=a.ir_max_seconds;metadata=[]

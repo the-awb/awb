@@ -1,0 +1,1231 @@
+{
+  "runs": [
+    {
+      "evidence": "/private/tmp/awb-send-layout-crossover-bracket-20261006",
+      "loadNodes": 0,
+      "inPlace": false,
+      "measureSeconds": 6,
+      "phases": 32,
+      "sampleRate": 44100.0,
+      "engineSHA256": "817f728e74294d78d788f3dd065c56e878957442e564212330f91bdb34876be2",
+      "idleMean": 0.0689203951507808,
+      "cells": [
+        {
+          "sends": 24,
+          "active": 10,
+          "inactive": 14,
+          "monolithic": 1.5807399014631933,
+          "splitPaused": 1.5433775961399117,
+          "deltaPoints": -0.03736230532328155,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 1.54016446272532,
+              "splitPaused": 1.5381560881932568,
+              "deltaPoints": -0.0020083745320631508,
+              "monolithicPeak": 3.2342267036438,
+              "splitPausedPeak": 3.5230388641357,
+              "monolithicPhaseMeans": [
+                1.54016446272532
+              ],
+              "splitPhaseMeans": [
+                1.5381560881932568
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 1.6213153402010667,
+              "splitPaused": 1.5485991040865668,
+              "deltaPoints": -0.07271623611449995,
+              "monolithicPeak": 4.0887846946716,
+              "splitPausedPeak": 2.6956813335419,
+              "monolithicPhaseMeans": [
+                1.6213153402010667
+              ],
+              "splitPhaseMeans": [
+                1.5485991040865668
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 12,
+          "inactive": 12,
+          "monolithic": 1.5408409456412082,
+          "splitPaused": 1.6778665840625782,
+          "deltaPoints": 0.13702563842136994,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 1.5080345312754433,
+              "splitPaused": 1.67328560352327,
+              "deltaPoints": 0.16525107224782665,
+              "monolithicPeak": 3.8526432514191,
+              "splitPausedPeak": 3.2166471481323,
+              "monolithicPhaseMeans": [
+                1.5080345312754433
+              ],
+              "splitPhaseMeans": [
+                1.67328560352327
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 1.5736473600069734,
+              "splitPaused": 1.6824475646018866,
+              "deltaPoints": 0.10880020459491324,
+              "monolithicPeak": 2.6907029151917,
+              "splitPausedPeak": 3.7383966445923,
+              "monolithicPhaseMeans": [
+                1.5736473600069734
+              ],
+              "splitPhaseMeans": [
+                1.6824475646018866
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 14,
+          "inactive": 10,
+          "monolithic": 1.6434305270512999,
+          "splitPaused": 1.84749102393786,
+          "deltaPoints": 0.20406049688656003,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 1.6019192854563666,
+              "splitPaused": 1.8539274732271733,
+              "deltaPoints": 0.2520081877708067,
+              "monolithicPeak": 3.0701696872711,
+              "splitPausedPeak": 5.4344120025635,
+              "monolithicPhaseMeans": [
+                1.6019192854563666
+              ],
+              "splitPhaseMeans": [
+                1.8539274732271733
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 1.6849417686462334,
+              "splitPaused": 1.8410545746485467,
+              "deltaPoints": 0.15611280600231336,
+              "monolithicPeak": 3.1711173057556,
+              "splitPausedPeak": 5.2624735832214,
+              "monolithicPhaseMeans": [
+                1.6849417686462334
+              ],
+              "splitPhaseMeans": [
+                1.8410545746485467
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 16,
+          "inactive": 8,
+          "monolithic": 1.7621035834153567,
+          "splitPaused": 2.0302689433097934,
+          "deltaPoints": 0.2681653598944367,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 1.7430179874102334,
+              "splitPaused": 2.006166251500457,
+              "deltaPoints": 0.2631482640902234,
+              "monolithicPeak": 3.6254506111145,
+              "splitPausedPeak": 4.8764262199402,
+              "monolithicPhaseMeans": [
+                1.7430179874102334
+              ],
+              "splitPhaseMeans": [
+                2.006166251500457
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 1.78118917942048,
+              "splitPaused": 2.05437163511913,
+              "deltaPoints": 0.27318245569864996,
+              "monolithicPeak": 4.6296987533569,
+              "splitPausedPeak": 3.8188359737396,
+              "monolithicPhaseMeans": [
+                1.78118917942048
+              ],
+              "splitPhaseMeans": [
+                2.05437163511913
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 14,
+          "inactive": 18,
+          "monolithic": 2.1273884395758134,
+          "splitPaused": 2.0717840790748534,
+          "deltaPoints": -0.05560436050095996,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 2.1128158529599266,
+              "splitPaused": 2.0113912781079533,
+              "deltaPoints": -0.10142457485197331,
+              "monolithicPeak": 4.0080351829529,
+              "splitPausedPeak": 4.6195697784424,
+              "monolithicPhaseMeans": [
+                2.1128158529599266
+              ],
+              "splitPhaseMeans": [
+                2.0113912781079533
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 2.1419610261917,
+              "splitPaused": 2.1321768800417535,
+              "deltaPoints": -0.009784146149946604,
+              "monolithicPeak": 4.5238418579102,
+              "splitPausedPeak": 4.2064938545227,
+              "monolithicPhaseMeans": [
+                2.1419610261917
+              ],
+              "splitPhaseMeans": [
+                2.1321768800417535
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 16,
+          "inactive": 16,
+          "monolithic": 2.069133742650348,
+          "splitPaused": 2.2328703820705416,
+          "deltaPoints": 0.16373663942019356,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 2.07632223765054,
+              "splitPaused": 2.1920971552531,
+              "deltaPoints": 0.1157749176025602,
+              "monolithicPeak": 3.4565012454987,
+              "splitPausedPeak": 4.2714982032776,
+              "monolithicPhaseMeans": [
+                2.07632223765054
+              ],
+              "splitPhaseMeans": [
+                2.1920971552531
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 2.0619452476501565,
+              "splitPaused": 2.2736436088879834,
+              "deltaPoints": 0.21169836123782693,
+              "monolithicPeak": 4.7062020301819,
+              "splitPausedPeak": 6.0643444061279,
+              "monolithicPhaseMeans": [
+                2.0619452476501565
+              ],
+              "splitPhaseMeans": [
+                2.2736436088879834
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 18,
+          "inactive": 14,
+          "monolithic": 2.1493496696154413,
+          "splitPaused": 2.225415056943893,
+          "deltaPoints": 0.0760653873284518,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 2.18261027336122,
+              "splitPaused": 2.22697349389394,
+              "deltaPoints": 0.04436322053272024,
+              "monolithicPeak": 3.5143220424652,
+              "splitPausedPeak": 4.5455555915833,
+              "monolithicPhaseMeans": [
+                2.18261027336122
+              ],
+              "splitPhaseMeans": [
+                2.22697349389394
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 2.116089065869663,
+              "splitPaused": 2.2238566199938465,
+              "deltaPoints": 0.10776755412418337,
+              "monolithicPeak": 3.8479490280151,
+              "splitPausedPeak": 4.0012741088867,
+              "monolithicPhaseMeans": [
+                2.116089065869663
+              ],
+              "splitPhaseMeans": [
+                2.2238566199938465
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 20,
+          "inactive": 12,
+          "monolithic": 2.0979329228401182,
+          "splitPaused": 2.369339925050733,
+          "deltaPoints": 0.271407002210615,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 2.0929274400075166,
+              "splitPaused": 2.3660900910695366,
+              "deltaPoints": 0.27316265106202,
+              "monolithicPeak": 3.4904546737671,
+              "splitPausedPeak": 5.1111125946045,
+              "monolithicPhaseMeans": [
+                2.0929274400075166
+              ],
+              "splitPhaseMeans": [
+                2.3660900910695366
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 2.10293840567272,
+              "splitPaused": 2.37258975903193,
+              "deltaPoints": 0.26965135335921,
+              "monolithicPeak": 3.7055456638336,
+              "splitPausedPeak": 4.822817325592,
+              "monolithicPhaseMeans": [
+                2.10293840567272
+              ],
+              "splitPhaseMeans": [
+                2.37258975903193
+              ]
+            }
+          ]
+        }
+      ],
+      "phasesWithSampledPeakOver100": []
+    },
+    {
+      "evidence": "/private/tmp/awb-send-layout-crossover-refine-20261006",
+      "loadNodes": 0,
+      "inPlace": false,
+      "measureSeconds": 8,
+      "phases": 12,
+      "sampleRate": 44100.0,
+      "engineSHA256": "817f728e74294d78d788f3dd065c56e878957442e564212330f91bdb34876be2",
+      "idleMean": 0.06416961625218405,
+      "cells": [
+        {
+          "sends": 24,
+          "active": 9,
+          "inactive": 15,
+          "monolithic": 1.6911404684185924,
+          "splitPaused": 1.4990468874573737,
+          "deltaPoints": -0.19209358096121865,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 1.6933362334966549,
+              "splitPaused": 1.4640380233526276,
+              "deltaPoints": -0.2292982101440273,
+              "monolithicPeak": 4.0841856002808,
+              "splitPausedPeak": 4.0121092796326,
+              "monolithicPhaseMeans": [
+                1.6933362334966549
+              ],
+              "splitPhaseMeans": [
+                1.4640380233526276
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 1.68894470334053,
+              "splitPaused": 1.53405575156212,
+              "deltaPoints": -0.15488895177841,
+              "monolithicPeak": 4.0938668251038,
+              "splitPausedPeak": 4.2359685897827,
+              "monolithicPhaseMeans": [
+                1.68894470334053
+              ],
+              "splitPhaseMeans": [
+                1.53405575156212
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 11,
+          "inactive": 13,
+          "monolithic": 1.7214050754904637,
+          "splitPaused": 1.6477933570742627,
+          "deltaPoints": -0.07361171841620118,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 1.663497531414025,
+              "splitPaused": 1.6193691611289875,
+              "deltaPoints": -0.044128370285037466,
+              "monolithicPeak": 3.3469660282135,
+              "splitPausedPeak": 3.6360535621643,
+              "monolithicPhaseMeans": [
+                1.663497531414025
+              ],
+              "splitPhaseMeans": [
+                1.6193691611289875
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 1.7793126195669025,
+              "splitPaused": 1.6762175530195376,
+              "deltaPoints": -0.10309506654736489,
+              "monolithicPeak": 3.7127892971039,
+              "splitPausedPeak": 4.1845560073853,
+              "monolithicPhaseMeans": [
+                1.7793126195669025
+              ],
+              "splitPhaseMeans": [
+                1.6762175530195376
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 15,
+          "inactive": 17,
+          "monolithic": 2.1232929587364238,
+          "splitPaused": 2.0461443483829447,
+          "deltaPoints": -0.07714861035347886,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 2.1428592562675526,
+              "splitPaused": 2.04604685008526,
+              "deltaPoints": -0.09681240618229259,
+              "monolithicPeak": 3.7026860713959,
+              "splitPausedPeak": 4.2048401832581,
+              "monolithicPhaseMeans": [
+                2.1428592562675526
+              ],
+              "splitPhaseMeans": [
+                2.04604685008526
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 2.103726661205295,
+              "splitPaused": 2.04624184668063,
+              "deltaPoints": -0.05748481452466514,
+              "monolithicPeak": 4.3161325454712,
+              "splitPausedPeak": 6.0340600013733,
+              "monolithicPhaseMeans": [
+                2.103726661205295
+              ],
+              "splitPhaseMeans": [
+                2.04624184668063
+              ]
+            }
+          ]
+        }
+      ],
+      "phasesWithSampledPeakOver100": []
+    },
+    {
+      "evidence": "/private/tmp/awb-send-layout-crossover-load48-20261006",
+      "loadNodes": 48,
+      "inPlace": false,
+      "measureSeconds": 10,
+      "phases": 32,
+      "sampleRate": 44100.0,
+      "engineSHA256": "817f728e74294d78d788f3dd065c56e878957442e564212330f91bdb34876be2",
+      "idleMean": 55.02206020355205,
+      "cells": [
+        {
+          "sends": 24,
+          "active": 9,
+          "inactive": 15,
+          "monolithic": 56.615206756591846,
+          "splitPaused": 57.28590496063241,
+          "deltaPoints": 0.6706982040405585,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 56.70131980896006,
+              "splitPaused": 57.3155493927002,
+              "deltaPoints": 0.6142295837401406,
+              "monolithicPeak": 73.012741088867,
+              "splitPausedPeak": 72.773300170898,
+              "monolithicPhaseMeans": [
+                56.70131980896006
+              ],
+              "splitPhaseMeans": [
+                57.3155493927002
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 56.52909370422364,
+              "splitPaused": 57.25626052856462,
+              "deltaPoints": 0.7271668243409763,
+              "monolithicPeak": 83.982627868652,
+              "splitPausedPeak": 74.560813903809,
+              "monolithicPhaseMeans": [
+                56.52909370422364
+              ],
+              "splitPhaseMeans": [
+                57.25626052856462
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 11,
+          "inactive": 13,
+          "monolithic": 56.99714660644541,
+          "splitPaused": 57.4758458328247,
+          "deltaPoints": 0.4786992263792875,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 56.23957603454604,
+              "splitPaused": 57.01169868469226,
+              "deltaPoints": 0.7721226501462226,
+              "monolithicPeak": 79.192657470703,
+              "splitPausedPeak": 77.37084197998,
+              "monolithicPhaseMeans": [
+                56.23957603454604
+              ],
+              "splitPhaseMeans": [
+                57.01169868469226
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 57.754717178344784,
+              "splitPaused": 57.939992980957136,
+              "deltaPoints": 0.18527580261235244,
+              "monolithicPeak": 75.50008392334,
+              "splitPausedPeak": 74.369293212891,
+              "monolithicPhaseMeans": [
+                57.754717178344784
+              ],
+              "splitPhaseMeans": [
+                57.939992980957136
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 13,
+          "inactive": 11,
+          "monolithic": 57.44262928009026,
+          "splitPaused": 57.9565737915039,
+          "deltaPoints": 0.5139445114136407,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 56.9647783660888,
+              "splitPaused": 58.0252114105225,
+              "deltaPoints": 1.060433044433701,
+              "monolithicPeak": 80.120704650879,
+              "splitPausedPeak": 84.168296813965,
+              "monolithicPhaseMeans": [
+                56.9647783660888
+              ],
+              "splitPhaseMeans": [
+                58.0252114105225
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 57.920480194091716,
+              "splitPaused": 57.8879361724853,
+              "deltaPoints": -0.03254402160641945,
+              "monolithicPeak": 80.025283813477,
+              "splitPausedPeak": 81.163528442383,
+              "monolithicPhaseMeans": [
+                57.920480194091716
+              ],
+              "splitPhaseMeans": [
+                57.8879361724853
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 24,
+          "inactive": 0,
+          "monolithic": 57.65935756683345,
+          "splitPaused": 58.46643333435058,
+          "deltaPoints": 0.8070757675171265,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 57.80212745666496,
+              "splitPaused": 59.31318038940434,
+              "deltaPoints": 1.511052932739375,
+              "monolithicPeak": 83.33854675293,
+              "splitPausedPeak": 84.070861816406,
+              "monolithicPhaseMeans": [
+                57.80212745666496
+              ],
+              "splitPhaseMeans": [
+                59.31318038940434
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 57.516587677001944,
+              "splitPaused": 57.61968627929682,
+              "deltaPoints": 0.1030986022948781,
+              "monolithicPeak": 75.756004333496,
+              "splitPausedPeak": 88.038719177246,
+              "monolithicPhaseMeans": [
+                57.516587677001944
+              ],
+              "splitPhaseMeans": [
+                57.61968627929682
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 13,
+          "inactive": 19,
+          "monolithic": 57.56002933502202,
+          "splitPaused": 57.178593826294,
+          "deltaPoints": -0.38143550872802123,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 58.31561050415028,
+              "splitPaused": 57.276334762573356,
+              "deltaPoints": -1.0392757415769225,
+              "monolithicPeak": 76.899925231934,
+              "splitPausedPeak": 75.52220916748,
+              "monolithicPhaseMeans": [
+                58.31561050415028
+              ],
+              "splitPhaseMeans": [
+                57.276334762573356
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 56.80444816589376,
+              "splitPaused": 57.08085289001464,
+              "deltaPoints": 0.27640472412088,
+              "monolithicPeak": 73.558197021484,
+              "splitPausedPeak": 74.835021972656,
+              "monolithicPhaseMeans": [
+                56.80444816589376
+              ],
+              "splitPhaseMeans": [
+                57.08085289001464
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 15,
+          "inactive": 17,
+          "monolithic": 56.96876247406004,
+          "splitPaused": 57.388959960937484,
+          "deltaPoints": 0.4201974868774414,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 56.95435333251954,
+              "splitPaused": 57.43872245788568,
+              "deltaPoints": 0.4843691253661433,
+              "monolithicPeak": 76.774978637695,
+              "splitPausedPeak": 71.931198120117,
+              "monolithicPhaseMeans": [
+                56.95435333251954
+              ],
+              "splitPhaseMeans": [
+                57.43872245788568
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 56.98317161560054,
+              "splitPaused": 57.33919746398928,
+              "deltaPoints": 0.3560258483887395,
+              "monolithicPeak": 75.755668640137,
+              "splitPausedPeak": 74.593605041504,
+              "monolithicPhaseMeans": [
+                56.98317161560054
+              ],
+              "splitPhaseMeans": [
+                57.33919746398928
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 17,
+          "inactive": 15,
+          "monolithic": 57.66473304748535,
+          "splitPaused": 58.322534790039086,
+          "deltaPoints": 0.6578017425537404,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 57.42631431579592,
+              "splitPaused": 57.4506534576417,
+              "deltaPoints": 0.02433914184577901,
+              "monolithicPeak": 73.416061401367,
+              "splitPausedPeak": 86.666244506836,
+              "monolithicPhaseMeans": [
+                57.42631431579592
+              ],
+              "splitPhaseMeans": [
+                57.4506534576417
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 57.90315177917478,
+              "splitPaused": 59.19441612243648,
+              "deltaPoints": 1.2912643432617017,
+              "monolithicPeak": 76.160614013672,
+              "splitPausedPeak": 81.990905761719,
+              "monolithicPhaseMeans": [
+                57.90315177917478
+              ],
+              "splitPhaseMeans": [
+                59.19441612243648
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 32,
+          "inactive": 0,
+          "monolithic": 57.83048141479496,
+          "splitPaused": 58.76682910919189,
+          "deltaPoints": 0.9363476943969289,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 57.6480956268311,
+              "splitPaused": 58.46224014282234,
+              "deltaPoints": 0.8141445159912379,
+              "monolithicPeak": 77.679244995117,
+              "splitPausedPeak": 89.97713470459,
+              "monolithicPhaseMeans": [
+                57.6480956268311
+              ],
+              "splitPhaseMeans": [
+                58.46224014282234
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 58.01286720275882,
+              "splitPaused": 59.07141807556144,
+              "deltaPoints": 1.0585508728026198,
+              "monolithicPeak": 86.744674682617,
+              "splitPausedPeak": 93.24813079834,
+              "monolithicPhaseMeans": [
+                58.01286720275882
+              ],
+              "splitPhaseMeans": [
+                59.07141807556144
+              ]
+            }
+          ]
+        }
+      ],
+      "phasesWithSampledPeakOver100": []
+    },
+    {
+      "evidence": "/private/tmp/awb-send-layout-crossover-inplace60-20261006",
+      "loadNodes": 60,
+      "inPlace": true,
+      "measureSeconds": 6,
+      "phases": 80,
+      "sampleRate": 44100.0,
+      "engineSHA256": "817f728e74294d78d788f3dd065c56e878957442e564212330f91bdb34876be2",
+      "idleMean": 67.14324722290036,
+      "cells": [
+        {
+          "sends": 24,
+          "active": 0,
+          "inactive": 24,
+          "monolithic": 68.81075553894043,
+          "splitPaused": 68.31308530171705,
+          "deltaPoints": -0.49767023722338166,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 68.5978772481282,
+              "splitPaused": 68.34769592285149,
+              "deltaPoints": -0.25018132527671355,
+              "monolithicPeak": 91.719802856445,
+              "splitPausedPeak": 92.358528137207,
+              "monolithicPhaseMeans": [
+                68.44496256510413,
+                68.75079193115226
+              ],
+              "splitPhaseMeans": [
+                67.94800211588543,
+                68.74738972981754
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 69.02363382975265,
+              "splitPaused": 68.2784746805826,
+              "deltaPoints": -0.7451591491700498,
+              "monolithicPeak": 91.933525085449,
+              "splitPausedPeak": 95.048034667969,
+              "monolithicPhaseMeans": [
+                68.4035560607911,
+                69.6437115987142
+              ],
+              "splitPhaseMeans": [
+                67.78834940592441,
+                68.7685999552408
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 4,
+          "inactive": 20,
+          "monolithic": 68.3198664983113,
+          "splitPaused": 68.67952117919931,
+          "deltaPoints": 0.35965468088801344,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 68.78484675089518,
+              "splitPaused": 68.75753313700369,
+              "deltaPoints": -0.02731361389149356,
+              "monolithicPeak": 93.108139038086,
+              "splitPausedPeak": 91.55419921875,
+              "monolithicPhaseMeans": [
+                69.02425613403317,
+                68.5454373677572
+              ],
+              "splitPhaseMeans": [
+                68.91269378662113,
+                68.60237248738623
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 67.85488624572741,
+              "splitPaused": 68.60150922139493,
+              "deltaPoints": 0.7466229756675204,
+              "monolithicPeak": 95.199813842773,
+              "splitPausedPeak": 92.191871643066,
+              "monolithicPhaseMeans": [
+                68.4411539713541,
+                67.26861852010073
+              ],
+              "splitPhaseMeans": [
+                69.10723597208667,
+                68.0957824707032
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 8,
+          "inactive": 16,
+          "monolithic": 69.10500106811524,
+          "splitPaused": 68.679348373413,
+          "deltaPoints": -0.42565269470223654,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 69.73514048258454,
+              "splitPaused": 69.31611595153805,
+              "deltaPoints": -0.41902453104648885,
+              "monolithicPeak": 89.158721923828,
+              "splitPausedPeak": 92.286010742188,
+              "monolithicPhaseMeans": [
+                70.09632237752267,
+                69.37395858764643
+              ],
+              "splitPhaseMeans": [
+                70.0866925557454,
+                68.5455393473307
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 68.47486165364595,
+              "splitPaused": 68.04258079528796,
+              "deltaPoints": -0.43228085835798424,
+              "monolithicPeak": 88.613983154297,
+              "splitPausedPeak": 95.234786987305,
+              "monolithicPhaseMeans": [
+                68.83680318196626,
+                68.11292012532563
+              ],
+              "splitPhaseMeans": [
+                68.1567301432289,
+                67.92843144734704
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 11,
+          "inactive": 13,
+          "monolithic": 68.4436169306436,
+          "splitPaused": 68.77587718963626,
+          "deltaPoints": 0.33226025899266176,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 68.23647270202625,
+              "splitPaused": 68.67893562316902,
+              "deltaPoints": 0.4424629211427771,
+              "monolithicPeak": 89.509391784668,
+              "splitPausedPeak": 92.016494750977,
+              "monolithicPhaseMeans": [
+                68.74153569539374,
+                67.73140970865877
+              ],
+              "splitPhaseMeans": [
+                69.0288798014323,
+                68.32899144490574
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 68.65076115926095,
+              "splitPaused": 68.8728187561035,
+              "deltaPoints": 0.22205759684254645,
+              "monolithicPeak": 90.744537353516,
+              "splitPausedPeak": 87.750923156738,
+              "monolithicPhaseMeans": [
+                68.98664754231767,
+                68.31487477620423
+              ],
+              "splitPhaseMeans": [
+                69.64326985677083,
+                68.10236765543617
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 24,
+          "active": 24,
+          "inactive": 0,
+          "monolithic": 69.17093219757082,
+          "splitPaused": 69.77648264567058,
+          "deltaPoints": 0.6055504480997627,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 68.74801203409834,
+              "splitPaused": 69.42770423889161,
+              "deltaPoints": 0.6796922047932696,
+              "monolithicPeak": 97.698890686035,
+              "splitPausedPeak": 88.716178894043,
+              "monolithicPhaseMeans": [
+                68.8857126871746,
+                68.61031138102207
+              ],
+              "splitPhaseMeans": [
+                69.76993001302094,
+                69.08547846476226
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 69.5938523610433,
+              "splitPaused": 70.12526105244956,
+              "deltaPoints": 0.5314086914062557,
+              "monolithicPeak": 97.583992004395,
+              "splitPausedPeak": 92.832817077637,
+              "monolithicPhaseMeans": [
+                70.262431081136,
+                68.92527364095059
+              ],
+              "splitPhaseMeans": [
+                70.20850168863953,
+                70.0420204162596
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 0,
+          "inactive": 32,
+          "monolithic": 68.37549915313728,
+          "splitPaused": 68.64072062174489,
+          "deltaPoints": 0.26522146860761353,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 68.85042572021487,
+              "splitPaused": 68.66699498494474,
+              "deltaPoints": -0.18343073527013587,
+              "monolithicPeak": 93.219291687012,
+              "splitPausedPeak": 97.94312286377,
+              "monolithicPhaseMeans": [
+                68.71666742960606,
+                68.98418401082367
+              ],
+              "splitPhaseMeans": [
+                68.60982513427747,
+                68.724164835612
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 67.9005725860597,
+              "splitPaused": 68.61444625854506,
+              "deltaPoints": 0.7138736724853629,
+              "monolithicPeak": 92.983352661133,
+              "splitPausedPeak": 99.963485717773,
+              "monolithicPhaseMeans": [
+                67.69282887776703,
+                68.10831629435236
+              ],
+              "splitPhaseMeans": [
+                68.23579788208016,
+                68.99309463500997
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 4,
+          "inactive": 28,
+          "monolithic": 69.29453163146962,
+          "splitPaused": 68.80478890736904,
+          "deltaPoints": -0.48974272410058717,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 69.21300748189279,
+              "splitPaused": 69.24213218688979,
+              "deltaPoints": 0.029124704997002482,
+              "monolithicPeak": 94.331100463867,
+              "splitPausedPeak": 99.367088317871,
+              "monolithicPhaseMeans": [
+                69.40215301513666,
+                69.02386194864893
+              ],
+              "splitPhaseMeans": [
+                69.24368413289406,
+                69.24058024088554
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 69.37605578104646,
+              "splitPaused": 68.36744562784828,
+              "deltaPoints": -1.0086101531981768,
+              "monolithicPeak": 101.7790222168,
+              "splitPausedPeak": 96.381278991699,
+              "monolithicPhaseMeans": [
+                69.03344039916983,
+                69.71867116292307
+              ],
+              "splitPhaseMeans": [
+                68.17492650349924,
+                68.55996475219733
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 12,
+          "inactive": 20,
+          "monolithic": 68.60362962086995,
+          "splitPaused": 68.83080272674566,
+          "deltaPoints": 0.22717310587570694,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 68.56391105651863,
+              "splitPaused": 68.78404757181804,
+              "deltaPoints": 0.22013651529940148,
+              "monolithicPeak": 87.90193939209,
+              "splitPausedPeak": 92.542411804199,
+              "monolithicPhaseMeans": [
+                68.7250724792481,
+                68.40274963378917
+              ],
+              "splitPhaseMeans": [
+                68.44461212158222,
+                69.12348302205386
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 68.64334818522127,
+              "splitPaused": 68.87755788167328,
+              "deltaPoints": 0.2342096964520124,
+              "monolithicPeak": 89.006149291992,
+              "splitPausedPeak": 94.799179077148,
+              "monolithicPhaseMeans": [
+                68.43649851481116,
+                68.85019785563136
+              ],
+              "splitPhaseMeans": [
+                68.95970942179373,
+                68.79540634155283
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 15,
+          "inactive": 17,
+          "monolithic": 68.78899955749515,
+          "splitPaused": 68.99724648793539,
+          "deltaPoints": 0.20824693044023945,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 68.17164128621425,
+              "splitPaused": 68.23364664713534,
+              "deltaPoints": 0.062005360921091324,
+              "monolithicPeak": 91.569618225098,
+              "splitPausedPeak": 97.229202270508,
+              "monolithicPhaseMeans": [
+                68.20168635050446,
+                68.14159622192403
+              ],
+              "splitPhaseMeans": [
+                68.8079447428385,
+                67.6593485514322
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 69.40635782877604,
+              "splitPaused": 69.76084632873543,
+              "deltaPoints": 0.3544884999593876,
+              "monolithicPeak": 94.517265319824,
+              "splitPausedPeak": 97.188003540039,
+              "monolithicPhaseMeans": [
+                70.06552302042644,
+                68.74719263712564
+              ],
+              "splitPhaseMeans": [
+                69.99779586792003,
+                69.52389678955083
+              ]
+            }
+          ]
+        },
+        {
+          "sends": 32,
+          "active": 32,
+          "inactive": 0,
+          "monolithic": 69.36937961578374,
+          "splitPaused": 70.20907618204757,
+          "deltaPoints": 0.8396965662638252,
+          "blocks": [
+            {
+              "cycle": 1,
+              "monolithic": 68.75012372334794,
+              "splitPaused": 70.02475700378423,
+              "deltaPoints": 1.2746332804362908,
+              "monolithicPeak": 102.48426818848,
+              "splitPausedPeak": 100.66932678223,
+              "monolithicPhaseMeans": [
+                69.08041737874333,
+                68.41983006795253
+              ],
+              "splitPhaseMeans": [
+                70.01158320109043,
+                70.03793080647803
+              ]
+            },
+            {
+              "cycle": 2,
+              "monolithic": 69.98863550821955,
+              "splitPaused": 70.3933953603109,
+              "deltaPoints": 0.40475985209135956,
+              "monolithicPeak": 94.628471374512,
+              "splitPausedPeak": 97.378524780273,
+              "monolithicPhaseMeans": [
+                69.69950688680024,
+                70.27776412963887
+              ],
+              "splitPhaseMeans": [
+                70.77414932250983,
+                70.01264139811197
+              ]
+            }
+          ]
+        }
+      ],
+      "phasesWithSampledPeakOver100": [
+        {
+          "index": 38,
+          "cycle": 1,
+          "sends": 32,
+          "profile": "active32",
+          "layout": "splitPaused",
+          "peak": 100.66932678223
+        },
+        {
+          "index": 39,
+          "cycle": 1,
+          "sends": 32,
+          "profile": "active32",
+          "layout": "monolithic",
+          "peak": 102.48426818848
+        },
+        {
+          "index": 53,
+          "cycle": 2,
+          "sends": 32,
+          "profile": "active4",
+          "layout": "monolithic",
+          "peak": 101.7790222168
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Static send profiles, 8 stereo channels",
+    "Only declared zero routes suspended; no production pause/fade/resume policy",
+    "Loaded near-zero differences are unresolved when repeat drift is comparable",
+    "Peaks are cached status observations, not distinct overrun/dropout counts",
+    "Muted hardware, no return-audio capture",
+    "Synthetic common DSP, no GUI/bridge/actual FX chain test"
+  ]
+}

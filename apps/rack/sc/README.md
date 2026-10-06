@@ -272,3 +272,41 @@ No changes were installed into the live class path. The owned server exited.
 Machine-readable result: `control-routing-cost.json`; retained logs/provenance:
 `evidence-control-routing-cost/`; raw float audio/score:
 `/private/tmp/awb52-control-routing-cost-20261005`.
+
+## Persistent send layout cost — 6 October 2026
+
+A quiet-machine comparison of the production channel strip with one fader Synth
+plus one Synth per send found the current layout cheaper when all nodes run.
+At eight channels × 24 stereo sends, all-active mean SC CPU was 1.75% versus
+2.65%; all-moving at 15Hz was 1.88% versus 2.78%. Two passes reverse the order.
+Explicitly pausing unused individual send nodes can reverse the result: at 24
+slots with four active sends per channel, 1.12% versus 1.66% for the fixed strip.
+Gain zero alone does not stop the routing DSP. No production layout/wrapper
+change is made; fade/resume policy needs separate design and transient checks.
+
+See [bench/send-layout/README.md](bench/send-layout/README.md) for all counts,
+paired results, scope, reproducible fixtures and the main run's final JSON export
+failure (64 completed phase aggregates recovered; individual sample rows lost).
+The corrected supplementary live run passes with raw rows retained. Both regular
+and paused layouts pass 24 offline comparison windows each. These are isolated
+routing costs on SC 3.12.2, not GUI/bridge/FX/voice or dropout results.
+
+Crossover follow-up: the light eight-channel fixture favours suspended individual
+sends at 11/24 active (13 inactive) and 15/32 active (17 inactive), by only 0.07–0.08
+SC CPU points. The next denser cases favour the shared strip. With a 48-node
+synthetic load and a stronger preallocated ABBA/BAAB 60-node load, the light
+thresholds do not carry reliably: sparse means become non-monotonic and some
+block signs flip. No single loaded breakpoint is established. Fully active shared
+strips remain cheaper in every paired block. Three heavier phases show sampled
+peaks above 100% across both layouts; these are not captured audio-dropout counts.
+The [benchmark report](bench/send-layout/README.md) retains all 156 follow-up
+phases and explains the remaining elapsed-callback variance. All follow-up runners
+pass; production routing is unchanged and no commit is made.
+
+
+The optional `sets/awb52` adapter now also includes verified Scheps 73 Mono on
+the cello input and captured Deci/Sparkle control-rate profiles alongside Verb.
+It maps existing follower/blender sources and plugin parameters through KR buses,
+with native Rack ToolInstance ownership. See that folder's README for opt-in
+flags, reconstruction choices, private-cache hosting and measured functional
+validation. This does not install classes or replace existing rack configurations.

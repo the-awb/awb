@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "status": "Implemented opt-in native UM / stereo Scheps Chain Tool; EQ deferred; inferred modulation identities recorded in additional-modulation-profile.json",
+  "source": "User clarification and screenshots, 6 October 2026",
+  "schepsBaseline": "scheps73-stereo-baseline.json",
+  "placement": {
+    "mirrorBitwigMasterTrack": false,
+    "reason": "Bitwig Master placement supports controller-script/SC integration; SC can own a separate chain.",
+    "capturedAudioTopology": {
+      "processedSources": [
+        "Mast",
+        "FUZZ",
+        "Splutter",
+        "Shaped Decimate",
+        "Spiral Sparkle"
+      ],
+      "serialProcessors": [
+        "ValhallaUberMod",
+        "EQ control",
+        "Scheps 73 Stereo"
+      ],
+      "parallelSourcesAfterProcessing": [
+        "Reverb",
+        "Ambient sounds Master",
+        "Record Master"
+      ]
+    },
+    "firstPassScope": {
+      "processors": [
+        "ValhallaUberMod",
+        "Scheps 73 Stereo"
+      ],
+      "eq": "deferred at user request",
+      "multibandStutter": "deferred; disabled in captured template"
+    },
+    "note": "Placement flexibility does not by itself authorize changing which audio signals pass through the processing chain."
+  },
+  "modulationCorrections": [
+    {
+      "captureFile": "apps/awb-shell/docs/bitwig-set-inspection-stage2/live-evidence/modulation-ui-capture.jsonl",
+      "captureLine": 326,
+      "modulator": "Main control",
+      "targets": [
+        {
+          "role": "Main control selector",
+          "field": "Select",
+          "amount": 4.0
+        },
+        {
+          "role": "UM main modulation Math",
+          "field": "Operand/Signal B",
+          "amount": 0.48
+        }
+      ],
+      "source": "User: um main 4.0 is select. Signal B is the math for the um main modulation.",
+      "note": "The duplicate selector address in the raw capture must not become a summed 4.48 selector depth. Exact Math display name is not established by this clarification."
+    }
+  ],
+  "verification": {
+    "pluginReadback": true,
+    "audioRoutingTest": true,
+    "performanceTest": false,
+    "evidence": "/private/tmp/awb52-additional-complete"
+  },
+  "implementation": {
+    "class": "AWBSharedFXChain",
+    "selectedRackReturns": [
+      "mast",
+      "fuzz",
+      "deci",
+      "spark"
+    ],
+    "directReturns": [
+      "verb"
+    ],
+    "reservedDynamicReturns": "direct unless explicitly rerouted",
+    "pluginMode": "Waves sandbox",
+    "mainMathTarget": "mix, provisionally inferred and configurable"
+  }
+}

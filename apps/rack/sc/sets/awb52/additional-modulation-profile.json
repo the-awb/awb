@@ -1,0 +1,1452 @@
+{
+  "schema": 1,
+  "source": "/Users/willy/awb/apps/awb-shell/docs/bitwig-set-inspection-stage2/live-evidence/modulation-ui-capture.jsonl",
+  "sourceSha256": "84fe1d3f65a8c6cd6733d12914b85fefb1cd3713f75624c00408f759a89612ac",
+  "fuzz": {
+    "tables": {
+      "fuzz": {
+        "mathAmount": [
+          0.74,
+          0.36,
+          0.48,
+          0.35
+        ],
+        "lfoAmount": [
+          0.215,
+          0.34,
+          0.48,
+          0.47
+        ],
+        "volume": [
+          0.5,
+          0.6,
+          0.75,
+          0.75
+        ],
+        "output": [
+          0.165,
+          0.2,
+          0.3,
+          0.325
+        ],
+        "input": [
+          0,
+          0,
+          0.095,
+          0.105
+        ]
+      }
+    },
+    "basePole": false,
+    "gainDb": -5,
+    "defaults": {
+      "lfoRate": 0.04,
+      "lfoAmount": 0
+    },
+    "lfoStatus": "wave/rate/base amount pending user confirmation; provisional sine 0.04 Hz, enable explicitly after confirmation"
+  },
+  "um": {
+    "tables": {
+      "vib": {
+        "vibRate": [
+          -0.0,
+          0.19,
+          0.37,
+          0.63
+        ],
+        "detRate": [
+          0.15,
+          0.15,
+          0.5,
+          1.0
+        ]
+      },
+      "drive": {
+        "drive": [
+          0.45,
+          0.51,
+          0.74,
+          0.4
+        ],
+        "noise": [
+          -0.0,
+          0.65,
+          0.8,
+          1.0
+        ],
+        "driveAmount": [
+          0.36,
+          0.65,
+          0.53,
+          0.84
+        ],
+        "noiseAmount": [
+          0.66,
+          0.37,
+          0.86,
+          0.72
+        ]
+      },
+      "vibDepth": {
+        "vibDepth": [
+          0.66,
+          1.0,
+          0.75,
+          0.5
+        ],
+        "detDepth": [
+          0.0,
+          0.25,
+          0.75,
+          1.0
+        ]
+      },
+      "depth": {
+        "depth": [
+          0.33,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "depthAmount": [
+          0.16,
+          0.35,
+          0.89,
+          0.82
+        ],
+        "rateAmount": [
+          0.2,
+          0.49,
+          0.6,
+          1.01
+        ],
+        "mixAmount": [
+          0.72,
+          0.8,
+          0.8,
+          0.9
+        ]
+      },
+      "main": {
+        "depth": [
+          0.25,
+          0.4,
+          0.66,
+          0.75
+        ],
+        "innerDepth": [
+          0,
+          0,
+          0.365,
+          0.355
+        ],
+        "innerRate": [
+          0,
+          0,
+          0.165,
+          0.445
+        ],
+        "vibRate": [
+          0,
+          0.14,
+          0,
+          0
+        ]
+      },
+      "diff": {
+        "enabled": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "diffusion": [
+          0,
+          0.275,
+          0.425,
+          0.605
+        ],
+        "size": [
+          0,
+          0.16,
+          0.37,
+          0.635
+        ]
+      }
+    },
+    "basePole": true,
+    "mainMathTarget": "mix",
+    "defaults": {
+      "aSchertler": 0.11023622006177902
+    },
+    "selectorOwnership": "User confirms Earth\u2192Drive, UM_Rate\u2192Vib, UM_innerDepth\u2192VibDepth, Main_Control\u2192Depth 2, Diffusion\u2192Diff. Remaining UM_SC Shaper\u2192Depth assignment inferred from remaining bank.",
+    "mainMathTargetStatus": "Main control depth 0.48 drives modulation Math B, per user; Mix Math identity provisionally inferred, exposed as mainMathTarget",
+    "mainSelectorScreenshot": {
+      "name": "Screenshot 2026-10-07 at 00.33.32.png",
+      "sha256": "b01b6e7f0edb24f87bb5194ae164da2ae6f855433690128a8b8bc8fa7da1787b",
+      "capturedDepths": [
+        0.25,
+        0.4,
+        0.66,
+        0.75
+      ],
+      "source": "User clarification and screenshot, 7 October 2026"
+    }
+  },
+  "records": [
+    {
+      "track": "FUZZ",
+      "device": "Instrument Layer [root 0]",
+      "modulator": "A~Fuzz",
+      "targets": [
+        {
+          "address": "Instrument Layer \u203a Fuzz SC Math \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-06"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-06",
+      "line": 243
+    },
+    {
+      "track": "FUZZ",
+      "device": "Instrument Layer [root 0]",
+      "modulator": "Fuzz Control",
+      "targets": [
+        {
+          "address": "Instrument Layer \u203a Select-4 \u203a Select",
+          "amount": 3.0,
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a Fuzz SC Math \u203a Operand/Signal B",
+          "amount": 0.51,
+          "evidence": "hover 2026-10-06"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-06",
+      "line": 244
+    },
+    {
+      "track": "FUZZ",
+      "device": "Instrument Layer [root 0]",
+      "modulator": "Fuzz SC Math",
+      "targets": [
+        {
+          "address": "Instrument Layer \u203a LFO \u203a Rate",
+          "amount": "x2.558",
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a Select-4 \u203a Select",
+          "amount": 1.52,
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a LFO \u203a Amount",
+          "amount": 0.285,
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Gain",
+          "amount": 0.105,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Mix",
+          "amount": 0.44,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a Mixer \u203a Volume",
+          "amount": 0.15,
+          "evidence": "unique-in-rack inference (label resolves to one target, verified on sibling rows)"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Output",
+          "amount": 0.035,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-06",
+      "line": 245
+    },
+    {
+      "track": "FUZZ",
+      "device": "Instrument Layer [root 0]",
+      "modulator": "LFO",
+      "targets": [
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Mix",
+          "amount": 0.065,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Low-Mid Gain",
+          "amount": 0.045,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a High-Mid Gain",
+          "amount": 0.02,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-06",
+      "line": 246
+    },
+    {
+      "track": "FUZZ",
+      "device": "Instrument Layer [root 0]",
+      "modulator": "Select-4 S1",
+      "targets": [
+        {
+          "address": "Instrument Layer \u203a Fuzz SC Math \u203a Operand/Signal B",
+          "amount": 0.74,
+          "evidence": "unique-in-rack inference (label resolves to one target, verified on sibling rows)"
+        },
+        {
+          "address": "Instrument Layer \u203a LFO \u203a Amount",
+          "amount": 0.215,
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a Mixer \u203a Volume",
+          "amount": 0.5,
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Output",
+          "amount": 0.165,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-06",
+      "line": 247
+    },
+    {
+      "track": "FUZZ",
+      "device": "Instrument Layer [root 0]",
+      "modulator": "Select-4 S2",
+      "targets": [
+        {
+          "address": "Instrument Layer \u203a Fuzz SC Math \u203a Operand/Signal B",
+          "amount": 0.36,
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a LFO \u203a Amount",
+          "amount": 0.34,
+          "evidence": "unique-in-rack inference (label resolves to one target, verified on sibling rows)"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a Mixer \u203a Volume",
+          "amount": 0.6,
+          "evidence": "unique-in-rack inference (label resolves to one target, verified on sibling rows)"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Output",
+          "amount": 0.2,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-06",
+      "line": 248
+    },
+    {
+      "track": "FUZZ",
+      "device": "Instrument Layer [root 0]",
+      "modulator": "Select-4 S3",
+      "targets": [
+        {
+          "address": "Instrument Layer \u203a Fuzz SC Math \u203a Operand/Signal B",
+          "amount": 0.48,
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a LFO \u203a Amount",
+          "amount": 0.48,
+          "evidence": "unique-in-rack inference (label resolves to one target, verified on sibling rows)"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a Mixer \u203a Volume",
+          "amount": 0.75,
+          "evidence": "unique-in-rack inference (label resolves to one target, verified on sibling rows)"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Output",
+          "amount": 0.3,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Input",
+          "amount": 0.095,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-06",
+      "line": 249
+    },
+    {
+      "track": "FUZZ",
+      "device": "Instrument Layer [root 0]",
+      "modulator": "Select-4 S4",
+      "targets": [
+        {
+          "address": "Instrument Layer \u203a LFO \u203a Amount",
+          "amount": 0.47,
+          "evidence": "hover 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a Mixer \u203a Volume",
+          "amount": 0.75,
+          "evidence": "unique-in-rack inference (label resolves to one target, verified on sibling rows)"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Output",
+          "amount": 0.325,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a MDMX Fuzz Stereo \u203a MDMX Fuzz Stereo \u203a Input",
+          "amount": 0.105,
+          "evidence": "hover after MDMX plugin restored, 2026-10-06"
+        },
+        {
+          "address": "Instrument Layer \u203a Fuzz SC Math \u203a Operand/Signal B",
+          "amount": 0.35,
+          "evidence": "unique-in-rack inference (label resolves to one target, verified on sibling rows)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-06",
+      "line": 250
+    },
+    {
+      "track": "Master",
+      "device": "FX Layer [root 0] > layer Mast > FX Layer (UberMod)",
+      "modulator": "A~Drive",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Drive SC \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 312
+    },
+    {
+      "track": "Master",
+      "device": "FX Layer [root 0] > layer Mast > FX Layer (UberMod)",
+      "modulator": "A~innerDepth",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_DEP SC \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 313
+    },
+    {
+      "track": "Master",
+      "device": "FX Layer [root 0] > layer Mast > FX Layer (UberMod)",
+      "modulator": "A~innerRate",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_RATE SC \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 314
+    },
+    {
+      "track": "Master",
+      "device": "FX Layer [root 0] > layer Mast > FX Layer (UberMod)",
+      "modulator": "A~Mix",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Mix Math \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 315
+    },
+    {
+      "track": "Master",
+      "device": "FX Layer [root 0] > layer Mast > FX Layer (UberMod)",
+      "modulator": "A~Noise",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Noise SC \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 316
+    },
+    {
+      "track": "Master",
+      "device": "FX Layer [root 0] > layer Mast > FX Layer (UberMod)",
+      "modulator": "A~wonk",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Wonk Math \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 317
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Depth - main",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 318
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "DetDepth",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetuneDepth",
+          "amount": 0.645,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 319
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "DetRate",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetuneRate",
+          "amount": 0.64,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 320
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Diffusio",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Diff Select \u203a Select",
+          "amount": 4.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 321
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Drive SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveInG",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 322
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "DriveInG",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveInGain",
+          "amount": 0.425,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 323
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "DriveNoi",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveNoiseGain",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 324
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Earth",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Select-4 2 \u203a Select",
+          "amount": 4.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 325
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Main control",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Main control select \u203a Select",
+          "amount": 4.0,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Main control select \u203a Select",
+          "amount": 0.48,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 326
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Mix",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Mix",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 327
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Mix Math",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Mix",
+          "amount": 0.5,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 328
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Noise SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveNoi",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 329
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "OverMod",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a OverMod",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 330
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S1 (Vib)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibRate",
+          "amount": -0.0,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetRate",
+          "amount": 0.15,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 331
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S1 (Drive)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveInG",
+          "amount": 0.45,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveNoi",
+          "amount": -0.0,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Noise SC \u203a Operand/Signal B",
+          "amount": 0.66,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Drive SC \u203a Operand/Signal B",
+          "amount": 0.36,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 332
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S1 (VibDepth)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibDepth",
+          "amount": 0.66,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetDepth",
+          "amount": 0.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 333
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S1 (Depth)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth - main",
+          "amount": 0.33,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_RATE SC \u203a Operand/Signal B",
+          "amount": 0.2,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_DEP SC \u203a Operand/Signal B",
+          "amount": 0.16,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Mix Math \u203a Operand/Signal B",
+          "amount": 0.72,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 334
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S1 (Depth 2)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth - main",
+          "amount": 0.25,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 335
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S1 (Diff)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DiffEnable",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 336
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S2 (Vib)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibRate",
+          "amount": 0.19,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetRate",
+          "amount": 0.15,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "B-row order differs between S blocks; each hovered",
+      "line": 338
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S2 (Drive)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveNoi",
+          "amount": 0.65,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveInG",
+          "amount": 0.51,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Drive SC \u203a Operand/Signal B",
+          "amount": 0.65,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Noise SC \u203a Operand/Signal B",
+          "amount": 0.37,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "B-row order differs between S blocks; each hovered",
+      "line": 339
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S2 (VibDepth)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetDepth",
+          "amount": 0.25,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibDepth",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "B-row order differs between S blocks; each hovered",
+      "line": 340
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S2 (Depth)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth - main",
+          "amount": 0.5,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_DEP SC \u203a Operand/Signal B",
+          "amount": 0.35,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_RATE SC \u203a Operand/Signal B",
+          "amount": 0.49,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Mix Math \u203a Operand/Signal B",
+          "amount": 0.8,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "B-row order differs between S blocks; each hovered",
+      "line": 341
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S2 (Depth 2)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth - main",
+          "amount": 0.4,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibRate",
+          "amount": 0.14,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "B-row order differs between S blocks; each hovered",
+      "line": 342
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S2 (Diff)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DiffEnable",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Diffusion",
+          "amount": 0.275,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DiffSize",
+          "amount": 0.16,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "B-row order differs between S blocks; each hovered",
+      "line": 343
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S3 (Vib)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibRate",
+          "amount": 0.37,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetRate",
+          "amount": 0.5,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 344
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S3 (Drive)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveNoi",
+          "amount": 0.8,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveInG",
+          "amount": 0.74,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Drive SC \u203a Operand/Signal B",
+          "amount": 0.53,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Noise SC \u203a Operand/Signal B",
+          "amount": 0.86,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 345
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S3 (VibDepth)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetDepth",
+          "amount": 0.75,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibDepth",
+          "amount": 0.75,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 346
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S3 (Depth)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth - main",
+          "amount": 0.5,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_RATE SC \u203a Operand/Signal B",
+          "amount": 0.6,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_DEP SC \u203a Operand/Signal B",
+          "amount": 0.89,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Mix Math \u203a Operand/Signal B",
+          "amount": 0.8,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 347
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S3 (Depth 2)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth - main",
+          "amount": 0.66,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "UM_innerDepth (macro; short tooltip)",
+          "amount": 0.365,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_Rate",
+          "amount": 0.165,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 348
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S3 (Diff)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DiffEnable",
+          "amount": 1.0,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Diffusion",
+          "amount": 0.425,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DiffSize",
+          "amount": 0.37,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 349
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S4 (Vib)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibRate",
+          "amount": 0.63,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetRate",
+          "amount": 1.0,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 350
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S4 (Drive)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveNoi",
+          "amount": 1.0,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DriveInG",
+          "amount": 0.4,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Drive SC \u203a Operand/Signal B",
+          "amount": 0.84,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Noise SC \u203a Operand/Signal B",
+          "amount": 0.72,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 351
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S4 (VibDepth)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DetDepth",
+          "amount": 1.0,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibDepth",
+          "amount": 0.5,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 352
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S4 (Depth)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth - main",
+          "amount": 0.5,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_RATE SC \u203a Operand/Signal B",
+          "amount": 1.01,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_DEP SC \u203a Operand/Signal B",
+          "amount": 0.82,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Mix Math \u203a Operand/Signal B",
+          "amount": 0.9,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 353
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S4 (Depth 2)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Depth - main",
+          "amount": 0.75,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_Rate",
+          "amount": 0.445,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "UM_innerDepth (macro; short tooltip)",
+          "amount": 0.355,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 354
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "S4 (Diff)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DiffEnable",
+          "amount": 1.0,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Diffusion",
+          "amount": 0.605,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a DiffSize",
+          "amount": 0.635,
+          "evidence": "row label unique within block (VibRate/DetRate/DiffEnable etc. are plugin params of same name)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 355
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "UM_DEP SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_innerDepth",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibDepth",
+          "amount": 0.18,
+          "evidence": "row label (single plausible target in this device)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 356
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "UM_innerDepth",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Select-4 (UM_innerDepth) \u203a Select",
+          "amount": 4.0,
+          "evidence": "row label (single plausible target in this device)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 357
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "UM_Rate",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Select-4 (UM_Rate) \u203a Select",
+          "amount": 4.0,
+          "evidence": "row label (single plausible target in this device)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 358
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "UM_RATE SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a UM_Rate",
+          "amount": 0.92,
+          "evidence": "row label (single plausible target in this device)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibRate",
+          "amount": 0.255,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 359
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "UM_SC Shaper",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Select-4 (UM_SC Shaper) \u203a Select",
+          "amount": 4.0,
+          "evidence": "row label (single plausible target in this device)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 360
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "VibDepth",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibratoDepth",
+          "amount": 1.0,
+          "evidence": "row label (single plausible target in this device)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 361
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "VibRate",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a VibratoRate",
+          "amount": 0.515,
+          "evidence": "row label (single plausible target in this device)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 362
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Wonk Math",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Delay",
+          "amount": 0.44,
+          "evidence": "row label (single plausible target in this device)"
+        },
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Feedback",
+          "amount": 0.27,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 363
+    },
+    {
+      "track": "Master",
+      "device": "... > UberMod controlled 4.1 > ValhallaUberMod",
+      "modulator": "Wonk SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a UberMod controlled 4.1 \u203a ValhallaUberMod \u203a Wonk Math \u203a Operand/Signal B",
+          "amount": 1.0,
+          "evidence": "row label (single plausible target in this device)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "note": "Select rows in tail: which Select-4 they drive is inferred from owning modulator name",
+      "line": 364
+    },
+    {
+      "track": "Master",
+      "device": "... > layer Mast > FX Layer (Scheps 73 Stereo)",
+      "modulator": "Math",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a Mix",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 385
+    },
+    {
+      "track": "Master",
+      "device": "... > layer Mast > FX Layer (Scheps 73 Stereo)",
+      "modulator": "schertler mix",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a Math \u203a Operand/Signal B",
+          "amount": 1.0,
+          "evidence": "hover 2026-10-07"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 386
+    },
+    {
+      "track": "Master",
+      "device": "... > layer Mast > FX Layer (Scheps 73 Stereo)",
+      "modulator": "~a schertler mix",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mast \u203a FX Layer \u203a Math \u203a Operand/Signal A",
+          "amount": 0.66,
+          "evidence": "unique in rack (only Math has A input)"
+        }
+      ],
+      "source": "Device Inspector + hover, 2026-10-07",
+      "line": 387
+    }
+  ],
+  "assumptions": [
+    "Fuzz Select depth 3 spans S1 to S4 without a silent zero pole. UM depth 4 retains the existing empty-zero convention.",
+    "Fuzz rate-factor x2.558 uses the same provisional exponential host law as Deci; host feedback evaluation/clipping need A/B audition.",
+    "Uncaptured Math operand and Mixer baselines default to zero and remain controls. Only the Fuzz feedback edge uses a previous-block value.",
+    "Shared chain excludes Verb and reserved dynamic FX by default; those retain direct master returns.",
+    "Scheps wet/dry uses the captured outer Math: schertler mix times external source times 0.66."
+  ]
+}

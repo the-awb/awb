@@ -1,0 +1,313 @@
+{
+  "schema": 1,
+  "pluginName": "Scheps 73 Stereo",
+  "track": "Master",
+  "role": "shared processing chain; Bitwig Master placement is not an SC ownership requirement",
+  "source": [
+    {
+      "name": "Screenshot 2026-10-06 at 23.36.39.png",
+      "sha256": "b4d12f5a423fb9b60687295eff28d7dd43ad630b4886204e1940bf608d04fdd3",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 23.36.51.png",
+      "sha256": "75944126c200868f31b74e72879e0f93ba95f0ea1ca7959af47798cae26854bb",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 23.37.01.png",
+      "sha256": "7489e2643622f02339e6fa5f304cb379a38c294ecee9a9d354bd5c8010269348",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 23.37.11.png",
+      "sha256": "1edd92dcdb06df5cb83d4cdb1a827247ee4698b96068ef4b1a506e5dc9481a02",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 23.37.19.png",
+      "sha256": "cd272c964485d75cd0139eb72c01f01e18d714dd5e0fabfe4224ed3feca4a01c",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 23.37.30.png",
+      "sha256": "13f6f31f16dc67d2248b0e4754e97dbcbc0ed724618ed351fb4db68afabaf46b",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 23.37.38.png",
+      "sha256": "3154c3f35fc6ac1f7e07b6e8d98bf932d2963a2515b4250438b41707d5e22e85",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "PreAmp L/M",
+      "display": "-25M",
+      "index": 0,
+      "normalized": 0.36842104792595,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-25M"
+    },
+    {
+      "name": "PreAmp R/S",
+      "display": "-25M",
+      "index": 1,
+      "normalized": 0.36842104792595,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-25M"
+    },
+    {
+      "name": "PreAmp Drive",
+      "display": "On",
+      "index": 2,
+      "normalized": 1.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "On"
+    },
+    {
+      "name": "PreAmp On/Off",
+      "display": "On",
+      "index": 3,
+      "normalized": 1.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "On"
+    },
+    {
+      "name": "High On/Off",
+      "display": "On",
+      "index": 4,
+      "normalized": 1.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "On"
+    },
+    {
+      "name": "High Gain L/M",
+      "display": "5.1 dB",
+      "index": 5,
+      "normalized": 0.6700000166893,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "5.1 dB"
+    },
+    {
+      "name": "High Gain R/S",
+      "display": "5.1 dB",
+      "index": 6,
+      "normalized": 0.6700000166893,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "5.1 dB"
+    },
+    {
+      "name": "Mid On/Off",
+      "display": "On",
+      "index": 7,
+      "normalized": 1.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "On"
+    },
+    {
+      "name": "Mid Frequency L/M",
+      "display": "1.6 Hz",
+      "expectedFrequencyHz": 1600,
+      "expectedFrequencySource": "Same display convention as the mono instance; intended 1.6 kHz, not a measured frequency response.",
+      "index": 8,
+      "normalized": 0.33333334326744,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "1.6 Hz"
+    },
+    {
+      "name": "Mid Frequency R/S",
+      "display": "1.6 Hz",
+      "expectedFrequencyHz": 1600,
+      "expectedFrequencySource": "Same display convention as the mono instance; intended 1.6 kHz, not a measured frequency response.",
+      "index": 9,
+      "normalized": 0.33333334326744,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "1.6 Hz"
+    },
+    {
+      "name": "Mid Gain L/M",
+      "display": "3.6 dB",
+      "index": 10,
+      "normalized": 0.62000000476837,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "3.6 dB"
+    },
+    {
+      "name": "Mid Gain R/S",
+      "display": "3.6 dB",
+      "index": 11,
+      "normalized": 0.62000000476837,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "3.6 dB"
+    },
+    {
+      "name": "Low On/Off",
+      "display": "On",
+      "index": 12,
+      "normalized": 1.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "On"
+    },
+    {
+      "name": "Low Frequency L/M",
+      "display": "110 Hz",
+      "index": 13,
+      "normalized": 0.66666668653488,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "110 Hz"
+    },
+    {
+      "name": "Low Frequency R/S",
+      "display": "110 Hz",
+      "index": 14,
+      "normalized": 0.66666668653488,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "110 Hz"
+    },
+    {
+      "name": "Low Gain L/M",
+      "display": "-5.2 dB",
+      "index": 15,
+      "normalized": 0.32666665315628,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-5.2 dB"
+    },
+    {
+      "name": "Low Gain R/S",
+      "display": "-5.2 dB",
+      "index": 16,
+      "normalized": 0.32666665315628,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-5.2 dB"
+    },
+    {
+      "name": "High Pass L/M",
+      "display": "160 Hz",
+      "index": 17,
+      "normalized": 0.66666668653488,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "160 Hz"
+    },
+    {
+      "name": "High Pass R/S",
+      "display": "160 Hz",
+      "index": 18,
+      "normalized": 0.66666668653488,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "160 Hz"
+    },
+    {
+      "name": "High Pass L/M On/Off",
+      "display": "Off",
+      "index": 19,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Off"
+    },
+    {
+      "name": "High Pass R/S On/Off",
+      "display": "Off",
+      "index": 20,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Off"
+    },
+    {
+      "name": "EQ",
+      "display": "In",
+      "index": 21,
+      "normalized": 1.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "In"
+    },
+    {
+      "name": "Phase L/M",
+      "display": "Out",
+      "index": 22,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Out"
+    },
+    {
+      "name": "Phase R/S",
+      "display": "Out",
+      "index": 23,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Out"
+    },
+    {
+      "name": "Monitor",
+      "display": "Stereo",
+      "index": 24,
+      "normalized": 0.5,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Stereo"
+    },
+    {
+      "name": "EQ Mode",
+      "display": "Stereo",
+      "index": 25,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Stereo"
+    },
+    {
+      "name": "Input L/M",
+      "display": "6.5 dB",
+      "index": 26,
+      "normalized": 0.84722220897675,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "6.5 dB"
+    },
+    {
+      "name": "Input R/S",
+      "display": "6.5 dB",
+      "index": 27,
+      "normalized": 0.84722220897675,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "6.5 dB"
+    },
+    {
+      "name": "Output L/M",
+      "display": "-16.5 dB",
+      "index": 28,
+      "normalized": 0.20833332836628,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-16.5 dB"
+    },
+    {
+      "name": "Output R/S",
+      "display": "-16.5 dB",
+      "index": 29,
+      "normalized": 0.20833332836628,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-16.5 dB"
+    },
+    {
+      "name": "Link I/O",
+      "display": "Unlinked",
+      "index": 30,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Unlinked"
+    }
+  ],
+  "normalizedValuesVerified": true,
+  "notes": [
+    "Stereo plugin is distinct from Scheps 73 Mono on Cello 1; do not reuse mono parameter indexes or normalized values.",
+    "Repeated pinned PreAmp L/M row is recorded once.",
+    "High Pass is configured to 160 Hz on both sides but switched Off.",
+    "These are displayed baseline values, not an exported plugin state. Actual stereo parameter indexes and normalized values remain to be verified.",
+    "The external Scheps container wet/dry mix remains modulated as captured; these screenshots do not remove that routing.",
+    "All supplied displayed values matched actual installed plugin readbacks; normalized indexes recorded independently for this stereo child. Dedicated sandbox hosting; no CPU/dropout benchmark."
+  ],
+  "hosting": {
+    "path": "/Library/Audio/Plug-Ins/VST3/WaveShell1-VST3 17.1.vst3",
+    "key": "Scheps 73 Stereo.vst3",
+    "mode": "sandbox",
+    "version": "17.1.42.50",
+    "readbackEvidence": "/private/tmp/awb-new-waves-check/verified.log"
+  }
+}

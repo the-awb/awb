@@ -1919,6 +1919,52 @@ Node tests plus production build (`/private/tmp/awb-rack-commit-20261006`).
 Previous hardware load captures and GUI checks remain historical evidence.
 Vault and Telegram connectors are unavailable, so no external update is claimed.
 
+### Persistent rack send architecture cost — 6 October 2026
+
+Quiet hardware investigation completed: eight stereo channels with 8/16/24/32
+send destinations, full/zero/sparse/moving gains, two passes in reverse order.
+The current shared channel Synth is cheaper than one fader plus independent send
+Synths when every route stays running. At 24 sends: 1.75% versus 2.65% average SC
+callback CPU for all-active gains; 1.88% versus 2.78% at 15Hz full-bank automation.
+An additional paired 24-slot test suspending zero-gain sends shows the tradeoff:
+four active sends per channel cost 1.12% versus 1.66% for the fixed strip. No
+production routing or full/packed voice wrapper changed. Consider an optional
+active-route policy only with fade-to-zero/resume semantics and transient tests;
+per-connection AWParam Synths remain justified by ownership/flexibility, rather
+than an assumption that more nodes are inherently cheaper.
+
+Regular and paused layouts each pass 24 offline settled audio comparison windows.
+There are 64 completed main measurement phases and 12 supplementary phases. The
+main final JSON export failed after measurement; log aggregates were recovered,
+raw repeated status rows were lost, and its runner remains recorded as failed.
+The exporter is fixed and the supplementary run passes with raw rows/checkpoints.
+MOTU 1248, 44.1kHz/64-sample SC blocks/512-frame driver callbacks, 4 configured SC
+outputs; installed SC 3.12.2, muted output. No GUI/bridge/FX/dropout or patched
+engine-query validation in this benchmark. Owned servers exited. Detailed scope,
+results and retained provenance: `apps/rack/sc/bench/send-layout/README.md`.
+No commit, live installation, Vault update or Telegram notification in this run;
+Vault/Telegram connectors are unavailable.
+
+Crossover/load follow-up: 156 additional phases complete and retained. Light-load
+crossover is approximately 13 inactive of 24, or 17 inactive of 32, for eight
+stereo channels and genuinely suspended routes. Differences at the boundary are
+only 0.07–0.08 SC CPU points. A fixed 48-node DSP background and a 60-node,
+preallocated ABBA/BAAB comparison do not establish a single loaded breakpoint:
+sparse results are non-monotonic and some balanced-block signs flip. The former
+light thresholds favour the shared strip under the heavier fixture. Fully active
+shared strips win all light and loaded paired blocks. Three heavy phases show
+sampled SC peaks above 100% across both layouts, without return-audio capture;
+no dropout count or causal scheduler/power/cache explanation is established.
+
+Next investigation, if a loaded crossover is still useful: longer stable paired
+windows and separate callback thread CPU versus elapsed-time/trace evidence,
+before treating small differences as routing effects. Keep the production strip
+and packed/full wrappers unchanged. No adaptive layout/pause policy is built.
+Detailed per-block evidence and caveats:
+`apps/rack/sc/bench/send-layout/crossover-20261006.json` and its README. All four
+follow-up runners pass and owned servers exit. No commit or live installation.
+
+
 ### Modulation source registration — 6 October 2026
 
 Implemented on `integration/bw-sc`: Core-owned AWModulationRegistry with named
@@ -1946,3 +1992,198 @@ Implementation recorded in the registration commit checkpoint; no live class
 installation. Next: AWBaseTool rename and
 helpers, real follower → AWParam → Chain migration, then reusable modulators.
 Vault and Telegram tools are unavailable in this session.
+
+
+### Verb mix-profile development slice — 6 October 2026
+
+Implemented on `integration/bw-sc` after registration commit `9345108`, currently
+uncommitted: reusable owned AWSelectN, set-specific AWBVerbMixProfile and opt-in
+native rack attachment. The existing follower/blender output is borrowed into one
+selector AWParam; its formula and lifetime remain upstream. Twenty captured
+Select-4 depths act on five normalized branch parameters before the effects;
+static Tool gains are preserved there and wet convolution gains remain on the
+returns. No sum-to-one normalization. The follow-on branch tail-bypass slice
+below adds independent suspension after draining.
+
+Captured hierarchical rows and hash are retained in
+`apps/rack/sc/sets/awb52/verb-profile.json`. The zero-position policy is still
+configurable/unconfirmed and the cubic Tool Volume law is inferred from capture
+pairs; exact host/listening comparison remains open. Separate all-branches
+full-load mode is preserved. Dynamic generation disposal now has a resource
+callback so profiles release their KR buses when a generation is removed.
+
+Private Core regression plus new selector DSP passes 201 existing checks and
+89 new checks in `/private/tmp/awb-verb-select-20261006-final`. Actual convolution
+and VST profile render passes 26 native contracts and 24 audio checks in
+`/private/tmp/awb52-verb-profile-20261006-c`, including tails, independent dynamic
+clone, disposal and silence after close. The VST cache is now private per runner;
+an earlier cache-guard failure is retained rather than called a pass. Existing
+rack native/offline/Node/build regression passes in
+`/private/tmp/awb-rack-verb-lifecycle-20261006`.
+
+Next: host/listening confirmation of selector locations/taper, explicit live
+BaseLaunch follower/blender attachment and MIDI convenience rewiring, then the
+profile/control GUI and the already-agreed proper hardware DSP/dropout run.
+This slice performs no hardware performance test or live class installation.
+Vault and Telegram tools are unavailable; no external note/notification claimed.
+
+Final adapter repeats after compiling the profile gain path only when enabled:
+28 set contracts + 24 audio assertions with sixteen control sends in
+`/private/tmp/awb52-verb-controls-20261006-final`; 22 contracts + 24 audio assertions
+for separate all-branches mode in `/private/tmp/awb52-verb-legacy-20261006-final`.
+Both pass the installed-cache guard. BaseLaunch's actual live attachment and the
+new profile GUI remain explicit follow-ups, not completed by these offline tests.
+
+
+### Verb branch tail bypass — 6 October 2026
+
+Uncommitted follow-on: AWFXTailGate owns an independently pauseable processor
+Group with always-running ingress/return guards. Verb profile mode splits its
+five effects into five Groups, closes input at effective AWParam mix zero, drains
+tails, then pauses after minimum duration plus sustained quiet. Resume precedes
+new input; upstream blender and AWParam transitions remain intact. Convolution
+minimums cover each used IR plus FFT latency. Plugin branches have minimum/quiet
+policies; there is no forced cap by default, with an explicit optional maxTail.
+Pause retains buffers/plugin state; background plugin threads are not covered.
+Legacy/full-load graph remains separate and unchanged in behaviour.
+
+Private regression evidence: `/private/tmp/awb-tail-gate-20261006-final` passes
+290 existing checks plus 15 tail contracts and 35 offline DSP assertions, including
+processor counters proving actual suspension/resume. Actual 16-control-send
+profile render and branch/dynamic-generation ownership contracts:
+`/private/tmp/awb52-tail-verb-20261006-verified` (36 contracts, 24 audio checks).
+Separate legacy render: `/private/tmp/awb52-tail-legacy-20261006-final` (22 contracts,
+24 audio checks). No live install, hardware audio or
+performance claim. Remaining hardware/dropout and host/listening checks above
+are still pending. Vault and Telegram tools remain unavailable.
+
+
+### Active FX modulation clarification and Fuzz baseline — 6 October 2026
+
+User confirms all captured Math stages multiply follower input by amount.
+Sparkle has three selector roles: one profiles modulation amounts, two profile
+wet/dry at different depths; no LFO is required there. Deci LFO is sine, base
+0.04 Hz, Free mode, phase 0, bipolar, base amount 0, with amount driven entirely
+by Select-4. These clarifications are now implemented in the opt-in
+Deci/Sparkle graph described below. Retain captured selector-to-depth feedback routes
+when planning the corresponding control graph.
+
+The user has restored MDMX Fuzz Stereo and supplied 20 displayed base settings
+in five screenshots, captured in `apps/rack/sc/sets/awb52/fuzz-baseline.json`.
+Rack/container gain is separately confirmed -5 dB and already applied in the SC
+set; this is distinct from the plugin Gain -2.1 dB. WaveShell 17.1 exposes the restored MDMX Fuzz Stereo child; its normalized
+settings remain unverified and the native approximation is not yet replaced. No live state changed, no plugin
+scan/loading or hardware test performed for this capture. Vault/Telegram tools
+are unavailable in this session.
+
+
+Restored Scheps 73 Mono on Cello 1: four user screenshots supply 18 displayed
+baseline settings in `apps/rack/sc/sets/awb52/scheps73-baseline.json`. The captured
+Mid Frequency label is 1.6 Hz; the user expects the GUI value 1.6 to mean 1.6 kHz.
+The intended 1600 Hz value is stored separately; selector normalized 1/3 now
+reads the same Waves label, with all eighteen settings verified below.
+The user confirms every Scheps control is static, with no modulation routes.
+Normalized conversion and optional SC cello processing are implemented below;
+no hidden-state export or installed class-library change is claimed.
+
+
+### Cello + Deci/Sparkle implementation checkpoint — 6 October 2026
+
+`apps/rack/sc/sets/awb52` now includes static verified Scheps 73 Mono before the
+persistent cello rack channel, plus captured Deci/Sparkle KR modulation profiles.
+The prepared specification and example use these with Verb profiles. The existing
+Rack ToolInstance/NodeManager remains the owner; no extra GUI host. Effects still
+use actual installed processors, with Fuzz's native stand-in and UM omission
+retained. No live class paths or Bitwig files changed; changes are uncommitted.
+
+Named AWParams retain base/amount/curve transitions and borrow upstream blender
+outputs. Independent Math inputs stay independent. VST parameter modulation reads
+mapped KR buses directly; it creates no continuous language OSC automation stream.
+The two FX profiles install unique per-instance SynthDefs on the selected server,
+with independent per-generation Groups/buses and disposal callbacks. Explicit
+LocalIn state covers cyclic edges; other graph edges execute in the same block.
+Sparkle has three main selector roles plus its nested tail selector and no LFO.
+Deci uses the clarified free bipolar sine: 0.04 Hz, zero base amount, Select-4
+amount depths 0/.175/.35/.695. Captured gain modulation is included.
+
+Waves Scheps needs a dedicated VSTPlugin subprocess (`mode:sandbox`): an owned
+probe demonstrated that direct loading throws `NSWindow should only be
+instantiated on the main thread`. The verified child descriptor is loaded from a
+private generated cache, preserving the installed cache. Its eighteen static
+values include selector 1/3, displayed by Waves as “1.6 Hz” (user's intended
+1.6 kHz retained separately), -45M and all gains/switches.
+
+Evidence `fx-migration-validation.json` points to
+`/private/tmp/awb52-fx-migration-final`: 45 contracts, 24 offline audio checks,
+55 actual modulation-output checks, and 34 plugin readbacks pass. Readbacks
+compare mapping with direct setting after plugin quantization. The owned hardware
+server was muted with no ADC connection, and was quit after checking. This is
+functional evidence, not a CPU/dropout result. Installed plugin cache unchanged.
+
+Remaining audition choices: uncaptured Math/mixer baselines default to zero;
+Tool volume taper, empty-zero selector policy and Bitwig feedback timing are
+inferred. Native EQ-DJ is approximate; Deci/Sparkle branch tail-pausing is not
+implemented. BaseLaunch's full source startup/MIDI assignment remains explicit.
+Next proper load test must include the Waves host subprocess and the new KR
+mapping graph, alongside the actual active/quiet FX and rack bridge. Existing
+boundary numbers do not measure this graph. Vault/Telegram tools are unavailable.
+
+Legacy/full-load regression: `/private/tmp/awb52-fx-migration-legacy-final`,
+22 contracts + 24 offline audio checks pass; installed plugin cache unchanged.
+
+
+### Shared UM / stereo Scheps migration clarification — 6 October 2026
+
+Captured contract only: `apps/rack/sc/sets/awb52/master-profile.json` records
+that Bitwig Master placement need not be mirrored as SC ownership. Preserve
+which sources traverse the shared processing chain; Verb joins after it. EQ
+is deferred at user request. UM Main control depth 4.0 drives Select; depth
+0.48 drives Signal B of its modulation Math, correcting the duplicated selector
+address in the raw capture.
+
+Seven user screenshots supply 31 displayed stereo Scheps baseline settings in
+`scheps73-stereo-baseline.json`; this is distinct from Cello 1's mono instance.
+Actual stereo indexes/normalized values and readbacks remain unverified. The
+SC adapter still omits UM/shared stereo Scheps; no runtime or performance change
+was made. Telegram and Vault tools are unavailable.
+
+
+### Actual Fuzz and shared UM / stereo Scheps — 7 October 2026
+
+The AWB 5.2 adapter now has opt-in actual MDMX Fuzz Stereo and a native
+`AWBSharedFXChain` backed by `AWBChain : Tool`. Mast/Fuzz/Deci/Spark returns feed
+UM → stereo Scheps before the rack master; Verb joins directly. EQ remains
+excluded. Borrowed return destinations persist across processor replacement
+and retiring generations; closing the shared Chain restores direct returns.
+The Chain owns its AWParam graph, two processors and internal audio bus while
+borrowing its external ports. Its instance factory unregisters on close.
+
+Actual WaveShell 17.1 descriptors and plugin readbacks verify twenty MDMX and
+thirty-one stereo Scheps baseline settings. Enum/string setters proved ambiguous;
+verified normalized settings are stored instead, including the quantized -25M
+preamp positions. Waves hosting uses VSTPlugin sandbox mode. The installed cache
+is preserved; the example and prepared projection now enable all three additions.
+
+Fuzz and UM use independent AWParam source/amount controls and KR plugin mapping.
+The existing follower/blender remains upstream. User-confirmed UM bank ownership
+is Earth → Drive, UM_Rate → Vib, UM_innerDepth → VibDepth, Main → the screenshot's
+Depth bank, Diffusion → Diff. Shaper's remaining bank assignment and Main .48 →
+Mix Math B remain provisional/configurable. Fuzz's captured LFO routes exist but
+are disabled pending waveform/rate/base confirmation. Host tapers, clipping and
+feedback timing still require musical A/B; this is not an exact preset export.
+Only exported BaseLaunch sources are documented as control inputs; the complete
+legacy blender network is not instantiated or automatically wired here.
+
+`fx-migration-validation.json` records `/private/tmp/awb52-additional-complete`:
+60 native contracts, 27 actual audio assertions (including shared wet processing),
+55 existing Deci/Sparkle checks, 92 Fuzz/UM KR output checks and 119 real-time
+plugin readbacks pass. The muted readback probe closes its owned server. No CPU,
+dropout or GUI performance measurement was made, no live class-path installation
+occurred, and the installed plugin cache is unchanged. Rack and Chain regressions
+pass (31 and 11 Node tests respectively, plus their native/audio contracts);
+original mode passes with generated IRs. The prepared example is ready for
+explicit input-port selection and audition. The verified checkpoint is being
+committed on `integration/bw-sc` for fast-forward integration into local `main`;
+unrelated Bitwig-capture and shell edits remain outside that commit. SC class-path
+configuration is unchanged; the set README lists the four include paths needed
+for ordinary IDE access.

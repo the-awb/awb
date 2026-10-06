@@ -1,0 +1,158 @@
+{
+  "passed": true,
+  "comparisonWindows": 24,
+  "rate": 44100,
+  "blockSize": 64,
+  "channels": 8,
+  "width": 2,
+  "checks": [
+    {
+      "sends": 8,
+      "profile": "full",
+      "maxDifference": 1.1175870895385742e-08,
+      "sendPeak": 0.06788589060306549
+    },
+    {
+      "sends": 8,
+      "profile": "zero",
+      "maxDifference": 2.0679515313825692e-25,
+      "sendPeak": 1.0505917562459435e-18
+    },
+    {
+      "sends": 8,
+      "profile": "sparse",
+      "maxDifference": 7.450580596923828e-09,
+      "sendPeak": 0.04272545501589775
+    },
+    {
+      "sends": 8,
+      "profile": "moving",
+      "maxDifference": 1.1175870895385742e-08,
+      "sendPeak": 0.06210000813007355
+    },
+    {
+      "sends": 8,
+      "profile": "faderMuteSolo",
+      "maxDifference": 0.0,
+      "sendPeak": 0.006621748674660921
+    },
+    {
+      "sends": 8,
+      "profile": "closed",
+      "maxDifference": 0.0,
+      "sendPeak": 0.0
+    },
+    {
+      "sends": 16,
+      "profile": "full",
+      "maxDifference": 1.1175870895385742e-08,
+      "sendPeak": 0.06788589060306549
+    },
+    {
+      "sends": 16,
+      "profile": "zero",
+      "maxDifference": 8.271806125530277e-25,
+      "sendPeak": 6.240702181714495e-18
+    },
+    {
+      "sends": 16,
+      "profile": "sparse",
+      "maxDifference": 7.450580596923828e-09,
+      "sendPeak": 0.04272545501589775
+    },
+    {
+      "sends": 16,
+      "profile": "moving",
+      "maxDifference": 1.1175870895385742e-08,
+      "sendPeak": 0.06209997460246086
+    },
+    {
+      "sends": 16,
+      "profile": "faderMuteSolo",
+      "maxDifference": 0.0,
+      "sendPeak": 0.006621748674660921
+    },
+    {
+      "sends": 16,
+      "profile": "closed",
+      "maxDifference": 0.0,
+      "sendPeak": 0.0
+    },
+    {
+      "sends": 24,
+      "profile": "full",
+      "maxDifference": 1.1175870895385742e-08,
+      "sendPeak": 0.06788589060306549
+    },
+    {
+      "sends": 24,
+      "profile": "zero",
+      "maxDifference": 1.0339757656912846e-25,
+      "sendPeak": 1.0538058699135949e-18
+    },
+    {
+      "sends": 24,
+      "profile": "sparse",
+      "maxDifference": 7.450580596923828e-09,
+      "sendPeak": 0.04272545501589775
+    },
+    {
+      "sends": 24,
+      "profile": "moving",
+      "maxDifference": 1.1175870895385742e-08,
+      "sendPeak": 0.06503798067569733
+    },
+    {
+      "sends": 24,
+      "profile": "faderMuteSolo",
+      "maxDifference": 0.0,
+      "sendPeak": 0.006621748674660921
+    },
+    {
+      "sends": 24,
+      "profile": "closed",
+      "maxDifference": 0.0,
+      "sendPeak": 0.0
+    },
+    {
+      "sends": 32,
+      "profile": "full",
+      "maxDifference": 1.1175870895385742e-08,
+      "sendPeak": 0.06788589060306549
+    },
+    {
+      "sends": 32,
+      "profile": "zero",
+      "maxDifference": 4.1359030627651384e-25,
+      "sendPeak": 3.749700292979949e-18
+    },
+    {
+      "sends": 32,
+      "profile": "sparse",
+      "maxDifference": 7.450580596923828e-09,
+      "sendPeak": 0.04272545501589775
+    },
+    {
+      "sends": 32,
+      "profile": "moving",
+      "maxDifference": 1.1175870895385742e-08,
+      "sendPeak": 0.06536877900362015
+    },
+    {
+      "sends": 32,
+      "profile": "faderMuteSolo",
+      "maxDifference": 0.0,
+      "sendPeak": 0.006992836948484182
+    },
+    {
+      "sends": 32,
+      "profile": "closed",
+      "maxDifference": 0.0,
+      "sendPeak": 0.0
+    }
+  ],
+  "limits": [
+    "Offline audio equivalence only; no CPU or hardware deadline result",
+    "Split mode retains all send nodes even at zero gain"
+  ]
+}

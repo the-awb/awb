@@ -1,0 +1,197 @@
+{
+  "passed": false,
+  "liveRequested": true,
+  "evidence": "/private/tmp/awb-send-layout-live-20261006",
+  "sourceHashes": {
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolInstance.sc": "cec11b581d5fd54fcdca9f2016e240e752f9578bbaa801cdef0c2b7be471ef4c",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/NodeManager.sc": "0bbc8da3ae3cd823f91ce0fdeb3132699ab37ebbb9e6dd201950482cf8dc7817",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/Classes/EventPreset.sc": "1ed87a392a21c00ef69f980a4a6b9608635d550139173ae99b6000c83f3c220b",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/VirtualOrphanContainer.sc": "bc18d217fc74eb8d3afdaf522d0e73e0091d95eda71a5ea946f3a2bf46a1fe6e",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolGUIContract.sc": "fa8d98a87d4af593c9c9d87486a5ad6cf74a9afd00b1be1cbd025494b01aec80",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/Classes/PStreamPlayer.sc": "2b80c70e06ac59c7e0efa1753f5c8f641e076c6ba77e595a3b87a1580995a821",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/Tool.sc": "28a040516d0402a226c3cc0a0711f0310aa7da57a2d93c04e1247c19cf62ff49",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/HarmonicContext.sc": "8fba4164b2848de2c517b6c0132b5684982b15ed4b916ac2f370e8fc7909fe07",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolLauncher.sc": "0bcb8a47f73d8949ab3a5816c50a2f3750c62d3f36567934ab9cca3a0fcb2a57",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/Classes/EventStreamPlayerWithTracking.sc": "578d87478b8cfcbbf1274699341c5effed8b7b6a4a1e095615a928ada87a6b49",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/Classes/Preset.sc": "ea684c406703ddbdda658ef7efb115bcc9c88ad3099c0f678ea9eace51ab9190",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/Classes/PresetSubclasses.sc": "f90a2ec64c9789f7ee4b808c34f23cb7baf070435f27ca839360d3efa13eb6ee",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/SessionRecorder.sc": "33f61c37a273eae1966f2833f5515a25087c68119d3c1bca16763098e35a6ebf",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolPresetLibrary.sc": "70b4db4f9db1df2137d3be272960432ce1d01b99cca217781ff51578171ab413",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolPresetApplyDialogs.sc": "7cac34aabe2028c4634e4a2b39a9a5c0d9771f6ff6b8702a39fd3875a3847334",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/PlaylistGUI.sc": "40233edc9d4ae5554e5053a16cbf5cf5e24e9539ade8512eba356759968136ac",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolRegistry.sc": "c5201e894988d4de5e3bb3600b39211e3ad4d612e358d2edd4b628e3b7423b41",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolDefinition.sc": "b975f00e7ace6eb844f490185b7a4f3b56d1f64ad7de6ca586cd4d9efcca8efb",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/Playlist.sc": "52dc4ee3acbb028a5f348085788ca9dd9ca8a3f311efe742c29d5fc1704e93dd",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolInstanceControls.sc": "c4b763b634f5a9dfeea34ebff38441803336c03e32128b036511b76d7ece1f7a",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/classes WIP/ToolInstanceRecordCodec.sc": "2451a64639d48a6ee59ad539f57631b7e49957684a97ebe3b4aa6c131dd68d1e",
+    "/Users/willy/awb/apps/rack/sc/classes/AWBControlSendProfile.sc": "649ecb7266ea89a5130e05458b61ee4dbd610a8ef4af60107c8a6e653bc43ea9",
+    "/Users/willy/awb/apps/rack/sc/classes/AWBSendRackVoice.sc": "1c2128a32a3dcd32c22be59eb410903b54668329a5b471893cd2b95fb88935af",
+    "/Users/willy/awb/apps/rack/sc/classes/AWBSendRackTool.sc": "3e2efc63873e7d16723f0dcb766b0ab20f839aad9ef13adc366112281f81a87a",
+    "/Users/willy/awb/apps/rack/sc/bench/send-layout/run.py": "1aa1470c1cd8c364deac7c293eb4169450c7b4fb7f857b94e23daab7fb0fb85d",
+    "/Users/willy/awb/apps/rack/sc/bench/send-layout/definitions.scd": "108d00892722d47c4ca07eb3c5640833018ca47096815682d22cfc5580708e95",
+    "/Users/willy/awb/apps/rack/sc/bench/send-layout/live.scd": "f6ad2b8fa0ab5801be41c1d308131f94146cc333a405c157e56b50a073f21ecc",
+    "/Users/willy/awb/apps/rack/sc/bench/send-layout/offline.scd": "699681cdbbb1657341b909d4c89b7483f538a948866890b63474bab3eb05e866",
+    "/Users/willy/awb/apps/rack/sc/bench/send-layout/verify.py": "3a243498e56d0c81de7d80e0019c137a8f8f2ca22c16c36caef6255602748c8c"
+  },
+  "engine": "/Applications/SuperCollider.app/Contents/Resources/scsynth",
+  "engineSHA256": "817f728e74294d78d788f3dd065c56e878957442e564212330f91bdb34876be2",
+  "engineVersion": "scsynth 3.12.2 (Built from branch 'HEAD' [7c4c983])",
+  "equivalence": {
+    "passed": true,
+    "comparisonWindows": 24,
+    "rate": 44100,
+    "blockSize": 64,
+    "channels": 8,
+    "width": 2,
+    "checks": [
+      {
+        "sends": 8,
+        "profile": "full",
+        "maxDifference": 1.1175870895385742e-08,
+        "sendPeak": 0.06788589060306549
+      },
+      {
+        "sends": 8,
+        "profile": "zero",
+        "maxDifference": 2.0679515313825692e-25,
+        "sendPeak": 1.0505917562459435e-18
+      },
+      {
+        "sends": 8,
+        "profile": "sparse",
+        "maxDifference": 7.450580596923828e-09,
+        "sendPeak": 0.04272545501589775
+      },
+      {
+        "sends": 8,
+        "profile": "moving",
+        "maxDifference": 1.1175870895385742e-08,
+        "sendPeak": 0.06210000813007355
+      },
+      {
+        "sends": 8,
+        "profile": "faderMuteSolo",
+        "maxDifference": 0.0,
+        "sendPeak": 0.006621748674660921
+      },
+      {
+        "sends": 8,
+        "profile": "closed",
+        "maxDifference": 0.0,
+        "sendPeak": 0.0
+      },
+      {
+        "sends": 16,
+        "profile": "full",
+        "maxDifference": 1.1175870895385742e-08,
+        "sendPeak": 0.06788589060306549
+      },
+      {
+        "sends": 16,
+        "profile": "zero",
+        "maxDifference": 8.271806125530277e-25,
+        "sendPeak": 6.240702181714495e-18
+      },
+      {
+        "sends": 16,
+        "profile": "sparse",
+        "maxDifference": 7.450580596923828e-09,
+        "sendPeak": 0.04272545501589775
+      },
+      {
+        "sends": 16,
+        "profile": "moving",
+        "maxDifference": 1.1175870895385742e-08,
+        "sendPeak": 0.06209997460246086
+      },
+      {
+        "sends": 16,
+        "profile": "faderMuteSolo",
+        "maxDifference": 0.0,
+        "sendPeak": 0.006621748674660921
+      },
+      {
+        "sends": 16,
+        "profile": "closed",
+        "maxDifference": 0.0,
+        "sendPeak": 0.0
+      },
+      {
+        "sends": 24,
+        "profile": "full",
+        "maxDifference": 1.1175870895385742e-08,
+        "sendPeak": 0.06788589060306549
+      },
+      {
+        "sends": 24,
+        "profile": "zero",
+        "maxDifference": 1.0339757656912846e-25,
+        "sendPeak": 1.0538058699135949e-18
+      },
+      {
+        "sends": 24,
+        "profile": "sparse",
+        "maxDifference": 7.450580596923828e-09,
+        "sendPeak": 0.04272545501589775
+      },
+      {
+        "sends": 24,
+        "profile": "moving",
+        "maxDifference": 1.1175870895385742e-08,
+        "sendPeak": 0.06503798067569733
+      },
+      {
+        "sends": 24,
+        "profile": "faderMuteSolo",
+        "maxDifference": 0.0,
+        "sendPeak": 0.006621748674660921
+      },
+      {
+        "sends": 24,
+        "profile": "closed",
+        "maxDifference": 0.0,
+        "sendPeak": 0.0
+      },
+      {
+        "sends": 32,
+        "profile": "full",
+        "maxDifference": 1.1175870895385742e-08,
+        "sendPeak": 0.06788589060306549
+      },
+      {
+        "sends": 32,
+        "profile": "zero",
+        "maxDifference": 4.1359030627651384e-25,
+        "sendPeak": 3.749700292979949e-18
+      },
+      {
+        "sends": 32,
+        "profile": "sparse",
+        "maxDifference": 7.450580596923828e-09,
+        "sendPeak": 0.04272545501589775
+      },
+      {
+        "sends": 32,
+        "profile": "moving",
+        "maxDifference": 1.1175870895385742e-08,
+        "sendPeak": 0.06536877900362015
+      },
+      {
+        "sends": 32,
+        "profile": "faderMuteSolo",
+        "maxDifference": 0.0,
+        "sendPeak": 0.006992836948484182
+      },
+      {
+        "sends": 32,
+        "profile": "closed",
+        "maxDifference": 0.0,
+        "sendPeak": 0.0
+      }
+    ],
+    "limits": [
+      "Offline audio equivalence only; no CPU or hardware deadline result",
+      "Split mode retains all send nodes even at zero gain"
+    ]
+  }
+}

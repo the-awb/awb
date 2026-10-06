@@ -337,3 +337,66 @@ A fresh real-time scsynth tree-query run, hardware MIDI, GUI integration and loa
 measurement remain unrun. No live classes are installed. This implementation is
 recorded in the registration commit checkpoint. The public AWBaseTool rename
 remains a separate pending change.
+
+
+## Continuous SelectN and first Verb profile
+
+`AWSelectN(count, basePole, target, server, options)` is a reusable component,
+not another Tool host. It owns one Synth, a child Group, and one contiguous
+control-bus allocation of `count` outputs (2..32). `AWSelectN.prepare(server, count)`
+loads the width-specific definition before live creation. Position is 0..1;
+`setPosition` can set it directly, or an AWParam can map to `select.synth`'s
+`position`. `busAt(index)` returns a borrowed mono view; never free the view.
+Close the selector to release the entire allocation. Ownership callbacks use the
+same `ownFunction`/`disownFunction`/`sendFunction` contract as AWParam.
+
+With `basePole: false`, position traverses N triangular poles, starting at the
+first. With `basePole: true`, zero has no active pole and the N poles span
+1/N..1. Between poles two weights crossfade linearly. The policy is explicit;
+it does not claim exact Bitwig Select-4 compatibility without host comparison.
+
+The first set-specific consumer is `AWBVerbMixProfile` in
+`apps/rack/sc/sets/awb52`: one selector AWParam, Select-4 and five branch AWParams,
+with twenty independent depth routes. The complete profile Group and its
+consumer are ordered together by construction. External registered producers
+retain the existing tree-check contract; plain borrowed buses remain unchecked.
+AWFollower/AWBlender are unchanged. The native rack owns these component nodes;
+no new standalone ToolInstance is added. See that folder's README for captured
+matrix/gain semantics, attachment and opt-in use.
+
+Private verification also compiles this set-specific controller without a VST
+dependency and renders its parameter DSP through scsynth. In
+`/private/tmp/awb-verb-select-20261006-final`, the existing 201 Core/registration
+checks pass, plus 25 selector/profile contracts and 64 offline audio assertions.
+The new audio checks cover profile poles, continuous normalized interpolation,
+pre-processing gain, tails, borrowed blender input, server-timed transitions and
+closure. The blender input is a synthetic KR stand-in, not a live BaseLaunch run.
+A real-time performance measurement, hardware MIDI and dedicated profile panel
+are still unrun/unimplemented. No live classes are installed.
+
+
+## Tail-gated effect Groups
+
+`AWFXTailGate(sourceAudioBus, mixKRBus, destinationAudioBus, parentGroup,
+settings, options)` borrows its source, mono effective mix, destination and optional
+`options[\levelBus]`; it owns stereo/multichannel input/output pipes, state and
+measurement KR buses, a processor Group and two always-running guards. Call
+`AWFXTailGate.prepare(server, width)` before live creation, then
+`gate.createProcessor(defName, args)` to create an owned processor with fixed
+`in`/`out` pipes. Argument pairs cannot override those pipes. Native ownership
+callbacks match AWParam; this component does not open another ToolInstance.
+
+A zero effective mix closes ingress, preserves the audible tail, then pauses the
+processor Group once `minTail` and a sustained quiet window have elapsed. Initial
+zero pauses immediately; reselection resumes before input. Defaults are minTail
+0.1 s, no hard cap (`maxTail: 0`), quietDb -90, quietHold 0.25 s and fade 0.02 s.
+A positive hard cap explicitly permits fading out a nondecaying tail. Pausing
+retains/freeze states; it does not free buffers or unload plugins. `free` releases
+only owned nodes and buses, including on server/root closure.
+
+The first consumer is Verb's five independent branches. Its convolution minimums
+cover the used IR length; details and per-branch overrides are in the set README.
+Private verification in `/private/tmp/awb-tail-gate-20261006-final` adds 15 contracts
+and 35 actual offline DSP checks: stopped/resumed DSP progress, retained tails,
+server modulation, interrupted drains, timed transitions, hard caps and cleanup.
+No CPU reduction or hardware timing result is inferred from those functional tests.

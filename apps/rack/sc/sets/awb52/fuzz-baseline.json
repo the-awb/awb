@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "pluginName": "MDMX Fuzz Stereo",
+  "track": "FUZZ",
+  "source": [
+    {
+      "name": "Screenshot 2026-10-06 at 21.56.43.png",
+      "sha256": "c8e9c982697528413b7dd14de9eb518056695d9cec127509194ae2e4ab0a4ff9",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 21.56.53.png",
+      "sha256": "a5943d9e02b707164ad3b967aed8d5f16cd71c2cddf11da369089b5c4aeda506",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 21.57.02.png",
+      "sha256": "abada25cbfb506d818a9e2beb008382137c0858cec11f2fe2ea6d6c1de8e32ac",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 21.57.12.png",
+      "sha256": "ff66de0d713ebb01c110c95bf7ea32f4d74b06c8fead80bb09398b37db83a665",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 21.57.19.png",
+      "sha256": "900f14f5d3e73db8ef2eddb42f1420514668eb112632b9a5077ef79b0112f640",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "M/S Input",
+      "display": "0.0 dB",
+      "index": 0,
+      "normalized": 0.5,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "0.0 dB"
+    },
+    {
+      "name": "Input",
+      "display": "0.7 dB",
+      "index": 1,
+      "normalized": 0.51458334922791,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "0.7 dB"
+    },
+    {
+      "name": "Output",
+      "display": "-3.6 dB",
+      "index": 2,
+      "normalized": 0.42500001192093,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-3.6 dB"
+    },
+    {
+      "name": "Mix",
+      "display": "53.9",
+      "index": 3,
+      "normalized": 0.53899997472763,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "53.9"
+    },
+    {
+      "name": "Stereo Mode",
+      "display": "Stereo",
+      "index": 4,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Stereo"
+    },
+    {
+      "name": "Blend",
+      "display": "75.4",
+      "index": 5,
+      "normalized": 0.75400000810623,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "75.4"
+    },
+    {
+      "name": "Gain",
+      "display": "-2.1 dB",
+      "index": 6,
+      "normalized": 0.54750001430511,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-2.1 dB"
+    },
+    {
+      "name": "HD",
+      "display": "Off",
+      "index": 7,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Off"
+    },
+    {
+      "name": "Temperature",
+      "display": "44.4",
+      "index": 8,
+      "normalized": 0.44400000572205,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "44.4"
+    },
+    {
+      "name": "Threshold",
+      "display": "31.7",
+      "index": 9,
+      "normalized": 0.31700000166893,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "31.7"
+    },
+    {
+      "name": "Low Gain",
+      "display": "-4.0 dB",
+      "index": 10,
+      "normalized": 0.33333334326744,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-4.0 dB"
+    },
+    {
+      "name": "Low-Mid Gain",
+      "display": "-0.8 dB",
+      "index": 11,
+      "normalized": 0.46666666865349,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "-0.8 dB"
+    },
+    {
+      "name": "High-Mid Gain",
+      "display": "3.6 dB",
+      "index": 12,
+      "normalized": 0.64999997615814,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "3.6 dB"
+    },
+    {
+      "name": "High Gain",
+      "display": "4.4 dB",
+      "index": 13,
+      "normalized": 0.68333333730698,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "4.4 dB"
+    },
+    {
+      "name": "Low Cut",
+      "display": "Off",
+      "index": 14,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Off"
+    },
+    {
+      "name": "Punch Mode",
+      "display": "Mild",
+      "index": 15,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Mild"
+    },
+    {
+      "name": "Type",
+      "display": "A",
+      "index": 16,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "A"
+    },
+    {
+      "name": "Low-Mid Freq",
+      "display": "A",
+      "index": 17,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "A"
+    },
+    {
+      "name": "High-Mid Freq",
+      "display": "A",
+      "index": 18,
+      "normalized": 0.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "A"
+    },
+    {
+      "name": "Punch/Rider",
+      "display": "Rider",
+      "index": 19,
+      "normalized": 1.0,
+      "pluginMappingVerified": true,
+      "verifiedDisplay": "Rider"
+    }
+  ],
+  "normalizedValuesVerified": true,
+  "notes": [
+    "Saved base settings supplied by user for migration; not an exported plugin state.",
+    "Repeated M/S Input row is recorded once; screenshots alone do not establish multiple independent controls with the same name.",
+    "Keep numeric displays as provided; no normalized parameter conversion or assumed percent unit.",
+    "Low-Mid Freq and High-Mid Freq both display A; preserve categorical labels.",
+    "Rack/container gain -5 dB is separate from the MDMX plugin Gain -2.1 dB and Output -3.6 dB.",
+    "All supplied displayed values matched actual installed plugin readbacks; normalized indexes recorded independently for this stereo child. Dedicated sandbox hosting; no CPU/dropout benchmark."
+  ],
+  "rackGainDb": -5.0,
+  "rackGainAmplitude": 0.5623413251903491,
+  "rackGainSource": "User confirmation, 6 October 2026; matches existing observed Instrument Layer Gain and SC containerGains.fuzz.",
+  "hosting": {
+    "path": "/Library/Audio/Plug-Ins/VST3/WaveShell1-VST3 17.1.vst3",
+    "key": "MDMX Fuzz Stereo.vst3",
+    "mode": "sandbox",
+    "version": "17.1.42.50",
+    "readbackEvidence": "/private/tmp/awb-new-waves-check/verified.log"
+  }
+}

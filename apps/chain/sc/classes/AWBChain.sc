@@ -9,6 +9,7 @@ AWBChain : Tool {
         if(factory.isKindOf(Function).not){Error("Chain factory must be a Function").throw};
         factories[id.asSymbol]=factory;^factory;
     }
+    *unregisterFactory { |id|factories.removeAt(id.asSymbol);^this }
     *registerStageFactory { |id,definition,factory|
         var spec=(name:id.asString,inputWidth:2,outputWidth:2,controls:[]).putAll(definition ? ());
         if("^[a-zA-Z][a-zA-Z0-9_-]{0,63}$".matchRegexp(id.asString).not or:{id.asSymbol==\output}){Error("Invalid stage factory ID").throw};

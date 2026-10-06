@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "pluginName": "Scheps 73 Mono",
+  "track": "Cello 1",
+  "source": [
+    {
+      "name": "Screenshot 2026-10-06 at 21.59.46.png",
+      "sha256": "bb198c219c44b6736395adf59be1ca50bada04b07d5e31c71e9d2a44e80dd1e3",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 21.59.55.png",
+      "sha256": "d3934ae5a14fa848f5f93821e554e85254a8e446051f069d4b21e5603244edc4",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 22.00.06.png",
+      "sha256": "a4047d74008421fc588dc34e9bef7bcb49af8036d410f958c0a4b7689b61cd3f",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    },
+    {
+      "name": "Screenshot 2026-10-06 at 22.00.14.png",
+      "sha256": "9170b17479ede7f6a688e7beafd836a74703028037da28319478e5aee876be3d",
+      "kind": "user-provided Bitwig parameter-panel screenshot"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "PreAmp",
+      "display": "-45M",
+      "index": 0,
+      "normalized": 0.65,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "PreAmp Drive",
+      "display": "Off",
+      "index": 1,
+      "normalized": 0,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "PreAmp On/Off",
+      "display": "On",
+      "index": 2,
+      "normalized": 1,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "High On/Off",
+      "display": "On",
+      "index": 3,
+      "normalized": 1,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "High Gain",
+      "display": "0.3 dB",
+      "index": 4,
+      "normalized": 0.51,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Mid On/Off",
+      "display": "On",
+      "index": 5,
+      "normalized": 1,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Mid Frequency",
+      "display": "1.6 Hz",
+      "expectedFrequencyHz": 1600,
+      "expectedFrequencySource": "User confirms GUI 1.6; normalized 1/3 reads 1.6 Hz from Waves, matching the screenshot. Physical intention is 1600 Hz; Waves display uses the incorrect unit.",
+      "pluginMappingVerified": true,
+      "index": 6,
+      "normalized": 0.3333333333333333
+    },
+    {
+      "name": "Mid Gain",
+      "display": "2.9 dB",
+      "index": 7,
+      "normalized": 0.5966666667,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Low On/Off",
+      "display": "On",
+      "index": 8,
+      "normalized": 1,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Low Frequency",
+      "display": "110 Hz",
+      "index": 9,
+      "normalized": 0.6666666666666666,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Low Gain",
+      "display": "0.0 dB",
+      "index": 10,
+      "normalized": 0.5,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "High Pass",
+      "display": "50 Hz",
+      "index": 11,
+      "normalized": 0,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "High Pass On/Off",
+      "display": "Off",
+      "index": 12,
+      "normalized": 0,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "EQ",
+      "display": "In",
+      "index": 13,
+      "normalized": 1,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Phase",
+      "display": "Out",
+      "index": 14,
+      "normalized": 0,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Input",
+      "display": "1.7 dB",
+      "index": 15,
+      "normalized": 0.7138888889,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Output",
+      "display": "1.3 dB",
+      "index": 16,
+      "normalized": 0.7027777778,
+      "pluginMappingVerified": true
+    },
+    {
+      "name": "Link I/O",
+      "display": "Unlinked",
+      "index": 17,
+      "normalized": 0,
+      "pluginMappingVerified": true
+    }
+  ],
+  "normalizedValuesVerified": true,
+  "notes": [
+    "Restored plugin baseline supplied by user; not an exported plugin state or normalized parameter capture.",
+    "High Pass is configured to 50 Hz but switched Off.",
+    "Only settings visible in the supplied screenshots are recorded; hidden plugin state and any additional parameters are not established.",
+    "All eighteen normalized values read back from the actual restored plugin, including -45M, On/Off states, 1.6 Hz, 110 Hz, EQ In and gain values.",
+    "Waves creates a native window even with editor:false. In-process loading crashes scsynth; use mode:sandbox. Its process and transport cost must be included in the next load test."
+  ],
+  "modulation": {
+    "enabled": false,
+    "routes": [],
+    "source": "User confirms no modulation on any Scheps 73 controls, 6 October 2026."
+  },
+  "hosting": {
+    "path": "/Library/Audio/Plug-Ins/VST3/WaveShell1-VST3 17.1.vst3",
+    "key": "Scheps 73 Mono.vst3",
+    "mode": "sandbox",
+    "version": "17.1.42.50",
+    "readbackEvidence": "/private/tmp/awb-scheps-check/verified.log"
+  }
+}

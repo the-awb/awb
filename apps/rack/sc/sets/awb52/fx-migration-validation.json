@@ -1,0 +1,108 @@
+{
+  "passed": true,
+  "evidence": "/private/tmp/awb52-additional-complete",
+  "fullLoad": false,
+  "verbProfiles": true,
+  "fxProfiles": true,
+  "celloScheps": true,
+  "fuzzPlugin": true,
+  "sharedFX": true,
+  "memoryPoolKiB": 262144,
+  "hardwareAudio": true,
+  "hardwareMeasurement": "muted functional readback only",
+  "contractChecks": 60,
+  "pluginReadbackChecks": 119,
+  "cacheUnchanged": true,
+  "audioChecks": 27,
+  "modulationChecks": 55,
+  "additionalModulationChecks": 92,
+  "sampleRate": 44100,
+  "blockSize": 64,
+  "irMaxSeconds": 30,
+  "performanceMeasured": false,
+  "liveClassInstallation": false,
+  "sources": {
+    "apps/rack/sc/sets/awb52/AWBFirstPassSet.sc": "1899cfd241ab4f8d6cdc4bfc5c7b13a10b549da71217ae5ebe641e861b8f000f",
+    "apps/rack/sc/sets/awb52/AWBFXMixProfile.sc": "090258fe67c14207935b69d6273cc6bb05ca5c250b46c358053abec30c1c7b26",
+    "apps/rack/sc/sets/awb52/AWBAdditionalFXProfile.sc": "d296998da6344c48b91600e61ac9f5a126767f3b36ad9ecc44a8214f0f1cfe9c",
+    "apps/rack/sc/sets/awb52/AWBSharedFXChain.sc": "f266035f0f0007afdd936fddf69f02ae33169a4344376b2241a980e14427648f",
+    "apps/rack/sc/sets/awb52/prepare.py": "a38a1d0b6755ff3939934ee2d8f3c87ca26140f8feb27875e96e5076d80d1823",
+    "apps/rack/sc/sets/awb52/fuzz-baseline.json": "c82194835ff7273fc618a5e517834bd84984f06b4989b6bff42b48b5c029e41b",
+    "apps/rack/sc/sets/awb52/fuzz-plugin.ini": "1a97f4fc43a2ee808553396733061f22ab3eb94490ffdbfa6f426b7adb8503ac",
+    "apps/rack/sc/sets/awb52/scheps73-stereo-baseline.json": "bc69e1f451950841acc01fb7e53a03820ff6d1b7e1ffaff53acd6e7fabb7bded",
+    "apps/rack/sc/sets/awb52/scheps73-stereo-plugin.ini": "fa6aef14fa0cb9cb0d08e739f7db8d00479d598f60169cb56be92f0833c0f92c",
+    "apps/rack/sc/sets/awb52/additional-modulation-profile.json": "42bedbe5ce973a4dadfc5ab7c29268891de345dde8325d9f2974e85097e71a19",
+    "apps/rack/sc/sets/awb52/additional-modulation-test.scd": "ff0d352dc7d2c6c7bfb7e6fcdb0f450476b4c87530126b0b254ddded24c057a5",
+    "apps/rack/sc/sets/awb52/verify_additional_modulation.py": "6aafad271272cb42c11a10ecc00a6ee7838d649ea75ca99dfaaafc38eb76f993",
+    "apps/rack/sc/sets/awb52/plugin-map-test.scd": "9c1331b17459ff06a159074e1da8d1e21fa9810bc4c6e6b9540f37d83e6928df"
+  },
+  "genericRegressions": {
+    "rack": {
+      "passed": true,
+      "evidence": "/private/tmp/awb-rack-shared-regression",
+      "nodeTests": 31,
+      "audioChecks": 88,
+      "controlChecks": 17
+    },
+    "chain": {
+      "passed": true,
+      "evidence": "/private/tmp/awb-chain-shared-regression",
+      "nodeTests": 11
+    },
+    "core": {
+      "passed": true,
+      "evidence": "/private/tmp/awb-core-precommit-20261007",
+      "scope": "native, registration, actual DSP, selector, tail gate and OSC protocol"
+    }
+  },
+  "legacyRegression": {
+    "passed": true,
+    "evidence": "/private/tmp/awb52-additional-legacy",
+    "contractChecks": 18,
+    "audioChecks": 24,
+    "cacheUnchanged": true,
+    "irMode": "generated"
+  },
+  "previousMigration": {
+    "passed": true,
+    "evidence": "/private/tmp/awb52-fx-migration-final",
+    "fullLoad": false,
+    "verbProfiles": true,
+    "fxProfiles": true,
+    "celloScheps": true,
+    "memoryPoolKiB": 262144,
+    "hardwareAudio": true,
+    "hardwareMeasurement": "muted functional readback only",
+    "contractChecks": 45,
+    "pluginReadbackChecks": 34,
+    "cacheUnchanged": true,
+    "audioChecks": 24,
+    "modulationChecks": 55,
+    "sampleRate": 44100,
+    "blockSize": 64,
+    "irMaxSeconds": 30,
+    "performanceMeasured": false,
+    "liveClassInstallation": false,
+    "sources": {
+      "apps/rack/sc/sets/awb52/AWBFirstPassSet.sc": "3e0a0ff0e9bebea1e6ca968214f468952abead438ecc5444cec4c1bda7384d6f",
+      "apps/rack/sc/sets/awb52/AWBFXMixProfile.sc": "69799e6c80ef35d33c816a78dc4f7162313afdb7f9e8c933f0b0e73ba3f28771",
+      "apps/rack/sc/sets/awb52/prepare.py": "a9e5838a14ec427c66d95c9842367059ad098864122f0bc0db208b9ddd0304cc",
+      "apps/rack/sc/sets/awb52/scheps73-baseline.json": "608da6868cd951374694d89d0efae27673d0acc0a571479084d1bd13d88d1e0b",
+      "apps/rack/sc/sets/awb52/scheps73-plugin.ini": "947c8bca7fc2aaea4871dba7e7b1b547e5e6f178e262953b4955f054a0cab746",
+      "apps/rack/sc/sets/awb52/fx-modulation-profile.json": "d395f9aca4574847739b1b3cd6f8fc05c30891ce7745e56ed4b3665c8541ea98"
+    },
+    "legacyRegression": {
+      "passed": true,
+      "evidence": "/private/tmp/awb52-fx-migration-legacy-final",
+      "contractChecks": 22,
+      "audioChecks": 24,
+      "cacheUnchanged": true
+    }
+  },
+  "packagingCheck": {
+    "passed": true,
+    "evidence": "/private/tmp/awb52-committed-source-check",
+    "assertion": "Bounded seven-track source produces identical runtime specification, excluding output cache directory",
+    "sourceSha256": "8d961a4d8074b55d06daacd5305a817775ae31c3921368d4c7e68e8cc629ab29"
+  }
+}

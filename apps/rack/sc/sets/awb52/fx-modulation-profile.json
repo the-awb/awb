@@ -1,0 +1,1365 @@
+{
+  "schema": 1,
+  "source": "/Users/willy/awb/apps/awb-shell/docs/bitwig-set-inspection-stage2/live-evidence/modulation-ui-capture.jsonl",
+  "sourceSha256": "73765a4d1e000c53923f5e456b9a58b3cf369d6ef9c214de99233577461224e6",
+  "routes": [
+    {
+      "line": 140,
+      "device": "FX Layer [root 0]",
+      "modulator": "A~Pitch delay",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a pd math \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover"
+        }
+      ],
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector modulator list + hover tooltip, 2026-10-05"
+    },
+    {
+      "line": 141,
+      "device": "FX Layer [root 0]",
+      "modulator": "A~Spark",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle math \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover"
+        }
+      ],
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector modulator list + hover tooltip, 2026-10-05"
+    },
+    {
+      "line": 142,
+      "device": "FX Layer [root 0]",
+      "modulator": "A~Sparkle shaper",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle shapre math \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover"
+        }
+      ],
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector modulator list + hover tooltip, 2026-10-05"
+    },
+    {
+      "line": 143,
+      "device": "FX Layer [root 0]",
+      "modulator": "A~tail shaper",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail shape math \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover"
+        }
+      ],
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector modulator list + hover tooltip, 2026-10-05"
+    },
+    {
+      "line": 144,
+      "device": "FX Layer [root 0]",
+      "modulator": "A~TailMix",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail math \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover"
+        }
+      ],
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector modulator list + hover tooltip, 2026-10-05"
+    },
+    {
+      "line": 163,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "A (1)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a octave",
+          "amount": 0.15,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a pitchshift",
+          "amount": 0.225,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a feedback",
+          "amount": 0.28,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 164,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "A (2)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a octave",
+          "amount": 0.0,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a pitchshift",
+          "amount": -0.5,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a feedback",
+          "amount": 0.135,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 165,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "B (1)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a pitchshift",
+          "amount": 0.28,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a feedback",
+          "amount": 0.11,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a cents",
+          "amount": 0.06,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 166,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "B (2)",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a octave",
+          "amount": -0.21,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a feedback",
+          "amount": 0.59,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 167,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "Pitch delay select",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a pitchdelay pix select \u203a Select",
+          "amount": 4.0,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 168,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "pitchdelay pix select S1",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a wetdry",
+          "amount": 0.5,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a wetdry",
+          "amount": 0.0,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 169,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "pitchdelay pix select S2",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a wetdry",
+          "amount": 0.66,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a wetdry",
+          "amount": 0.33,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 170,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "pitchdelay pix select S3",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a wetdry",
+          "amount": 0.85,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a wetdry",
+          "amount": 0.84,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 171,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "pitchdelay pix select S4",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a wetdry",
+          "amount": 0.15,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay lower \u203a ++pitchdelay \u203a wetdry",
+          "amount": 1.0,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 172,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > FX Layer (pitch: ++spiralstretch / ++pitchdelay upper / ++pitchdelay lower)",
+      "modulator": "time",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++pitchdelay upper \u203a ++pitchdelay \u203a time",
+          "amount": 0.11,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "second tooltip line partly cut for pitchshift; matches row label"
+    },
+    {
+      "line": 173,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > EQ-DJ [off]",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 174,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "autotime",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a envmodulate",
+          "amount": 0.015,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 175,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "d++ FB SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a feedback SC \u203a Operand/Signal B",
+          "amount": 1.0,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 176,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "d++ tail shaper",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a Select-4 \u203a Select",
+          "amount": 4.0,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 177,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "feedback SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a feedback",
+          "amount": 0.495,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 178,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "Select-4 S1",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a feedback",
+          "amount": 0.215,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a d++ FB SC",
+          "amount": 0.0,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a autotime",
+          "amount": 0.0,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 179,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "Select-4 S2",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a feedback",
+          "amount": 0.15,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a d++ FB SC",
+          "amount": 0.225,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a autotime",
+          "amount": 0.205,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 180,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "Select-4 S3",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a feedback",
+          "amount": 0.055,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a d++ FB SC",
+          "amount": 0.64,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a autotime",
+          "amount": 0.53,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 181,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "Select-4 S4",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a feedback",
+          "amount": 0.045,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a d++ FB SC",
+          "amount": 1.0,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a autotime",
+          "amount": 0.035,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 182,
+      "track": "Spiral Sparkle",
+      "device": "... > layer EQ-DJ > ++delay",
+      "modulator": "time",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a time",
+          "amount": 0.065,
+          "evidence": "hover"
+        }
+      ],
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 183,
+      "device": "... > layer EQ-DJ > FX Layer (decimate)",
+      "modulator": "depth",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a EQ-DJ \u203a ++decimate \u203a depth",
+          "amount": 0.11,
+          "evidence": "hover"
+        }
+      ],
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 184,
+      "device": "... > layer EQ-DJ > FX Layer (decimate)",
+      "modulator": "folding",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a EQ-DJ \u203a ++decimate \u203a folding",
+          "amount": 0.185,
+          "evidence": "hover"
+        }
+      ],
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 185,
+      "device": "... > layer EQ-DJ > FX Layer (decimate)",
+      "modulator": "Lo Rolloff",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a EQ-DJ \u203a EQ-DJ \u203a Low Band Gain",
+          "amount": -0.42,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a EQ-DJ \u203a EQ-DJ \u203a Mid Band Gain",
+          "amount": -0.16,
+          "evidence": "hover"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a EQ-DJ \u203a EQ-DJ \u203a High Band Gain",
+          "amount": 0.18,
+          "evidence": "hover"
+        }
+      ],
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 186,
+      "device": "... > pitch FX Layer > ++spiralstretch",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 187,
+      "device": "... > pitch FX Layer > ++pitchdelay (upper)",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 188,
+      "device": "... > pitch FX Layer > ++pitchdelay (lower)",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 189,
+      "device": "... > decimate FX Layer > EQ-DJ [off]",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 190,
+      "device": "... > decimate FX Layer > ++decimate",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 191,
+      "device": "Things Texture [root 1]",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "track": "Spiral Sparkle",
+      "source": "Device Inspector + per-row hover (calibrated anchors), 2026-10-05"
+    },
+    {
+      "line": 192,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "d++ tail shaper",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a d++ tail shaper",
+          "amount": 1.0,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 193,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "pd math",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Pitch delay select",
+          "amount": 0.555,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 194,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Pitch delay select",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a Pitch delay select",
+          "amount": 1.0,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 195,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Select-4 (wetdry outputs) S1",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a wetdry",
+          "amount": 0.18,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++spiralstretch \u203a ++spiralstretch \u203a wetdry",
+          "amount": 0.52,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 196,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Select-4 (B/Volume/Gain outputs) S1",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle math \u203a Operand/Signal B",
+          "amount": 0.65,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail math \u203a Operand/Signal B",
+          "amount": 0.26,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a pd math \u203a Operand/Signal B",
+          "amount": -0.0,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail shape math \u203a Operand/Signal B",
+          "amount": 0.28,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a Mixer \u203a Volume",
+          "amount": 0.6,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Gain",
+          "amount": 6.0,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle shapre math \u203a Operand/Signal B",
+          "amount": 0.35,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 197,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Select-4 (wetdry outputs) S2",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a wetdry",
+          "amount": 0.43,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++spiralstretch \u203a ++spiralstretch \u203a wetdry",
+          "amount": 0.78,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 198,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Select-4 (B/Volume/Gain outputs) S2",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle math \u203a Operand/Signal B",
+          "amount": 0.6,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail math \u203a Operand/Signal B",
+          "amount": 0.64,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a pd math \u203a Operand/Signal B",
+          "amount": 0.4,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail shape math \u203a Operand/Signal B",
+          "amount": 0.28,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a Mixer \u203a Volume",
+          "amount": 0.85,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Gain",
+          "amount": 6.0,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle shapre math \u203a Operand/Signal B",
+          "amount": 0.5,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 199,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Select-4 (wetdry outputs) S3",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a wetdry",
+          "amount": 0.665,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++spiralstretch \u203a ++spiralstretch \u203a wetdry",
+          "amount": 0.665,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 200,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Select-4 (B/Volume/Gain outputs) S3",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle math \u203a Operand/Signal B",
+          "amount": 1.05,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail math \u203a Operand/Signal B",
+          "amount": 0.75,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a pd math \u203a Operand/Signal B",
+          "amount": 0.91,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail shape math \u203a Operand/Signal B",
+          "amount": 0.44,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a Mixer \u203a Volume",
+          "amount": 0.9,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Gain",
+          "amount": 6.48,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle shapre math \u203a Operand/Signal B",
+          "amount": 1.05,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 201,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Select-4 (wetdry outputs) S4",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a ++delay \u203a wetdry",
+          "amount": 0.75,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a ++spiralstretch \u203a ++spiralstretch \u203a wetdry",
+          "amount": 0.34,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 202,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Select-4 (B/Volume/Gain outputs) S4",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle math \u203a Operand/Signal B",
+          "amount": 0.65,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail math \u203a Operand/Signal B",
+          "amount": 0.82,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a pd math \u203a Operand/Signal B",
+          "amount": 1.1,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a tail shape math \u203a Operand/Signal B",
+          "amount": 0.86,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a Mixer \u203a Volume",
+          "amount": 0.85,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Gain",
+          "amount": 6.24,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle shapre math \u203a Operand/Signal B",
+          "amount": 0.65,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "which of 'Select-4 1'/'Select-4 2' owns these outputs is not identified in the UI list"
+    },
+    {
+      "line": 203,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "soarkle math",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Sparkle",
+          "amount": 0.395,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Select-4 2 \u203a Select",
+          "amount": 0.84,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Gain",
+          "amount": 3.12,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a time",
+          "amount": 0.51,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 204,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "soarkle shapre math",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Sparkle Shape",
+          "amount": 0.505,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 205,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Sparkle",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a Mix",
+          "amount": 1.0,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 206,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Sparkle Shape",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Select-4 2 \u203a Select",
+          "amount": 4.0,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a EQ-DJ \u203a FX Layer \u203a time",
+          "amount": 0.48,
+          "evidence": "hover, row verified in crop"
+        },
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a soarkle shapre math \u203a Operand/Signal A",
+          "amount": 0.42,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 207,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "tail math",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Tail Mix",
+          "amount": 0.185,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 208,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "Tail Mix",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a Select-4 1 \u203a Select",
+          "amount": 4.0,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 209,
+      "track": "Spiral Sparkle",
+      "device": "FX Layer [root 0] > layer Spiral Sparkle 4.3 > FX Layer",
+      "modulator": "tail shape math",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Spiral Sparkle 4.3 \u203a FX Layer \u203a d++ tail shaper",
+          "amount": 0.34,
+          "evidence": "hover, row verified in crop"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-05",
+      "note": "Select-4 numbering (1 vs 2) assigned by which wetdry/B set the outputs drive; both Select-4s expose S1-S4"
+    },
+    {
+      "line": 225,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "A",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Math 3 \u203a Operand/Signal A",
+          "amount": 1.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 226,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "DeciShape",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Select-4 \u203a Select",
+          "amount": 4.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a Mix",
+          "amount": 0.395,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 227,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "depth",
+      "targets": [
+        {
+          "address": "FX Layer \u203a EQ-DJ \u203a ++decimate \u203a depth",
+          "amount": 0.1,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 228,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "depth SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Math 1 \u203a Operand/Signal B",
+          "amount": 1.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 229,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "folding",
+      "targets": [
+        {
+          "address": "FX Layer \u203a EQ-DJ \u203a ++decimate \u203a folding",
+          "amount": 0.265,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 230,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "folding SC",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Math 2 \u203a Operand/Signal B",
+          "amount": 1.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 231,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "LFO",
+      "targets": [
+        {
+          "address": "FX Layer \u203a depth SC",
+          "amount": 0.6,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a folding SC",
+          "amount": -0.5,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a depth",
+          "amount": -0.22,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a folding",
+          "amount": 0.22,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 232,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "Lo Rolloff",
+      "targets": [
+        {
+          "address": "FX Layer \u203a EQ-DJ \u203a EQ-DJ \u203a Low Band Gain",
+          "amount": -0.7,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a EQ-DJ \u203a EQ-DJ \u203a Mid Band Gain",
+          "amount": -0.29,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 233,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "Math 1",
+      "targets": [
+        {
+          "address": "FX Layer \u203a depth",
+          "amount": 1.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 234,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "Math 2",
+      "targets": [
+        {
+          "address": "FX Layer \u203a folding",
+          "amount": 1.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 235,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "Math 3",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Mix",
+          "amount": 1.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a Gain",
+          "amount": 8.4,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a LFO \u203a Rate",
+          "amount": "x2.187",
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a Lo Rolloff",
+          "amount": -0.29,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a DeciShape",
+          "amount": 0.53,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 236,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "Select-4 S1",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Gain",
+          "amount": 6.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a EQ-DJ \u203a Mixer \u203a Volume",
+          "amount": 0.583,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a Math 3 \u203a Operand/Signal B",
+          "amount": 0.4,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 237,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "Select-4 S2",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Gain",
+          "amount": 6.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a Math 3 \u203a Operand/Signal B",
+          "amount": 0.7,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a LFO \u203a Amount",
+          "amount": 0.175,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a EQ-DJ \u203a Mixer \u203a Volume",
+          "amount": 0.726,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 238,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "Select-4 S3",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Gain",
+          "amount": 6.48,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a Math 3 \u203a Operand/Signal B",
+          "amount": 0.85,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a LFO \u203a Amount",
+          "amount": 0.35,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a EQ-DJ \u203a Mixer \u203a Volume",
+          "amount": 0.919,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 239,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0]",
+      "modulator": "Select-4 S4",
+      "targets": [
+        {
+          "address": "FX Layer \u203a Gain",
+          "amount": 8.4,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a Math 3 \u203a Operand/Signal B",
+          "amount": 1.0,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a LFO \u203a Amount",
+          "amount": 0.695,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        },
+        {
+          "address": "FX Layer \u203a EQ-DJ \u203a Mixer \u203a Volume",
+          "amount": 1.033,
+          "evidence": "hover sweep 2026-10-06, row highlighted"
+        }
+      ],
+      "source": "Device Inspector + per-row hover sweep, 2026-10-06"
+    },
+    {
+      "line": 240,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0] > layer EQ-DJ > EQ-DJ",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "source": "Device Inspector, 2026-10-06"
+    },
+    {
+      "line": 241,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0] > layer EQ-DJ > ++decimate",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "source": "Device Inspector, 2026-10-06"
+    },
+    {
+      "line": 242,
+      "track": "Shaped Decimate",
+      "device": "FX Layer [root 0] > layer EQ-DJ > Gate [off]",
+      "modulator": null,
+      "targets": [],
+      "note": "no modulators",
+      "source": "Device Inspector, 2026-10-06"
+    }
+  ],
+  "clarifications": {
+    "math": "incoming follower times amount",
+    "sparkle": "Three selector roles: amount profile, main wet/dry profile, pitch wet/dry profile. No LFO.",
+    "deciLFO": {
+      "wave": "sine",
+      "rateHz": 0.04,
+      "bipolar": true,
+      "phaseDegrees": 0,
+      "baseAmount": 0,
+      "amountDepths": [
+        0,
+        0.175,
+        0.35,
+        0.695
+      ]
+    }
+  },
+  "assumptions": [
+    "Select-4 1 is the amount bank, Select-4 2 the main wet/dry bank, following user clarification; UI capture alone did not identify these banks.",
+    "Uncaptured Math B baselines default to zero and are exposed as AWParams. Uncaptured mixer volume defaults to zero, also exposed.",
+    "Only cyclic edges use previous-control-block values. Bitwig feedback evaluation timing is not established.",
+    "Selector zero reserves an empty pole, as Verb; switch basePole:false to compare a four-pole interpretation.",
+    "Tool volume taper is inferred: (2 * normalized)^3. Rate factor x2.187 is interpreted exponentially as 0.04 * 2.187^Math3.",
+    "Sparkle branch outputs sum, not average. Static gains remain before/after the appropriate subrack.",
+    "No equivalence claimed for native EQ-DJ approximation, untouched hidden plugin state or host modulation clipping."
+  ]
+}

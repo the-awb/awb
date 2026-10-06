@@ -1,6 +1,6 @@
 AWBSendRackTool : Tool {
     var <instance, <server, <config, <channels, <slots, <slotIDs, <fxIDs, <followerIDs;
-    var <rootGroup, <sourceGroup, channelGroup, fxGroup, detectorGroup, followerGroup, masterGroup, <masterBus;
+    var <rootGroup, <sourceGroup, channelGroup, fxGroup, detectorGroup, followerGroup, <masterGroup, <masterBus;
     var <ready=false, <closed=false, prefix, definitions, sources, variants, processors;
     var ownedNodes, ownedBuses, options, responder, shellPID, closePending=false, publishPending=false, quitHook, <revision=0;
     var watchers, feedbackValues, metadataPending=false, publishedRevision=0, commandSource;
@@ -382,6 +382,19 @@ AWBSendRackTool : Tool {
         ([slot[\active]]++slot[\retiring]).reject(_.isNil).do{|gen|this.dispatch([\n_set,gen[\return].nodeID,\level,value])};
         this.publishValue("global/levels/"++id.asString,value);^value;
     }
+    // Borrow a private audio destination for an FX return. The slot keeps this
+    // routing across replacements and applies it to retiring generations too.
+    // Destination ownership remains with the caller; restore before freeing it.
+    setReturnDestination { |id,bus|
+        var slot=this.slotAt(id),messages=List.new;
+        this.requireOpen;
+        bus=bus ? masterBus;
+        if(slot[\kind]!=\fx or:{bus.isKindOf(Bus).not} or:{bus.server!==server} or:{bus.rate!=\audio} or:{bus.numChannels!=config[\width]} or:{bus.index.isNil} or:{bus.index<(server.options.numOutputBusChannels+server.options.numInputBusChannels)}){Error("FX return needs a matching private audio bus on this server").throw};
+        slot[\returnBus]=bus;
+        ([slot[\active]]++slot[\retiring]).reject(_.isNil).do{|gen|messages.add(gen[\return].setMsg(\out,bus.index))};
+        if(messages.notEmpty){this.dispatchBundle(messages.asArray)};^bus;
+    }
+    returnDestinationFor { |id|this.requireOpen;^this.slotAt(id)[\returnBus] ? masterBus }
     setFX { |id,processor,settings|
         var slot=this.slotAt(id),factory,gen,ctx,result,old,fade,tail,switchMessages;
         this.requireOpen;settings=settings ? ();
@@ -390,7 +403,7 @@ AWBSendRackTool : Tool {
         if(factory.isNil){Error("Unknown registered processor").throw};
         fade=settings[\fade] ? config[\fade];tail=settings[\tail] ? config[\tail];
         if([fade,tail].any{|v|v.isNumber.not or:{v.isNaN} or:{v<0} or:{v>60}}){Error("Invalid processor timing").throw};
-        gen=(nodes:List.new,buses:List.new,processor:if(processor.isKindOf(Function)){\custom}{processor.asSymbol});
+        gen=(nodes:List.new,buses:List.new,disposeActions:List.new,processor:if(processor.isKindOf(Function)){\custom}{processor.asSymbol});
         try {
             gen[\group]=this.group(slot[\group],"FX "++id);gen[\nodes].add(gen[\group]);
             gen[\input]=this.bus;gen[\output]=this.bus;gen[\buses].addAll([gen[\input],gen[\output]]);
@@ -398,7 +411,7 @@ AWBSendRackTool : Tool {
             gen[\nodes].add(gen[\ingress]);
             gen[\processors]=this.group(gen[\group],"Processor");gen[\nodes].add(gen[\processors]);
             ctx=(slotID:id,input:gen[\input],output:gen[\output],group:gen[\processors],server:server,
-                settings:settings,synth:{|name,args|
+                settings:settings,onDispose:{|action|if(action.isKindOf(Function).not){Error("FX disposal needs a Function").throw};gen[\disposeActions].add(action)},synth:{|name,args|
                     var node=this.synth(name,args,gen[\processors],"FX process");gen[\nodes].add(node);node
                 });
             result=factory.value(ctx);
@@ -406,7 +419,7 @@ AWBSendRackTool : Tool {
                 if(node.isKindOf(Node) and:{ownedNodes.includes(node).not}){this.own(node,\synth,(parent:gen[\processors],defName:node.tryPerform(\defName)));gen[\nodes].add(node)};
             };
             gen[\return]=this.synth(definitions[if(settings[\limiter] ? true){\returnLimited}{\return}].name,
-                [\in,gen[\output].index,\out,masterBus.index,\level,slot[\level],\fade,fade],gen[\group],"FX return");
+                [\in,gen[\output].index,\out,(slot[\returnBus] ? masterBus).index,\level,slot[\level],\fade,fade],gen[\group],"FX return");
             gen[\nodes].add(gen[\return]);
         }{|error|this.disposeGeneration(gen);error.throw};
         old=slot[\active];slot[\active]=gen;
@@ -438,8 +451,12 @@ AWBSendRackTool : Tool {
             };
         });
     }
+    finishGenerationResources { |gen|
+        var actions=gen.removeAt(\disposeActions);if(actions.notNil){actions.do{|action|try{action.value}{|error|error.reportError}}};^this;
+    }
     disposeGeneration { |gen|
         if(gen[\group].notNil){this.dispatch(gen[\group].freeMsg)};
+        this.finishGenerationResources(gen);
         (gen[\nodes] ? []).do{|node|instance.disown(node);ownedNodes.remove(node)};
         if(options[\sendFunction].notNil or:{server.serverRunning.not}){
             (gen[\buses] ? []).do{|bus|this.releaseBus(bus)};
@@ -669,6 +686,7 @@ AWBSendRackTool : Tool {
         responder.tryPerform(\free);responder=nil;
         if(quitHook.notNil){ServerQuit.remove(quitHook,server);quitHook=nil};
         if(rootGroup.notNil){this.dispatch(rootGroup.freeMsg)};
+        slots.values.do{|slot|([slot[\active]]++slot[\retiring]).reject(_.isNil).do{|gen|this.finishGenerationResources(gen)}};
         ownedBuses.select{|bus|bus.rate==\control and:{bus.index.notNil}}.do{|bus|this.dispatch(bus.setMsg(0))};
         ownedNodes.copy.do{|node|instance.disown(node)};ownedNodes.clear;
         // Do not return addresses to the allocator until the server has acknowledged graph removal.

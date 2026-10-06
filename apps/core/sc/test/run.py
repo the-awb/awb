@@ -12,6 +12,7 @@ manifest['EventExtensions.sc']='Classes/EventExtensions.sc'
 for name,relative in manifest.items():shutil.copy2(framework/relative,build/'framework'/name)
 for package in [root,root.parent/'chain',root.parent/'rack']:
  for source in (package/'sc/classes').glob('*.sc'):shutil.copy2(source,build/'classes'/source.name)
+shutil.copy2(root.parent/'rack/sc/sets/awb52/AWBVerbMixProfile.sc',build/'classes/AWBVerbMixProfile.sc')
 for source in (root/'sc/test').glob('*.sc'):shutil.copy2(source,build/'framework'/source.name)
 for source in (root/'sc/test').glob('*.scd'):shutil.copy2(source,build/'test'/source.name)
 conf='includePaths:\n'+''.join('  - '+json.dumps(str(v))+'\n' for v in [app/'Resources/SCClassLibrary',build/'framework',build/'classes'])+'excludeDefaultPaths: true\nexcludePaths: []\npostInlineWarnings: false\n'
@@ -36,6 +37,12 @@ if (build/'test/audio.scd').exists():
  run('audio-score',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/audio.scd'])
  run('audio-render',[app/'Resources/scsynth','-N',build/'test/audio.osc','_',build/'test/audio.wav',44100,'WAV','float','-o',8,'-i',0,'-z',64,'-U',app/'Resources/plugins','-D',0,'-V',-1])
  run('audio-verify',['python3',root/'sc/test/verify_audio.py',build/'test/audio.wav'])
+run('select-score',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/select.scd'])
+run('select-render',[app/'Resources/scsynth','-N',build/'test/select.osc','_',build/'test/select.wav',44100,'WAV','float','-o',8,'-i',0,'-z',64,'-U',app/'Resources/plugins','-D',0,'-V',-1])
+run('select-verify',['python3',root/'sc/test/verify_select.py',build/'test/select.wav'])
+run('tail-score',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/tail.scd'])
+run('tail-render',[app/'Resources/scsynth','-N',build/'test/tail.osc','_',build/'test/tail.wav',44100,'WAV','float','-o',8,'-i',0,'-z',64,'-U',app/'Resources/plugins','-D',0,'-V',-1])
+run('tail-verify',['python3',root/'sc/test/verify_tail.py',build/'test/tail.wav'])
 run('protocol',['python3',root/'sc/test/protocol.py',build])
 (build/'results.json').write_text(json.dumps(dict(passed=True,evidence=str(build)),indent=2));print('AWB_CORE_COMPLETE_RESULT=PASS')
 print('Evidence: '+str(build))
