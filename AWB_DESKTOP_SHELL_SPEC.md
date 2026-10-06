@@ -1918,3 +1918,31 @@ Rack rerun passes its native contract suite, 105 offline DSP assertions and 31
 Node tests plus production build (`/private/tmp/awb-rack-commit-20261006`).
 Previous hardware load captures and GUI checks remain historical evidence.
 Vault and Telegram connectors are unavailable, so no external update is claimed.
+
+### Modulation source registration — 6 October 2026
+
+Implemented on `integration/bw-sc`: Core-owned AWModulationRegistry with named
+borrowed bus/producer descriptors; registered AWParam connections check actual
+controls-free server node-tree replies before allocating a route. Explicit
+`previousBlock` timing permits stale control input without silently inserting a
+delay. Same-block dependency cycles and misordered sources fail. Owned writer
+construction places/records additive control writers inside the Param source Group.
+Opt-in checked output mapping covers processor → destination. Existing Bus
+connections and ordinary mapTo remain compatible and unchecked for ordering.
+
+Producer/route/destination end, unregistration and Param/root closure clean up
+registrations and cancel pending callbacks while preserving borrowed resources.
+Explicit audits cover complete route/processor order and owned writer placement;
+they report only by default, with detachment an opt-in. No automatic scheduling
+unit movement or per-control polling is introduced. Graph registration remains
+runtime metadata rather than full set persistence.
+
+Verification: 70 Core contracts, 49 registration contracts, 38 actual offline DSP
+assertions, 31 existing language/UDP assertions and 13 registry UDP assertions.
+Evidence: `/private/tmp/awb-core-modulation-final-20261006`. Actual offline audio
+uses installed SC 3.12.2; server-tree protocol/lifecycle uses fixtures and an OSC
+peer. Live scsynth query validation, hardware/GUI/load tests remain unrun.
+Implementation recorded in the registration commit checkpoint; no live class
+installation. Next: AWBaseTool rename and
+helpers, real follower → AWParam → Chain migration, then reusable modulators.
+Vault and Telegram tools are unavailable in this session.

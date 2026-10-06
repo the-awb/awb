@@ -2,7 +2,7 @@
 // Runtime resources are separate from reconstructible Tool configuration.
 AWBCoreTool : Tool {
     var <instance,<server,<config,<group,<groups,<params,<buses,<tools,<players;
-    var <ready=false,<closed=false,<clock;
+    var <ready=false,<closed=false,<clock,<modulationRegistry;
     var options,resources,ownedNodes,ownedBuses,quitHook,nodeHook,paramObservers,configPending=false;
     *defaults {^(name:"AWB live set",groups:[\input,\voices,\routing,\detectors,\parameters,\fx,\output],params:[])}
     *register {
@@ -17,8 +17,13 @@ AWBCoreTool : Tool {
     init { |anInstance,configuration,opts|
         instance=anInstance;config=configuration.deepCopy;options=(opts ? ()).copy;server=options[\server] ? Server.default;clock=options[\clock] ? TempoClock.default;
         groups=IdentityDictionary.new;params=IdentityDictionary.new;buses=IdentityDictionary.new;tools=IdentityDictionary.new;players=IdentitySet.new;
+        modulationRegistry=AWModulationRegistry(server,(sendFunction:options[\sendFunction],queryFunction:options[\queryFunction]));
         resources=IdentityDictionary.new;paramObservers=IdentityDictionary.new;ownedNodes=IdentitySet.new;ownedBuses=List.new;this.validate;^this;
     }
+    registerModulationSource { |id,bus,producer|this.requireAlive;^modulationRegistry.registerSource(this.id(id),bus,producer) }
+    modulationSource { |id|^modulationRegistry.source(id) }
+    unregisterModulationSource { |id|^modulationRegistry.unregisterSource(id) }
+    validateModulationOrder { |action,disconnectInvalid=false|^modulationRegistry.validateOrder(action,disconnectInvalid) }
     definition {^this.class.register}
     id { |value|if(value.isNil or:{"^[a-zA-Z][a-zA-Z0-9_/-]{0,95}$".matchRegexp(value.asString).not}){Error("AWBCoreTool: invalid resource ID").throw};^value.asSymbol}
     validate {
@@ -50,13 +55,13 @@ AWBCoreTool : Tool {
     requireAlive {if(closed or:{group.isNil}){Error("AWBCoreTool is closed").throw};^this}
     groupAt { |id|this.requireAlive;^groups[id.asSymbol] ?? {Error("AWBCoreTool: unknown group").throw} }
     buildParam { |item|
-        var id=this.id(item[\id]),param,opts=(sendFunction:options[\sendFunction],
+        var id=this.id(item[\id]),param,opts=(modulationRegistry:modulationRegistry,sendFunction:options[\sendFunction],
             ownFunction:{|node,type,metadata|this.ownNode(node,type,metadata)},disownFunction:{|node|this.disownNode(node)},
             baseCurve:item[\baseCurve] ? 0,amountCurve:item[\amountCurve] ? 0);
         if(params[id].notNil){Error("AWBCoreTool: duplicate parameter").throw};
         param=AWParam(id,item[\base],ControlSpec(item[\min] ? 0,item[\max] ? 1,item[\warp] ? \lin),
             item[\amount] ? 0,item[\modCurve] ? 0,this.groupAt(\parameters),server,opts);
-        params[id]=param;paramObservers[param]={|object,what|
+        modulationRegistry.registerParameter(param);params[id]=param;paramObservers[param]={|object,what|
             if(what==\closed and:{closed.not} and:{params[id]===object}){
                 params.removeAt(id);object.removeDependant(paramObservers.removeAt(object));this.syncParamConfig
             };
@@ -143,7 +148,7 @@ AWBCoreTool : Tool {
     }
     checkPlayableEvent { |event|if((event[\type] ? \note)==\note and:{event.keys.includes(\out).not or:{event[\out].isNil}}){Error("AWBCoreTool: tracked notes require an explicit output destination").throw};^event}
     stopPlayback {players.copy.do{|player|if(player.isKindOf(Event)){player[\id].asArray.do{|id|this.dispatch([\n_free,id])};player[\id]=nil}{if(player.isKindOf(Node)){this.dispatch(player.freeMsg)}{player.stop}};instance.disown(player)};players.clear;^this}
-    content {^(configuration:config.deepCopy,ready:ready,closed:closed,groups:groups.keys.asArray,params:params.collect(_.configuration),buses:buses.collect{|b|(rate:b.rate,width:b.numChannels,index:b.index)},tools:tools.collect{|i|i.instanceID},players:players.size)}
+    content {^(modulation:modulationRegistry.content,configuration:config.deepCopy,ready:ready,closed:closed,groups:groups.keys.asArray,params:params.collect(_.configuration),buses:buses.collect{|b|(rate:b.rate,width:b.numChannels,index:b.index)},tools:tools.collect{|i|i.instanceID},players:players.size)}
     promotionCandidate {
         var configuration=config.deepCopy;configuration[\params]=params.keys.asArray.sort.collect{|id|params[id].configuration};
         ^(toolID:\awbCore,definitionVersion:"0.1.0",config:configuration,selectedState:(),
@@ -158,7 +163,7 @@ AWBCoreTool : Tool {
     close {
         var busList;if(closed){^this};closed=true;ready=false;ServerQuit.remove(quitHook,server);
         if(nodeHook.notNil){group.removeDependant(nodeHook);group.unregister};
-        this.stopPlayback;tools.keys.copy.do{|id|this.closeTool(id)};
+        modulationRegistry.close;this.stopPlayback;tools.keys.copy.do{|id|this.closeTool(id)};
         params.values.do{|param|param.removeDependant(paramObservers[param]);param.free};params.clear;paramObservers.clear;
         resources.values.do{|r|try{r[\cleanup].value(r[\object])}{|error|error.reportError}};resources.clear;
         if(group.notNil){this.dispatch(group.freeMsg)};ownedNodes.copy.do{|node|this.disownNode(node)};

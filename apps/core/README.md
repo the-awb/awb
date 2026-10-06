@@ -126,6 +126,87 @@ a destination reassigned to another AWParam. Borrowed destination nodes are not
 freed. Bus IDs are released after server sync, never immediately reused while
 old writers may still exist. Server quit invalidates the owned resources.
 
+### Registered modulation sources — 6 October 2026
+
+Core now owns an `AWModulationRegistry`. A named `AWModulationSource` borrows a
+mono control bus and its producing Synth or Group. Registration does not transfer
+ownership or start DSP. Declare the actual producing scheduling unit; the registry
+cannot infer which synths write a bus. A Group declaration means its whole subtree
+must finish before a same-block reader.
+
+```supercollider
+~core.registerModulationSource(\celloEnvelope, follower.outputBus, follower.group);
+~cutoff.addModulation(\cello, ~core.modulationSource(\celloEnvelope), 0.5, 0,
+    action: { |connection, error|
+        if(error.notNil) { error.reportError };
+    }
+);
+~cutoff.mapToChecked(filterSynth, \cutoff,
+    action: { |mapping, error| if(error.notNil) { error.reportError } }
+);
+```
+
+Registered connections return a **record**, rather than the Synth returned by a
+plain Bus connection. Its `status` is `pending`, `connected` or `removed`; `node`
+is absent until the order check succeeds, and `error` explains rejection/removal.
+Treat the completion callback as readiness for the connection. IDs are reserved
+while pending, and removal/closure cancels validation. Validation sends
+`/g_queryTree 0 0` and parses the real controls-free reply into subtree intervals.
+A missing producer/processor, malformed reply or one-second timeout fails without
+creating a route. Plain Bus `addModulation` and ordinary `mapTo` retain their
+existing unchecked-order behaviour.
+
+Default timing is `\sameBlock`. A later producer/consumer or a same-block cycle
+is rejected. Set `timing: \previousBlock` deliberately to **permit** a previous
+block's control value; this is not an inserted delay and an earlier producer will
+still supply the current value. Route synths must always remain in the parameter's
+source Group before its processor. No automatic node or Group movement is done.
+A producer Group containing that route Group cannot serve as a same-block source;
+register the individual writer instead.
+
+A source generated specifically for one Param can be built and owned there:
+
+```supercollider
+SynthDef(\gestureWriter, { |out=0, rate=0.2|
+    Out.kr(out, SinOsc.kr(rate)); // additive control-rate writer
+}).add;
+s.sync;
+~gesture = ~cutoff.createModulationWriter(\gesture, \gestureWriter, [\rate, 0.2]);
+~cutoff.removeModulationWriter(\gesture);
+```
+
+The helper requires a known SynthDef with a control-rate output-bus argument. It
+assigns that argument to `inputBus`, places the writer inside `sourceGroup`, and
+records native ownership. Callers must supply an additive **Out.kr** SynthDef;
+the helper does not rewrite its signal graph or convert audio to control rate.
+Per-writer shaping can live in that SynthDef; borrowed sources continue to use
+per-connection depth/curve in the existing route Synth.
+
+```supercollider
+~core.validateModulationOrder({ |reports, error| reports.postln });
+// Explicit opt-in to detach invalid routes/mappings or free misplaced owned writers:
+~core.validateModulationOrder({ |reports, error| reports.postln }, true);
+~core.unregisterModulationSource(\celloEnvelope);
+```
+
+Audits check source → route → processor, registered helper writers and checked
+processor → destination mappings. They report only by default. Run an audit
+after deliberately rearranging external nodes; order is not continuously polled
+and a successful snapshot cannot prevent later external edits. Invalidation of a
+registered producer via its node-end notification removes all of its connections,
+while preserving the borrowed bus. Unregistration behaves the same way. Param,
+route and destination closure remove their own connection/mapping records; root
+closure releases the registry and pending callbacks. Sources shared by other
+parameters are not owned or freed by the recipient. Runtime registration is
+inspectable through Core `content`, but is not yet whole-set preset persistence.
+
+Standalone Params may use `AWModulationRegistry(server)` directly; register a
+source there and pass its descriptor to `addModulation`. For checked destination
+mapping, pass `registry:` explicitly. The coordinator owns only bookkeeping,
+not borrowed sources. Score/capture transports have no live node-tree reply;
+registered connections require an explicit `queryFunction` order fixture and
+otherwise fail, rather than pretending to have verified server order.
+
 ### Readback and MIDI
 
 ```supercollider
@@ -246,3 +327,13 @@ exercise the language responder, coalesced reads, timeout/close behaviour and
 tracked stream ownership; the emulated peer is **not a live scsynth DSP test**.
 Source hashes and logs are saved beside the rendered audio. A live server/MIDI
 hardware run and full processor CPU measurement are still unrun.
+
+Registration slice verification: 70 existing Core contracts, 49 registration
+contracts, 38 actual offline DSP assertions, 31 existing language/UDP assertions
+and 13 registry UDP assertions pass in `/private/tmp/awb-core-modulation-final-20261006`.
+The tree fixture and UDP peer exercise protocol/ordering/lifecycle semantics; the
+actual offline render verifies registered source routing and helper-owned writers.
+A fresh real-time scsynth tree-query run, hardware MIDI, GUI integration and load
+measurement remain unrun. No live classes are installed. This implementation is
+recorded in the registration commit checkpoint. The public AWBaseTool rename
+remains a separate pending change.

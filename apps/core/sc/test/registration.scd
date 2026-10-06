@@ -1,0 +1,110 @@
+(
+var server,instance,core,p,q,producer,late,bus,source,connection,writer,checks=0,failed=List.new,check,reject,nodes=Dictionary.new,messages=List.new,send,tree,reply,query,mode=\normal,delayed,callbackCount=0,foreign;
+check={|ok,label|checks=checks+1;if(ok){("PASS "++label).postln}{failed.add(label);("FAIL "++label).postln}};
+reject={|fn,label|var caught=false;try{fn.value}{caught=true};check.value(caught,label)};
+// In-memory server tree fixture, fed by the actual construction OSC messages.
+nodes[0]=(children:List.new,parent:nil);nodes[1]=(children:List.new,parent:0);nodes[0][\children].add(1);
+send={|msg|
+ var command=msg[0].asSymbol,id,parent,record;
+ messages.add(msg);command=switch(msg[0],21,{\g_new},9,{\s_new},11,{\n_free},{command});
+ if(command==\g_new or:{command==\s_new}){
+    id=if(command==\g_new){msg[1]}{msg[2]};parent=if(command==\g_new){msg[3]}{msg[4]};
+    record=(parent:parent,children:if(command==\g_new){List.new}{nil},defName:if(command==\s_new){msg[1]}{nil});nodes[id]=record;
+    if(if(command==\g_new){msg[2]}{msg[3]}==0){nodes[parent][\children].addFirst(id)}{nodes[parent][\children].add(id)};
+ };
+ if(command==\n_free){msg.copyToEnd(1).do{|nid|if(nodes[nid].notNil){nodes[nodes[nid][\parent]][\children].remove(nid);nodes.removeAt(nid)}}};
+};
+tree={
+ var result=List['/g_queryTree.reply',0],visit;
+ visit={|id|var n=nodes[id];result.add(id);if(n[\children].notNil){result.add(n[\children].size);n[\children].do(visit)}{result.add(-1);result.add(n[\defName].asString)}};
+ visit.value(0);result.asArray;
+};
+query={|action|if(mode==\normal){action.value(tree.value,nil)}{delayed=action}};
+try{
+ server=Server(\modRegistration,NetAddr("127.0.0.1",59995),ServerOptions.new.numOutputBusChannels_(4).numInputBusChannels_(0));
+ instance=AWBCoreTool.open((),(server:server,sendFunction:send,queryFunction:query,track:false));core=instance.tool;
+ p=core.createParam(\gain,0.2,\unipolar,0.5);q=core.createParam(\other,0.3);
+ bus=core.createBus(\envelope);producer=core.addSynth(\producer,\testProducer,[\out,bus.index],\detectors);
+ source=core.registerModulationSource(\envelope,bus,core.groupAt(\detectors));
+ check.value(source===core.modulationSource(\envelope),"registered source keeps stable identity");
+ reject.value({core.registerModulationSource(\envelope,bus,producer)},"duplicate source rejected");
+ foreign=Bus.audio(server,1);reject.value({core.registerModulationSource(\bad,foreign,producer)},"audio source rejected");foreign.free;
+ foreign=Server(\foreignMod,NetAddr("127.0.0.1",59994));reject.value({core.registerModulationSource(\bad,Bus.control(foreign,1),producer)},"foreign server bus rejected");
+ connection=p.addModulation(\cello,source,0.5,-4,action:{|c,error|callbackCount=callbackCount+1;check.value(error.isNil,"valid connection callback succeeds")});
+ check.value(connection[\status]==\connected and:{connection[\node].group===p.sourceGroup},"verified source connects before processor");
+ check.value(connection[\amount]==0.5 and:{connection[\curve]== -4},"connection retains depth and curve");
+ reject.value({p.addModulation(\cello,source)},"duplicate registered connection rejected");
+ core.validateModulationOrder({|reports,error|check.value(error.isNil and:{reports.size==1} and:{reports[0][\valid]},"audit checks actual route placement")});
+ p.removeModulation(\cello);check.value(connection[\status]==\removed and:{bus.index.notNil} and:{nodes[producer.nodeID].notNil},"disconnect preserves borrowed bus and producer");
+ late=core.addSynth(\late,\testProducer,[\out,bus.index],\fx);source=core.registerModulationSource(\late,bus,core.groupAt(\fx));
+ connection=p.addModulation(\late,source,action:{|c,error|check.value(error.notNil,"late same-block source reports order error")});
+ check.value(connection[\status]==\removed and:{connection[\node].isNil},"invalid order creates no routing synth");
+ connection=p.addModulation(\late,source,timing:\previousBlock);
+ check.value(connection[\status]==\connected,"explicit previous-block policy allows late source");p.removeModulation(\late);
+ source=core.registerModulationSource(\self,p.outputBus,p.group);
+ reject.value({p.addModulation(\self,source)},"same-block self dependency rejected");
+ connection=p.addModulation(\self,source,timing:\previousBlock);check.value(connection[\status]==\connected,"explicit delayed self connection allowed");p.removeModulation(\self);
+ SynthDescLib.global.add(SynthDef(\checkedDestination,{|gain=0|Out.ar(0,DC.ar(gain))}).asSynthDesc);
+ producer=core.addSynth(\consumer,\checkedDestination,[],\fx);
+ connection=p.mapToChecked(producer,\gain);
+ check.value(connection[\status]==\connected,"checked output mapping validates producer before consumer");
+ p.unmapFrom(producer,\gain);check.value(connection[\status]==\removed and:{core.modulationRegistry.destinations.isEmpty},"manual unmap removes checked dependency");
+ producer=core.addSynth(\earlyConsumer,\checkedDestination,[],\voices);
+ connection=p.mapToChecked(producer,\gain);
+ check.value(connection[\status]==\removed,"checked output rejects earlier same-block consumer");
+ connection=p.mapToChecked(producer,\gain,\previousBlock);
+ check.value(connection[\status]==\connected,"output mapping can explicitly accept previous-block value");p.unmapFrom(producer,\gain);
+ source=core.registerModulationSource(\pOutput,p.outputBus,p.group);
+ connection=q.addModulation(\pToQ,source);
+ check.value(connection[\status]==\connected,"parameter output can be a registered source");
+ source=core.registerModulationSource(\qOutput,q.outputBus,q.group);
+ reject.value({p.addModulation(\qToP,source)},"multi-parameter same-block cycle rejected");
+ connection=p.addModulation(\qToP,source,timing:\previousBlock);
+ check.value(connection[\status]==\connected,"one explicit delayed connection breaks dependency cycle");p.removeModulation(\qToP);q.removeModulation(\pToQ);
+ // Adversarial missing and malformed node-tree replies.
+ reply=AWModulationRegistry.treeOrder(tree.value);check.value(reply[core.group.nodeID][\end]>reply[core.group.nodeID][\start],"group interval includes nested synths");
+ reject.value({AWModulationRegistry.treeOrder(['/g_queryTree.reply',0,0,1])},"truncated tree rejected");
+ reject.value({AWModulationRegistry.treeOrder(['/g_queryTree.reply',0,0,2,1,0,1,0])},"duplicate tree node rejected");
+ reject.value({AWModulationRegistry.treeOrder(['/g_queryTree.reply',1,0,0])},"control-bearing reply rejected");
+ source=core.modulationSource(\envelope);
+ connection=q.addModulation(\env,source);core.unregisterModulationSource(\envelope);
+ check.value(connection[\status]==\removed and:{source.active.not} and:{q.modulationConnections.isEmpty},"unregister removes all associated routes");
+ reject.value({p.addModulation(\old,source)},"stale source descriptor rejected");
+ source=core.registerModulationSource(\envelope,bus,core.groupAt(\detectors));
+ // Reordering externally requires an explicit audit; no unit is moved here.
+ connection=p.addModulation(\audit,source);nodes[core.group.nodeID][\children].remove(core.groupAt(\detectors).nodeID);nodes[core.group.nodeID][\children].add(core.groupAt(\detectors).nodeID);
+ core.validateModulationOrder({|reports,error|check.value(error.isNil and:{reports[0][\valid].not},"audit detects explicit external group move")});
+ check.value(connection[\status]==\connected,"default audit reports without altering connections");
+ core.validateModulationOrder({|reports,error|check.value(error.isNil,"explicit detachment audit succeeds")},true);
+ check.value(connection[\status]==\removed,"audit detaches invalid route without moving producer");
+ // Restore detectors before parameters.
+ nodes[core.group.nodeID][\children].remove(core.groupAt(\detectors).nodeID);nodes[core.group.nodeID][\children].insert(3,core.groupAt(\detectors).nodeID);
+ connection=p.addModulation(\routeMove,source);
+ nodes[p.sourceGroup.nodeID][\children].remove(connection[\node].nodeID);nodes[core.groupAt(\fx).nodeID][\children].add(connection[\node].nodeID);nodes[connection[\node].nodeID][\parent]=core.groupAt(\fx).nodeID;
+ core.validateModulationOrder({|reports,error|check.value(error.isNil and:{reports[0][\valid].not},"audit rejects a route moved after processor")},true);
+ check.value(connection[\status]==\removed,"misplaced route is detached");
+ mode=\delay;connection=p.addModulation(\pending,source);check.value(connection[\status]==\pending and:{connection[\node].isNil},"query gate reserves ID without starting DSP");
+ p.removeModulation(\pending);delayed.value(tree.value,nil);check.value(connection[\status]==\removed and:{connection[\node].isNil},"late validation cannot recreate removed route");
+ connection=p.addModulation(\pending,source);core.unregisterModulationSource(\envelope);delayed.value(tree.value,nil);
+ check.value(connection[\status]==\removed and:{connection[\node].isNil},"source removal cancels pending validation");mode=\normal;
+ SynthDescLib.global.add(SynthDef(\registeredWriter,{|out=0,value=0.2|Out.kr(out,value)}).asSynthDesc);
+ writer=p.createModulationWriter(\owned,\registeredWriter,[\value,0.4]);
+ check.value(writer.group===p.sourceGroup and:{p.modulationWriters[\owned][\node]===writer},"writer helper places and registers owned writer");
+ check.value(instance.ownedObjects.includes(writer),"writer participates in native Tool ownership");
+ reject.value({p.createModulationWriter(\duplicate,\registeredWriter,[\out,999])},"writer cannot override authoritative input bus");
+ reject.value({p.createModulationWriter(\owned,\registeredWriter)},"duplicate writer rejected");
+ reject.value({p.createModulationWriter(\unknown,\unknownWriter)},"unknown writer definition rejected");
+ p.removeModulationWriter(\owned);check.value(p.modulationWriters.isEmpty and:{instance.ownedObjects.includes(writer).not},"writer removal disowns node");
+ writer=p.createModulationWriter(\moved,\registeredWriter);
+ nodes[p.sourceGroup.nodeID][\children].remove(writer.nodeID);nodes[core.groupAt(\fx).nodeID][\children].add(writer.nodeID);nodes[writer.nodeID][\parent]=core.groupAt(\fx).nodeID;
+ core.validateModulationOrder({|reports,error|check.value(error.isNil and:{reports[0][\valid].not},"audit checks helper-owned writer placement")},true);
+ check.value(p.modulationWriters.isEmpty,"misplaced owned writer is freed");
+ writer=p.createModulationWriter(\owned,\registeredWriter);source=core.registerModulationSource(\envelope,bus,core.groupAt(\detectors));connection=q.addModulation(\env,source);
+ q.free;check.value(connection[\status]==\removed and:{core.modulationRegistry.connections.isEmpty},"parameter closure detaches registered connections");
+ mode=\delay;connection=p.addModulation(\pending,source,action:{|c,error|callbackCount=callbackCount+1;check.value(error.notNil,"registry close resolves pending callback")});
+ instance.close;delayed.value(['/g_queryTree.reply',0,0,0],nil);
+ check.value(core.modulationRegistry.closed and:{source.active.not} and:{p.modulationWriters.isEmpty},"root closes registry and writers");
+ check.value(callbackCount==2,"connection callbacks run exactly once");
+ ("AWB_MODULATION_CONTRACT_CHECKS="++checks).postln;if(failed.isEmpty){"AWB_MODULATION_CONTRACT_RESULT=PASS".postln;0.exit}{1.exit};
+}{|error|error.reportError;instance.tryPerform(\close);1.exit};
+)
