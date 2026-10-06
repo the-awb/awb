@@ -649,6 +649,13 @@ folders. Add them in SC IDE → Preferences → Interpreter → Include paths:
 /Users/willy/awb/apps/rack/sc/sets/awb52
 ```
 
+Also add this folder to **Exclude paths**, because it contains an archived
+instrumented copy of `AWBFirstPassSet`:
+
+```
+/Users/willy/awb/apps/rack/sc/sets/awb52/evidence-dropout-real-ir-30s
+```
+
 Keep the existing AWB framework and installed VSTPlugin extension paths. Recompile
 the class library, then open this folder's `example.scd`. Set server options before
 boot as shown there; select the actual input indices explicitly. Merging this
