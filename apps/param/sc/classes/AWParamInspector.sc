@@ -111,6 +111,7 @@ AWParamInspector : Tool {
         if(shellPID.notNil){^shellPID};
         if(rack.notNil){environment="AWB_RACK_SC_PORT=% AWB_RACK_INSTANCE_ID=% AWB_RACK_LIBRARY_ID=% AWB_RACK_SC_LIBRARY_ROOT=% ".format(NetAddr.langPort,rack[\instanceID].asString.shellQuote,rack[\libraryID].asString.shellQuote,(root+/+".rack-sc-libraries").shellQuote)};
         if(options[\cellViews].notNil){environment=environment++"AWB_LIVE_CELL_VIEWS="++this.viewJSON(options[\cellViews]).shellQuote++" "};
+        if(options[\delayBinding] ? false){environment=environment++"AWB_LIVE_DELAY_BIND=1 "};
         if(options[\delayURL].notNil){environment=environment++"AWB_LIVE_DELAY_URL="++options[\delayURL].asString.shellQuote++" "};
         if(options[\routingView].notNil){environment=environment++"AWB_LIVE_ROUTING_VIEW="++options[\routingView].asString.shellQuote++" "};
         command="exec /usr/bin/env -u ELECTRON_RUN_AS_NODE %AWB_LIVE_BASE_ID=% AWB_PARAM_SC_PORT=% AWB_PARAM_INSTANCE_ID=% % % --tool=% --profile=standalone --origin=supercollider --tool-instance=% --owner-pid=% --osc-port=0 --user-data-dir=%".format(

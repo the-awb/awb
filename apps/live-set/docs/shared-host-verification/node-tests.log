@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: counter-clockwise cell placement and semantic pedal names retain source identity
+ok 1 - counter-clockwise cell placement and semantic pedal names retain source identity
+  ---
+  duration_ms: 1.902755
+  type: 'test'
+  ...
+# Subtest: embedded cells cannot introduce external URLs or unknown routing identities
+ok 2 - embedded cells cannot introduce external URLs or unknown routing identities
+  ---
+  duration_ms: 1.586319
+  type: 'test'
+  ...
+# Subtest: BaseLaunch ordering and independent mono/stereo source ports survive graph compilation
+ok 3 - BaseLaunch ordering and independent mono/stereo source ports survive graph compilation
+  ---
+  duration_ms: 8.218244
+  type: 'test'
+  ...
+# Subtest: one knob edit sends only that parameter and never rewrites mappings or unrelated controls
+ok 4 - one knob edit sends only that parameter and never rewrites mappings or unrelated controls
+  ---
+  duration_ms: 0.979452
+  type: 'test'
+  ...
+# Subtest: source routes remain independent and backward/cyclic sends cannot be admitted
+ok 5 - source routes remain independent and backward/cyclic sends cannot be admitted
+  ---
+  duration_ms: 2.472475
+  type: 'test'
+  ...
+# Subtest: SC-origin parameter deltas reconcile only the corresponding state field
+ok 6 - SC-origin parameter deltas reconcile only the corresponding state field
+  ---
+  duration_ms: 0.620412
+  type: 'test'
+  ...
+# Subtest: observed timing remains the actual parameter value while rhythmic metadata changes
+ok 7 - observed timing remains the actual parameter value while rhythmic metadata changes
+  ---
+  duration_ms: 0.822548
+  type: 'test'
+  ...
+# Subtest: unbound surface opens no rack or engine and stops owned viewers once
+ok 8 - unbound surface opens no rack or engine and stops owned viewers once
+  ---
+  duration_ms: 33.464441
+  type: 'test'
+  ...
+# Subtest: composite forwards an existing rack binding and closes only its borrowed viewer
+ok 9 - composite forwards an existing rack binding and closes only its borrowed viewer
+  ---
+  duration_ms: 10.769148
+  type: 'test'
+  ...
+# Subtest: one existing delay instrument supplies four tape views and one routing view without launch
+ok 10 - one existing delay instrument supplies four tape views and one routing view without launch
+  ---
+  duration_ms: 5.99643
+  type: 'test'
+  ...
+# Subtest: failed composite startup releases its own delay readers
+ok 11 - failed composite startup releases its own delay readers
+  ---
+  duration_ms: 4.190331
+  type: 'test'
+  ...
+# Subtest: live fixture preserves all imported targets and current surface destinations
+ok 12 - live fixture preserves all imported targets and current surface destinations
+  ---
+  duration_ms: 12.337078
+  type: 'test'
+  ...
+# Subtest: value notifications are isolated from structural and sibling subscriptions
+ok 13 - value notifications are isolated from structural and sibling subscriptions
+  ---
+  duration_ms: 2.459697
+  type: 'test'
+  ...
+# Subtest: linear logarithmic and breakpoint mapping are invertible before quantisation
+ok 14 - linear logarithmic and breakpoint mapping are invertible before quantisation
+  ---
+  duration_ms: 0.36595
+  type: 'test'
+  ...
+# Subtest: unsafe and ambiguous configuration is rejected
+ok 15 - unsafe and ambiguous configuration is rejected
+  ---
+  duration_ms: 1.029709
+  type: 'test'
+  ...
+# Subtest: legacy OSC emits exactly one SET and refuses absent or reordered mappings
+ok 16 - legacy OSC emits exactly one SET and refuses absent or reordered mappings
+  ---
+  duration_ms: 1.408005
+  type: 'test'
+  ...
+# Subtest: recall alignment and duration fractions are preserved; manual override cancels just one target
+ok 17 - recall alignment and duration fractions are preserved; manual override cancels just one target
+  ---
+  duration_ms: 1.599931
+  type: 'test'
+  ...
+# Subtest: snapshots retain commanded settings and explicit scene identity
+ok 18 - snapshots retain commanded settings and explicit scene identity
+  ---
+  duration_ms: 5.535855
+  type: 'test'
+  ...
+# Subtest: both views consume the same layout and configurable region counts
+ok 19 - both views consume the same layout and configurable region counts
+  ---
+  duration_ms: 1.291141
+  type: 'test'
+  ...
+# Subtest: each channel has an independent send rack and region definition
+ok 20 - each channel has an independent send rack and region definition
+  ---
+  duration_ms: 5.114891
+  type: 'test'
+  ...
+# Subtest: channel rack cannot absorb shared levels or exceed independent region limits
+ok 21 - channel rack cannot absorb shared levels or exceed independent region limits
+  ---
+  duration_ms: 0.662901
+  type: 'test'
+  ...
+# Subtest: legacy scene amounts are normalised and converted exactly like transition.js
+ok 22 - legacy scene amounts are normalised and converted exactly like transition.js
+  ---
+  duration_ms: 7.471812
+  type: 'test'
+  ...
+# Subtest: channel racks are compact vertical strips with sends stacked in each strip
+ok 23 - channel racks are compact vertical strips with sends stacked in each strip
+  ---
+  duration_ms: 1.72913
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 655.340864

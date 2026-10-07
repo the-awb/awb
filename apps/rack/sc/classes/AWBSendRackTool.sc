@@ -342,11 +342,24 @@ AWBSendRackTool : Tool {
         this.dispatch([\n_setn,channel[\node].nodeID,\sendGains,slotIDs.size]++channel[\gains]);
         this.publishValue(channelID.asString++"/"++if(slots[destinationID.asSymbol][\kind]==\fx){"fx"}{"followers"}++"/"++destinationID.asString,gain);^gain;
     }
+    // Borrow the control; the rack fader and MIDI change the same AWParam baseline.
+    bindLevelParam { |id,param|
+        var channel=this.channelAt(id),hook;this.requireOpen;
+        if(param.server!==server or:{param.closed} or:{param.spec.minval>0} or:{param.spec.maxval>config[\maxGain]}){Error("Invalid rack level parameter").throw};
+        if(channel[\levelParam].notNil){Error("Rack level parameter already bound").throw};
+        param.mapTo(channel[\node],\level);channel[\levelParam]=param;
+        hook={|o,what,data|if(what==\baseTarget and:{closed.not}){channel[\level]=param.baseTarget;this.publishValue("global/channel-levels/"++id.asString,param.baseTarget)};if(what==\closed and:{closed.not}){this.unbindLevelParam(id)}};
+        channel[\levelHook]=hook;param.addDependant(hook);channel[\level]=param.baseTarget;^this;
+    }
+    unbindLevelParam { |id|
+        var channel=this.channelAt(id),p=channel[\levelParam];
+        if(p.notNil){p.removeDependant(channel[\levelHook]);if(p.closed.not){p.unmapFrom(channel[\node],\level)};channel[\levelParam]=nil;channel[\levelHook]=nil;this.dispatch(channel[\node].setMsg(\level,channel[\level]))};^this;
+    }
     setLevel { |id,value|
         var channel=this.channelAt(id);
         this.requireOpen;value=AWBSendRackVoice.gain(value);
         if(value>config[\maxGain]){Error("Channel level exceeds rack range").throw};
-        channel[\level]=value;this.dispatch([\n_set,channel[\node].nodeID,\level,value]);this.publishValue("global/channel-levels/"++id.asString,value);^value;
+        channel[\level]=value;if(channel[\levelParam].notNil){channel[\levelParam].setBase(value)}{this.dispatch([\n_set,channel[\node].nodeID,\level,value]);this.publishValue("global/channel-levels/"++id.asString,value)};^value;
     }
     setMute { |id,value|this.requireOpen;if(value.isKindOf(Boolean).not){Error("Mute requires a Boolean").throw};this.channelAt(id)[\mute]=value==true;this.publishValue(id.asString++"/state/mute",value.asInteger);this.updateEnabled;^this }
     setSolo { |id,value|this.requireOpen;if(value.isKindOf(Boolean).not){Error("Solo requires a Boolean").throw};this.channelAt(id)[\solo]=value==true;this.publishValue(id.asString++"/state/solo",value.asInteger);this.updateEnabled;^this }
@@ -681,7 +694,7 @@ AWBSendRackTool : Tool {
         shellPID=runner.value(command);^shellPID;
     }
     close {
-        if(closed){^this};closed=true;ready=false;
+        if(closed){^this};channels.keys.do{|id|this.unbindLevelParam(id)};closed=true;ready=false;
         watchers.values.do{|watcher|watcher[\address].sendMsg('/awb/rack/closed',instance.instanceID,watcher[\token])};watchers.clear;feedbackValues.clear;
         responder.tryPerform(\free);responder=nil;
         if(quitHook.notNil){ServerQuit.remove(quitHook,server);quitHook=nil};

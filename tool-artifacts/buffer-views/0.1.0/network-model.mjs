@@ -1,8 +1,8 @@
 // Performance controls for the first executable, acyclic delay-network graph.
-export const ids=['B1','A2','A1','B2'];
+export const ids=['B1','A2','B2','A1'];
 // Classic stereo feedback paths: paired direct returns, then paired cross returns.
 export const headPaths=[{source:0,returnChannel:0,label:'L→L'},{source:1,returnChannel:1,label:'R→R'},{source:1,returnChannel:0,label:'R→L'},{source:0,returnChannel:1,label:'L→R'}];
-export const colours=['#72cbb8','#e6be75','#b79ae5','#86b9ef'];
+export const colours=['#72cbb8','#e6be75','#86b9ef','#b79ae5'];
 export const sendDestinations=id=>[...ids.slice(ids.indexOf(id)+1),'monitor'];
 export function headPreset(mode){
   const times=mode==='quad'?[.25,.5,.75,1]:[.5,.5,1,1];
@@ -10,19 +10,20 @@ export function headPreset(mode){
 }
 // A legacy loop-mode action chooses its base value; head toggles never normalize feedback.
 export const loopFeedback=cell=>cell.heads.filter(h=>h.enabled).length===4?.5:1;
+export const inputSources=['clean','pro2','sc1','sc2'];
 export function defaults(){
   const periods=[8,2,.5,16],modes=['AB','quad','quad','AB'];
-  const routes={};ids.forEach((to,i)=>{routes[`clean:${to}`]=i===0?1:0;ids.slice(0,i).forEach(from=>routes[`${from}:${to}`]=ids[i-1]===from?1:0);routes[`${to}:monitor`]=i===3?1:0;});
+  const routes={};inputSources.slice(1).forEach(from=>ids.forEach(to=>{if(!from.startsWith('sc')||to==='A1')routes[`${from}:${to}`]=0;}));ids.forEach((to,i)=>{routes[`clean:${to}`]=i===0?1:0;ids.slice(0,i).forEach(from=>routes[`${from}:${to}`]=ids[i-1]===from?1:0);routes[`${to}:monitor`]=i===3?1:0;});
   return {version:1,reserveSeconds:32,tempo:120,globalInput:1,master:0,source:'tone',inputChannel:0,frequency:220,toneLevel:.1,
     cells:ids.map((id,i)=>({id,seconds:periods[i],timingMode:'seconds',beats:periods[i]*2,divisor:4,triplet:false,effectLevel:1,dryLevel:0,inputGain:1,feedback:i===2?.4:.5,running:true,heads:headPreset(modes[i]).map(h=>({...h,sends:Object.fromEntries(sendDestinations(id).map(to=>[to,0]))})),preset:modes[i]})),routes};
 }
 export const beatSeconds=(cell,tempo)=>60/tempo*cell.beats*4/cell.divisor*(cell.triplet?2/3:1);
 const number=(v,min,max,name)=>{if(!Number.isFinite(v)||v<min||v>max)throw new Error(`${name} must be ${min}–${max}`);};
-export function validate(candidate){
+export function validate(candidate,{resolveTiming=true}={}){
   const c=structuredClone(candidate),keys=Object.keys(defaults().routes);
   if(c.version!==1||c.reserveSeconds!==32||!Array.isArray(c.cells)||c.cells.length!==4)throw new Error('This view requires the four-cell, classic stereo layout');
   c.tempo??=120;number(c.tempo,20,400,'Tempo');
-  number(c.globalInput,0,1,'Clean availability');number(c.master,0,.8,'Master');number(c.frequency,20,2000,'Frequency');number(c.toneLevel,0,.3,'Test level');
+  number(c.globalInput,0,1,'Clean availability');number(c.master,0,2,'Master');number(c.frequency,20,2000,'Frequency');number(c.toneLevel,0,.3,'Test level');
   if(!Number.isInteger(c.inputChannel)||c.inputChannel<0||c.inputChannel>16)throw new Error('Input channel must be 1–17');
   if(!['tone','cello'].includes(c.source))throw new Error('Unknown input source');
   if(!c.routes||Object.keys(c.routes).length!==keys.length||keys.some(k=>!(k in c.routes)))throw new Error('Unknown route or unsupported return cycle');
@@ -34,7 +35,7 @@ export function validate(candidate){
     cell.effectLevel??=1;cell.dryLevel??=0;cell.timingMode??='seconds';cell.beats??=cell.seconds*c.tempo/60;cell.divisor??=4;cell.triplet??=false;
     number(cell.effectLevel,0,2,'FX level');number(cell.dryLevel,0,1,'Dry level');number(cell.beats,.001,256,'Beats');
     if(!['seconds','beats'].includes(cell.timingMode)||![1,2,4,8,16,32,64].includes(cell.divisor)||typeof cell.triplet!=='boolean')throw new Error('Invalid rhythmic timing');
-    if(cell.timingMode==='beats')cell.seconds=beatSeconds(cell,c.tempo);
+    if(resolveTiming&&cell.timingMode==='beats')cell.seconds=beatSeconds(cell,c.tempo);
     number(cell.seconds,.01,c.reserveSeconds,'Head timing span');number(cell.inputGain,0,2,'Input');number(cell.feedback,0,1.1,'Feedback');
     if(!Array.isArray(cell.heads)||cell.heads.length!==4)throw new Error('Four declared heads required');
     cell.heads.forEach((h,j)=>{if(h.id!==`h${j+1}`||typeof h.enabled!=='boolean'||!['fraction','seconds'].includes(h.unit))throw new Error('Invalid head');
@@ -65,13 +66,13 @@ export function command(current,p){
 export function graphFor(c){
   c=validate(c);
   const graph={version:1,buffers:ids.map(id=>({id:`memory-${id}`,channels:2,labels:['L','R'],capacitySeconds:c.reserveSeconds})),
-    nodes:[{id:'clean',kind:'input',ports:[{id:'out',direction:'out',channels:1,labels:['mono']}]}],connections:[]};
+    nodes:[...inputSources.map(id=>({id,kind:'input',ports:[{id:'out',direction:'out',channels:2,labels:['L','R']}]}))],connections:[]};
   c.cells.forEach(cell=>{graph.nodes.push({id:cell.id,kind:'cell',periodSeconds:cell.seconds,layout:{kind:'fitted',headSlots:4},
     ports:[{id:'record',direction:'in',channels:2,labels:['L','R']},{id:'wet',direction:'out',channels:2,labels:['L','R']},...cell.heads.map(h=>({id:'tap-'+h.id,direction:'out',channels:2,labels:['L','R']}))],mix:{input:'record',output:'wet',mapping:'identity'},writer:{buffer:`memory-${cell.id}`,port:'record',mapping:'identity'},
     heads:cell.heads.map((h,i)=>({id:h.id,level:h.amount,source:{buffer:`memory-${cell.id}`,channel:headPaths[i].source},delay:{unit:h.unit,value:h.value},returns:[{channel:headPaths[i].returnChannel,gain:1}],destinations:[{port:'wet',channel:0,gain:h.left},{port:'wet',channel:1,gain:h.right},{port:'tap-'+h.id,channel:0,gain:h.left},{port:'tap-'+h.id,channel:1,gain:h.right}]}))});});
   graph.nodes.push({id:'monitor',kind:'output',ports:[{id:'in',direction:'in',channels:2,labels:['L','R']}]});
-  Object.keys(c.routes).forEach(id=>{const [from,to]=id.split(':');graph.connections.push({id,from:{node:from,port:from==='clean'?'out':'wet'},to:{node:to,port:to==='monitor'?'in':'record'},
-    mapping:from==='clean'?[{from:0,to:0,gain:1},{from:0,to:1,gain:1}]:'identity'});});
+  Object.keys(c.routes).forEach(id=>{const [from,to]=id.split(':');graph.connections.push({id,from:{node:from,port:inputSources.includes(from)?'out':'wet'},to:{node:to,port:to==='monitor'?'in':'record'},
+    mapping:'identity'});});
   c.cells.forEach(cell=>cell.heads.forEach(h=>sendDestinations(cell.id).forEach(to=>graph.connections.push({id:`${cell.id}/${h.id}:${to}`,from:{node:cell.id,port:'tap-'+h.id},to:{node:to,port:to==='monitor'?'in':'record'},mapping:'identity'}))));return graph;
 }
 export const headSeconds=(head,period)=>head.value*(head.unit==='fraction'?period:1);

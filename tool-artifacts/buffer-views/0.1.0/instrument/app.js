@@ -1,5 +1,5 @@
 if(new URLSearchParams(location.search).get('embed')==='1')document.body.dataset.embedded='true';
-import {ids,colours,headPaths,loopFeedback,command,timeline,ageEnvelope,headSeconds,sendDestinations,panelViews,resolvePanelView} from '/network-model.mjs';
+import {ids,inputSources,colours,headPaths,loopFeedback,command,timeline,ageEnvelope,headSeconds,sendDestinations,panelViews,resolvePanelView} from '/network-model.mjs';
 function fmt(value){return value>=10?value.toFixed(1):value>=1?value.toFixed(2):value.toFixed(3);}
 function value(el,v){if(document.activeElement!==el)el.value=v;}
 function draw(canvas,wave,t,colour,advance=0){
@@ -69,7 +69,7 @@ function render(){
 }
 function mountRouting(root,{getState,send,amount}){
  const $=s=>root.querySelector(s);
-$('#matrix').innerHTML=`<table><thead><tr><th>From ↓ / to →</th>${[...ids,'Wet'].map(v=>`<th>${v}</th>`).join('')}</tr></thead><tbody>${['clean',...ids].map((from,i)=>`<tr><th>${from==='clean'?'Clean':from}</th>${[...ids,'monitor'].map((to,j)=>{const allowed=to==='monitor'?from!=='clean':i<=j;return allowed?`<td><label class="send-amount"><input class="route" type="range" min="0" max="1" step=".01" data-route="${from}:${to}" aria-label="${from} to ${to} amount"><output>0%</output></label></td>`:'<td class="unavailable" title="Route unavailable in this graph">—</td>';}).join('')}</tr>`).join('')}</tbody></table>`;
+$('#matrix').innerHTML=`<table><thead><tr><th>From ↓ / to →</th>${[...ids,'Wet'].map(v=>`<th>${v}</th>`).join('')}</tr></thead><tbody>${[...inputSources,...ids].map((from,i)=>`<tr><th>${from==='clean'?'VC':from}</th>${[...ids,'monitor'].map((to,j)=>{const allowed=to==='monitor'?ids.includes(from):inputSources.includes(from)?(!from.startsWith('sc')||to==='A1'):ids.indexOf(from)<j;return allowed?`<td><label class="send-amount"><input class="route" type="range" min="0" max="1" step=".01" data-route="${from}:${to}" aria-label="${from} to ${to} amount"><output>0%</output></label></td>`:'<td class="unavailable" title="Route unavailable in this graph">—</td>';}).join('')}</tr>`).join('')}</tbody></table>`;
 $('#matrix').querySelectorAll('input').forEach(input=>amount(input,'route:'+input.dataset.route,v=>({action:'route',id:input.dataset.route,value:v})));
 $('#route-reset').onclick=async()=>{for(const id of Object.keys(getState().config.routes))if(getState().config.routes[id]>0)await send({action:'route',id,value:0});};
 
@@ -152,7 +152,7 @@ function render(){if(!state)return;
   tapeView.render();routeView.render();headView.render();renderAllTapes();
   $('#stop-audio').hidden=state.backend!=='audio';
   $('#status').textContent=state.connected?(state.backend==='rehearsal'?'REHEARSAL':'SC AUDIO'):'DISCONNECTED';
-  $('#notice').textContent=state.backend==='rehearsal'?'Interface rehearsal · no audio engine. Waveforms are illustrative; timing and routing controls use the same validated graph model.':'Live SuperCollider buffers · waveform summaries follow the write pointer. Hardware input and test tone are selectable. Raise Master to hear the stereo mix.';
+  $('#notice').textContent=state.backend==='rehearsal'?'Interface rehearsal · no audio engine. Waveforms are illustrative; timing and routing controls use the same validated graph model.':'Live SuperCollider buffers · waveform summaries follow the write pointer. Inputs come from rack VC, Pro 2, SC1 and SC2. Wet goes to Delay Bus; use its rack fader/sends.';
   if(state.error)$('#error').textContent=state.error;
   value($('#inputChannel'),state.config.inputChannel+1);$('#input-channel-label').hidden=state.config.source!=='cello';
   ['source','globalInput','master'].forEach(f=>{value($('#'+f),state.config[f]);if($('#'+f+'-value'))$('#'+f+'-value').textContent=Math.round(state.config[f]*100)+'%';});
@@ -213,7 +213,7 @@ function renderAllTapes(){
  });
 }
 
-const events=new EventSource('/events');events.onmessage=e=>receive(JSON.parse(e.data));events.onerror=()=>{$('#status').textContent='DISCONNECTED';$('#error').textContent='Connection lost. Controls wait for the instrument bridge.';};window.addEventListener('resize',render);
+const events=new EventSource('/events');events.onmessage=e=>receive({...state,...JSON.parse(e.data)});events.onerror=()=>{$('#status').textContent='DISCONNECTED';$('#error').textContent='Connection lost. Controls wait for the instrument bridge.';};window.addEventListener('resize',render);
 
 // Move captured content smoothly between publications, without inventing samples.
 function animateTape(){
@@ -267,7 +267,7 @@ function startPanel(descriptor){
 function startPanelBroker(){
  const ports=new Set();let events=null,latest=null;
  const publish=message=>{for(const port of ports)port.postMessage(message);};
- const open=()=>{if(events)return;events=new EventSource('/events');events.onmessage=e=>{latest=JSON.parse(e.data);publish({type:'state',state:latest});};events.onerror=()=>publish({type:'connection-error'});};
+ const open=()=>{if(events)return;events=new EventSource('/events');events.onmessage=e=>{latest={...latest,...JSON.parse(e.data)};publish({type:'state',state:latest});};events.onerror=()=>publish({type:'connection-error'});};
  self.onconnect=event=>{
   const port=event.ports[0];ports.add(port);port.onmessage=event=>{if(event.data?.type!=='detach')return;ports.delete(port);port.close();if(!ports.size){events?.close();events=null;latest=null;}};
   port.start();if(latest)port.postMessage({type:'state',state:latest});open();

@@ -1,11 +1,15 @@
-import path from 'node:path';import {readFile} from 'node:fs/promises';import {fileURLToPath} from 'node:url';import {startRuntime as startParams} from '../../param/runtime/shell-runtime.mjs';import {startRuntime as startRack} from '../../rack/runtime/shell-runtime.mjs';import {createBaseBridge} from './base-bridge.mjs';import {validateSurface,localViewURL} from '../src/catalog.mjs';import {requestableViews} from '../../../tool-artifacts/buffer-views/0.1.0/network-model.mjs';
-export async function startRuntime({runtimeDirectory='/private/tmp/awb-live-set-runtime',controlObservations,binding,baseBinding,surface={},bridgeFactory,baseBridgeFactory=createBaseBridge,rackFactory=startRack,previewRack=false,rackBinding,delayURL=process.env.AWB_LIVE_DELAY_URL}={}){
- const clients=new Set(),config=validateSurface(surface);let base,params,rack,stopped=false,error=null;
+import {createDelayBridge} from './delay-bridge.mjs';import {startNetwork} from '../../../tool-artifacts/buffer-views/0.1.0/network-server.mjs';import path from 'node:path';import {readFile} from 'node:fs/promises';import {fileURLToPath} from 'node:url';import {startRuntime as startParams} from '../../param/runtime/shell-runtime.mjs';import {startRuntime as startRack} from '../../rack/runtime/shell-runtime.mjs';import {createBaseBridge} from './base-bridge.mjs';import {validateSurface,localViewURL} from '../src/catalog.mjs';import {requestableViews} from '../../../tool-artifacts/buffer-views/0.1.0/network-model.mjs';
+export async function startRuntime({runtimeDirectory='/private/tmp/awb-live-set-runtime',controlObservations,binding,baseBinding,surface={},bridgeFactory,baseBridgeFactory=createBaseBridge,rackFactory=startRack,previewRack=false,rackBinding,delayURL=process.env.AWB_LIVE_DELAY_URL,delayBinding=process.env.AWB_LIVE_DELAY_BIND==='1',delayBridgeFactory=createDelayBridge}={}){
+ const clients=new Set(),config=validateSurface(surface);let base,params,rack,delays,stopped=false,error=null;
  const publish=m=>{const text=`data: ${JSON.stringify(m)}\n\n`;for(const res of clients){if(res.destroyed){clients.delete(res);continue}if(res.writableLength>131072){res.destroy();clients.delete(res)}else res.write(text)}};
  const port=Number(process.env.AWB_PARAM_SC_PORT);binding??=process.env.AWB_PARAM_INSTANCE_ID?{instanceID:process.env.AWB_PARAM_INSTANCE_ID,port}:null;
  baseBinding??=process.env.AWB_LIVE_BASE_ID?{instanceID:process.env.AWB_LIVE_BASE_ID,port}:null;
  if(process.env.AWB_LIVE_CELL_VIEWS)config.cellViews=validateSurface({cellViews:JSON.parse(process.env.AWB_LIVE_CELL_VIEWS)}).cellViews;
  if(process.env.AWB_LIVE_ROUTING_VIEW)config.routingView=validateSurface({routingView:process.env.AWB_LIVE_ROUTING_VIEW}).routingView;
+ try{
+ if(delayBinding){
+  const adapter=await delayBridgeFactory(baseBinding);try{delays=await startNetwork({adapter,initial:adapter.initial});delayURL=delays.url;}catch(e){await adapter.close();throw e}
+ }
  if(delayURL){
   const views=requestableViews(localViewURL(delayURL));
   const embed=url=>{const u=new URL(url);u.searchParams.set('embed','1');return u.href};
@@ -13,7 +17,6 @@ export async function startRuntime({runtimeDirectory='/private/tmp/awb-live-set-
   config.headViews=Object.fromEntries(views.filter(v=>v.kind==='heads').map(v=>[v.cell.toLowerCase(),embed(v.url)]));
   config.routingView=embed(views.find(v=>v.kind==='routing').url);config.managedCells=true;
  }
- try{
   if(!config.rackView&&(previewRack||rackBinding||process.env.AWB_RACK_INSTANCE_ID)){
    const native=!!(rackBinding||process.env.AWB_RACK_INSTANCE_ID);let seedDocument;
    if(!native){seedDocument=JSON.parse(await readFile(new URL('../../rack/fixtures/live-set.rack.json',import.meta.url),'utf8'));seedDocument.config.output.mode='off'}
@@ -26,6 +29,6 @@ export async function startRuntime({runtimeDirectory='/private/tmp/awb-live-set-
    if(url.searchParams.get('token')!==token){res.writeHead(403);res.end();return true}
    res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-store'});res.write(`data: ${JSON.stringify({type:'console-state',state:base?.state()??{logs:[],mappings:[]}})}\n\n`);clients.add(res);req.on('close',()=>clients.delete(res));return true;
   }});
- }catch(e){await rack?.stop();await base?.close();throw e}
- return {...params,surface:config,async stop(){if(stopped)return;stopped=true;for(const c of clients)c.end();clients.clear();await params.stop();await base?.close();await rack?.stop()}};
+ }catch(e){await delays?.stop();await rack?.stop();await base?.close();throw e}
+ return {...params,surface:config,async stop(){if(stopped)return;stopped=true;for(const c of clients)c.end();clients.clear();await params.stop();await delays?.stop();await base?.close();await rack?.stop()}};
 }

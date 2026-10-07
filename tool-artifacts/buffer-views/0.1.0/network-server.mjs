@@ -13,12 +13,13 @@ export function rehearsal(){
     });}};
 }
 export async function startNetwork({adapter=rehearsal(),port=0,initial=defaults(),onStop=null}={}){
-  let config=validate(initial),revision=0,waveforms=[],error=null,closing=false,tail=Promise.resolve(),stopPromise;
+  let config=validate(initial),revision=0,publishedRevision=-1,waveforms=[],error=null,closing=false,tail=Promise.resolve(),stopPromise;
   const clients=new Map();
   await adapter.apply(config);
+  adapter.onConfig=next=>{config=validate(next,{resolveTiming:false});revision++;};
   const state=()=>({backend:adapter.kind,connected:!closing&&adapter.connected(),config,revision,waveforms,error});
   const control=p=>{const job=tail.catch(()=>{}).then(async()=>{if(closing||!adapter.connected())throw new Error('Disconnected');const next=command(config,p);if(next.clear)await adapter.clear(next.clear);else await adapter.apply(next.config);config=next.config;revision++;return state();});tail=job;return job;};
-  const timer=setInterval(()=>{try{waveforms=adapter.read().map((w,i)=>waveformView(w,timeline(config.cells[i],w).horizon));error=null;}catch(e){error=e.message;}const data=`data: ${JSON.stringify(state())}\n\n`;for(const [res,busy] of clients)if(!busy&&!res.destroyed&&!res.write(data)){clients.set(res,true);res.once('drain',()=>{if(clients.has(res))clients.set(res,false);});}},50);
+  const timer=setInterval(()=>{try{waveforms=adapter.read().map((w,i)=>waveformView(w,timeline(config.cells[i],w).horizon));error=null;}catch(e){error=e.message;}const observation=state();if(publishedRevision===revision)delete observation.config;else publishedRevision=revision;const data=`data: ${JSON.stringify(observation)}\n\n`;for(const [res,busy] of clients)if(!busy&&!res.destroyed&&!res.write(data)){clients.set(res,true);res.once('drain',()=>{if(clients.has(res))clients.set(res,false);});}},50);
   const files={'/':'instrument/index.html','/app.js':'instrument/app.js','/style.css':'instrument/style.css','/network-model.mjs':'network-model.mjs'};
   const server=http.createServer(async(req,res)=>{
     const url=new URL(req.url,'http://127.0.0.1');

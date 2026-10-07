@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build --configLoader native",
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "prepare:delay": "node scripts/prepare-delay.mjs --native"
   },
   "dependencies": {
     "react": "^18.2.0",

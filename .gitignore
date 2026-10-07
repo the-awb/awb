@@ -29,3 +29,6 @@ apps/awb-shell/test/signal-bench/**/*.input.gz
 
 # Live surface Vite cache.
 .vite-live-set/
+
+# Per-host delay plugin and native waveform reader.
+apps/live-set/.build/

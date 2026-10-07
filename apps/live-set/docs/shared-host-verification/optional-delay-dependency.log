@@ -1,0 +1,34 @@
+compiling class library...
+	Found 855 primitives.
+	Compiling directory '/Applications/SuperCollider.app/Contents/Resources/SCClassLibrary'
+	Compiling directory '/private/tmp/awb-live-delay-classes/framework'
+	Compiling directory '/private/tmp/awb-live-delay-classes/classes'
+	excluding file: '/private/tmp/awb-live-delay-classes/classes/AWBDelayRack.sc'
+	numentries = 885011 / 15352686 = 0.058
+	6381 method selectors, 2406 classes
+	method table size 15433072 bytes, big table size 122821488
+	Number of Symbols 14627
+	Byte Code Size 514405
+	compiled 385 files in 0.70 seconds
+
+Info: 3 methods are currently overwritten by extensions. To see which, execute:
+MethodOverride.printAll
+
+compile done
+NodeManager: Projected container | Total: 1
+NodeManager: Projected container | Total: 2
+localhost : setting clientID to 0.
+internal : setting clientID to 0.
+No existing sequence library found at: /private/tmp/awb-live-delay-classes/framework/EventSequences.scd
+No existing library found at: /private/tmp/awb-live-delay-classes/framework/EventPresets.scd
+Will create new library when first preset is saved.
+Class tree inited in 0.01 seconds
+WARNING: Extension in '/private/tmp/awb-live-delay-classes/framework/NodeManager.sc' overwrites Meta_Synth:new in main class library.
+WARNING: Extension in '/private/tmp/awb-live-delay-classes/framework/NodeManager.sc' overwrites Meta_Synth:newPaused in main class library.
+WARNING: Extension in '/private/tmp/awb-live-delay-classes/framework/NodeManager.sc' overwrites Meta_Synth:replace in main class library.
+Intentional overwrites must be put in a 'SystemOverwrites' subfolder.
+
+
+*** Welcome to SuperCollider 3.12.2. *** For help type cmd-d.
+AWBASE_OPTIONAL_DELAY_DEPENDENCY=PASS
+cleaning up OSC

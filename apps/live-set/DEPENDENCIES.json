@@ -1,0 +1,79 @@
+{
+  "commit": "4feac995fcbc54541060806057dc1c81c26c42f7",
+  "files": {
+    "apps/live-set/sc/dependencies/unified-buffer/UnifiedBufferController.sc": {
+      "source": "sc/UnifiedBufferController.sc",
+      "sha256": "6fe00a1c0ab93e00abb8b8c051790128023c93e188eec5bb26a57916c3782173"
+    },
+    "apps/live-set/sc/dependencies/unified-buffer/UBPGraphController.sc": {
+      "source": "sc/UBPGraphController.sc",
+      "sha256": "eadc2d385073624a7a289bb58951334014af918cb13d02fded5f7560f2e617a8"
+    },
+    "apps/live-set/sc/dependencies/unified-buffer/UBPGraphAWParamAdapter.sc": {
+      "source": "sc/UBPGraphAWParamAdapter.sc",
+      "sha256": "1a66d66826927b381c62fc2d9a16f37d6dd3a6cd2754a502db9014e1f7854424"
+    },
+    "apps/live-set/sc/dependencies/unified-buffer/UBPTakePool.sc": {
+      "source": "sc/UBPTakePool.sc",
+      "sha256": "03463a82f87230ab0a6c6123b31278350dfdd68a47851ed0c5a88ad0e40c36b4"
+    },
+    "apps/live-set/sc/dependencies/unified-buffer/UnifiedTape.sc": {
+      "source": "sc/UnifiedTape.sc",
+      "sha256": "abd52421a08e0ecbf720ecfee320764d58d971ae885b2b67338716c67a0cdd1e"
+    },
+    "apps/live-set/native/shared.hpp": {
+      "source": "native/shared.hpp",
+      "sha256": "18792194dbe30e4e32d44ce1e08ce146dee4370c806b59f84f7f41c277438cab"
+    },
+    "apps/live-set/native/snapshot.hpp": {
+      "source": "native/snapshot.hpp",
+      "sha256": "c1dc731c4e2aafc09ec7a60cbf125c475d7f2d8f75a814a251f171dbba806ec7"
+    },
+    "apps/live-set/native/channels-plugin.hpp": {
+      "source": "native/channels-plugin.hpp",
+      "sha256": "2466438b7a9e118ad20304726f77920fb7e8b02c854390d8c76ef70566f96e2f"
+    },
+    "apps/live-set/native/channels.hpp": {
+      "source": "native/channels.hpp",
+      "sha256": "c35828c218011b6033c5ce130c6a456aa7f0cf04c762020c3b581b3fa4c21a0f"
+    },
+    "apps/live-set/native/tape.hpp": {
+      "source": "native/tape.hpp",
+      "sha256": "f92ded04049ce799e81ccfb213993ea3521968e3e0d8a0eedd8c1e0dd8ea93c3"
+    },
+    "apps/live-set/native/wave-prefix.hpp": {
+      "source": "native/wave-prefix.hpp",
+      "sha256": "5f215d0e4d220ba5579abeb16fa976d78a2eb65180f13321b08d3995014b9b8c"
+    },
+    "apps/live-set/native/addon.cpp": {
+      "source": "native/addon.cpp",
+      "sha256": "48d154c0af6a19c8a1599678f53ed7cdffaff1c412747f15b57b85172de91666"
+    },
+    "apps/live-set/native/gesture.hpp": {
+      "source": "native/gesture.hpp",
+      "sha256": "600c99afda216b02c2bf858ce746c0df26374787b8f28b44ae06f8072f96536c"
+    },
+    "apps/live-set/native/UnifiedTape.cpp": {
+      "source": "native/UnifiedTape.cpp",
+      "sha256": "1d4cd962f97fcc5eb29462ddcbe821122f9831092563233a91d02ddf34d42b3c"
+    },
+    "apps/live-set/sc/dependencies/unified-buffer/UnifiedTapeChannels.sc": {
+      "source": "sc/UnifiedTapeChannels.sc",
+      "sha256": "3d7e06b54b9d42d13eee57f5742b22e6fb53e6278992ed28554f0d4429efd502"
+    },
+    "apps/live-set/runtime/graph-compiler.mjs": {
+      "source": "graph-compiler.mjs",
+      "sha256": "0d54193bddbc0cab94e3a170ccd0f831c7caddc851f0ecf01eaef62e459619d7"
+    },
+    "apps/live-set/runtime/graph-layout.mjs": {
+      "source": "graph-layout.mjs",
+      "sha256": "bec79bc33583e23427201bf8c508bcd59e862690962ac4bdab0f7f0713d088dd"
+    },
+    "apps/live-set/runtime/model.mjs": {
+      "source": "model.mjs",
+      "sha256": "825179844367da31a32d3d07f5ffab5f45a9ae2f76896b848c2600beae6052a1"
+    }
+  },
+  "repository": "SuperCollider",
+  "sourceRoot": "prototypes/unified-buffer-tool"
+}

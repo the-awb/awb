@@ -1,6 +1,6 @@
 // A live-set root on the existing Tool/Core lifecycle. The GUI borrows its objects.
 AWBaseTool : AWBCoreTool {
-    var <t,<logHistory,<logSequence=0,baseResponder,baseWatchers,baseEpoch,views,liveRack;
+    var <liveDelays,<t,<logHistory,<logSequence=0,baseResponder,baseWatchers,baseEpoch,views,liveRack;
     *register {^ToolRegistry.at(\awbBase) ?? {ToolRegistry.register(ToolDefinition(\awbBase,"AWB Live Base",version:"0.1.0",
         interfaceKind:\native,capabilities:[\liveSet,\parameters,\trackedPlayback,\ownership,\logging],defaultConfig:AWBCoreTool.defaults,
         dependencies:(nodeManager:\required),multipleInstances:true,cleanupPolicy:\terminateOwned,
@@ -45,12 +45,22 @@ AWBaseTool : AWBCoreTool {
         logHistory.do{|entry|this.sendLog(address,token,entry)};
         address.sendMsg('/awb/base/end',this.instance.instanceID,token,baseEpoch,request);^this;
     }
-    // Explicit ownership: closing the base closes this resource; closing a view doesn't.
-    adopt { |id,object,cleanup|this.ownResource(id,object,cleanup);this.instance.own(object,\toolObject,(name:id.asString));^object }
+    // These persistent resources are containers, not playing streams. Object's
+    // default isPlaying=false must not let NodeManager discard their ownership.
+    // Closing the base runs cleanup; closing a view does not.
+    adopt { |id,object,cleanup|this.ownResource(id,object,cleanup);this.instance.own(object,\container,(name:id.asString,lifetime:\explicit));^object }
     bindFirstPass { |set,own=false|
         var result=\AWBLiveMappings.asClass.perform(\bindFirstPass,this,set);
         liveRack=set.rack;
         if(own){this.adopt(\firstPassSet,set,{|object|object.close})};^result;
+    }
+    bindDelays { |plan,configuration,action|
+        var delayClass=\AWBDelayRack.asClass;
+        if(delayClass.isNil){Error("Load the live-set delay classes before binding delays").throw};
+        if(liveDelays.notNil){Error("Delays already attached").throw};if(liveRack.isNil){Error("Bind the set before delays").throw};
+        liveDelays=delayClass.perform(\open,this,liveRack,plan,configuration,{|result,error|
+            if(error.isNil){this.adopt(\delays,result,{|object|object.close})}{liveDelays=nil};action.value(result,error);
+        });^liveDelays;
     }
     namedParameters {
         var result=IdentityDictionary.new;
@@ -60,13 +70,14 @@ AWBaseTool : AWBCoreTool {
     gui { |opts|
         var view,params=this.namedParameters,options=(opts ? ()).copy,launch=(opts ? ())[\launch] ? true;
         if(params.isEmpty){Error("Register track/FX AWParams before opening the live surface").throw};
+        if(liveDelays.notNil and:{liveDelays.ready}){options[\delayBinding]=true};
         options.putAll((launch:false,guiTool:"live-set",baseInstanceID:this.instance.instanceID));
         if(liveRack.notNil){options[\rackBinding]=(instanceID:liveRack.instance.instanceID,libraryID:liveRack.config[\libraryID])};
         view=AWParamInspector.openNamed(params,options,this.instance);views.add(view);view.addDependant({|object,what|if(what==\closed){views.remove(object)}});
         if(launch){view.tool.gui(options)};^view;
     }
     close {
-        if(this.closed){^this};views.copy.do(_.close);views.clear;
+        if(this.closed){^this};liveDelays.tryPerform(\close);views.copy.do(_.close);views.clear;
         baseWatchers.values.do{|w|w[\address].sendMsg('/awb/base/closed',this.instance.instanceID,w[\token],baseEpoch)};baseWatchers.clear;baseResponder.tryPerform(\free);
         t.values.do(_.free);t.clear;super.close;^this;
     }

@@ -1,5 +1,5 @@
 {
-  "branch": "codex/live-set-surface",
+  "branch": "codex/live-audio-integration",
   "dependencies": {
     "awbParam": "da72790",
     "delayViews": "4feac995fcbc54541060806057dc1c81c26c42f7"
@@ -72,11 +72,8 @@
     "passed": 16
   },
   "unrun": [
-    "actual shared-host composite audio",
-    "independent cell input/output-to-rack routing",
-    "prepared-host delay adoption",
-    "physical inputs",
-    "performance/dropout comparison",
+    "physical MOTU input indices and audible audition",
+    "extended dropout/headroom test with GUI, modulation and scopes",
     "NodeManager source-process navigation"
   ],
   "installed": false,
@@ -97,5 +94,31 @@
       "log": "/private/tmp/awb-live-postmerge-tests.log",
       "shellSyntax": "passed"
     }
+  },
+  "previousSurfaceVerificationBranch": "codex/live-set-surface",
+  "sharedHostVerification": {
+    "date": "2026-10-07",
+    "server": "scsynth",
+    "sampleRate": 44100,
+    "blockSize": 128,
+    "hardwareBufferSize": 512,
+    "outputChannels": 4,
+    "hardwareOutput": "master group paused; SC buffer captures",
+    "fullFirstPassFX": true,
+    "fftSize": 4096,
+    "fileIRCapSeconds": 30,
+    "vstDSPThreads": 2,
+    "scAudioAssertions": 26,
+    "nodeBridgeAssertions": 11,
+    "electronAssertions": 8,
+    "focusedNodeTests": 23,
+    "scContracts": 15,
+    "failed": 0,
+    "evidence": "docs/shared-host-verification",
+    "unrelatedPreviewPreserved": true,
+    "engineExited": 0,
+    "performanceClaim": false,
+    "knownStartupWarning": "Pre-existing VST cache reports FL Studio VSTi.vst: not a plugin; required set plugins became ready.",
+    "optionalDelayDependencyProbe": "AWBaseTool compiles without AWBDelayRack; passed"
   }
 }

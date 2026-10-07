@@ -8,10 +8,13 @@ manifest=json.loads((root/'apps/rack/sc/test/framework-files.json').read_text())
 for name,relative in manifest.items():shutil.copy2(framework/relative,build/'framework'/name)
 for package in ['core','chain','rack','param','live-set']:
  for p in (root/f'apps/{package}/sc/classes').glob('*.sc'):shutil.copy2(p,build/'classes'/p.name)
+for p in (root/'apps/live-set/sc/dependencies/unified-buffer').glob('*.sc'):shutil.copy2(p,build/'classes'/p.name)
 shutil.copy2(root/'apps/core/sc/test/TestServer.sc',build/'framework/TestServer.sc')
 # Metadata fixture only; tests never attach a native reader to this PID.
 (build/'framework/LanguageTestServer.sc').write_text('AWBLiveLanguageTestServer : AWBCoreTestServer { pid { ^thisProcess.pid } }\n')
-shutil.copy2(root/'apps/rack/sc/sets/awb52/AWBVerbMixProfile.sc',build/'classes/AWBVerbMixProfile.sc')
+shutil.copy2(Path('/Library/Application Support/SuperCollider/Extensions/EnvDetect3/EnvDetect3.sc'),build/'classes/EnvDetect3.sc')
+for p in (root/'apps/rack/sc/sets/awb52').glob('*.sc'):shutil.copy2(p,build/'classes'/p.name)
+for p in Path('/Library/Application Support/SuperCollider/Extensions/VSTPlugin/classes').glob('*.sc'):shutil.copy2(p,build/'classes'/p.name)
 conf='includePaths:\n'+''.join('  - '+json.dumps(str(v))+'\n' for v in [app/'Resources/SCClassLibrary',build/'framework',build/'classes'])+'excludeDefaultPaths: true\nexcludePaths: []\npostInlineWarnings: false\n'
 config=build/'sclang_conf.yaml';config.write_text(conf)
 with (build/'contract.log').open('w') as log:

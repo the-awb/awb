@@ -1,0 +1,49 @@
+compiling class library...
+	Found 855 primitives.
+	Compiling directory '/Applications/SuperCollider.app/Contents/Resources/SCClassLibrary'
+	Compiling directory '/private/tmp/awb-live-delay-classes/framework'
+	Compiling directory '/private/tmp/awb-live-delay-classes/classes'
+	numentries = 885631 / 15391936 = 0.058
+	6392 method selectors, 2408 classes
+	method table size 15454720 bytes, big table size 123135488
+	Number of Symbols 14669
+	Byte Code Size 520640
+	compiled 386 files in 0.84 seconds
+
+Info: 3 methods are currently overwritten by extensions. To see which, execute:
+MethodOverride.printAll
+
+compile done
+NodeManager: Projected container | Total: 1
+NodeManager: Projected container | Total: 2
+localhost : setting clientID to 0.
+internal : setting clientID to 0.
+No existing sequence library found at: /private/tmp/awb-live-delay-classes/framework/EventSequences.scd
+No existing library found at: /private/tmp/awb-live-delay-classes/framework/EventPresets.scd
+Will create new library when first preset is saved.
+Class tree inited in 0.01 seconds
+WARNING: Extension in '/private/tmp/awb-live-delay-classes/framework/NodeManager.sc' overwrites Meta_Synth:new in main class library.
+WARNING: Extension in '/private/tmp/awb-live-delay-classes/framework/NodeManager.sc' overwrites Meta_Synth:newPaused in main class library.
+WARNING: Extension in '/private/tmp/awb-live-delay-classes/framework/NodeManager.sc' overwrites Meta_Synth:replace in main class library.
+Intentional overwrites must be put in a 'SystemOverwrites' subfolder.
+
+
+*** Welcome to SuperCollider 3.12.2. *** For help type cmd-d.
+liveSetContract : setting clientID to 0.
+PASS AWBaseTool uses Core Tool ownership
+PASS track dictionary refers to the actual AWParam
+PASS namespaces disambiguate parameters with identical internal names
+PASS view closure preserves borrowed DSP
+PASS unavailable legacy controls allocate no extra parameters or buses
+PASS aliases do not duplicate observation
+PASS base GUI launches the composite Tool by default
+PASS composite GUI forwards the existing native rack binding
+PASS composite GUI forwards individually requested cell views
+PASS composite forwards one existing delay instrument URL
+PASS composite NodeManager binding belongs to AWBaseTool
+PASS AWBase-style logging retains actual messages
+PASS console history is bounded with monotonic sequence
+PASS base closure retires owned resources once
+PASS externally borrowed parameter remains independently owned
+AWB_LIVE_SURFACE_CONTRACT_RESULT=PASS checks=15
+cleaning up OSC

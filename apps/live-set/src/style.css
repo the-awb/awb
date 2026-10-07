@@ -7,3 +7,5 @@
 .compact-sources{position:fixed;z-index:100;margin:0;padding:12px;border:1px solid #45616e;background:#142128;box-shadow:0 8px 30px #000b;border-radius:5px;overflow:auto;font:12px system-ui;color:#d2dde0}.compact-sources .fields{display:flex;margin-bottom:7px}.compact-sources .number{display:flex}.compact-sources>button{margin-top:7px}.compact-sources .source{padding:5px 0}
 
 .delay-cell>header button{font-size:9px;padding:2px 4px}.view-inspector{position:fixed;inset:50px max(20px,calc((100vw - 660px)/2)) 40px;background:#131d22;border:1px solid #52707e;border-radius:5px;z-index:50;display:flex;flex-direction:column;box-shadow:0 20px 100px #000b}.view-inspector>header{padding:8px 12px;border-bottom:1px solid #334751}.view-inspector iframe{width:100%;flex:1;min-height:0}.routing-inspector{inset:80px max(20px,calc((100vw - 660px)/2)) max(40px,calc(100vh - 700px))}
+
+.delay-modulation{padding:3px 8px;font-size:11px;background:#171d24}.delay-modulation summary{cursor:pointer}.delay-modulation .cell-controls{padding-top:5px}

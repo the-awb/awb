@@ -1,0 +1,16 @@
+{
+  "passed": 11,
+  "checks": [
+    "live adapter binds four cell region pairs",
+    "native shared waveform bridge reads all eight live regions",
+    "actual delay UI command is accepted",
+    "shared state reflects authoritative edit",
+    "sclang confirms independent edit and retained modulation",
+    "shared-host viewer cannot inject its old private test tone",
+    "closing GUI leaves borrowed delay engine alive",
+    "reopening retains tempo and rhythmic cell settings",
+    "heartbeat preserves borrowed viewer without configuration polling",
+    "real composite GUI assertions pass",
+    "owner closure invalidates delay observation and releases all eight readers"
+  ]
+}

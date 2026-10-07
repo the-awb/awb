@@ -6,7 +6,7 @@ const Parameter=memo(function Parameter({control,store,edit,disabled}){
 });
 const Cell=memo(function Cell({cell,stores,edit,disabled,url,onHeads}){
  return <section className="delay-cell" style={{'--accent':cell.color}} data-cell={cell.id}><header><h2>{cell.label}</h2><span>DELAY / BUFFER CELL</span><small>{url?'Cell view attached':'Awaiting cell view'}</small>{onHeads&&<button onClick={onHeads}>Heads / sends</button>}</header>
- {url?<iframe className="cell-view" src={url} title={`${cell.label} delay cell`} sandbox="allow-scripts allow-same-origin"/>:<><div className="cell-controls">{delayControls(cell.id).map(c=><Parameter key={c.id} control={c} store={stores.get(c.id)} {...{edit,disabled}}/>)}</div><div className="cell-display"><span>{cell.label}</span><p>Attach the individually requested cell view here.</p><small>Input bus and output sends stay separate for this cell.</small></div></>}
+ {url?<><iframe className="cell-view" src={url} title={`${cell.label} delay cell`} sandbox="allow-scripts allow-same-origin"/><details className="delay-modulation"><summary>AWParam / modulation</summary><div className="cell-controls">{delayControls(cell.id).slice(0,4).map(c=><Parameter key={c.id} control={c} store={stores.get(c.id)} {...{edit,disabled}}/>)}</div></details></>:<><div className="cell-controls">{delayControls(cell.id).map(c=><Parameter key={c.id} control={c} store={stores.get(c.id)} {...{edit,disabled}}/>)}</div><div className="cell-display"><span>{cell.label}</span><p>Attach the individually requested cell view here.</p><small>Input bus and output sends stay separate for this cell.</small></div></>}
  </section>;
 });
 function Console({token,initial}){
