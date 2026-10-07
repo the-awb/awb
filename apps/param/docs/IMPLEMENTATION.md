@@ -46,15 +46,45 @@ The precursor read/allocate/copy median was about 13–14 microseconds for 384 v
 
 ## Outstanding gates
 
-Another agent currently holds `/private/tmp/awb-audio-hardware-test.lock` for Supernova functional qualification. The live harness attempted reservation and stopped before launching an engine. Leave that reservation intact.
+The 7 October live attempt stopped before launch because another agent held the hardware reservation. On 8 October the lock was absent but the user had an active IDE/server session. Recheck both reservations and active engine ownership before running the pending live gates.
 
 1. Run `python3 apps/param/test/run-live.py` against installed scsynth and supernova in a private class path with the audio slot reserved. Verify real command/route/ramp/source closure and browser output end to end; preserve system device/rate.
 2. Measure 16/32/128 independent parameters at 8/15 Hz, stopped observation, feed-only, SVG, Canvas and opacity. Hold dimensions/DPR/visibility fixed, repeat/interleave phases and include all owned Electron/helper + language/engine CPU. Verify pixels/value advancement and cleanup. Separately label fan-out, source-panel and automation phases. No winner has been selected.
 3. Run the existing combined audio deadline/headroom qualification when reserved; no new full DSP sweep required.
-4. Review/install/merge only after these gates as appropriate. No production installation or merge performed by this slice.
+4. Live class-library installation and live qualification remain separate gates. Repository integration is recorded below.
 
 Vault and Telegram connectors are unavailable in this tool session, so no vault mirror or Telegram notification has been sent.
 
 ## Shared checkout integration — 7 October 2026
 
 AWParam `da72790` and the composite live surface are now merged into `/Users/willy/awb` on `integration/bw-sc` (`411b64d`). Parameter, rack and composite renderer bundles and both native bus-reader addons were rebuilt there. This supersedes the original isolated-checkout status above. Existing local work is preserved. No installed SC engine/interpreter or class-path configuration was changed; the live audio/GUI qualification gates above remain pending.
+
+## Display and polarity revision — 8 October 2026
+
+The outer green ring is a read-only effective-output display using existing observation index 2. Overall amount is a blue/orange radial marker with a 4 CSS pixel stroke in both SVG and Canvas; signed depth above ±1 retains the overflow cue and full numeric ±8 editing. The marker can be dragged independently. A zero-output tick remains visible. The consumed renderer bundle was rebuilt in this isolated worktree.
+
+Verification: five model tests and 26 synthetic Electron browser checks pass, including exact output-ring placement independent of base/amount, read-only ring gestures, marker dragging, keyboard/focus, rendered-pixel advancement, lease release and unavailable values. No additional sample acquisition is introduced. These are synthetic tests, not live audio qualification or cost measurements.
+
+AWParam now owns normalized polarity, explicit-spec ownership, `setPolarity`, `setNormalized`, `normalizedValue` and `nativeValue`. Bare controls use the selected normalized multiplier range directly. Switching a bare negative control to unipolar clamps its base target to zero and ends its base ramp; explicitly specified native ranges and active ramps remain intact. Core presets retain and reconstruct polarity/spec ownership, validate the entire list before applying changes, and notify only the affected entry. Inspector metadata carries polarity/range/spec ownership once per change; the sparse three-field recurring feed is unchanged.
+
+Final checks: **14 focused Node tests**, **30 SC parameter/inspector contract checks**, **41 offline rendered DSP checks**, existing Core/registry/OSC/select/tail regressions and **75 shell unit tests** pass. DSP checks verify positive-value preservation, negative bipolar output and zero clamping in actual offline scsynth rendering. Language serialization and localhost OSC tests verify the new metadata positions and authoritative polarity updates. Canvas tests inspect actual rendered pixels for centered bipolar zero and the unipolar endpoint.
+
+Evidence:
+
+- `/private/tmp/awb-param-polarity-core-verified-20261008/` and `/private/tmp/awb-param-polarity-core-verified.log`
+- `/private/tmp/awb-param-polarity-node-final.log`
+- `/private/tmp/awb-param-polarity-shell.log`
+- `/private/tmp/awb-param-browser/results.json`, `svg.png`, `canvas.png`
+
+The reservation directory was absent on 8 October, but an existing IDE/language PID54989 and scsynth PID58259 on port57110 were active. They were left untouched. No live engine was launched by this revision. The two-engine live harness now includes polarity and negative readback checks, but remains **unrun**, as do controlled GUI cost and audio headroom comparisons. No shared checkout, live class library or SC executable has been modified.
+
+
+## Polarity integration — 8 October 2026
+
+The display/polarity revision (`5802244`) is integrated with `integration/bw-sc` starting at `8394e6e`, through a clean worktree. Named bindings, borrowed delay views and compact knobs from the integration branch are retained. Compact controls expose polarity inside their Sources popup, keeping the tape layout intact. Polarity changes wait for authoritative owner metadata in both standalone and embedded interfaces.
+
+Merged validation passes **104 top-level Node tests** across parameter, live-set and shell services, **26 inspector browser checks**, **21 embedded delay browser checks**, **30 SC parameter/inspector contracts**, **41 offline DSP assertions**, and the existing Core/registration/OSC/select/tail checks. Parameter and live-set renderer builds and native-reader compilation pass. Evidence: `/private/tmp/awb-param-integration-focused-final.log`, `/private/tmp/awb-param-merged-core-20261008/`, `/private/tmp/awb-param-browser/results.json`, and `/private/tmp/awb-delay-param-gui/`.
+
+The first broad command included seven unrelated shell Electron tests, which failed on the clean worktree's missing `dist/render-worker/index.html`. A recursive follow-up also picked up four archived benchmark copies with stale relative paths. These runs are retained in `/private/tmp/awb-param-integration-node.log` and `/private/tmp/awb-param-integration-focused.log`; neither is counted as a passing full suite. The final top-level service suite excludes those unrelated Electron and archived tests. No hardware or live engine qualification is claimed.
+
+Shared local edits are preserved separately from this merge. Consumed parameter/live-set bundles are rebuilt after integration. Active SC processes and class-path configuration are left untouched; using the new language methods requires loading the updated classes in a suitable language instance. Vault/Telegram MCP tools remain unavailable.

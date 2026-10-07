@@ -2193,7 +2193,7 @@ for ordinary IDE access.
 
 Isolated implementation in `codex/awparam-gui`: a shell-shared latest-value control observer and reusable React SVG/Canvas knobs. AWParam remains a plain class; an optional `param` inspector Tool borrows one or many parameters. The existing mono output and scope/audio routes remain intact. Current base and amount use a separate two-channel observation bus. Commands use the owning Tool/parameter binding; recurring changed values use sparse binary batches at 8/15 Hz without ScopeOut or AWParam periodic replies.
 
-The implementation and private validation gates are tracked in [Parameter Inspector status](apps/param/docs/IMPLEMENTATION.md). It has not been merged or installed in the live class library. Live engine/GUI validation and controlled 16/32/128-widget cost comparison remain gated on the audio-test reservation.
+The implementation and private validation gates are tracked in [Parameter Inspector status](apps/param/docs/IMPLEMENTATION.md). It is merged into `integration/bw-sc`; live class-library installation remains a separate step. Live engine/GUI validation and controlled 16/32/128-widget cost comparison remain gated on the audio-test reservation.
 
 
 ### Composite live surface — 7 October 2026
@@ -2213,3 +2213,9 @@ The external delay URL is borrowed: it does not yet confer SC resource ownership
 or connect separate cell ports to rack channels. Unimplemented legacy FX controls
 remain visibly unbound. No live engine, hardware routing, load test or class-path
 installation is implied by this milestone.
+
+### AWParam display revision — 8 October 2026
+
+Integrated from `codex/awparam-gui` into `integration/bw-sc`: the outer ring reads sampled effective output; signed modulation amount uses a 4 CSS pixel pointer marker. Each AWParam owns normalized 0…1 / −1…1 polarity. Bare controls follow that multiplier domain directly; an explicit ControlSpec preserves native units, range and active ramps. Core configuration/presets and inspector metadata retain polarity/spec ownership; recurring observation remains the same three sampled fields.
+
+The bundle is rebuilt; 14 focused Node tests, 30 SC parameter/inspector checks, 41 offline DSP checks, existing Core regressions, 26 synthetic browser checks and 75 shell unit tests pass. The active IDE/server session was left untouched. Live engine/GUI qualification and controlled cost comparisons remain unrun. See [implementation status](apps/param/docs/IMPLEMENTATION.md) and [usage](apps/param/README.md#normalized-polarity-and-native-specs). The merged inspector and compact delay controls pass 26 and 21 browser checks; 104 top-level parameter/live-set/shell service tests pass. Named bindings and borrowed views are retained; compact polarity selection lives in the Sources popup. Shared local edits are preserved separately. Live class-library installation remains pending.

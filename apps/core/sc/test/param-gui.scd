@@ -1,5 +1,5 @@
 (
-var server,core,instance,p,q,bus,route,writer,view,messages=List.new,checks=0,failures=List.new,check,reject,events=List.new;
+var server,core,instance,p,q,native,restored,preset,address,wire,bus,route,writer,view,messages=List.new,checks=0,failures=List.new,check,reject,events=List.new;
 check={|ok,label|checks=checks+1;if(ok){("PASS "++label).postln}{failures.add(label);("FAIL "++label).postln}};
 reject={|fn,label|var caught=false;try{fn.value}{caught=true};check.value(caught,label)};
 try{
@@ -24,7 +24,26 @@ try{
  instance.addDependant({|o,what,payload|if(what==\toolEvent){events.add(payload)}});
  p.setBase(0.4);check.value(instance.config[\params].detect{|entry|entry[\id]==\gain}[\base]==0.4,"canonical snapshot retains changed entry");
  check.value(events.last[\kind]==\paramChanged and:{events.last[\payload][\entry][\id]==\gain} and:{events.last[\payload][\state].isNil},"gesture publishes parameter delta without full snapshot");
+ check.value(p.polarity==\unipolar and:{p.nativeSpec.not},"bare controls default to unipolar normalized multiplier");
+ p.setPolarity(\bipolar);check.value(p.spec.minval==(-1) and:{p.spec.maxval==1} and:{p.baseTarget==0.4},"bare bipolar polarity preserves current amount and widens domain");
+ p.setNormalized(-0.5);check.value(p.baseTarget==(-0.5) and:{p.normalizedValue(-0.5)==(-0.5)},"bipolar normalized setters accept negative multipliers");
+ check.value(instance.config[\params].detect{|entry|entry[\id]==\gain}[\polarity]==\bipolar,"polarity is retained in canonical entry delta");
+ preset=core.promotionCandidate[\config];p.setPolarity(\unipolar);
+ check.value(p.baseTarget==0 and:{p.spec.minval==0},"unipolar switch clamps negative bare control to zero");
+ reject.value({p.setNormalized(-0.1)},"unipolar normalized setter rejects negative multiplier");
+ core.applyPresetConfig(preset);check.value(p.polarity==\bipolar and:{p.baseTarget==(-0.5)},"preset restores polarity before validating native base");
+ restored=AWBCoreTool.open(preset,(server:server,sendFunction:{|m|messages.add(m)},track:false));
+ check.value(restored.tool.param(\gain).nativeSpec.not and:{restored.tool.param(\gain).polarity==\bipolar} and:{restored.tool.param(\gain).baseTarget==(-0.5)},"configuration reconstructs bare bipolar control");restored.close;
+ native=core.createParam(\frequency,200,ControlSpec(20,20000,\exp));messages.clear;native.setPolarity(\bipolar);
+ check.value(native.spec.minval==20 and:{native.spec.maxval==20000} and:{native.baseTarget==200} and:{messages.isEmpty},"explicit native spec and DSP ramp remain unchanged by display polarity");
+ native.setNormalized(0);check.value((native.baseTarget-(20*1000.sqrt)).abs<0.000001 and:{native.normalizedValue(native.baseTarget).abs<0.000001},"bipolar zero maps through exponential ControlSpec midpoint");
+ reject.value({native.setPolarity(\invalid)},"unknown polarity rejected");
+ preset=core.promotionCandidate[\config];preset[\params].last[\polarity]=\invalid;
+ reject.value({core.applyPresetConfig(preset)},"preset validates all polarities before mutation");
+ core.removeParam(\frequency);
  view=AWParamInspector.openMany([p,q],(launch:false),instance);
+ address=AWParamTestAddress();view.tool.sendParam(address,"probe",p.name);wire=address.messages.last;
+ check.value(wire.size==20 and:{wire[17]=="bipolar"} and:{wire[18]==0} and:{wire.copyRange(14,16)==p.observationIndices},"language metadata serializes polarity and sparse observation indices");
  check.value(view.tool.owner===instance,"inspector panel retains owning Tool identity");
  check.value(view.tool.params.size==2 and:{p.isKindOf(Tool).not},"one inspector borrows multiple plain AWParams");
  p.watch(6);messages.clear;

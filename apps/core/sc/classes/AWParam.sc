@@ -3,14 +3,14 @@
 AWParam {
     classvar definition, routeDefinition, mappingOwners;
     var <name, <server, <spec, <group, <sourceGroup, <synth, <inputBus, <outputBus, <observationBus, <ownerInstance;
-    var <baseTarget, <amountTarget, <modCurve, <closed=false, <snapshot;
+    var <polarity, <nativeSpec, <baseTarget, <amountTarget, <modCurve, <closed=false, <snapshot;
     var options, baseSerial=0, amountSerial=0, defaultBaseCurve, defaultAmountCurve;
     var responder, quitHook, nodeHook, pendingReads, readGeneration=0, watchRate=0;
     var mappings, ownedNodes, modulationNodes, routeRecords;
     var <sources,<modulationConnections,<modulationWriters,<checkedMappings;
 
     *initClass { mappingOwners=Dictionary.new }
-    *new { |name,base,spec=\unipolar,amount=0,modCurve=0,target,server,options|
+    *new { |name,base,spec,amount=0,modCurve=0,target,server,options|
         ^super.new.init(name,base,spec,amount,modCurve,target,server,options)
     }
     // State is internal LocalIn, not externally allocated buses. Explicit
@@ -62,9 +62,33 @@ AWParam {
     *finite { |value,label|if(value.isNumber.not or:{value.isNaN} or:{value.abs==inf}){Error("AWParam: "++label++" must be finite").throw};^value }
     *curve { |value|if([\lin,\linear].includes(value)){^0};this.finite(value,"curve");if(value.abs>16){Error("AWParam: numeric curve must be within -16..16").throw};^value }
     *duration { |value|this.finite(value,"duration");if(value<0 or:{value>86400}){Error("AWParam: duration must be within 0..86400 seconds").throw};^value }
+    *checkPolarity { |value|
+        if([\unipolar,\bipolar].includes(value.asSymbol).not){Error("AWParam: polarity must be unipolar or bipolar").throw};^value.asSymbol;
+    }
+    normalizedMinimum {^if(polarity==\bipolar){-1}{0}}
+    normalizedValue { |value|^this.normalizedMinimum+((1-this.normalizedMinimum)*spec.unmap(this.checkBase(value)))}
+    nativeValue { |value|
+        this.class.finite(value,"normalized value");
+        if(value<this.normalizedMinimum or:{value>1}){Error("AWParam: value outside normalized polarity domain").throw};
+        ^spec.map((value-this.normalizedMinimum)/(1-this.normalizedMinimum));
+    }
+    setNormalized { |value,dur=0,curve|^this.setBase(this.nativeValue(value),dur,curve)}
+    setPolarity { |value|
+        this.requireAlive;value=this.class.checkPolarity(value);if(value==polarity){^this};polarity=value;
+        // An explicit spec preserves its native range and all active ramps.
+        // Bare amount controls use the selected normalized domain directly.
+        if(nativeSpec.not){
+            spec=polarity.asSpec.copy;spec.step=0;baseTarget=baseTarget.clip(spec.minval,spec.maxval);
+            baseSerial=(baseSerial+1)%1000000;snapshot=nil;
+            this.dispatch(synth.setMsg(\lo,spec.minval,\hi,spec.maxval,\baseTarget,spec.unmap(baseTarget),\baseDur,0,\baseSerial,baseSerial));
+        };
+        this.changed(\polarity);^this;
+    }
     init { |id,base,aSpec,amount,shape,target,aServer,opts|
         name=id.asSymbol;server=aServer ? target.tryPerform(\server) ? Server.default;options=(opts ? ()).copy;ownerInstance=options[\ownerInstance];
-        spec=aSpec.asSpec.copy;spec.step=0;modCurve=this.class.curve(shape);
+        nativeSpec=aSpec.notNil;
+        polarity=this.class.checkPolarity(options[\polarity] ? if(nativeSpec and:{aSpec.asSpec.minval<0}){\bipolar}{\unipolar});
+        spec=(aSpec ? polarity).asSpec.copy;spec.step=0;modCurve=this.class.curve(shape);
         if(spec.minval.isNumber.not or:{spec.maxval.isNumber.not}){Error("AWParam: invalid ControlSpec").throw};
         this.class.finite(spec.minval,"minimum");this.class.finite(spec.maxval,"maximum");
         if(spec.minval>=spec.maxval or:{[\lin,\linear,\exp,\exponential].includes(spec.warp.asSpecifier).not}
@@ -284,7 +308,7 @@ AWParam {
             if(dispose){source.free};
         };^source;
     }
-    configuration {^(id:name,base:baseTarget,min:spec.minval,max:spec.maxval,warp:spec.warp.asSpecifier,amount:amountTarget,modCurve:modCurve,baseCurve:defaultBaseCurve,amountCurve:defaultAmountCurve)}
+    configuration {^(id:name,base:baseTarget,min:spec.minval,max:spec.maxval,warp:spec.warp.asSpecifier,polarity:polarity,nativeSpec:nativeSpec,amount:amountTarget,modCurve:modCurve,baseCurve:defaultBaseCurve,amountCurve:defaultAmountCurve)}
     free { |send=true|
         var buses;if(closed){^this};closed=true;
         if(checkedMappings.notNil){checkedMappings.copy.do{|d|d[\registry].removeDestination(d,Error("AWParam closed"),send)}};
