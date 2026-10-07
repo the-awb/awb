@@ -1,6 +1,15 @@
 // Load AWB framework, apps/rack/sc/classes, apps/core/sc/classes,
 // apps/chain/sc/classes, this folder, and VSTPlugin classes
-// in your chosen SC configuration first. This example never reboots your server.
+// in your chosen SC configuration first.
+// 1. Evaluate this block FIRST. It restarts the server and clears its current graph.
+// The file IRs require 256 MiB of RT memory and 44.1 kHz. Buffer RAM is separate.
+(
+s.options.memSize = 262144;
+s.options.sampleRate = 44100;
+s.reboot;
+)
+
+// Wait for the server boot to finish, then evaluate this second block.
 (
 ~awb52Root = "/Users/willy/awb/apps/rack/sc/sets/awb52";
 ~awb52Spec = thisProcess.interpreter.executeFile(~awb52Root +/+ "prepared/first-pass.scd");
@@ -21,11 +30,9 @@
 ));
 )
 
-// Set before boot in your SC-only configuration, then boot normally:
-// s.options.memSize = 262144; // 256 MiB real-time pool; buffers are separate
+// Optional I/O settings go in the FIRST block, before s.reboot:
 // s.options.numInputBusChannels = 3; // or enough for your chosen physical indices
 // s.options.numOutputBusChannels = 4;
-// s.options.sampleRate = 44100;
 // s.options.hardwareBufferSize = 512;
 
 // Explicit zero-based hardware indices: VC [one index], Pro 2 [left, right].

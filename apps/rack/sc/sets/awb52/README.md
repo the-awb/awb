@@ -658,6 +658,12 @@ instrumented copy of `AWBFirstPassSet`:
 
 Keep the existing AWB framework and installed VSTPlugin extension paths. Recompile
 the class library, then open this folder's `example.scd`. Set server options before
-boot as shown there; select the actual input indices explicitly. Merging this
-checkpoint does not change the interpreter configuration, boot the server or
-connect live audio inputs.
+boot as shown there; select the actual input indices explicitly. The initial merge did not change the interpreter configuration. During audition
+setup the four paths and exclusion were added with a backup, and a fresh language
+process verified all six mixer/Core/Chain classes. Reopen or restart the IDE
+interpreter to load that configuration.
+
+The example now has an explicit first setup block: memory pool 262144 KiB,
+sample rate 44100, then server reboot. Evaluate it and wait for boot completion
+before evaluating the set-opening block. Reboot clears the existing server graph;
+input connection remains explicit.
