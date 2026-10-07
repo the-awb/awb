@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: counter-clockwise cell placement and semantic pedal names retain source identity
+ok 1 - counter-clockwise cell placement and semantic pedal names retain source identity
+  ---
+  duration_ms: 1.787182
+  type: 'test'
+  ...
+# Subtest: embedded cells cannot introduce external URLs or unknown routing identities
+ok 2 - embedded cells cannot introduce external URLs or unknown routing identities
+  ---
+  duration_ms: 2.16539
+  type: 'test'
+  ...
+# Subtest: BaseLaunch ordering and independent mono/stereo source ports survive graph compilation
+ok 3 - BaseLaunch ordering and independent mono/stereo source ports survive graph compilation
+  ---
+  duration_ms: 8.264235
+  type: 'test'
+  ...
+# Subtest: one knob edit sends only that parameter and never rewrites mappings or unrelated controls
+ok 4 - one knob edit sends only that parameter and never rewrites mappings or unrelated controls
+  ---
+  duration_ms: 0.930009
+  type: 'test'
+  ...
+# Subtest: source routes remain independent and backward/cyclic sends cannot be admitted
+ok 5 - source routes remain independent and backward/cyclic sends cannot be admitted
+  ---
+  duration_ms: 2.039919
+  type: 'test'
+  ...
+# Subtest: SC-origin parameter deltas reconcile only the corresponding state field
+ok 6 - SC-origin parameter deltas reconcile only the corresponding state field
+  ---
+  duration_ms: 0.393287
+  type: 'test'
+  ...
+# Subtest: observed timing remains the actual parameter value while rhythmic metadata changes
+ok 7 - observed timing remains the actual parameter value while rhythmic metadata changes
+  ---
+  duration_ms: 0.662446
+  type: 'test'
+  ...
+# Subtest: unbound surface opens no rack or engine and stops owned viewers once
+ok 8 - unbound surface opens no rack or engine and stops owned viewers once
+  ---
+  duration_ms: 35.851327
+  type: 'test'
+  ...
+# Subtest: composite forwards an existing rack binding and closes only its borrowed viewer
+ok 9 - composite forwards an existing rack binding and closes only its borrowed viewer
+  ---
+  duration_ms: 11.272202
+  type: 'test'
+  ...
+# Subtest: one existing delay instrument supplies four tape views and one routing view without launch
+ok 10 - one existing delay instrument supplies four tape views and one routing view without launch
+  ---
+  duration_ms: 7.304911
+  type: 'test'
+  ...
+# Subtest: failed composite startup releases its own delay readers
+ok 11 - failed composite startup releases its own delay readers
+  ---
+  duration_ms: 4.865146
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 477.508867

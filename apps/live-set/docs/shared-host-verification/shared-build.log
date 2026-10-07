@@ -1,0 +1,38 @@
+
+> @awb/live-set@0.1.0 prepare:delay
+> node scripts/prepare-delay.mjs --native
+
+Delay plans prepared; no host or audio engine started.
+
+> @awb/live-set@0.1.0 build
+> vite build --configLoader native
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 19 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.34 kB │ gzip:  0.25 kB
+dist/assets/index-DKgVAX1c.css    9.08 kB │ gzip:  2.72 kB
+dist/assets/index-C-xjQ7sM.js   173.25 kB │ gzip: 55.08 kB │ map: 404.14 kB
+
+✓ built in 201ms
+
+> @awb/rack@0.1.0 build
+> vite build --configLoader native
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 25 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.56 kB │ gzip:   0.36 kB
+dist/assets/index-6_eJOADF.css   13.13 kB │ gzip:   3.52 kB
+dist/assets/index-CKPoP4cw.js   724.70 kB │ gzip: 196.60 kB │ map: 3,184.50 kB
+
+✓ built in 324ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

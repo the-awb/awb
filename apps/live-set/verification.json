@@ -120,5 +120,17 @@
     "performanceClaim": false,
     "knownStartupWarning": "Pre-existing VST cache reports FL Studio VSTi.vst: not a plugin; required set plugins became ready.",
     "optionalDelayDependencyProbe": "AWBaseTool compiles without AWBDelayRack; passed"
+  },
+  "sharedHostIntegration": {
+    "branch": "integration/bw-sc",
+    "implementationCommit": "454bac4",
+    "sharedNativeDelayBuilt": true,
+    "sharedLiveAndRackBundlesRebuilt": true,
+    "existingNativeControlAndAudioReadersPresent": true,
+    "postMergeNodeTests": 11,
+    "postMergePassed": 11,
+    "globalPluginOrClassInstallation": false,
+    "unrelatedDirtyFileHashesUnchanged": 51,
+    "otherPreviewRunning": true
   }
 }
