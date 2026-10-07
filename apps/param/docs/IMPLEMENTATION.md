@@ -88,3 +88,12 @@ Merged validation passes **104 top-level Node tests** across parameter, live-set
 The first broad command included seven unrelated shell Electron tests, which failed on the clean worktree's missing `dist/render-worker/index.html`. A recursive follow-up also picked up four archived benchmark copies with stale relative paths. These runs are retained in `/private/tmp/awb-param-integration-node.log` and `/private/tmp/awb-param-integration-focused.log`; neither is counted as a passing full suite. The final top-level service suite excludes those unrelated Electron and archived tests. No hardware or live engine qualification is claimed.
 
 Shared local edits are preserved separately from this merge. Consumed parameter/live-set bundles are rebuilt after integration. Active SC processes and class-path configuration are left untouched; using the new language methods requires loading the updated classes in a suitable language instance. Vault/Telegram MCP tools remain unavailable.
+
+
+### Shared-checkout verification
+
+Merge commit `67594eb` is on `integration/bw-sc` in `/Users/willy/awb`. Parameter and live-set bundles were rebuilt from the merged sources plus preserved local edits. All **30 shared-checkout parameter/live-set Node tests**, **26 inspector browser checks** and **21 embedded browser checks** pass. Logs: `/private/tmp/awb-param-shared-integration-tests.log`, `/private/tmp/awb-param-shared-browser-serial.log`, and `/private/tmp/awb-param-shared-delay-browser-final.log`.
+
+Two concurrent browser runs timed out; separate runs passed the inspector. One separate embedded run timed out at the synthetic numeric amount edit after successfully verifying polarity; a diagnostic run and an unchanged separate rerun both passed all 21 checks. These intermittent browser timeouts remain visible in the retained logs. Follow-up: stabilize the synthetic focus/input checks before treating them as an unattended CI gate. No product change or rollback of local UI work was made to obtain the passing rerun.
+
+Preservation was checked before and after builds: 46 unrelated dirty tracked files remain byte-identical, three overlapping local edits are carried forward, all 380 original untracked paths remain, and the index contains no local edits. Backup and verification manifest: `/private/tmp/awb-param-merge-preservation/`. Pre-existing sclang PID54989 and scsynth PID58259 were confirmed still running. No live class-library reload, engine installation, hardware or GUI cost qualification was performed.
