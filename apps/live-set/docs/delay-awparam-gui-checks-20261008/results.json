@@ -1,0 +1,47 @@
+{
+  "time": "2026-10-07T23:14:36.675794+00:00",
+  "status": "implemented-uncommitted",
+  "scope": "Shared AWParam GUI inside bound delay tape modules; no duplicate host modulation bank",
+  "nodeTests": {
+    "passed": 14,
+    "failed": 0
+  },
+  "fixtureGUI": {
+    "passed": 19,
+    "failed": 0
+  },
+  "realGUI": {
+    "passed": 9,
+    "failed": 0
+  },
+  "SC_audio": {
+    "passed": 30,
+    "failed": 0
+  },
+  "audioBridge": {
+    "passed": 11,
+    "failed": 0
+  },
+  "DSP": "Existing native plugin used unchanged; no DSP source or binary rebuild",
+  "engine": "Private test server quit with exit0; UDP57975/57976 free; audition remains stopped",
+  "sources": {
+    "apps/live-set/src/delay-widgets.jsx": "2af8dcdfc3d2af4b736619356857b372fcff66796fc3efc7e30d7d033399f07b",
+    "apps/live-set/src/delay-widgets.css": "664a65916a895f2865192ca23f99792b32c3f48561b8abda7c47a4e0407c604a",
+    "apps/live-set/src/delay-parameters.mjs": "617c1a8c135f6f4737513212b0b433dd82a11c01bf9ed85727cf7bd6b364c184",
+    "apps/live-set/src/delay-param-bindings.mjs": "96601449726ce63b86df66d0349d934dfd5981095330e24c37374a2f9f15e8d2",
+    "apps/live-set/sc/classes/AWBDelayRack.sc": "97d33e9a5617af329c5c04417b946040466065825221d2a6988e7002ca9e7d74",
+    "apps/live-set/runtime/delay-bridge.mjs": "b323c6a3f15d76cdecf1999e9547965701cef5ab8769cd1942f1483e387a6daf",
+    "apps/live-set/runtime/shell-runtime.mjs": "04f5f969440c76a3029cbafb5b65bf888c1411e8f24b13fd9a5ea9bd685e0c80",
+    "apps/param/src/widgets.jsx": "f1db7c0b81ab2a03b5b7cd558c33173136d7fcad15c7c2afb7b26b3a2577b0c3",
+    "apps/param/src/model.mjs": "6a77d698676c90b58370d8c47c793e976a394a14b0ab6d5c12ba767e2ecc71a5",
+    "apps/live-set/.build/delay-widgets/delay-widgets.js": "468b723b7395a39bcb52cd1f903da1cd9253a229aae928f6c865e05dac9b2dbc",
+    "apps/live-set/.build/delay-widgets/delay-widgets.css": "1ea57970a4702e4eac67e8525d4ccbadf3f211476a143a73cc0f67c675d94df2"
+  },
+  "telegram": "Required completion notification unavailable: no Telegram tool exposed",
+  "broaderComposite": {
+    "passed": false,
+    "successfulChecks": 38,
+    "failure": "Separate mixer-import gate did not observe rackRuntime.store.mixSet.name acknowledgement; module GUI checks passed beforehand",
+    "evidence": "composite-gui.json"
+  }
+}

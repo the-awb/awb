@@ -67,7 +67,7 @@ AWBDelayRack {
         hooks[p]={|object,what,data|if(what==\baseTarget and:{closed.not}){setter.value(p.baseTarget);revision=revision+1;this.notifyValue(id,p.baseTarget)}};p.addDependant(hooks[p]);^p;
     }
     bindParameters {
-        var names=(inputGain:\inOf,feedback:\fbOf,effectLevel:\fxOf,seconds:\sliOf);
+        var names=(inputGain:\inOf,feedback:\fbOf,effectLevel:\fxOf,seconds:\sliOf,dryLevel:\dryOf);
         state[\cells].do{|cell|
             var id=cell[\id],track=base.track(id.toLower.asSymbol);
             [\seconds,\inputGain,\feedback,\effectLevel,\dryLevel,\fadeGate,\fadeIn,\fadeOut,\running].do{|field|
@@ -77,7 +77,11 @@ AWBDelayRack {
                 if(names[field].notNil){track.add(names[field],p,field.asString,this.class.midi(id.toLower,names[field]))};
             };
         };
-        state[\cells].do{|cell|cell[\heads].do{|h|if(h[\enabled].not){graph.setTarget(graph.headTarget(cell[\id],h[\id],\source),-1)};h[\sends].keysValuesDo{|to,gain|graph.setRoute(cell[\id]++"/"++h[\id]++":"++to.asString,gain)}}};
+        state[\cells].do{|cell|cell[\heads].do{|h|
+            var id=cell[\id],name=(h[\id]++"Amount").asSymbol;
+            var p=this.addParam(id++"/"++h[\id]++"/amount",graph.headTarget(id,h[\id],\level),h[\amount],{|v|h[\amount]=v});
+            base.track(id.toLower.asSymbol).add(name,p,"Head "++h[\id]++" amount");
+            if(h[\enabled].not){graph.setTarget(graph.headTarget(cell[\id],h[\id],\source),-1)};h[\sends].keysValuesDo{|to,gain|graph.setRoute(cell[\id]++"/"++h[\id]++":"++to.asString,gain)}}};
         state[\routes].keysValuesDo{|id,value|
             var p=this.addParam(id,graph.routeTarget(id).copy.putAll((min:0,max:1)),value,{|v|state[\routes][id]=v}),parts=id.split($:),names=(clean:\vcIn,pro2:\p2In,sc1:\sc1In,sc2:\sc2In,B1:\b1In,A2:\a2In,B2:\b2In);
             if(parts[1]!="monitor"){base.track(parts[1].toLower.asSymbol).add(names[parts[0].asSymbol],p,id,this.class.midi(parts[1].toLower,names[parts[0].asSymbol]))};
@@ -125,7 +129,7 @@ AWBDelayRack {
         if(cell.isNil or:{keys.size<2}){Error("Unknown head").throw};head=cell[\heads].detect{|h|h[\id]==keys[0]};if(head.isNil){Error("Unknown head").throw};
         switch(keys[1],
             "value",{target=graph.headTarget(id,keys[0],\time);graph.setTarget(target,value);head[\value]=value},
-            "amount",{graph.setTarget(graph.headTarget(id,keys[0],\level),value);head[\amount]=value},
+            "amount",{params[id++"/"++keys[0]++"/amount"].setBase(value)},
             "enabled",{if([0,1].includes(value).not){Error("Invalid head enabled").throw};graph.setTarget(graph.headTarget(id,keys[0],\source),if(value!=0){graph.plan[\nodes][graph.cellIndex(id)][\heads].detect{|h|h[\id]==keys[0]}[\source]}{-1});head[\enabled]=value!=0},
             "unit",{if([0,1].includes(value).not){Error("Invalid head unit").throw};graph.setTarget(graph.headTarget(id,keys[0],\relative),value);head[\unit]=if(value==1){"fraction"}{"seconds"}},
             "left",{this.headGain(id,head,0,value);head[\left]=value},

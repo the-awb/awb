@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "checks": [
+    "embedded rack opens one SVG renderer with mixes",
+    "four live cells occupy B2/A2/A1/B1 quadrants",
+    "managed cell routing appears once",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "four embedded delay views share one observation stream",
+    "embedding all four cells preserves acknowledged settings",
+    "an embedded B1 AWParam edit targets B1 independently",
+    "per-cell heads and sends are requestable from the composite",
+    "shared routing opens once",
+    "composite FX controls share one native control reader",
+    "AWParam effective arc advances in composite panel",
+    "semantic knob sends the authoritative parameter edit",
+    "editing one control preserves unrelated widget DOM identity",
+    "compact knob exposes numeric amount and source controls",
+    "modulation inspector stays inside the window without FX-strip clipping",
+    "console shows bounded escaped AWBase messages",
+    "mapping inspector exposes legacy names and pedal CCs",
+    "owner loss disables editing and releases control observation",
+    "no browser errors",
+    "closing the composite leaves its borrowed delay instrument running"
+  ],
+  "errors": [],
+  "edits": [
+    {
+      "id": "b1/inOf",
+      "field": "base",
+      "value": 0.31,
+      "source": ""
+    },
+    {
+      "id": "deci/deciShaper",
+      "field": "base",
+      "value": 0.31,
+      "source": ""
+    },
+    {
+      "id": "deci/deciShaper",
+      "field": "base",
+      "value": 0.31,
+      "source": ""
+    }
+  ],
+  "attached": 5,
+  "detached": 5
+}

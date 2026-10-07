@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "checks": [
+    "tape uses eight shared AWParam knobs without duplicate literal controls",
+    "tape uses eight shared AWParam knobs without duplicate literal controls",
+    "tape uses eight shared AWParam knobs without duplicate literal controls",
+    "tape uses eight shared AWParam knobs without duplicate literal controls",
+    "all four tape panels borrow one active native parameter reader",
+    "waveform publication remains a single shared feed",
+    "effective arc follows measured values inside the tape",
+    "tape base edit goes through the authoritative AWParam interface",
+    "editing feedback preserves sources and other cells",
+    "shared source inspector opens from the tape",
+    "source inspector fits inside the panel",
+    "signed modulation depth uses the shared numeric editor",
+    "registered source edits stay on the existing route",
+    "head amount has its own AWParam control",
+    "shared widgets retain the compact gig layout and transport",
+    "owner closure disables knobs and rejects stale/forged edits",
+    "live-set host has no duplicate delay parameter widgets",
+    "no renderer errors",
+    "closing views releases the borrowed observation reader"
+  ],
+  "errors": [],
+  "attached": 9,
+  "detached": 9
+}

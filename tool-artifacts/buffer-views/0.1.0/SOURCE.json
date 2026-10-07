@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "4feac995fcbc54541060806057dc1c81c26c42f7",
+  "sourceCommit": "c4ee528659dae7434c8a062973fc305898c1dd59",
   "sourceRepository": "SuperCollider",
   "sourcePath": "prototypes/unified-buffer-tool",
   "purpose": "Requestable renderer attachments; no private-engine launcher or SC class snapshots included.",
@@ -10,7 +10,7 @@
     },
     {
       "path": "network-model.mjs",
-      "sha256": "270d0931f129e10702881679bb2f54ff7022137759993a92b9eca2837c2bf5ba"
+      "sha256": "c80d2fcb0af96dc3369e77440c98390568923031a56e783670206413a11b2769"
     },
     {
       "path": "waveform-view.mjs",
@@ -22,11 +22,11 @@
     },
     {
       "path": "instrument/app.js",
-      "sha256": "654793dd0224a22882232ea49384c0f9442528a691710b3dc7eb4952a13a7cbf"
+      "sha256": "b8ec52bf567e8f8d0ffa2da76eb431150a245ea58b3d1f0d9f72a3049cb72e6e"
     },
     {
       "path": "instrument/style.css",
-      "sha256": "23870ef214bc9030d8b35d3d73d8340c5bfbb7719e9a064a214be3c3dbc3e51b"
+      "sha256": "537de71d49a4a7c4ea859cb37a027748f1731166f8d929954b7e9e537da5b80b"
     }
   ],
   "localChanges": [
@@ -34,14 +34,16 @@
     "instrument/style.css: compact borrowed view style",
     "network-model.mjs: BaseLaunch DAG B1/A2/B2/A1, four independent stereo source ports, shared-host observation preserves actual timing",
     "network-server.mjs: publish configuration only on revision changes; adapter-origin deltas reconcile without timing recomputation",
-    "instrument/app.js: VC/Pro2/SC1/SC2 routing, forward-only cell edges, merge sparse observations into existing configuration"
+    "instrument/app.js: VC/Pro2/SC1/SC2 routing, forward-only cell edges, merge sparse observations into existing configuration",
+    "Compact gig tape panels imported from c4ee528; existing AWB embedding, shared routing and SC observation changes retained.",
+    "2026-10-08: opt-in shared AWParam GUI in bound tape views. No second parameter authority in the renderer. External AWB adapter imports apps/param/src/widgets.jsx; standalone unbound literal demonstration remains available."
   ],
   "workspaceHashes": {
     "network-server.mjs": "d41b789d651008cc7dec1fdfdacd5ffc2810b3e4834a1cd70d180b5e4d07ba04",
     "network-model.mjs": "0c3f2161ded10ce4ef5ea4f604cdc304d8f7865ffb7a421c832927b634cd6665",
     "waveform-view.mjs": "da09d82c8bf81bc6afb4c0df87aa023be7ca760468a649a3d5963f93ae8ac730",
     "instrument/index.html": "77cf82685247ac82dcbad3311df8252bff739232ea75deb452d9796a8be6e6fd",
-    "instrument/app.js": "521c2c25f9fddecc95eb1e00fc6b2b5e01337c27246a8f00457befa2bdef8dc1",
-    "instrument/style.css": "5aee3e3588000ad871b8c6d8fa14b152b6d7fa4ce69825e8d605d32e1afbb1f5"
+    "instrument/app.js": "2b9d08fff2f3e395369a9677bdd465f992649cc474d98dd6bab08e3197c0e3ef",
+    "instrument/style.css": "ade0817fc8f0d2fc1ddaf41dea35bc1a18f84f499fc735d86fb2214bb953bcea"
   }
 }

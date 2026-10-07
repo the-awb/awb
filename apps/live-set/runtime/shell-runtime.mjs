@@ -24,11 +24,13 @@ export async function startRuntime({runtimeDirectory='/private/tmp/awb-live-set-
   }
   if(baseBinding)try{base=await baseBridgeFactory(baseBinding,{onLog:entry=>publish({type:'log',entry}),onStatus:(connected,message)=>{error=message;publish({type:'console-status',connected,error:message})}})}catch(e){error=e.message}
   params=await startParams({binding,controlObservations,bridgeFactory,frameSources:"http://127.0.0.1:*",rendererRoot:path.resolve(fileURLToPath(new URL('../dist/',import.meta.url))),additionalRoutes:async(req,res,url,{token})=>{
+   if(req.method==='GET'&&['/delay-widgets.js','/delay-widgets.css'].includes(url.pathname)){const body=await readFile(new URL('../.build/delay-widgets/'+url.pathname.slice(1),import.meta.url));res.setHeader('Content-Type',url.pathname.endsWith('.css')?'text/css':'text/javascript');res.setHeader('Access-Control-Allow-Origin','*');res.end(body);return true}
    if(url.pathname==='/api/live-set'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({surface:config,console:{...(base?.state()??{logs:[],mappings:[]}),connected:!!base&&!error,error},rackBound:!!(rackBinding??process.env.AWB_RACK_INSTANCE_ID)}));return true}
    if(url.pathname!=='/events/logs')return false;
    if(url.searchParams.get('token')!==token){res.writeHead(403);res.end();return true}
    res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-store'});res.write(`data: ${JSON.stringify({type:'console-state',state:base?.state()??{logs:[],mappings:[]}})}\n\n`);clients.add(res);req.on('close',()=>clients.delete(res));return true;
   }});
+ for(const [cell,url]of Object.entries(config.cellViews)){const u=new URL(url);u.searchParams.set('hostOrigin',new URL(params.url).origin);u.searchParams.set('paramGUI','1');config.cellViews[cell]=u.href;}
  }catch(e){await delays?.stop();await rack?.stop();await base?.close();throw e}
  return {...params,surface:config,async stop(){if(stopped)return;stopped=true;for(const c of clients)c.end();clients.clear();await params.stop();await delays?.stop();await base?.close();await rack?.stop()}};
 }

@@ -8,7 +8,7 @@ export function changedFields(before,after){
   for(const head of cell.heads){const h=prior.heads.find(h=>h.id===head.id);for(const f of ['value','amount','enabled','unit','left','right'])if(head[f]!==h[f])edits.push(['head',cell.id,`${head.id}/${f}`,f==='unit'?+(head[f]==='fraction'):typeof head[f]==='boolean'?+head[f]:head[f]]);for(const [to,value]of Object.entries(head.sends))if(h.sends[to]!==value)edits.push(['head',cell.id,`${head.id}/send/${to}`,value]);}
  }return edits;
 }
-export function applyDelta(config,id,value){if(id==='globalInput'||id==='master'||id==='tempo')config[id]=value;else if(id in config.routes)config.routes[id]=value;else{const [cell,field]=id.split('/'),target=config.cells.find(c=>c.id===cell);if(target)target[field]=['running','fadeGate','triplet'].includes(field)?value>=.5:value;}return config;}
+export function applyDelta(config,id,value){if(id==='globalInput'||id==='master'||id==='tempo')config[id]=value;else if(id in config.routes)config.routes[id]=value;else{const [cell,field,headField]=id.split('/'),target=config.cells.find(c=>c.id===cell);if(headField){const head=target?.heads.find(h=>h.id===field);if(head)head[headField]=value;}else if(target)target[field]=['running','fadeGate','triplet'].includes(field)?value>=.5:value;}return config;}
 export async function createDelayBridge(binding,{native,timeout=3000}={}){
  if(!/^awbBase:[a-zA-Z0-9_-]+$/.test(binding?.instanceID)||!Number.isInteger(binding.port)||binding.port<1||binding.port>65535)throw Error('Invalid delay root binding');
  const socket=dgram.createSocket('udp4'),token=crypto.randomUUID(),pending=new Map();let config,epoch,revision=0,regions,closed=false,connected=true,readers=[],waves=[],onConfig=()=>{},heartbeat,applying=false,seen=performance.now();

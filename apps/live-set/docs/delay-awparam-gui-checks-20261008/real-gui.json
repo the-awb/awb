@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": [
+    "composite inspector binds actual AWParams",
+    "all four native stereo waveform views render",
+    "native rack exposes Delay Bus and both SC inputs",
+    "all 32 tape knobs are real AWParam GUI widgets",
+    "real modulation source appears in feedback inspector",
+    "AWParam GUI edit preserves registered source",
+    "SC-origin AWParam edit reconciles the native delay view",
+    "console displays actual AWBase log",
+    "no browser errors"
+  ],
+  "errors": []
+}

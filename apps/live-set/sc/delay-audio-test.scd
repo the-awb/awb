@@ -40,6 +40,9 @@ run={
   check.value("legacy DAG order B1 A2 B2 A1",delays.graph.plan[\order].collect{|i|delays.graph.plan[\nodes][i]}.select{|n|n[\kind]=="cell"}.collect{|n|n[\id]}==["B1","A2","B2","A1"]);
   check.value("route AWParam range matches the shared surface",delays.params["clean:B1"].spec.minval==0 and:{delays.params["clean:B1"].spec.maxval==1});
   check.value("delay timing AWParam range matches the shared surface",delays.params["B1/seconds"].spec.minval==0.01 and:{delays.params["B1/seconds"].spec.maxval==32});
+  check.value("all 32 tape knobs expose owned AWParams",["B1","A2","B2","A1"].every{|id|var track=base.track(id.toLower.asSymbol);[\inOf,\dryOf,\fxOf,\fbOf,\h1Amount,\h2Amount,\h3Amount,\h4Amount].every{|name|track.p[name].isKindOf(AWParam)}});
+  check.value("Dry alias uses the same parameter",base.track(\b1).p[\dryOf]===delays.params["B1/dryLevel"]);
+  check.value("head alias uses the same parameter",base.track(\b1).p[\h1Amount]===delays.params["B1/h1/amount"]);
   check.value("SC1/SC2 input pipes are independent",rack.inputFor(\sc1).index!=rack.inputFor(\sc2).index);
   delays.state[\cells].do{|c|["h3","h4"].do{|h|delays.setField("head",c[\id],h++"/enabled",0)};delays.setField("head",c[\id],"h1/left",1);delays.setField("head",c[\id],"h2/right",1);delays.setField("cell",c[\id],"seconds",0.03);delays.setField("cell",c[\id],"feedback",0);delays.setField("cell",c[\id],"inputGain",1)};
   delays.setField("route","clean:B1","",1);delays.setField("route","pro2:A2","",1);
@@ -48,6 +51,13 @@ run={
   0.5.wait;a=capture.value(delays.graph.port("B1","wet"));b=capture.value(delays.graph.port("A2","wet"));
   check.value("VC reaches B1 with stereo preserved",(a[0]-0.1).abs<0.005 and:{(a[1]-0.2).abs<0.005});
   check.value("Pro2 independently reaches A2",(b[0]-0.3).abs<0.005 and:{(b[1]-0.4).abs<0.005});
+  p=delays.params["B1/h1/amount"];delays.setField("head","B1","h1/amount",0.25);0.15.wait;
+  a=capture.value(delays.graph.port("B1","wet"));check.value("head AWParam base actually scales left DSP independently",(a[0]-0.025).abs<0.003 and:{(a[1]-0.2).abs<0.003});
+  modBus=Bus.control(server,1);modBus.set(0.1);p.addBusModulation(\testHead,modBus,1);p.setAmount(0.5);server.sync;0.15.wait;
+  a=capture.value(delays.graph.port("B1","wet"));check.value("head AWParam modulation reaches actual audio",(a[0]-0.03).abs<0.003 and:{(a[1]-0.2).abs<0.003});
+  delays.setField("head","B1","h1/amount",0.5);0.15.wait;a=capture.value(delays.graph.port("B1","wet"));
+  check.value("legacy head edit preserves mapping and modulation",p.routeMetadata.notEmpty and:{(a[0]-0.055).abs<0.003});
+  p.removeBusModulation(\testHead);p.setAmount(0);p.setBase(1);modBus.free;modBus=nil;server.sync;0.15.wait;
   aggregate=capture.value(rack.postFor(\delbus));check.value("Delay Bus sums routed wet returns once",(aggregate[0]-0.32).abs<0.01 and:{(aggregate[1]-0.48).abs<0.01});
   check.value("cell return also reaches its own persistent channel",(capture.value(rack.postFor(\b1))[0]-0.1).abs<0.005);
   check.value("independent cell sends start at zero",rack.channels[\b1][\gains].sum==0);

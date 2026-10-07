@@ -1,0 +1,14 @@
+/* Shared AWParamKnob artwork; only its tape presentation is specialised. */
+.knob-wrap[data-awparam-gui] fieldset{margin:0;padding:0;border:0;min-width:0}
+[data-awparam-gui] .knob-card{position:relative;background:transparent;border:0;padding:0}
+[data-awparam-gui] .knob-card h2,[data-awparam-gui] .observed,[data-awparam-gui] .fields,[data-awparam-gui] .amount-slider{display:none}
+[data-awparam-gui] svg.knob{display:block;margin:auto;border:0;background:none;box-shadow:none;touch-action:none;cursor:ns-resize}
+[data-awparam-gui] svg.knob path{fill:none;stroke-linecap:round}
+[data-awparam-gui] .overflow{visibility:hidden}
+[data-awparam-gui] .knob-card>button{position:absolute;left:0;right:0;bottom:-9px;margin:auto;padding:0;border:0;background:#101820d9;font:9px system-ui;line-height:11px;color:#b4c8d2;opacity:0;z-index:5;width:max-content}
+[data-awparam-gui]:hover .knob-card>button,[data-awparam-gui]:focus-within .knob-card>button{opacity:1}
+[data-awparam-gui] fieldset:disabled{opacity:.45}[data-awparam-gui] fieldset:disabled .knob{pointer-events:none}
+[data-awparam-gui] .unbound-param{font:10px system-ui;color:#8d9ca6;min-height:28px;display:grid;place-content:center}
+.compact-sources{position:fixed;z-index:100;margin:0;padding:10px;border:1px solid #45616e;background:#142128;box-shadow:0 8px 30px #000b;border-radius:5px;overflow:auto;font:12px system-ui;color:#d2dde0;box-sizing:border-box}
+.compact-sources .fields{display:flex;gap:6px;margin-bottom:7px}.compact-sources .number{display:flex;flex-direction:column;font-size:10px;color:#8ca4ac;gap:3px;flex:1;min-width:0}.compact-sources .number input{width:100%;box-sizing:border-box;font:12px system-ui}.compact-sources .source{padding:6px 0;border-top:1px solid #26373d;margin-top:6px}.compact-sources small{display:block;font-size:10px;margin:5px 0}.compact-sources .curve{width:100%;height:25px}.compact-sources .curve path{fill:none;stroke-linecap:round}.compact-sources>button{margin-top:7px}
+@container(max-height:260px){body[data-gig=true] .classic-head [data-awparam-gui] fieldset{grid-column:2}.classic-head [data-awparam-gui] .knob-card>button{bottom:-8px}}

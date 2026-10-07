@@ -4,10 +4,15 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[3];out=Path('/private/tmp/awb-live-delay-audio');out.mkdir(exist_ok=True)
 lock=Path('/private/tmp/awb-audio-hardware-test.lock')
 if lock.exists():raise SystemExit('Exclusive audio reservation exists; no engine started')
-config=Path('/private/tmp/awb-live-delay-classes/sclang_conf.yaml');binding=out/'binding.json'
+config=Path(os.environ.get('AWB_DELAY_CLASS_CONFIG','/private/tmp/awb-live-delay-classes/sclang_conf.yaml'));binding=out/'binding.json'
 if (out/'engine.log').exists():(out/'engine.log').rename(out/f'engine-attempt-{time.time_ns()}.log')
 if binding.exists():binding.unlink()
 if (out/'node-results.json').exists():(out/'node-results.json').unlink()
+for port in [57975,57976]:
+ probe=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+ try:probe.bind(('127.0.0.1',port))
+ except OSError:raise SystemExit(f'Private fixture port {port} already in use; no engine started')
+ finally:probe.close()
 env=dict(os.environ,AWB_DELAY_ROOT=str(root),AWB_DELAY_BINDING=str(binding))
 with (out/'engine.log').open('w') as log:
  p=subprocess.Popen(['/Applications/SuperCollider.app/Contents/MacOS/sclang','-a','-D','-u','57976','-l',str(config),str(root/'apps/live-set/sc/delay-audio-test.scd')],env=env,stdout=log,stderr=subprocess.STDOUT)

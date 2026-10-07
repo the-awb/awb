@@ -1,0 +1,205 @@
+compiling class library...
+	Found 855 primitives.
+	Compiling directory '/Applications/SuperCollider.app/Contents/Resources/SCClassLibrary'
+	Compiling directory '/private/tmp/awb-delay-param-classes/framework'
+	Compiling directory '/private/tmp/awb-delay-param-classes/classes'
+	numentries = 885631 / 15391936 = 0.058
+	6392 method selectors, 2408 classes
+	method table size 15454720 bytes, big table size 123135488
+	Number of Symbols 14670
+	Byte Code Size 520724
+	compiled 386 files in 0.64 seconds
+
+Info: 3 methods are currently overwritten by extensions. To see which, execute:
+MethodOverride.printAll
+
+compile done
+NodeManager: Projected container | Total: 1
+NodeManager: Projected container | Total: 2
+localhost : setting clientID to 0.
+internal : setting clientID to 0.
+No existing sequence library found at: /private/tmp/awb-delay-param-classes/framework/EventSequences.scd
+No existing library found at: /private/tmp/awb-delay-param-classes/framework/EventPresets.scd
+Will create new library when first preset is saved.
+Class tree inited in 0.01 seconds
+WARNING: Extension in '/private/tmp/awb-delay-param-classes/framework/NodeManager.sc' overwrites Meta_Synth:new in main class library.
+WARNING: Extension in '/private/tmp/awb-delay-param-classes/framework/NodeManager.sc' overwrites Meta_Synth:newPaused in main class library.
+WARNING: Extension in '/private/tmp/awb-delay-param-classes/framework/NodeManager.sc' overwrites Meta_Synth:replace in main class library.
+Intentional overwrites must be put in a 'SystemOverwrites' subfolder.
+
+
+*** Welcome to SuperCollider 3.12.2. *** For help type cmd-d.
+awbDelayIntegration : setting clientID to 0.
+Booting server 'awbDelayIntegration' on address 127.0.0.1:57975.
+VSTPlugin 0.6-pre1
+objc[58576]: Class CocoaEditorWindow is implemented in both /Library/Application Support/SuperCollider/Extensions/VSTPlugin/plugins/VSTPlugin.scx (0x10b559ab8) and /Library/Application Support/SuperCollider/Extensions/VSTPlugin/plugins/VSTPlugin_supernova.scx (0x10b611ab8). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+objc[58576]: Class EventLoopProxy is implemented in both /Library/Application Support/SuperCollider/Extensions/VSTPlugin/plugins/VSTPlugin.scx (0x10b559ae0) and /Library/Application Support/SuperCollider/Extensions/VSTPlugin/plugins/VSTPlugin_supernova.scx (0x10b611ae0). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+Number of Devices: 7
+   0 : "BenQ PD2705Q"
+   1 : "BlackHole 16ch"
+   2 : "BlackHole 2ch"
+   3 : "Mac mini Speakers"
+   4 : "Iriun Webcam Audio"
+   5 : "1248"
+   6 : "Aggregate Device"
+
+"1248" Input Device
+   Streams: 1
+      0  channels 17
+
+"1248" Output Device
+   Streams: 1
+      0  channels 14
+
+SC_AudioDriver: sample rate = 44100.000000, driver's block size = 512
+SuperCollider 3 server ready.
+Requested notification messages from server 'awbDelayIntegration'
+awbDelayIntegration: server process's maxLogins (1) matches with my options.
+awbDelayIntegration: keeping clientID (0) as confirmed by server process.
+Shared memory server interface initialized
+NodeManager: Projected container | Total: 4
+NodeManager: Created SynthDef container for: ubpg1n4
+NodeManager: Projected synth | Total: 4
+NodeManager: Unprojected synth | Remaining: 3
+NodeManager: Projected container | Total: 5
+NodeManager: Created SynthDef container for: ubpg1n5
+NodeManager: Projected synth | Total: 5
+NodeManager: Unprojected synth | Remaining: 4
+NodeManager: Projected container | Total: 6
+NodeManager: Created SynthDef container for: ubpg1n6
+NodeManager: Projected synth | Total: 6
+NodeManager: Unprojected synth | Remaining: 5
+NodeManager: Projected container | Total: 7
+NodeManager: Created SynthDef container for: ubpg1n7
+NodeManager: Projected synth | Total: 7
+NodeManager: Unprojected synth | Remaining: 6
+NodeManager: Projected container | Total: 8
+NodeManager: Created SynthDef container for: ubpg1n8
+NodeManager: Projected synth | Total: 8
+NodeManager: Unprojected synth | Remaining: 7
+NodeManager: Projected container | Total: 9
+NodeManager: Created SynthDef container for: awbDelayPipe1023
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+NodeManager: Projected synth | Total: 9
+NodeManager: Unprojected synth | Remaining: 8
+PASS nine named persistent channels
+PASS all rack channels expose 24 destinations
+PASS single graph on the same server
+PASS four independent stereo buffers
+PASS rack post outputs are explicit one-block source reads
+PASS legacy DAG order B1 A2 B2 A1
+PASS route AWParam range matches the shared surface
+PASS delay timing AWParam range matches the shared surface
+PASS all 32 tape knobs expose owned AWParams
+PASS Dry alias uses the same parameter
+PASS head alias uses the same parameter
+PASS SC1/SC2 input pipes are independent
+NodeManager: Projected container | Total: 10
+NodeManager: Created SynthDef container for: awbDelayTestSource
+NodeManager: Projected synth | Total: 10
+NodeManager: Projected synth | Total: 11
+NodeManager: Projected container | Total: 13
+NodeManager: Created SynthDef container for: awbDelayTestCapture
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS VC reaches B1 with stereo preserved
+PASS Pro2 independently reaches A2
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS head AWParam base actually scales left DSP independently
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS head AWParam modulation reaches actual audio
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS legacy head edit preserves mapping and modulation
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS Delay Bus sums routed wet returns once
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS cell return also reaches its own persistent channel
+PASS independent cell sends start at zero
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS muted source stops new delay input
+NodeManager: Projected synth | Total: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS internal B1 to B2 route works
+NodeManager: Projected synth | Total: 13
+NodeManager: Projected synth | Total: 14
+NodeManager: Projected synth | Total: 15
+NodeManager: Unprojected synth | Remaining: 14
+NodeManager: Cleaned up 1 finished items | Remaining: 14
+PASS SC1 and SC2 reach A1 as independent stereo sources
+NodeManager: Projected synth | Total: 15
+NodeManager: Unprojected synth | Remaining: 14
+NodeManager: Cleaned up 1 finished items | Remaining: 14
+PASS SC1 mute preserves SC2 delay input
+NodeManager: Unprojected synth | Remaining: 13
+NodeManager: Cleaned up 1 finished items | Remaining: 13
+NodeManager: Unprojected synth | Remaining: 12
+NodeManager: Cleaned up 1 finished items | Remaining: 12
+PASS rack fader updates same Delay Bus AWParam
+PASS real feedback modulation registered
+PASS modulation actually changes effective feedback
+AWB_DELAY_WAITING_FOR_NODE
+PASS live adapter binds four cell region pairs
+PASS native shared waveform bridge reads all eight live regions
+PASS actual delay UI command is accepted
+PASS shared state reflects authoritative edit
+PASS GUI changes actual B1 AWParam
+PASS other cell baseline retained
+PASS GUI preserves modulation input
+PASS sclang confirms independent edit and retained modulation
+PASS shared-host viewer cannot inject its old private test tone
+PASS closing GUI leaves borrowed delay engine alive
+PASS reopening retains tempo and rhythmic cell settings
+PASS heartbeat preserves borrowed viewer without configuration polling
+PASS composite inspector binds actual AWParams
+PASS all four native stereo waveform views render
+PASS native rack exposes Delay Bus and both SC inputs
+PASS all 32 tape knobs are real AWParam GUI widgets
+PASS real modulation source appears in feedback inspector
+PASS AWParam GUI edit preserves registered source
+PASS SC-origin AWParam edit reconciles the native delay view
+PASS console displays actual AWBase log
+PASS no browser errors
+AWB_DELAY_BROWSER=PASS checks=9
+PASS real composite GUI assertions pass
+PASS owner closure invalidates delay observation and releases all eight readers
+NodeManager: Unprojected synth | Remaining: 11
+NodeManager: Cleaned up 1 finished items | Remaining: 11
+NodeManager: Unprojected synth | Remaining: 10
+NodeManager: Cleaned up 1 finished items | Remaining: 10
+AWB_DELAY_AUDIO_RESULT=PASS checks=30
+server 'awbDelayIntegration' disconnected shared memory interface
+'/quit' message sent to server 'awbDelayIntegration'.
+Server 'awbDelayIntegration' exited with exit code 0.
+cleaning up OSC

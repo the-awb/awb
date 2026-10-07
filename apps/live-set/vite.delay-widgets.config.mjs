@@ -1,0 +1,2 @@
+import {defineConfig} from 'vite';import react from '@vitejs/plugin-react';
+export default defineConfig({plugins:[react()],define:{'process.env.NODE_ENV':JSON.stringify('production')},cacheDir:'.vite-delay-widgets',build:{outDir:'.build/delay-widgets',sourcemap:true,lib:{entry:'src/delay-widgets.jsx',formats:['es'],fileName:()=> 'delay-widgets.js',cssFileName:'delay-widgets'},rollupOptions:{output:{codeSplitting:false}}}});

@@ -1,0 +1,74 @@
+{
+  "passed": false,
+  "checks": [
+    "embedded rack opens one SVG renderer with mixes",
+    "four live cells occupy B2/A2/A1/B1 quadrants",
+    "managed cell routing appears once",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "four embedded delay views share one observation stream",
+    "embedding all four cells preserves acknowledged settings",
+    "an embedded B1 edit targets B1 independently",
+    "per-cell heads and sends are requestable from the composite",
+    "shared routing opens once",
+    "composite controls use one native control reader at a time",
+    "AWParam effective arc advances in composite panel",
+    "semantic knob sends the authoritative parameter edit",
+    "editing one control preserves unrelated widget DOM identity",
+    "compact knob exposes numeric amount and source controls",
+    "modulation inspector stays inside the window without FX-strip clipping",
+    "console shows bounded escaped AWBase messages",
+    "mapping inspector exposes legacy names and pedal CCs",
+    "live window is resizable",
+    "original per-cell routing row is present without duplicating module controls",
+    "routing knob edits the existing cell route through its AWParam",
+    "normal rack hides numeric readouts",
+    "duplicate delay controls and redundant headers are removed",
+    "all nine channels, 24 sends, mute/solo and level are present",
+    "FX fader is beside Verb and writes through the existing rack bridge",
+    "incoming rack fader changes paint their matching parent controls",
+    "mix panel offers named set loading",
+    "actual o-s-c collection loads eleven named mixes through the file input",
+    "loading a mix collection leaves live values unchanged",
+    "mix amounts use decimal SC units rather than MIDI integers",
+    "mix editing exposes every send, state and shared FX/follower fader",
+    "decimal mix edit changes its live send value",
+    "full mixer fits at 1700×1040: {\"bottom\":731,\"height\":772,\"right\":542,\"width\":747}",
+    "surface fits at 1700×1040",
+    "full mixer fits at 1440×900: {\"bottom\":611,\"height\":632,\"right\":542,\"width\":631}",
+    "surface fits at 1440×900"
+  ],
+  "errors": [
+    "AssertionError [ERR_ASSERTION]: full mixer fits at 1280×850: {\"bottom\":587,\"height\":582,\"right\":542,\"width\":661}\n    at check (file:///Users/willy/awb/apps/live-set/test/browser.mjs:7:202)\n    at file:///Users/willy/awb/apps/live-set/test/browser.mjs:57:318"
+  ],
+  "edits": [
+    {
+      "id": "b1/inOf",
+      "field": "base",
+      "value": 0.98,
+      "source": ""
+    },
+    {
+      "id": "deci/deciShaper",
+      "field": "base",
+      "value": 0.31,
+      "source": ""
+    },
+    {
+      "id": "deci/deciShaper",
+      "field": "base",
+      "value": 0.31,
+      "source": ""
+    },
+    {
+      "id": "b1/vcIn",
+      "field": "base",
+      "value": 0.99,
+      "source": ""
+    }
+  ],
+  "attached": 6,
+  "detached": 6
+}

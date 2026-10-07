@@ -50,3 +50,75 @@ body[data-embedded] .tape-transport span{font-size:8px;margin:0;flex-basis:auto}
 body[data-embedded][data-panel="routing"] .routing{padding:8px;border:0;border-radius:0}
 
 body[data-embedded] .panel-heading{padding:0 5px;min-height:12px;justify-content:flex-end;font-size:8px}body[data-embedded] .panel-heading strong{display:none}
+
+html:has(body[data-gig="true"]){height:100%}
+/* Single-tape gig view: the tape is the panel, with controls overlaid. */
+body[data-gig="true"]{height:100%;overflow:hidden;background:#10171c}
+body[data-gig="true"] main{height:100%;padding:0;margin:0}
+body[data-gig="true"] #performance{position:relative;width:100%;height:100%;min-width:0;min-height:0;container-type:size;margin:0;max-width:none;border:0;border-radius:0;overflow:hidden;background:none}
+body[data-gig="true"] #performance [hidden]{display:none!important}
+body[data-gig="true"] .tape-body{position:absolute;inset:0 0 26px;display:block;padding:0;margin:0}
+body[data-gig="true"] .stereo-tape{position:absolute;inset:0;height:auto;margin:0;width:100%;background:none}
+body[data-gig="true"] .stereo-tape canvas{height:100%;width:100%}
+body[data-gig="true"] .side-knobs{position:absolute;width:78px;top:0;bottom:0;z-index:3;justify-content:space-around;pointer-events:none}
+body[data-gig="true"] #intake-knobs{left:0}body[data-gig="true"] #return-knobs{right:0}
+body[data-gig="true"] .side-knobs .knob-wrap{pointer-events:auto;text-shadow:0 1px 3px #000}
+body[data-gig="true"] .side-knobs [data-field=dryLevel],body[data-gig="true"] .side-knobs [data-field=feedback]{order:0}
+body[data-gig="true"] .side-knobs [data-field=inputGain],body[data-gig="true"] .side-knobs [data-field=effectLevel]{order:1}
+body[data-gig="true"] .side-knobs .knob{width:clamp(38px,calc((100cqh - 26px)/4),72px);height:clamp(38px,calc((100cqh - 26px)/4),72px)}
+body[data-gig="true"] .classic-row{height:25%!important;border-color:#30404933}
+body[data-gig="true"] .classic-label{left:82px;top:3px;font-size:12px;text-shadow:0 1px 3px #000}
+body[data-gig="true"] .classic-head{--head-rise:0px;top:calc(50% - var(--head-rise));transform:translate(-50%,-50%);gap:0}
+body[data-gig="true"] .classic-head .knob{width:clamp(28px,calc((100cqh - 26px)/7),56px);height:clamp(28px,calc((100cqh - 26px)/7),56px);margin:0}
+body[data-gig="true"] .classic-head .knob-wrap{gap:0}body[data-gig="true"] .classic-head output{font-size:12px;text-shadow:0 1px 2px #000}
+body[data-gig="true"] .head-time{border:0;background:#10171c88;border-radius:0;padding:0 2px;font-size:12px;line-height:14px}
+body[data-gig="true"] .classic-row[data-row="3"] .classic-head{--head-rise:26px}
+body[data-gig="true"] .classic-head:after{content:"";position:absolute;left:calc(50% + var(--marker-link-left,0px));width:var(--marker-link-width,0px);height:1px;top:50%;background:var(--cell);opacity:.4;pointer-events:none}
+body[data-gig="true"] .classic-head:before{left:calc(50% + var(--marker-offset,0px));top:calc(50% + var(--head-rise));height:calc((100cqh - 26px)/4);transform:translateY(-50%);opacity:.4}
+body[data-gig="true"] #tape-scale{position:absolute;left:0;right:0;bottom:55px;margin:0;font-size:11px;pointer-events:none;padding:0;background:none;text-shadow:0 1px 3px #000}
+body[data-gig="true"] .gig-timing{position:absolute;left:0;right:0;bottom:26px;height:26px;padding:0;margin:0;display:flex;align-items:center;gap:4px;flex-wrap:nowrap;border:0;background:#10171cd9;z-index:4}
+body[data-gig="true"] .gig-timing label{gap:2px;font-size:12px;white-space:nowrap}
+body[data-gig="true"] .gig-timing input[type=number]{width:54px}body[data-gig="true"] .gig-timing #tape-beats{width:42px}
+body[data-gig="true"] .gig-timing input,body[data-gig="true"] .gig-timing select,body[data-gig="true"] .gig-timing button{font-size:13px;padding:2px;border:0;border-radius:0;background:#10171c99;height:22px}
+body[data-gig="true"] #tape-time-slider{flex:1;min-width:30px;width:auto;background:transparent;height:18px;margin:0}
+body[data-gig="true"] .tape-transport{position:absolute;left:0;right:0;bottom:0;height:26px;padding:0;margin:0;display:flex;align-items:center;gap:2px;flex-wrap:nowrap;border:0;border-top:1px solid #30404944;background:#101317;z-index:6}
+body[data-gig="true"] .tape-transport button{padding:2px 5px;border:0;border-radius:0;font-size:13px;line-height:20px;background:none;white-space:nowrap;height:25px}
+body[data-gig="true"] .tape-transport button:hover{background:#263d3a}body[data-gig="true"] .tape-transport button.active{background:#263d3a}
+body[data-gig="true"] .tape-transport span{flex-basis:auto}
+body[data-gig="true"] .tape-transport .gig-identity{font-size:13px;color:var(--cell);margin:0 3px 0 0}
+body[data-gig="true"] #tape-settings{margin-left:auto;font-size:20px;line-height:18px}
+body[data-gig="true"] #status{font-size:10px;color:var(--muted);margin:0;white-space:nowrap}
+body[data-gig="true"] .gig-pending{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+body[data-gig="true"] #tape-extras{position:absolute;right:0;bottom:26px;width:min(340px,100%);max-height:calc(100% - 26px);overflow:auto;background:#10171cf5;border:1px solid #304049;z-index:7;padding:8px;display:flex;flex-wrap:wrap;gap:8px}
+body[data-gig="true"] #tape-extras .tape-top{border:0;padding:0;margin:0;width:100%}body[data-gig="true"] #tape-extras #clock-note{display:block;width:100%;font-size:12px;color:var(--muted)}
+body[data-gig="true"] #tape-extras .tape-help{padding:0;width:100%;margin:0}body[data-gig="true"] #tape-extras a{font-size:13px;color:var(--cell)}
+body[data-gig="true"] #error{position:absolute;left:0;right:0;top:0;padding:0!important;background:#442522e8;font-size:12px;z-index:8}
+body[data-gig="true"] #error:empty{display:none}
+@media(max-width:520px){body[data-gig="true"] .side-knobs{width:54px}body[data-gig="true"] .side-knobs .knob{max-width:48px;max-height:48px}body[data-gig="true"] .classic-label{left:57px}body[data-gig="true"] .tape-transport{gap:0}body[data-gig="true"] .tape-transport button{padding-left:3px;padding-right:3px}body[data-gig="true"] #status{font-size:10px}body[data-gig="true"] .gig-timing{gap:2px}body[data-gig="true"] .gig-timing label{font-size:12px}}
+
+body[data-gig="true"] .side-knobs .knob-label,body[data-gig="true"] .side-knobs output{font-size:14px}
+body[data-gig="true"] #tape-extras label,body[data-gig="true"] #tape-extras .tape-help{font-size:12px}
+body[data-gig="true"] #tape-extras input,body[data-gig="true"] #tape-extras select{font-size:13px}
+
+/* Equal performance action spans; identity, settings and connection stay compact. */
+body[data-gig="true"] .tape-transport{display:grid;grid-template-columns:auto repeat(7,minmax(0,1fr)) 26px auto;gap:1px;align-items:stretch}
+body[data-gig="true"] .tape-transport button{width:100%;height:100%;padding:0;min-width:0}
+body[data-gig="true"] .tape-transport .gig-identity,body[data-gig="true"] .tape-transport #status{align-self:center}
+body[data-gig="true"] #tape-settings{margin-left:0}
+@media(max-width:520px){body[data-gig="true"] .tape-transport button:not(#tape-settings){font-size:12px}}
+
+body[data-gig="true"] .side-knobs [data-field=inputGain],body[data-gig="true"] .side-knobs [data-field=effectLevel]{transform:translateY(-14px)}
+
+/* Compact host slots retain readable text, with head values beside the knobs. */
+@container(max-height:260px){
+ body[data-gig="true"] .side-knobs{width:54px;bottom:42px}
+ body[data-gig="true"] .side-knobs .knob{width:28px;height:28px}
+ body[data-gig="true"] .side-knobs .knob-label,body[data-gig="true"] .side-knobs output{font-size:12px}
+ body[data-gig="true"] .side-knobs .knob-wrap{gap:1px}
+ body[data-gig="true"] .side-knobs [data-field=inputGain],body[data-gig="true"] .side-knobs [data-field=effectLevel]{transform:none}
+ body[data-gig="true"] .classic-label{left:58px}
+ body[data-gig="true"] .classic-head{display:grid;grid-template-columns:52px 28px 52px;align-items:center;gap:0}
+ body[data-gig="true"] .classic-head .knob-wrap{display:contents}
+ body[data-gig="true"] .classic-head .knob{width:28px;height:28px}
+ body[data-gig="true"] .classic-head output{text-align:center}
+}

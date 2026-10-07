@@ -6,42 +6,49 @@ function draw(canvas,wave,t,colour,advance=0){
   const width=canvas.clientWidth,height=canvas.clientHeight||62,dpr=window.devicePixelRatio||1;if(canvas.width!==Math.round(width*dpr)||canvas.height!==height*dpr){canvas.width=width*dpr;canvas.height=height*dpr;}
   const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.strokeStyle='#28333e';ctx.beginPath();for(let j=0;j<=4;j++){const x=j*width/4;ctx.moveTo(x,0);ctx.lineTo(x,height);}ctx.moveTo(0,height/2);ctx.lineTo(width,height/2);ctx.stroke();
   const channels=wave?.channels??[];canvas.dataset.channels=channels.length;canvas.dataset.binSeconds=(channels[0]?.binWidth??Math.ceil((channels[0]?.frames??1)/(channels[0]?.bins??512)))/(channels[0]?.sampleRate??44100);
-  channels.forEach((channel,ch)=>{const centre=height*(ch+.5)/2;ctx.strokeStyle=colour;ctx.globalAlpha=ch===0?.7:.45;ctx.beginPath();for(let x=0;x<width;x++){const [lo,hi]=(x/width*t.horizon<advance?[0,0]:ageEnvelope(channel,x/width*t.horizon-advance));ctx.moveTo(x,centre-hi*height*.4);ctx.lineTo(x,centre-lo*height*.4);}ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle='#9aa9b8';ctx.font='9px system-ui';ctx.fillText(ch===0?'L':'R',3,ch===0?10:height/2+10);});
+  channels.forEach((channel,ch)=>{const centre=height*(ch+.5)/2;ctx.strokeStyle=colour;ctx.globalAlpha=ch===0?.7:.45;ctx.beginPath();for(let x=0;x<width;x++){const [lo,hi]=(x/width*t.horizon<advance?[0,0]:ageEnvelope(channel,x/width*t.horizon-advance));ctx.moveTo(x,centre-hi*height*.4);ctx.lineTo(x,centre-lo*height*.4);}ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle='#9aa9b8';const labelSize=canvas.closest('[data-gig="true"]')?12:9;ctx.font=labelSize+'px system-ui';ctx.fillText(ch===0?'L':'R',3,(ch===0?0:height/2)+labelSize+1);});
   if(t.horizon>t.period){ctx.setLineDash([3,3]);ctx.strokeStyle='#c5cfdb';ctx.beginPath();ctx.moveTo(t.period/t.horizon*width,0);ctx.lineTo(t.period/t.horizon*width,height);ctx.stroke();ctx.setLineDash([]);}
 }
 // Rotary controls remain ordinary range inputs, with keyboard and vertical drag access.
 function rotary(label,aria,max,callback,amount){
- const wrap=document.createElement('label');wrap.className='knob-wrap';wrap.innerHTML=`<span class="knob-label">${label}</span><span class="knob"><input type="range" min="0" max="${max}" step=".01" aria-label="${aria}"></span><output></output>`;
+ const wrap=document.createElement('div');wrap.className='knob-wrap';wrap.innerHTML=`<span class="knob-label">${label}</span><span class="knob"><input type="range" min="0" max="${max}" step=".01" aria-label="${aria}"></span><output></output>`;
  const input=wrap.querySelector('input');const paint=()=>{const ratio=Number(input.value)/max;wrap.querySelector('.knob').style.setProperty('--angle',(ratio*270-135)+'deg');wrap.querySelector('.knob').style.setProperty('--sweep',ratio*270+'deg');wrap.querySelector('output').textContent=Math.round(Number(input.value)*100)+'%';};
  amount(input,aria,callback);const oninput=input.oninput;input.oninput=()=>{paint();oninput();};let ride=null;
  input.onpointerdown=e=>{e.preventDefault();input.focus();input.setPointerCapture(e.pointerId);ride={y:e.clientY,value:Number(input.value)};};
  input.onpointermove=e=>{if(!ride)return;input.value=Math.min(max,Math.max(0,ride.value+(ride.y-e.clientY)/150*max));input.dispatchEvent(new Event('input',{bubbles:true}));};
  input.onpointerup=()=>{if(ride){ride=null;input.dispatchEvent(new Event('change',{bubbles:true}));}};input.onpointercancel=input.onpointerup;
- wrap.update=v=>{value(input,v);paint();};return wrap;
+ wrap.update=v=>{if(wrap.dataset.awparamGui==='true')return;value(input,v);paint();};return wrap;
 }
-function mountTape(root,{getState,getCell,send,select,knob,selectable=true}){
+function mountTape(root,{getState,getCell,send,select,knob,amount,selectable=true}){
  const $=s=>root.querySelector(s);let state=null,selected=getCell();
+ function placeHead(head,x,rail){
+  if(root.dataset.gig!=='true'){head.style.left=x*100+'%';return;}
+  const width=rail.clientWidth,actual=x*width,pad=root.querySelector('.side-knobs').clientWidth+head.getBoundingClientRect().width/2+2,shown=Math.max(pad,Math.min(width-pad,actual));
+  const offset=Math.min(width-.5,Math.max(.5,actual))-shown;head.style.left=shown+'px';head.style.setProperty('--marker-offset',offset+'px');head.style.setProperty('--marker-link-left',Math.min(0,offset)+'px');head.style.setProperty('--marker-link-width',Math.abs(offset)+'px');head.dataset.actualX=x;
+ }
  const choices=selectable?ids:[selected];
  choices.forEach(id=>{const b=document.createElement('button');b.textContent=id;b.dataset.tapeCell=id;b.onclick=()=>select(id);$('#cell-selector').append(b);});
 const tapeKnobs=new Map(),classicRows=new Map();
 for(const [field,label,max,where] of [['inputGain','Input',2,'intake'],['dryLevel','Dry',1,'intake'],['effectLevel','FX',2,'return'],['feedback','FB',1.1,'return']]){
- const k=knob(label,'Tape '+label,max,v=>({action:'cell',cell:selected,field,value:v}));k.dataset.field=field;$('#'+where+'-knobs').append(k);tapeKnobs.set(field,k);
+ const k=knob(label,'Tape '+label,max,v=>({action:'cell',cell:selected,field,value:v}));k.dataset.field=field;k.dataset.paramField=field;k.dataset.paramCell=selected;$('#'+where+'-knobs').append(k);tapeKnobs.set(field,k);
 }
 // Outer cross paths, inner direct paths; first two rows read L, last two read R.
 [3,0,1,2].forEach((h,rowIndex)=>{
  const row=document.createElement('div');row.className='classic-row';row.dataset.path=headPaths[h].label;row.dataset.head='h'+(h+1);row.dataset.row=rowIndex;
  row.innerHTML=`<label class="classic-label"><input type="checkbox" aria-label="${headPaths[h].label} enabled">${headPaths[h].label}</label><div class="classic-head"><button class="head-time" aria-label="${headPaths[h].label} time">—</button></div>`;
- const id='h'+(h+1),k=knob('',headPaths[h].label+' amount',1,v=>({action:'head',cell:selected,head:id,patch:{amount:v}}));row.querySelector('.classic-head').append(k);row.knob=k;
+ const id='h'+(h+1),k=knob('',headPaths[h].label+' amount',1,v=>({action:'head',cell:selected,head:id,patch:{amount:v}}));k.dataset.paramCell=selected;k.dataset.paramHead=id;k.dataset.paramField='amount';row.querySelector('.classic-head').append(k);row.knob=k;
  row.querySelector('input[type=checkbox]').onchange=e=>send({action:'head',cell:selected,head:id,patch:{enabled:e.target.checked}});
  const handle=row.querySelector('.head-time');let move=null;
  handle.onpointerdown=e=>{row.dataset.moving='true';handle.setPointerCapture(e.pointerId);select(selected,id);move={x:e.clientX,cell:selected};};
- handle.onpointermove=e=>{if(!move)return;const rect=$('.stereo-tape').getBoundingClientRect();row.querySelector('.classic-head').style.left=Math.max(1,Math.min(100,(e.clientX-rect.left)/rect.width*100))+'%';};
+ handle.onpointermove=e=>{if(!move)return;const rect=$('.stereo-tape').getBoundingClientRect();placeHead(row.querySelector('.classic-head'),Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width)),$('.stereo-tape'));};
  handle.onpointerup=e=>{if(!move)return;const cell=state.config.cells.find(c=>c.id===move.cell),head=cell.heads[h],t=timeline(cell,state.waveforms[ids.indexOf(cell.id)]),rect=$('.stereo-tape').getBoundingClientRect();if(Math.abs(e.clientX-move.x)>3){const seconds=Math.max(.000125,Math.min(t.horizon,(e.clientX-rect.left)/rect.width*t.horizon));send({action:'head',cell:move.cell,head:id,patch:{value:head.unit==='fraction'?Math.max(.01,Math.min(1,seconds/t.period)):seconds}});}move=null;delete row.dataset.moving;};handle.onpointercancel=()=>{move=null;delete row.dataset.moving;render();};
  $('#classic-heads').append(row);classicRows.set(id,row);
 });
 $('#tape-preset').onchange=e=>{if(e.target.value!=='custom')send({action:'preset',cell:selected,value:e.target.value});};
 for(const [selector,field] of [['tape-seconds','seconds'],['tape-beats','beats'],['tape-divisor','divisor'],['timing-mode','timingMode']])$('#'+selector).onchange=e=>send({action:'cell',cell:selected,field,value:field==='timingMode'?e.target.value:Number(e.target.value)});
 $('#tempo').onchange=e=>send({action:'global',field:'tempo',value:Number(e.target.value)});
+if($('#tape-time-slider')){amountForTime();}
+function amountForTime(){const input=$('#tape-time-slider');amount(input,'Tape delay time',v=>({action:'cell',cell:selected,field:'seconds',value:v}));const ride=input.oninput;input.oninput=()=>{$('#tape-seconds').value=input.value;ride();};}
 $('#tape-triplet').onclick=()=>send({action:'cell',cell:selected,field:'triplet',value:!state.config.cells.find(c=>c.id===selected).triplet});
 $('[data-tape-mode]').parentElement.querySelectorAll('[data-tape-mode]').forEach(b=>b.onclick=()=>send({action:'mode',cell:selected,value:b.dataset.tapeMode}));
 $('#tape-fade').onclick=()=>send({action:'cell',cell:selected,field:'fadeGate',value:!state.config.cells.find(c=>c.id===selected).fadeGate});
@@ -52,7 +59,7 @@ function render(){
  const i=ids.indexOf(selected),cell=state.config.cells[i],t=timeline(cell,state.waveforms[i]);root.style.setProperty('--cell',colours[i]);
  $('#cell-selector').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.tapeCell===selected));
  $('#tape-summary').textContent=fmt(t.period)+'s span · '+(cell.running?'running':'paused')+' · 32s storage';
- for(const [field,k] of tapeKnobs)k.update(cell[field]);value($('#tape-preset'),cell.preset);value($('#tape-seconds'),cell.seconds);value($('#tape-beats'),cell.beats);value($('#tape-divisor'),cell.divisor);value($('#timing-mode'),cell.timingMode);value($('#tempo'),state.config.tempo);
+ for(const [field,k] of tapeKnobs){if(k.dataset.paramCell!==selected)k.dataset.paramCell=selected;k.update(cell[field]);}value($('#tape-preset'),cell.preset);value($('#tape-seconds'),cell.seconds);value($('#tape-beats'),cell.beats);value($('#tape-divisor'),cell.divisor);value($('#timing-mode'),cell.timingMode);value($('#tempo'),state.config.tempo);if($('#tape-time-slider'))value($('#tape-time-slider'),cell.seconds);
  $('#tape-triplet').classList.toggle('active',cell.triplet);$('#tape-triplet').setAttribute('aria-pressed',String(cell.triplet));
  $('#tape-fade').textContent=cell.fadeGate?'Fade out':'Fade in';$('#tape-fade').setAttribute('aria-pressed',String(!cell.fadeGate));$('#tape-fade').classList.toggle('active',!cell.fadeGate);value($('#fade-in'),cell.fadeIn);value($('#fade-out'),cell.fadeOut);
  const clearing=Boolean(state.waveforms[i]?.flags&8);$('#tape-clear').textContent=clearing?'Clearing…':'Clear';$('#tape-clear').disabled=clearing;$('#tape-clear').classList.toggle('active',clearing);
@@ -60,7 +67,7 @@ function render(){
  root.querySelectorAll('[data-tape-mode]').forEach(b=>b.classList.toggle('active',b.dataset.tapeMode===mode));
  $('#clock-note').textContent=cell.timingMode==='beats'?'Manual tempo · '+fmt(cell.seconds)+'s resolved':'Free time · division/triplet selects beat timing';
  draw($('#tape-wave'),state.waveforms[i],t,colours[i]);const height=$('.stereo-tape').clientHeight;
- t.taps.forEach(h=>{const row=classicRows.get(h.id),head=row.querySelector('.classic-head');row.style.top=Number(row.dataset.row)*height/4+'px';row.style.height=height/4+'px';row.querySelector('input[type=checkbox]').checked=h.enabled;head.classList.toggle('disabled',!h.enabled);if(row.dataset.moving!=='true')head.style.left=h.x*100+'%';row.knob.update(h.amount);const handle=row.querySelector('.head-time');handle.textContent=fmt(h.seconds)+'s';handle.dataset.seconds=h.seconds;});
+ t.taps.forEach(h=>{const row=classicRows.get(h.id),head=row.querySelector('.classic-head');row.style.top=Number(row.dataset.row)*height/4+'px';row.style.height=height/4+'px';row.querySelector('input[type=checkbox]').checked=h.enabled;head.classList.toggle('disabled',!h.enabled);if(row.dataset.moving!=='true')placeHead(head,h.x,$('.stereo-tape'));if(row.knob.dataset.paramCell!==selected)row.knob.dataset.paramCell=selected;row.knob.update(h.amount);const handle=row.querySelector('.head-time');handle.textContent=fmt(h.seconds)+'s';handle.dataset.seconds=h.seconds;});
  $('#tape-scale').innerHTML=Array.from({length:5},(_,j)=>`<span>${j===0?'now':fmt(t.horizon*j/4)+'s'}</span>`).join('');
 }
 
@@ -231,6 +238,38 @@ window.addEventListener('pagehide',()=>{events.close();for(const item of rides.v
 
 }
 
+function makeGigTape(root,descriptor){
+ const $=s=>root.querySelector(s);root.dataset.gig='true';document.body.dataset.gig='true';
+ const bar=$('.tape-transport'),extras=document.createElement('section');extras.id='tape-extras';extras.setAttribute('aria-label','Additional tape controls');extras.hidden=true;root.append(extras);
+ const top=$('.tape-top');top.hidden=true;extras.append(top);$('#cell-selector').hidden=true;
+ const timing=$('.tape-timing');
+ for(const id of ['timing-mode','tempo'])extras.append($('#'+id).closest('label'));
+ for(const id of ['fade-in','fade-out'])extras.append($('#'+id).closest('label'));
+ extras.append($('#clock-note'));extras.append($('.tape-help'));
+ top.hidden=false;top.querySelector('#tape-summary').hidden=true;
+ const headLink=document.createElement('a');headLink.textContent='Heads / sends';headLink.href=resolvePanelView('heads:'+descriptor.cell).path;headLink.target='_blank';headLink.rel='noopener';extras.append(headLink);
+ const routeLink=document.createElement('a');routeLink.textContent='Routing';routeLink.href=resolvePanelView('routing').path;routeLink.target='_blank';routeLink.rel='noopener';extras.append(routeLink);
+ const time=$('#tape-seconds');time.closest('label').title='Delay time in seconds';time.setAttribute('aria-label','Tape head span seconds');
+ const slider=document.createElement('input');slider.id='tape-time-slider';slider.type='range';slider.min='.01';slider.max='32';slider.step='.001';slider.setAttribute('aria-label','Delay time slider');slider.title='Delay time';time.closest('label').after(slider);
+ const settings=document.createElement('button');settings.id='tape-settings';settings.textContent='⋯';settings.title='Additional tape controls';settings.setAttribute('aria-label','Tape settings');settings.setAttribute('aria-expanded','false');settings.setAttribute('aria-controls','tape-extras');
+ let pinned=false,leaveTimer=null;
+ const toggle=open=>{clearTimeout(leaveTimer);leaveTimer=null;extras.hidden=!open;settings.setAttribute('aria-expanded',String(open));if(!open)pinned=false;};
+ // Hover reveals without a click; clicking pins it for touch or longer edits.
+ const enter=event=>{clearTimeout(leaveTimer);if(event.pointerType==='mouse')toggle(true);};
+ const leave=()=>{clearTimeout(leaveTimer);leaveTimer=setTimeout(()=>{if(!pinned&&!extras.contains(document.activeElement))toggle(false);},180);};
+ settings.onpointerenter=enter;extras.onpointerenter=enter;settings.onpointerleave=leave;extras.onpointerleave=leave;
+ settings.onclick=()=>{if(pinned)toggle(false);else{pinned=true;toggle(true);}};
+ const identity=document.createElement('span');identity.className='gig-identity';identity.textContent=descriptor.cell;bar.prepend(identity);bar.append(settings);
+ const status=document.querySelector('#status');status.title='Instrument connection';bar.append(status);document.querySelector('.panel-heading').remove();
+ const pending=document.querySelector('#pending');pending.classList.add('gig-pending');bar.append(pending);document.querySelector('footer').remove();
+ // Timing mirrors the original seconds/slider/beats/divisor row over the tape.
+ timing.classList.add('gig-timing');$('#tape-beats').closest('label').title='Beats';$('#tape-divisor').closest('label').title='Beat divisor';
+ const escape=event=>{if(event.key==='Escape'&&!extras.hidden){toggle(false);settings.focus();}};
+ const outside=event=>{if(!extras.hidden&&!extras.contains(event.target)&&event.target!==settings)toggle(false);};
+ document.addEventListener('keydown',escape);document.addEventListener('pointerdown',outside);
+ return {dispose(){clearTimeout(leaveTimer);document.removeEventListener('keydown',escape);document.removeEventListener('pointerdown',outside);}};
+}
+
 function startPanel(descriptor){
  const $=s=>document.querySelector(s);let state=null,tail=Promise.resolve(),pending=0,disposed=false,frame=0,observed={key:null,at:performance.now()};const rides=new Map();
  document.body.dataset.panel=descriptor.id;document.body.dataset.pane=descriptor.kind==='tape'?'performance':descriptor.kind;
@@ -252,12 +291,13 @@ function startPanel(descriptor){
   input.oninput=()=>{const next=payload(Number(input.value));if(input.nextElementSibling?.tagName==='OUTPUT')input.nextElementSibling.textContent=Math.round(Number(input.value)*100)+'%';const item=rides.get(key);if(item)item.payload=next;else rides.set(key,{payload:next,timer:setTimeout(flush,50)});};
   input.onchange=()=>{const item=rides.get(key);if(item){item.payload=payload(Number(input.value));flush();}else send(payload(Number(input.value)));};
  };
+ const gig=descriptor.kind==='tape'?makeGigTape(root,descriptor):null;
  const context={getState:()=>state,getCell:()=>descriptor.cell,send,select:()=>{},amount,knob:(...args)=>rotary(...args,amount),selectable:false};
  const view=descriptor.kind==='tape'?mountTape(root,context):descriptor.kind==='heads'?mountHeads(root,context):mountRouting(root,context);
  function render(){if(disposed||!state)return;root.inert=!state.connected;if(state.connected&&$('#error').textContent.startsWith('Connection lost.'))$('#error').textContent='';$('#status').textContent=state.connected?(state.backend==='audio'?'SC AUDIO':'REHEARSAL'):'DISCONNECTED';if(state.error)$('#error').textContent=state.error;view.render();}
  const feed=connectPanelFeed(receive,()=>{if(disposed)return;root.inert=true;$('#status').textContent='DISCONNECTED';$('#error').textContent='Connection lost. Waiting for the instrument bridge.';});
  function animate(){if(disposed)return;if(state&&descriptor.kind==='tape'&&!document.hidden){const wave=state.waveforms[ids.indexOf(descriptor.cell)],elapsed=Math.min(.1,Math.max(0,(performance.now()-observed.at)/1000));view.draw(wave?.flags&2?elapsed:0);}frame=requestAnimationFrame(animate);}
- const dispose=()=>{if(disposed)return;disposed=true;feed.close();cancelAnimationFrame(frame);for(const item of rides.values())clearTimeout(item.timer);rides.clear();window.removeEventListener('resize',render);window.removeEventListener('pagehide',dispose);root.inert=true;$('#status').textContent='DETACHED';};
+ const dispose=()=>{if(disposed)return;disposed=true;gig?.dispose();feed.close();cancelAnimationFrame(frame);for(const item of rides.values())clearTimeout(item.timer);rides.clear();window.removeEventListener('resize',render);window.removeEventListener('pagehide',dispose);root.inert=true;$('#status').textContent='DETACHED';};
  window.bufferPanel=Object.freeze({descriptor,dispose});window.addEventListener('resize',render);window.addEventListener('pagehide',dispose);frame=requestAnimationFrame(animate);
  window.addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
 }
@@ -285,4 +325,12 @@ if(requested===null)startWorkspace();else{
  try{startPanel(resolvePanelView(requested));}catch(error){document.querySelector('main').replaceChildren();document.querySelector('header').remove();document.querySelector('.view-tabs').remove();document.querySelector('#notice').remove();document.querySelector('#error').textContent=error.message;document.querySelector('#pending').textContent='Unknown view';}
 }
 
+}
+
+if(typeof document!=='undefined'&&parent!==window){
+ const host=new URLSearchParams(location.search).get('hostOrigin');
+ if(new URLSearchParams(location.search).get('paramGUI')==='1'&&/^http:\/\/127\.0\.0\.1:\d+$/.test(host??'')){
+  const css=document.createElement('link');css.rel='stylesheet';css.href=host+'/delay-widgets.css';document.head.append(css);
+  import(host+'/delay-widgets.js').catch(e=>{const root=document.querySelector('#performance');if(root)root.inert=true;document.querySelector('#error').textContent='AWParam GUI unavailable: '+e.message;});
+ }
 }

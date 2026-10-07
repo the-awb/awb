@@ -1,0 +1,48 @@
+{
+  "time": "2026-10-07T23:32:57.557908+00:00",
+  "branch": "integration/bw-sc",
+  "parent": "854006a1f9b1b7bdf18eb0c30c724ba6bf7de40d",
+  "method": "Isolated tracked HEAD tree plus reviewed feature-only files; concurrent dirty layout, mixer, routing-strip and meter work excluded",
+  "build": {
+    "liveSurface": true,
+    "sharedAWParamTapeLibrary": true,
+    "committedRackBaseline": true
+  },
+  "node": {
+    "passed": 14,
+    "failed": 0
+  },
+  "fixtureGUI": {
+    "passed": 19,
+    "failed": 0
+  },
+  "compositeGUI": {
+    "passed": 23,
+    "failed": 0
+  },
+  "audio": "Not rerun for commit; prior 30 SC/audio +11 bridge +9 real GUI checks retained with frozen class-source hashes. Relevant AWBDelayRack and DSP bridge sources unchanged since that pass. No engine started for commit checks.",
+  "sources": {
+    "apps/live-set/package.json": "a3a1991b2d3375798ec83b2e6b0b95b70fe3bafc497e0c50087fa6d02a35cb6f",
+    "apps/live-set/runtime/delay-bridge.mjs": "b323c6a3f15d76cdecf1999e9547965701cef5ab8769cd1942f1483e387a6daf",
+    "apps/live-set/runtime/shell-runtime.mjs": "d7b75aac4cd7c8597196784369a5772247a62b1f0e70ee3d9603cfac9a8dd37a",
+    "apps/live-set/sc/classes/AWBDelayRack.sc": "97d33e9a5617af329c5c04417b946040466065825221d2a6988e7002ca9e7d74",
+    "apps/live-set/sc/delay-audio-test.scd": "e1113bad716fb5dcfbd2fb448ad8accc55d02b0559592adcb8fa69e9cfe7d143",
+    "apps/live-set/src/delay-param-bindings.mjs": "96601449726ce63b86df66d0349d934dfd5981095330e24c37374a2f9f15e8d2",
+    "apps/live-set/src/delay-parameters.mjs": "617c1a8c135f6f4737513212b0b433dd82a11c01bf9ed85727cf7bd6b364c184",
+    "apps/live-set/src/delay-widgets.css": "664a65916a895f2865192ca23f99792b32c3f48561b8abda7c47a4e0407c604a",
+    "apps/live-set/src/delay-widgets.jsx": "2af8dcdfc3d2af4b736619356857b372fcff66796fc3efc7e30d7d033399f07b",
+    "apps/live-set/src/main.jsx": "7c15fcb109f6da32fb4bcc3b872a7eb38101134b801a7d9082c53f8de5d408e2",
+    "apps/live-set/test/browser.mjs": "f228f86337cc249c9e4e41d64ba92837e9f952ce180bd4d7308aaab7170bbe17",
+    "apps/live-set/test/delay-bridge.test.mjs": "4b1ee6fd689a8fb91e00e7feb1fac6bb0f3aba49f5d74d201ccdfcc68b63eccd",
+    "apps/live-set/test/delay-browser.mjs": "5f269a681ec5e228c556364f401abdc163cd4d34d6565436b7b9a790af5d3fda",
+    "apps/live-set/test/delay-param-browser.mjs": "6b0f4d699213552cae855f8c97594ab6d66ddf72d57c28801929adb77409c760",
+    "apps/live-set/test/delay-parameters.test.mjs": "d422d3accd177cb8e1e125c103b575fac5ae72ba77c4f02a23aca1176e3d3519",
+    "apps/live-set/test/run-delay-audio.py": "b6cbbbb4ce47ca88b4de289ac1d178ef0f668aea768931ed6526dec4dafcfbef",
+    "apps/live-set/test/runtime.test.mjs": "7f3a5663e298fe4809170890e98f8f101db474c8aec4c94f357ae1dcbc9f12a9",
+    "apps/live-set/vite.delay-widgets.config.mjs": "6c30c173b4ffea7785aec9228bf306234f3180b2c03c5255173c056effb1e161",
+    "tool-artifacts/buffer-views/0.1.0/SOURCE.json": "3358b4311b05dbd58be0371841f6eec2e65691bf4bd98fe24a1ff2a94aa8dbde",
+    "tool-artifacts/buffer-views/0.1.0/instrument/app.js": "2b9d08fff2f3e395369a9677bdd465f992649cc474d98dd6bab08e3197c0e3ef",
+    "tool-artifacts/buffer-views/0.1.0/instrument/style.css": "ade0817fc8f0d2fc1ddaf41dea35bc1a18f84f499fc735d86fb2214bb953bcea"
+  },
+  "telegram": "No Telegram tool is exposed in this chat"
+}
