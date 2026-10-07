@@ -1,0 +1,36 @@
+{
+  "sourceCommit": "4feac995fcbc54541060806057dc1c81c26c42f7",
+  "sourceRepository": "SuperCollider",
+  "sourcePath": "prototypes/unified-buffer-tool",
+  "purpose": "Requestable renderer attachments; no private-engine launcher or SC class snapshots included.",
+  "files": [
+    {
+      "path": "network-server.mjs",
+      "sha256": "5c3454b1ca9d62aaa5785d120c99a8baa14df3e7e0666f7d77674ff8f1cf937a"
+    },
+    {
+      "path": "network-model.mjs",
+      "sha256": "270d0931f129e10702881679bb2f54ff7022137759993a92b9eca2837c2bf5ba"
+    },
+    {
+      "path": "waveform-view.mjs",
+      "sha256": "da09d82c8bf81bc6afb4c0df87aa023be7ca760468a649a3d5963f93ae8ac730"
+    },
+    {
+      "path": "instrument/index.html",
+      "sha256": "77cf82685247ac82dcbad3311df8252bff739232ea75deb452d9796a8be6e6fd"
+    },
+    {
+      "path": "instrument/app.js",
+      "sha256": "654793dd0224a22882232ea49384c0f9442528a691710b3dc7eb4952a13a7cbf"
+    },
+    {
+      "path": "instrument/style.css",
+      "sha256": "23870ef214bc9030d8b35d3d73d8340c5bfbb7719e9a064a214be3c3dbc3e51b"
+    }
+  ],
+  "localChanges": [
+    "instrument/app.js: opt-in embed layout attribute",
+    "instrument/style.css: compact borrowed view style"
+  ]
+}

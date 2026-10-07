@@ -2,11 +2,11 @@
 // fraction of the parameter's full normalized range. No legacy Param overrides.
 AWParam {
     classvar definition, routeDefinition, mappingOwners;
-    var <name, <server, <spec, <group, <sourceGroup, <synth, <inputBus, <outputBus;
+    var <name, <server, <spec, <group, <sourceGroup, <synth, <inputBus, <outputBus, <observationBus, <ownerInstance;
     var <baseTarget, <amountTarget, <modCurve, <closed=false, <snapshot;
     var options, baseSerial=0, amountSerial=0, defaultBaseCurve, defaultAmountCurve;
     var responder, quitHook, nodeHook, pendingReads, readGeneration=0, watchRate=0;
-    var mappings, ownedNodes, modulationNodes;
+    var mappings, ownedNodes, modulationNodes, routeRecords;
     var <sources,<modulationConnections,<modulationWriters,<checkedMappings;
 
     *initClass { mappingOwners=Dictionary.new }
@@ -43,11 +43,12 @@ AWParam {
         ^Select.kr(curve.abs<0.001,[((phase*c).exp-1)/(c.exp-1),phase]);
     }
     *synthDef {
-        ^definition ?? {definition=SynthDef(\awParam_v1,{|inputBus=0,out=1,baseTarget=0,amountTarget=0,
+        ^definition ?? {definition=SynthDef(\awParam_v2,{|inputBus=0,out=1,baseTarget=0,amountTarget=0,
             baseSerial=0,amountSerial=0,baseDur=0,amountDur=0,baseCurve=0,amountCurve=0,
-            modCurve=0,lo=0,hi=1,exponential=0,replyRate=0|
+            modCurve=0,lo=0,hi=1,exponential=0,replyRate=0,observationBus=0|
             var values=AWParam.signals(baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential);
             ReplaceOut.kr(out,values[2]);
+            ReplaceOut.kr(observationBus,values.copyRange(0,1));
             SendReply.kr(Impulse.kr(replyRate),'/awb/param/state',values++[baseSerial,amountSerial]);
             // Writers execute BEFORE this processor. Clear AFTER consuming so
             // removal of the last writer cannot leave stale modulation.
@@ -62,7 +63,7 @@ AWParam {
     *curve { |value|if([\lin,\linear].includes(value)){^0};this.finite(value,"curve");if(value.abs>16){Error("AWParam: numeric curve must be within -16..16").throw};^value }
     *duration { |value|this.finite(value,"duration");if(value<0 or:{value>86400}){Error("AWParam: duration must be within 0..86400 seconds").throw};^value }
     init { |id,base,aSpec,amount,shape,target,aServer,opts|
-        name=id.asSymbol;server=aServer ? target.tryPerform(\server) ? Server.default;options=(opts ? ()).copy;
+        name=id.asSymbol;server=aServer ? target.tryPerform(\server) ? Server.default;options=(opts ? ()).copy;ownerInstance=options[\ownerInstance];
         spec=aSpec.asSpec.copy;spec.step=0;modCurve=this.class.curve(shape);
         if(spec.minval.isNumber.not or:{spec.maxval.isNumber.not}){Error("AWParam: invalid ControlSpec").throw};
         this.class.finite(spec.minval,"minimum");this.class.finite(spec.maxval,"maximum");
@@ -73,15 +74,15 @@ AWParam {
         if(options[\sendFunction].isNil and:{server.serverRunning.not}){Error("AWParam: boot server and call AWParam.prepare first").throw};
         target=target ? server.defaultGroup;
         if(target.isKindOf(Group).not or:{target.server!==server}){Error("AWParam: target must be a Group on the selected server").throw};
-        pendingReads=List.new;mappings=List.new;ownedNodes=List.new;sources=List.new;checkedMappings=IdentitySet.new;modulationConnections=IdentityDictionary.new;modulationWriters=IdentityDictionary.new;modulationNodes=IdentityDictionary.new;
+        pendingReads=List.new;mappings=List.new;ownedNodes=List.new;sources=List.new;checkedMappings=IdentitySet.new;modulationConnections=IdentityDictionary.new;modulationWriters=IdentityDictionary.new;modulationNodes=IdentityDictionary.new;routeRecords=IdentityDictionary.new;
         try {
-            inputBus=Bus.control(server,1);outputBus=Bus.control(server,1);
-            if(inputBus.index.isNil or:{outputBus.index.isNil}){Error("AWParam: control bus allocation exhausted").throw};
-            group=Group.basicNew(server);sourceGroup=Group.basicNew(server);synth=Synth.basicNew(\awParam_v1,server);
+            inputBus=Bus.control(server,1);outputBus=Bus.control(server,1);observationBus=Bus.control(server,2);
+            if(inputBus.index.isNil or:{outputBus.index.isNil} or:{observationBus.index.isNil}){Error("AWParam: control bus allocation exhausted").throw};
+            group=Group.basicNew(server);sourceGroup=Group.basicNew(server);synth=Synth.basicNew(\awParam_v2,server);
             this.dispatchBundle([
-                [\c_set,inputBus.index,0,outputBus.index,baseTarget],
+                [\c_set,inputBus.index,0,outputBus.index,baseTarget,observationBus.index,baseTarget,observationBus.index+1,amountTarget],
                 group.newMsg(target,\addToTail),sourceGroup.newMsg(group,\addToHead),
-                synth.newMsg(group,[\inputBus,inputBus.index,\out,outputBus.index,\baseTarget,spec.unmap(baseTarget),
+                synth.newMsg(group,[\inputBus,inputBus.index,\out,outputBus.index,\observationBus,observationBus.index,\baseTarget,spec.unmap(baseTarget),
                     \amountTarget,amountTarget,\modCurve,modCurve,\lo,spec.minval,\hi,spec.maxval,
                     \exponential,[\exp,\exponential].includes(spec.warp.asSpecifier).asInteger],\addToTail)
             ]);
@@ -180,20 +181,24 @@ AWParam {
         ^this.addBusModulation(id,source,amount,curve);
     }
     addBusModulation { |id,source,amount=1,curve=0|
-        var node;this.requireAlive;id=id.asSymbol;
+        var node,record;this.requireAlive;id=id.asSymbol;
         if(this.hasModulation(id) or:{this.modulationCount>=64}){Error("AWParam: duplicate/excess modulation connection").throw};
         if(source.isKindOf(Bus).not or:{source.server!==server} or:{source.rate!=\control} or:{source.numChannels!=1} or:{source.index.isNil}){Error("AWParam: modulation source must be a mono control Bus on selected server").throw};
         amount=this.checkAmount(amount);curve=this.class.curve(curve);node=Synth.basicNew(\awParamRoute_v1,server);
         this.dispatchBundle([node.newMsg(sourceGroup,[\out,inputBus.index,\amount,amount,\curve,curve],\addToTail),node.mapMsg(\value,source.index)]);
-        modulationNodes[id]=this.own(node,\synth);^node;
+        modulationNodes[id]=this.own(node,\synth);record=(node:node,bus:source,amount:amount,curve:curve);routeRecords[id]=record;
+        if(options[\sendFunction].isNil and:{modulationConnections[id].isNil}){
+            record[\hook]={|n,what|if(what==\n_end){this.removeBusModulation(id,false)}};node.register;node.addDependant(record[\hook])
+        };this.changed(\routes);^node;
     }
     removeModulation { |id|
         var connection;this.requireAlive;connection=modulationConnections[id.asSymbol];
         if(connection.notNil){connection[\source].registry.disconnect(connection);^connection};
         ^this.removeBusModulation(id);
     }
-    removeBusModulation { |id|var node;node=modulationNodes.removeAt(id.asSymbol);
-        if(node.notNil){this.dispatch(node.freeMsg);ownedNodes.remove(node);options[\disownFunction].value(node)};^node;
+    removeBusModulation { |id,send=true|var node,record;id=id.asSymbol;node=modulationNodes.removeAt(id);record=routeRecords.removeAt(id);
+        if(record.notNil and:{record[\hook].notNil}){node.removeDependant(record[\hook])};
+        if(node.notNil){if(send){this.dispatch(node.freeMsg)};ownedNodes.remove(node);options[\disownFunction].value(node);this.changed(\routes)};^node;
     }
     // An owned writer built inside sourceGroup is ordered by construction.
     // Its declared out control must write additive Out.kr to the supplied bus.
@@ -204,16 +209,63 @@ AWParam {
         if(desc.isNil or:{desc.controls.any{|c|c.name.asSymbol==outControl and:{c.rate==\control}}.not}){Error("AWParam: writer needs a known SynthDef with a control-rate out control").throw};
         args=args ? [];if(args.isArray.not or:{args.size.odd}){Error("AWParam: writer args must be key/value pairs").throw};
         if(args.clump(2).any{|pair|pair[0].asSymbol==outControl}){Error("AWParam: writer output is assigned by the parameter").throw};
-        node=Synth.basicNew(defName,server);record=(node:node,defName:defName,outControl:outControl);
+        node=Synth.basicNew(defName,server);record=(node:node,defName:defName,outControl:outControl,args:args.copy,controls:[]);
         this.dispatch(node.newMsg(sourceGroup,args++[outControl,inputBus.index],\addToTail));
-        modulationWriters[id]=record;this.own(node,\synth);
+        modulationWriters[id]=record;this.own(node,\synth);this.changed(\routes);
         if(options[\sendFunction].isNil){record[\hook]={|n,what|if(what==\n_end){this.removeModulationWriter(id,false)}};node.register;node.addDependant(record[\hook])};^node;
+    }
+    declareModulationWriterControls { |id,controls|
+        var record,desc,validated;this.requireAlive;record=modulationWriters[id.asSymbol];
+        if(record.isNil){Error("AWParam: custom writer removed or unknown").throw};desc=SynthDescLib.global.at(record[\defName]);
+        if(controls.isArray.not or:{controls.size>16}){Error("AWParam: writer controls must be a bounded array").throw};
+        validated=controls.collect{|c|var key=c[\id].asSymbol,control=desc.controls.detect{|item|item.name.asSymbol==key},value,pair;
+            if("^[a-zA-Z][a-zA-Z0-9_]{0,31}$".matchRegexp(key.asString).not or:{control.isNil} or:{control.rate!=\control} or:{key==record[\outControl]}){Error("AWParam: undeclared/non-control writer field").throw};
+            this.class.finite(c[\min],"writer minimum");this.class.finite(c[\max],"writer maximum");if(c[\min]>=c[\max]){Error("AWParam: invalid writer range").throw};
+            pair=record[\args].clump(2).detect{|a|a[0].asSymbol==key};value=if(pair.notNil){pair[1]}{control.defaultValue};
+            this.class.finite(value,"writer value");if(value<c[\min] or:{value>c[\max]}){Error("AWParam: writer value outside declared range").throw};
+            (id:key,min:c[\min],max:c[\max],value:value)
+        };
+        if(validated.collect{|c|c[\id]}.as(Set).size!=validated.size){Error("AWParam: duplicate writer control").throw};
+        record[\controls]=validated;this.changed(\routes);^this;
+    }
+    setModulationWriterControl { |id,control,value|
+        var record,field;this.requireAlive;record=modulationWriters[id.asSymbol];
+        if(record.isNil){Error("AWParam: custom writer removed or unknown").throw};
+        field=record[\controls].detect{|c|c[\id]==control.asSymbol};if(field.isNil){Error("AWParam: writer field is not editable").throw};
+        this.class.finite(value,"writer value");if(value<field[\min] or:{value>field[\max]}){Error("AWParam: writer value outside declared range").throw};
+        this.dispatch(record[\node].setMsg(control.asSymbol,value));field[\value]=value;this.changed(\writerField,(id:id.asSymbol,field:control.asSymbol,value:value));^this;
     }
     removeModulationWriter { |id,send=true|
         var record=modulationWriters.removeAt(id.asSymbol),node;
         if(record.notNil){node=record[\node];if(record[\hook].notNil){node.removeDependant(record[\hook])};
-            if(send){this.dispatch(node.freeMsg)};ownedNodes.remove(node);options[\disownFunction].value(node)};^node;
+            if(send){this.dispatch(node.freeMsg)};ownedNodes.remove(node);options[\disownFunction].value(node);this.changed(\routes)};^node;
     }
+    standardRoute { |id|
+        var connection,record;this.requireAlive;id=id.asSymbol;connection=modulationConnections[id];
+        if(connection.notNil and:{connection[\status]!=\connected}){Error("AWParam: route is pending validation").throw};
+        record=routeRecords[id];if(record.isNil){Error("AWParam: standard route removed or unknown").throw};^record;
+    }
+    setModulationAmount { |id,value|
+        var record=this.standardRoute(id),connection;value=this.checkAmount(value);id=id.asSymbol;
+        this.dispatch(record[\node].setMsg(\amount,value));record[\amount]=value;connection=modulationConnections[id];if(connection.notNil){connection[\amount]=value};
+        this.changed(\routeField,(id:id,field:\amount,value:value));^this;
+    }
+    setModulationCurve { |id,value|
+        var record=this.standardRoute(id),connection;value=this.class.curve(value);id=id.asSymbol;
+        this.dispatch(record[\node].setMsg(\curve,value));record[\curve]=value;connection=modulationConnections[id];if(connection.notNil){connection[\curve]=value};
+        this.changed(\routeField,(id:id,field:\curve,value:value));^this;
+    }
+    routeMetadata {
+        var ids=(routeRecords.keys++modulationConnections.keys).as(Set).asArray.sort;
+        ^ids.collect{|id|var record=routeRecords[id],connection=modulationConnections[id],source=connection.tryPerform(\at,\source),bus=record.tryPerform(\at,\bus) ? source.tryPerform(\bus);
+            (id:id,kind:if(source.notNil){\registered}{\bus},label:source.tryPerform(\name) ? ("Bus "++bus.tryPerform(\index)),
+                bus:bus.tryPerform(\index),producer:source.tryPerform(\producer).tryPerform(\nodeID),node:record.tryPerform(\at,\node).tryPerform(\nodeID),
+                amount:record.tryPerform(\at,\amount) ? connection.tryPerform(\at,\amount),curve:record.tryPerform(\at,\curve) ? connection.tryPerform(\at,\curve),
+                status:connection.tryPerform(\at,\status) ? \connected,error:connection.tryPerform(\at,\error).tryPerform(\errorString),editable:true)
+        }++modulationWriters.keys.asArray.sort.collect{|id|var r=modulationWriters[id];(id:id,kind:\custom,label:r[\defName].asString,producer:r[\node].nodeID,node:r[\node].nodeID,status:\connected,editable:false,controls:r[\controls].deepCopy)};
+    }
+    observationIndices {this.requireAlive;^[observationBus.index,observationBus.index+1,outputBus.index]}
+    gui { |options|^\AWParamInspector.asClass.perform(\open,this,options)}
     // Same attachment shape as legacy Param; MIDI is one kind of source.
     createMidiSource { |midiInClient,chanIn,ccIn,lo=0,hi=127,passthru=false,install=true|
         var source;this.requireAlive;
@@ -243,8 +295,9 @@ AWParam {
         if(pendingReads.notNil){this.finishReads(nil,Error("AWParam closed during read"))};
         if(mappings.notNil){mappings.copy.do{|item|this.unmapFrom(item[\node],item[\control],send and:{server.serverRunning or:{options[\sendFunction].notNil}})}};
         if(send and:{group.notNil}){this.dispatch(group.freeMsg)};
+        if(routeRecords.notNil){routeRecords.values.do{|r|if(r[\hook].notNil){r[\node].removeDependant(r[\hook])}};routeRecords.clear};
         ownedNodes.do{|node|options[\disownFunction].value(node)};ownedNodes.clear;
-        buses=[inputBus,outputBus].reject(_.isNil);
+        buses=[inputBus,outputBus,observationBus].reject(_.isNil);
         if(options[\sendFunction].notNil or:{server.serverRunning.not}){buses.do{|bus|if(bus.index.notNil){bus.free}}}
         {Routine({server.sync;buses.do{|bus|if(bus.index.notNil){bus.free}}}).play(SystemClock)};
         this.changed(\closed);^this;

@@ -2187,3 +2187,29 @@ committed on `integration/bw-sc` for fast-forward integration into local `main`;
 unrelated Bitwig-capture and shell edits remain outside that commit. SC class-path
 configuration is unchanged; the set README lists the four include paths needed
 for ordinary IDE access.
+
+
+### AWParam inspector milestone — 7 October 2026
+
+Isolated implementation in `codex/awparam-gui`: a shell-shared latest-value control observer and reusable React SVG/Canvas knobs. AWParam remains a plain class; an optional `param` inspector Tool borrows one or many parameters. The existing mono output and scope/audio routes remain intact. Current base and amount use a separate two-channel observation bus. Commands use the owning Tool/parameter binding; recurring changed values use sparse binary batches at 8/15 Hz without ScopeOut or AWParam periodic replies.
+
+The implementation and private validation gates are tracked in [Parameter Inspector status](apps/param/docs/IMPLEMENTATION.md). It has not been merged or installed in the live class library. Live engine/GUI validation and controlled 16/32/128-widget cost comparison remain gated on the audio-test reservation.
+
+
+### Composite live surface — 7 October 2026
+
+`codex/live-set-surface` includes AWParam `da72790` and consumes the independently
+requestable delay views from SC `4feac995`. SC's completed delay commits are
+integrated on `codex/live-set-sc-integration`, preserving both dirty shared
+checkouts. Four tape views occupy B2/A2/A1/B1 quadrants, with one shared routing
+view and per-cell head/send inspectors. The rack embeds one SVG renderer with
+its mix editor. AWBaseTool adds native root ownership, bounded logging and
+semantic/MIDI dictionaries referencing existing AWParams. Local edits and
+measured observation remain separate; the shell broker is shared.
+
+[Implementation and verification](apps/live-set/README.md) distinguishes the
+verified GUI/language slice from the remaining prepared-host delay adapter.
+The external delay URL is borrowed: it does not yet confer SC resource ownership
+or connect separate cell ports to rack channels. Unimplemented legacy FX controls
+remain visibly unbound. No live engine, hardware routing, load test or class-path
+installation is implied by this milestone.

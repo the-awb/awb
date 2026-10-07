@@ -85,7 +85,7 @@ AWModulationRegistry {
         amount=param.checkAmount(amount);curve=AWParam.curve(curve);
         if(timing==\sameBlock and:{this.cycle(source,param)}){Error("AWModulationRegistry: same-block dependency cycle; designate a previousBlock connection").throw};
         record=(id:id,source:source,param:param,amount:amount,curve:curve,timing:timing,status:\pending,action:action);
-        this.registerParameter(param);connections.add(record);param.modulationConnections[id]=record;generation=generation+1;
+        this.registerParameter(param);connections.add(record);param.modulationConnections[id]=record;generation=generation+1;param.changed(\routes);
         this.requestOrder({|order,error|
             if(record[\status]==\pending){
                 if(error.isNil){error=this.orderError(source,param,order,timing)};
@@ -98,7 +98,7 @@ AWModulationRegistry {
             };
         });^record;
     }
-    complete { |record,error|var action=record.removeAt(\action);if(action.notNil){action.value(record,error)};^this }
+    complete { |record,error|var action=record.removeAt(\action);if(action.notNil){action.value(record,error)};if(record[\source].notNil){record[\param].changed(\routes)};^this }
     disconnect { |record,error|
         if(connections.includes(record)){
             connections.remove(record);generation=generation+1;

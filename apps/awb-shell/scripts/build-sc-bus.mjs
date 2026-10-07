@@ -7,6 +7,8 @@ const sc=process.env.SC_SOURCE??'/Users/willy/supercollider';
 const headers=process.env.NODE_HEADERS??path.resolve(path.dirname(process.execPath),'../include/node');
 if(process.platform!=='darwin'||!existsSync(`${sc}/common/server_shm.hpp`))throw new Error('SC bus addon requires macOS and matching SC_SOURCE headers');
 mkdirSync(`${root}/.build`,{recursive:true});
-const result=spawnSync('clang++',['-std=c++17','-O2','-fPIC','-bundle','-undefined','dynamic_lookup',`-I${headers}`,`-I${sc}/common`,`-I${sc}/external_libraries/boost`,`-I${sc}/external_libraries/TLSF-2.4.6/src`,`${root}/native/sc-bus-reader.cpp`,'-o',`${root}/.build/sc-bus-reader.node`],{stdio:'inherit'});
+for(const name of ['sc-bus-reader','control-bus-reader']) {
+const result=spawnSync('clang++',['-std=c++17','-O2','-fPIC','-bundle','-undefined','dynamic_lookup',`-I${headers}`,`-I${sc}/common`,`-I${sc}/external_libraries/boost`,`-I${sc}/external_libraries/TLSF-2.4.6/src`,`${root}/native/${name}.cpp`,'-o',`${root}/.build/${name}.node`],{stdio:'inherit'});
 if(result.status!==0)process.exit(result.status??1);
-console.log('Built SC bus reader (N-API)');
+console.log(`Built ${name} (N-API)`);
+}

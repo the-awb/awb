@@ -1,0 +1,12 @@
+{
+  "surface": "/Volumes/ARMED WITH SOUND/open-stage-control scripts/itsawd 4v w room mic.json",
+  "sha256": "d76977bac7e2d8703458103928fb0e8f8cf845310854375b90bc8253999ce5ee",
+  "placement": {
+    "topLeft": "b2",
+    "topRight": "a2",
+    "bottomLeft": "a1",
+    "bottomRight": "b1"
+  },
+  "layout": "Four delay cells on left, mixes/rack on right, named track/FX controls below; AWBase console retained.",
+  "originalUnmodified": true
+}

@@ -1,0 +1,84 @@
+{
+  "branch": "codex/live-set-surface",
+  "dependencies": {
+    "awbParam": "da72790",
+    "delayViews": "4feac995fcbc54541060806057dc1c81c26c42f7"
+  },
+  "builds": [
+    "@awb/live-set",
+    "@awb/rack",
+    "@awb/param",
+    "native sc-bus-reader and control-bus-reader"
+  ],
+  "node": {
+    "tests": 62,
+    "passed": 60,
+    "failed": 0,
+    "skipped": 2,
+    "log": "/private/tmp/awb-live-set-final-node.log",
+    "skips": [
+      "actual ToolInstance bridge gate",
+      "actual eight-channel 32-send bridge gate"
+    ]
+  },
+  "scContracts": {
+    "passed": 15,
+    "log": "/private/tmp/awb-live-set-class-test/contract.log"
+  },
+  "languageBridge": {
+    "passed": 7,
+    "checks": [
+      "actual sclang console history binds",
+      "actual semantic name and MIDI metadata arrive",
+      "namespaced AWParam binds across UDP",
+      "authoritative GUI edit reaches the same language AWParam",
+      "actual AWBase.log arrives as a delta",
+      "root close invalidates borrowed parameter bridge",
+      "root close invalidates console connection"
+    ],
+    "log": "/private/tmp/awb-live-language/language.log",
+    "engine": "none; commands captured by TestServer"
+  },
+  "compositeBrowser": {
+    "passed": 23,
+    "checks": [
+      "embedded rack opens one SVG renderer with mixes",
+      "four live cells occupy B2/A2/A1/B1 quadrants",
+      "managed cell routing appears once",
+      "requested cell constructs only its own tape",
+      "requested cell constructs only its own tape",
+      "requested cell constructs only its own tape",
+      "requested cell constructs only its own tape",
+      "four embedded delay views share one observation stream",
+      "embedding all four cells preserves acknowledged settings",
+      "an embedded B1 edit targets B1 independently",
+      "per-cell heads and sends are requestable from the composite",
+      "shared routing opens once",
+      "composite FX controls share one native control reader",
+      "AWParam effective arc advances in composite panel",
+      "semantic knob sends the authoritative parameter edit",
+      "editing one control preserves unrelated widget DOM identity",
+      "compact knob exposes numeric amount and source controls",
+      "modulation inspector stays inside the window without FX-strip clipping",
+      "console shows bounded escaped AWBase messages",
+      "mapping inspector exposes legacy names and pedal CCs",
+      "owner loss disables editing and releases control observation",
+      "no browser errors",
+      "closing the composite leaves its borrowed delay instrument running"
+    ],
+    "data": "synthetic AWParam observations; one explicit delay rehearsal backend"
+  },
+  "standaloneParamBrowser": {
+    "passed": 16
+  },
+  "unrun": [
+    "actual shared-host composite audio",
+    "independent cell input/output-to-rack routing",
+    "prepared-host delay adoption",
+    "physical inputs",
+    "performance/dropout comparison",
+    "NodeManager source-process navigation"
+  ],
+  "installed": false,
+  "sharedDirtyCheckoutsPreserved": true
+}
