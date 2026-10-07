@@ -7,6 +7,7 @@
     "../../tool-artifacts/scope/0.1.0",
     "../rack",
     "../chain",
-    "../param"
+    "../param",
+    "../live-set"
   ]
 }

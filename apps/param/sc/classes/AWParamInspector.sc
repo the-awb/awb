@@ -12,11 +12,20 @@ AWParamInspector : Tool {
         instance=ToolLauncher.open(\param,(name:"Parameters"),options);
         if(options[\launch] ? true){instance.tool.gui};^instance;
     }
+    *openNamed { |named,options,owner|
+        var instance;this.register;options=(options ? ()).copy.putAll((namedParams:named,params:named.values.asArray,owner:owner,gui:false,track:false));
+        instance=ToolLauncher.open(\param,(name:"Parameters"),options);if(options[\launch] ? true){instance.tool.gui};^instance;
+    }
     *new { |instance,opts|^super.new.init(instance,opts)}
     init { |i,opts|
         instance=i;options=opts ? ();owner=options[\owner];params=IdentityDictionary.new;observers=IdentityDictionary.new;watchers=Dictionary.new;
         if(options[\params].isArray.not or:{options[\params].isEmpty} or:{options[\params].size>128}){Error("Inspector needs 1..128 AWParams").throw};
-        options[\params].do{|p|if(p.isKindOf(AWParam).not or:{p.closed} or:{params[p.name].notNil}){Error("Inspector needs unique live AWParams").throw};params[p.name]=p};
+        if(options[\namedParams].notNil){
+            options[\namedParams].keysValuesDo{|id,p|
+                if("^[a-zA-Z][a-zA-Z0-9_/-]{0,95}$".matchRegexp(id.asString).not or:{p.isKindOf(AWParam).not} or:{p.closed} or:{params[id.asSymbol].notNil}){Error("Invalid named AWParam binding").throw};params[id.asSymbol]=p;
+            };
+            if(params.values.asArray.as(IdentitySet).size!=params.size){Error("One parameter may have only one view ID").throw};
+        }{options[\params].do{|p|if(p.isKindOf(AWParam).not or:{p.closed} or:{params[p.name].notNil}){Error("Inspector needs unique live AWParams").throw};params[p.name]=p}};
         server=options[\params][0].server;if(params.values.any{|p|p.server!==server}){Error("Inspector parameters must share a server").throw};
         epoch=thisProcess.pid.asString++":"++UniqueID.next;^this;
     }
@@ -90,12 +99,23 @@ AWParamInspector : Tool {
             address.sendMsg('/awb/param/result',instance.instanceID,msg[3].asString,request,"ok",revision);
         }{origin=""};^this;
     }
+    viewJSON { |cellViews|
+        var entries=List.new;
+        cellViews.keysValuesDo{|id,url|
+            if([\b1,\b2,\a1,\a2].includes(id.asSymbol).not or:{"^http://127\\.0\\.0\\.1:[0-9]+/[a-zA-Z0-9_/?&=:%+.-]*$".matchRegexp(url.asString).not}){Error("Invalid local cell view URL").throw};
+            entries.add(id.asString.asCompileString++":"++url.asString.asCompileString);
+        };^"{"++entries.join(",")++"}";
+    }
     gui { |opts|
-        var root=options[\shellRoot] ? (Platform.userHomeDir+/+"awb"),command;opts=opts ? ();
+        var root=options[\shellRoot] ? (Platform.userHomeDir+/+"awb"),command,environment="",rack=options[\rackBinding];opts=opts ? ();
         if(shellPID.notNil){^shellPID};
-        command="exec /usr/bin/env -u ELECTRON_RUN_AS_NODE AWB_PARAM_SC_PORT=% AWB_PARAM_INSTANCE_ID=% % % --tool=param --profile=standalone --origin=supercollider --tool-instance=% --owner-pid=% --osc-port=0 --user-data-dir=%".format(
-            NetAddr.langPort,instance.instanceID.shellQuote,(root+/+"node_modules/electron/dist/Electron.app/Contents/MacOS/Electron").shellQuote,(root+/+"apps/awb-shell/shell/main.mjs").shellQuote,
-            instance.instanceID.shellQuote,thisProcess.pid,(root+/+".param-user-data"+/+(thisProcess.pid.asString++"-"++instance.instanceID)).shellQuote);
+        if(rack.notNil){environment="AWB_RACK_SC_PORT=% AWB_RACK_INSTANCE_ID=% AWB_RACK_LIBRARY_ID=% AWB_RACK_SC_LIBRARY_ROOT=% ".format(NetAddr.langPort,rack[\instanceID].asString.shellQuote,rack[\libraryID].asString.shellQuote,(root+/+".rack-sc-libraries").shellQuote)};
+        if(options[\cellViews].notNil){environment=environment++"AWB_LIVE_CELL_VIEWS="++this.viewJSON(options[\cellViews]).shellQuote++" "};
+        if(options[\delayURL].notNil){environment=environment++"AWB_LIVE_DELAY_URL="++options[\delayURL].asString.shellQuote++" "};
+        if(options[\routingView].notNil){environment=environment++"AWB_LIVE_ROUTING_VIEW="++options[\routingView].asString.shellQuote++" "};
+        command="exec /usr/bin/env -u ELECTRON_RUN_AS_NODE %AWB_LIVE_BASE_ID=% AWB_PARAM_SC_PORT=% AWB_PARAM_INSTANCE_ID=% % % --tool=% --profile=standalone --origin=supercollider --tool-instance=% --owner-pid=% --osc-port=0 --user-data-dir=%".format(
+            environment,(options[\baseInstanceID] ? "").shellQuote,NetAddr.langPort,instance.instanceID.shellQuote,(root+/+"node_modules/electron/dist/Electron.app/Contents/MacOS/Electron").shellQuote,(root+/+"apps/awb-shell/shell/main.mjs").shellQuote,
+            (options[\guiTool] ? "param").shellQuote,(options[\baseInstanceID] ? instance.instanceID).shellQuote,thisProcess.pid,(root+/+".param-user-data"+/+(thisProcess.pid.asString++"-"++instance.instanceID)).shellQuote);
         shellPID=(opts[\processRunner] ? {|cmd|cmd.unixCmd({shellPID=nil})}).value(command);^shellPID;
     }
     close {

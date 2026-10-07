@@ -2,7 +2,7 @@ import http from 'node:http';import crypto from 'node:crypto';import {readFile} 
 import {ControlObservationBroker} from '../../awb-shell/src/controlObservationBroker.mjs';
 import {envBinding,createBridge} from './bridge.mjs';import {wireBatch} from '../src/model.mjs';
 const root=path.resolve(fileURLToPath(new URL('../dist/',import.meta.url)));
-export async function startRuntime({binding=envBinding(),controlObservations,bridgeFactory=createBridge}={}) {
+export async function startRuntime({binding=envBinding(),controlObservations,bridgeFactory=createBridge,rendererRoot=root,additionalRoutes,frameSources=""}={}) {
   const ownBroker=!controlObservations,broker=controlObservations??new ControlObservationBroker(),clients=new Set(),token=crypto.randomUUID();
   let bridge,state={params:[],connected:false,error:'Open AWParam.gui or Core.paramGUI from sclang to bind parameters.'},stopped=false,syncing=false,queued=[],resyncTask;
   const send=(c,m)=>{if(c.readyState===1)c.send(JSON.stringify(m))};
@@ -65,8 +65,9 @@ export async function startRuntime({binding=envBinding(),controlObservations,bri
   const server=http.createServer(async(req,res)=>{try{
     const u=new URL(req.url,'http://127.0.0.1');res.setHeader('Cache-Control','no-store');
     if(u.pathname==='/api/state'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({token,state}));return}
-    const file=path.resolve(root,'.'+decodeURIComponent(u.pathname==='/'?'/index.html':u.pathname));if(!file.startsWith(root+path.sep)){res.writeHead(403);res.end();return}
-    const body=await readFile(file);res.setHeader('Content-Security-Policy',"default-src 'self'; connect-src 'self' ws://127.0.0.1:*; object-src 'none'; frame-ancestors 'none'");res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css'})[path.extname(file)]??'application/octet-stream');res.end(body)
+    if(additionalRoutes&&await additionalRoutes(req,res,u,{token}))return;
+    const file=path.resolve(rendererRoot,'.'+decodeURIComponent(u.pathname==='/'?'/index.html':u.pathname));if(!file.startsWith(rendererRoot+path.sep)){res.writeHead(403);res.end();return}
+    const body=await readFile(file);res.setHeader('Content-Security-Policy',`default-src 'self'; connect-src 'self' ws://127.0.0.1:*; object-src 'none'; ${frameSources?`frame-src ${frameSources}; `:""}frame-ancestors 'none'`);res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css'})[path.extname(file)]??'application/octet-stream');res.end(body)
   }catch{res.writeHead(404);res.end()}});
   const wss=new WebSocketServer({noServer:true,maxPayload:8192});
   server.on('upgrade',(req,socket,head)=>{const u=new URL(req.url,'http://127.0.0.1'),origin=`http://127.0.0.1:${server.address().port}`;if(u.pathname!=='/ws'||u.searchParams.get('token')!==token||req.headers.origin!==origin){socket.destroy();return}wss.handleUpgrade(req,socket,head,ws=>wss.emit('connection',ws))});

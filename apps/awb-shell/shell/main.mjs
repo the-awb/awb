@@ -1737,7 +1737,7 @@ if ( gotLock ) {
     toolRuntimes = new ToolRuntimeRegistry( {
       runtimeRoot: path.join( app.getPath( 'userData' ), 'tool-runtimes' ),
       runtimeContext: async ( { tool } ) => {
-        if ( tool.id === 'param' ) return {controlObservations};
+        if ( [ 'param', 'live-set' ].includes( tool.id ) ) return {controlObservations};
         if ( tool.id === 'scope' ) return { signalCaptures, getNativeHost: async () => {
           const native = await nativeHostForProfile( 'hosted' );
           if ( native.service.hostSnapshot().scsynth.status !== 'ready' ) throw new Error( 'Boot the shell SC host or prepared IDE server before listening.' );

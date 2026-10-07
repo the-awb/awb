@@ -1,4 +1,5 @@
 import React,{useEffect,useLayoutEffect,useRef,useState,useSyncExternalStore} from 'react';
+import {createPortal} from 'react-dom';
 import {arc,clamp,normalized,nativeValue,shape} from './model.mjs';
 const angle=v=>Math.round(v*10000)/10000;
 const format=n=>Number.isFinite(n)?Number(n.toPrecision(5)).toString():'—';
@@ -20,8 +21,8 @@ function drawCanvas(ctx,g,x,y,size,cue){
   ctx.globalAlpha=1;ctx.fillStyle=g.overflow?'#ffa774':'#71868d';if(g.overflow){ctx.beginPath();ctx.arc(50,7,2,0,Math.PI*2);ctx.fill()}
   const a=(-225+270*g.base)*Math.PI/180;ctx.beginPath();ctx.strokeStyle='#e8eeee';ctx.lineWidth=2;ctx.moveTo(50,50);ctx.lineTo(50+23*Math.cos(a),50+23*Math.sin(a));ctx.stroke();ctx.restore();
 }
-export function AWParamKnob({store,edit,renderer='svg',cue='arc',registerCanvas,onProcess}) {
-  const p=useSyncExternalStore(store.subscribe,store.get),preview=useRef({}),svg=useRef(),actual=useRef(),amountText=useRef(),opener=useRef(),panel=useRef(),drag=useRef(),[expanded,setExpanded]=useState(false);
+export function AWParamKnob({store,edit,renderer='svg',cue='arc',registerCanvas,onProcess,compact=false,disabled=false}) {
+  const p=useSyncExternalStore(store.subscribe,store.get),preview=useRef({}),svg=useRef(),actual=useRef(),amountText=useRef(),opener=useRef(),panel=useRef(),drag=useRef(),[expanded,setExpanded]=useState(false),[panelPosition,setPanelPosition]=useState({});
   const paint=useRef();paint.current=()=>{
     const g=geometry(store,preview),root=svg.current;
     if(renderer==='svg'&&root){const put=(selector,attrs)=>{const el=root.querySelector(selector);for(const [key,value]of Object.entries(attrs))if(el.getAttribute(key)!==String(value))el.setAttribute(key,value)};
@@ -35,10 +36,18 @@ export function AWParamKnob({store,edit,renderer='svg',cue='arc',registerCanvas,
   const redraw=useRef(()=>paint.current());
   useEffect(()=>{const off=store.subscribeValues(()=>{const o=store.observed();for(const [key,index]of [['base',0],['amount',1]])if(o&&preview.current[key]!==undefined&&Math.abs(preview.current[key]-o[index])<Math.max(1e-6,Math.abs(o[index])*1e-6))delete preview.current[key];schedule(redraw.current)});schedule(redraw.current);return()=>{off();paints.delete(redraw.current)}},[store,renderer,cue]);
   useEffect(()=>{schedule(redraw.current)},[p]);
+  useLayoutEffect(()=>{if(!expanded||!compact)return;const place=()=>{const b=opener.current.getBoundingClientRect(),width=Math.min(300,innerWidth-16),height=Math.min(340,innerHeight-16);setPanelPosition({left:Math.max(8,Math.min(b.left,innerWidth-width-8)),top:Math.max(8,Math.min(b.bottom+6,innerHeight-height-8)),width,maxHeight:height})};place();window.addEventListener('resize',place);window.addEventListener('scroll',place,true);return()=>{window.removeEventListener('resize',place);window.removeEventListener('scroll',place,true)}},[expanded,compact]);
   useEffect(()=>{if(expanded)panel.current?.querySelector('input')?.focus()},[expanded]);
+  useEffect(()=>{if(disabled)setExpanded(false)},[disabled]);
   useLayoutEffect(()=>registerCanvas?.(p.id,{element:svg.current,store,preview}),[registerCanvas,p.id,renderer]);
   const change=(field,value,source)=>{if(!source&&['base','amount'].includes(field))preview.current[field]=value;edit(p.id,field,value,source);schedule(redraw.current)};
   const close=()=>{setExpanded(false);opener.current?.focus()};
+  const sources=expanded&&<div ref={panel} className={`sources ${compact?'compact-sources':''}`} data-source-owner={p.id} style={compact?panelPosition:undefined} onKeyDown={e=>{if(e.key==='Escape'){e.stopPropagation();close()}}}>
+      {compact&&<div className="fields"><NumberEdit label={`${p.id} Base`} value={p.base} min={p.min} max={p.max} onCommit={v=>change('base',v)}/><NumberEdit label={`${p.id} Amount`} value={p.amount} min={-8} max={8} onCommit={v=>change('amount',v)}/></div>}
+      <NumberEdit label="Overall curve" value={p.modCurve} min={-16} max={16} onCommit={v=>change('modCurve',v)}/>
+      {p.routes.map(r=><div className="source" key={r.id}><b>{r.label}</b><small>{r.kind} · bus {r.bus<0?'—':r.bus} · {r.producer<0?'producer unknown':`producer ${r.producer}`} · {r.status}</small>{r.producer>=0&&<button disabled={!onProcess} title={onProcess?'Select producing process':'Parent Tool can attach NodeManager navigation'} onClick={()=>onProcess?.({paramID:p.id,producer:r.producer,node:r.node})}>Process {r.producer}</button>}{r.error&&<small>{r.error}</small>}
+        {r.editable&&r.status==='connected'?<><div className="fields"><NumberEdit label="Source amount" value={r.amount} min={-8} max={8} onCommit={v=>change('sourceAmount',v,r.id)}/><NumberEdit label="Source curve" value={r.curve} min={-16} max={16} onCommit={v=>change('sourceCurve',v,r.id)}/></div><svg className="curve" viewBox="0 0 100 24"><path d={Array.from({length:33},(_,i)=>`${i?'L':'M'} ${i/32*100} ${22-shape(i/32,r.curve)*20}`).join(' ')} stroke="#59dcc2"/></svg></>:<>{(r.controls??[]).map(c=><NumberEdit key={c.id} label={c.id} value={c.value} min={c.min} max={c.max} onCommit={v=>change(`writer:${c.id}`,v,r.id)}/>)}{!r.controls?.length&&<small>{r.kind==='custom'?'Custom writer · no editable controls declared':'Editing unavailable until connected'}</small>}</>}</div>)}
+      {!p.routes.length&&<small>No modulation routes.</small>}<button onClick={close}>Close sources</button></div>;
   return <section className="knob-card" data-param={p.id}><h2>{p.id}</h2><svg ref={svg} viewBox="0 0 100 100" className={'knob '+(renderer==='canvas'?'canvas-hit':'')} role="slider" tabIndex={0} aria-label={`${p.id} base`} aria-valuemin={p.min} aria-valuemax={p.max} aria-valuenow={p.base}
     onPointerDown={e=>{const box=e.currentTarget.getBoundingClientRect(),radius=Math.hypot((e.clientX-box.left)/box.width*100-50,(e.clientY-box.top)/box.height*100-50),field=radius>=38?'amount':'base';drag.current={y:e.clientY,field,start:field==='amount'?p.amount:normalized(p.base,p)};e.currentTarget.setPointerCapture(e.pointerId)}} onPointerMove={e=>{if(drag.current){const d=drag.current;change(d.field,d.field==='amount'?clamp(d.start+(d.y-e.clientY)/100,-8,8):nativeValue(d.start+(d.y-e.clientY)/150,p))}}} onPointerUp={()=>drag.current=null} onPointerCancel={()=>drag.current=null}
     onKeyDown={e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();change('base',nativeValue(normalized(p.base,p)+(['ArrowUp','ArrowRight'].includes(e.key)?1:-1)*(e.shiftKey?.001:.01),p))}}}>
@@ -47,12 +56,7 @@ export function AWParamKnob({store,edit,renderer='svg',cue='arc',registerCanvas,
     <div className="fields"><NumberEdit label={`${p.id} Base`} value={p.base} min={p.min} max={p.max} onCommit={v=>change('base',v)}/><NumberEdit label={`${p.id} Amount`} value={p.amount} min={-8} max={8} onCommit={v=>change('amount',v)}/></div>
     <label className="amount-slider">Amount<input type="range" min="-8" max="8" step="0.01" value={p.amount} onChange={e=>change('amount',+e.target.value)}/></label>
     <button ref={opener} aria-expanded={expanded} onClick={()=>expanded?close():setExpanded(true)}>Sources · {p.routes.length}</button>
-    {expanded&&<div ref={panel} className="sources" onKeyDown={e=>{if(e.key==='Escape'){e.stopPropagation();close()}}}>
-      <NumberEdit label="Overall curve" value={p.modCurve} min={-16} max={16} onCommit={v=>change('modCurve',v)}/>
-      {p.routes.map(r=><div className="source" key={r.id}><b>{r.label}</b><small>{r.kind} · bus {r.bus<0?'—':r.bus} · {r.producer<0?'producer unknown':`producer ${r.producer}`} · {r.status}</small>{r.producer>=0&&<button disabled={!onProcess} title={onProcess?'Select producing process':'Parent Tool can attach NodeManager navigation'} onClick={()=>onProcess?.({paramID:p.id,producer:r.producer,node:r.node})}>Process {r.producer}</button>}{r.error&&<small>{r.error}</small>}
-        {r.editable&&r.status==='connected'?<><div className="fields"><NumberEdit label="Source amount" value={r.amount} min={-8} max={8} onCommit={v=>change('sourceAmount',v,r.id)}/><NumberEdit label="Source curve" value={r.curve} min={-16} max={16} onCommit={v=>change('sourceCurve',v,r.id)}/></div><svg className="curve" viewBox="0 0 100 24"><path d={Array.from({length:33},(_,i)=>`${i?'L':'M'} ${i/32*100} ${22-shape(i/32,r.curve)*20}`).join(' ')} stroke="#59dcc2"/></svg></>:<>{(r.controls??[]).map(c=><NumberEdit key={c.id} label={c.id} value={c.value} min={c.min} max={c.max} onCommit={v=>change(`writer:${c.id}`,v,r.id)}/>)}{!r.controls?.length&&<small>{r.kind==='custom'?'Custom writer · no editable controls declared':'Editing unavailable until connected'}</small>}</>}</div>)}
-      {!p.routes.length&&<small>No modulation routes.</small>}<button onClick={close}>Close sources</button>
-    </div>}
+    {compact?(sources&&createPortal(sources,document.body)):sources}
   </section>;
 }
 export function AWParamPanel({stores,edit,renderer='svg',cue='arc',onProcess}) {

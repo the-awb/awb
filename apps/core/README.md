@@ -8,9 +8,9 @@ This is a parallel implementation, not an installed migration of existing sets.
 ## Agreed boundary — 6 October 2026
 
 The live-set root remains one concrete Tool with construction helpers, named
-registries and native ownership. The agreed public name is `AWBaseTool`; the
-code still uses `AWBCoreTool`, with the rename and legacy logging/convenience
-migration pending. No generic Context or separate Base/adapter layer is needed.
+registries and native ownership. The public live-set root is now `AWBaseTool : AWBCoreTool`; the original
+Core API remains available. AWBase-style logging and semantic track dictionaries
+are added by that subclass. No generic Context or separate Base/adapter layer is needed.
 Rack and Chain remain independently usable Tools. DynamicTrackContainer is to
 be reduced to a named dictionary of existing controls plus MIDI/access helpers;
 Rack, Chain and AWParam keep their authoritative controls, buses and state.
@@ -33,8 +33,9 @@ existing SendReply implementation.
   incoming CC candidates while a server read is outstanding. External base edits
   rearm pickup; the source's own edits retain takeover.
 
-Core has no separate panel yet. Existing child rack/Chain tools retain their own
-panels and lifecycle. No old OSC receiver, Bitwig MIDI banks or global MIDI
+The optional [live surface](../live-set/README.md) composes the rack, borrowed
+delay views, FX AWParams and AWBase console. Existing child rack/Chain tools
+retain their own panels and lifecycle. No old OSC receiver, Bitwig MIDI banks or global MIDI
 initialization is introduced by opening Core. Native Tool registration and
 NodeManager projection use the existing framework, not another tracking registry.
 

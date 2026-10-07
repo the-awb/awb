@@ -1,0 +1,34 @@
+{
+  "schema": "awb.tool/1",
+  "id": "live-set",
+  "name": "AWB Live Set",
+  "version": "0.1.0",
+  "renderer": {
+    "entry": "dist/index.html",
+    "preloadProtocol": 1
+  },
+  "runtime": {
+    "schema": "awb.local-runtime/1",
+    "entry": "runtime/shell-runtime.mjs"
+  },
+  "view": {
+    "defaultWidth": 1700,
+    "defaultHeight": 1040,
+    "allowMultiple": false
+  },
+  "launchProfiles": [
+    {
+      "id": "standalone",
+      "label": "Open live surface"
+    }
+  ],
+  "capabilities": {
+    "filesystem": []
+  },
+  "documentKinds": [],
+  "hostBindings": {
+    "nodeManager": {
+      "toolSource": "awbBase"
+    }
+  }
+}
