@@ -2194,3 +2194,9 @@ for ordinary IDE access.
 Isolated implementation in `codex/awparam-gui`: a shell-shared latest-value control observer and reusable React SVG/Canvas knobs. AWParam remains a plain class; an optional `param` inspector Tool borrows one or many parameters. The existing mono output and scope/audio routes remain intact. Current base and amount use a separate two-channel observation bus. Commands use the owning Tool/parameter binding; recurring changed values use sparse binary batches at 8/15 Hz without ScopeOut or AWParam periodic replies.
 
 The implementation and private validation gates are tracked in [Parameter Inspector status](apps/param/docs/IMPLEMENTATION.md). It has not been merged or installed in the live class library. Live engine/GUI validation and controlled 16/32/128-widget cost comparison remain gated on the audio-test reservation.
+
+### AWParam display revision — 8 October 2026
+
+Implemented in isolated `codex/awparam-gui`: the outer ring reads sampled effective output; signed modulation amount uses a 4 CSS pixel pointer marker. Each AWParam owns normalized 0…1 / −1…1 polarity. Bare controls follow that multiplier domain directly; an explicit ControlSpec preserves native units, range and active ramps. Core configuration/presets and inspector metadata retain polarity/spec ownership; recurring observation remains the same three sampled fields.
+
+The bundle is rebuilt; 14 focused Node tests, 30 SC parameter/inspector checks, 41 offline DSP checks, existing Core regressions, 26 synthetic browser checks and 75 shell unit tests pass. The active IDE/server session was left untouched. Live engine/GUI qualification and controlled cost comparisons remain unrun. See [implementation status](apps/param/docs/IMPLEMENTATION.md) and [usage](apps/param/README.md#normalized-polarity-and-native-specs). No merge or live installation has been performed for this revision.

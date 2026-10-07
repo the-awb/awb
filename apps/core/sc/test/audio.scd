@@ -33,8 +33,10 @@ try{
  queryReply=['/g_queryTree.reply',0,0,2,registeredProducer.nodeID,-1,'paramWriter',p[7].group.nodeID,2,p[7].sourceGroup.nodeID,0,p[7].synth.nodeID,-1,'awParam_v1'];
  p[7].addModulation(\a,core.registerModulationSource(\sourceA,sourceA,registeredProducer),0.5);p[7].addModulation(\b,sourceB,-0.5);
  now=1.3;p[0].setBase(0.9,0);p[1].setAmount(0,0);
- now=1.4;p[0].setBase(0.3,0.6,4);p[1].setAmount(0.5,0.6,-4);
+ now=1.4;p[6].setPolarity(\bipolar);p[0].setBase(0.3,0.6,4);p[1].setAmount(0.5,0.6,-4);
  now=1.5;p[7].removeModulation(\a);
+ now=1.6;p[6].setNormalized(-0.25);
+ now=1.9;p[6].setPolarity(\unipolar);
  now=1.7;p[0].setBase(0.3,0.6,0); // same target restarts from current value
  now=1.8;p[7].removeModulation(\b);
  now=2.1;p[5].free;

@@ -7,7 +7,7 @@ server.waitForBoot({Routine({try{
  SynthDef(\paramTestLFO,{|out=0,rate=0.7|Out.kr(out,SinOsc.kr(rate,0,0.5))}).add;
  SynthDef(\paramTestWriter,{|out=0|Out.kr(out,LFNoise1.kr(2)*0.1)}).add;
  server.sync;
- core=AWBCoreTool.open((params:count.collect{|i|(id:("p"++i).asSymbol,min:if(i.even){0}{100},max:if(i.even){1}{10000},warp:if(i.even){\lin}{\exp},base:if(i.even){0.25}{316.227766},amount:0.2)}),(server:server,track:false));
+ core=AWBCoreTool.open((params:count.collect{|i|if(i==0){(id:\p0,base:0.25,amount:0.2)}{(id:("p"++i).asSymbol,min:if(i.even){0}{100},max:if(i.even){1}{10000},warp:if(i.even){\lin}{\exp},base:if(i.even){0.25}{316.227766},amount:0.2)}}),(server:server,track:false));
  core.tool.whenReady{|c|Routine({
   count.do{|i|var bus=c.createBus(("source"++i).asSymbol),producer=c.addSynth(("lfo"++i).asSymbol,\paramTestLFO,[\out,bus.index,\rate,0.7+(i*0.031)],\detectors),p=c.param(("p"++i).asSymbol);
    if(i<2){p.addModulation(\lfo,c.registerModulationSource(("lfo"++i).asSymbol,bus,producer))}{p.addModulation(\lfo,bus)};

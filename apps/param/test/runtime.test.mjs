@@ -14,6 +14,8 @@ test('runtime uses shared leases, authenticated edits, hidden release, and borro
   send(a,{type:'edit',epoch:'stale',id:'gain',field:'base',value:.5,request:'bad'});await wait(()=>first.some(m=>m.request==='bad'));assert.equal(editCalls,0);
   send(a,{type:'edit',epoch:state.epoch,id:'gain',field:'base',value:.5,request:'good'});await wait(()=>first.some(m=>m.request==='good'));assert.equal(editCalls,1);assert.ok(!first.some(m=>m.type==='delta'));await wait(()=>second.some(m=>m.type==='delta'));
   send(a,{type:'edit',epoch:state.epoch,id:'gain',field:'sourceAmount',source:'lfo',value:-.4,request:'source'});await wait(()=>first.some(m=>m.request==='source'));assert.equal(editCalls,2);assert.equal(runtime.state().params[0].routes[0].amount,-.4);await wait(()=>second.some(m=>m.delta?.source==='lfo'));assert.ok(!first.some(m=>m.delta?.source==='lfo'));
+  send(a,{type:'edit',epoch:state.epoch,id:'gain',field:'polarity',value:'unknown',request:'badpolarity'});await wait(()=>first.some(m=>m.request==='badpolarity'));assert.equal(editCalls,2);assert.equal(first.find(m=>m.request==='badpolarity').ok,false);
+  send(a,{type:'edit',epoch:state.epoch,id:'gain',field:'polarity',value:'bipolar',request:'polarity'});await wait(()=>first.some(m=>m.request==='polarity'));assert.equal(editCalls,3);assert.equal(first.find(m=>m.request==='polarity').ok,true);
   send(a,{type:'visible',visible:false,hz:15});await wait(()=>broker.diagnostics().hosts[0]?.leases===1);assert.equal(detached,0);b.close();await wait(()=>!broker.diagnostics().polling);assert.equal(detached,1);
  }finally{a?.terminate();b?.terminate();await runtime.stop();broker.close()}
 });

@@ -24,13 +24,13 @@ AWParamInspector : Tool {
     requireOpen {if(closed or:{owner.notNil and:{owner.status==\closed}} or:{server.serverRunning.not}){Error("Parameter binding is closed or server unavailable").throw};^this}
     attach {
         params.keysValuesDo{|id,p|var hook={|object,what,data|
-            if(what==\closed){instance.close}{if([\baseTarget,\amountTarget,\modCurve,\transitionCurves,\routes,\routeField,\writerField].includes(what)){revision=revision+1;
+            if(what==\closed){instance.close}{if([\baseTarget,\amountTarget,\modCurve,\transitionCurves,\polarity,\routes,\routeField,\writerField].includes(what)){revision=revision+1;
                 this.prune;watchers.values.do{|w|
                     if([\routeField,\writerField].includes(what)){
                         w[\address].sendMsg('/awb/param/routeDelta',instance.instanceID,w[\token],epoch,revision,id.asString,data[\id].asString,
                             if(what==\writerField){"writer:"++data[\field]}{if(data[\field]==\amount){"sourceAmount"}{"sourceCurve"}},data[\value],origin)
                     }{if(what==\routes){this.sendRoutes(w[\address],w[\token],id)}{
-                        if(what==\transitionCurves){this.sendParam(w[\address],w[\token],id,"metadata")}{
+                        if([\transitionCurves,\polarity].includes(what)){this.sendParam(w[\address],w[\token],id,"metadata")}{
                             w[\address].sendMsg('/awb/param/delta',instance.instanceID,w[\token],epoch,revision,id.asString,what.asString,
                                 if(data.isKindOf(Event)){data[\value]}{data},if(data.isKindOf(Event)){data[\dur]}{0},if(data.isKindOf(Event)){data[\curve]}{0},origin)
                         }
@@ -62,7 +62,7 @@ AWParamInspector : Tool {
     prune {watchers.keys.copy.do{|key|if(Main.elapsedTime-watchers[key][\seen]>10){watchers.removeAt(key)}};^this}
     sendParam { |address,token,id,kind="param"|
         var p=params[id],c=p.configuration;
-        address.sendMsg('/awb/param/meta',instance.instanceID,token,epoch,kind,id.asString,c[\min],c[\max],c[\warp].asString,c[\base],c[\amount],c[\modCurve],c[\baseCurve],c[\amountCurve],*p.observationIndices);
+        address.sendMsg('/awb/param/meta',instance.instanceID,token,epoch,kind,id.asString,c[\min],c[\max],c[\warp].asString,c[\base],c[\amount],c[\modCurve],c[\baseCurve],c[\amountCurve],*(p.observationIndices++[c[\polarity].asString,c[\nativeSpec].asInteger,revision]));
     }
     sendRoutes { |address,token,id|
         var rows=params[id].routeMetadata;
@@ -84,7 +84,7 @@ AWParamInspector : Tool {
         id=msg[6].asSymbol;field=msg[7].asString;value=msg[8];dur=msg[10];curve=msg[11];p=params[id];
         if(p.isNil or:{p.closed}){Error("Parameter removed").throw};origin=request;
         protect {
-            switch(field,"base",{p.setBase(value,dur,curve)},"amount",{p.setAmount(value,dur,curve)},"modCurve",{p.setModCurve(value)},
+            switch(field,"base",{p.setBase(value,dur,curve)},"amount",{p.setAmount(value,dur,curve)},"modCurve",{p.setModCurve(value)},"polarity",{p.setPolarity(value)},
                 "sourceAmount",{p.setModulationAmount(msg[9].asSymbol,value)},"sourceCurve",{p.setModulationCurve(msg[9].asSymbol,value)},
                 {if(field.beginsWith("writer:")){p.setModulationWriterControl(msg[9].asSymbol,field.drop(7).asSymbol,value)}{Error("Unknown parameter field").throw}});
             address.sendMsg('/awb/param/result',instance.instanceID,msg[3].asString,request,"ok",revision);

@@ -27,8 +27,8 @@ export async function createBridge(binding,{onDelta=()=>{},onRoutes=()=>{},onSta
       if(a[2]!==epoch)return;
       const snapshot=[...snapshots.values()].at(-1);
       if(kind==='param'||kind==='metadata') {
-        const p={id,min:a[5],max:a[6],warp:a[7],base:a[8],amount:a[9],modCurve:a[10],baseCurve:a[11],amountCurve:a[12],indices:a.slice(13,16),routes:[]};
-        if(kind==='param')snapshot?.params.push(p);else {delete p.routes;onDelta({id,metadata:p,epoch,revision:null})};
+        const p={id,min:a[5],max:a[6],warp:a[7],base:a[8],amount:a[9],modCurve:a[10],baseCurve:a[11],amountCurve:a[12],indices:a.slice(13,16),polarity:a[16]??'unipolar',nativeSpec:a[17]===undefined?true:!!a[17],routes:[]};
+        if(kind==='param')snapshot?.params.push(p);else {delete p.routes;onDelta({id,metadata:p,epoch,revision:a[18]??null})};
       }else if(kind==='routesBegin'){routes.set(id,[]);routeCounts.set(id,a[6])}
       else if(kind==='route')routes.get(id)?.push({id:a[5],kind:a[6],label:a[7],bus:a[8],producer:a[9],node:a[10],amount:a[11],curve:a[12],status:a[13],error:a[14],editable:!!a[15],controls:[],expectedControls:a[16]??0});
       else if(kind==='writerControl'){const r=routes.get(id)?.find(r=>r.id===a[5]);r?.controls.push({id:a[6],min:a[7],max:a[8],value:a[9]})}
@@ -38,7 +38,7 @@ export async function createBridge(binding,{onDelta=()=>{},onRoutes=()=>{},onSta
       }else if(kind==='end') {
         const s=snapshots.get(id);if(!s)return;snapshots.delete(id);
         if(s.params.length!==s.count||s.params.length>128||new Set(s.params.map(p=>p.id)).size!==s.params.length)throw Error('Incomplete parameter snapshot');
-        for(const p of s.params)if(!Number.isFinite(p.min)||!Number.isFinite(p.max)||p.min>=p.max||!['lin','linear','exp','exponential'].includes(p.warp)||p.indices.length!==3||p.indices.some(i=>!Number.isInteger(i)||i<0||i>=s.host.capacity))throw Error('Invalid parameter snapshot');
+        for(const p of s.params)if(!Number.isFinite(p.min)||!Number.isFinite(p.max)||p.min>=p.max||!['lin','linear','exp','exponential'].includes(p.warp)||!['unipolar','bipolar'].includes(p.polarity)||p.indices.length!==3||p.indices.some(i=>!Number.isInteger(i)||i<0||i>=s.host.capacity))throw Error('Invalid parameter snapshot');
         alive=performance.now();healthy=true;settle(id,null,s);onStatus(true,null);
       }
     }catch(e){lost(e.message)}

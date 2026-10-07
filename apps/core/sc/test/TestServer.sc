@@ -11,3 +11,11 @@ AWBCoreTestMidiSource {
     var <midiClient;
     *new { |uid|^super.newCopyArgs(uid) }
 }
+
+// Captures the language serializer without an engine or network listener.
+AWParamTestAddress {
+    var <messages;
+    *new {^super.new.init}
+    init {messages=List.new;^this}
+    sendMsg { |...args|messages.add(args);^this}
+}

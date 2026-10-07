@@ -41,7 +41,28 @@ Use `renderer="svg"` or `renderer="canvas"`. Canvas uses one panel surface and r
 
 `setModulationAmount/Curve` edit ordinary and registered routes consistently. Pending routes reject edits until validation completes. Custom writers are read-only unless the creator calls `declareModulationWriterControls(id,[...])` with valid control-rate fields/ranges. GUI edits cannot change a writer's assigned output.
 
-The signed amount ring saturates at ±1 for legibility; numeric amount retains the full ±8 range and an overflow dot marks larger depth. White follows current base, blue/orange current signed amount, green spans current base to effective output. Drag the central knob for base, or the outer ring for amount. Local drag/key edits paint on the next frame; telemetry is slower. No smoothing transitions are added.
+The outer green ring reads the sampled effective output (`outputBus`, observation index 2) and is read-only. White follows current base. A blue/orange radial marker shows measured signed amount; its stroke stays 4 CSS pixels wide in SVG and Canvas. Drag that marker to edit amount, or the central knob to edit base. The amount marker saturates at ±1 for legibility; numeric amount retains the full ±8 range and an overflow dot marks larger depth. Zero output retains a short readout tick. Local drag/key edits paint on the next frame; telemetry is slower. No smoothing transitions are added.
+
+## Normalized polarity and native specs
+
+Each AWParam owns `polarity` (`\unipolar` or `\bipolar`) and publishes it as configuration metadata. Select 0…1 / −1…1 on the knob, or call `setPolarity`. With no explicit spec, the parameter is a dimensionless multiplier in that domain. Omitted polarity defaults to unipolar; an explicit spec with a negative minimum defaults to bipolar. Switching to unipolar clamps a negative bare base target to zero and ends its current base ramp at the clamped target. Existing modulation depth remains a signed fraction of the full range; global and route amount APIs retain ±8.
+
+An explicit ControlSpec defines a native domain such as Hz. Selecting polarity preserves that spec, its current native base/output and active ramps. `setBase` and the numeric Base field still use native units. `setNormalized` maps through the selected normalized domain into the spec; `normalizedValue(native)` does the inverse. In bipolar mode, zero is the spec midpoint (geometric for an exponential spec). SVG and Canvas arcs start from center zero in bipolar mode, with −1 and +1 at their endpoints.
+
+```supercollider
+// No native spec: a signed normalized multiplier.
+p = core.createParam(\depth, 0, polarity: \bipolar);
+p.setNormalized(-0.25);
+p.setPolarity(\unipolar); // bare negative base clamps to 0
+
+// Explicit native spec: normalized polarity does not replace the Hz range.
+f = core.createParam(\frequency, 220, ControlSpec(60, 1800, \exp));
+f.setPolarity(\bipolar).setNormalized(0); // geometric midpoint in Hz
+```
+
+Standalone construction accepts `options: (polarity: \bipolar)`; omit `spec` for a bare multiplier. Configuration records `polarity` and whether a native spec was explicitly supplied (`nativeSpec`). Core presets validate the entire parameter list before applying a polarity change, retain that distinction during reconstruction, and update only the affected parameter entry during GUI edits. Older configurations without the new fields keep their stored native min/max/warp and get a compatible default polarity.
+
+The selector waits for authoritative metadata so a clipped base and its new range reach the UI together. Polarity travels only on configuration changes; the existing three-field sampled feed is unchanged. Closing the inspector never frees its borrowed AWParam.
 
 ## Validation and limits
 
