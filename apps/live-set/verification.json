@@ -80,5 +80,22 @@
     "NodeManager source-process navigation"
   ],
   "installed": false,
-  "sharedDirtyCheckoutsPreserved": true
+  "sharedDirtyCheckoutsPreserved": true,
+  "integration": {
+    "awbBranch": "integration/bw-sc",
+    "awbMerge": "411b64d",
+    "scBranch": "recovery/preset-session-pipeline",
+    "scMerge": "1f5a77a",
+    "sharedRendererBundlesRebuilt": true,
+    "sharedNativeReadersRebuilt": true,
+    "unrelatedAWBFilesPreserved": 259,
+    "unrelatedSCFilesPreserved": 60,
+    "postMergeChecks": {
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "log": "/private/tmp/awb-live-postmerge-tests.log",
+      "shellSyntax": "passed"
+    }
+  }
 }

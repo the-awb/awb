@@ -54,3 +54,7 @@ Another agent currently holds `/private/tmp/awb-audio-hardware-test.lock` for Su
 4. Review/install/merge only after these gates as appropriate. No production installation or merge performed by this slice.
 
 Vault and Telegram connectors are unavailable in this tool session, so no vault mirror or Telegram notification has been sent.
+
+## Shared checkout integration — 7 October 2026
+
+AWParam `da72790` and the composite live surface are now merged into `/Users/willy/awb` on `integration/bw-sc` (`411b64d`). Parameter, rack and composite renderer bundles and both native bus-reader addons were rebuilt there. This supersedes the original isolated-checkout status above. Existing local work is preserved. No installed SC engine/interpreter or class-path configuration was changed; the live audio/GUI qualification gates above remain pending.

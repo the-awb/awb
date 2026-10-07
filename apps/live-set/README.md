@@ -1,6 +1,6 @@
 # AWB live surface
 
-First composite GUI on `codex/live-set-surface`, based on AWParam commit `da72790`. Delay renderer attachments come from SuperCollider commit `4feac995`; that dependency is integrated separately on `codex/live-set-sc-integration` because SC and AWB are separate Git repositories. Neither dirty shared checkout is overwritten.
+The composite GUI and AWParam `da72790` are merged into AWB’s `integration/bw-sc` at `411b64d`. The committed delay views (`4feac995`) are merged into the separate SuperCollider repository’s `recovery/preset-session-pipeline` branch at `1f5a77a`. Existing unrelated local changes are preserved.
 
 The surface has B2/A2 on top, A1/B1 below, a single rack renderer with mixes, an AWBase console and named FX controls. Four delay tape views borrow **one existing instrument**. Per-cell heads/sends and the one shared routing matrix open on demand. The default unbound launch creates no rack, delay instrument or audio engine.
 
@@ -26,7 +26,7 @@ Do not include the test classes or archived benchmark copies. No class-path or p
     base.bindFirstPass(~awb52, own:true);
     base.log("Live set ready");
     ~liveView = base.gui((
-        shellRoot:"/private/tmp/awb-live-set-surface",
+        shellRoot:"/Users/willy/awb",
         delayURL:"http://127.0.0.1:50244/" // existing instrument; use its actual URL
     ));
 });
