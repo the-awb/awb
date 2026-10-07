@@ -6,6 +6,7 @@
     "../../tool-artifacts/shared-loop/0.1.0",
     "../../tool-artifacts/scope/0.1.0",
     "../rack",
-    "../chain"
+    "../chain",
+    "../param"
   ]
 }

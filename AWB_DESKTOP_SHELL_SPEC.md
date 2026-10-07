@@ -2187,3 +2187,10 @@ committed on `integration/bw-sc` for fast-forward integration into local `main`;
 unrelated Bitwig-capture and shell edits remain outside that commit. SC class-path
 configuration is unchanged; the set README lists the four include paths needed
 for ordinary IDE access.
+
+
+### AWParam inspector milestone — 7 October 2026
+
+Isolated implementation in `codex/awparam-gui`: a shell-shared latest-value control observer and reusable React SVG/Canvas knobs. AWParam remains a plain class; an optional `param` inspector Tool borrows one or many parameters. The existing mono output and scope/audio routes remain intact. Current base and amount use a separate two-channel observation bus. Commands use the owning Tool/parameter binding; recurring changed values use sparse binary batches at 8/15 Hz without ScopeOut or AWParam periodic replies.
+
+The implementation and private validation gates are tracked in [Parameter Inspector status](apps/param/docs/IMPLEMENTATION.md). It has not been merged or installed in the live class library. Live engine/GUI validation and controlled 16/32/128-widget cost comparison remain gated on the audio-test reservation.

@@ -10,7 +10,7 @@ for sub in ['framework','classes','test']:(build/sub).mkdir(exist_ok=True)
 manifest=json.loads((root.parent/'rack/sc/test/framework-files.json').read_text())
 manifest['EventExtensions.sc']='Classes/EventExtensions.sc'
 for name,relative in manifest.items():shutil.copy2(framework/relative,build/'framework'/name)
-for package in [root,root.parent/'chain',root.parent/'rack']:
+for package in [root,root.parent/'chain',root.parent/'rack',root.parent/'param']:
  for source in (package/'sc/classes').glob('*.sc'):shutil.copy2(source,build/'classes'/source.name)
 shutil.copy2(root.parent/'rack/sc/sets/awb52/AWBVerbMixProfile.sc',build/'classes/AWBVerbMixProfile.sc')
 for source in (root/'sc/test').glob('*.sc'):shutil.copy2(source,build/'framework'/source.name)
@@ -33,6 +33,7 @@ def run(label,cmd,timeout=45):
  return log
 log=run('contract',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/contract.scd']);assert 'AWB_CORE_CONTRACT_RESULT=PASS' in log
 log=run('registration',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/registration.scd']);assert 'AWB_MODULATION_CONTRACT_RESULT=PASS' in log
+log=run('param-gui',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/param-gui.scd']);assert 'AWB_PARAM_GUI_CONTRACT_RESULT=PASS' in log
 if (build/'test/audio.scd').exists():
  run('audio-score',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/audio.scd'])
  run('audio-render',[app/'Resources/scsynth','-N',build/'test/audio.osc','_',build/'test/audio.wav',44100,'WAV','float','-o',8,'-i',0,'-z',64,'-U',app/'Resources/plugins','-D',0,'-V',-1])

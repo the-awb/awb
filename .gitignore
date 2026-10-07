@@ -22,3 +22,7 @@ apps/awb-shell/test/signal-bench/**/*.input.gz
 # Native Chain GUI profiles.
 .chain-user-data/
 .vite-chain/
+
+# Parameter inspector build cache and private Electron profiles.
+.vite-param/
+.param-user-data/

@@ -1,3 +1,4 @@
+import {ControlObservationBroker} from '../src/controlObservationBroker.mjs';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import process from 'node:process';
@@ -49,6 +50,7 @@ const hostSubscriptions = new Map();
 const fileGrants = new FileGrantStore();
 const services = new ServiceRegistry( createOscWebSocketRelay );
 const nativeAudio = new NativeAudioAccess( createNativeAudioBroker() );
+const controlObservations=new ControlObservationBroker();
 const signalCaptures=new SignalCaptureBroker({open:openScSignalSource});
 const scBusAudio = new ScBusAudioAccess({broker:signalCaptures,hostContext: async()=>{
  const native=await nativeHostForProfile('hosted');
@@ -1735,6 +1737,7 @@ if ( gotLock ) {
     toolRuntimes = new ToolRuntimeRegistry( {
       runtimeRoot: path.join( app.getPath( 'userData' ), 'tool-runtimes' ),
       runtimeContext: async ( { tool } ) => {
+        if ( tool.id === 'param' ) return {controlObservations};
         if ( tool.id === 'scope' ) return { signalCaptures, getNativeHost: async () => {
           const native = await nativeHostForProfile( 'hosted' );
           if ( native.service.hostSnapshot().scsynth.status !== 'ready' ) throw new Error( 'Boot the shell SC host or prepared IDE server before listening.' );
@@ -1773,6 +1776,7 @@ if ( gotLock ) {
       nativeToolInstances.clear();
       const runtimeStops = await Promise.allSettled( [ toolRuntimes?.closeAll(), scBusAudio.close() ] );
       await signalCaptures.close();
+      controlObservations.close();
       const headlessService = services.firstService( ( service ) => service.hostSnapshot?.().control?.mode === 'headless' );
       const hostStop = await Promise.allSettled( [ nativeAudio.close(),
         nativeScHost.stop( () => headlessService?.shutdownHost?.() ) ] );

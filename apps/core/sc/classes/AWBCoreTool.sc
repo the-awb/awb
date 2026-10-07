@@ -3,7 +3,7 @@
 AWBCoreTool : Tool {
     var <instance,<server,<config,<group,<groups,<params,<buses,<tools,<players;
     var <ready=false,<closed=false,<clock,<modulationRegistry;
-    var options,resources,ownedNodes,ownedBuses,quitHook,nodeHook,paramObservers,configPending=false;
+    var options,resources,ownedNodes,ownedBuses,quitHook,nodeHook,paramObservers,paramRevision=0;
     *defaults {^(name:"AWB live set",groups:[\input,\voices,\routing,\detectors,\parameters,\fx,\output],params:[])}
     *register {
         ^ToolRegistry.at(\awbCore) ?? {ToolRegistry.register(ToolDefinition(\awbCore,"AWB Core",version:"0.1.0",
@@ -55,7 +55,7 @@ AWBCoreTool : Tool {
     requireAlive {if(closed or:{group.isNil}){Error("AWBCoreTool is closed").throw};^this}
     groupAt { |id|this.requireAlive;^groups[id.asSymbol] ?? {Error("AWBCoreTool: unknown group").throw} }
     buildParam { |item|
-        var id=this.id(item[\id]),param,opts=(modulationRegistry:modulationRegistry,sendFunction:options[\sendFunction],
+        var id=this.id(item[\id]),param,opts=(ownerInstance:instance,modulationRegistry:modulationRegistry,sendFunction:options[\sendFunction],
             ownFunction:{|node,type,metadata|this.ownNode(node,type,metadata)},disownFunction:{|node|this.disownNode(node)},
             baseCurve:item[\baseCurve] ? 0,amountCurve:item[\amountCurve] ? 0);
         if(params[id].notNil){Error("AWBCoreTool: duplicate parameter").throw};
@@ -65,9 +65,7 @@ AWBCoreTool : Tool {
             if(what==\closed and:{closed.not} and:{params[id]===object}){
                 params.removeAt(id);object.removeDependant(paramObservers.removeAt(object));this.syncParamConfig
             };
-            if([\baseTarget,\amountTarget,\modCurve,\transitionCurves].includes(what) and:{configPending.not} and:{closed.not}){
-                configPending=true;SystemClock.sched(0.02,{configPending=false;if(closed.not){this.syncParamConfig};nil})
-            }
+            if([\baseTarget,\amountTarget,\modCurve,\transitionCurves].includes(what) and:{closed.not}){this.syncParamEntry(id)}
         };param.addDependant(paramObservers[param]);^param;
     }
     createParam { |id,base,spec=\unipolar,amount=0,modCurve=0|
@@ -77,6 +75,13 @@ AWBCoreTool : Tool {
     param { |id|this.requireAlive;^params[id.asSymbol] ?? {Error("AWBCoreTool: unknown parameter").throw} }
     removeParam { |id|var param=this.param(id);params.removeAt(id.asSymbol);param.removeDependant(paramObservers.removeAt(param));param.free;this.syncParamConfig;^param}
     syncParamConfig {config[\params]=params.keys.asArray.sort.collect{|id|params[id].configuration};instance.updateState((params:config[\params].deepCopy));^this}
+    syncParamEntry { |id|
+        var entry=params[id].configuration,index=config[\params].detectIndex{|p|p[\id].asSymbol==id};
+        if(index.isNil){^this.syncParamConfig};config[\params][index]=entry;
+        instance.config[\params][index]=entry.deepCopy;paramRevision=paramRevision+1;
+        instance.publishEvent(\paramChanged,(id:id,entry:entry.deepCopy,paramRevision:paramRevision));this.changed(\paramChanged,id,entry);^this;
+    }
+    paramGUI { |ids,options|^\AWParamInspector.asClass.perform(\openMany,ids.collect{|id|this.param(id)},options,instance)}
     createBus { |id,rate=\control,width=1|
         var bus;this.requireAlive;id=this.id(id);if(buses[id].notNil){Error("AWBCoreTool: duplicate bus").throw};
         if([\control,\audio].includes(rate).not or:{width.isInteger.not} or:{width<1} or:{width>64}){Error("AWBCoreTool: invalid bus rate/width").throw};
