@@ -87,6 +87,7 @@ const smokeExternalRouter = process.argv.includes( '--smoke-external-router' );
 const smokeMultitool = process.argv.includes( '--smoke-multitool' );
 const smokeRender = process.argv.includes( '--smoke-render' );
 const smokeField = process.argv.includes( '--smoke-field' );
+const smokeQtStation = process.argv.includes( '--smoke-qt-station' );
 const smokeHeadlessSc = process.argv.includes( '--smoke-headless-sc' );
 let smokeRunning = false;
 let homeReadyCount = 0;
@@ -1548,7 +1549,24 @@ function registerIPC() {
     if ( sender.kind === 'home' ) {
       homeReadyCount += 1;
       console.log( 'AWB_SHELL_HOME_READY' );
-      if ( smokeHome ) runHomeSmoke().catch( reportFatal );
+      if ( smokeQtStation && !smokeRunning ) {
+        smokeRunning = true;
+        ( async () => {
+          await waitFor( () => services.firstService( candidate => candidate.hostSnapshot?.().control?.qtStation ), 10000 );
+          const result = await homeWindow.webContents.executeJavaScript( `(async () => {
+            const button = document.querySelector('[data-host-action="qt-station"]');
+            if (!button) throw new Error('Qt station launcher missing');
+            button.click();
+            const first = await window.awbHost.request('shell.open-qt-station');
+            const second = await window.awbHost.request('shell.open-qt-station');
+            return {first, second};
+          })()` );
+          if ( result.first.status !== 'focused' || result.second.status !== 'focused' ) throw new Error( 'Qt station focus/reuse failed.' );
+          console.log( 'AWB_QT_STATION_ELECTRON_RESULT=PASS launcher=present host=connected repeated=focused' );
+          app.quit();
+        } )().catch( reportFatal );
+      }
+      else if ( smokeHome ) runHomeSmoke().catch( reportFatal );
       else if ( smokeScopeTool && !smokeRunning ) { smokeRunning=true;
         import('../test/scope-tool/smoke.mjs').then(({runScopeToolSmoke})=>runScopeToolSmoke({
           startHeadlessHost,services,nativeScHost,launchFromHome,closeToolView,windows,registry,signalCaptures,scBusAudio,homeWindow,
@@ -1607,6 +1625,11 @@ function registerIPC() {
       if ( request.operation === 'shell.launch-document' ) return launchDocument( payload );
       if ( request.operation === 'shell.focus' ) { await focusToolView( payload.viewID ); return true; }
       if ( request.operation === 'shell.close' ) return closeToolView( payload.viewID );
+      if ( request.operation === 'shell.open-qt-station' ) {
+        const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.status === 'ready' );
+        if ( !service ) throw new Error( 'No AWB-enabled SuperCollider host is connected. Open SuperCollider or start the language host first.' );
+        return service.openQtToolStation();
+      }
       if ( request.operation === 'shell.open-supercollider' ) return openSuperColliderIDE();
       if ( request.operation === 'shell.start-headless-sc' ) return startHeadlessHost();
       if ( request.operation === 'shell.stop-headless-sc' ) return stopHeadlessHost();

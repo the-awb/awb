@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node scripts/build-sc-bus.mjs && vite build --config render-worker/vite.config.mjs",
     "start": "electron shell/main.mjs",
-    "test": "node --test test/files.test.mjs test/host-control.test.mjs test/manifest.test.mjs test/native-host-profile.test.mjs test/node-manager-projection.test.mjs test/recent-store.test.mjs test/render-job-broker.test.mjs test/router.test.mjs test/renderer-policy.test.mjs test/score-project-resolver.test.mjs test/services.test.mjs test/osc-output.test.mjs test/stdio-errors.test.mjs test/shared-host-integration.test.mjs test/synthdef-broker.test.mjs test/tool-runtime.test.mjs test/sc-bus-audio.test.mjs test/signal-capture.test.mjs",
+    "test": "node --test test/files.test.mjs test/host-control.test.mjs test/qt-station.test.mjs test/manifest.test.mjs test/native-host-profile.test.mjs test/node-manager-projection.test.mjs test/recent-store.test.mjs test/render-job-broker.test.mjs test/router.test.mjs test/renderer-policy.test.mjs test/score-project-resolver.test.mjs test/services.test.mjs test/osc-output.test.mjs test/stdio-errors.test.mjs test/shared-host-integration.test.mjs test/synthdef-broker.test.mjs test/tool-runtime.test.mjs test/sc-bus-audio.test.mjs test/signal-capture.test.mjs",
     "pretest:electron": "npm --prefix ../.. run build",
     "test:electron": "node test/electron-home.test.mjs && node test/electron-headless-sc.test.mjs && node test/electron-field.test.mjs && node test/electron-headless-render.test.mjs && node test/electron-multiview.mjs && node test/electron-multitool.mjs && node test/electron-external-router.mjs && node test/electron-owner-loss.mjs",
     "test:shared-loop": "node test/electron-shared-loop.test.mjs",

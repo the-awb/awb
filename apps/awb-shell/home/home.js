@@ -53,7 +53,7 @@ async function render() {
   } ).join( '' );
   const control = snapshot.host.control ?? {}; const managed = snapshot.nativeScHost ?? {};
   const nodePolicy = control.nodeManagerPolicy ?? 'unknown';
-  hostActionsElement.innerHTML = `<button class="secondary" data-host-action="open-ide">Open SuperCollider</button>${ control.mode === 'headless' || managed.owned
+  hostActionsElement.innerHTML = `<button class="secondary" data-host-action="qt-station">Qt Tool Station</button><button class="secondary" data-host-action="open-ide">Open SuperCollider</button>${ control.mode === 'headless' || managed.owned
     ? '<button class="secondary" data-host-action="stop-headless">Stop headless host</button>'
     : `<button class="secondary" data-host-action="start-headless" ${ control.status === 'ready' ? 'disabled' : '' }>Start headless host</button>` }${ control.status === 'ready'
     ? `<button data-host-action="audio-probe" ${ snapshot.host.scsynth?.status === 'ready' ? '' : 'disabled' }>Test tone</button><button class="secondary" data-host-action="nm-whenNeeded" ${ nodePolicy === 'whenNeeded' ? 'disabled' : '' }>NodeManager when needed</button><button class="secondary" data-host-action="nm-always" ${ nodePolicy === 'always' ? 'disabled' : '' }>Always on</button><button class="secondary" data-host-action="nm-manual" ${ nodePolicy === 'manual' ? 'disabled' : '' }>Off / manual</button>` : '' }`;
@@ -83,7 +83,11 @@ document.addEventListener( 'click', async ( event ) => {
     hostMessageElement.textContent = '';
     try {
       const action = target.dataset.hostAction;
-      if ( action === 'open-ide' ) await host.request( 'shell.open-supercollider' );
+      if ( action === 'qt-station' ) {
+        const result = await host.request( 'shell.open-qt-station' );
+        hostMessageElement.textContent = `Qt Tool Station ${ result.status }`;
+      }
+      else if ( action === 'open-ide' ) await host.request( 'shell.open-supercollider' );
       else if ( action === 'start-headless' ) await host.request( 'shell.start-headless-sc' );
       else if ( action === 'stop-headless' ) await host.request( 'shell.stop-headless-sc' );
       else if ( action === 'audio-probe' ) {

@@ -37,6 +37,7 @@ export class HostControlProjection {
       this.protocolVersion = args[ 2 ]; this.mode = `${ args[ 3 ] }`; this.nodeManager = `${ args[ 4 ] }`;
       this.nodeManagerPolicy = `${ args[ 5 ] }`; this.scsynth = `${ args[ 6 ] }`;
       this.processID = Number.isInteger( args[ 7 ] ) ? args[ 7 ] : null;
+      this.qtStation = args[ 8 ] === 'qt-station';
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) { clearTimeout( pending.timer ); this.pending.delete( requestID ); pending.resolve( this.snapshot() ); }
       this.onChange( this.snapshot() ); return true;
@@ -44,6 +45,14 @@ export class HostControlProjection {
     if ( address === '/awb/host/shutting-down' ) {
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) { clearTimeout( pending.timer ); this.pending.delete( requestID ); pending.resolve( { status: 'shutting-down' } ); }
+      return true;
+    }
+    if ( address === '/awb/host/qt-station/status' ) {
+      const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
+      if ( pending ) {
+        clearTimeout( pending.timer ); this.pending.delete( requestID );
+        pending.resolve( Object.freeze( { status: `${ args[ 2 ] }` } ) );
+      }
       return true;
     }
     if ( address === '/awb/host/tool/status' ) {
@@ -99,6 +108,11 @@ export class HostControlProjection {
 
   shutdown() { return this.request( '/awb/host/shutdown', [] ); }
 
+  openQtToolStation() {
+    if ( !this.qtStation ) return Promise.reject( new Error( 'This SuperCollider host needs the Qt Tool Station update. Recompile its class library first.' ) );
+    return this.request( '/awb/host/qt-station/open', [] );
+  }
+
   openToolInstance( toolID, instanceID ) {
     return this.request( '/awb/host/tool/open', [ toolID, instanceID ] );
   }
@@ -118,7 +132,7 @@ export class HostControlProjection {
   snapshot() {
     return Object.freeze( { status: this.status, protocolVersion: this.protocolVersion,
       mode: this.mode, nodeManager: this.nodeManager, nodeManagerPolicy: this.nodeManagerPolicy,
-      scsynth: this.scsynth, processID: this.processID } );
+      scsynth: this.scsynth, processID: this.processID, ...( this.qtStation ? { qtStation: true } : {} ) } );
   }
 
   close() {
