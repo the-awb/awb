@@ -1,0 +1,81 @@
+{
+  "startedAt": "2026-10-07T11:39:39.740012+00:00",
+  "complete": true,
+  "runs": [
+    {
+      "name": "baseline",
+      "command": [
+        "/Users/willy/.nvm/versions/node/v22.23.2/bin/node",
+        "/private/tmp/awb-motu256-cello-run.mjs",
+        "--run",
+        "--quiet-window",
+        "--seconds=300",
+        "--repeats=1",
+        "--block=128",
+        "--ir-cap=30",
+        "--plugin-workers=2",
+        "--fft-size=4096",
+        "--reserve-percent=0",
+        "--output=/private/tmp/awb-motu256-session-20261007/baseline",
+        "--sc-source=/private/tmp/awb-motu256-cello-source.scd"
+      ],
+      "startedAt": "2026-10-07T11:39:40.135278+00:00",
+      "results": "/private/tmp/awb-motu256-session-20261007/baseline/results.json",
+      "exitCode": 0,
+      "endedAt": "2026-10-07T11:45:50.255218+00:00"
+    },
+    {
+      "name": "reserve25",
+      "command": [
+        "/Users/willy/.nvm/versions/node/v22.23.2/bin/node",
+        "/private/tmp/awb-motu256-cello-run.mjs",
+        "--run",
+        "--quiet-window",
+        "--seconds=300",
+        "--repeats=1",
+        "--block=128",
+        "--ir-cap=30",
+        "--plugin-workers=2",
+        "--fft-size=4096",
+        "--reserve-percent=25",
+        "--output=/private/tmp/awb-motu256-session-20261007/reserve25",
+        "--sc-source=/private/tmp/awb-motu256-cello-source.scd"
+      ],
+      "startedAt": "2026-10-07T11:45:50.266826+00:00",
+      "results": "/private/tmp/awb-motu256-session-20261007/reserve25/results.json",
+      "exitCode": 0,
+      "endedAt": "2026-10-07T11:55:58.363063+00:00"
+    }
+  ],
+  "hardwareBefore": {
+    "device": 159,
+    "name": "1248",
+    "sampleRate": 44100,
+    "hardwareFrames": 512,
+    "inputLatencyFrames": 8,
+    "outputLatencyFrames": 8,
+    "inputSafetyOffsetFrames": 8,
+    "outputSafetyOffsetFrames": 8
+  },
+  "hardwareAfter": {
+    "device": 159,
+    "name": "1248",
+    "sampleRate": 44100,
+    "hardwareFrames": 512,
+    "inputLatencyFrames": 8,
+    "outputLatencyFrames": 8,
+    "inputSafetyOffsetFrames": 8,
+    "outputSafetyOffsetFrames": 8
+  },
+  "hardware256": {
+    "device": 159,
+    "name": "1248",
+    "sampleRate": 44100,
+    "hardwareFrames": 256,
+    "inputLatencyFrames": 8,
+    "outputLatencyFrames": 8,
+    "inputSafetyOffsetFrames": 8,
+    "outputSafetyOffsetFrames": 8
+  },
+  "releasedAt": "2026-10-07T11:55:58.739510+00:00"
+}

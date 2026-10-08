@@ -172,7 +172,7 @@ function encodedContextArgument( context ) {
 }
 
 function secureWindowOptions( width, height, context ) {
-  return { width, height, show: false, webPreferences: { preload: preloadPath,
+  return { width, height, resizable: true, maximizable: true, show: false, webPreferences: { preload: preloadPath,
     additionalArguments: [ encodedContextArgument( context ) ], contextIsolation: true,
     nodeIntegration: false, sandbox: true } };
 }

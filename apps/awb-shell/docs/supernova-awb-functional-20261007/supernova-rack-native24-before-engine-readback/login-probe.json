@@ -1,0 +1,40 @@
+{
+  "requestedMaxLogins": 1,
+  "primaryLanguageClientAlreadyRegistered": true,
+  "rows": [
+    {
+      "i": 0,
+      "on": 1,
+      "reply": [
+        "/notify",
+        1
+      ]
+    },
+    {
+      "i": 1,
+      "on": 1,
+      "reply": [
+        "/notify",
+        2
+      ]
+    },
+    {
+      "i": 0,
+      "on": 0,
+      "reply": [
+        "/notify",
+        1
+      ]
+    },
+    {
+      "i": 2,
+      "on": 1,
+      "reply": [
+        "/notify",
+        2
+      ]
+    }
+  ],
+  "excessClientRejected": false,
+  "clientIDReuseCollision": true
+}

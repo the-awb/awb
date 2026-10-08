@@ -73,6 +73,18 @@ AWBSendRackTool : Tool {
         ids=config[\fixedFX].collect{|item|this.itemID(item)}++Array.fill(config[\dynamicFX],{|i|("fx"++(i+1)).asSymbol})
             ++config[\fixedFollowers].collect{|item|this.itemID(item)}++Array.fill(config[\spareFollowers],{|i|("follow"++(i+1)).asSymbol});
         if(ids.as(Set).size!=ids.size){Error("Destination IDs must be unique, including reserved slots").throw};
+        // An optional channel borrows a post-processor FX tap. One return row per slot.
+        ids=List.new;
+        config[\channels].do{|item|
+            var source=if(item.isKindOf(Dictionary)){item[\returnOf]}{nil};
+            if(source.notNil){
+                source=source.asSymbol;
+                if((config[\fixedFX].collect{|fx|this.itemID(fx)}++Array.fill(config[\dynamicFX],{|i|("fx"++(i+1)).asSymbol})).includes(source).not
+                    or:{ids.includes(source)}){Error("Return channel needs a unique FX destination").throw};
+                ids.add(source);
+            };
+        };
+
         if(config[\cleanSlot].notNil and:{config[\cleanSlot]!=false} and:{config[\fixedFX].collect{|item|this.itemID(item)}.includes(config[\cleanSlot].asSymbol).not}){Error("Clean slot must name a fixed FX destination").throw};
         if(config[\name].isString.not or:{config[\name].size>120}){Error("Invalid rack name").throw};
         AWBSendRackVoice.gain(config[\maxGain]);
@@ -150,7 +162,9 @@ AWBSendRackTool : Tool {
             config[\channels].do{|item|
                 var id=this.itemID(item);
                 channels[id]=(id:id,label:this.itemLabel(item),input:this.bus,post:this.bus,
-                    level:1.0,mute:false,solo:false,gains:Array.fill(slotIDs.size,0.0));
+                    level:1.0,mute:false,solo:false,gains:Array.fill(slotIDs.size,0.0),
+                    returnOf:if(item.isKindOf(Dictionary)){if(item[\returnOf].notNil){item[\returnOf].asSymbol}{nil}}{nil});
+                if(channels[id][\returnOf].notNil){slots[channels[id][\returnOf]][\returnChannel]=id};
             };
             this.makeSupportDefs;
             processors[\pass]={|ctx|ctx[\synth].value(definitions[\pass].name,[\in,ctx[\input].index,\out,ctx[\output].index])};
@@ -167,26 +181,31 @@ AWBSendRackTool : Tool {
     }
     makeSupportDefs {
         var width=config[\width],size=slotIDs.size,detectorClass,def;
-        this.installDef(\channel,SynthDef((prefix++"Channel").asSymbol,{|in=0,post=0,level=1,enabled=1,fade=0.02|
-            var signal=In.ar(in,width)*Lag.kr(level*enabled,fade);
+        [false,true].do{|feedback|
+        this.installDef(if(feedback){\returnChannel}{\channel},SynthDef((prefix++if(feedback){"ReturnChannel"}{"Channel"}).asSymbol,{|in=0,post=0,level=1,enabled=1,fade=0.02|
+            // Return taps are written later in FX: every extra send has exactly one block delay.
+            var signal=if(feedback){InFeedback.ar(in,width)}{In.ar(in,width)}*Lag.kr(level*enabled,fade);
             var buses=NamedControl.ir(\sendBuses,Array.fill(size,0)).asArray;
             var gains=NamedControl.kr(\sendGains,Array.fill(size,0.0)).asArray;
             ReplaceOut.ar(post,signal);
             size.do{|i|Out.ar(buses[i],signal*Lag.kr(gains[i],fade))};
         }));
+        };
         this.installDef(\ingress,SynthDef((prefix++"Ingress").asSymbol,{|in=0,out=0,gate=1,fade=0.02|
             // Start at zero: fade a newly installed processor in without a hard onset.
             var gain=Lag.kr(gate,fade)*EnvGen.kr(Env([0,1],[fade]));
             Out.ar(out,In.ar(in,width)*gain);
         }));
         this.installDef(\pass,SynthDef((prefix++"Pass").asSymbol,{|in=0,out=0|Out.ar(out,In.ar(in,width))}));
-        [false,true].do{|limit|
-            this.installDef(if(limit){\returnLimited}{\return},SynthDef((prefix++if(limit){"ReturnLimited"}{"Return"}).asSymbol,{|in=0,out=0,level=1,fade=0.02,ceiling=0.99|
+        [false,true].do{|limit|[false,true].do{|tapped|
+            var key=if(limit){"returnLimited"}{"return"}++if(tapped){"Tapped"}{""};
+            this.installDef(key.asSymbol,SynthDef((prefix++key).asSymbol,{|in=0,out=0,tap=0,level=1,fade=0.02,ceiling=0.99|
                 var signal=In.ar(in,width)*Lag.kr(level,fade);
                 if(limit){signal=Limiter.ar(signal,ceiling,0.01)};
                 Out.ar(out,signal);
+                if(tapped){Out.ar(tap,signal)};
             }));
-        };
+        }};
         this.installDef(\master,SynthDef((prefix++"Master").asSymbol,{|in=0,out=0,level=1|
             var sig=In.ar(in,width)*level;if(config[\masterLimit] ? true){sig=Limiter.ar(sig,0.99,0.01)};Out.ar(out,sig)
         }));
@@ -226,7 +245,7 @@ AWBSendRackTool : Tool {
         fxIDs.do{|id|slots[id][\group]=this.group(fxGroup,"Slot "++id)};
         followerIDs.do{|id|slots[id][\group]=this.group(followerGroup,"Slot "++id)};
         channels.values.do{|channel|
-            channel[\node]=this.synth(definitions[\channel].name,[\in,channel[\input].index,\post,channel[\post].index,
+            channel[\node]=this.synth(definitions[if(channel[\returnOf].notNil){\returnChannel}{\channel}].name,[\in,channel[\input].index,\post,channel[\post].index,
                 \sendBuses,slotIDs.collect{|id|slots[id][\bus].index},\sendGains,channel[\gains],\fade,config[\fade]],channelGroup,channel[\label]);
         };
         this.synth(definitions[\master].name,[\in,masterBus.index,\out,config[\out]],masterGroup,"Master output");
@@ -431,8 +450,9 @@ AWBSendRackTool : Tool {
             result.asArray.reject(_.isNil).do{|node|
                 if(node.isKindOf(Node) and:{ownedNodes.includes(node).not}){this.own(node,\synth,(parent:gen[\processors],defName:node.tryPerform(\defName)));gen[\nodes].add(node)};
             };
-            gen[\return]=this.synth(definitions[if(settings[\limiter] ? true){\returnLimited}{\return}].name,
-                [\in,gen[\output].index,\out,(slot[\returnBus] ? masterBus).index,\level,slot[\level],\fade,fade],gen[\group],"FX return");
+            gen[\return]=this.synth(definitions[(if(settings[\limiter] ? true){"returnLimited"}{"return"}++if(slot[\returnChannel].notNil){"Tapped"}{""}).asSymbol].name,
+                [\in,gen[\output].index,\out,(slot[\returnBus] ? masterBus).index,\level,slot[\level],\fade,fade]
+                ++if(slot[\returnChannel].notNil){[\tap,channels[slot[\returnChannel]][\input].index]}{[]},gen[\group],"FX return");
             gen[\nodes].add(gen[\return]);
         }{|error|this.disposeGeneration(gen);error.throw};
         old=slot[\active];slot[\active]=gen;

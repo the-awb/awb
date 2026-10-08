@@ -11,16 +11,19 @@ export function headPreset(mode){
 // A legacy loop-mode action chooses its base value; head toggles never normalize feedback.
 export const loopFeedback=cell=>cell.heads.filter(h=>h.enabled).length===4?.5:1;
 export const inputSources=['clean','pro2','sc1','sc2'];
-export function defaults(){
+export function defaults({sources=inputSources}={}){
   const periods=[8,2,.5,16],modes=['AB','quad','quad','AB'];
-  const routes={};inputSources.slice(1).forEach(from=>ids.forEach(to=>{if(!from.startsWith('sc')||to==='A1')routes[`${from}:${to}`]=0;}));ids.forEach((to,i)=>{routes[`clean:${to}`]=i===0?1:0;ids.slice(0,i).forEach(from=>routes[`${from}:${to}`]=ids[i-1]===from?1:0);routes[`${to}:monitor`]=i===3?1:0;});
+  const routes={};sources.slice(1).forEach(from=>ids.forEach(to=>{if(!from.startsWith('sc')||to==='A1')routes[`${from}:${to}`]=0;}));ids.forEach((to,i)=>{routes[`clean:${to}`]=i===0?1:0;ids.slice(0,i).forEach(from=>routes[`${from}:${to}`]=ids[i-1]===from?1:0);routes[`${to}:monitor`]=i===3?1:0;});
   return {version:1,reserveSeconds:32,tempo:120,globalInput:1,master:0,source:'tone',inputChannel:0,frequency:220,toneLevel:.1,
+    ...(sources===inputSources?{}:{inputSources:[...sources]}),
     cells:ids.map((id,i)=>({id,seconds:periods[i],timingMode:'seconds',beats:periods[i]*2,divisor:4,triplet:false,effectLevel:1,dryLevel:0,inputGain:1,feedback:i===2?.4:.5,running:true,heads:headPreset(modes[i]).map(h=>({...h,sends:Object.fromEntries(sendDestinations(id).map(to=>[to,0]))})),preset:modes[i]})),routes};
 }
 export const beatSeconds=(cell,tempo)=>60/tempo*cell.beats*4/cell.divisor*(cell.triplet?2/3:1);
 const number=(v,min,max,name)=>{if(!Number.isFinite(v)||v<min||v>max)throw new Error(`${name} must be ${min}–${max}`);};
 export function validate(candidate,{resolveTiming=true}={}){
-  const c=structuredClone(candidate),keys=Object.keys(defaults().routes);
+  const c=structuredClone(candidate),sources=c.inputSources??inputSources;
+  if(!Array.isArray(sources)||!sources.length||sources.length>5||new Set(sources).size!==sources.length||!sources.includes('clean')||sources.some(id=>![...inputSources,'mic'].includes(id)))throw Error('Invalid delay input sources');
+  const keys=Object.keys(defaults({sources}).routes);
   if(c.version!==1||c.reserveSeconds!==32||!Array.isArray(c.cells)||c.cells.length!==4)throw new Error('This view requires the four-cell, classic stereo layout');
   c.tempo??=120;number(c.tempo,20,400,'Tempo');
   number(c.globalInput,0,1,'Clean availability');number(c.master,0,2,'Master');number(c.frequency,20,2000,'Frequency');number(c.toneLevel,0,.3,'Test level');
@@ -64,14 +67,14 @@ export function command(current,p){
   return {config:validate(c),clear};
 }
 export function graphFor(c){
-  c=validate(c);
+  c=validate(c);const sources=c.inputSources??inputSources;
   const graph={version:1,buffers:ids.map(id=>({id:`memory-${id}`,channels:2,labels:['L','R'],capacitySeconds:c.reserveSeconds})),
-    nodes:[...inputSources.map(id=>({id,kind:'input',ports:[{id:'out',direction:'out',channels:2,labels:['L','R']}]}))],connections:[]};
+    nodes:[...sources.map(id=>({id,kind:'input',ports:[{id:'out',direction:'out',channels:2,labels:['L','R']}]}))],connections:[]};
   c.cells.forEach(cell=>{graph.nodes.push({id:cell.id,kind:'cell',periodSeconds:cell.seconds,layout:{kind:'fitted',headSlots:4},
     ports:[{id:'record',direction:'in',channels:2,labels:['L','R']},{id:'wet',direction:'out',channels:2,labels:['L','R']},...cell.heads.map(h=>({id:'tap-'+h.id,direction:'out',channels:2,labels:['L','R']}))],mix:{input:'record',output:'wet',mapping:'identity'},writer:{buffer:`memory-${cell.id}`,port:'record',mapping:'identity'},
     heads:cell.heads.map((h,i)=>({id:h.id,level:h.amount,source:{buffer:`memory-${cell.id}`,channel:headPaths[i].source},delay:{unit:h.unit,value:h.value},returns:[{channel:headPaths[i].returnChannel,gain:1}],destinations:[{port:'wet',channel:0,gain:h.left},{port:'wet',channel:1,gain:h.right},{port:'tap-'+h.id,channel:0,gain:h.left},{port:'tap-'+h.id,channel:1,gain:h.right}]}))});});
   graph.nodes.push({id:'monitor',kind:'output',ports:[{id:'in',direction:'in',channels:2,labels:['L','R']}]});
-  Object.keys(c.routes).forEach(id=>{const [from,to]=id.split(':');graph.connections.push({id,from:{node:from,port:inputSources.includes(from)?'out':'wet'},to:{node:to,port:to==='monitor'?'in':'record'},
+  Object.keys(c.routes).forEach(id=>{const [from,to]=id.split(':');graph.connections.push({id,from:{node:from,port:sources.includes(from)?'out':'wet'},to:{node:to,port:to==='monitor'?'in':'record'},
     mapping:'identity'});});
   c.cells.forEach(cell=>cell.heads.forEach(h=>sendDestinations(cell.id).forEach(to=>graph.connections.push({id:`${cell.id}/${h.id}:${to}`,from:{node:cell.id,port:'tap-'+h.id},to:{node:to,port:to==='monitor'?'in':'record'},mapping:'identity'}))));return graph;
 }
@@ -99,7 +102,7 @@ export function ageEnvelope(wave,seconds){
 
 // Renderer attachment descriptors; requesting one never creates an audio instrument.
 export const panelViews=Object.freeze([
- ...ids.map(cell=>Object.freeze({id:`tape:${cell}`,kind:'tape',cell,label:`${cell} · stereo tape`,path:`/?view=tape%3A${cell}`,preferredSize:Object.freeze({width:720,height:600})})),
+ ...ids.map(cell=>Object.freeze({id:`tape:${cell}`,kind:'tape',cell,label:`${cell} · stereo tape`,path:`/?view=tape%3A${cell}`,preferredSize:Object.freeze({width:630,height:400})})),
  ...ids.map(cell=>Object.freeze({id:`heads:${cell}`,kind:'heads',cell,label:`${cell} · heads and sends`,path:`/?view=heads%3A${cell}`,preferredSize:Object.freeze({width:600,height:650})})),
  Object.freeze({id:'routing',kind:'routing',cell:null,label:'Buffer · routing',path:'/?view=routing',preferredSize:Object.freeze({width:600,height:420})})
 ]);

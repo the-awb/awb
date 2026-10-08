@@ -1,5 +1,6 @@
 import React,{memo,useCallback,useState,useRef,useSyncExternalStore} from 'react';
 import {targetCount,validateCaptureTiming} from './model.mjs';
+import {MixTimers} from './Timers.jsx';
 import {gridNeighbour} from './mixes.mjs';
 const seconds=ms=>Number((ms/1000).toFixed(3));
 const alignments=[['L','Start'],['C','Centre'],['R','End'],['J','Start (legacy J)']];
@@ -18,11 +19,11 @@ const CaptureForm=memo(function CaptureForm({store,selection,command,setNotice,o
   </div>;
 });
 
-export const MixPanel=memo(function MixPanel({store,selection,chosen,onChoose,onEdit,onRack,command,setNotice,editing}){
+export const MixPanel=memo(function MixPanel({store,selection,chosen,onChoose,onEdit,onRack,command,setNotice,editing,onLoadSet,onSaveSet,transport}){
   useSyncExternalStore(store.subscribeMeta,store.getRevision);
   const active=useSyncExternalStore(selection.subscribe,()=>selection.active);
   const recall=async id=>{onChoose(id);try{await command({type:'recall',id});}catch{}};
-  return <aside className="mix-panel" aria-label="Mixes panel"><div className="mix-panel-title"><strong>MIXES</strong><button disabled={!chosen} onClick={()=>onEdit(chosen)}>Edit mix</button></div><div className="mix-buttons">{store.snapshots.map(s=><button key={s.id} data-mix={s.id} disabled={active} className={s.id===chosen?'active':''} onClick={()=>editing?onEdit(s.id):recall(s.id)}><span>{s.label}</span><small>{s.sceneID==null?'Unassigned':`SC ${s.sceneID}`} · {seconds(s.duration)}s · {targetCount(s)}/{store.controls.length}</small></button>)}{!store.snapshots.length&&<p>No mixes yet. Capture the matrix below.</p>}</div><CaptureForm store={store} selection={selection} command={command} setNotice={setNotice} onCaptured={onChoose} onRack={onRack} editing={editing}/></aside>;
+  return <aside className="mix-panel" aria-label="Mixes panel"><div className="mix-panel-title"><strong title={store.mixSet?.name}>{store.mixSet?.name??'Mixes'}</strong><button disabled={!chosen} onClick={()=>onEdit(chosen)}>Edit mix</button></div><div className="mix-set-actions"><button onClick={onLoadSet}>Load set</button><button onClick={onSaveSet}>Save set</button></div>{transport&&<MixTimers transport={transport} command={command}/>}<div className="mix-buttons">{store.snapshots.map(s=><button key={s.id} data-mix={s.id} disabled={active} className={s.id===chosen?'active':''} onClick={()=>editing?onEdit(s.id):recall(s.id)}><span>{s.label}</span><small>{s.sceneID==null?'Unassigned':`SC ${s.sceneID}`} · {seconds(s.duration)}s · {targetCount(s)}/{store.controls.length}</small></button>)}{!store.snapshots.length&&<p>No mixes yet. Capture the matrix below.</p>}</div><details className="capture-disclosure" open><summary>Capture snapshot</summary><CaptureForm store={store} selection={selection} command={command} setNotice={setNotice} onCaptured={onChoose} onRack={onRack} editing={editing}/></details></aside>;
 });
 
 export const MixControlFields=memo(function MixControlFields({session,cell,layout,onSelect}){

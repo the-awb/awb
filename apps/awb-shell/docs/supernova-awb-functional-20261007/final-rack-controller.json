@@ -1,0 +1,30 @@
+[
+  {
+    "backend": "scsynth",
+    "kind": "plugins",
+    "destinations": 24,
+    "nodeExit": 0,
+    "languageExit": 0
+  },
+  {
+    "backend": "supernova",
+    "kind": "native",
+    "destinations": 24,
+    "nodeExit": 0,
+    "languageExit": 0
+  },
+  {
+    "backend": "scsynth",
+    "kind": "plugins",
+    "destinations": 32,
+    "nodeExit": 0,
+    "languageExit": 0
+  },
+  {
+    "backend": "supernova",
+    "kind": "native",
+    "destinations": 32,
+    "nodeExit": 0,
+    "languageExit": 0
+  }
+]

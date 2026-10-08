@@ -1,0 +1,126 @@
+{
+  "workload": {
+    "channels": 2,
+    "plugins": 13,
+    "partConvs": 6,
+    "fullLoad": false,
+    "blockSize": 256,
+    "controlSends": 16,
+    "followers": 25,
+    "modulated": true,
+    "irMaxSeconds": 30,
+    "fxOutputCleared": true,
+    "irProvenance": [
+      {
+        "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+        "sourceFrames": 463050,
+        "usedFrames": 463050,
+        "sourceSeconds": 10.5,
+        "usedSeconds": 10.5,
+        "channels": 2,
+        "sampleRate": 44100,
+        "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+      },
+      {
+        "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+        "sourceFrames": 962182,
+        "usedFrames": 962182,
+        "sourceSeconds": 21.818185941043083,
+        "usedSeconds": 21.818185941043083,
+        "channels": 2,
+        "sampleRate": 44100,
+        "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+      },
+      {
+        "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+        "sourceFrames": 3301490,
+        "usedFrames": 1323000,
+        "sourceSeconds": 74.86371882086168,
+        "usedSeconds": 30,
+        "channels": 1,
+        "sampleRate": 44100,
+        "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+      }
+    ],
+    "gui": false,
+    "syntheticInput": false,
+    "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+    "celloSourceMono": true,
+    "pro2Silent": true,
+    "hardwareFXMix": false,
+    "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+  },
+  "session": {
+    "port": 57420,
+    "langPort": 57120,
+    "sclangPID": 30485,
+    "scPID": 30489,
+    "toneNode": 1000,
+    "sampleRate": 44100,
+    "blockSize": 256,
+    "outputChannels": 4,
+    "inputChannels": 3,
+    "memoryPoolKiB": 262144,
+    "pilotBus": 2
+  },
+  "reserveCalibration": null,
+  "loading": {},
+  "stageCosts": null,
+  "heaviestCallbacks": null,
+  "timeline": [
+    {
+      "label": "idle-calibration begin",
+      "utc": "2026-10-07T01:02:55.318Z",
+      "hostNs": 394013972171457
+    },
+    {
+      "label": "idle-calibration end",
+      "utc": "2026-10-07T01:02:58.325Z",
+      "hostNs": 394016979396656
+    },
+    {
+      "label": "rack load requested",
+      "utc": "2026-10-07T01:03:01.094Z",
+      "hostNs": 394019748298465
+    },
+    {
+      "label": "command received load",
+      "utc": "2026-10-07T01:03:01.095Z",
+      "hostNs": 394019749199995
+    },
+    {
+      "label": "command received close",
+      "utc": "2026-10-07T01:04:03.726Z",
+      "hostNs": 394082379269776
+    }
+  ],
+  "pluginChecks": null,
+  "testTransforms": null,
+  "teardown": {
+    "languageExited": true,
+    "recorderExited": true
+  },
+  "guardsVerified": null,
+  "engineShutdownConfirmed": null,
+  "serverFailures": [
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out"
+  ],
+  "error": "Error: Timed out: loaded rack\n    at until (file:///Users/willy/awb/apps/rack/sc/sets/awb52/cello-run.mjs:59:430)\n    at async file:///Users/willy/awb/apps/rack/sc/sets/awb52/cello-run.mjs:87:98",
+  "rawResults": "/private/tmp/awb52-cello-blocks-20261007/run-5-block-256/results.json",
+  "rawResultsSHA256": "48f8c24b21b83685fe96a813da7809c0bec002c5616aa63cdb0d4e36cd814976",
+  "disposition": "excluded early concurrent development",
+  "complete": false,
+  "phases": []
+}

@@ -1145,9 +1145,9 @@
     "fuzz": 0.5623413251903491
   },
   "irSeconds": [
-    10.5,
+    5.0,
     21.818185941043083,
-    30.0
+    20.0
   ],
   "fftSize": 2048,
   "unresolved": [
@@ -5468,19 +5468,23 @@
       "InputPan": 0
     }
   },
+  "irMaxSecondsByBranch": {
+    "earth": 5,
+    "echo": 20
+  },
   "irFiles": [
     "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
     "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
     "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav"
   ],
-  "irMaxSeconds": 30.0,
+  "irMaxSeconds": 30,
   "irProvenance": [
     {
       "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
       "sourceFrames": 463050,
-      "usedFrames": 463050,
+      "usedFrames": 220500,
       "sourceSeconds": 10.5,
-      "usedSeconds": 10.5,
+      "usedSeconds": 5.0,
       "channels": 2,
       "sampleRate": 44100,
       "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
@@ -5498,9 +5502,9 @@
     {
       "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
       "sourceFrames": 3301490,
-      "usedFrames": 1323000,
+      "usedFrames": 882000,
       "sourceSeconds": 74.86371882086168,
-      "usedSeconds": 30.0,
+      "usedSeconds": 20.0,
       "channels": 1,
       "sampleRate": 44100,
       "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"

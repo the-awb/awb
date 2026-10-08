@@ -1,0 +1,366 @@
+{
+  "passed": true,
+  "audioWindows": 22,
+  "assertionCount": 88,
+  "checks": [
+    {
+      "time": 0.3,
+      "label": "No implicit dry output",
+      "expected": [
+        0,
+        0.1,
+        0.2,
+        0.1
+      ],
+      "measured": [
+        0.0,
+        0.10000000149011612,
+        0.20000000298023224,
+        0.09999999403953552
+      ],
+      "maxError": 5.960464483090178e-09
+    },
+    {
+      "time": 0.6,
+      "label": "Two persistent channel inputs",
+      "expected": [
+        0.3,
+        0.1,
+        0.2,
+        0.1
+      ],
+      "measured": [
+        0.30000001192092896,
+        0.10000000149011612,
+        0.20000000298023224,
+        0.09999999403953552
+      ],
+      "maxError": 1.1920928966180355e-08
+    },
+    {
+      "time": 0.9,
+      "label": "Fader and empty FX are correct",
+      "expected": [
+        0.25,
+        0.05,
+        0.2,
+        0.05
+      ],
+      "measured": [
+        0.25,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.050000011920928955
+      ],
+      "maxError": 1.1920928952302567e-08
+    },
+    {
+      "time": 1.2,
+      "label": "Mute affects audio and follower",
+      "expected": [
+        0.2,
+        0,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.20000000298023224,
+        0.0,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 2.980232227667301e-09
+    },
+    {
+      "time": 1.6,
+      "label": "Solo suppresses other channel sends",
+      "expected": [
+        0.2,
+        0,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.20000000298023224,
+        0.0,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 2.980232227667301e-09
+    },
+    {
+      "time": 2.0,
+      "label": "Solo can transfer between channels",
+      "expected": [
+        0.05,
+        0.05,
+        0,
+        0.05
+      ],
+      "measured": [
+        0.05000000074505806,
+        0.05000000074505806,
+        0.0,
+        0.04999999701976776
+      ],
+      "maxError": 2.980232241545089e-09
+    },
+    {
+      "time": 2.3,
+      "label": "Clearing solo restores channel mix",
+      "expected": [
+        0.25,
+        0.05,
+        0.2,
+        0.05
+      ],
+      "measured": [
+        0.25,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.04999999701976776
+      ],
+      "maxError": 2.980232241545089e-09
+    },
+    {
+      "time": 2.6,
+      "label": "Log follower curve",
+      "expected": [
+        0.25,
+        0.05,
+        0.2,
+        0.5663233347786729
+      ],
+      "measured": [
+        0.25,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.5663232803344727
+      ],
+      "maxError": 5.444420025924046e-08
+    },
+    {
+      "time": 2.9,
+      "label": "Follower removal resets stable output",
+      "expected": [
+        0.25,
+        0.05,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.25,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 2.980232227667301e-09
+    },
+    {
+      "time": 3.2,
+      "label": "Assign a spare FX",
+      "expected": [
+        0.275,
+        0.05,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.2750000059604645,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 5.960464455334602e-09
+    },
+    {
+      "time": 3.55,
+      "label": "Replace processor on same input pipe",
+      "expected": [
+        0.275,
+        0.05,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.2750000059604645,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 5.960464455334602e-09
+    },
+    {
+      "time": 3.69,
+      "label": "Removed delay still has an audible tail",
+      "expected": [
+        0.275,
+        0.05,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.2750000059604645,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 5.960464455334602e-09
+    },
+    {
+      "time": 3.95,
+      "label": "Tail finishes without continued input",
+      "expected": [
+        0.25,
+        0.05,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.25,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 2.980232227667301e-09
+    },
+    {
+      "time": 4.23,
+      "label": "Reassign the same FX bus",
+      "expected": [
+        0.275,
+        0.05,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.2750000059604645,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 5.960464455334602e-09
+    },
+    {
+      "time": 4.35,
+      "label": "Direct voice bypasses channel fader",
+      "expected": [
+        0.475,
+        0.05,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.4749999940395355,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 5.960464455334602e-09
+    },
+    {
+      "time": 4.55,
+      "label": "One-shot frees itself",
+      "expected": [
+        0.275,
+        0.05,
+        0.2,
+        0
+      ],
+      "measured": [
+        0.2750000059604645,
+        0.05000000074505806,
+        0.20000000298023224,
+        0.0
+      ],
+      "maxError": 5.960464455334602e-09
+    },
+    {
+      "time": 4.69,
+      "label": "Explicit voice bus override enters persistent channel",
+      "expected": [
+        0.175,
+        0.05,
+        0.1,
+        0
+      ],
+      "measured": [
+        0.17500001192092896,
+        0.05000000074505806,
+        0.10000000149011612,
+        0.0
+      ],
+      "maxError": 1.1920928966180355e-08
+    },
+    {
+      "time": 4.85,
+      "label": "Override voice expires independently",
+      "expected": [
+        0.125,
+        0.05,
+        0.05,
+        0
+      ],
+      "measured": [
+        0.125,
+        0.05000000074505806,
+        0.05000000074505806,
+        0.0
+      ],
+      "maxError": 7.450580569168253e-10
+    },
+    {
+      "time": 5.0,
+      "label": "Tool close silences its graph",
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "measured": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxError": 0.0
+    },
+    {
+      "time": 0.3,
+      "label": "Stereo full wrapper with one port",
+      "expected": [
+        0.1,
+        0.2
+      ],
+      "measured": [
+        0.10000000149011612,
+        0.20000000298023224
+      ]
+    },
+    {
+      "time": 0.75,
+      "label": "Master limiter catches boost",
+      "expected": [
+        0.99,
+        0.99
+      ],
+      "measured": [
+        0.9900016784667969,
+        0.9900037050247192
+      ]
+    },
+    {
+      "time": 1.2,
+      "label": "Stereo close",
+      "expected": [
+        0,
+        0
+      ],
+      "measured": [
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

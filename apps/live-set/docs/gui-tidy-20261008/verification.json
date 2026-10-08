@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "guiChecks": 62,
+  "focusedNode": {
+    "passed": 55,
+    "skipped": 2,
+    "note": "SC fixtures rerun separately in the complete rack regression"
+  },
+  "SCClasses": 15,
+  "SCInputReturnChecks": 24,
+  "fxReturnAudioChecks": 6,
+  "legacyRackAudioChecks": 88,
+  "legacyControlSendChecks": 17,
+  "openerPreflight": true,
+  "realtimeHardwareRun": false,
+  "performanceRerun": false
+}

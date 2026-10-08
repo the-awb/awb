@@ -88,7 +88,7 @@ export class RackStore {
   constructor(document={config:defaultConfig(),values:{},snapshots:[]}){
     this.listeners=new Map();this.metaListeners=new Set();this.allListeners=new Set();this.revision=0;this.stats={changes:0};this.replace(document,false);
   }
-  replace(doc,notify=true){const config=validateConfig(doc.config);const ds=descriptors(config);this.config=config;this.controls=ds;this.byID=new Map(ds.map(d=>[d.id,d]));this.values=new Map(ds.map(d=>[d.id,quantise(Number.isFinite(doc.values?.[d.id])?doc.values[d.id]:d.region.min,d.region)]));this.snapshots=copy(doc.snapshots??[]);this.validateSnapshots();if(notify){this.revision++;this.metaListeners.forEach(f=>f());this.allListeners.forEach(f=>f({kind:'structure'}));}}
+  replace(doc,notify=true){const config=validateConfig(doc.config);const ds=descriptors(config);this.config=config;this.controls=ds;this.byID=new Map(ds.map(d=>[d.id,d]));this.values=new Map(ds.map(d=>[d.id,quantise(Number.isFinite(doc.values?.[d.id])?doc.values[d.id]:d.region.min,d.region)]));this.snapshots=copy(doc.snapshots??[]);this.mixSet=copy(doc.mixSet??{name:'Live mixes'});this.validateSnapshots();if(notify){this.revision++;this.metaListeners.forEach(f=>f());this.allListeners.forEach(f=>f({kind:'structure'}));}}
   validateSnapshots(){if(!Array.isArray(this.snapshots)||this.snapshots.length>256)throw Error('Invalid mix snapshot library.');const seen=new Set();for(const s of this.snapshots){if(typeof s.id!=='string'||seen.has(s.id)||typeof s.label!=='string'||!s.label.trim()||s.label.length>120||!Number.isFinite(s.duration)||s.duration<0||s.duration>3600000||!s.targets||typeof s.targets!=='object'||Array.isArray(s.targets))throw Error('Invalid mix snapshot.');seen.add(s.id);if(s.defaultTransition)validateCaptureTiming(s.duration,s.defaultTransition.duration,s.defaultTransition.alignment);for(const [id,t]of Object.entries(s.targets)){if(t===null)continue;const d=this.byID.get(id);if(!t||!Number.isFinite(t.value)||!Number.isFinite(t.fraction)||t.fraction<0||t.fraction>1||!['J','L','C','R'].includes(t.alignment)||(d&&(t.value<d.region.min||t.value>d.region.max)))throw Error(`Invalid transition for ${id}.`);}}}
   get(id){return this.values.get(id);}
   subscribe(id,f){const set=this.listeners.get(id)??new Set();set.add(f);this.listeners.set(id,set);return()=>{set.delete(f);if(!set.size)this.listeners.delete(id);};}
@@ -97,7 +97,7 @@ export class RackStore {
   subscribeAll(f){this.allListeners.add(f);return()=>this.allListeners.delete(f);}
   set(id,value,origin='local'){const d=this.byID.get(id);if(!d||!Number.isFinite(value))throw Error('Unknown control or non-finite value.');value=quantise(value,d.region);if(value===this.get(id))return false;this.values.set(id,value);this.stats.changes++;this.listeners.get(id)?.forEach(f=>f());this.allListeners.forEach(f=>f({kind:'value',id,value,origin}));return true;}
   configure(config){this.replace({...this.document(),config});}
-  document(){return {schema:'awb.rack-library/1',config:copy(this.config),values:Object.fromEntries(this.values),snapshots:copy(this.snapshots)};}
+  document(){return {schema:'awb.rack-library/1',config:copy(this.config),values:Object.fromEntries(this.values),snapshots:copy(this.snapshots),mixSet:copy(this.mixSet)};}
   capture(label,sceneID=null,ids=this.controls.map(d=>d.id),{duration=1000,targetDuration=duration,alignment='L'}={}){
     if(typeof label!=='string'||!label.trim()||label.length>120)throw Error('Give the snapshot a name.');
     validateCaptureTiming(duration,targetDuration,alignment);

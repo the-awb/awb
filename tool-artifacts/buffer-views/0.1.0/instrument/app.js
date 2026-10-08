@@ -75,12 +75,14 @@ function render(){
  return {render,draw(advance=0){const state=getState();if(!state)return;const i=ids.indexOf(getCell()),cell=state.config.cells[i],wave=state.waveforms[i];draw($('#tape-wave'),wave,timeline(cell,wave),colours[i],advance);}};
 }
 function mountRouting(root,{getState,send,amount}){
- const $=s=>root.querySelector(s);
-$('#matrix').innerHTML=`<table><thead><tr><th>From ↓ / to →</th>${[...ids,'Wet'].map(v=>`<th>${v}</th>`).join('')}</tr></thead><tbody>${[...inputSources,...ids].map((from,i)=>`<tr><th>${from==='clean'?'VC':from}</th>${[...ids,'monitor'].map((to,j)=>{const allowed=to==='monitor'?ids.includes(from):inputSources.includes(from)?(!from.startsWith('sc')||to==='A1'):ids.indexOf(from)<j;return allowed?`<td><label class="send-amount"><input class="route" type="range" min="0" max="1" step=".01" data-route="${from}:${to}" aria-label="${from} to ${to} amount"><output>0%</output></label></td>`:'<td class="unavailable" title="Route unavailable in this graph">—</td>';}).join('')}</tr>`).join('')}</tbody></table>`;
+ const $=s=>root.querySelector(s);let sourceKey;
+ const mount=()=>{const sources=getState()?.config.inputSources??inputSources,key=sources.join(':');if(key===sourceKey)return;sourceKey=key;
+$('#matrix').innerHTML=`<table><thead><tr><th>From ↓ / to →</th>${[...ids,'Wet'].map(v=>`<th>${v}</th>`).join('')}</tr></thead><tbody>${[...sources,...ids].map((from,i)=>`<tr><th>${from==='clean'?'VC':from}</th>${[...ids,'monitor'].map((to,j)=>{const allowed=to==='monitor'?ids.includes(from):sources.includes(from)?(!from.startsWith('sc')||to==='A1'):ids.indexOf(from)<j;return allowed?`<td><label class="send-amount"><input class="route" type="range" min="0" max="1" step=".01" data-route="${from}:${to}" aria-label="${from} to ${to} amount"><output>0%</output></label></td>`:'<td class="unavailable" title="Route unavailable in this graph">—</td>';}).join('')}</tr>`).join('')}</tbody></table>`;
 $('#matrix').querySelectorAll('input').forEach(input=>amount(input,'route:'+input.dataset.route,v=>({action:'route',id:input.dataset.route,value:v})));
+ };
 $('#route-reset').onclick=async()=>{for(const id of Object.keys(getState().config.routes))if(getState().config.routes[id]>0)await send({action:'route',id,value:0});};
 
- return {render(){const state=getState();if(!state)return;
+ return {render(){const state=getState();if(!state)return;mount();
   $('#matrix').querySelectorAll('input').forEach(input=>{const gain=state.config.routes[input.dataset.route];value(input,gain);input.nextElementSibling.textContent=Math.round(gain*100)+'%';});
   $('#route-summary').textContent=Object.entries(state.config.routes).filter(([,v])=>v>0).map(([id,gain])=>id.replace(':',' → ').replace('clean','Clean').replace('monitor','Wet')+` (${Math.round(gain*100)}%)`).join(' · ')||'No routes open';
  }};

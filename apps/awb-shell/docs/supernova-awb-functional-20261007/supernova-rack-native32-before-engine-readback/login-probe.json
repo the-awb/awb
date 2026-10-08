@@ -1,0 +1,28 @@
+{
+  "requestedMaxLogins": 1,
+  "primaryLanguageClientAlreadyRegistered": true,
+  "rows": [
+    {
+      "i": 0,
+      "on": 1,
+      "error": "/notify timed out"
+    },
+    {
+      "i": 1,
+      "on": 1,
+      "error": "/notify timed out"
+    },
+    {
+      "i": 0,
+      "on": 0,
+      "error": "/notify timed out"
+    },
+    {
+      "i": 2,
+      "on": 1,
+      "error": "/notify timed out"
+    }
+  ],
+  "excessClientRejected": true,
+  "clientIDReuseCollision": false
+}

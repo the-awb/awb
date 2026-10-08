@@ -1,0 +1,35 @@
+diff --git a/sc/src/VSTPlugin.cpp b/sc/src/VSTPlugin.cpp
+index 0234d83..abe64c8 100644
+--- a/sc/src/VSTPlugin.cpp
++++ b/sc/src/VSTPlugin.cpp
+@@ -205,7 +205,7 @@ static std::atomic_bool gSearching {false};
+ 
+ static PluginDictionary gPluginDict;
+ 
+-static std::string gSettingsDir = userSettingsPath() + "/sc";
++static std::string gSettingsDir = std::getenv("AWB_TEST_VST_CACHE") ? std::getenv("AWB_TEST_VST_CACHE") : userSettingsPath() + "/sc";
+ 
+ static std::string gCacheFileName = std::string("cache_")
+         + cpuArchToString(getHostCpuArchitecture()) + ".ini";
+diff --git a/vst/VST2Plugin.cpp b/vst/VST2Plugin.cpp
+index 736d5be..debd909 100644
+--- a/vst/VST2Plugin.cpp
++++ b/vst/VST2Plugin.cpp
+@@ -644,13 +644,13 @@ void VST2Plugin::setNumSpeakers(int *input, int numInputs, int *output, int numO
+     };
+ 
+     // VstSpeakerArrangment already has 8 speakers
+-    int inputSpeakerSize = sizeof(VstSpeakerArrangement)
+-            + sizeof(VstSpeakerProperties) * std::max<int>(0, numInputSpeakers - 8);
++    int inputSpeakerSize = offsetof(VstSpeakerArrangement, speakers)
++            + sizeof(VstSpeakerProperties) * std::max<int>(8, numInputSpeakers);
+     auto inputSpeakers = (VstSpeakerArrangement *)calloc(inputSpeakerSize, 1);
+     initSpeakers(*inputSpeakers, numInputSpeakers);
+ 
+-    int outputSpeakerSize = sizeof(VstSpeakerArrangement)
+-            + sizeof(VstSpeakerProperties) * std::max<int>(0, numOutputSpeakers - 8);
++    int outputSpeakerSize = offsetof(VstSpeakerArrangement, speakers)
++            + sizeof(VstSpeakerProperties) * std::max<int>(8, numOutputSpeakers);
+     auto outputSpeakers = (VstSpeakerArrangement *)calloc(outputSpeakerSize, 1);
+     initSpeakers(*outputSpeakers, numOutputSpeakers);
+ 

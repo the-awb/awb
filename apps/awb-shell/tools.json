@@ -8,6 +8,7 @@
     "../rack",
     "../chain",
     "../param",
-    "../live-set"
+    "../live-set",
+    "../dsp-history"
   ]
 }

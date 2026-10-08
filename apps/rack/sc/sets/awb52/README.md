@@ -34,18 +34,28 @@ size 2048. Convolution now reads the actual files from
 
 | Branch | Source duration | Used duration | IR channels |
 | --- | ---: | ---: | --- |
-| Earth / Mulching 1 | 10.5 s | 10.5 s | Stereo |
+| Earth / Mulching 1 | 10.5 s | 5 s | Stereo |
 | Composite Earth b | 21.8182 s | 21.8182 s | Stereo |
-| Inchindown / fourth impulse | 74.8637 s | 30 s | Mono, applied independently to both input channels |
+| Inchindown / fourth impulse | 74.8637 s | 20 s | Mono, applied independently to both input channels |
 
-Reads start at frame zero and stop at the configurable `irMaxSeconds` cap, without
-changing the source files. Stereo sides are preserved. No resampling is performed;
+Reads start at frame zero. The global `irMaxSeconds` cap defaults to 30 seconds;
+`irMaxSecondsByBranch` additionally limits Earth to 5 seconds and Echo to 20.
+The smaller cap applies, without changing the source files. Older specifications
+without branch caps retain their global-cap behavior. Stereo sides are preserved. No resampling is performed;
 IR sample rates must match the server (these files are all 44.1 kHz). Raw IR gain
 is preserved: Bitwig normalization, trims, fades and stereo-width settings are not
 yet reproduced. Legacy/full-load mode computes all six processors even at zero
 output gain. Opt-in Verb profile mode now suspends each branch after its tail
 drains, as described below. Generated 2.5/4/8-second stand-ins remain
 available through the runner's `--ir-mode=generated` for the earlier baseline.
+
+Automatic unused-processor suspension currently applies only to the five Verb
+profile branches. At zero branch mix, input fades out; after the minimum tail
+and 250 ms below −90 dB, the processor Group pauses and resumes on selection.
+Deci, Sparkle (including its internal branches), Fuzz, UM and both Scheps
+instances remain running at zero contribution. Rack mute/solo and return faders
+do not suspend their processors. Explicit FX removal drains then frees the old
+generation; it is separate from automatic suspension.
 
 `source-snapshot.json` is a bounded copy of the seven observed track records used
 by this adapter, retaining the original capture path/hash. The runner uses it by
@@ -114,7 +124,8 @@ python3 /Users/willy/awb/apps/rack/sc/sets/awb52/run.py \
 ```
 
 The runner copies actual framework/rack classes into a fresh private library,
-regenerates the read-only projection with actual IR files capped at 30 seconds, renders all selected original plugin
+regenerates the read-only projection with Earth capped at 5 seconds, Echo at 20
+and other branches at 30, renders all selected original plugin
 processors and verifies routing, finite audio, mute/solo, tails, stable-pipe
 replacement and complete silence after close. It preserves the installed VST
 cache. A pre-existing invalid FL Studio cache entry is retained and reported as a
@@ -142,7 +153,9 @@ python3 /Users/willy/awb/apps/rack/sc/sets/awb52/run.py \
   --ir-max-seconds=20 --output /private/tmp/awb52-IR20-FRESH
 ```
 
-Set `--ir-max-seconds=180` to allow all three complete source files, or
+Use `--earth-ir-max-seconds` and `--echo-ir-max-seconds` on either `prepare.py`
+or the runner to override the branch limits. Set all three cap flags to 180
+to allow all three complete source files, or
 `--ir-mode=generated` to reproduce the original short-IR baseline. The configured
 cap is bounded to 180 seconds. The old generated benchmark is historical evidence;
 its 22.8% DSP reading must not be presented as the real-IR result.
@@ -667,3 +680,37 @@ The example now has an explicit first setup block: memory pool 262144 KiB,
 sample rate 44100, then server reboot. Evaluate it and wait for boot completion
 before evaluating the set-opening block. Reboot clears the existing server graph;
 input connection remains explicit.
+
+
+## Convolution envelope and gain editor
+
+After opening the file-IR set with `verbProfiles: true`, use:
+
+```supercollider
+~irEditor = ~awb52.convolutionGUI;
+```
+
+The native SC window selects Earth, Composite Earth or Echo and shows the actual
+used crop. Drag envelope points below the waveform; time spans the crop from
+0 to 1. Levels are 0..1, curve is −8..8, and gain is −60..+24 dB. Press **Apply
+to branch** to prepare a stereo-preserving float IR copy and its PartConv spectra.
+The waveform then shows that prepared IR. Flat/Fade both ends edit the draft;
+they do not change audio until Apply.
+
+The original files stay untouched. Each edit is calculated from the original
+crop rather than the previously shaped copy. Apply stops feeding the old
+convolution, starts the replacement in the same branch Group, keeps the complete
+old tail, then releases the old processor and spectra. Other FX, modulation,
+fixed buses and plugin instances are retained. Subsequent dynamic Verb clones
+use the current prepared spectra. One preparation may run at a time; preparing
+large IRs can occupy sclang briefly, so this is an explicit edit operation.
+
+**Save settings…** writes loadable SC data. Restore before opening the set:
+
+```supercollider
+~awb52Spec[\irEnvelopes] = "/path/to/ir-settings.scd".load;
+```
+
+The editor adds no observation loop or audio bridge. Closing it leaves the
+current IR processing intact; closing the set closes the editor and releases
+its resources. This first pass is a native window alongside the Shell GUI.

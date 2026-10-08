@@ -19,7 +19,7 @@ try{
  window.webContents.on('console-message',event=>{if(event.level==='error')errors.push(event.message)});
  const js=s=>window.webContents.executeJavaScript(s,true);
  await window.loadURL(runtime.url);
- await wait(()=>js("(document.querySelector('.connection')?.title||document.querySelector('.connection')?.textContent)==='SC controls connected'"));
+ await wait(()=>js("document.querySelector('.connection')?.title==='SC controls connected'"));
  check(runtime.state().connected,'composite inspector binds actual AWParams');
  await wait(()=>window.webContents.mainFrame.frames.filter(f=>f.url.includes('view=tape')).length===4);
  const frames=window.webContents.mainFrame.frames.filter(f=>f.url.includes('view=tape'));
@@ -39,7 +39,7 @@ try{
  check(runtime.state().params.find(p=>p.id==='b1/fbOf').routes.length===prior.routes.length,'AWParam GUI edit preserves registered source');
  await wait(()=>b1.executeJavaScript("Number(document.querySelector('[data-param=\"b1/fbOf\"] .knob')?.getAttribute('aria-valuenow'))>.31"));
  check(true,'SC-origin AWParam edit reconciles the native delay view');
- await js("if(!document.querySelector('.console'))[...document.querySelectorAll('button')].find(b=>b.textContent==='Console').click()");
+ await js("[...document.querySelectorAll('button')].find(b=>b.textContent==='Console').click()");
  await wait(()=>js("document.querySelector('.console').textContent.includes('Four delays connected')"));
  check(true,'console displays actual AWBase log');
  await sleep(250);await writeFile(out+'/composite.png',(await window.capturePage()).toPNG());
