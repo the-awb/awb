@@ -1,5 +1,5 @@
 (
-var server,base,instance,p,q,view,check,checks=0,failures=List.new,messages=List.new,cleaned=0,command;
+var server,base,instance,p,q,view,check,checks=0,failures=List.new,messages=List.new,cleaned=0,command,rackInstance,rack,level,rejected=false,before;
 check={|ok,label|checks=checks+1;if(ok){("PASS "++label).postln}{failures.add(label);("FAIL "++label).postln}};
 try {
     server=AWBCoreTestServer(\liveSetContract,NetAddr("127.0.0.1",59994));
@@ -26,6 +26,20 @@ try {
     505.do{|i|base.log(i)};check.value(base.logHistory.size==500 and:{base.logSequence==506},"console history is bounded with monotonic sequence");
     base.adopt(\example,Ref.new,{cleaned=cleaned+1});
     instance.close;check.value(base.closed and:{p.closed} and:{cleaned==1},"base closure retires owned resources once");
+    // Borrowed faders reject invalid values without poisoning authoritative cache.
+    rackInstance=AWBSendRackTool.open((channels:[\b1,\a2],fixedFX:[\mast],dynamicFX:0,fixedFollowers:[],spareFollowers:0),
+        (server:server,sendFunction:{|m|messages.add(m)},track:false));rack=rackInstance.tool;
+    level=AWParam(\master,0.8,ControlSpec(0,2),target:rack.sourceGroup,server:server,options:(sendFunction:{|m|messages.add(m)}));
+    rack.bindLevelParam(\b1,level);before=messages.size;
+    try{rack.setLevel(\b1,2.1)}{|error|rejected=true};
+    check.value(rejected and:{rack.channelAt(\b1)[\level]==0.8} and:{level.baseTarget==0.8} and:{messages.size==before},"out-of-range rack edit leaves parameter, cached level and server commands unchanged");
+    rack.unbindLevelParam(\b1);level.free;rackInstance.close;
+    rackInstance=AWBSendRackTool.open((channels:[\vc],fixedFX:[\mast],dynamicFX:0,fixedFollowers:[],spareFollowers:0,maxGain:1),
+        (server:server,sendFunction:{|m|messages.add(m)},track:false));rack=rackInstance.tool;
+    rack.setSend(\vc,\mast,1);before=messages.size;rejected=false;
+    try{rack.setSend(\vc,\mast,1.001)}{|error|rejected=true};
+    check.value(rejected and:{rack.channelAt(\vc)[\gains][0]==1} and:{messages.size==before},"unity rack rejects gain above 100 percent without changing DSP or cache");
+    rackInstance.close;
     q.free;check.value(q.closed,"externally borrowed parameter remains independently owned");
     ("AWB_LIVE_SURFACE_CONTRACT_RESULT="++if(failures.isEmpty){"PASS"}{"FAIL"}++" checks="++checks).postln;if(failures.isEmpty){0.exit}{1.exit};
 }{|error|error.reportError;instance.tryPerform(\close);q.tryPerform(\free);1.exit};

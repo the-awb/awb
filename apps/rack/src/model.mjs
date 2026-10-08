@@ -23,6 +23,10 @@ export function validateConfig(input) {
     if(!['instrument','global'].includes(r.scope)||!['knob','fader'].includes(r.widget))throw Error(`Invalid region ${r.id}.`);
     if(!Array.isArray(r.destinations)||!r.destinations.length||r.destinations.length>64||new Set(r.destinations).size!==r.destinations.length||r.destinations.some(d=>!idPattern.test(d)))throw Error(`Invalid destinations in ${r.id}.`);
     if(!Number.isFinite(r.min)||!Number.isFinite(r.max)||r.max<=r.min||!Number.isFinite(r.step)||r.step<0)throw Error(`Invalid range in ${r.id}.`);
+    if(r.ranges!==undefined){
+      if(!r.ranges||typeof r.ranges!=='object'||Array.isArray(r.ranges)||r.curve!=='linear')throw Error('Per-destination ranges require a linear region.');
+      for(const [id,bounds] of Object.entries(r.ranges))if(!r.destinations.includes(id)||!bounds||!Number.isFinite(bounds.min)||!Number.isFinite(bounds.max)||bounds.min<r.min||bounds.max>r.max||bounds.min>=bounds.max)throw Error(`Invalid destination range ${id}.`);
+    }
     if(!['linear','log','piecewise'].includes(r.curve)||(r.curve==='log'&&r.min<=0))throw Error(`Invalid curve in ${r.id}.`);
     if(r.curve==='piecewise'){
       const p=r.points;if(!Array.isArray(p)||p.length<2||p.length>32||p[0][0]!==0||p.at(-1)[0]!==1||p[0][1]!==r.min||p.at(-1)[1]!==r.max)throw Error('Curve points must run from [0,min] to [1,max].');
@@ -51,7 +55,7 @@ export function formatValue(v){return Number.isInteger(v)?String(v):String(Numbe
 export function channelRegions(config,instrument){return instrument.regions??config.regions.filter(r=>r.scope==='instrument');}
 export function descriptors(config){
   const out=[];
-  const append=(i,r)=>r.destinations.forEach((d,n)=>out.push({id:`${i.id}/${r.id}/${d}`,instrument:i.id,instrumentLabel:i.label,destination:d,index:n,region:r,address:r.address.replaceAll('{instrument}',i.id).replaceAll('{destination}',d).replaceAll('{index}',String(n)),label:`${i.label} → ${d.toUpperCase()} · ${r.label}`}));
+  const append=(i,r)=>r.destinations.forEach((d,n)=>out.push({id:`${i.id}/${r.id}/${d}`,instrument:i.id,instrumentLabel:i.label,destination:d,index:n,region:r.ranges?.[d]?{...r,...r.ranges[d]}:r,address:r.address.replaceAll('{instrument}',i.id).replaceAll('{destination}',d).replaceAll('{index}',String(n)),label:`${i.label} → ${d.toUpperCase()} · ${r.label}`}));
   for(const i of config.instruments)for(const r of channelRegions(config,i))append(i,r);
   for(const r of config.regions.filter(r=>r.scope==='global'))append({id:'global',label:'LEVELS'},r);
   return out;

@@ -2,7 +2,7 @@
 // All internal dependencies are ordered by construction in this private Group:
 // selector AWParam -> SelectN -> branch route writers -> branch AWParams -> FX.
 AWBVerbMixProfile {
-    var <server,<group,<selector,<select,<branches,<closed=false,options,profiles,bases,hook,routes,quitHook;
+    var <server,<group,<selector,<inputGain,<select,<branches,<closed=false,options,profiles,bases,hook,routes,quitHook;
     *branchIDs {^[\earth,\composite,\texture,\shimmer,\echo]}
     *controlNames {^[\earthVolume,\compositeVolume,\textureVolume,\shimmerVolume,\echoVolume]}
     *defaultBases {^[0.495,0,0.14,0.14,0]}
@@ -22,14 +22,15 @@ AWBVerbMixProfile {
         AWSelectN.weightsAt(0,4,options[\basePole] ? true);
         if(target.isKindOf(Group).not or:{target.server!==server}){Error("Verb: target must be a Group on this server").throw};
         branches=IdentityDictionary.new;routes=IdentityDictionary.new;
-        parameterOptions=options.copy;parameterOptions.removeAt(\basePole);parameterOptions.removeAt(\bases);parameterOptions.removeAt(\profiles);
+        parameterOptions=options.copy.put(\polarity,\unipolar);parameterOptions.removeAt(\basePole);parameterOptions.removeAt(\bases);parameterOptions.removeAt(\profiles);
         try {
             if(options[\sendFunction].notNil){[AWParam.synthDef,AWParam.routeDef].do{|def|this.dispatch([\d_recv,def.asBytes]);SynthDescLib.global.add(def.asSynthDesc)}};
             group=Group.basicNew(server);this.dispatch(group.newMsg(target,\addToTail));options[\ownFunction].value(group,\container,(name:"Verb mix profile",parent:target));
-            selector=AWParam(\verbSelect,options[\base] ? 0,\unipolar,options[\amount] ? 0,options[\modCurve] ? 0,group,server,parameterOptions);
+            inputGain=AWParam(\verbIn,options[\inputGain] ? 1,nil,0,0,group,server,parameterOptions);
+            selector=AWParam(\verbSelect,options[\base] ? 0,nil,options[\amount] ? 0,options[\modCurve] ? 0,group,server,parameterOptions);
             select=AWSelectN(4,options[\basePole] ? true,group,server,parameterOptions);selector.mapTo(select.synth,\position);
             this.class.branchIDs.do{|id,column|
-                var param=AWParam(id,bases[column],\unipolar,1,0,group,server,parameterOptions);branches[id]=param;
+                var param=AWParam(id,bases[column],nil,1,0,group,server,parameterOptions);branches[id]=param;
                 routes[id]=4.collect{|pole|param.addModulation(("s"++(pole+1)).asSymbol,select.busAt(pole),profiles[pole][column])};
             };
             quitHook={this.free(false)};ServerQuit.add(quitHook,server);
@@ -59,11 +60,11 @@ AWBVerbMixProfile {
         var weights=AWSelectN.weightsAt(position,4,select.basePole);
         ^this.class.branchIDs.collect{|id,column|(branches[id].baseTarget+4.collect{|pole|weights[pole]*profiles[pole][column]}.sum).clip(0,1)};
     }
-    configuration {^(base:selector.baseTarget,amount:selector.amountTarget,modCurve:selector.modCurve,basePole:select.basePole,bases:this.class.branchIDs.collect{|id|branches[id].baseTarget},profiles:profiles.deepCopy)}
+    configuration {^(inputGain:inputGain.baseTarget,base:selector.baseTarget,amount:selector.amountTarget,modCurve:selector.modCurve,basePole:select.basePole,bases:this.class.branchIDs.collect{|id|branches[id].baseTarget},profiles:profiles.deepCopy)}
     free { |send=true|
         if(closed){^this};closed=true;ServerQuit.remove(quitHook,server);
         if(hook.notNil){group.removeDependant(hook);group.unregister};
-        branches.values.do{|param|param.free(send)};selector.tryPerform(\free,send);select.tryPerform(\free,send);
+        branches.values.do{|param|param.free(send)};selector.tryPerform(\free,send);inputGain.tryPerform(\free,send);select.tryPerform(\free,send);
         if(send and:{group.notNil}){this.dispatch(group.freeMsg)};if(group.notNil){options[\disownFunction].value(group)};^this;
     }
 }

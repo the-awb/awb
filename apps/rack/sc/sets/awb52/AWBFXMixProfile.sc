@@ -26,7 +26,7 @@ AWBFXMixProfile {
             var values=In.kr(NamedControl.kr(\buses,Array.fill(ids.size,0)),1),c,previous,weights,math,position,result;
             c=IdentityDictionary.new;ids.do{|id,i|c[id]=values[i]};
             if(kind==\deci){
-                var lfo,rate,depthSC,foldSC,depth,fold,roll;
+                var lfo,rate,depthSC,foldSC,depth,fold,roll,full=configuration[\fullParameterRanges] ? false;
                 previous=LocalIn.kr(1,0).asArray;
                 position=(c[\shape]+(previous[0]*0.53)).clip(0,1);
                 weights=AWSelectN.signals(position,4,pole);
@@ -35,13 +35,19 @@ AWBFXMixProfile {
                 lfo=SinOsc.kr(rate,0)*(c[\lfoAmount]+AWBFXMixProfile.mix(weights,[0,0.175,0.35,0.695])).clip(0,1);
                 depthSC=(c[\depthSC]+(lfo*0.6)).clip(0,1);
                 foldSC=(c[\foldingSC]-(lfo*0.5)).clip(0,1);
-                depth=((c[\depth]-(lfo*0.22)+(c[\aDepth]*(c[\depthAmount]+depthSC))).clip(0,1)*2)-1;
-                fold=((c[\folding]+(lfo*0.22)+(c[\aFolding]*(c[\foldingAmount]+foldSC))).clip(0,1)*2)-1;
+                if(full){
+                    // Full plugin bases, retaining the captured modulation depths.
+                    depth=(c[\depth]-(lfo*0.044)+(c[\aDepth]*(c[\depthAmount]+depthSC)*0.2)).clip(0,1);
+                    fold=(c[\folding]+(lfo*0.1166)+(c[\aFolding]*(c[\foldingAmount]+foldSC)*0.53)).clip(0,1);
+                }{
+                    depth=((c[\depth]-(lfo*0.22)+(c[\aDepth]*(c[\depthAmount]+depthSC))).clip(0,1)*2)-1;
+                    fold=((c[\folding]+(lfo*0.22)+(c[\aFolding]*(c[\foldingAmount]+foldSC))).clip(0,1)*2)-1;
+                };
                 roll=(c[\rolloff]-(math*0.29)).clip(0,1);
                 result=[(c[\wet]+(c[\shape]*0.395)+math).clip(0,1),
                     (configuration[\gainDb]+AWBFXMixProfile.mix(weights,[6,6,6.48,8.4])+(math*8.4)).dbamp*c[\level],
                     AWBVerbMixProfile.amplitude(c[\mixerBase]+AWBFXMixProfile.mix(weights,[0.583,0.726,0.919,1.033])),
-                    (bases[\deci][\depth]+(depth*0.1)).clip(0,1),(bases[\deci][\folding]+(fold*0.265)).clip(0,1),
+                    if(full){depth}{(bases[\deci][\depth]+(depth*0.1)).clip(0,1)},if(full){fold}{(bases[\deci][\folding]+(fold*0.265)).clip(0,1)},
                     roll*(-16.8),roll*(-6.96),lfo,rate,position,math];
                 LocalOut.kr([math]);
             }{
@@ -91,7 +97,7 @@ AWBFXMixProfile {
         });
     }
     init { |id,target,s,configuration,opts|
-        var def,defaults,ids;kind=id.asSymbol;options=(opts ? ()).copy;server=s ? target.server;
+        var def,defaults,ids;kind=id.asSymbol;options=(opts ? ()).copy.put(\polarity,\unipolar);server=s ? target.server;
         if([\deci,\spark,\fuzz,\um].includes(kind).not){Error("Unknown FX profile").throw};
         ids=this.class.controls(kind);outputs=this.class.outputNames(kind);params=IdentityDictionary.new;
         defaults=configuration[\defaults] ? ();ownsDefinition=options[\definition].isNil;def=options[\definition] ?? {this.class.compile(kind,configuration)};definitionName=def.name;
@@ -100,7 +106,9 @@ AWBFXMixProfile {
             SynthDescLib.global.add(def.asSynthDesc);
             if(options[\sendFunction].notNil){[AWParam.synthDef,AWParam.routeDef].do{|d|SynthDescLib.global.add(d.asSynthDesc);this.dispatch([\d_recv,d.asBytes])};if(ownsDefinition){this.dispatch([\d_recv,def.asBytes])}};
             ids.do{|key|
-                var spec=if(key==\lfoRate){ControlSpec(0.001,20,\exp)}{if(key.asString.beginsWith("amount") or:{[\amount,\depthAmount,\foldingAmount].includes(key)}){ControlSpec(0,2)}{if(key==\level){ControlSpec(0,4)}{\unipolar}}};
+                // All authored macro/source values are unipolar. Signed LFO signals
+                // and captured target depths belong to the profile DSP, not these knobs.
+                var spec=if(key==\lfoRate){ControlSpec(0.001,20,\exp)}{if(key.asString.beginsWith("amount") or:{[\amount,\depthAmount,\foldingAmount].includes(key)}){ControlSpec(0,2)}{if(key==\level){ControlSpec(0,4)}{nil}}};
                 params[key]=AWParam(key,defaults[key] ? if(key==\level){1}{if(key==\lfoRate){0.04}{0}},spec,1,0,group,server,options);
             };
             outputBus=Bus.control(server,outputs.size);if(outputBus.index.isNil){Error("FX modulation bus allocation exhausted").throw};

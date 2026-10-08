@@ -12,7 +12,7 @@ import {encodeOSC,createSCBridge,documentFromState,envBinding} from './sc-bridge
 import {createOscOutput} from '../../awb-shell/services/oscOutput.mjs';
 export {encodeOSC} from './sc-bridge.mjs';
 const MIME={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.map':'application/json','.svg':'image/svg+xml'};
-export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sendPacket,scBinding=envBinding(),fixedFXReturns=false}={}){
+export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sendPacket,scBinding=envBinding(),fixedFXReturns=false,autoArmSC=false,levelRanges={}}={}){
   await mkdir(runtimeDirectory,{recursive:true});
   let scState=null,bridge=null,reportSCError=()=>{},applySCUpdate=()=>{},feedbackReady=false;const feedbackQueue=[];
   if(scBinding){bridge=await createSCBridge(scBinding,{onError:message=>reportSCError(message),onUpdate:event=>{if(feedbackReady)applySCUpdate(event);else feedbackQueue.push(event)}});try{scState=await bridge.sync();}catch(e){bridge.close();throw e;}}
@@ -29,22 +29,32 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
       if(!libraryLock)throw Error('Unable to acquire SC mix library.');
     }catch(e){bridge.close();await unlock();throw e;}
   }
+  const boundDocument=(state,snapshots=[])=>{
+    const doc=documentFromState(state,snapshots),region=doc.config.regions.find(r=>r.kind==='channel-levels');
+    region.ranges={...levelRanges,...region.ranges};return doc;
+  };
   let document=seedDocument;
   try {
     if(!document){try{document=JSON.parse(await readFile(libraryPath,'utf8'));}catch(e){if(e.code!=='ENOENT')throw e;if(!scState){try{document=JSON.parse(await readFile(new URL('../fixtures/live-set.rack.json',import.meta.url),'utf8'));}catch{document={config:defaultConfig(),values:{},snapshots:[]};}}}}
-    if(scState)document={...documentFromState(scState,document?.snapshots??[]),mixSet:document?.mixSet};
+    if(scState)document={...boundDocument(scState,document?.snapshots??[]),mixSet:document?.mixSet};
   }catch(e){bridge?.close();await unlock();throw e;}
   if(!bridge&&document.config.output.mode==='sc')throw Error('Native SC rack requires its ToolInstance binding.');
   let store;try{store=new RackStore(document);}catch(e){bridge?.close();await unlock();throw e;}
   const fixedReturns=new Set(fixedFXReturns?[...store.byID.values()].filter(d=>d.instrument==='global'&&d.region.id==='levels').map(d=>d.id):[]);
   for(const id of fixedReturns)store.set(id,1,'unity-return');
   const token=crypto.randomUUID(),udp=dgram.createSocket('udp4'),peers=new Set();
-  const root=path.resolve(fileURLToPath(new URL('../dist/',import.meta.url)));let armed=false,recall=null,saveTimer,flushTimer,closed=false,writeQueue=Promise.resolve(),transmitQueue=Promise.resolve();const pending=new Map(),localVersions=new Map();let sent=0,failures=0;
+  const root=path.resolve(fileURLToPath(new URL('../dist/',import.meta.url)));let armed=!!(autoArmSC&&bridge),recall=null,saveTimer,flushTimer,closed=false,writeQueue=Promise.resolve(),transmitQueue=Promise.resolve();const pending=new Map(),localVersions=new Map();let sent=0,failures=0;
   const output=createOscOutput({encodeMessage:encodeOSC,sendPacket:(bytes,packets)=>sendPacket?sendPacket(bytes,packets.length===1?packets[0]:{controls:packets}):new Promise((resolve,reject)=>udp.send(bytes,store.config.output.port,store.config.output.host,e=>e?reject(e):resolve()))});
   const timing=createRackTiming();
   const state=()=>({timing:timing.snapshot(),recall:!!recall,document:store.document(),armed,token,libraryPath,sent,failures,sc:scState,oscOutput:bridge&&!sendPacket?bridge.outputStats():output.snapshot()});
   const broadcast=message=>{const text=JSON.stringify(message);for(const ws of peers)if(ws.readyState===1)ws.send(text);};
-  reportSCError=message=>{failures++;armed=false;broadcast({type:'armed',armed});broadcast({type:'error',message:`SC: ${message}`});};
+  reportSCError=message=>{
+    failures++;armed=false;recall?.stop();recall=null;timing.finishScene();pending.clear();
+    broadcast({type:'armed',armed});broadcast({type:'error',message:`SC: ${message}`});
+    // A rejected command must roll optimistic GUI state back to actual SC values.
+    // Stay disarmed and never retry failed edits automatically.
+    if(!closed&&!syncingSC)queueMicrotask(()=>syncSC().catch(()=>{}));
+  };
   const save=()=>{const text=JSON.stringify(store.document(),null,2)+'\n';writeQueue=writeQueue.catch(()=>{}).then(async()=>{await writeFile(libraryPath+'.tmp',text);await rename(libraryPath+'.tmp',libraryPath);}).catch(e=>{broadcast({type:'error',message:`Save failed: ${e.message}`});throw e;});return writeQueue;};
   const queueSave=()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>save().catch(()=>{}),300);};
   const cacheSCValue=(id,value)=>{
@@ -90,7 +100,7 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
     if(!bridge)throw Error('No native SC rack is bound.');
     if(!recovery){recall?.stop();recall=null;timing.finishScene();}
     const versions=new Map(localVersions);await flush();
-    let next;try{next=await bridge.sync();}catch(e){reportSCError(e.message);throw e;}const doc=documentFromState(next,store.snapshots);
+    let next;try{next=await bridge.sync();}catch(e){reportSCError(e.message);throw e;}const doc=boundDocument(next,store.snapshots);
     compatible(doc);scState=next;
     for(const [id,value]of Object.entries(doc.values)){
       // A recovery snapshot may predate a gesture made while awaiting SC.
@@ -173,7 +183,7 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
   }catch(e){res.writeHead(e.code==='ENOENT'?404:400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:e.message}));}});
   const wss=new WebSocketServer({noServer:true});
   server.on('upgrade',(req,socket,head)=>{const u=new URL(req.url,'http://127.0.0.1');if(u.pathname!=='/ws'||u.searchParams.get('token')!==token){socket.destroy();return;}wss.handleUpgrade(req,socket,head,ws=>wss.emit('connection',ws,req));});
-  wss.on('connection',ws=>{peers.add(ws);const clientID=crypto.randomUUID();let sequence=Promise.resolve();ws.send(JSON.stringify({type:'state',clientID,...state()}));ws.on('close',()=>{peers.delete(ws);if(!peers.size){armed=false;recall?.stop();recall=null;timing.finishScene();}});ws.on('message',data=>{if(data.length>4*1024*1024){ws.close(1009);return;}sequence=sequence.then(async()=>{let c;try{c=JSON.parse(data);const result=await command(c,clientID);if(c.requestID&&ws.readyState===1)ws.send(JSON.stringify({type:'ack',requestID:c.requestID,result}));}catch(e){if(ws.readyState===1)ws.send(JSON.stringify({type:'error',requestID:c?.requestID,message:e.message}));}});});});
+  wss.on('connection',ws=>{peers.add(ws);const clientID=crypto.randomUUID();let sequence=Promise.resolve();ws.send(JSON.stringify({type:'state',clientID,...state()}));ws.on('close',()=>{peers.delete(ws);if(!peers.size){if(!autoArmSC)armed=false;recall?.stop();recall=null;timing.finishScene();}});ws.on('message',data=>{if(data.length>4*1024*1024){ws.close(1009);return;}sequence=sequence.then(async()=>{let c;try{c=JSON.parse(data);const result=await command(c,clientID);if(c.requestID&&ws.readyState===1)ws.send(JSON.stringify({type:'ack',requestID:c.requestID,result}));}catch(e){if(ws.readyState===1)ws.send(JSON.stringify({type:'error',requestID:c?.requestID,message:e.message}));}});});});
   try{await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(httpPort,'127.0.0.1',resolve);});}catch(e){bridge?.close();await unlock();throw e;}
   if(bridge){
     try{await bridge.watch();await syncSC();feedbackReady=true;for(const event of feedbackQueue.splice(0))applySCUpdate(event);}

@@ -1,3 +1,4 @@
+import {createLiveSetHostBridge} from '../src/liveSetHostBridge.mjs';
 import {ControlObservationBroker} from '../src/controlObservationBroker.mjs';
 import crypto from 'node:crypto';
 import path from 'node:path';
@@ -66,6 +67,7 @@ const nativeScHost = new NativeScHostSupervisor( { token: shellHostToken,
 const renderExecutorID = `headless-local-${ crypto.randomUUID() }`;
 let recentStore;
 let toolRuntimes;
+let liveSetSession=null, liveSetLaunch=null;
 let homeWindow = null;
 let quitting = false;
 let servicesClosed = false;
@@ -129,7 +131,10 @@ function hostConfigurationFromRequest( request ) {
 }
 
 function hostConfigurationFromArgs( args ) {
-  const oscPort = Number( option( args, 'osc-port', process.env.AWB_SC_OSC_PORT ?? 57120 ) );
+  // Param/live-set views carry their own direct binding. --osc-port=0 omits
+  // a renderer relay; it must not hide that same language host from Home.
+  const oscPort = Number( option( args, 'osc-port', process.env.AWB_SC_OSC_PORT ?? 57120 ) )
+    || Number( process.env.AWB_PARAM_SC_PORT );
   if ( !Number.isInteger( oscPort ) || oscPort < 1 || oscPort > 65535 ) return null;
   return Object.freeze( { oscHost: option( args, 'osc-host', '127.0.0.1' ), oscPort, hostToken: shellHostToken } );
 }
@@ -234,13 +239,13 @@ function shellSnapshot() {
     host, nativeScHost: nativeScHost.snapshot(), failures: manifestFailures };
 }
 
-async function startHeadlessHost() {
+async function startHeadlessHost({deferServerBoot=false}={}) {
   const configuration = hostConfigurationFromArgs( process.argv.slice( 1 ) );
   const service = await ensureHost( configuration ); const host = service.hostSnapshot();
   if ( host.sclang?.status === 'attached' && host.control?.mode !== 'headless' ) {
     throw new Error( 'An attached SuperCollider IDE host is already available.' );
   }
-  return nativeScHost.start( { oscPort: configuration.oscPort } );
+  return nativeScHost.start( { oscPort: configuration.oscPort, deferServerBoot } );
 }
 
 async function stopHeadlessHost() {
@@ -284,7 +289,33 @@ async function nativeHostForProfile( profileID ) {
   return { configuration, service };
 }
 
+async function launchHeadlessLiveSet(request) {
+  const existing=registry.list().find(v=>v.toolID==='live-set'&&windows.has(v.viewID));
+  if(existing){await focusToolView(existing.viewID);return {status:'accepted',viewID:existing.viewID};}
+  if(liveSetLaunch)return liveSetLaunch;
+  liveSetLaunch=(async()=>{
+    await startHeadlessHost({deferServerBoot:true});
+    const configuration=hostConfigurationFromArgs(process.argv.slice(1)),service=await ensureHost(configuration);
+    await waitFor(()=>service.hostSnapshot().control?.status==='ready'&&service.hostSnapshot().control?.mode==='headless',30000);
+    const bridge=await createLiveSetHostBridge({port:configuration.oscPort,token:shellHostToken,libraryRoot:path.resolve(appRoot,'../../.rack-sc-libraries')});
+    let result;
+    try {
+      const binding=await bridge.open();
+      const session={...binding,bridge,service,close:async()=>{try{await bridge.close()}finally{if(liveSetSession===session)liveSetSession=null}}};
+      liveSetSession=session;
+      result=await router.launch({...request,toolInstanceID:binding.instanceID,owner:{kind:'attached-process',pid:binding.processID}});
+      if(result.status!=='accepted')throw Error(result.error??'Live set window could not open');
+      nativeToolInstances.set(result.viewID,{service,toolID:'live-set',instanceID:binding.instanceID,close:session.close});
+      return result;
+    } catch(error) {
+      await bridge.close().catch(()=>{});liveSetSession=null;throw error;
+    }
+  })();
+  try{return await liveSetLaunch}finally{liveSetLaunch=null}
+}
+
 async function launchFromHome( rawRequest ) {
+  if(rawRequest.toolID==='live-set'&&rawRequest.profileID==='headless'&&!rawRequest.toolInstanceID)return launchHeadlessLiveSet(rawRequest);
   if ( [ 'shared-loop', 'scope' ].includes( rawRequest.toolID ) ) rawRequest = { ...rawRequest, profileID: 'hosted' };
   const nativeTool = rawRequest.toolID === 'score-studio'
     ? { instancePrefix: 'scoreArranger', profiles: [ 'hosted', 'attached', 'headless' ] }
@@ -1314,10 +1345,12 @@ function finalizeView( viewID, window, senderID ) {
   fileGrants.releaseView( viewID );
   nativeAudio.releaseView( viewID ).catch( ( error ) => console.error( error ) );
   scBusAudio.releaseView( viewID ).catch( ( error ) => console.error( error ) );
-  toolRuntimes.release( viewID ).catch( ( error ) => console.error( error ) );
+  const runtimeStop=toolRuntimes.release(viewID);
   const nativeInstance = nativeToolInstances.get( viewID ); nativeToolInstances.delete( viewID );
-  nativeInstance?.service.closeToolInstance( nativeInstance.toolID, nativeInstance.instanceID )
-    .catch( ( error ) => console.error( error ) );
+  // Stop observation and local servers before retiring this window's DSP owner.
+  runtimeStop.catch(error=>console.error(error)).then(()=>nativeInstance &&
+    (nativeInstance.close ? nativeInstance.close() : nativeInstance.service.closeToolInstance(nativeInstance.toolID,nativeInstance.instanceID)))
+    .catch(error=>console.error(error));
   serviceReleases.get( viewID )?.().catch( ( error ) => console.error( error ) ); serviceReleases.delete( viewID );
   if ( registry.get( viewID ) ) { registry.update( viewID, { lifecycle: 'closed' } ); registry.remove( viewID ); }
   notifyHome();
@@ -1760,6 +1793,7 @@ if ( gotLock ) {
     toolRuntimes = new ToolRuntimeRegistry( {
       runtimeRoot: path.join( app.getPath( 'userData' ), 'tool-runtimes' ),
       runtimeContext: async ( { tool } ) => {
+        if(tool.id==='live-set'&&liveSetSession)return {...liveSetSession.context,controlObservations};
         if ( [ 'param', 'live-set' ].includes( tool.id ) ) return {controlObservations};
         if ( tool.id === 'scope' ) return { signalCaptures, getNativeHost: async () => {
           const native = await nativeHostForProfile( 'hosted' );
@@ -1781,10 +1815,20 @@ if ( gotLock ) {
     await ensureHost( hostConfigurationFromRequest( initialRequest )
       ?? hostConfigurationFromArgs( process.argv.slice( 1 ) ) );
     await createRenderExecutorWindow();
-    await createHomeWindow();
-    if ( initialRequest ) await launchFromHome( initialRequest );
+    if ( initialRequest?.toolID === 'live-set' ) {
+      const result = await launchFromHome( initialRequest );
+      await focusToolView( result.viewID );
+    } else {
+      await createHomeWindow();
+      if ( initialRequest ) await launchFromHome( initialRequest );
+    }
   } ).catch( reportFatal );
-  app.on( 'activate', () => { if ( !quitting ) createHomeWindow().catch( reportFatal ); } );
+  app.on( 'activate', () => {
+    if ( quitting ) return;
+    const live = registry.list().find( view => view.toolID === 'live-set' && windows.has( view.viewID ) );
+    if ( live ) focusToolView( live.viewID ).catch( reportFatal );
+    else createHomeWindow().catch( reportFatal );
+  } );
   app.on( 'window-all-closed', () => { if ( !quitting ) createHomeWindow().catch( reportFatal ); } );
   app.on( 'before-quit', ( event ) => {
     quitting = true;
@@ -1793,11 +1837,11 @@ if ( gotLock ) {
     if ( !serviceShutdown ) serviceShutdown = ( async () => {
       for ( const unsubscribe of hostSubscriptions.values() ) unsubscribe();
       hostSubscriptions.clear();
+      const runtimeStops = await Promise.allSettled( [ toolRuntimes?.closeAll(), scBusAudio.close() ] );
       const nativeInstanceStops = await Promise.allSettled( [ ...nativeToolInstances.values() ].map(
-        ( owned ) => owned.service.closeToolInstance( owned.toolID, owned.instanceID )
+        owned => owned.close ? owned.close() : owned.service.closeToolInstance(owned.toolID,owned.instanceID)
       ) );
       nativeToolInstances.clear();
-      const runtimeStops = await Promise.allSettled( [ toolRuntimes?.closeAll(), scBusAudio.close() ] );
       await signalCaptures.close();
       controlObservations.close();
       const headlessService = services.firstService( ( service ) => service.hostSnapshot?.().control?.mode === 'headless' );

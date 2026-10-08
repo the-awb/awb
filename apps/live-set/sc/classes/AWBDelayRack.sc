@@ -29,6 +29,20 @@ AWBDelayRack {
         epoch=thisProcess.pid.asString++":"++UniqueID.next;
         graph=UBPGraphController(server,plan,base.instance);^this;
     }
+    *pipeDef {
+        ^SynthDef(("awbDelayPipe"++UniqueID.next).asSymbol,{|in=0,out=0,gain=1|Out.ar(out,In.ar(in,2)*gain)});
+    }
+    // Put source channels before the graph and delay/FX return channels after it.
+    // Build messages first so missing inputs cannot leave a partially moved graph.
+    *routingOrderMessages { |rack,group,inputIDs|
+        var upstream=[\vc]++inputIDs.reject{|id|id=="clean"}.collect(_.asSymbol)++[\delbus];
+        var before=upstream.collect{|id|rack.channelAt(id)[\node]},after,messages=List.new;
+        after=rack.channels.values.reject{|c|upstream.includes(c[\id])}.collect{|c|c[\node]}.asArray;
+        messages.add(group.moveBeforeMsg(rack.channelAt(\b1)[\node]));
+        before.do{|node|messages.add(node.moveBeforeMsg(group))};
+        after.reverseDo{|node|messages.add(node.moveAfterMsg(group))};
+        ^messages.asArray;
+    }
     requireOpen {if(closed or:{ready.not} or:{server.serverRunning.not}){Error("Delay binding unavailable").throw};^this}
     start { |action|
         starting=true;
@@ -38,25 +52,30 @@ AWBDelayRack {
                     var bridge;
                     try{
                         base.group.moveBefore(rack.rootGroup);
-                        graph.group.moveToTail(rack.sourceGroup);
+                        server.sendBundle(nil,*this.class.routingOrderMessages(rack,graph.group,
+                            graph.plan[\nodes].select{|item|item[\kind]=="input"}.collect{|item|item[\id]}));
                         parameterGroup=Group.head(base.group);base.instance.own(parameterGroup,\group,(name:"Delay parameters"));
                         adapter=UBPGraphAWParamAdapter(graph);
-                        bridge=SynthDef(("awbDelayPipe"++UniqueID.next).asSymbol,{|in=0,out=0,gain=1,previous=0|Out.ar(out,Select.ar(previous,[In.ar(in,2),InFeedback.ar(in,2)])*gain)});
+                        bridge=this.class.pipeDef;
                         pipeDefinition=bridge;bridge.send(server);AWParam.prepare(server);server.sync;
+                        // Enforce VC channel -> cello feed -> Delay Bus channel order.
+                        // Delay inputs and cells then read these current-block post buses.
+                        feeders.add(Synth.after(rack.channelAt(\vc)[\node],bridge.name,[\in,rack.postFor(\vc).index,\out,rack.inputFor(\delbus).index]));
+                        rack.channelAt(\delbus)[\node].moveAfter(feeders.last);
+                        base.instance.own(feeders.last,\synth,(name:"Cello feed to Delay Bus"));
                         graph.plan[\nodes].select{|item|item[\kind]=="input"}.do{|item|
                             var id=item[\id];
-                            var source=if(id=="clean"){\vc}{id.asSymbol},node;
-                            node=Synth.before(graph.group,bridge.name,[\in,rack.postFor(source).index,\out,graph.port(id,"out").index,\previous,1]);feeders.add(node);base.instance.own(node,\synth,(name:"Delay input "++source));
+                            var source=if(id=="clean"){\delbus}{id.asSymbol},node;
+                            node=Synth.before(graph.group,bridge.name,[\in,rack.postFor(source).index,\out,graph.port(id,"out").index]);feeders.add(node);base.instance.own(node,\synth,(name:"Delay input "++source));
                         };
-                        // Independent wet channels are initially unsent; Delay Bus is the aggregate.
+                        // Each cell reaches hardware only through its own explicit rack sends.
                         ["B1","A2","B2","A1"].do{|id|
                             var node=Synth.after(graph.group,bridge.name,[\in,graph.port(id,"wet").index,\out,rack.inputFor(id.toLower.asSymbol).index]);returns.add(node);base.instance.own(node,\synth,(name:"Delay return "++id));
                         };
-                        returns.add(Synth.after(graph.group,bridge.name,[\in,graph.port("monitor","in").index,\out,rack.inputFor(\delbus).index]));base.instance.own(returns.last,\synth,(name:"Delay Bus return"));
                         this.bindParameters;
-                        rack.setSend(\delbus,\mast,1);rack.setLevel(\delbus,0.8);
+                        rack.setSend(\delbus,\mast,0);rack.setLevel(\delbus,state[\globalInput]);
                         server.sync;ready=true;starting=false;this.installResponder;
-                        if(closed){this.close;action.value(nil,Error("Delay owner closed during startup"))}{base.log("Four delays connected; configured rack inputs, separate returns and Delay Bus");action.value(this,nil)};
+                        if(closed){this.close;action.value(nil,Error("Delay owner closed during startup"))}{base.log("Four delays connected; configured rack inputs, explicit cell returns and cello-only Delay Bus");action.value(this,nil)};
                     }{|failure|starting=false;this.close;action.value(nil,failure)};
                 }).play(SystemClock);
             };
@@ -88,10 +107,10 @@ AWBDelayRack {
             if(parts[1]!="monitor"){base.track(parts[1].toLower.asSymbol).add(names[parts[0].asSymbol],p,id,this.class.midi(parts[1].toLower,names[parts[0].asSymbol]))};
         };
         this.class.midiRows.do{|row|var track=base.track(row[\track]),id=row[\name].asSymbol;if(track.p[id].isNil){track.unavailable(id,row[\name],this.class.midi(row[\track],id))}};
-        [\globalInput,\master].do{|field|
-            var p=AWParam(field,state[field],ControlSpec(0,if(field==\master){2}{1}),target:parameterGroup,server:server,options:(ownerInstance:base.instance,ownFunction:{|n,type,meta|base.instance.own(n,type,meta)},disownFunction:{|n|base.instance.disown(n)}));
+        [\globalInput].do{|field|
+            var p=AWParam(field,state[field],ControlSpec(0,1),target:parameterGroup,server:server,options:(ownerInstance:base.instance,ownFunction:{|n,type,meta|base.instance.own(n,type,meta)},disownFunction:{|n|base.instance.disown(n)}));
             params[field.asString]=p;
-            if(field==\globalInput){feeders.do{|n|p.mapTo(n,\gain)}}{rack.bindLevelParam(\delbus,p);base.track(\delbus).add(\fader,p,"Delay Bus",(channel:3,cc:32,pickup:true))};
+            rack.bindLevelParam(\delbus,p);base.track(\delbus).add(\fader,p,"Cello to delays",(channel:3,cc:32,pickup:true));
             hooks[p]={|o,what,data|if(what==\baseTarget and:{closed.not}){state[field]=p.baseTarget;revision=revision+1;this.notifyValue(field.asString,p.baseTarget)}};p.addDependant(hooks[p]);
         };
     }

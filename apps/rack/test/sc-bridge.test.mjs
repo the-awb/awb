@@ -20,9 +20,15 @@ test('actual ToolInstance bridge coalesces feedback, fences stale writes and pre
     assert.match(runtime.libraryPath,/rack-library-sc-bridge-test.json$/);
     // Preview changes are local only; Sync restores the authoritative SC command state.
     await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.8}]});await runtime.command({type:'sync-sc'});assert.equal(runtime.store.get('a/fx/mast'),0);assert.equal(runtime.state().sent,0);
+    // A bound live set opts into immediate control; an ordinary rack still previews.
+    await runtime.stop();runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),scBinding:{...binding,libraryRoot:dir},autoArmSC:true});
+    assert.equal(runtime.state().armed,true,'a successfully bound live rack starts editable');
+    await runtime.command({type:'batch',changes:[{id:'global/channel-levels/a',value:.85}]});await runtime.command({type:'sync-sc'});
+    assert.ok(Math.abs(runtime.store.get('global/channel-levels/a')-.85)<1e-6,'first live fader edit reaches SC without an arm click');
+    const initialSent=runtime.state().sent;
     await runtime.command({type:'arm',armed:true});
     await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.375},{id:'b/fx/mast',value:.25},{id:'global/channel-levels/a',value:.7},{id:'a/state/mute',value:1},{id:'b/state/solo',value:1},{id:'a/followers/env',value:.4},{id:'global/levels/mast',value:.9}]});
-    await runtime.command({type:'sync-sc'});assert.equal(runtime.store.get('a/fx/mast'),.375);assert.ok(Math.abs(runtime.store.get('global/channel-levels/a')-.7)<1e-6);assert.equal(runtime.store.get('a/state/mute'),1);assert.equal(runtime.store.get('b/state/solo'),1);assert.ok(Math.abs(runtime.store.get('a/followers/env')-.4)<1e-6);assert.ok(Math.abs(runtime.store.get('global/levels/mast')-.9)<1e-6);assert.equal(runtime.state().sent,7);
+    await runtime.command({type:'sync-sc'});assert.equal(runtime.store.get('a/fx/mast'),.375);assert.ok(Math.abs(runtime.store.get('global/channel-levels/a')-.7)<1e-6);assert.equal(runtime.store.get('a/state/mute'),1);assert.equal(runtime.store.get('b/state/solo'),1);assert.ok(Math.abs(runtime.store.get('a/followers/env')-.4)<1e-6);assert.ok(Math.abs(runtime.store.get('global/levels/mast')-.9)<1e-6);assert.equal(runtime.state().sent-initialSent,7);
     assert.equal(runtime.store.get('global/control-levels/env'),1);
     await runtime.command({type:'batch',changes:[{id:'global/control-levels/env',value:.35}]});
     await runtime.command({type:'sync-sc'});assert.ok(Math.abs(runtime.store.get('global/control-levels/env')-.35)<1e-6);
@@ -233,5 +239,13 @@ test('automatic SC recovery preserves new gestures and keeps recalls running',{t
     await wait(60);await recover();await wait(60);release();await wait(30);
     assert.equal(notifications.filter(m=>m.type==='recall').at(-1)?.active,true,'recovery must not tell the browser that an active recall stopped');await wait(270);
     assert.equal(runtime.store.get('a/fx/mast'),1,'automatic recovery must not stop a recall');assert.equal(runtime.state().failures,0);
+    await new Promise((ok,no)=>socket.send(encodeOSC({address:'/awb/rack/error',args:[instanceID,'Rejected control edit']}),endpoint.port,endpoint.address,e=>e?no(e):ok()));
+    for(let i=0;i<100&&runtime.store.get('a/fx/mast')!==.125;i++)await wait(10);
+    assert.equal(runtime.state().armed,false,'command rejection disables output');
+    assert.equal(runtime.store.get('a/fx/mast'),.125,'command rejection rolls optimistic GUI values back to actual SC state');
+    assert.equal(runtime.state().sc.sends.a[0],.125,'authoritative cache is restored too');
+    await runtime.command({type:'arm',armed:true});await runtime.command({type:'batch',changes:[{id:'a/fx/mast',value:.375}]});await runtime.command({type:'capture',label:'after error'});
+    for(let i=0;i<100&&sends.at(-1)!==.375;i++)await wait(5);assert.equal(sends.at(-1),.375,'transport accepts a subsequent edit after explicit re-arm');
+
   }finally{await runtime?.stop();await wait(10);socket.close();await rm(dir,{recursive:true,force:true});}
 });

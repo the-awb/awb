@@ -24,7 +24,7 @@ const lifecycleClass = ( lifecycle ) => lifecycle === 'ready' ? 'is-ready'
 
 function toolCard( tool ) {
   const hue = TOOL_HUE[ tool.id ] ?? 'var(--accent)';
-  const profiles = tool.launchProfiles.map( ( profile, index ) =>
+  const profiles = tool.launchProfiles.filter( profile => tool.id !== 'live-set' || profile.id !== 'standalone' ).map( ( profile, index ) =>
     `<button class="${ index === 0 ? 'primary' : 'secondary' }" data-tool="${ escapeHTML( tool.id ) }" data-profile="${ escapeHTML( profile.id ) }">${ escapeHTML( profile.label ) }</button>` ).join( '' );
   const documents = tool.documentKinds.map( ( kind ) => {
     const actions = [
@@ -71,7 +71,14 @@ async function render() {
 document.addEventListener( 'click', async ( event ) => {
   const target = event.target.closest( 'button' );
   if ( !target ) return;
-  if ( target.dataset.tool ) await host.request( 'shell.launch', { toolID: target.dataset.tool, profileID: target.dataset.profile, launchOrigin: 'desktop' } );
+  if ( target.dataset.tool ) {
+    target.disabled = true; hostMessageElement.textContent = `Opening ${target.dataset.tool}…`;
+    try {
+      const result = await host.request( 'shell.launch', { toolID: target.dataset.tool, profileID: target.dataset.profile, launchOrigin: 'desktop' } );
+      hostMessageElement.textContent = result.status === 'failed' ? result.error : '';
+    } catch ( error ) { hostMessageElement.textContent = error.message; }
+    finally { target.disabled = false; }
+  }
   if ( target.dataset.documentAction ) await host.request( 'shell.launch-document', {
     toolID: target.dataset.documentTool, documentKindID: target.dataset.documentKind,
     action: target.dataset.documentAction, recentID: target.dataset.recentId ?? null

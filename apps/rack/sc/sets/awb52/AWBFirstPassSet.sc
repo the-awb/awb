@@ -247,6 +247,7 @@ AWBFirstPassSet {
         mix=AWBVerbMixProfile(ctx[\group],server,mixOptions);
         allVerbMixes.add(mix);verbMixes[ctx[\slotID]]=mix;verbBranchGates[ctx[\slotID]]=gates;
         hub=ctx[\synth].value((prefix++"Verb").asSymbol,[\in,ctx[\input].index,\out,source.index,\levelOut,level.index,\inputLevel,if(options[\audition] ? true){1}{0}]);
+        mix.inputGain.mapTo(hub,\inputLevel);
         [[\earth,\VerbEarth,2.5,0],[\composite,\VerbComposite,-0.4,-8.4],[\texture,\VerbTexture,0,0],[\shimmer,\VerbShimmer,0,0],[\echo,\VerbEcho,0,-20]].do{|entry|
             var id=entry[0],gateOpts=mixOptions.copy,gate,processor;
             gateOpts[\name]="Verb / "++id;gateOpts[\gain]=entry[2].dbamp;gateOpts[\wetGain]=entry[3].dbamp;gateOpts[\levelBus]=level;
@@ -383,6 +384,7 @@ AWBFirstPassSet {
         if(closed or:{node.isNil}){Error("FX unavailable").throw};
         desc=SynthDescLib.global.at(node.defName);
         if(range.isNil or:{desc.controls.any{|c|c.name==key.asSymbol}.not} or:{value.isNumber.not} or:{value.isNaN} or:{value<range[0]} or:{value>range[1]}){Error("Invalid FX control or value").throw};
+        if(slot.asSymbol==\verb and:{key.asSymbol==\inputLevel} and:{verbMixes[slot.asSymbol].notNil}){verbMixes[slot.asSymbol].inputGain.setBase(value);^value};
         if(fxMixes[slot.asSymbol].notNil and:{fxMixes[slot.asSymbol].params[key.asSymbol].notNil}){fxMixes[slot.asSymbol].param(key).setBase(value)}{this.emit([\n_set,node.nodeID,key,value])};^value;
     }
     connectInputs { |vc,pro2,mic|

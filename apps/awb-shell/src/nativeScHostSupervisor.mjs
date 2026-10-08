@@ -29,7 +29,7 @@ export class NativeScHostSupervisor {
     if ( this.logTail.length > 40 ) this.logTail.splice( 0, this.logTail.length - 40 );
   }
 
-  async start( { oscPort } ) {
+  async start( { oscPort, deferServerBoot = false } ) {
     if ( this.child ) return this.snapshot();
     await access( this.sclangPath, constants.X_OK ); await access( this.bootstrapPath, constants.R_OK );
     if ( this.sclangConfig ) await access( this.sclangConfig, constants.R_OK );
@@ -41,6 +41,7 @@ export class NativeScHostSupervisor {
     const child = spawn( this.sclangPath, args, {
       cwd: path.dirname( this.bootstrapPath ), env: { ...process.env, AWB_HEADLESS_TOKEN: this.token,
         AWB_HEADLESS_SERVER_PORT: `${ this.serverPort }`, AWB_HOST_AUTOSTART: '0',
+        AWB_HEADLESS_DEFER_SERVER_BOOT: deferServerBoot ? '1' : '0',
         SC_PLUGIN_PATH: [ process.env.SC_PLUGIN_PATH, ...this.pluginPaths ].filter( Boolean ).join( path.delimiter ) },
       stdio: [ 'ignore', 'pipe', 'pipe' ]
     } );

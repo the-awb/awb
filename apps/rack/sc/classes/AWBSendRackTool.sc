@@ -199,10 +199,10 @@ AWBSendRackTool : Tool {
         this.installDef(\pass,SynthDef((prefix++"Pass").asSymbol,{|in=0,out=0|Out.ar(out,In.ar(in,width))}));
         [false,true].do{|limit|[false,true].do{|tapped|
             var key=if(limit){"returnLimited"}{"return"}++if(tapped){"Tapped"}{""};
-            this.installDef(key.asSymbol,SynthDef((prefix++key).asSymbol,{|in=0,out=0,tap=0,level=1,fade=0.02,ceiling=0.99|
+            this.installDef(key.asSymbol,SynthDef((prefix++key).asSymbol,{|in=0,out=0,tap=0,level=1,channelLevel=1,channelEnabled=1,fade=0.02,ceiling=0.99|
                 var signal=In.ar(in,width)*Lag.kr(level,fade);
                 if(limit){signal=Limiter.ar(signal,ceiling,0.01)};
-                Out.ar(out,signal);
+                Out.ar(out,signal*Lag.kr(channelLevel*channelEnabled,fade));
                 if(tapped){Out.ar(tap,signal)};
             }));
         }};
@@ -366,28 +366,38 @@ AWBSendRackTool : Tool {
         var channel=this.channelAt(id),hook;this.requireOpen;
         if(param.server!==server or:{param.closed} or:{param.spec.minval>0} or:{param.spec.maxval>config[\maxGain]}){Error("Invalid rack level parameter").throw};
         if(channel[\levelParam].notNil){Error("Rack level parameter already bound").throw};
-        param.mapTo(channel[\node],\level);channel[\levelParam]=param;
+        param.mapTo(channel[\node],\level);this.returnGenerations(channel).do{|gen|param.mapTo(gen[\return],\channelLevel);gen[\returnLevelParam]=param};channel[\levelParam]=param;
         hook={|o,what,data|if(what==\baseTarget and:{closed.not}){channel[\level]=param.baseTarget;this.publishValue("global/channel-levels/"++id.asString,param.baseTarget)};if(what==\closed and:{closed.not}){this.unbindLevelParam(id)}};
         channel[\levelHook]=hook;param.addDependant(hook);channel[\level]=param.baseTarget;^this;
     }
     unbindLevelParam { |id|
         var channel=this.channelAt(id),p=channel[\levelParam];
-        if(p.notNil){p.removeDependant(channel[\levelHook]);if(p.closed.not){p.unmapFrom(channel[\node],\level)};channel[\levelParam]=nil;channel[\levelHook]=nil;this.dispatch(channel[\node].setMsg(\level,channel[\level]))};^this;
+        if(p.notNil){p.removeDependant(channel[\levelHook]);if(p.closed.not){p.unmapFrom(channel[\node],\level);this.returnGenerations(channel).do{|gen|p.unmapFrom(gen[\return],\channelLevel)}};this.returnGenerations(channel).do{|gen|gen[\returnLevelParam]=nil};this.returnGenerations(channel).do{|gen|this.dispatch(gen[\return].setMsg(\channelLevel,channel[\level]))};channel[\levelParam]=nil;channel[\levelHook]=nil;this.dispatch(channel[\node].setMsg(\level,channel[\level]))};^this;
     }
     setLevel { |id,value|
         var channel=this.channelAt(id);
         this.requireOpen;value=AWBSendRackVoice.gain(value);
         if(value>config[\maxGain]){Error("Channel level exceeds rack range").throw};
-        channel[\level]=value;if(channel[\levelParam].notNil){channel[\levelParam].setBase(value)}{this.dispatch([\n_set,channel[\node].nodeID,\level,value]);this.publishValue("global/channel-levels/"++id.asString,value)};^value;
+        if(channel[\levelParam].notNil){value=channel[\levelParam].checkBase(value);channel[\levelParam].setBase(value)}{channel[\level]=value;this.dispatch([\n_set,channel[\node].nodeID,\level,value]);this.returnGenerations(channel).do{|gen|this.dispatch(gen[\return].setMsg(\channelLevel,value))};this.publishValue("global/channel-levels/"++id.asString,value)};^value;
     }
     setMute { |id,value|this.requireOpen;if(value.isKindOf(Boolean).not){Error("Mute requires a Boolean").throw};this.channelAt(id)[\mute]=value==true;this.publishValue(id.asString++"/state/mute",value.asInteger);this.updateEnabled;^this }
     setSolo { |id,value|this.requireOpen;if(value.isKindOf(Boolean).not){Error("Solo requires a Boolean").throw};this.channelAt(id)[\solo]=value==true;this.publishValue(id.asString++"/state/solo",value.asInteger);this.updateEnabled;^this }
+    returnGenerations { |channel|
+        var slot;if(channel[\returnOf].isNil){^[]};slot=slots[channel[\returnOf]];
+        ^([slot[\active]]++slot[\retiring]).reject(_.isNil);
+    }
+    returnEnabled { |channel|
+        var soloing=channels.values.any{|c|c[\returnOf].notNil and:{c[\solo]}};
+        ^channel[\mute].not and:{soloing.not or:{channel[\solo]}};
+    }
     updateEnabled {
-        var soloing=channels.values.any{|channel|channel[\solo]};
+        var soloing=channels.values.any{|channel|channel[\returnOf].isNil and:{channel[\solo]}};
         this.requireOpen;
         channels.values.do{|channel|
-            var enabled=channel[\mute].not and:{soloing.not or:{channel[\solo]}};
+            // FX solos keep their upstream audio and inter-FX sends alive.
+            var enabled=channel[\mute].not and:{channel[\returnOf].notNil or:{soloing.not or:{channel[\solo]}}};
             this.dispatch([\n_set,channel[\node].nodeID,\enabled,if(enabled){1}{0}]);
+            this.returnGenerations(channel).do{|gen|this.dispatch(gen[\return].setMsg(\channelEnabled,this.returnEnabled(channel).binaryValue))};
         };
         this.publish(false);
     }
@@ -452,8 +462,9 @@ AWBSendRackTool : Tool {
             };
             gen[\return]=this.synth(definitions[(if(settings[\limiter] ? true){"returnLimited"}{"return"}++if(slot[\returnChannel].notNil){"Tapped"}{""}).asSymbol].name,
                 [\in,gen[\output].index,\out,(slot[\returnBus] ? masterBus).index,\level,slot[\level],\fade,fade]
-                ++if(slot[\returnChannel].notNil){[\tap,channels[slot[\returnChannel]][\input].index]}{[]},gen[\group],"FX return");
+                ++if(slot[\returnChannel].notNil){var channel=channels[slot[\returnChannel]];[\tap,channel[\input].index,\channelLevel,channel[\level],\channelEnabled,this.returnEnabled(channel).binaryValue]}{[]},gen[\group],"FX return");
             gen[\nodes].add(gen[\return]);
+            if(slot[\returnChannel].notNil and:{channels[slot[\returnChannel]][\levelParam].notNil}){gen[\returnLevelParam]=channels[slot[\returnChannel]][\levelParam];gen[\returnLevelParam].mapTo(gen[\return],\channelLevel)};
         }{|error|this.disposeGeneration(gen);error.throw};
         old=slot[\active];slot[\active]=gen;
         switchMessages=[[\n_set,gen[\ingress].nodeID,\gate,1]];
@@ -488,6 +499,8 @@ AWBSendRackTool : Tool {
         var actions=gen.removeAt(\disposeActions);if(actions.notNil){actions.do{|action|try{action.value}{|error|error.reportError}}};^this;
     }
     disposeGeneration { |gen|
+        var param=gen.removeAt(\returnLevelParam);
+        if(param.notNil and:{param.closed.not} and:{gen[\return].notNil}){param.unmapFrom(gen[\return],\channelLevel,false)};
         if(gen[\group].notNil){this.dispatch(gen[\group].freeMsg)};
         this.finishGenerationResources(gen);
         (gen[\nodes] ? []).do{|node|instance.disown(node);ownedNodes.remove(node)};
@@ -681,7 +694,7 @@ AWBSendRackTool : Tool {
         address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"begin",revision,config[\name],config[\libraryID],config[\maxGain],channels.size,slotIDs.size,processors.size,1);
         config[\channels].do{|item,order|
             var channel=this.channelAt(this.itemID(item));
-            address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"channel",channel[\id].asString,channel[\label],channel[\level],channel[\mute].asInteger,channel[\solo].asInteger,order);
+            address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"channel",channel[\id].asString,channel[\label],channel[\level],channel[\mute].asInteger,channel[\solo].asInteger,order,if(channel[\levelParam].isNil){0}{channel[\levelParam].spec.minval},if(channel[\levelParam].isNil){config[\maxGain]}{channel[\levelParam].spec.maxval});
         };
         slotIDs.do{|id,order|
             var slot=slots[id],settings=slot[\active].tryPerform(\at,\settings) ? (),detector=slot[\detector].tryPerform(\at,\settings) ? ();

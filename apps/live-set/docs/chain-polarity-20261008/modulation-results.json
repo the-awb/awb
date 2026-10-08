@@ -1,0 +1,385 @@
+{
+  "passed": true,
+  "checks": 55,
+  "rows": [
+    {
+      "label": "36 real diagnostic channels",
+      "measured": null
+    },
+    {
+      "label": "All modulation samples finite",
+      "measured": null
+    },
+    {
+      "label": "Deci pole 1",
+      "measured": {
+        "actual": 0.25,
+        "expected": 0.25
+      }
+    },
+    {
+      "label": "Deci LFO remains 0.04 Hz without Math input",
+      "measured": {
+        "actual": 0.04000000283122063,
+        "expected": 0.04
+      }
+    },
+    {
+      "label": "Deci pole gain 1",
+      "measured": {
+        "actual": 0.60953688621521,
+        "expected": 0.6095368972401691
+      }
+    },
+    {
+      "label": "Deci pole mixer volume 1",
+      "measured": {
+        "actual": 1.5852422714233398,
+        "expected": 1.5852422959999997
+      }
+    },
+    {
+      "label": "Sparkle amount selector pole 1",
+      "measured": {
+        "actual": 0.25,
+        "expected": 0.25
+      }
+    },
+    {
+      "label": "Sparkle follower times selected amount 1",
+      "measured": {
+        "actual": 0.6499999761581421,
+        "expected": 0.65
+      }
+    },
+    {
+      "label": "Sparkle main wet profile 1",
+      "measured": {
+        "actual": 1.0,
+        "expected": 1
+      }
+    },
+    {
+      "label": "Sparkle delay wet profile 1",
+      "measured": {
+        "actual": 0.4732399582862854,
+        "expected": 0.47324000000000005
+      }
+    },
+    {
+      "label": "Sparkle upper wet profile 1",
+      "measured": {
+        "actual": 0.0,
+        "expected": 0.0
+      }
+    },
+    {
+      "label": "Sparkle lower wet profile 1",
+      "measured": {
+        "actual": 0.0,
+        "expected": 0.0
+      }
+    },
+    {
+      "label": "Deci pole 2",
+      "measured": {
+        "actual": 0.5,
+        "expected": 0.5
+      }
+    },
+    {
+      "label": "Deci LFO remains 0.04 Hz without Math input",
+      "measured": {
+        "actual": 0.04000000283122063,
+        "expected": 0.04
+      }
+    },
+    {
+      "label": "Deci pole gain 2",
+      "measured": {
+        "actual": 0.60953688621521,
+        "expected": 0.6095368972401691
+      }
+    },
+    {
+      "label": "Deci pole mixer volume 2",
+      "measured": {
+        "actual": 3.0612576007843018,
+        "expected": 3.061257408
+      }
+    },
+    {
+      "label": "Sparkle amount selector pole 2",
+      "measured": {
+        "actual": 0.5,
+        "expected": 0.5
+      }
+    },
+    {
+      "label": "Sparkle follower times selected amount 2",
+      "measured": {
+        "actual": 0.6000000238418579,
+        "expected": 0.6
+      }
+    },
+    {
+      "label": "Sparkle main wet profile 2",
+      "measured": {
+        "actual": 1.0,
+        "expected": 1
+      }
+    },
+    {
+      "label": "Sparkle delay wet profile 2",
+      "measured": {
+        "actual": 0.43376001715660095,
+        "expected": 0.43376000000000003
+      }
+    },
+    {
+      "label": "Sparkle upper wet profile 2",
+      "measured": {
+        "actual": 0.4440000057220459,
+        "expected": 0.44400000000000006
+      }
+    },
+    {
+      "label": "Sparkle lower wet profile 2",
+      "measured": {
+        "actual": 0.0,
+        "expected": 0.0
+      }
+    },
+    {
+      "label": "Deci pole 3",
+      "measured": {
+        "actual": 0.75,
+        "expected": 0.75
+      }
+    },
+    {
+      "label": "Deci LFO remains 0.04 Hz without Math input",
+      "measured": {
+        "actual": 0.04000000283122063,
+        "expected": 0.04
+      }
+    },
+    {
+      "label": "Deci pole gain 3",
+      "measured": {
+        "actual": 0.644169270992279,
+        "expected": 0.6441692655151773
+      }
+    },
+    {
+      "label": "Deci pole mixer volume 3",
+      "measured": {
+        "actual": 6.2092132568359375,
+        "expected": 6.209212472000001
+      }
+    },
+    {
+      "label": "Sparkle amount selector pole 3",
+      "measured": {
+        "actual": 0.75,
+        "expected": 0.75
+      }
+    },
+    {
+      "label": "Sparkle follower times selected amount 3",
+      "measured": {
+        "actual": 1.0499999523162842,
+        "expected": 1.05
+      }
+    },
+    {
+      "label": "Sparkle main wet profile 3",
+      "measured": {
+        "actual": 0.9774758219718933,
+        "expected": 0.9774757250785828
+      }
+    },
+    {
+      "label": "Sparkle delay wet profile 3",
+      "measured": {
+        "actual": 0.709879994392395,
+        "expected": 0.7098800000000001
+      }
+    },
+    {
+      "label": "Sparkle upper wet profile 3",
+      "measured": {
+        "actual": 0.6638380289077759,
+        "expected": 0.663838
+      }
+    },
+    {
+      "label": "Sparkle lower wet profile 3",
+      "measured": {
+        "actual": 0.3403020203113556,
+        "expected": 0.3403020000000002
+      }
+    },
+    {
+      "label": "Deci pole 4",
+      "measured": {
+        "actual": 1.0,
+        "expected": 1.0
+      }
+    },
+    {
+      "label": "Deci LFO remains 0.04 Hz without Math input",
+      "measured": {
+        "actual": 0.04000000283122063,
+        "expected": 0.04
+      }
+    },
+    {
+      "label": "Deci pole gain 4",
+      "measured": {
+        "actual": 0.8035260438919067,
+        "expected": 0.8035261221856173
+      }
+    },
+    {
+      "label": "Deci pole mixer volume 4",
+      "measured": {
+        "actual": 8.0,
+        "expected": 8
+      }
+    },
+    {
+      "label": "Sparkle amount selector pole 4",
+      "measured": {
+        "actual": 1.0,
+        "expected": 1.0
+      }
+    },
+    {
+      "label": "Sparkle follower times selected amount 4",
+      "measured": {
+        "actual": 0.6499999761581421,
+        "expected": 0.65
+      }
+    },
+    {
+      "label": "Sparkle main wet profile 4",
+      "measured": {
+        "actual": 1.0,
+        "expected": 1
+      }
+    },
+    {
+      "label": "Sparkle delay wet profile 4",
+      "measured": {
+        "actual": 0.4732399582862854,
+        "expected": 0.47324000000000005
+      }
+    },
+    {
+      "label": "Sparkle upper wet profile 4",
+      "measured": {
+        "actual": 0.7439800500869751,
+        "expected": 0.7439800000000001
+      }
+    },
+    {
+      "label": "Sparkle lower wet profile 4",
+      "measured": {
+        "actual": 0.5554200410842896,
+        "expected": 0.5554200000000002
+      }
+    },
+    {
+      "label": "Empty Deci pole suppresses LFO",
+      "measured": {
+        "actual": 0.0,
+        "expected": 0
+      }
+    },
+    {
+      "label": "Empty Sparkle amount pole suppresses Math",
+      "measured": {
+        "actual": 0.0,
+        "expected": 0
+      }
+    },
+    {
+      "label": "Base LFO amount remains zero",
+      "measured": {
+        "actual": 0.0,
+        "expected": 0
+      }
+    },
+    {
+      "label": "Free bipolar sine at 11 seconds",
+      "measured": {
+        "actual": 0.27180996537208557,
+        "expected": 0.27200469845185565
+      }
+    },
+    {
+      "label": "Free bipolar sine at 15 seconds",
+      "measured": {
+        "actual": -0.3944208323955536,
+        "expected": -0.3942519196430958
+      }
+    },
+    {
+      "label": "Free bipolar sine at 20 seconds",
+      "measured": {
+        "actual": -0.66611647605896,
+        "expected": -0.6661726433670763
+      }
+    },
+    {
+      "label": "Free bipolar sine at 25 seconds",
+      "measured": {
+        "actual": -0.017276998609304428,
+        "expected": -0.017465416333119866
+      }
+    },
+    {
+      "label": "Free bipolar sine at 30 seconds",
+      "measured": {
+        "actual": 0.6554379463195801,
+        "expected": 0.6553784224455409
+      }
+    },
+    {
+      "label": "Free bipolar sine at 34 seconds",
+      "measured": {
+        "actual": 0.5463631749153137,
+        "expected": 0.5464704603349497
+      }
+    },
+    {
+      "label": "Mapped borrowed follower reaches Math",
+      "measured": {
+        "actual": 0.6600000262260437,
+        "expected": 0.66
+      }
+    },
+    {
+      "label": "Rate factor applied exponentially",
+      "measured": {
+        "actual": 0.06704404950141907,
+        "expected": 0.06704404179305569
+      }
+    },
+    {
+      "label": "Timed AWParam change starts at current base",
+      "measured": {
+        "actual": 0.2993479371070862,
+        "expected": 0.3
+      }
+    },
+    {
+      "label": "Timed AWParam reaches exact target",
+      "measured": {
+        "actual": 0.6000000238418579,
+        "expected": 0.6
+      }
+    }
+  ]
+}

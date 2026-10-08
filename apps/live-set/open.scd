@@ -5,7 +5,7 @@
 // ~awbLiveInputs = (vc: [0], mic: [1], pro2: [4, 5]);
 // ~awbLiveClose.value; closes this set and its views, leaving the server running.
 (
-var root, server = s, spec, plan, configuration, inputs, required, missing;
+var root, server = Server.default, spec, plan, configuration, inputs, required, missing;
 var checkOnly = "AWB_LIVE_CHECK_ONLY".getenv == "1", openView, waitFor, booted = false, failure;
 root = PathName(thisProcess.nowExecutingPath ?? { \Document.asClass.tryPerform(\current).tryPerform(\path) }
     ?? { "/Users/willy/awb/apps/live-set/open.scd" }).pathOnly;
@@ -26,6 +26,11 @@ required = [
 missing = required.select { |file| File.exists(root +/+ file).not };
 if(missing.notEmpty) { Error("Live set needs prepared/built files: " ++ missing.join(", ")).throw };
 spec = (root +/+ required[0]).load;
+// Live controls stop at unity; Deci base knobs address full plugin parameters.
+spec[\rack][\maxGain] = 1;
+spec[\fxMixes][\deci][\fullParameterRanges] = true;
+spec[\fxMixes][\deci][\defaults][\depth] = spec[\fxMixes][\deci][\pluginBases][\deci][\depth];
+spec[\fxMixes][\deci][\defaults][\folding] = spec[\fxMixes][\deci][\pluginBases][\deci][\folding];
 spec[\rack][\channels] = spec[\rack][\channels] ++ [(id:"mic", label:"Mic (mono)")];
 spec[\initialMix][\channels] = spec[\initialMix][\channels] ++ [(id:"mic", level:1, sends:(mast:1))];
 spec = AWBDelayRack.configure(spec, []);
@@ -57,7 +62,8 @@ spec[\components].values.do { |item| if(File.exists(item[\path]).not) { Error("M
 };
 openView = {
     ~liveView.tryPerform(\close);
-    ~liveView = ~liveBase.gui((shellRoot: root));
+    ~liveView = ~liveBase.gui((shellRoot: root, launch: ~awbLiveOpenGUI ? true));
+    ~awbLiveOnReady.value(~liveBase, ~liveView);
 };
 waitFor = { |ready, label|
     var deadline = Main.elapsedTime + 120;
@@ -80,8 +86,8 @@ if(checkOnly) {
             and: { ~awb52.notNil } and: { ~awb52.ready } and: { ~awb52.closed.not }) {
             if(~awb52.rack.channels[\mic].isNil or: { ~awb52.rack.channels[\sc1].notNil }
                 or: { ~awb52.rack.channels[\sc2].notNil }
-                or: { ~awb52.rack.channels['fx-verb'].isNil }) {
-                Error("Existing set has the old input topology. Run ~awbLiveClose.value before loading this opener again.").throw;
+                or: { ~awb52.rack.channels['fx-verb'].isNil } or: { ~awb52.rack.config[\maxGain] != 1 }) {
+                Error("Existing set has the old input topology or gain range. Run ~awbLiveClose.value before loading this opener again.").throw;
             };
             openView.value;
             "Existing AWB live set reopened.".postln;
@@ -145,6 +151,7 @@ if(checkOnly) {
                     ~awbLiveRoutine = nil;
                     ~awbLiveClose.value;
                     error.reportError;
+                    ~awbLiveOnError.value(error);
                 };
             }.play(SystemClock);
         };

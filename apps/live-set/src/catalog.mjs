@@ -3,7 +3,7 @@ export const cells=[{id:'b2',label:'B2',position:'top-left',color:'#86b9ef'},{id
 const controls=(group,rows)=>rows.map(([name,label,target])=>({id:`${group}/${name}`,group,name,label,target,midi:legacy.mappings.find(m=>m.track===group&&m.name===name)??null}));
 export const fxGroups=[
  {id:'mast',label:'Master',color:'#507878',controls:controls('mast',[['mastEQShaper','EQ','unavailable'],['schertlerMix','Scheps mix','um:schertlerMix']])},
- {id:'verb',label:'Verb',color:'#96915a',controls:controls('verb',[['verbIn','Input / follower','unavailable'],['verbSelect','Mode','verb:selector']])},
+ {id:'verb',label:'Verb',color:'#96915a',controls:controls('verb',[['verbIn','Gain','verb:inputGain'],['verbSelect','Mode','verb:selector']])},
  {id:'fuzz',label:'Fuzz',color:'#938096',controls:controls('fuzz',[['fuzzShaper','Fuzz','fuzz:shape']])},
  {id:'deci',label:'Decimate',color:'#648b99',controls:controls('deci',[['deciShaper','Shape','deci:shape'],['depthOf','Depth','deci:depth'],['foldOf','Folding','deci:folding'],['depthSc','~ depth','deci:depthSC'],['foldSc','~ folding','deci:foldingSC']])},
  {id:'spark',label:'Sparkle',color:'#6e9866',controls:controls('spark',[['sparkleShaper','Sparkle','spark:sparkle'],['spark','Spark','spark:shape'],['sparkTailMix','Tail mix','spark:tailMix'],['sparkPD','Pitch select','spark:pitchSelect'],['sparkTailShapr','Tail shape','spark:tailShape']])},
@@ -14,9 +14,8 @@ export const fxGroups=[
 export const delayControls=id=>controls(id,[['inOf','Input',null],['fbOf','Feedback',null],['fxOf','FX',null],['sliOf','Time',null],['inSc','~ input',null],['fbSc','~ feedback',null],['fxSc','~ FX',null],['sliSc','~ time',null]]);
 export const delayRouting=id=>controls(id,[...['b1','a2','b2'].slice(0,['b1','a2','b2','a1'].indexOf(id)).reverse().map(from=>[`${from}In`,from.toUpperCase(),'delay:route']),...(id==='a1'?[['sc2In','SC2','delay:route'],['sc1In','SC1','delay:route']]:[]),['p2In','Pro2','delay:route'],['micIn','Mic','delay:route'],['vcIn','VC','delay:route']]);
 export const delayModulation=id=>[
- {id:`${id}/sliOf`,label:'~T',field:'amount'},{id:`${id}/fbOf`,label:'~FB',field:'amount'},
- {id:`${id}/fxOf`,label:'~FX',field:'amount'},{id:`${id}/inOf`,label:'~IN',field:'amount'},
- {id:`${id}/thAMod`,label:'LFO',field:'base'},{id:`${id}/thPMod`,label:'Offset',field:'base'},
+ {id:`${id}/thM`,label:'TH mode',field:'base'},{id:`${id}/thP`,label:'Position',field:'base'},
+ {id:`${id}/thAMod`,label:'TH mod',field:'base'},{id:`${id}/thPMod`,label:'Position mod',field:'base'},
 ];
 export const allControls=[...fxGroups.flatMap(g=>g.controls),...cells.flatMap(c=>[...delayControls(c.id),...delayRouting(c.id)])];
 export function localViewURL(value){if(!value)return null;const u=new URL(value);if(u.protocol!=='http:'||u.hostname!=='127.0.0.1'||!u.port||u.username||u.password||u.hash)throw Error('Embedded views require an explicit loopback HTTP URL');return u.href}

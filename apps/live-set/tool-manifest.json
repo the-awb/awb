@@ -18,6 +18,10 @@
   },
   "launchProfiles": [
     {
+      "id": "headless",
+      "label": "Start live set (no IDE)"
+    },
+    {
       "id": "standalone",
       "label": "Open live surface"
     }

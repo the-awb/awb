@@ -7,7 +7,7 @@ AWBLiveMappings {
             var target=r[3],parameter,midi=(device:r[4],channel:r[5],cc:r[6],lo:r[7],hi:r[8],pickup:r[9]);
             if(target!="unavailable"){
                 var pieces=target.split($:),slot=pieces[0].asSymbol,key=pieces[1].asSymbol;
-                parameter=if(slot==\verb){set.verbMix.selector}{if(slot==\um){set.sharedMix.param(key)}{set.fxMix(slot).param(key)}};
+                parameter=if(slot==\verb){set.verbMix.perform(key)}{if(slot==\um){set.sharedMix.param(key)}{set.fxMix(slot).param(key)}};
             };
             if(parameter.notNil){
                 var existing=base.t[r[0].asSymbol].tryPerform(\p).tryPerform(\at,r[1].asSymbol);
@@ -20,7 +20,7 @@ AWBLiveMappings {
     *rows {^[
         ["mast","mastEQShaper","EQ","unavailable","fcb",3,10,0,127,true],
         ["mast","schertlerMix","Scheps mix","um:schertlerMix","fcb",3,104,0,127,true],
-        ["verb","verbIn","Input / follower","unavailable","fcb",3,105,0,127,true],
+        ["verb","verbIn","Input gain","verb:inputGain","fcb",3,105,0,127,true],
         ["verb","verbSelect","Mode","verb:selector","fcb",3,11,0,127,true],
         ["fuzz","fuzzShaper","Fuzz","fuzz:shape","fcb",3,12,0,127,true],
         ["deci","deciShaper","Shape","deci:shape","fcb",3,13,0,127,true],

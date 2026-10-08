@@ -1,0 +1,37 @@
+{
+  "parameters": 90,
+  "normalized": 69,
+  "native": 21,
+  "bipolarKnobs": 0,
+  "offlineDSPChecks": 147,
+  "audioDeviceUsed": false,
+  "committed": false,
+  "sources": {
+    "apps/rack/sc/sets/awb52/AWBFXMixProfile.sc": "9e5965c01ee094a355b32293954d63d19865012dd0afe6696b0712c0c6bf895c",
+    "apps/rack/sc/sets/awb52/AWBVerbMixProfile.sc": "3cdd0b4b33ccdad03e0a5862c2dd5f1687ac5e04112ef1802f57064a36af5add",
+    "apps/core/sc/classes/AWParam.sc": "7e5b058bec9aeab4a5cdd97157eba2e5e50d24635d058b58098f8d6e8278bb00",
+    "apps/rack/sc/sets/awb52/AWBAdditionalFXProfile.sc": "d296998da6344c48b91600e61ac9f5a126767f3b36ad9ecc44a8214f0f1cfe9c"
+  },
+  "nativeRanges": {
+    "lfoRate": {
+      "min": 0.001,
+      "max": 20,
+      "warp": "exp",
+      "unit": "Hz"
+    },
+    "level": {
+      "min": 0,
+      "max": 4
+    },
+    "mathBaselines": {
+      "min": 0,
+      "max": 2
+    }
+  },
+  "notes": [
+    "All exposed chain macros are unipolar 0..1.",
+    "Negative captured target depths and bipolar generated LFO signals remain in DSP.",
+    "Deci and Sparkle depth/folding macros remain normalized; their DSP performs center conversion.",
+    "Existing extended Math baseline and internal level ranges are retained."
+  ]
+}

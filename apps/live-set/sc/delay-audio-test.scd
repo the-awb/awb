@@ -36,7 +36,7 @@ run={
   check.value("all rack channels expose 24 destinations",rack.slotIDs.size==24);
   check.value("single graph on the same server",delays.graph.server===rack.server);
   check.value("four independent stereo buffers",delays.graph.graphBuffers.size==4 and:{delays.graph.graphBuffers.every{|v|v[\buffer].numChannels==2}});
-  check.value("rack post outputs are explicit one-block source reads",delays.graph.port("clean","out").numChannels==2);
+  check.value("rack post outputs feed current-block delay inputs",delays.graph.port("clean","out").numChannels==2);
   check.value("legacy DAG order B1 A2 B2 A1",delays.graph.plan[\order].collect{|i|delays.graph.plan[\nodes][i]}.select{|n|n[\kind]=="cell"}.collect{|n|n[\id]}==["B1","A2","B2","A1"]);
   check.value("route AWParam range matches the shared surface",delays.params["clean:B1"].spec.minval==0 and:{delays.params["clean:B1"].spec.maxval==1});
   check.value("delay timing AWParam range matches the shared surface",delays.params["B1/seconds"].spec.minval==0.01 and:{delays.params["B1/seconds"].spec.maxval==32});
@@ -58,9 +58,10 @@ run={
   delays.setField("head","B1","h1/amount",0.5);0.15.wait;a=capture.value(delays.graph.port("B1","wet"));
   check.value("legacy head edit preserves mapping and modulation",p.routeMetadata.notEmpty and:{(a[0]-0.055).abs<0.003});
   p.removeBusModulation(\testHead);p.setAmount(0);p.setBase(1);modBus.free;modBus=nil;server.sync;0.15.wait;
-  aggregate=capture.value(rack.postFor(\delbus));check.value("Delay Bus sums routed wet returns once",(aggregate[0]-0.32).abs<0.01 and:{(aggregate[1]-0.48).abs<0.01});
+  aggregate=capture.value(rack.postFor(\delbus));check.value("Delay Bus carries only cello, not Pro2 or delay returns",(aggregate[0]-0.1).abs<0.005 and:{(aggregate[1]-0.2).abs<0.005});
   check.value("cell return also reaches its own persistent channel",(capture.value(rack.postFor(\b1))[0]-0.1).abs<0.005);
   check.value("independent cell sends start at zero",rack.channels[\b1][\gains].sum==0);
+  rack.setMute(\delbus,true);0.25.wait;check.value("Delay Bus mute stops cello despite active VC",capture.value(delays.graph.port("B1","wet")).abs.maxItem<0.002);rack.setMute(\delbus,false);
   rack.setMute(\vc,true);0.25.wait;check.value("muted source stops new delay input",capture.value(delays.graph.port("B1","wet")).abs.maxItem<0.002);rack.setMute(\vc,false);
   delays.setField("route","B1:B2","",1);0.3.wait;check.value("internal B1 to B2 route works",(capture.value(delays.graph.port("B2","wet"))[0]-0.1).abs<0.005);
   sourceC=Synth.head(rack.sourceGroup,\awbDelayTestSource,[\out,rack.inputFor(\sc1).index,\left,0.05,\right,0.07]);
@@ -69,7 +70,12 @@ run={
   a=capture.value(delays.graph.port("A1","wet"));check.value("SC1 and SC2 reach A1 as independent stereo sources",(a[0]-0.13).abs<0.005 and:{(a[1]-0.18).abs<0.005});
   rack.setMute(\sc1,true);0.2.wait;a=capture.value(delays.graph.port("A1","wet"));check.value("SC1 mute preserves SC2 delay input",(a[0]-0.08).abs<0.005 and:{(a[1]-0.11).abs<0.005});rack.setMute(\sc1,false);
   sourceC.free;sourceC=nil;sourceD.free;sourceD=nil;
-  rack.setLevel(\delbus,0.4);0.15.wait;check.value("rack fader updates same Delay Bus AWParam",delays.params["master"].baseTarget==0.4);
+  rack.setLevel(\delbus,0.4);0.15.wait;check.value("rack fader updates same Delay Bus AWParam",delays.params["globalInput"].baseTarget==0.4 and:{delays.params["globalInput"].spec.maxval==1});
+  0.25.wait;a=capture.value(delays.graph.port("B1","wet"));b=capture.value(delays.graph.port("A2","wet"));
+  check.value("Delay Bus scales cello entering B1",(a[0]-0.04).abs<0.005 and:{(a[1]-0.08).abs<0.005});
+  check.value("Delay Bus leaves Pro2 input gain unchanged",(b[0]-0.3).abs<0.005 and:{(b[1]-0.4).abs<0.005});
+  check.value("no default aggregate return can bypass cell sends",rack.channels[\delbus][\gains].sum==0 and:{rack.channels[\b1][\gains].sum==0});
+  rack.setLevel(\delbus,1);
   p=delays.params["B1/feedback"];modBus=Bus.control(server,1);modBus.set(0.1);p.addBusModulation(\testFeedback,modBus,1);p.setAmount(0.5);server.sync;0.1.wait;
   check.value("real feedback modulation registered",p.routeMetadata.notEmpty);
   p.outputBus.get({|v|observed=v});while({observed.isNil},{0.01.wait});check.value("modulation actually changes effective feedback",(observed-0.055).abs<0.002);

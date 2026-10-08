@@ -22,7 +22,7 @@ export async function startRuntime({runtimeDirectory='/private/tmp/awb-live-set-
   if(!config.rackView&&(previewRack||rackBinding||process.env.AWB_RACK_INSTANCE_ID)){
    const native=!!(rackBinding||process.env.AWB_RACK_INSTANCE_ID);let seedDocument;
    if(!native){seedDocument=JSON.parse(await readFile(new URL('../../rack/fixtures/live-set.rack.json',import.meta.url),'utf8'));seedDocument.config.output.mode='off'}
-   rack=await rackFactory({runtimeDirectory:path.join(runtimeDirectory,'rack'),scBinding:rackBinding,seedDocument,fixedFXReturns:true,...(!native?{sendPacket:()=>{}}:{})});config.rackView=new URL("?embed=1",rack.url).href;config.rackMode=native?'native':'preview';
+   rack=await rackFactory({runtimeDirectory:path.join(runtimeDirectory,'rack'),scBinding:rackBinding,seedDocument,fixedFXReturns:true,autoArmSC:native,levelRanges:{delbus:{min:0,max:1}},...(!native?{sendPacket:()=>{}}:{})});config.rackView=new URL("?embed=1",rack.url).href;config.rackMode=native?'native':'preview';
   }
   if(baseBinding)try{base=await baseBridgeFactory(baseBinding,{onLog:entry=>publish({type:'log',entry}),onStatus:(connected,message)=>{error=message;publish({type:'console-status',connected,error:message})}})}catch(e){error=e.message}
   params=await startParams({binding,controlObservations:broker,bridgeFactory,frameSources:"http://127.0.0.1:*",rendererRoot:path.resolve(fileURLToPath(new URL('../dist/',import.meta.url))),additionalRoutes:async(req,res,url,{token})=>{

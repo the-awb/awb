@@ -49,3 +49,6 @@ header{padding:7px 12px;gap:16px;min-height:48px}h1{font-size:14px;margin-top:1p
 .mix-timers .timer-actions button{flex:1;padding:2px 4px;font-size:10px}
 .mix-timers progress{width:100%;height:3px;accent-color:#77cbb5}
 .mix-timers .scene-timer[data-active=true] output{color:#9de6ce}
+
+/* Keep large mix editors from setting the minimum size of the live viewport. */
+.performance-rack .renderer-pane,.performance-rack .rack-scroll{min-height:0;min-width:0}
