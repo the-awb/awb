@@ -450,6 +450,12 @@ async function runHomeSmoke() {
       else setTimeout(check, 25);
     }; check();
   })` );
+  const originalHome = homeWindow;
+  homeWindow.hide();
+  const opened = await homeWindow.webContents.executeJavaScript("window.awbHost.request('shell.open-home')");
+  const reopened = await homeWindow.webContents.executeJavaScript("window.awbHost.request('shell.open-home')");
+  if ( opened.status !== 'focused' || reopened.status !== 'focused' || homeWindow !== originalHome || !homeWindow.isVisible() ) throw new Error('Shell launcher open/focus/reuse failed.');
+  console.log( 'AWB_SHELL_HOME_OPEN_RESULT=PASS visible=true reused=true' );
   console.log( `AWB_SHELL_HOME_PROJECTIONS documents=${ result.scoreActions + result.lissajousActions } hostFacts=${ result.hostFacts } hostServices=${ services.snapshot().length } profiles=hosted-public` ); app.quit();
 }
 
@@ -1652,6 +1658,9 @@ function registerIPC() {
     const sender = senderRecord( event );
     if ( !request || typeof request.operation !== 'string' || request.operation.length > 128 ) throw new Error( 'Invalid shell operation.' );
     const payload = boundedOperationPayload( request.payload ?? {} );
+    if ( request.operation === 'shell.open-home' ) {
+      await createHomeWindow(); return { status: 'focused' };
+    }
     if ( sender.kind === 'home' ) {
       if ( request.operation === 'shell.snapshot' ) return shellSnapshot();
       if ( request.operation === 'shell.launch' ) return launchFromHome( payload );

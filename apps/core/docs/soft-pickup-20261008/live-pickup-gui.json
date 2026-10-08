@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "checks": [
+    "preview rack stays disarmed",
+    "embedded rack opens one SVG renderer with mixes",
+    "four live cells occupy B2/A2/A1/B1 quadrants",
+    "managed cell routing appears once",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "four embedded delay views share one observation stream",
+    "embedding all four cells preserves acknowledged settings",
+    "an embedded B1 edit targets B1 independently",
+    "per-cell heads and sends are requestable from the composite",
+    "shared routing opens once",
+    "shared routing follows the live VC/Pro2/Mic schema",
+    "composite controls use one native control reader at a time",
+    "envelope fader flashes from its shared AWParam phase",
+    "pickup phase reaches borrowed tape widgets",
+    "delay modulation field shows pickup warning",
+    "owner loss clears fader, field and embedded tape pickup warnings",
+    "no renderer errors in pickup GUI fixture"
+  ],
+  "errors": [],
+  "edits": [
+    {
+      "id": "b1/inOf",
+      "field": "base",
+      "value": 0.98,
+      "source": ""
+    }
+  ],
+  "attached": 1,
+  "detached": 1
+}

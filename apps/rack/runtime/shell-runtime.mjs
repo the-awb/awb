@@ -1,5 +1,6 @@
 import http from 'node:http';
 import {createRackTiming} from './timing.mjs';
+import {mixSetFolders,listMixSets,readMixSet} from './mix-set-library.mjs';
 import dgram from 'node:dgram';
 import crypto from 'node:crypto';
 import path from 'node:path';
@@ -12,9 +13,9 @@ import {encodeOSC,createSCBridge,documentFromState,envBinding} from './sc-bridge
 import {createOscOutput} from '../../awb-shell/services/oscOutput.mjs';
 export {encodeOSC} from './sc-bridge.mjs';
 const MIME={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.map':'application/json','.svg':'image/svg+xml'};
-export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sendPacket,scBinding=envBinding(),fixedFXReturns=false,autoArmSC=false,levelRanges={}}={}){
+export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sendPacket,scBinding=envBinding(),fixedFXReturns=false,autoArmSC=false,levelRanges={},sceneLauncher,sceneTransitioning=()=>false,mixSetDirectories}={}){
   await mkdir(runtimeDirectory,{recursive:true});
-  let scState=null,bridge=null,reportSCError=()=>{},applySCUpdate=()=>{},feedbackReady=false;const feedbackQueue=[];
+  let scState=null,bridge=null,reportSCError=()=>{},applySCUpdate=()=>{},feedbackReady=false,recallStarting=false;const feedbackQueue=[];
   if(scBinding){bridge=await createSCBridge(scBinding,{onError:message=>reportSCError(message),onUpdate:event=>{if(feedbackReady)applySCUpdate(event);else feedbackQueue.push(event)}});try{scState=await bridge.sync();}catch(e){bridge.close();throw e;}}
   const libraryPath=path.join(scState&&scBinding.libraryRoot?path.resolve(scBinding.libraryRoot):path.dirname(runtimeDirectory),scState?`rack-library-sc-${scState.libraryID}.json`:'rack-library.json');
   try{await mkdir(path.dirname(libraryPath),{recursive:true});}catch(e){bridge?.close();throw e;}
@@ -40,6 +41,7 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
   }catch(e){bridge?.close();await unlock();throw e;}
   if(!bridge&&document.config.output.mode==='sc')throw Error('Native SC rack requires its ToolInstance binding.');
   let store;try{store=new RackStore(document);}catch(e){bridge?.close();await unlock();throw e;}
+  let savedSetFolders;try{savedSetFolders=mixSetFolders(libraryPath,mixSetDirectories);}catch(e){bridge?.close();await unlock();throw e;}
   const fixedReturns=new Set(fixedFXReturns?[...store.byID.values()].filter(d=>d.instrument==='global'&&d.region.id==='levels').map(d=>d.id):[]);
   for(const id of fixedReturns)store.set(id,1,'unity-return');
   const token=crypto.randomUUID(),udp=dgram.createSocket('udp4'),peers=new Set();
@@ -156,6 +158,12 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
       return result;
     }
     if(c.type==='document'){const next=new RackStore(c.document),doc=next.document();compatible(doc);if(bridge)doc.config.output={...store.config.output};recall?.stop();recall=null;timing.finishScene();armed=false;pending.clear();store.replace(doc);broadcast({type:'recall',active:false,timing:timing.snapshot()});broadcast({type:'armed',armed});await save();return;}
+    if(c.type==='list-mix-sets')return await listMixSets(savedSetFolders,store.document());
+    if(c.type==='load-saved-mix-set'){
+      const loaded=await readMixSet(savedSetFolders,store.document(),c.id);
+      await command({type:'mix-set',name:loaded.name,snapshots:loaded.snapshots},origin);
+      return {name:loaded.name,count:loaded.snapshots.length,skipped:loaded.skipped};
+    }
     if(c.type==='mix-set'){
       if(typeof c.name!=='string'||!c.name.trim()||c.name.length>120)throw Error('Invalid mix set name.');
       const next=new RackStore({...store.document(),snapshots:c.snapshots,mixSet:{name:c.name.trim()}});
@@ -165,7 +173,7 @@ export async function startRuntime({runtimeDirectory,httpPort=0,seedDocument,sen
     if(c.type==='capture'){await flush();const snapshot=store.capture(c.label,c.sceneID??null,c.ids,{duration:c.duration??1000,targetDuration:c.targetDuration??c.duration??1000,alignment:c.alignment??'L'});await save();return {snapshotID:snapshot.id};}
     if(c.type==='snapshot'){store.updateSnapshot(c.snapshot);await save();return;}
     if(c.type==='delete-snapshot'){store.snapshots=store.snapshots.filter(s=>s.id!==c.id);store.notifyMeta();await save();return;}
-    if(c.type==='recall'){const s=store.snapshots.find(s=>s.id===c.id);if(!s)throw Error('Unknown snapshot.');recall?.stop();timing.startScene(s,c.direct?0:s.duration);broadcast({type:'recall',active:true,id:s.id,timing:timing.snapshot()});let finished=false;const next=createRecall(store,{...s,targets:Object.fromEntries(Object.entries(s.targets).filter(([id])=>!fixedReturns.has(id))),duration:c.direct?0:s.duration},{onFinish:()=>{finished=true;recall=null;timing.finishScene(true);broadcast({type:'recall',active:false,timing:timing.snapshot()});}});recall=finished?null:next;return;}
+    if(c.type==='recall'){const s=store.snapshots.find(s=>s.id===c.id);if(!s)throw Error('Unknown snapshot.');if(recall||recallStarting||sceneTransitioning())throw Error('A scene transition is already in progress');recallStarting=true;try{if(s.sceneID!==null&&s.sceneID!==undefined&&s.sceneID!=='')await sceneLauncher?.(s.sceneID,(c.direct?0:s.duration)/1000);}finally{recallStarting=false;}timing.startScene(s,c.direct?0:s.duration);broadcast({type:'recall',active:true,id:s.id,timing:timing.snapshot()});let finished=false;const next=createRecall(store,{...s,targets:Object.fromEntries(Object.entries(s.targets).filter(([id])=>!fixedReturns.has(id))),duration:c.direct?0:s.duration},{onFinish:()=>{finished=true;recall=null;timing.finishScene(true);broadcast({type:'recall',active:false,timing:timing.snapshot()});}});recall=finished?null:next;return;}
     if(c.type==='send-all'){await flush();transmitQueue=transmitQueue.then(()=>transmitMany(store.controls.map(d=>({id:d.id,value:store.get(d.id)}))));await transmitQueue;return;}
     if(c.type==='save'){await save();return;}
     throw Error('Unknown Rack command.');

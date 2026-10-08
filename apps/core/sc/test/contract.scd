@@ -16,6 +16,17 @@ try{
  check.value(param.isKindOf(AWParam) and:{param.inputBus.index!=param.outputBus.index},"AWParam has two distinct owned control buses");
  check.value(param.sourceGroup.group===param.group and:{param.synth.group===param.group},"modulation sources and processor share owned group");
  check.value(NodeManager.instance.watchedEntries[param.synth].owner===instance,"parameter processor has core ownership");
+ check.value(param.baseSmoothing==0.5,"continuous bases default to half-second lag");
+ param.setBase(0.6);check.value(messages.last[messages.last.indexOf(\baseLag)+1]==0.5 and:{messages.last[messages.last.indexOf(\baseDur)+1]==0},"omitted base duration uses smoothing");
+ param.setI(0.4);check.value(messages.last[messages.last.indexOf(\baseLag)+1]==0.5 and:{messages.last[messages.last.indexOf(\baseDur)+1]==0},"legacy base alias retains smoothing");
+ param.setM(64);check.value(messages.last[messages.last.indexOf(\baseLag)+1]==0.5 and:{messages.last[messages.last.indexOf(\baseDur)+1]==0},"MIDI base setter retains smoothing");
+ param.setNormalized(0.5);check.value(messages.last[messages.last.indexOf(\baseLag)+1]==0.5 and:{messages.last[messages.last.indexOf(\baseDur)+1]==0},"normalized base setter retains smoothing");
+ param.setBase(0.6,0);check.value(messages.last[messages.last.indexOf(\baseDur)+1]==0 and:{messages.last[messages.last.indexOf(\baseLag)+1]==0.5},"zero-duration target changes still pass through base lag");
+ param.setBase(0.6,2);check.value(messages.last[messages.last.indexOf(\baseDur)+1]==2 and:{messages.last[messages.last.indexOf(\baseLag)+1]==0.5},"explicit scene ramps also pass through base lag");
+ param.baseSmoothing=0.2;param.setBase(0.6);check.value(messages.last[messages.last.indexOf(\baseLag)+1]==0.2 and:{param.configuration[\baseSmoothing]==0.2},"per-parameter smoothing is configurable and serialized");
+ reject.value({param.baseSmoothing=(-1)},"negative default smoothing is rejected");
+ param.setAmount(0.3);check.value(messages.last[messages.last.indexOf(\amountDur)+1]==0,"amount default remains immediate");
+ param.baseSmoothing=0.5;
  param.set(0.7,2,-4).setAmount(-0.5,1,4);check.value(param.baseTarget==0.7 and:{param.amountTarget== -0.5},"base and amount targets are independent");
  check.value(messages.last.includes(\amountSerial) and:{messages.last.includes(\amountDur)},"transition command contains duration and retrigger serial");
  param.setBase(0.7,3);check.value(messages.last.includes(\baseSerial),"identical target can restart transition");
@@ -35,7 +46,7 @@ try{
  param.mapTo(prior,\gain);check.value(messages.last.includes(param.outputBus.index),"maps effective bus to destination");
  reject.value({param.mapTo(prior,\missing)},"missing synth control rejected");
  clone=core.createParam(\other,0.6);clone.mapTo(prior,\gain);owned=messages.size;param.unmapFrom(prior,\gain);check.value(messages.size==owned,"old owner cannot unmap a newer mapping");clone.unmapFrom(prior,\gain);
- midi=param.createMidiSource(nil,0,1,0,127,true,false);
+ midi=param.createMidiSource(nil,0,1,0,127,true,false).softPickup(0,0);
  check.value(param.sources.includes(midi) and:{midi.param===param},"MIDI is an attached parameter source");
  param.addSource(midi);check.value(param.sources.size==1,"attaching a source twice is idempotent");
  param.setBase(0.5);midi.acceptBase(20,0.5);check.value(midi.latched.not,"MIDI pickup ignores distant controller");
@@ -79,8 +90,8 @@ try{
  check.value(rack.tool.rootGroup.group===core.groupAt(\routing),"rack root adopted into Core routing phase");
  core.closeTool(\rack);check.value(rack.status==\closed,"child rack can close independently");
  reject.value({core.playTracked((instrument:\coreDestination))},"no implicit hardware output in tracked notes");
- preset=core.promotionCandidate;check.value(preset[\config][\params].size==2 and:{preset[\metadata][\scope]==\coreParametersAndGroups},"preset scope is explicit and reconstructible");
- clone=AWBCoreTool.open(preset[\config],(server:server,sendFunction:{},track:false));clone.tool.applyPresetConfig(preset[\config],());
+ param.baseSmoothing=0.25; preset=core.promotionCandidate;check.value(preset[\config][\params].size==2 and:{preset[\metadata][\scope]==\coreParametersAndGroups},"preset scope is explicit and reconstructible");
+ clone=AWBCoreTool.open(preset[\config].deepCopy,(server:server,sendFunction:{},track:false));clone.tool.param(\gain).baseSmoothing=0;clone.tool.applyPresetConfig(preset[\config],());check.value(clone.tool.param(\gain).baseSmoothing==0.25,"preset application restores per-parameter lag");
  check.value(clone.tool.param(\gain).baseTarget==param.baseTarget,"preset reconstructs base target");clone.close;
  instance.close;
  check.value(midi.closed and:{midi.param.isNil},"parameter closure disposes attached MIDI sources");

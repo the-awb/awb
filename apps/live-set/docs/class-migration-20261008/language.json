@@ -1,0 +1,104 @@
+{
+  "checks": [
+    "actual sclang console history binds",
+    "actual semantic name and MIDI metadata arrive",
+    "actual SC and Node bind a registry larger than 128",
+    "namespaced AWParam binds across UDP",
+    "authoritative GUI edit reaches the same language AWParam",
+    "actual AWBase.log arrives as a delta",
+    "silent scene registry binds without launching original scenes",
+    "Shell launch receives authoritative transition lock",
+    "Shell rejects another launch during transition",
+    "real MIDI note handler rejects overlap with Shell launch",
+    "lock releases after action and transition duration",
+    "real MIDI note handler launches after lock releases",
+    "zero-duration launch stays locked while its action runs",
+    "SC rejection is acknowledged without changing current scene",
+    "root close invalidates borrowed parameter bridge",
+    "root close invalidates console connection"
+  ],
+  "status": [
+    {
+      "ok": true,
+      "error": null
+    },
+    {
+      "ok": false,
+      "error": "AWBase closed"
+    }
+  ],
+  "logs": [
+    {
+      "seq": 1,
+      "time": 1.0290277004241943,
+      "level": "info",
+      "text": "Language bridge ready"
+    },
+    {
+      "seq": 2,
+      "time": 1.0651006698608398,
+      "level": "warn",
+      "text": "A real log <with markup>"
+    },
+    {
+      "seq": 3,
+      "time": 1.0855462551116943,
+      "level": "info",
+      "text": "Scene 0: silentA"
+    },
+    {
+      "seq": 4,
+      "time": 1.085740566253662,
+      "level": "info",
+      "text": "Silent A start"
+    },
+    {
+      "seq": 5,
+      "time": 1.0862864255905151,
+      "level": "warn",
+      "text": "ERROR: A scene transition is already in progress"
+    },
+    {
+      "seq": 6,
+      "time": 1.336342453956604,
+      "level": "info",
+      "text": "Scene 0 launch complete"
+    },
+    {
+      "seq": 7,
+      "time": 1.4277222156524658,
+      "level": "info",
+      "text": "Scene 1: silentB"
+    },
+    {
+      "seq": 8,
+      "time": 1.4279409646987915,
+      "level": "info",
+      "text": "Silent B start"
+    },
+    {
+      "seq": 9,
+      "time": 1.4280208349227905,
+      "level": "info",
+      "text": "Scene 1 launch complete"
+    },
+    {
+      "seq": 10,
+      "time": 1.4381808042526245,
+      "level": "info",
+      "text": "Scene 0: silentA"
+    },
+    {
+      "seq": 11,
+      "time": 1.4384022951126099,
+      "level": "info",
+      "text": "Silent A start"
+    },
+    {
+      "seq": 12,
+      "time": 1.5601860284805298,
+      "level": "info",
+      "text": "Scene 0 launch complete"
+    }
+  ]
+}

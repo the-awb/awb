@@ -1,3 +1,4 @@
+import {faderGain,faderPosition} from './fader-scale.mjs';
 export const copy = value => JSON.parse(JSON.stringify(value));
 export const clamp = (v,lo=0,hi=1) => Math.max(lo,Math.min(hi,v));
 const idPattern=/^[a-z0-9][a-z0-9_-]{0,63}$/;
@@ -24,10 +25,10 @@ export function validateConfig(input) {
     if(!Array.isArray(r.destinations)||!r.destinations.length||r.destinations.length>64||new Set(r.destinations).size!==r.destinations.length||r.destinations.some(d=>!idPattern.test(d)))throw Error(`Invalid destinations in ${r.id}.`);
     if(!Number.isFinite(r.min)||!Number.isFinite(r.max)||r.max<=r.min||!Number.isFinite(r.step)||r.step<0)throw Error(`Invalid range in ${r.id}.`);
     if(r.ranges!==undefined){
-      if(!r.ranges||typeof r.ranges!=='object'||Array.isArray(r.ranges)||r.curve!=='linear')throw Error('Per-destination ranges require a linear region.');
+      if(!r.ranges||typeof r.ranges!=='object'||Array.isArray(r.ranges)||!['linear','audio'].includes(r.curve))throw Error('Per-destination ranges require a linear or audio-taper region.');
       for(const [id,bounds] of Object.entries(r.ranges))if(!r.destinations.includes(id)||!bounds||!Number.isFinite(bounds.min)||!Number.isFinite(bounds.max)||bounds.min<r.min||bounds.max>r.max||bounds.min>=bounds.max)throw Error(`Invalid destination range ${id}.`);
     }
-    if(!['linear','log','piecewise'].includes(r.curve)||(r.curve==='log'&&r.min<=0))throw Error(`Invalid curve in ${r.id}.`);
+    if(!['linear','audio','log','piecewise'].includes(r.curve)||(r.curve==='log'&&r.min<=0))throw Error(`Invalid curve in ${r.id}.`);
     if(r.curve==='piecewise'){
       const p=r.points;if(!Array.isArray(p)||p.length<2||p.length>32||p[0][0]!==0||p.at(-1)[0]!==1||p[0][1]!==r.min||p.at(-1)[1]!==r.max)throw Error('Curve points must run from [0,min] to [1,max].');
       p.forEach((v,i)=>{if(!Array.isArray(v)||v.length!==2||v.some(n=>!Number.isFinite(n))||(i&&(v[0]<=p[i-1][0]||v[1]<=p[i-1][1])))throw Error('Curve points must increase.');});
@@ -42,11 +43,13 @@ export function validateConfig(input) {
 }
 export function quantise(v,r){return clamp(r.step?Math.round((v-r.min)/r.step)*r.step+r.min:v,r.min,r.max);}
 export function mapPosition(p,r){p=clamp(p);let v;
-  if(r.curve==='log')v=r.min*Math.pow(r.max/r.min,p);
+  if(r.curve==='audio')v=faderGain(p,r.min,r.max);
+  else if(r.curve==='log')v=r.min*Math.pow(r.max/r.min,p);
   else if(r.curve==='piecewise'){const i=Math.max(1,r.points.findIndex(x=>x[0]>=p));const a=r.points[i-1],b=r.points[i];v=a[1]+(b[1]-a[1])*(p-a[0])/(b[0]-a[0]);}
   else v=r.min+p*(r.max-r.min);return quantise(v,r);
 }
 export function positionOf(v,r){v=clamp(v,r.min,r.max);
+  if(r.curve==='audio')return faderPosition(v,r.min,r.max);
   if(r.curve==='log')return Math.log(v/r.min)/Math.log(r.max/r.min);
   if(r.curve==='piecewise'){const i=Math.max(1,r.points.findIndex(x=>x[1]>=v));const a=r.points[i-1],b=r.points[i];return a[0]+(b[0]-a[0])*(v-a[1])/(b[1]-a[1]);}
   return (v-r.min)/(r.max-r.min);

@@ -12,10 +12,10 @@ function draw(canvas,wave,t,colour,advance=0){
 // Rotary controls remain ordinary range inputs, with keyboard and vertical drag access.
 function rotary(label,aria,max,callback,amount){
  const wrap=document.createElement('div');wrap.className='knob-wrap';wrap.innerHTML=`<span class="knob-label">${label}</span><span class="knob"><input type="range" min="0" max="${max}" step=".01" aria-label="${aria}"></span><output></output>`;
- const input=wrap.querySelector('input');const paint=()=>{const ratio=Number(input.value)/max;wrap.querySelector('.knob').style.setProperty('--angle',(ratio*270-135)+'deg');wrap.querySelector('.knob').style.setProperty('--sweep',ratio*270+'deg');wrap.querySelector('output').textContent=Math.round(Number(input.value)*100)+'%';};
+ const input=wrap.querySelector('input');const paint=()=>{const ratio=Number(input.value)/Number(input.max);wrap.querySelector('.knob').style.setProperty('--angle',(ratio*270-135)+'deg');wrap.querySelector('.knob').style.setProperty('--sweep',ratio*270+'deg');wrap.querySelector('output').textContent=Math.round(Number(input.value)*100)+'%';};
  amount(input,aria,callback);const oninput=input.oninput;input.oninput=()=>{paint();oninput();};let ride=null;
  input.onpointerdown=e=>{e.preventDefault();input.focus();input.setPointerCapture(e.pointerId);ride={y:e.clientY,value:Number(input.value)};};
- input.onpointermove=e=>{if(!ride)return;input.value=Math.min(max,Math.max(0,ride.value+(ride.y-e.clientY)/150*max));input.dispatchEvent(new Event('input',{bubbles:true}));};
+ input.onpointermove=e=>{if(!ride)return;input.value=Math.min(Number(input.max),Math.max(0,ride.value+(ride.y-e.clientY)/150*Number(input.max)));input.dispatchEvent(new Event('input',{bubbles:true}));};
  input.onpointerup=()=>{if(ride){ride=null;input.dispatchEvent(new Event('change',{bubbles:true}));}};input.onpointercancel=input.onpointerup;
  wrap.update=v=>{if(wrap.dataset.awparamGui==='true')return;value(input,v);paint();};return wrap;
 }
@@ -29,7 +29,7 @@ function mountTape(root,{getState,getCell,send,select,knob,amount,selectable=tru
  const choices=selectable?ids:[selected];
  choices.forEach(id=>{const b=document.createElement('button');b.textContent=id;b.dataset.tapeCell=id;b.onclick=()=>select(id);$('#cell-selector').append(b);});
 const tapeKnobs=new Map(),classicRows=new Map();
-for(const [field,label,max,where] of [['inputGain','Input',2,'intake'],['dryLevel','Dry',1,'intake'],['effectLevel','FX',2,'return'],['feedback','FB',1.1,'return']]){
+for(const [field,label,max,where] of [['inputGain','Input',1,'intake'],['dryLevel','Dry',1,'intake'],['effectLevel','FX',2,'return'],['feedback','FB',1,'return']]){
  const k=knob(label,'Tape '+label,max,v=>({action:'cell',cell:selected,field,value:v}));k.dataset.field=field;k.dataset.paramField=field;k.dataset.paramCell=selected;$('#'+where+'-knobs').append(k);tapeKnobs.set(field,k);
 }
 // Outer cross paths, inner direct paths; first two rows read L, last two read R.
@@ -59,7 +59,7 @@ function render(){
  const i=ids.indexOf(selected),cell=state.config.cells[i],t=timeline(cell,state.waveforms[i]);root.style.setProperty('--cell',colours[i]);
  $('#cell-selector').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.tapeCell===selected));
  $('#tape-summary').textContent=fmt(t.period)+'s span · '+(cell.running?'running':'paused')+' · 32s storage';
- for(const [field,k] of tapeKnobs){if(k.dataset.paramCell!==selected)k.dataset.paramCell=selected;k.update(cell[field]);}value($('#tape-preset'),cell.preset);value($('#tape-seconds'),cell.seconds);value($('#tape-beats'),cell.beats);value($('#tape-divisor'),cell.divisor);value($('#timing-mode'),cell.timingMode);value($('#tempo'),state.config.tempo);if($('#tape-time-slider'))value($('#tape-time-slider'),cell.seconds);
+ for(const [field,k] of tapeKnobs){if(k.dataset.paramCell!==selected)k.dataset.paramCell=selected;if(field==='feedback'&&k.querySelector('input'))k.querySelector('input').max=loopFeedback(cell);k.update(cell[field]);}value($('#tape-preset'),cell.preset);value($('#tape-seconds'),cell.seconds);value($('#tape-beats'),cell.beats);value($('#tape-divisor'),cell.divisor);value($('#timing-mode'),cell.timingMode);value($('#tempo'),state.config.tempo);if($('#tape-time-slider'))value($('#tape-time-slider'),cell.seconds);
  $('#tape-triplet').classList.toggle('active',cell.triplet);$('#tape-triplet').setAttribute('aria-pressed',String(cell.triplet));
  $('#tape-fade').textContent=cell.fadeGate?'Fade out':'Fade in';$('#tape-fade').setAttribute('aria-pressed',String(!cell.fadeGate));$('#tape-fade').classList.toggle('active',!cell.fadeGate);value($('#fade-in'),cell.fadeIn);value($('#fade-out'),cell.fadeOut);
  const clearing=Boolean(state.waveforms[i]?.flags&8);$('#tape-clear').textContent=clearing?'Clearing…':'Clear';$('#tape-clear').disabled=clearing;$('#tape-clear').classList.toggle('active',clearing);
@@ -142,7 +142,7 @@ function send(payload){pending++;$('#pending').textContent='Applying…';const j
 function receive(next){if(!state&&next.backend==='audio')selected=next.config.cells.find(c=>next.config.routes['clean:'+c.id]>0)?.id??selected;if(!state||next.revision>=state.revision){state=next;next.waveforms.forEach((w,i)=>{const key=w?.channels?.map(c=>c.generation+":"+c.sequence).join("/");if(observed.get(i)?.key!==key)observed.set(i,{key,at:performance.now()});});render();}}
 function select(cell,head=selectedHead){selected=cell;selectedHead=head;render();}
 ids.forEach((id,i)=>{
-  const el=document.createElement('article');el.className='cell';el.dataset.cell=id;el.style.setProperty('--cell',colours[i]);el.innerHTML=`<div class="cell-top"><button class="cell-name">${id}</button><span class="role">${['long / paired heads','medium / staggered heads','short / feedback swell','long / paired heads'][i]}</span><label>Head span <input class="seconds" aria-label="${id} head span seconds" type="number" min=".01" max="32" step=".01">s</label><span class="transport">${['record','overdub','hold','off'].map(m=>`<button data-mode="${m}">${m}</button>`).join('')}<button class="pause" title="Pause tape and silence its heads">Ⅱ</button><button class="clear">Clear</button></span></div><div class="timeline"><canvas class="wave"></canvas><div class="tap-lanes">${Array.from({length:4},(_,h)=>`<button class="tap" data-head="h${h+1}" aria-label="${id} head ${h+1}">${h+1}</button>`).join('')}</div><div class="scale"></div><div class="time-info"></div></div><div class="cell-bottom">${['inputGain','feedback'].map(f=>`<label>${f==='inputGain'?'Input':'Feedback'}<input type="range" data-field="${f}" aria-label="${id} ${f}" min="0" max="${f==='inputGain'?2:1.1}" step=".01"><output></output></label>`).join('')}<span class="state">stereo · 32s reserve</span></div>`;
+  const el=document.createElement('article');el.className='cell';el.dataset.cell=id;el.style.setProperty('--cell',colours[i]);el.innerHTML=`<div class="cell-top"><button class="cell-name">${id}</button><span class="role">${['long / paired heads','medium / staggered heads','short / feedback swell','long / paired heads'][i]}</span><label>Head span <input class="seconds" aria-label="${id} head span seconds" type="number" min=".01" max="32" step=".01">s</label><span class="transport">${['record','overdub','hold','off'].map(m=>`<button data-mode="${m}">${m}</button>`).join('')}<button class="pause" title="Pause tape and silence its heads">Ⅱ</button><button class="clear">Clear</button></span></div><div class="timeline"><canvas class="wave"></canvas><div class="tap-lanes">${Array.from({length:4},(_,h)=>`<button class="tap" data-head="h${h+1}" aria-label="${id} head ${h+1}">${h+1}</button>`).join('')}</div><div class="scale"></div><div class="time-info"></div></div><div class="cell-bottom">${['inputGain','feedback'].map(f=>`<label>${f==='inputGain'?'Input':'Feedback'}<input type="range" data-field="${f}" aria-label="${id} ${f}" min="0" max="${1}" step=".01"><output></output></label>`).join('')}<span class="state">stereo · 32s reserve</span></div>`;
   $('#cells').append(el);rows.set(id,el);el.querySelector('.cell-name').onclick=()=>select(id);
   el.querySelector('.seconds').onchange=e=>send({action:'cell',cell:id,field:'seconds',value:Number(e.target.value)});
   el.querySelectorAll('[data-field]').forEach(input=>amount(input,`${id}:${input.dataset.field}`,v=>({action:'cell',cell:id,field:input.dataset.field,value:v})));
@@ -166,7 +166,7 @@ function render(){if(!state)return;
   value($('#inputChannel'),state.config.inputChannel+1);$('#input-channel-label').hidden=state.config.source!=='cello';
   ['source','globalInput','master'].forEach(f=>{value($('#'+f),state.config[f]);if($('#'+f+'-value'))$('#'+f+'-value').textContent=Math.round(state.config[f]*100)+'%';});
   state.config.cells.forEach((c,i)=>{const el=rows.get(c.id),wave=state.waveforms[i],t=timeline(c,wave);el.classList.toggle('selected',c.id===selected);value(el.querySelector('.seconds'),c.seconds);
-    el.querySelectorAll('[data-field]').forEach(input=>{value(input,c[input.dataset.field]);input.nextElementSibling.textContent=Math.round(c[input.dataset.field]*100)+'%';});
+    el.querySelectorAll('[data-field]').forEach(input=>{if(input.dataset.field==='feedback')input.max=loopFeedback(c);value(input,c[input.dataset.field]);input.nextElementSibling.textContent=Math.round(c[input.dataset.field]*100)+'%';});
     const unity=loopFeedback(c),mode=c.inputGain===1&&c.feedback===0?'record':c.inputGain===1&&c.feedback===unity?'overdub':c.inputGain===0&&c.feedback===unity?'hold':c.inputGain===0&&c.feedback===0?'off':null;
     el.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));el.querySelector('.pause').textContent=c.running?'Ⅱ':'▶';
     el.querySelector('.scale').innerHTML=Array.from({length:5},(_,j)=>`<span>${j===0?'now':fmt(t.horizon*j/4)+'s'}</span>`).join('');
@@ -185,7 +185,7 @@ ids.forEach((id,i)=>{
  el.querySelector('.detail').onclick=()=>{select(id);document.body.dataset.pane='performance';$('.view-tabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.pane==='performance'));render();};
  el.querySelector('.all-seconds').onchange=e=>send({action:'cell',cell:id,field:'seconds',value:Number(e.target.value)});
  el.querySelector('.all-preset').onchange=e=>{if(e.target.value!=='custom')send({action:'preset',cell:id,value:e.target.value});};
- for(const [field,label,max,where] of [['inputGain','Input',2,'intake'],['dryLevel','Dry',1,'intake'],['effectLevel','FX',2,'return'],['feedback','FB',1.1,'return']]){
+ for(const [field,label,max,where] of [['inputGain','Input',1,'intake'],['dryLevel','Dry',1,'intake'],['effectLevel','FX',2,'return'],['feedback','FB',1,'return']]){
   const k=knob(label,id+' '+label,max,v=>({action:'cell',cell:id,field,value:v}));k.dataset.field=field;el.querySelector('.all-'+where).append(k);knobs.set(field,k);
  }
  [3,0,1,2].forEach((h,j)=>{
@@ -210,7 +210,7 @@ function renderAllTapes(){
  if(!state||document.body.dataset.pane!=='all')return;
  state.config.cells.forEach((cell,i)=>{
   const {el,knobs,heads}=allTapes.get(cell.id),wave=state.waveforms[i],t=timeline(cell,wave),clearing=Boolean(wave?.flags&8);
-  value(el.querySelector('.all-seconds'),cell.seconds);value(el.querySelector('.all-preset'),cell.preset);knobs.forEach((k,f)=>k.update(cell[f]));
+  value(el.querySelector('.all-seconds'),cell.seconds);value(el.querySelector('.all-preset'),cell.preset);knobs.forEach((k,f)=>{if(f==='feedback'&&k.querySelector('input'))k.querySelector('input').max=loopFeedback(cell);k.update(cell[f]);});
   el.querySelector('.all-state').textContent=clearing?'clearing':cell.running?'running':'paused';el.querySelector('.all-pause').textContent=cell.running?'Pause':'Run';
   const fade=el.querySelector('.all-fade');fade.textContent=cell.fadeGate?'Fade out':'Fade in';fade.setAttribute('aria-pressed',String(!cell.fadeGate));fade.classList.toggle('active',!cell.fadeGate);
   const clear=el.querySelector('.all-clear');clear.textContent=clearing?'Clearing…':'Clear';clear.disabled=clearing;value(el.querySelector('.all-in'),cell.fadeIn);value(el.querySelector('.all-out'),cell.fadeOut);

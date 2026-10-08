@@ -27,8 +27,8 @@ AWBVerbMixProfile {
             if(options[\sendFunction].notNil){[AWParam.synthDef,AWParam.routeDef].do{|def|this.dispatch([\d_recv,def.asBytes]);SynthDescLib.global.add(def.asSynthDesc)}};
             group=Group.basicNew(server);this.dispatch(group.newMsg(target,\addToTail));options[\ownFunction].value(group,\container,(name:"Verb mix profile",parent:target));
             inputGain=AWParam(\verbIn,options[\inputGain] ? 1,nil,0,0,group,server,parameterOptions);
-            selector=AWParam(\verbSelect,options[\base] ? 0,nil,options[\amount] ? 0,options[\modCurve] ? 0,group,server,parameterOptions);
-            select=AWSelectN(4,options[\basePole] ? true,group,server,parameterOptions);selector.mapTo(select.synth,\position);
+            selector=AWParam(\verbSelect,options[\base] ? 0,ControlSpec(0,1),options[\amount] ? 0,options[\modCurve] ? 0,group,server,parameterOptions);
+            select=AWSelectN(4,options[\basePole] ? true,group,server,parameterOptions);selector.setPolarity(\bipolar);selector.mapTo(select.synth,\position);
             this.class.branchIDs.do{|id,column|
                 var param=AWParam(id,bases[column],nil,1,0,group,server,parameterOptions);branches[id]=param;
                 routes[id]=4.collect{|pole|param.addModulation(("s"++(pole+1)).asSymbol,select.busAt(pole),profiles[pole][column])};

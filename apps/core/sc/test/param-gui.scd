@@ -46,7 +46,7 @@ try{
  core.removeParam(\frequency);
  view=AWParamInspector.openMany([p,q],(launch:false),instance);
  address=AWParamTestAddress();view.tool.sendParam(address,"probe",p.name);wire=address.messages.last;
- check.value(wire.size==20 and:{wire[17]=="bipolar"} and:{wire[18]==0} and:{wire.copyRange(14,16)==p.observationIndices},"language metadata serializes polarity and sparse observation indices");
+ check.value(wire.size==22 and:{wire[17]=="bipolar"} and:{wire[18]==0} and:{wire.copyRange(14,16)==p.observationIndices} and:{wire[20]=="idle"} and:{wire[21]=="idle"},"language metadata serializes polarity and sparse observation indices");
  check.value(view.tool.owner===instance,"inspector panel retains owning Tool identity");
  check.value(view.tool.params.size==2 and:{p.isKindOf(Tool).not},"one inspector borrows multiple plain AWParams");
  p.watch(6);messages.clear;

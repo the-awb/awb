@@ -20,3 +20,30 @@ test('runtime uses shared leases, authenticated edits, hidden release, and borro
   send(a,{type:'visible',visible:false,hz:15});await wait(()=>broker.diagnostics().hosts[0]?.leases===1);assert.equal(detached,0);b.close();await wait(()=>!broker.diagnostics().polling);assert.equal(detached,1);
  }finally{a?.terminate();b?.terminate();await runtime.stop();broker.close()}
 });
+
+test('pickup phase deltas persist for late viewers without telemetry or edits; loss clears phases',async()=>{
+ let callbacks,bindings=0,edits=0;const state={epoch:'pickup',revision:0,host:{pid:process.pid,port:57110,capacity:8},params:[{id:'one',min:0,max:1,base:.5,amount:.2,warp:'lin',indices:[0,1,2],routes:[]}]};
+ const r=await startRuntime({binding:{},controlObservations:{close:()=>{},subscribe:()=>assert.fail('Phase notifications must not start telemetry')},bridgeFactory:async(b,o)=>{callbacks=o;return {bind:async()=>{bindings++;return structuredClone(state)},isAlive:()=>true,edit:async()=>edits++,close:async()=>{}}}});
+ let ws;const messages=[];
+ try{
+  callbacks.onDelta({epoch:'pickup',revision:1,id:'one',field:'pickupBase',value:'warning',dur:0,curve:0,origin:''});assert.equal(r.state().params[0].pickupBase,'warning');assert.equal(bindings,1);
+  const {token}=await fetch(r.url+'api/state').then(r=>r.json());ws=new WebSocket(r.url.replace('http','ws')+'ws?token='+token,{origin:r.url.slice(0,-1)});ws.on('message',m=>messages.push(JSON.parse(m)));await wait(()=>messages.length);assert.equal(messages[0].state.params[0].pickupBase,'warning');
+  callbacks.onDelta({epoch:'pickup',revision:2,id:'one',field:'pickupAmount',value:'ramping',dur:0,curve:0,origin:''});await wait(()=>messages.some(m=>m.delta?.field==='pickupAmount'));assert.equal(r.state().params[0].pickupBase,'warning');assert.equal(r.state().params[0].pickupAmount,'ramping');assert.equal(edits,0);assert.equal(bindings,1);
+  callbacks.onStatus(false,'Owner closed');assert.equal(r.state().params[0].pickupBase,'idle');assert.equal(r.state().params[0].pickupAmount,'idle');
+ }finally{ws?.terminate();await r.stop()}
+});
+
+
+test('base target edits keep their declared ramp durations; downstream lag stays SC-owned',async()=>{
+ const state={epoch:'lag-fixture',host:{port:57110,capacity:64,pid:process.pid,epoch:'boot'},owner:'core:lag',revision:0,count:1,params:[{id:'gain',min:0,max:1,warp:'lin',base:.2,amount:0,modCurve:0,indices:[1,2,3],routes:[]}]};
+ const calls=[],messages=[];let ws;
+ const runtime=await startRuntime({binding:{instanceID:'param:lag',port:57120},bridgeFactory:async()=>({bind:async()=>structuredClone(state),isAlive:()=>true,edit:async(...args)=>{calls.push(args);return calls.length},close:async()=>{}})});
+ try{
+  const {token}=await fetch(runtime.url+'api/state').then(r=>r.json());ws=new WebSocket(runtime.url.replace('http','ws')+'ws?token='+token,{origin:runtime.url.slice(0,-1)});ws.on('message',m=>messages.push(JSON.parse(m)));await wait(()=>messages.length);
+  for(const [request,field,dur] of [['default','base',undefined],['instant','base',0],['scene','base',2],['amount','amount',undefined]]){
+   ws.send(JSON.stringify({type:'edit',epoch:state.epoch,id:'gain',field,value:.5,request,dur}));await wait(()=>messages.some(m=>m.request===request));assert.ok(messages.find(m=>m.request===request).ok);
+  }
+  assert.deepEqual(calls.map(c=>c[4]),[0,0,2,0]);
+  ws.send(JSON.stringify({type:'edit',epoch:state.epoch,id:'gain',field:'base',value:.5,request:'invalid',dur:-1}));await wait(()=>messages.some(m=>m.request==='invalid'));assert.equal(messages.find(m=>m.request==='invalid').ok,false);assert.equal(calls.length,4);
+ }finally{ws?.terminate();await runtime.stop()}
+});

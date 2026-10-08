@@ -7,14 +7,14 @@ AWBLiveMappings {
             var target=r[3],parameter,midi=(device:r[4],channel:r[5],cc:r[6],lo:r[7],hi:r[8],pickup:r[9]);
             if(target!="unavailable"){
                 var pieces=target.split($:),slot=pieces[0].asSymbol,key=pieces[1].asSymbol;
-                parameter=if(slot==\verb){set.verbMix.perform(key)}{if(slot==\um){set.sharedMix.param(key)}{set.fxMix(slot).param(key)}};
+                parameter=if(slot==\vcfx and:{set.celloStutter.isNil}){nil}{if(slot==\verb){set.verbMix.perform(key)}{if(slot==\um){set.sharedMix.param(key)}{set.fxMix(slot).param(key)}}};
             };
             if(parameter.notNil){
                 var existing=base.t[r[0].asSymbol].tryPerform(\p).tryPerform(\at,r[1].asSymbol);
-                if(parameter.isKindOf(AWParam).not or:{parameter.closed} or:{existing.notNil and:{existing!==parameter}}){Error("Invalid or conflicting live parameter alias: "++r[0]++"/"++r[1]).throw};
+                if((parameter.isKindOf(AWParam).not and:{parameter.isKindOf(AWParamField).not}) or:{parameter.closed} or:{existing.notNil and:{existing!==parameter}}){Error("Invalid or conflicting live parameter alias: "++r[0]++"/"++r[1]).throw};
             };[r,parameter,midi];
         };
-        entries.do{|entry|var r=entry[0],parameter=entry[1],midi=entry[2];if(parameter.notNil){base.track(r[0]).add(r[1],parameter,r[2],midi)}{base.track(r[0]).unavailable(r[1],r[2],midi)}};
+        entries.do{|entry|var r=entry[0],parameter=entry[1],midi=entry[2];if(parameter.notNil){if(parameter.isKindOf(AWParamField)){base.track(r[0]).field(r[1],parameter.param,parameter.field,r[2],midi)}{base.track(r[0]).add(r[1],parameter,r[2],midi)}}{base.track(r[0]).unavailable(r[1],r[2],midi)}};
         base.log("First-pass FX controls bound; unavailable legacy controls retained as metadata.");^base;
     }
     *rows {^[
@@ -43,7 +43,9 @@ AWBLiveMappings {
         ["mast","umOverMod","Overmod","um:overMod","fcb",3,57,0,127,true],
         ["mast","umShaper","Shaper","um:shape","fcb",3,15,0,127,true],
         ["vcfx","submarine","Submarine","unavailable","fcb",3,103,0,127,true],
-        ["vcfx","stut1AMT","Stutter","unavailable","fcb",3,17,0,127,true],
+        ["vcfx","stut1AMT","Stutter","vcfx:amount","fcb",3,17,0,127,true],
+        ["vcfx","stutWave","Wave","vcfx:waveform",nil,nil,nil,0,127,true],
+        ["vcfx","stutRate","Rate","vcfx:rate",nil,nil,nil,0,127,true],
         ["splut","splut1","1","unavailable","fcb",3,42,0,127,true],
         ["splut","splut2","2","unavailable","fcb",3,41,0,127,true],
         ["splut","splutenvMod","~ envelope","unavailable","fcb",3,52,0,127,true],

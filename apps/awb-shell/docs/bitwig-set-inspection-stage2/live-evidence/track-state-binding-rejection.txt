@@ -1,0 +1,2 @@
+Combined renderer rejected the first state pass: Controller target track differs from main capture
+The dedicated bank reported offset 0 / Audio group instead of offset 5 / Pro 2. Initialization-time scrolling was replaced by a scheduled scroll after observations were available; the entire state pass was rerun.

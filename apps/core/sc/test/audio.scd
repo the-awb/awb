@@ -12,6 +12,7 @@ try{
  p[2]=core.createParam(\sum,0.2,\unipolar,0.5);p[3]=core.createParam(\curve,0.5,\unipolar,0.5,4);
  p[4]=core.createParam(\frequency,200,ControlSpec(20,20000,\exp),0.2);
  p[5]=core.createParam(\mapped,0.4);p[6]=core.createParam(\rapid,0.2);p[7]=core.createParam(\stale,0.2,\unipolar,0.5);
+ p.do{|param|param.baseSmoothing=0};
  [1,2,3,4,7].do{|i|writers[i]=Synth.basicNew(\paramWriter,server);emit.value(writers[i].newMsg(p[i].sourceGroup,[\out,p[i].inputBus.index,\value,if(i==1){1}{0.5}],\addToTail))};
  // Exercise the registered writer helper against the real NRT server.
  emit.value(writers[2].freeMsg);writers[2]=p[2].createModulationWriter(\ownedWriter,\paramWriter,[\value,0.5]);
@@ -35,7 +36,7 @@ try{
  now=1.3;p[0].setBase(0.9,0);p[1].setAmount(0,0);
  now=1.4;p[6].setPolarity(\bipolar);p[0].setBase(0.3,0.6,4);p[1].setAmount(0.5,0.6,-4);
  now=1.5;p[7].removeModulation(\a);
- now=1.6;p[6].setNormalized(-0.25);
+ now=1.6;p[6].setNormalized(-0.25,0);
  now=1.9;p[6].setPolarity(\unipolar);p[1].setAmount(-0.6);
  now=2.0;p[1].setPolarity(\unipolar);
  now=2.05;p[1].setAmount(0.5);

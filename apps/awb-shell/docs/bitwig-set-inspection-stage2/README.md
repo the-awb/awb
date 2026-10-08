@@ -1,98 +1,58 @@
 # One-shot Bitwig set mapper
 
-Willy authorized the custom capture after the Stage 1 comparison on 4 October 2026.
-The target is the open instance of `awb 5.2 (ef script)`. This is an investigation
-of a fixed template; continuous feedback, project writes and SC migration are outside scope.
+The scripts select API 15; the installed host reports maximum API 17.
 
-Status: implemented and tested offline. Actual Bitwig 4.3.10 capture pending controller
-activation. The earlier Stage 1 probe is live evidence for a subset of these APIs;
-it does not establish that this expanded controller has run successfully.
+The read-only capture of Willy's open `New 2*` instance of `awb 5.2 (ef script)` completed on 4 October 2026 in Bitwig 4.3.10. Start with [the capture overview](target-capture/overview.md), [the full map](target-capture/set-map.md), or [the JSON snapshot](target-capture/snapshot.json). [Capture review](capture-review.md) records exact coverage, runtime fixes and remaining gaps.
 
-## Run the prepared capture
+This documents a fixed template. The open instance's path/hash remains unknown; the source template hash is recorded separately. Positional locators identify this capture, not stable DAW object IDs. Human annotations remain in [annotations.json](annotations.json) and are never overwritten by the renderer.
 
-1. Keep the target open with playback stopped. Do not run an audio load-test concurrently.
-2. In Settings → Controllers, add **AWB Investigation → One Shot Set Mapper**.
-   The installed controller lives in its own `Controller Scripts/AWBSetMapper` folder.
-3. The controller starts once and writes
-   `/private/tmp/bitwig-set-mapper-20261004/capture.jsonl`.
-   It displays a completion notification. Bank traversal may take several minutes.
-4. Render the latest completed run:
+## Captured evidence and source
 
-   ```sh
-   python3 render-capture.py /private/tmp/bitwig-set-mapper-20261004/capture.jsonl \
-     --out ./target-capture --annotations ./annotations.json
-   ```
+- `AWBSetMapper.control.js`: paginated tracks, nested devices, sends, direct parameters and current remote controls; project/group main-track identity pass.
+- `AWBParameterPass.control.js`: targeted repair of initially unresolved parameter records, retaining the current host-observer cache when unchanged values do not emit new callbacks.
+- `AWBHierarchyPass.control.js`: explicit group/root effect banks and root Master identity, joined to the first capture by `createEqualsValue()`.
+- `AWBTrackStates.control.js`: activation, arm and monitoring state, root effect-bank order, and the exact FX Layer UUID matcher used by the existing OSC controller.
+- `live-evidence/`: raw events, source snapshots for failed attempts, the audio-device error, and an explicitly incomplete checkpoint preserved during the run.
+- `target-capture/provenance.json` and `artifact-manifest.json`: source evidence paths and hashes; comparable musical-content hash excludes incidental session metadata.
 
-5. Disable the inspection controller once capture completes. Remove only this mapper's
-   controller file/folder after retaining its source and evidence. Do not alter other controllers.
+The one-shot sources share a controller identity so replacing only this inspection file reloads the next phase. No existing controller was changed. Each phase stops automatically on completion. The installed inspection file is removed after evidence is preserved.
 
-The scratch output directory must exist and be writable before activation. The controller
-has no MIDI ports, networking, services, musical parameter setters or project save calls.
-Named track/device cursors are independent of editor selection; bank scrolling and cursor
-pinning/navigation are the only API writes. This behavior still needs a live check.
+## Reproduction
 
-## What the capture attempts
+The dated output directory must exist. Keep the fixed target open and playback stopped. Install only the mapper into its separate `Controller Scripts/AWBSetMapper` folder and enable **AWB Investigation → One Shot Set Mapper** once. After the main `done` event, replace only that file with the parameter, track-state and hierarchy follow-up sources, waiting for each `done` event before proceeding. The scratch `finish-passes.py` automates that sequential replacement with ownership checks; it does not launch Bitwig or change audio settings.
 
-- Paginate the flat track bank, including groups, effect tracks and master where the host
-  supplies them; retain type, order, volume, pan, mute, solo, input flags and sends.
-- Paginate root chains, layer chains, drum-pad chains and named device slots recursively.
-  Retain enabled and disabled devices; capture preset/sample labels and exposed direct parameters.
-- Match project-root and group child tracks to the flat bank with `createEqualsValue()`.
-  Names and cursor-relative positions do not establish parent identity.
-- Write ordered evidence events and a final snapshot, then stop automatically.
-- Render JSON, Markdown and provenance, without overwriting human annotation files.
+Render the retained completed evidence:
 
-Each locator is a position in this static capture, not a stable DAW object identifier.
-The instance file path/hash is unknown. The original source template identity is documented
-separately in Stage 1; it must not be assigned to the open instance.
+```sh
+python3 render-capture.py live-evidence/live-capture.jsonl \
+  --parameter-pass live-evidence/parameter-pass.jsonl \
+  --track-states live-evidence/track-states.jsonl \
+  --hierarchy-pass live-evidence/hierarchy-pass.jsonl \
+  --annotations annotations.json --out target-capture
+python3 summarize-target.py target-capture/snapshot.json \
+  --references . --out target-capture
+```
 
-## Observation and coverage limits
+The renderer accepts the latest completed run only. It rejects incomplete/aborted latest runs, mismatched source runs or identities, conflicting observed parents, and changed mute/volume/pan between the main and track-state passes. Remove only the installed inspector after capture; preserve other controller files and project state.
 
-All proxies are created during `init()`. Traversal reuses banks of eight. Navigation waits
-at least 450 ms and requires three equal reads; a maximum of 12 attempts bounds each wait.
-Each parameter rebind clears callback caches. The ID observer is registered before the
-display observer, as required by the actual 4.3.10 host. Display observations are paged in
-groups of 64. Missing callbacks are unresolved; NaN numeric values are unavailable. Zero,
-false and empty strings retain their values.
+## Observation boundaries
 
-This is bounded cache settling for an unchanged, stopped template. It is not an atomic
-snapshot, proof of callback causality or a claim of live-update support. The controller
-aborts when playback starts, counted banks change or a navigation wait times out.
+All proxies are created during `init()`. Banks contain eight items and are paginated. Navigation waits at least 450 ms and requires three equal reads, bounded by 12 attempts. The main reader clears direct-parameter caches on rebind, which loses unchanged callbacks; the required parameter follow-up preserves current ID/name/numeric observations across rebind. Changed fields receive callbacks; unchanged fields retain their values. Display strings are requested in groups of 64. Zero, false and empty values remain distinct from missing data.
 
-Hard limits are recorded in the capture: 512 tracks, 256 devices per chain, 128 layers,
-128 pads, 12 nested levels, 4,096 inspected devices, 4,096 parameters per device and
-32 sends per track. Exceeding a limit is explicit. Empty/inaccessible named slots that
-retain the parent cursor are unresolved rather than recursively mistaken for the parent.
+These are asynchronous observations of an unchanged, stopped template. The passes do not establish an atomic snapshot or independent UI verification of every parameter. Playback, count changes or navigation timeouts abort the main/follow-up traversal. The capture reports 512-track, 256-device-chain, 128-layer/pad, 12-level, 4,096-device/parameter and 32-send limits.
 
-Generic input/output destinations, verified send edges, modulation assignment targets
-and amounts, plugin versions and hidden plugin/Grid state remain gaps. The current remote-control
-page, its eight controls and page names are captured alongside direct parameters;
-remaining remote pages are untraversed. UI inspection
-must supply the missing routing facts. Put those facts in `annotations.json` under `notes`,
-keyed by a capture track ID or serialized device locator, with their human source stated.
+Generic input/output destinations, verified send edges, modulation assignments/amounts, plugin versions and hidden plugin/Grid state remain gaps. An observed empty direct-parameter list is not proof that a plugin has no controls. Current remote pages, page names and eight controls are captured; other pages remain untraversed. Named slots that retain their parent are unresolved rather than claimed empty. Human routing annotations must state their source.
 
-## Checks
+## Verification
+
+The mock traversal fixture has 19 tracks and 24 devices, duplicate names, an eleven-device chain, nine layers, nested slots/pads, disabled devices, zero/empty/NaN values, missing callbacks and playback refusal. The persistent-cache reader also handles callbacks emitted only when values change. Eight renderer tests cover annotation preservation, latest-run refusal, musical hashes and supplement identity/coherence checks.
 
 ```sh
 node --check AWBSetMapper.control.js
 node test-mapper.mjs
+node test-mapper.mjs AWBParameterPass.control.js
 python3 test-render.py
 node check-interface.mjs
 ```
 
-The mock fixture contains 19 tracks and 24 devices: duplicate names, long chains,
-nine layers, nested slots, drum pads, disabled devices, zero/empty/NaN values,
-missing callbacks and playback refusal. The renderer tests cover human annotation
-preservation, ignoring an older success when the latest run is incomplete, and
-comparable hashes that ignore session duration but detect musical changes.
-
-`check-interface.mjs` checks initialization calls against the installed 4.3.10 Java
-interfaces saved by Stage 1. It does not execute actual host observations. The fixture
-report is explicitly a mock example and must never be presented as the target map.
-
-## Screenshot and existing OSC-controller reference
-
-[The cross-check](track-controller-crosscheck.md) records the supplied 65-track UI
-reference and the installed OSC Controller for AWB configuration. It established the
-24-send contract and the need to retain current remote controls; the mapper now
-allocates 32 sends and captures those controls. No existing controller was changed.
+Interface checks compare initialization calls with the installed 4.3.10 Java interfaces; they are not host execution. The fixture is explicitly mock evidence. Actual host results and the screenshot/OSC comparison are documented in [the reference cross-check](track-controller-crosscheck.md).

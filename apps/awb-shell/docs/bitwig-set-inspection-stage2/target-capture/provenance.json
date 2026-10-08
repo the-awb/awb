@@ -1,0 +1,22 @@
+{
+  "run": "1791142098490",
+  "capturePath": "/Users/willy/awb/apps/awb-shell/docs/bitwig-set-inspection-stage2/live-evidence/live-capture.jsonl",
+  "captureSha256": "3f0ce2e245b2e4df4be879d6d25502939f29544b02abfc5dd5ed1921528ebca8",
+  "musicalContentSha256": "6130ba6a8eae4bd4d1c43b4221ff3b9d11210a6f239acfd5fa1d52946a86a9d5",
+  "annotationsPath": "/Users/willy/awb/apps/awb-shell/docs/bitwig-set-inspection-stage2/annotations.json",
+  "trackStates": {
+    "path": "/Users/willy/awb/apps/awb-shell/docs/bitwig-set-inspection-stage2/live-evidence/track-states.jsonl",
+    "sha256": "2e30bc9782bae484aab1fb320d85469f468b85ed584015417be5d47ea794e16d",
+    "run": "1791146757845"
+  },
+  "parameterPass": {
+    "path": "/Users/willy/awb/apps/awb-shell/docs/bitwig-set-inspection-stage2/live-evidence/parameter-pass.jsonl",
+    "sha256": "aafd0680f5478de1d638abc753b39658e0d8b530576eb56fa72d10a323771a9d",
+    "run": "1791145787283"
+  },
+  "hierarchyPass": {
+    "path": "/Users/willy/awb/apps/awb-shell/docs/bitwig-set-inspection-stage2/live-evidence/hierarchy-pass.jsonl",
+    "sha256": "59cc5c5262d599fed8f7ee0ec71366cc0ef51fd98674c00cd19da228a97dec48",
+    "run": "1791146597214"
+  }
+}

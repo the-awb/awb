@@ -1,10 +1,12 @@
 (
-var server,base,instance,p,q,view,check,checks=0,failures=List.new,messages=List.new,cleaned=0,command,rackInstance,rack,level,rejected=false,before;
+var server,base,instance,p,q,view,check,checks=0,failures=List.new,messages=List.new,cleaned=0,command,rackInstance,rack,level,rejected=false,before,midi,cap,cc;
 check={|ok,label|checks=checks+1;if(ok){("PASS "++label).postln}{failures.add(label);("FAIL "++label).postln}};
 try {
     server=AWBCoreTestServer(\liveSetContract,NetAddr("127.0.0.1",59994));
     instance=AWBaseTool.open((params:[(id:\gain,base:0.2)]),(server:server,sendFunction:{|msg|messages.add(msg)},track:false));base=instance.tool;p=base.param(\gain);
     check.value(base.ready and:{instance.definition.id==\awbBase},"AWBaseTool uses Core Tool ownership");
+    check.value(base.containers===base.t,"b.containers is the existing namespace registry");
+    check.value(base.clock!==TempoClock.default,"the set owns an independent musical clock");
     base.track(\deci).add(\deciShaper,p,"Shape",(channel:3,cc:13,pickup:true));
     check.value(base.t[\deci].p[\deciShaper]===p,"track dictionary refers to the actual AWParam");
     q=AWParam(\gain,0.4,target:base.groupAt(\parameters),server:server,options:(sendFunction:{|m|messages.add(m)}));
@@ -22,6 +24,12 @@ try {
     check.value(command.contains("AWB_LIVE_DELAY_URL='http://127.0.0.1:12345/'"),"composite forwards one existing delay instrument URL");
     check.value(command.contains("--tool-instance="++instance.instanceID.shellQuote),"composite NodeManager binding belongs to AWBaseTool");
     view.close;
+    // Real launch has short aliases plus amount views of each delay parameter.
+    [[\in,\inOf,\inSc],[\fx,\fxOf,\fxSc],[\fb,\fbOf,\fbSc],[\dry,\dryOf,\drySc]].do{|row|
+        var parameter=base.createParam(("delay"++row[0]).asSymbol,0.5),track=base.track(\b1),named;
+        track.add(row[1],parameter,"Delay "++row[0]);track.add(row[0],parameter);track.field(row[2],parameter,\amount);track.canonical(row[1]);named=base.namedParameters;
+        check.value(named[("b1/"++row[1]).asSymbol]===parameter and:{named[("b1/"++row[0]).asSymbol].isNil},"delay "++row[0]++" keeps its canonical GUI name across aliases");
+    };
     base.log("hello");check.value(base.logHistory.last[\text]=="hello","AWBase-style logging retains actual messages");
     505.do{|i|base.log(i)};check.value(base.logHistory.size==500 and:{base.logSequence==506},"console history is bounded with monotonic sequence");
     base.adopt(\example,Ref.new,{cleaned=cleaned+1});
@@ -39,7 +47,18 @@ try {
     rack.setSend(\vc,\mast,1);before=messages.size;rejected=false;
     try{rack.setSend(\vc,\mast,1.001)}{|error|rejected=true};
     check.value(rejected and:{rack.channelAt(\vc)[\gains][0]==1} and:{messages.size==before},"unity rack rejects gain above 100 percent without changing DSP or cache");
-    rackInstance.close;
+    rack.setLevel(\vc,1);rackInstance.close;
+    cap=6.dbamp;
+    rackInstance=AWBSendRackTool.open((channels:[\vc],fixedFX:[\mast],dynamicFX:0,fixedFollowers:[\env],spareFollowers:0,maxGain:1,maxLevel:cap),
+        (server:server,sendFunction:{|m|messages.add(m)},track:false));rack=rackInstance.tool;
+    rack.setLevel(\vc,cap);rack.setControlAmount(\env,cap);
+    check.value(rack.channelAt(\vc)[\level]==cap and:{rack.slotAt(\env)[\level]==cap},"channel and control faders accept +6dB while send range stays at unity");
+    p=AWParam(\fader,0.5,ControlSpec(0,cap),target:rack.sourceGroup,server:server,options:(sendFunction:{|m|messages.add(m)})).midiRange(0,1);
+    midi=p.createMidiSource(12345,3,7,passthru:false);MIDIIn.doControlAction(12345,3,7,127);
+    check.value(p.baseTarget==1,"actual MIDI callback reaches unity, not +6dB");
+    p.setBase(cap);check.value(p.baseTarget==cap,"manual fader edit reaches +6dB");
+    check.value(midi.acceptBase(127,cap).not,"pickup cannot latch above the MIDI unity ceiling");
+    midi.free;p.free;rackInstance.close;
     q.free;check.value(q.closed,"externally borrowed parameter remains independently owned");
     ("AWB_LIVE_SURFACE_CONTRACT_RESULT="++if(failures.isEmpty){"PASS"}{"FAIL"}++" checks="++checks).postln;if(failures.isEmpty){0.exit}{1.exit};
 }{|error|error.reportError;instance.tryPerform(\close);q.tryPerform(\free);1.exit};

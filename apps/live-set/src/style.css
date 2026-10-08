@@ -86,3 +86,5 @@ main.live-surface{grid-template-rows:minmax(0,1fr) 22px}
 .delay-cell.routing-bottom .delay-routing{grid-row:2;border-bottom:0;border-top:1px solid #26363d55}
 .delay-cell.routing-bottom .delay-side,.delay-cell.routing-bottom .cell-view,.delay-cell.routing-bottom .cell-display{grid-row:1}
 @media(min-width:1800px){.delay-cell{grid-template-columns:minmax(0,1fr) 86px 29px;grid-template-rows:86px minmax(0,1fr)}.delay-cell.side-left{grid-template-columns:86px minmax(0,1fr) 29px}.delay-cell.routing-bottom{grid-template-rows:minmax(0,1fr) 86px}.delay-side .field-knob,.delay-side .field-unbound{width:56px;height:56px}}
+
+.fader-track .unity-mark{position:absolute;left:-3px;right:-3px;top:calc((1 - var(--unity)) * (100% - 7px) + 3.5px);height:1px;background:#b8a47b;pointer-events:none;z-index:1}.fader-track input{z-index:2}

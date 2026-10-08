@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 
-const source=fs.readFileSync(new URL('./AWBSetMapper.control.js',import.meta.url),'utf8');
+const source=fs.readFileSync(process.argv[2]??new URL('./AWBSetMapper.control.js',import.meta.url),'utf8');
 function fixture(){
   let serial=0;
   const dev=(name,extra={})=>({uid:++serial,name,type:'audio-effect',enabled:true,params:[{id:'gain',name:'Gain',value:0,display:'-inf dB'}],...extra});
@@ -15,7 +15,7 @@ function fixture(){
   tracks[1].sends=Array.from({length:25},(_,i)=>({name:'Send '+i,value:i===24?.5:0}));
   return {tracks,roots:tracks.filter((_,i)=>i!==1&&i!==2)};
 }
-function simulate({playing=false,suppressIds=false}={}){
+function simulate({playing=false,suppressIds=false,changedCallbacksOnly=false}={}){
   const data=fixture(), output=[], tasks=[];let time=0,seq=0;
   const schedule=(fn,ms)=>tasks.push({fn,time:time+ms,seq:seq++});
   const value=(read,write)=>({get:read,markInterested(){},set(v){if(!write)throw Error('Unexpected musical write');write(v);}});
@@ -41,9 +41,14 @@ function simulate({playing=false,suppressIds=false}={}){
     sendBank:()=>bank(()=>read()?.sends??[],s=>({...parameter(()=>s()?.value??0,'0 dB'),exists:()=>exists(s),name:()=>prop(s,'name',''),isPreFader:()=>value(()=>false),sendMode:()=>value(()=> 'POST')})),
     createTrackBank:()=>bank(()=>read()?.children??[],track),createEqualsValue:b=>equal(read,b)};}
   function parameter(read,display){return {...value(read),displayedValue:()=>value(()=>display)};}
-  function cursorDevice(){let current=null,idCb,nameCb,numCb,displayCb;let pin=false;
-    const bind=n=>{current=n;schedule(()=>{if(!suppressIds)idCb?.((n?.params??[]).map(p=>p.id));
-      for(const p of n?.params??[]){nameCb?.(p.id,p.name);numCb?.(p.id,p.value);}},100);};
+  function cursorDevice(){let current=null,idCb,nameCb,numCb,displayCb;let pin=false,lastIds=null,lastNames={},lastNumbers={};
+    const bind=n=>{current=n;schedule(()=>{const nextIds=(n?.params??[]).map(p=>p.id),signature=JSON.stringify(nextIds);
+      if(!suppressIds&&(!changedCallbacksOnly||signature!==lastIds))idCb?.(nextIds);lastIds=signature;
+      for(const p of n?.params??[]){
+        if(!changedCallbacksOnly||lastNames[p.id]!==p.name)nameCb?.(p.id,p.name);
+        if(!changedCallbacksOnly||!Object.is(lastNumbers[p.id],p.value))numCb?.(p.id,p.value);
+        lastNames[p.id]=p.name;lastNumbers[p.id]=p.value;
+      }},100);};
     return {...device(()=>current),isPinned:()=>value(()=>pin,v=>pin=v),selectDevice:d=>bind(d._getNode()),
       'selectFirstInLayer(int)':i=>bind(current?.layers?.[i]?.devices?.[0]??null),
       selectFirstInKeyPad:i=>bind(current?.pads?.[i]?.devices?.[0]??null),
@@ -68,7 +73,10 @@ function simulate({playing=false,suppressIds=false}={}){
     getProject:()=>({getRootTrackGroup:()=>({createTrackBank:()=>bank(()=>data.roots,track)})}),
     getHostVersion:()=> 'mock 4.3.10',getHostApiVersion:()=>17,scheduleTask:schedule,showPopupNotification(){}};
   const context={host,loadAPI(){},CursorDeviceFollowMode:{FIRST_DEVICE:'FIRST_DEVICE'},println:line=>output.push(JSON.parse(line.replace('AWB_SET_MAPPER ',''))),Date,JSON,Math,isFinite};
-  vm.createContext(context);vm.runInContext(source,context);context.init();
+  vm.createContext(context);vm.runInContext(source,context);
+  // Exercise the parameter pass's persistent-cache reader against the same full fixture.
+  if(source.includes('function parameterPass()'))context.parameterPass=context.captureTracks;
+  context.init();
   let iterations=0;
   while(tasks.length){assert.ok(iterations++<100000,'Scheduler did not terminate');tasks.sort((a,b)=>a.time-b.time||a.seq-b.seq);const task=tasks.shift();time=task.time;task.fn();}
   return {output,time};
@@ -89,6 +97,11 @@ const deep=snapshot.tracks[2].chain.items[0].layers.items[8].chain.items[0].slot
 assert.equal(deep.enabled,false);assert.equal(deep.parameters.items[0].numericStatus,'unavailable');assert.equal(deep.parameters.items[0].display,'');
 assert.equal(snapshot.tracks[8].chain.items[0].pads.items[0].chain.items.length,1);
 assert.equal(snapshot.deviceCount,24);
+if(source.includes('function parameterPass()')){
+  const unchanged=simulate({changedCallbacksOnly:true}).output.find(r=>r.kind==='snapshot').data;
+  assert.ok(unchanged.tracks[1].chain.items.every(d=>d.parameters.status==='observed'));
+  assert.ok(unchanged.tracks[1].chain.items.every(d=>d.parameters.items[0].normalized===0));
+}
 const noIds=simulate({suppressIds:true}).output.find(r=>r.kind==='snapshot').data;
 assert.equal(noIds.tracks[1].chain.items[0].parameters.status,'unresolved');
 const running=simulate({playing:true});assert.equal(running.output.at(-1).kind,'aborted');assert.equal(running.output.filter(r=>r.kind==='track').length,0);

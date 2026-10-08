@@ -9,16 +9,16 @@ function App(){
   useEffect(()=>{
     let stopped=false;
     fetch('/api/state').then(r=>r.json()).then(({token})=>{if(stopped)return;const ws=new WebSocket(`ws://${location.host}/ws?token=${token}`);socket.current=ws;ws.binaryType='arraybuffer';
-      ws.onopen=visibility;ws.onclose=()=>{if(!stopped){pending.current.clear();queue.current.clear();current.current.forEach(s=>s.observe(null));setStatus('Disconnected · reload to obtain a fresh binding')}};
+      ws.onopen=visibility;ws.onclose=()=>{if(!stopped){pending.current.clear();queue.current.clear();current.current.forEach(s=>{s.observe(null);s.patch({pickupBase:'idle',pickupAmount:'idle'})});setStatus('Disconnected · reload to obtain a fresh binding')}};
       ws.onmessage=e=>{try{if(typeof e.data!=='string'){
         const b=readBatch(e.data);if(b.generation!==generation.current||b.sequence<=sequence.current)return;sequence.current=b.sequence;const affected=new Map();
         for(const [index,value]of b.fields){const i=Math.floor(index/3),s=current.current[i];if(!s||!Number.isFinite(value))continue;if(!affected.has(i))affected.set(i,s.observed()?.slice()??[NaN,NaN,NaN]);affected.get(i)[index%3]=value}
         for(const [i,v]of affected)current.current[i].observe(v);return;
       }const m=JSON.parse(e.data);
       if(m.type==='state'){epoch.current=m.state.epoch;generation.current=0;sequence.current=0;pending.current.clear();queue.current.clear();current.current=m.state.params.map(createStore);setStores(current.current);setStatus(m.state.connected?'Connected':m.state.error);visibility()}
-      else if(m.type==='generation'){generation.current=m.generation;sequence.current=0;current.current.forEach(s=>s.observe(null))}
-      else if(m.type==='status'){setStatus(m.connected?'Connected':m.error);if(!m.connected){queue.current.clear();current.current.forEach(s=>s.observe(null))}}
-      else if(m.type==='delta'){const d=m.delta,s=current.current.find(s=>s.get().id===d.id);if(s&&d.source)s.patch({routes:s.get().routes.map(r=>r.id===d.source?(d.field.startsWith('writer:')?{...r,controls:r.controls.map(c=>c.id===d.field.slice(7)?{...c,value:d.value}:c)}:{...r,[d.field==='sourceAmount'?'amount':'curve']:d.value}):r)});else if(s)s.patch(d.metadata??{[{baseTarget:'base',amountTarget:'amount',modCurve:'modCurve'}[d.field]]:d.value})}
+      else if(m.type==='generation'){generation.current=m.generation;sequence.current=0;current.current.forEach(s=>{s.observe(null);s.patch({pickupBase:'idle',pickupAmount:'idle'})})}
+      else if(m.type==='status'){setStatus(m.connected?'Connected':m.error);if(!m.connected){queue.current.clear();current.current.forEach(s=>{s.observe(null);s.patch({pickupBase:'idle',pickupAmount:'idle'})})}}
+      else if(m.type==='delta'){const d=m.delta,s=current.current.find(s=>s.get().id===d.id);if(s&&d.source)s.patch({routes:s.get().routes.map(r=>r.id===d.source?(d.field.startsWith('writer:')?{...r,controls:r.controls.map(c=>c.id===d.field.slice(7)?{...c,value:d.value}:c)}:{...r,[d.field==='sourceAmount'?'amount':'curve']:d.value}):r)});else if(s)s.patch(d.metadata??{[{baseTarget:'base',amountTarget:'amount',modCurve:'modCurve',pickupBase:'pickupBase',pickupAmount:'pickupAmount'}[d.field]]:d.value})}
       else if(m.type==='routes')current.current.find(s=>s.get().id===m.id)?.patch({routes:m.routes});
       else if(m.type==='result'){pending.current.delete(m.request);if(!m.ok){setStatus(m.error);ws.send(JSON.stringify({type:'sync'}))}}
       }catch(e){setStatus(e.message)}};

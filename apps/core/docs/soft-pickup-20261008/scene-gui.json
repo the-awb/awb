@@ -1,0 +1,142 @@
+{
+  "passed": true,
+  "checks": [
+    "preview rack stays disarmed",
+    "embedded rack opens one SVG renderer with mixes",
+    "four live cells occupy B2/A2/A1/B1 quadrants",
+    "managed cell routing appears once",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "requested cell constructs only its own tape",
+    "four embedded delay views share one observation stream",
+    "embedding all four cells preserves acknowledged settings",
+    "an embedded B1 edit targets B1 independently",
+    "per-cell heads and sends are requestable from the composite",
+    "shared routing opens once",
+    "shared routing follows the live VC/Pro2/Mic schema",
+    "composite controls use one native control reader at a time",
+    "envelope fader flashes from its shared AWParam phase",
+    "pickup phase reaches borrowed tape widgets",
+    "delay modulation field shows pickup warning",
+    "AWParam effective arc advances in composite panel",
+    "Verb input gain is bound to an editable AWParam",
+    "semantic knob sends the authoritative parameter edit",
+    "editing one control preserves unrelated widget DOM identity",
+    "knob wheel consumes scrolling instead of scrolling the panel",
+    "ordinary wheel edits base independently of modulation",
+    "Alt wheel edits AWParam modulation amount",
+    "routing and modulation knobs have usable sizes",
+    "every delay shows mode, position and both modulation controls with binding availability",
+    "tape-head columns and routing rows face outward around the tiled delay surfaces",
+    "compact knob exposes numeric amount and source controls",
+    "modulation inspector stays inside the window without FX-strip clipping",
+    "console shows bounded escaped AWBase messages",
+    "console shares the mixer tabs; Sends opens first",
+    "Console tab hides only the rack page",
+    "console stays inside the mixer while delays and FX remain visible",
+    "pause is retained while the console tab is hidden",
+    "tab selection supports keyboard navigation and focus",
+    "resume includes messages received while the tab was hidden",
+    "Clear view survives tab changes",
+    "tab switches preserve every live iframe and parameter widget",
+    "tab switches retain one shared delay feed",
+    "mapping inspector exposes legacy names and pedal CCs",
+    "live window is resizable",
+    "Delay Bus fader stops at unity",
+    "Delay Bus sits to the right of cells and before the mix list",
+    "set list occupies the left side of the rack beside Delay Bus",
+    "delay cells use the entire delay region without an inline console",
+    "set timer starts and pauses independently of scene changes",
+    "set timer reset is shared runtime state",
+    "routing row and separate paired modulation bank appear in every cell",
+    "Mic is available to every delay and SC1/SC2 controls are absent",
+    "routing knobs support wheel edits through their AWParam",
+    "routing knob edits the existing cell route through its AWParam",
+    "fully clockwise sends stop at unity",
+    "normal rack hides numeric readouts",
+    "duplicate delay controls and redundant headers are removed",
+    "all thirteen channels, 21 active sends, mute/solo and level are present without spare FX",
+    "envelope amount fader is beside Verb and writes through the existing rack bridge",
+    "fader wheel consumes scrolling",
+    "wheel moves envelope fader through the rack bridge",
+    "Shift wheel gives fine fader adjustment",
+    "rapid wheel edits accumulate before bridge replies",
+    "disabled faders ignore wheel edits",
+    "actual mouse dragging moves the envelope fader through the rack transport",
+    "incoming rack fader changes paint their matching parent controls",
+    "mix triggers and capture controls stay visible",
+    "mix panel offers named set loading",
+    "dedicated Delay Bus fader controls the cello feed",
+    "wheel stops at Delay Bus unity",
+    "Ctrl wheel gives fine Delay Bus adjustment",
+    "spare FX bank is removed",
+    "chain OUT faders are removed",
+    "post-amount envelope bus paints the single fader bar",
+    "FX return row edits self-send and follower-send through the rack transport",
+    "actual o-s-c collection loads eleven named mixes through the file input",
+    "loading a mix collection leaves live values unchanged",
+    "scene countdown visibly runs during recall",
+    "mix recall calls the AWBase scene bridge with its ID and duration",
+    "visible mix trigger recalls sends and completes the scene countdown"
+  ],
+  "errors": [],
+  "edits": [
+    {
+      "id": "b1/inOf",
+      "field": "base",
+      "value": 0.98,
+      "source": ""
+    },
+    {
+      "id": "verb/verbIn",
+      "field": "base",
+      "value": 0.31,
+      "source": ""
+    },
+    {
+      "id": "deci/deciShaper",
+      "field": "base",
+      "value": 0.31,
+      "source": ""
+    },
+    {
+      "id": "deci/deciShaper",
+      "field": "base",
+      "value": 0.32,
+      "source": ""
+    },
+    {
+      "id": "deci/deciShaper",
+      "field": "amount",
+      "value": 0.41000000000000003,
+      "source": ""
+    },
+    {
+      "id": "b1/vcIn",
+      "field": "base",
+      "value": 0.99,
+      "source": ""
+    },
+    {
+      "id": "b1/vcIn",
+      "field": "base",
+      "value": 1,
+      "source": ""
+    },
+    {
+      "id": "b1/vcIn",
+      "field": "base",
+      "value": 0.99,
+      "source": ""
+    }
+  ],
+  "sceneLaunches": [
+    {
+      "id": "0",
+      "duration": 1
+    }
+  ],
+  "attached": 1,
+  "detached": 1
+}

@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-08",
+  "branch": "integration/bw-sc",
+  "committed": false,
+  "defaultHoldSeconds": 1,
+  "defaultFadeSeconds": 0.5,
+  "cancellation": "Controller movement never cancels pickup. External edits, reconfiguration, detachment and owner closure still cancel deferred writes and rearm safely.",
+  "interpolation": "Capture fixed delta = controller - held value after the one-second hold. During the half-second fade, output = current controller - delta * (1 - progress), clamped to MIDI bounds. Incoming CC movement writes immediately; 30 Hz native ramps reduce the offset between movements.",
+  "controlFields": [
+    "base",
+    "amount"
+  ],
+  "discreteChoices": "unchanged immediate stepped pickup",
+  "physicalMidiTested": false,
+  "audioDeviceOpened": false,
+  "newSynthsOrBuses": 0,
+  "verification": {
+    "pickupBehaviourChecks": 27,
+    "renderedControlBusChecks": 20,
+    "nodeTests": 32,
+    "nodeFailed": 0,
+    "inspectorGUIChecks": 42,
+    "livePickupGUIChecks": 20,
+    "liveSetLanguageContractChecks": 21,
+    "coreSuite": "PASS (contracts, registration, inspector metadata, DSP renders, selector/tail renders, OSC coalescing)",
+    "broaderSurfaceRegression": {
+      "passed": false,
+      "passedChecksBeforeFailure": 87,
+      "failure": "Fullscreen window-manager geometry wait at apps/live-set/test/browser.mjs (then line 126)",
+      "status": "Scene countdown is verified; full-screen geometry remains unverified. See full-surface-latest.json."
+    },
+    "sceneGUIProgressionChecks": 78,
+    "sceneCountdown": "PASS: incomplete fake AWBase bridge lacked launchScene; corrected fixture verifies ID/duration, running countdown and completed recall, without launching actual scenes.",
+    "unchangedGUIEvidence": "Earlier 32 Node tests, 42 inspector GUI checks and 20 focused pickup GUI checks remain retained; no renderer or bridge product code changed during the fixed-delta correction."
+  },
+  "compiledClassHashes": {
+    "apps/core/sc/classes/AWMidiCCIn.sc": "7836ec19b4136dc513b96ed36f2711b1dcf35c98c94b270ebd8a6cd5bdddb54e",
+    "apps/core/sc/classes/AWParam.sc": "7bd1cd010cd92aff3088845467ef09441428512fb52bca62baf5c8ec9e372f95",
+    "apps/param/sc/classes/AWParamInspector.sc": "4f21b577d59e547bde469a306cddbde11d4098c233e8b0baefc0cab67660a686"
+  },
+  "privateEvidenceRoots": [
+    "/private/tmp/awb-soft-pickup-fixed-delta-live",
+    "/private/tmp/awb-soft-pickup-fixed-delta-live-contract",
+    "/private/tmp/awb-param-browser",
+    "/private/tmp/awb-live-set-browser"
+  ],
+  "activation": "Close old set; restart headless language host or recompile in IDE, then reopen. Views rebuilt. No installed engine binaries changed."
+}

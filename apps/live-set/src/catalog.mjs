@@ -5,12 +5,13 @@ export const fxGroups=[
  {id:'mast',label:'Master',color:'#507878',controls:controls('mast',[['mastEQShaper','EQ','unavailable'],['schertlerMix','Scheps mix','um:schertlerMix']])},
  {id:'verb',label:'Verb',color:'#96915a',controls:controls('verb',[['verbIn','Gain','verb:inputGain'],['verbSelect','Mode','verb:selector']])},
  {id:'fuzz',label:'Fuzz',color:'#938096',controls:controls('fuzz',[['fuzzShaper','Fuzz','fuzz:shape']])},
- {id:'deci',label:'Decimate',color:'#648b99',controls:controls('deci',[['deciShaper','Shape','deci:shape'],['depthOf','Depth','deci:depth'],['foldOf','Folding','deci:folding'],['depthSc','~ depth','deci:depthSC'],['foldSc','~ folding','deci:foldingSC']])},
+ {id:'deci',label:'Decimate',color:'#648b99',controls:controls('deci',[['deciShaper','Shape','deci:shape'],['depthOf','Depth','deci:depth'],['foldOf','Folding','deci:folding']])},
  {id:'spark',label:'Sparkle',color:'#6e9866',controls:controls('spark',[['sparkleShaper','Sparkle','spark:sparkle'],['spark','Spark','spark:shape'],['sparkTailMix','Tail mix','spark:tailMix'],['sparkPD','Pitch select','spark:pitchSelect'],['sparkTailShapr','Tail shape','spark:tailShape']])},
  {id:'mast-um',label:'UM',color:'#8b638c',controls:controls('mast',[['umMix','Mix','um:mix'],['umMainControl','Main','um:main'],['umEarth','Earth','um:earth'],['umDiffusion','Diffuse','um:diffusion'],['umInnerDep','Depth','um:innerDepth'],['umInnerR8','Rate','um:innerRate'],['umwonkSC','Wonk','um:wonk'],['umOverMod','Overmod','um:overMod'],['umShaper','Shaper','um:shape']])},
- {id:'vcfx',label:'Cello',color:'#936e50',controls:controls('vcfx',[['submarine','Submarine','unavailable'],['stut1AMT','Stutter','unavailable']])},
+ {id:'vcfx',label:'Cello',color:'#936e50',controls:controls('vcfx',[['submarine','Submarine','unavailable'],['stut1AMT','Stutter','vcfx:amount'],['stutWave','Wave','vcfx:waveform'],['stutRate','Rate','vcfx:rate']])},
  {id:'splut',label:'Splutter',color:'#9a7548',controls:controls('splut',[['splut1','1','unavailable'],['splut2','2','unavailable'],['splutenvMod','~ envelope','unavailable'],['splutDiv','~ time','unavailable']])},
 ];
+fxGroups.find(g=>g.id==='vcfx').controls.find(c=>c.name==='stutWave').choices=['Tri','Pulse','Sine','Saw','Custom'];
 export const delayControls=id=>controls(id,[['inOf','Input',null],['fbOf','Feedback',null],['fxOf','FX',null],['sliOf','Time',null],['inSc','~ input',null],['fbSc','~ feedback',null],['fxSc','~ FX',null],['sliSc','~ time',null]]);
 export const delayRouting=id=>controls(id,[...['b1','a2','b2'].slice(0,['b1','a2','b2','a1'].indexOf(id)).reverse().map(from=>[`${from}In`,from.toUpperCase(),'delay:route']),...(id==='a1'?[['sc2In','SC2','delay:route'],['sc1In','SC1','delay:route']]:[]),['p2In','Pro2','delay:route'],['micIn','Mic','delay:route'],['vcIn','VC','delay:route']]);
 export const delayModulation=id=>[

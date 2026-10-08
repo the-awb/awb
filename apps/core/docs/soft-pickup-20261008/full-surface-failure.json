@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "scope": "broader composite UI regression, outside the focused pickup gate",
+  "passedChecksBeforeFailure": 75,
+  "failure": "Browser condition timed out at apps/live-set/test/browser.mjs scene countdown assertion (then line 108)",
+  "lastPassingChecks": [
+    "actual o-s-c collection loads eleven named mixes through the file input",
+    "loading a mix collection leaves live values unchanged"
+  ],
+  "status": "Historical failure resolved: fake base bridge lacked launchScene. New scene-only gate passes 78 checks. Full rerun reached 87 passing checks before an unrelated fullscreen geometry wait."
+}

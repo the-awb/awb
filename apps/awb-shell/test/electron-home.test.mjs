@@ -26,6 +26,7 @@ test( 'direct Electron launch opens Toolkit Home', { timeout: 20000 }, async () 
     } );
     assert.equal( exitCode, 0, output );
     assert.match( output, /AWB_SHELL_HOME_READY/ );
+    assert.match( output, /AWB_SHELL_HOME_OPEN_RESULT=PASS visible=true reused=true/ );
     assert.match( output, /AWB_SHELL_HOME_PROJECTIONS documents=4 hostFacts=4 hostServices=1 profiles=hosted-public/ );
   } finally {
     if ( child.exitCode === null ) child.kill( 'SIGKILL' );

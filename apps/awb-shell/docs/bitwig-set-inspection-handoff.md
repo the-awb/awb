@@ -1,7 +1,7 @@
 # Bitwig set documentation: investigation handoff
 
-Status: Stage 1 reviewed; Willy authorized a custom one-shot mapper on 4 October 2026.
-Implementation and offline checks are prepared in [Stage 2](bitwig-set-inspection-stage2/README.md); expanded live capture awaits controller activation.
+Status: authorized one-shot capture complete, 4 October 2026: 65 tracks, 290 devices, all parent identities and 3,094 exposed direct-parameter records.
+[Stage 2](bitwig-set-inspection-stage2/README.md) retains the map, raw evidence and screenshot/OSC checks. Generic routing and modulation assignments remain annotation gaps; the temporary inspector is removed.
 Requested by Willy, 4 October 2026.
 
 ## Purpose
@@ -27,8 +27,9 @@ load-testing work. It must not change that workstream's test conditions or share
 - Project inside that bundle: `template.bwproject`, 3,447,457 bytes at initial inspection.
   SHA-256: `c41ab2729aa00efa82586602705380d5b880542b2e7ecc1e26de1308d5cdae94`.
 - The template's name includes “5.2”; that is not evidence of the installed Bitwig version.
-- The project is binary. Read access and extraction of metadata/name strings are proven.
-  Complete track hierarchy, device order, routing and parameter extraction are not proven.
+- The project is binary. Initial inspection established metadata/name strings; Stage 2
+  subsequently captured tracks, hierarchy, device order and exposed parameters through
+  the running host API. Complete routing and hidden device state remain gaps.
 - Strings include Splutter, Sparkle, Decimate, Fuzz, Reverb and Mast, plus named buses.
   Treat them as investigation clues, not a decoded routing model.
 - The bundled 4.3.10 API documentation mentions API versions 15 and 16. This is a clue for

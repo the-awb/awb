@@ -84,7 +84,7 @@ try:
  if result.returncode or 'ERROR:' in log or 'AWB_CORE_PROTOCOL_RESULT=PASS' not in log:print(log[-12000:]);raise RuntimeError('language OSC protocol test failed')
  # The test's 12 simultaneous callbacks must produce one read request.
  requests=sum(1 for address,args in commands if address=='/n_set' and 'replyRate' in args and 64 in args)
- assert requests==6,('expected six read bursts: first, coalesced, MIDI coalesced, MIDI removed, timeout, close',requests)
+ assert requests==7,('expected seven read bursts: first, coalesced, MIDI coalesced, MIDI removed, soft pickup, timeout, close',requests)
  print('PASS OSC query coalescing: 12 callbacks and three pending MIDI CCs each share one request; latched CC adds no read')
  print(log[log.index('PASS UDP'):])
  result=subprocess.run(['/Applications/SuperCollider.app/Contents/MacOS/sclang','-l',str(build/'sclang_conf.yaml'),str(build/'test/registration-protocol.scd')],env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=20)

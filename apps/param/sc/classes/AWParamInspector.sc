@@ -19,7 +19,7 @@ AWParamInspector : Tool {
     *new { |instance,opts|^super.new.init(instance,opts)}
     init { |i,opts|
         instance=i;options=opts ? ();owner=options[\owner];params=IdentityDictionary.new;observers=IdentityDictionary.new;watchers=Dictionary.new;
-        if(options[\params].isArray.not or:{options[\params].isEmpty} or:{options[\params].size>128}){Error("Inspector needs 1..128 AWParams").throw};
+        if(options[\params].isArray.not or:{options[\params].isEmpty} or:{options[\params].size>256}){Error("Inspector needs 1..256 AWParams").throw};
         if(options[\namedParams].notNil){
             options[\namedParams].keysValuesDo{|id,p|
                 if("^[a-zA-Z][a-zA-Z0-9_/-]{0,95}$".matchRegexp(id.asString).not or:{p.isKindOf(AWParam).not} or:{p.closed} or:{params[id.asSymbol].notNil}){Error("Invalid named AWParam binding").throw};params[id.asSymbol]=p;
@@ -33,15 +33,15 @@ AWParamInspector : Tool {
     requireOpen {if(closed or:{owner.notNil and:{owner.status==\closed}} or:{server.serverRunning.not}){Error("Parameter binding is closed or server unavailable").throw};^this}
     attach {
         params.keysValuesDo{|id,p|var hook={|object,what,data|
-            if(what==\closed){instance.close}{if([\baseTarget,\amountTarget,\modCurve,\transitionCurves,\polarity,\routes,\routeField,\writerField].includes(what)){revision=revision+1;
+            if(what==\closed){instance.close}{if([\baseTarget,\amountTarget,\modCurve,\transitionCurves,\polarity,\spec,\routes,\routeField,\writerField,\pickupBase,\pickupAmount].includes(what)){revision=revision+1;
                 this.prune;watchers.values.do{|w|
                     if([\routeField,\writerField].includes(what)){
                         w[\address].sendMsg('/awb/param/routeDelta',instance.instanceID,w[\token],epoch,revision,id.asString,data[\id].asString,
                             if(what==\writerField){"writer:"++data[\field]}{if(data[\field]==\amount){"sourceAmount"}{"sourceCurve"}},data[\value],origin)
                     }{if(what==\routes){this.sendRoutes(w[\address],w[\token],id)}{
-                        if([\transitionCurves,\polarity].includes(what)){this.sendParam(w[\address],w[\token],id,"metadata")}{
+                        if([\transitionCurves,\polarity,\spec].includes(what)){this.sendParam(w[\address],w[\token],id,"metadata")}{
                             w[\address].sendMsg('/awb/param/delta',instance.instanceID,w[\token],epoch,revision,id.asString,what.asString,
-                                if(data.isKindOf(Event)){data[\value]}{data},if(data.isKindOf(Event)){data[\dur]}{0},if(data.isKindOf(Event)){data[\curve]}{0},origin)
+                                if(data.isKindOf(Event)){data[\value]}{if(data.isKindOf(Symbol)){data.asString}{data}},if(data.isKindOf(Event)){data[\dur]}{0},if(data.isKindOf(Event)){data[\curve]}{0},origin)
                         }
                     }}
                 }
@@ -71,7 +71,7 @@ AWParamInspector : Tool {
     prune {watchers.keys.copy.do{|key|if(Main.elapsedTime-watchers[key][\seen]>10){watchers.removeAt(key)}};^this}
     sendParam { |address,token,id,kind="param"|
         var p=params[id],c=p.configuration;
-        address.sendMsg('/awb/param/meta',instance.instanceID,token,epoch,kind,id.asString,c[\min],c[\max],c[\warp].asString,c[\base],c[\amount],c[\modCurve],c[\baseCurve],c[\amountCurve],*(p.observationIndices++[c[\polarity].asString,c[\nativeSpec].asInteger,revision]));
+        address.sendMsg('/awb/param/meta',instance.instanceID,token,epoch,kind,id.asString,c[\min],c[\max],c[\warp].asString,c[\base],c[\amount],c[\modCurve],c[\baseCurve],c[\amountCurve],*(p.observationIndices++[c[\polarity].asString,c[\nativeSpec].asInteger,revision,p.midiPickupPhase(\base).asString,p.midiPickupPhase(\amount).asString]));
     }
     sendRoutes { |address,token,id|
         var rows=params[id].routeMetadata;

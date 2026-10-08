@@ -1,4 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {mkdtemp,readFile,rm} from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import {WebSocket} from 'ws';import {startRuntime,encodeOSC} from '../runtime/shell-runtime.mjs';import {defaultConfig} from '../src/model.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {mkdtemp,readFile,writeFile,rm,symlink} from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import {WebSocket} from 'ws';import {startRuntime,encodeOSC} from '../runtime/shell-runtime.mjs';import {defaultConfig} from '../src/model.mjs';
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 test('runtime serves built tool, output is off until armed, persists settings, and restarts disarmed',async()=>{const dir=await mkdtemp(path.join(os.tmpdir(),'rack-runtime-'));let runtime;try{const packets=[];runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),seedDocument:{config:defaultConfig(),values:{},snapshots:[]},sendPacket:async(bytes,packet)=>packets.push({bytes,packet})});assert.equal((await fetch(runtime.url)).status,200);const control='in0/fx/splut';await runtime.command({type:'batch',changes:[{id:control,value:34}]});await wait(40);assert.equal(packets.length,0);await runtime.command({type:'arm',armed:true});await runtime.command({type:'batch',changes:[{id:control,value:42}]});await wait(40);assert.equal(packets.length,1);assert.ok(packets[0].bytes.includes(Buffer.from('/sends/in0/fx/0')));await runtime.command({type:'capture',label:'test',sceneID:'opening'});await runtime.stop();runtime=await startRuntime({runtimeDirectory:path.join(dir,'another-view')});assert.equal(runtime.state().armed,false);assert.equal(runtime.store.get(control),42);assert.equal(runtime.store.snapshots[0].targets[control].value,42);assert.equal((await fetch(runtime.url+'api/command',{method:'POST',body:'{}'})).status,400);}finally{await runtime?.stop();await rm(dir,{recursive:true,force:true});}});
 test('ordered WebSocket controls are applied before capture, and disconnect disables output',async()=>{const dir=await mkdtemp(path.join(os.tmpdir(),'rack-ws-'));const runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),seedDocument:{config:defaultConfig(),values:{},snapshots:[]}});let ws;try{ws=new WebSocket(runtime.url.replace('http','ws')+'ws?token='+runtime.state().token);await new Promise(r=>ws.once('open',r));const ack=new Promise((resolve,reject)=>ws.on('message',data=>{const m=JSON.parse(data);if(m.requestID===1){if(m.type==='error')reject(Error(m.message));else resolve(m.result);}}));ws.send(JSON.stringify({type:'batch',changes:[{id:'in0/fx/splut',value:93}]}));ws.send(JSON.stringify({type:'capture',label:'ordered',requestID:1}));const result=await ack;assert.equal(result.snapshotID,runtime.store.snapshots[0].id);assert.equal(runtime.store.snapshots[0].targets['in0/fx/splut'].value,93);await runtime.command({type:'arm',armed:true});ws.close();await wait(30);assert.equal(runtime.state().armed,false);}finally{ws?.terminate();await runtime.stop();await rm(dir,{recursive:true,force:true});}});
@@ -37,4 +37,55 @@ test('scene countdown survives reconnect, freezes on stop, and finishes immediat
   await r.command({type:'set-timer',action:'pause'});assert.ok(r.state().timing.set.elapsed>500);await r.command({type:'set-timer',action:'reset'});assert.deepEqual(r.state().timing.set,{running:false,startedAt:null,elapsed:0});
   await assert.rejects(r.command({type:'set-timer',action:'typo'}),/Invalid set timer/);
  }finally{ws?.terminate();await r?.stop();await rm(dir,{recursive:true,force:true})}
+});
+
+
+test('SC scene lock also blocks mixes without an attached scene ID',async()=>{
+ const dir=await mkdtemp(path.join(os.tmpdir(),'rack-scene-lock-'));let r,transitioning=true;
+ try{
+  r=await startRuntime({runtimeDirectory:path.join(dir,'view'),sceneTransitioning:()=>transitioning,seedDocument:{config:defaultConfig(),values:{},snapshots:[{id:'plain',label:'Plain',duration:0,targets:{'in0/fx/verb':{value:50,fraction:1,alignment:'L'}}}]}});
+  await assert.rejects(r.command({type:'recall',id:'plain'}),/in progress/);assert.equal(r.store.get('in0/fx/verb'),0);
+  transitioning=false;await r.command({type:'recall',id:'plain'});assert.equal(r.store.get('in0/fx/verb'),50);
+ }finally{await r?.stop();await rm(dir,{recursive:true,force:true})}
+});
+
+
+test('saved-set catalogue lists only compatible collections and loads targets without changing audio or launching scenes',async()=>{
+ const dir=await mkdtemp(path.join(os.tmpdir(),'rack-set-catalogue-'));let runtime,launches=0;
+ try{
+  const snapshot={id:'saved',label:'Saved scene',sceneID:'do-not-launch',duration:3000,targets:{'in0/fx/verb':{value:77,fraction:1,alignment:'L'}}};
+  const saved={schema:'awb.mix-set/1',name:'Gig',snapshots:[snapshot]};
+  await writeFile(path.join(dir,'config (gig).json'),JSON.stringify(saved));
+  await writeFile(path.join(dir,'soundbath.mixes.json'),JSON.stringify({...saved,name:'Soundbath'}));
+  await writeFile(path.join(dir,'credentials.json'),JSON.stringify({...saved,name:'Never list'}));
+  await writeFile(path.join(dir,'config_empty.json'),JSON.stringify({...saved,snapshots:[]}));
+  await writeFile(path.join(dir,'config_broken.json'),'{');
+  await symlink(path.join(dir,'credentials.json'),path.join(dir,'config_link.json'));
+  runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),mixSetDirectories:[dir,path.join(dir,'absent')],sceneLauncher:()=>{launches++},seedDocument:{config:defaultConfig(),values:{'in0/fx/verb':31},snapshots:[]}});
+  const before=runtime.store.document(),list=await runtime.command({type:'list-mix-sets'});
+  assert.deepEqual(list.sets.map(s=>s.name),['Gig','Soundbath']);assert.equal(list.errors.length,1);assert.equal(list.sets[0].count,1);
+  assert.deepEqual(runtime.store.document(),before);assert.equal(launches,0);
+  await runtime.command({type:'arm',armed:true});
+  const result=await runtime.command({type:'load-saved-mix-set',id:list.sets[0].id});
+  assert.deepEqual(result,{name:'Gig',count:1,skipped:0});assert.deepEqual(runtime.store.document().values,before.values);assert.equal(launches,0);assert.equal(runtime.state().armed,true);
+  assert.equal(runtime.store.snapshots[0].targets['in0/fx/verb'].value,77);assert.equal(runtime.store.snapshots[0].sceneID,'do-not-launch');
+  assert.equal(JSON.parse(await readFile(runtime.libraryPath)).mixSet.name,'Gig');
+  await assert.rejects(runtime.command({type:'load-saved-mix-set',id:'../credentials.json'}),/Unknown saved/);
+  await rm(path.join(dir,'config (gig).json'));await assert.rejects(runtime.command({type:'load-saved-mix-set',id:list.sets[0].id}),/no longer available/);
+ }finally{await runtime?.stop();await rm(dir,{recursive:true,force:true});}
+});
+
+test('saved o-s-c configuration is transposed into the bound native rack without loading topology',async()=>{
+ const dir=await mkdtemp(path.join(os.tmpdir(),'rack-osc-catalogue-'));let runtime;
+ try{
+  const {documentFromState}=await import('../runtime/sc-bridge.mjs');
+  const doc=documentFromState({libraryID:'catalogue',instanceID:'rack:catalogue',name:'Rack',port:57120,maxGain:1,channels:[{id:'vc',label:'VC',order:0,level:1,mute:0,solo:0}],slots:[{id:'verb',label:'VERB',order:0,kind:'fx',level:1},{id:'mod-verb',label:'Verb envelope',order:1,kind:'follower',level:1}],sends:{vc:[.3,0]}});doc.config.output.mode='off';
+  // Keep a follower region so the preview has the native address translation policy.
+  assert.ok(doc.config.regions.some(r=>r.kind==='followers'));
+  await writeFile(path.join(dir,'INEFFIBLEED_config.json'),await readFile(new URL('../fixtures/live-set.rack.json',import.meta.url)));
+  runtime=await startRuntime({runtimeDirectory:path.join(dir,'view'),mixSetDirectories:[dir],seedDocument:doc});
+  const before=runtime.store.document(),{sets}=await runtime.command({type:'list-mix-sets'});assert.equal(sets.length,1);assert.equal(sets[0].count,11);
+  await runtime.command({type:'load-saved-mix-set',id:sets[0].id});assert.deepEqual(runtime.store.config,before.config);assert.deepEqual(runtime.store.document().values,before.values);
+  assert.ok(runtime.store.snapshots.some(s=>s.targets['vc/fx/verb']!==null));assert.ok(sets[0].skipped>0);
+ }finally{await runtime?.stop();await rm(dir,{recursive:true,force:true});}
 });

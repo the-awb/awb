@@ -32,12 +32,19 @@ def run(label,cmd,timeout=45):
  if process.returncode or 'ERROR:' in log or 'FAILURE IN SERVER' in log:print(log[-12000:]);raise RuntimeError(label+' failed')
  return log
 log=run('contract',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/contract.scd']);assert 'AWB_CORE_CONTRACT_RESULT=PASS' in log
+log=run('soft-pickup',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/soft-pickup.scd']);assert 'AWB_SOFT_PICKUP_RESULT=PASS' in log
 log=run('registration',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/registration.scd']);assert 'AWB_MODULATION_CONTRACT_RESULT=PASS' in log
 log=run('param-gui',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/param-gui.scd']);assert 'AWB_PARAM_GUI_CONTRACT_RESULT=PASS' in log
 if (build/'test/audio.scd').exists():
  run('audio-score',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/audio.scd'])
  run('audio-render',[app/'Resources/scsynth','-N',build/'test/audio.osc','_',build/'test/audio.wav',44100,'WAV','float','-o',8,'-i',0,'-z',64,'-U',app/'Resources/plugins','-D',0,'-V',-1])
  run('audio-verify',['python3',root/'sc/test/verify_audio.py',build/'test/audio.wav'])
+run('base-smoothing-score',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/base-smoothing.scd'])
+run('base-smoothing-render',[app/'Resources/scsynth','-N',build/'test/base-smoothing.osc','_',build/'test/base-smoothing.wav',44100,'WAV','float','-o',6,'-i',0,'-z',64,'-U',app/'Resources/plugins','-D',0,'-V',-1])
+run('base-smoothing-verify',['python3',root/'sc/test/verify_base_smoothing.py',build/'test/base-smoothing.wav'])
+run('soft-pickup-score',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/soft-pickup-audio.scd'])
+run('soft-pickup-render',[app/'Resources/scsynth','-N',build/'test/soft-pickup.osc','_',build/'test/soft-pickup.wav',44100,'WAV','float','-o',2,'-i',0,'-z',64,'-U',app/'Resources/plugins','-D',0,'-V',-1])
+run('soft-pickup-verify',['python3',root/'sc/test/verify_soft_pickup.py',build/'test/soft-pickup.wav'])
 run('select-score',[app/'MacOS/sclang','-l',build/'sclang_conf.yaml',build/'test/select.scd'])
 run('select-render',[app/'Resources/scsynth','-N',build/'test/select.osc','_',build/'test/select.wav',44100,'WAV','float','-o',8,'-i',0,'-z',64,'-U',app/'Resources/plugins','-D',0,'-V',-1])
 run('select-verify',['python3',root/'sc/test/verify_select.py',build/'test/select.wav'])

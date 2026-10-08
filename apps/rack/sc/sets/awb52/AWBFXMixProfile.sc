@@ -2,7 +2,7 @@
 // selector/Math network runs at KR. LocalIn is used ONLY for its feedback edges.
 // Plugin outputs are normalized KR buses mapped directly with VSTPlugin.mapMsg.
 AWBFXMixProfile {
-    var <kind,<server,<group,<node,<params,<outputBus,<closed=false,options,outputs,hook,quitHook,ownsDefinition=false,definitionName;
+    var <kind,<server,<group,<node,<params,<outputBus,<closed=false,options,outputs,hook,quitHook,ownsDefinition=false,definitionName,inputOverrides;
     *new { |kind,target,server,configuration,options|^super.new.init(kind,target,server,configuration,options) }
     *controls { |kind|
         if([\fuzz,\um].includes(kind)){^AWBAdditionalFXProfile.controls(kind)};
@@ -26,7 +26,7 @@ AWBFXMixProfile {
             var values=In.kr(NamedControl.kr(\buses,Array.fill(ids.size,0)),1),c,previous,weights,math,position,result;
             c=IdentityDictionary.new;ids.do{|id,i|c[id]=values[i]};
             if(kind==\deci){
-                var lfo,rate,depthSC,foldSC,depth,fold,roll,full=configuration[\fullParameterRanges] ? false;
+                var lfo,rate,depthSC,foldSC,depth,fold,roll,full=configuration[\fullParameterRanges] ? false,coupled=configuration[\foldedEnvelopeParams] ? false;
                 previous=LocalIn.kr(1,0).asArray;
                 position=(c[\shape]+(previous[0]*0.53)).clip(0,1);
                 weights=AWSelectN.signals(position,4,pole);
@@ -37,6 +37,15 @@ AWBFXMixProfile {
                 foldSC=(c[\foldingSC]-(lfo*0.5)).clip(0,1);
                 if(full){
                     // Full plugin bases, retaining the captured modulation depths.
+                    if(coupled){
+                        c[\aDepth]=c[\aDepth].clip(-1,1);c[\aFolding]=c[\aFolding].clip(-1,1);
+                        // Base + signed envelope amount are already processed by
+                        // the public AWParam. Keep only the captured LFO terms here;
+                        // subtract its amount to avoid applying the envelope twice.
+                        // Preserve original unipolar clipping for nonnegative amounts.
+                        depthSC=(c[\depthSC]+(lfo*0.6)).clip(Select.kr(c[\depthSC]<0,[0,-1]),1)-c[\depthSC];
+                        foldSC=(c[\foldingSC]-(lfo*0.5)).clip(Select.kr(c[\foldingSC]<0,[0,-1]),1)-c[\foldingSC];
+                    };
                     depth=(c[\depth]-(lfo*0.044)+(c[\aDepth]*(c[\depthAmount]+depthSC)*0.2)).clip(0,1);
                     fold=(c[\folding]+(lfo*0.1166)+(c[\aFolding]*(c[\foldingAmount]+foldSC)*0.53)).clip(0,1);
                 }{
@@ -99,18 +108,20 @@ AWBFXMixProfile {
     init { |id,target,s,configuration,opts|
         var def,defaults,ids;kind=id.asSymbol;options=(opts ? ()).copy.put(\polarity,\unipolar);server=s ? target.server;
         if([\deci,\spark,\fuzz,\um].includes(kind).not){Error("Unknown FX profile").throw};
-        ids=this.class.controls(kind);outputs=this.class.outputNames(kind);params=IdentityDictionary.new;
+        ids=this.class.controls(kind);outputs=this.class.outputNames(kind);params=IdentityDictionary.new;inputOverrides=IdentityDictionary.new;
         defaults=configuration[\defaults] ? ();ownsDefinition=options[\definition].isNil;def=options[\definition] ?? {this.class.compile(kind,configuration)};definitionName=def.name;
         try {
             group=Group.basicNew(server);this.dispatch(group.newMsg(target,\addToTail));options[\ownFunction].value(group,\container,(name:kind.asString++" modulation",parent:target));
             SynthDescLib.global.add(def.asSynthDesc);
             if(options[\sendFunction].notNil){[AWParam.synthDef,AWParam.routeDef].do{|d|SynthDescLib.global.add(d.asSynthDesc);this.dispatch([\d_recv,d.asBytes])};if(ownsDefinition){this.dispatch([\d_recv,def.asBytes])}};
-            ids.do{|key|
+            ids.reject{|key|kind==\deci and:{[\depthSC,\foldingSC].includes(key)}}.do{|key|
                 // All authored macro/source values are unipolar. Signed LFO signals
                 // and captured target depths belong to the profile DSP, not these knobs.
                 var spec=if(key==\lfoRate){ControlSpec(0.001,20,\exp)}{if(key.asString.beginsWith("amount") or:{[\amount,\depthAmount,\foldingAmount].includes(key)}){ControlSpec(0,2)}{if(key==\level){ControlSpec(0,4)}{nil}}};
-                params[key]=AWParam(key,defaults[key] ? if(key==\level){1}{if(key==\lfoRate){0.04}{0}},spec,1,0,group,server,options);
+                if(kind==\deci and:{[\depth,\folding].includes(key)}){spec=ControlSpec(0,1)};
+                params[key]=AWParam(key,defaults[key] ? if(key==\level){1}{if(key==\lfoRate){0.04}{0}},spec,1,0,group,server,if(kind==\deci and:{[\depth,\folding].includes(key)}){options.copy.put(\polarity,\bipolar)}{options});
             };
+            if(kind==\deci){params[\depthSC]=AWParamField(params[\depth],\amount);params[\foldingSC]=AWParamField(params[\folding],\amount);params[\depth].setAmount(defaults[\depthSC] ? 0);params[\folding].setAmount(defaults[\foldingSC] ? 0)};
             outputBus=Bus.control(server,outputs.size);if(outputBus.index.isNil){Error("FX modulation bus allocation exhausted").throw};
             node=Synth.basicNew(def.name,server);
             if(ownsDefinition and:{options[\sendFunction].isNil}){
@@ -124,6 +135,15 @@ AWBFXMixProfile {
     dispatch { |msg|if(options[\sendFunction].notNil){options[\sendFunction].value(msg)}{server.sendMsg(*msg)};^this }
     param { |id|if(closed){Error("FX profile closed").throw};^params[id.asSymbol] ?? {Error("Unknown FX macro: "++id).throw} }
     bus { |id|var i=outputs.indexOf(id.asSymbol);if(closed or:{i.isNil}){Error("Unknown/closed FX output").throw};^Bus.new(\control,outputBus.index+i,1,server) }
+    // Borrow a KR source for the captured LFO cross-product, without another
+    // route synth or owning/freeing its bus. The public parameter's registered
+    // previous-block connection supplies the same scheduling contract.
+    borrowInput { |id,bus|
+        var ids=this.class.controls(kind);
+        if(closed or:{[\aDepth,\aFolding].includes(id).not} or:{kind!=\deci} or:{bus.isKindOf(Bus).not} or:{bus.rate!=\control} or:{bus.numChannels!=1} or:{bus.server!==server}){Error("Invalid borrowed Deci modulation input").throw};
+        inputOverrides[id]=bus;
+        this.dispatch(node.setnMsg(\buses,ids.collect{|key|(inputOverrides[key] ? params[key].outputBus).index}));^this;
+    }
     // Borrowed upstream follower/blender; AWParam retains base, amount and curve.
     addModulation { |control,id,source,amount=1,curve=0,timing=\sameBlock,action|^this.param(control).addModulation(id,source,amount,curve,timing,action) }
     before { |consumer|this.dispatch(group.moveBeforeMsg(consumer));^this }

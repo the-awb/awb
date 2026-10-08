@@ -38,14 +38,16 @@
     "Compact gig tape panels imported from c4ee528; existing AWB embedding, shared routing and SC observation changes retained.",
     "2026-10-08: opt-in shared AWParam GUI in bound tape views. No second parameter authority in the renderer. External AWB adapter imports apps/param/src/widgets.jsx; standalone unbound literal demonstration remains available.",
     "instrument/style.css: embedded connection dot, narrow two-row transport and compact tape controls for the live surface",
-    "2026-10-08: configurable live VC/Pro2/Mic routing schema; obsolete SC1/SC2 inputs omitted by the live opener, legacy defaults retained."
+    "2026-10-08: configurable live VC/Pro2/Mic routing schema; obsolete SC1/SC2 inputs omitted by the live opener, legacy defaults retained.",
+    "2026-10-08: delay cell input limited to unity (100 percent) in literal controls and command validation; native AWBDelayRack supplies the same AWParam range.",
+    "2026-10-08: Lua master feedback scaling restored: unity with one pair, half with both pairs; conservative half ceiling above two enabled heads; mode changes preserve normalized feedback, literal controls and validation follow the ceiling."
   ],
   "workspaceHashes": {
     "network-server.mjs": "d41b789d651008cc7dec1fdfdacd5ffc2810b3e4834a1cd70d180b5e4d07ba04",
-    "network-model.mjs": "e080b3a866d8401a26d0620e36bb6f1480b06ab1035eceef1c74f1ee8a209979",
+    "network-model.mjs": "86b78d4dd139f962206c870500d4d3641ee3cebdb63af784a29120d23ec3784d",
     "waveform-view.mjs": "da09d82c8bf81bc6afb4c0df87aa023be7ca760468a649a3d5963f93ae8ac730",
     "instrument/index.html": "77cf82685247ac82dcbad3311df8252bff739232ea75deb452d9796a8be6e6fd",
-    "instrument/app.js": "551de4ce268984159da410cae6145f855569ba16b8c53e556a28998bbc84a9ae",
+    "instrument/app.js": "891831737a0b3320c0750bc21e6693e656832ef7a914b651670b64b86ac54d80",
     "instrument/style.css": "bffc26f62976b07a1961b05eea444722d469a9ca19637087a0cdf9b68314ffd9"
   }
 }

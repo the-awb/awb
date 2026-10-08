@@ -6,7 +6,7 @@ export function changedFields(before,after){
  for(const cell of after.cells){const prior=before.cells.find(c=>c.id===cell.id);for(const f of ['seconds','inputGain','feedback','effectLevel','dryLevel','running','fadeGate','fadeIn','fadeOut'])if(cell[f]!==prior[f])edits.push(['cell',cell.id,f,typeof cell[f]==='boolean'?+cell[f]:cell[f]]);
   for(const f of ['timingMode','beats','divisor','triplet','preset'])if(cell[f]!==prior[f])edits.push(['meta',cell.id,f,typeof cell[f]==='boolean'?+cell[f]:cell[f]]);
   for(const head of cell.heads){const h=prior.heads.find(h=>h.id===head.id);for(const f of ['value','amount','enabled','unit','left','right'])if(head[f]!==h[f])edits.push(['head',cell.id,`${head.id}/${f}`,f==='unit'?+(head[f]==='fraction'):typeof head[f]==='boolean'?+head[f]:head[f]]);for(const [to,value]of Object.entries(head.sends))if(h.sends[to]!==value)edits.push(['head',cell.id,`${head.id}/send/${to}`,value]);}
- }return edits;
+ }return edits.sort((a,b)=>Number(b[0]==='head'&&b[2].endsWith('/enabled'))-Number(a[0]==='head'&&a[2].endsWith('/enabled')));
 }
 export function applyDelta(config,id,value){if(id==='globalInput'||id==='master'||id==='tempo')config[id]=value;else if(id in config.routes)config.routes[id]=value;else{const [cell,field,headField]=id.split('/'),target=config.cells.find(c=>c.id===cell);if(headField){const head=target?.heads.find(h=>h.id===field);if(head)head[headField]=value;}else if(target)target[field]=['running','fadeGate','triplet'].includes(field)?value>=.5:value;}return config;}
 export async function createDelayBridge(binding,{native,timeout=3000}={}){

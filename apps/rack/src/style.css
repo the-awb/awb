@@ -52,3 +52,5 @@ header{padding:7px 12px;gap:16px;min-height:48px}h1{font-size:14px;margin-top:1p
 
 /* Keep large mix editors from setting the minimum size of the live viewport. */
 .performance-rack .renderer-pane,.performance-rack .rack-scroll{min-height:0;min-width:0}
+
+.saved-mix-sets{border:1px solid #39515a;padding:5px;background:#142127;flex-shrink:0}.saved-set-actions{display:flex;justify-content:space-between;gap:4px}.saved-set-list{display:flex;flex-direction:column;gap:3px;max-height:260px;overflow:auto;margin-top:5px}.saved-set-list button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:7px 5px;overflow:hidden}.saved-set-list button span{font-size:12px}.saved-set-list small{font-size:10px;color:#93aaaF;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.saved-mix-sets p,.saved-mix-sets summary{font-size:11px;margin:5px 0;overflow-wrap:anywhere}

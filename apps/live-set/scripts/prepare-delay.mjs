@@ -1,6 +1,6 @@
 import {mkdirSync,writeFileSync} from 'node:fs';import {fileURLToPath} from 'node:url';import {spawnSync} from 'node:child_process';import path from 'node:path';
 import {defaults,graphFor,validate} from '../../../tool-artifacts/buffer-views/0.1.0/network-model.mjs';import {compileGraph,scLiteral} from '../runtime/graph-compiler.mjs';
-const root=fileURLToPath(new URL('../',import.meta.url)),live=process.argv.includes('--live-inputs'),prefix=live?'live-':'',state=defaults(live?{sources:['clean','pro2','mic']}:{ });
+const root=fileURLToPath(new URL('../',import.meta.url)),live=process.argv.includes('--live-inputs'),prefix=live?'live-':'',state=defaults(live?{sources:['clean','pro2','mic','patterns']}:{ });
 state.globalInput=1;state.master=.8;state.source='cello';state.cells.forEach(c=>{c.inputGain=0;c.feedback=.5;c.effectLevel=1;});for(const k of Object.keys(state.routes))state.routes[k]=0;
 // All branches available without automatically injecting audio or summing duplicates.
 for(const c of state.cells)state.routes[`${c.id}:monitor`]=1;

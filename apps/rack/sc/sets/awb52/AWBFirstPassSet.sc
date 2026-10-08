@@ -6,12 +6,13 @@ AWBFirstPassSet {
     var <verbMixes,allVerbMixes,verbBranchGates,allVerbGates;
     var <fxMixes,allFXMixes,<celloInputBus,<celloSourceGroup,profileDefinitions;
     var <sharedChain,<sharedInputBus,sharedDefinitions;
+    var <celloStutter,celloProcessedBus;
     var irSpectra,irPreparedPaths,irProcessorRecords,irEditingBusy=false,irEditRoutine,irCleanupRoutines;
     *open { |specification, opts| ^super.new.init(specification,opts ? ()) }
     init { |specification, opts|
         spec=specification.deepCopy;options=opts;server=opts[\server] ? Server.default;
         if(options[\controlSends] ? false){spec[\rack]=AWBControlSendProfile.configure(spec[\rack]);spec[\rack][\spareFollowers]=options[\controlSpareCount] ? 0};
-        prefix="awbFirstPass"++UniqueID.next;buffers=List.new;assets=List.new;
+        prefix="awbFirstPass"++thisProcess.pid++"_"++UniqueID.next;buffers=List.new;assets=List.new;
         nodes=IdentityDictionary.new;controllers=IdentityDictionary.new;verbMixes=IdentityDictionary.new;allVerbMixes=IdentitySet.new;verbBranchGates=IdentityDictionary.new;allVerbGates=IdentitySet.new;irInfo=List.new;
         fxMixes=IdentityDictionary.new;allFXMixes=IdentitySet.new;profileDefinitions=IdentityDictionary.new;sharedDefinitions=IdentityDictionary.new;
         irSpectra=Array.newClear(6);irPreparedPaths=IdentityDictionary.new;irProcessorRecords=IdentityDictionary.new;irCleanupRoutines=List.new;
@@ -27,7 +28,7 @@ AWBFirstPassSet {
                     this.prepareIRs;this.makeDefs;
                     if(options[\verbProfiles] ? false){if(options[\sendFunction].isNil){AWBVerbMixProfile.prepare(server);AWFXTailGate.prepare(server,2)}};
                     if(options[\sendFunction].isNil){server.sync};
-                    if(options[\fxProfiles] ? false){if(options[\sendFunction].isNil){AWParam.prepare(server);server.sync}};
+                    if((options[\fxProfiles] ? false) or:{options[\celloStutter] ? false}){if(options[\sendFunction].isNil){AWParam.prepare(server);server.sync}};
                     if(closed.not){this.install;this.finishIfReady};
                 }{|error|failure=error.errorString;error.reportError;this.close;options[\onError].value(error,this)};
             }).play(SystemClock);
@@ -131,7 +132,11 @@ AWBFirstPassSet {
             });
         };
         if(options[\sharedFX] ? false){sharedDefinitions[\um]=SynthDescLib.global.at((prefix++"UM").asSymbol);sharedDefinitions[\scheps]=SynthDescLib.global.at((prefix++"StereoScheps").asSymbol)};
-        this.def(\VC,{|out=0,channel=0,gain=1|Out.ar(out,SoundIn.ar(channel)*Lag.kr(gain,0.02)*if(options[\celloScheps] ? false){1}{[1,1]})});
+        if(options[\celloStutter] ? false){
+            var definition=AWBCelloStutter.compile((prefix++"CelloStutter").asSymbol,spec[\celloStutter],if(options[\celloScheps] ? false){2}{1});
+            profileDefinitions[\vcfx]=definition;rack.installDef(definition.name,definition);
+        };
+        this.def(\VC,{|out=0,channel=0,gain=1|Out.ar(out,SoundIn.ar(channel)*Lag.kr(gain,0.02)*if((options[\celloScheps] ? false) or:{options[\celloStutter] ? false}){1}{[1,1]})});
         if(options[\celloScheps] ? false){this.def(\CelloScheps,{|in=0,out=0|Out.ar(out,VSTPlugin.ar(In.ar(in,1),1,id:\celloScheps)!2)})};
         this.def(\Mic,{|out=0,channel=0,gain=1|Out.ar(out,(SoundIn.ar(channel)*Lag.kr(gain,0.02))!2)});
         this.def(\Pro2,{|out=0,left=0,right=1,gain=1|Out.ar(out,SoundIn.ar([left,right])*Lag.kr(gain,0.02))});
@@ -309,7 +314,7 @@ AWBFirstPassSet {
             });
             rack.setFX(slot,("awb52_"++slot).asSymbol,(tail:8));
         };
-        if(options[\celloScheps] ? false){this.installCello};
+        if((options[\celloScheps] ? false) or:{options[\celloStutter] ? false}){this.installCello};
         if(options[\sharedFX] ? false){this.installShared};
         rack.applyMix(spec[\initialMix]);
         if((options[\fullLoad] ? false) or:{options[\audition] ? true}){if((options[\fxProfiles] ? false).not){this.setEffect(\deci,\wet,1)}}{
@@ -330,7 +335,7 @@ AWBFirstPassSet {
         pairs.clump(2).do{|pair|var i=names.indexOfEqual(pair[0].asString);if(i.isNil){Error("Missing FX modulation parameter: "++role++"/"++pair[0]).throw};args.add(i).add(profile.bus(pair[1]))};
         if(args.notEmpty){controller.mapMsg(*args.asArray).do{|message|this.emit(message)}};^this;
     }
-    fxMix { |slot|^fxMixes[slot.asSymbol] ?? {Error("Enable fxProfiles and wait for this slot").throw} }
+    fxMix { |slot|if(slot.asSymbol==\vcfx){^celloStutter ?? {Error("Enable celloStutter and wait for readiness").throw}};^fxMixes[slot.asSymbol] ?? {Error("Enable fxProfiles and wait for this slot").throw} }
     installShared {
         var chainOptions=options.copy;
         sharedInputBus=rack.bus;pending=pending+1;
@@ -345,18 +350,28 @@ AWBFirstPassSet {
     }
     sharedMix {^sharedChain.tryPerform(\profile) ?? {Error("Enable sharedFX and wait for readiness").throw}}
     installCello {
-        var item=spec[\components][\celloScheps],controller;
-        celloInputBus=rack.bus(\audio,1);celloSourceGroup=rack.group(rack.sourceGroup,"Cello input / Scheps 73");
-        nodes[\celloScheps]=rack.synth((prefix++"CelloScheps").asSymbol,[\in,celloInputBus.index,\out,rack.inputFor(\vc).index],celloSourceGroup,"Cello 1 Scheps 73 Mono");
-        controller=VSTPluginController.collect(nodes[\celloScheps])[\celloScheps];controllers[\celloScheps]=controller;
-        if(options[\sendFunction].notNil){
-            this.emit(controller.openMsg(item[\key],editor:false,mode:item[\mode]));this.emit(controller.setMsg(*item[\params]));
-        }{
-            pending=pending+1;
-            controller.open(item[\key],editor:false,mode:item[\mode],action:{|vst,ok|
-                if(closed.not){if(ok){this.emit(vst.setMsg(*item[\params]));pending=pending-1;this.finishIfReady}{failure="Cello Scheps failed to open";this.close;options[\onError].value(Error(failure),this)}};
-            });
-        };^this;
+        var item=spec[\components][\celloScheps],controller,stutterOptions;
+        celloInputBus=rack.bus(\audio,1);celloSourceGroup=rack.group(rack.sourceGroup,"Cello input / Scheps / Stutter");
+        celloProcessedBus=if((options[\celloStutter] ? false) and:{options[\celloScheps] ? false}){rack.bus(\audio,2)}{rack.inputFor(\vc)};
+        if(options[\celloStutter] ? false){
+            stutterOptions=options.copy;stutterOptions[\definition]=profileDefinitions[\vcfx];
+            stutterOptions[\ownFunction]={|node,type,metadata|rack.own(node,type,metadata)};
+            stutterOptions[\disownFunction]={|node|instance.disown(node)};
+            if(options[\sendFunction].notNil){[AWParam.synthDef,AWParam.routeDef].do{|def|this.emit([\d_recv,def.asBytes])}};
+        };
+        if(options[\celloScheps] ? false){
+            nodes[\celloScheps]=rack.synth((prefix++"CelloScheps").asSymbol,[\in,celloInputBus.index,\out,celloProcessedBus.index],celloSourceGroup,"Cello 1 Scheps 73 Mono");
+            controller=VSTPluginController.collect(nodes[\celloScheps])[\celloScheps];controllers[\celloScheps]=controller;
+            if(options[\sendFunction].notNil){
+                this.emit(controller.openMsg(item[\key],editor:false,mode:item[\mode]));this.emit(controller.setMsg(*item[\params]));
+            }{
+                pending=pending+1;
+                controller.open(item[\key],editor:false,mode:item[\mode],action:{|vst,ok|
+                    if(closed.not){if(ok){this.emit(vst.setMsg(*item[\params]));pending=pending-1;this.finishIfReady}{failure="Cello Scheps failed to open";this.close;options[\onError].value(Error(failure),this)}};
+                });
+            };
+        };
+        if(options[\celloStutter] ? false){celloStutter=AWBCelloStutter(if(options[\celloScheps] ? false){celloProcessedBus}{celloInputBus},rack.inputFor(\vc),celloSourceGroup,spec[\celloStutter],stutterOptions)};^this;
     }
     // Apply only wet/dry and bypass overrides; do not turn every plugin parameter up.
     parameterValues { |role|
@@ -374,7 +389,7 @@ AWBFirstPassSet {
         };^values;
     }
     finishIfReady {
-        if(closed.not and:{pending==0} and:{[\deci,\spark,\fuzz,\verb].every{|id|nodes[id].notNil}} and:{ready.not} and:{(options[\sharedFX] ? false).not or:{sharedChain.notNil and:{sharedChain.ready}}}){
+        if(closed.not and:{pending==0} and:{[\deci,\spark,\fuzz,\verb].every{|id|nodes[id].notNil}} and:{ready.not} and:{(options[\celloStutter] ? false).not or:{celloStutter.notNil}} and:{(options[\sharedFX] ? false).not or:{sharedChain.notNil and:{sharedChain.ready}}}){
             ready=true;this.changed(\ready);options[\onReady].value(this);
         };
     }
@@ -396,7 +411,7 @@ AWBFirstPassSet {
         };
         if(nodes[\vc].notNil or:{nodes[\pro2].notNil} or:{nodes[\mic].notNil}){Error("Hardware inputs already connected; disconnect first").throw};
         nodes[\vc]=rack.synth((prefix++"VC").asSymbol,[\out,(celloInputBus ? rack.inputFor(\vc)).index,\channel,vc[0]],celloSourceGroup ? rack.sourceGroup,"VC hardware input");
-        if(celloSourceGroup.notNil){this.emit(nodes[\vc].moveBeforeMsg(nodes[\celloScheps]))};
+        if(celloSourceGroup.notNil){this.emit(nodes[\vc].moveBeforeMsg(nodes[\celloScheps] ?? {celloStutter.group}))};
         nodes[\pro2]=rack.synth((prefix++"Pro2").asSymbol,[\out,rack.inputFor(\pro2).index,\left,pro2[0],\right,pro2[1]],rack.sourceGroup,"Pro 2 hardware input");
         if(mic.notNil){nodes[\mic]=rack.synth((prefix++"Mic").asSymbol,[\out,rack.inputFor(\mic).index,\channel,mic[0]],rack.sourceGroup,"Mic hardware input")};^this;
     }
@@ -483,7 +498,7 @@ AWBFirstPassSet {
         allVerbGates.copy.do{|gate|gate.free(false)};allVerbGates.clear;verbBranchGates.clear;
         allVerbMixes.copy.do{|mix|mix.free(false)};allVerbMixes.clear;verbMixes.clear;
         allFXMixes.copy.do{|mix|mix.free(false)};allFXMixes.clear;fxMixes.clear;
-        sharedChain.tryPerform(\close);
+        sharedChain.tryPerform(\close);celloStutter.tryPerform(\free,false);
         controllers.clear;nodes.clear;this.changed(\closed);
     }
     close {
@@ -492,7 +507,7 @@ AWBFirstPassSet {
         allVerbGates.copy.do{|gate|gate.free};allVerbGates.clear;verbBranchGates.clear;
         allVerbMixes.copy.do{|mix|mix.free};allVerbMixes.clear;verbMixes.clear;
         allFXMixes.copy.do{|mix|mix.free};allFXMixes.clear;fxMixes.clear;
-        sharedChain.tryPerform(\close);
+        sharedChain.tryPerform(\close);celloStutter.tryPerform(\free);
         instance.close;^this;
     }
     free { ^this.close }

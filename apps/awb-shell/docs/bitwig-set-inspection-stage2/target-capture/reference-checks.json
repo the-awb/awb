@@ -1,0 +1,2935 @@
+{
+  "screenshots": [
+    {
+      "index": 0,
+      "screenshotLabel": "Audio group",
+      "hostName": "Audio group",
+      "status": "match"
+    },
+    {
+      "index": 1,
+      "screenshotLabel": "INS",
+      "hostName": "INS",
+      "status": "match"
+    },
+    {
+      "index": 2,
+      "screenshotLabel": "Cello In",
+      "hostName": "Cello In",
+      "status": "match"
+    },
+    {
+      "index": 3,
+      "screenshotLabel": "Line 1 (VC) Group",
+      "hostName": "Line 1 (VC) Group",
+      "status": "match"
+    },
+    {
+      "index": 4,
+      "screenshotLabel": "Cello 1",
+      "hostName": "Cello 1",
+      "status": "match"
+    },
+    {
+      "index": 5,
+      "screenshotLabel": "Pro 2",
+      "hostName": "Pro 2",
+      "status": "match"
+    },
+    {
+      "index": 6,
+      "screenshotLabel": "Pro2",
+      "hostName": "Pro2",
+      "status": "match"
+    },
+    {
+      "index": 7,
+      "screenshotLabel": "Delays",
+      "hostName": "Delays",
+      "status": "match"
+    },
+    {
+      "index": 8,
+      "screenshotLabel": "Cello Delay BUS",
+      "hostName": "Cello Delay BUS",
+      "status": "match"
+    },
+    {
+      "index": 9,
+      "screenshotLabel": "DelB.1",
+      "hostName": "DelB.1",
+      "status": "match"
+    },
+    {
+      "index": 10,
+      "screenshotLabel": "DelA.1",
+      "hostName": "DelA.1",
+      "status": "match"
+    },
+    {
+      "index": 11,
+      "screenshotLabel": "DelA.2",
+      "hostName": "DelA.2",
+      "status": "match"
+    },
+    {
+      "index": 12,
+      "screenshotLabel": "DelB.2",
+      "hostName": "DelB.2",
+      "status": "match"
+    },
+    {
+      "index": 13,
+      "screenshotLabel": "SC IN",
+      "hostName": "SC IN",
+      "status": "match"
+    },
+    {
+      "index": 14,
+      "screenshotLabel": "SC IN 1",
+      "hostName": "SC IN 1",
+      "status": "match"
+    },
+    {
+      "index": 15,
+      "screenshotLabel": "SC IN 2",
+      "hostName": "SC IN 2",
+      "status": "match"
+    },
+    {
+      "index": 16,
+      "screenshotLabel": "SC IN 3",
+      "hostName": "SC IN 3",
+      "status": "match"
+    },
+    {
+      "index": 17,
+      "screenshotLabel": "SC IN 4",
+      "hostName": "SC IN 4",
+      "status": "match"
+    },
+    {
+      "index": 18,
+      "screenshotLabel": "Ambient sounds",
+      "hostName": "Ambient sounds",
+      "status": "match"
+    },
+    {
+      "index": 19,
+      "screenshotLabel": "Ambient 01",
+      "hostName": "Ambient 01",
+      "status": "match"
+    },
+    {
+      "index": 20,
+      "screenshotLabel": "LH DRIVE",
+      "hostName": "LH DRIVE",
+      "status": "match"
+    },
+    {
+      "index": 21,
+      "screenshotLabel": "Splutter 5.0 (remote)",
+      "hostName": "Splutter 5.0 (remote)",
+      "status": "match"
+    },
+    {
+      "index": 22,
+      "screenshotLabel": "Spiral Sparkle",
+      "hostName": "Spiral Sparkle",
+      "status": "match"
+    },
+    {
+      "index": 23,
+      "screenshotLabel": "Shaped Decimate",
+      "hostName": "Shaped Decimate",
+      "status": "match"
+    },
+    {
+      "index": 24,
+      "screenshotLabel": "FUZZ",
+      "hostName": "FUZZ",
+      "status": "match"
+    },
+    {
+      "index": 25,
+      "screenshotLabel": "Reverb",
+      "hostName": "Reverb",
+      "status": "match"
+    },
+    {
+      "index": 26,
+      "screenshotLabel": "Mast",
+      "hostName": "Mast",
+      "status": "match"
+    },
+    {
+      "index": 27,
+      "screenshotLabel": "Midi guitar + Bass",
+      "hostName": "Midi guitar + Bass",
+      "status": "match"
+    },
+    {
+      "index": 28,
+      "screenshotLabel": "AudioToMidi Stream",
+      "hostName": "AudioToMidi Stream",
+      "status": "match"
+    },
+    {
+      "index": 29,
+      "screenshotLabel": "Mic",
+      "hostName": "Mic",
+      "status": "match"
+    },
+    {
+      "index": 30,
+      "screenshotLabel": "Group 5",
+      "hostName": "Group 5",
+      "status": "match"
+    },
+    {
+      "index": 31,
+      "screenshotLabel": "Audio 1",
+      "hostName": "Audio 1",
+      "status": "match"
+    },
+    {
+      "index": 32,
+      "screenshotLabel": "Audio 2",
+      "hostName": "Audio 2",
+      "status": "match"
+    },
+    {
+      "index": 33,
+      "screenshotLabel": "Record",
+      "hostName": "Record",
+      "status": "match"
+    },
+    {
+      "index": 34,
+      "screenshotLabel": "Mast Record",
+      "hostName": "Mast Record",
+      "status": "match"
+    },
+    {
+      "index": 35,
+      "screenshotLabel": "Master Record A",
+      "hostName": "Master Record A",
+      "status": "match"
+    },
+    {
+      "index": 36,
+      "screenshotLabel": "Master Record B",
+      "hostName": "Master Record B",
+      "status": "match"
+    },
+    {
+      "index": 37,
+      "screenshotLabel": "Master Record C",
+      "hostName": "Master Record C",
+      "status": "match"
+    },
+    {
+      "index": 38,
+      "screenshotLabel": "Reverb RETURN",
+      "hostName": "Reverb RETURN",
+      "status": "match"
+    },
+    {
+      "index": 39,
+      "screenshotLabel": "P2 record",
+      "hostName": "P2 record",
+      "status": "match"
+    },
+    {
+      "index": 40,
+      "screenshotLabel": "AL Capture",
+      "hostName": "AL Capture",
+      "status": "match"
+    },
+    {
+      "index": 41,
+      "screenshotLabel": "Group 7",
+      "hostName": "Group 7",
+      "status": "match"
+    },
+    {
+      "index": 42,
+      "screenshotLabel": "Windy reeds & trains 04",
+      "hostName": "Windy reeds & trains 04",
+      "status": "match"
+    },
+    {
+      "index": 43,
+      "screenshotLabel": "constructiona t batersea heavy a...",
+      "hostName": "constructiona t batersea heavy ambient noise",
+      "status": "partial_match"
+    },
+    {
+      "index": 44,
+      "screenshotLabel": "bell",
+      "hostName": "bell",
+      "status": "match"
+    },
+    {
+      "index": 45,
+      "screenshotLabel": "C1",
+      "hostName": "C1",
+      "status": "match"
+    },
+    {
+      "index": 46,
+      "screenshotLabel": "C2",
+      "hostName": "C2",
+      "status": "match"
+    },
+    {
+      "index": 47,
+      "screenshotLabel": "C3",
+      "hostName": "C3",
+      "status": "match"
+    },
+    {
+      "index": 48,
+      "screenshotLabel": "C4",
+      "hostName": "C4",
+      "status": "match"
+    },
+    {
+      "index": 49,
+      "screenshotLabel": "B1 SC BUS",
+      "hostName": "B1 SC BUS",
+      "status": "match"
+    },
+    {
+      "index": 50,
+      "screenshotLabel": "A1 SC BUS",
+      "hostName": "A1 SC BUS",
+      "status": "match"
+    },
+    {
+      "index": 51,
+      "screenshotLabel": "A2 SC BUS",
+      "hostName": "A2 SC BUS",
+      "status": "match"
+    },
+    {
+      "index": 52,
+      "screenshotLabel": "B2 SC BUS",
+      "hostName": "B2 SC BUS",
+      "status": "match"
+    },
+    {
+      "index": 53,
+      "screenshotLabel": "Stutter BUS",
+      "hostName": "Stutter BUS",
+      "status": "match"
+    },
+    {
+      "index": 54,
+      "screenshotLabel": "Splutter BUS",
+      "hostName": "Splutter BUS",
+      "status": "match"
+    },
+    {
+      "index": 55,
+      "screenshotLabel": "Ubermod BUS",
+      "hostName": "Ubermod BUS",
+      "status": "match"
+    },
+    {
+      "index": 56,
+      "screenshotLabel": "Sparkle BUS",
+      "hostName": "Sparkle BUS",
+      "status": "match"
+    },
+    {
+      "index": 57,
+      "screenshotLabel": "Decimate BUS",
+      "hostName": "Decimate BUS",
+      "status": "match"
+    },
+    {
+      "index": 58,
+      "screenshotLabel": "Fuzz BUS",
+      "hostName": "Fuzz BUS",
+      "status": "match"
+    },
+    {
+      "index": 59,
+      "screenshotLabel": "Verb BUS",
+      "hostName": "Verb BUS",
+      "status": "match"
+    },
+    {
+      "index": 60,
+      "screenshotLabel": "Mast BUS",
+      "hostName": "Mast BUS",
+      "status": "match"
+    },
+    {
+      "index": 61,
+      "screenshotLabel": "P2 SC BUS",
+      "hostName": "P2 SC BUS",
+      "status": "match"
+    },
+    {
+      "index": 62,
+      "screenshotLabel": "Environment BUS",
+      "hostName": "Environment BUS",
+      "status": "match"
+    },
+    {
+      "index": 63,
+      "screenshotLabel": "---BLANK---",
+      "hostName": "---BLANK---",
+      "status": "match"
+    },
+    {
+      "index": 64,
+      "screenshotLabel": "Master",
+      "hostName": "Master",
+      "status": "match"
+    }
+  ],
+  "nameStatusCounts": {
+    "match": 64,
+    "partial_match": 1
+  },
+  "countMatches": true,
+  "oscModules": [
+    {
+      "key": "vcfx",
+      "group": "audio_in",
+      "flatIndex": 2,
+      "screenshotTrackLabel": "Cello In",
+      "midiChannelZeroBased": 1,
+      "effectBankBusIndices": [],
+      "mapBusSends": false,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": false,
+      "hostTrackName": "Cello In",
+      "trackNameMatches": true
+    },
+    {
+      "key": "vcin",
+      "group": "audio_in",
+      "flatIndex": 3,
+      "screenshotTrackLabel": "Line 1 (VC) Group",
+      "midiChannelZeroBased": 0,
+      "effectBankBusIndices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "Line 1 (VC) Group",
+      "trackNameMatches": true
+    },
+    {
+      "key": "pro2",
+      "group": "audio_in",
+      "flatIndex": 5,
+      "screenshotTrackLabel": "Pro 2",
+      "midiChannelZeroBased": 7,
+      "effectBankBusIndices": [
+        16
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "Pro 2",
+      "trackNameMatches": true
+    },
+    {
+      "key": "b1",
+      "group": "audio_in",
+      "flatIndex": 9,
+      "screenshotTrackLabel": "DelB.1",
+      "midiChannelZeroBased": 2,
+      "effectBankBusIndices": [
+        4
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "DelB.1",
+      "trackNameMatches": true
+    },
+    {
+      "key": "a1",
+      "group": "audio_in",
+      "flatIndex": 10,
+      "screenshotTrackLabel": "DelA.1",
+      "midiChannelZeroBased": 3,
+      "effectBankBusIndices": [
+        5
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "DelA.1",
+      "trackNameMatches": true
+    },
+    {
+      "key": "a2",
+      "group": "audio_in",
+      "flatIndex": 11,
+      "screenshotTrackLabel": "DelA.2",
+      "midiChannelZeroBased": 4,
+      "effectBankBusIndices": [
+        6
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "DelA.2",
+      "trackNameMatches": true
+    },
+    {
+      "key": "b2",
+      "group": "audio_in",
+      "flatIndex": 12,
+      "screenshotTrackLabel": "DelB.2",
+      "midiChannelZeroBased": 5,
+      "effectBankBusIndices": [
+        7
+      ],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "DelB.2",
+      "trackNameMatches": true
+    },
+    {
+      "key": "bus",
+      "group": "audio_in",
+      "flatIndex": 8,
+      "screenshotTrackLabel": "Cello Delay BUS",
+      "midiChannelZeroBased": 6,
+      "effectBankBusIndices": [],
+      "mapBusSends": true,
+      "mapFxSends": true,
+      "mapFader": true,
+      "mapEnvelopeFollower": false,
+      "hostTrackName": "Cello Delay BUS",
+      "trackNameMatches": true
+    },
+    {
+      "key": "splut",
+      "group": "fx_1",
+      "flatIndex": 21,
+      "screenshotTrackLabel": "Splutter 5.0 (remote)",
+      "midiChannelZeroBased": 8,
+      "effectBankBusIndices": [
+        9
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "Splutter 5.0 (remote)",
+      "trackNameMatches": true
+    },
+    {
+      "key": "spark",
+      "group": "fx_1",
+      "flatIndex": 22,
+      "screenshotTrackLabel": "Spiral Sparkle",
+      "midiChannelZeroBased": 10,
+      "effectBankBusIndices": [
+        11
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "Spiral Sparkle",
+      "trackNameMatches": true
+    },
+    {
+      "key": "deci",
+      "group": "fx_1",
+      "flatIndex": 23,
+      "screenshotTrackLabel": "Shaped Decimate",
+      "midiChannelZeroBased": 11,
+      "effectBankBusIndices": [
+        12
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "Shaped Decimate",
+      "trackNameMatches": true
+    },
+    {
+      "key": "fuzz",
+      "group": "fx_1",
+      "flatIndex": 24,
+      "screenshotTrackLabel": "FUZZ",
+      "midiChannelZeroBased": 12,
+      "effectBankBusIndices": [
+        13
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "FUZZ",
+      "trackNameMatches": true
+    },
+    {
+      "key": "verb",
+      "group": "fx_1",
+      "flatIndex": 25,
+      "screenshotTrackLabel": "Reverb",
+      "midiChannelZeroBased": 13,
+      "effectBankBusIndices": [
+        14
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "Reverb",
+      "trackNameMatches": true
+    },
+    {
+      "key": "mast",
+      "group": "fx_1",
+      "flatIndex": 26,
+      "screenshotTrackLabel": "Mast",
+      "midiChannelZeroBased": 14,
+      "effectBankBusIndices": [
+        15,
+        10,
+        8
+      ],
+      "mapBusSends": true,
+      "mapFxSends": false,
+      "mapFader": false,
+      "mapEnvelopeFollower": true,
+      "hostTrackName": "Mast",
+      "trackNameMatches": true
+    }
+  ],
+  "directParameterCoverage": {
+    "observed": 290
+  },
+  "sendCounts": {
+    "19": 38,
+    "25": 26,
+    "0": 1
+  },
+  "unresolvedDeviceSlots": [
+    {
+      "track": "flat/2",
+      "locator": [
+        {
+          "track": 2,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Submarine Mono",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/2",
+      "locator": [
+        {
+          "track": 2,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "Submarine Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/4",
+      "locator": [
+        {
+          "track": 4,
+          "device": 0
+        }
+      ],
+      "device": "Scheps 73 Mono",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/8",
+      "locator": [
+        {
+          "track": 8,
+          "device": 0
+        }
+      ],
+      "device": "Scheps 73 Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/9",
+      "locator": [
+        {
+          "track": 9,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/9",
+      "locator": [
+        {
+          "track": 9,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/9",
+      "locator": [
+        {
+          "track": 9,
+          "device": 1
+        }
+      ],
+      "device": "Minimal Delay",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/9",
+      "locator": [
+        {
+          "track": 9,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 2
+        }
+      ],
+      "device": "Augustus Loop Fx Loop",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 3,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 4,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 5,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 6,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 7,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 8,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 1
+        }
+      ],
+      "device": "Minimal Delay",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/10",
+      "locator": [
+        {
+          "track": 10,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 2
+        }
+      ],
+      "device": "Augustus Loop Fx Loop",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/11",
+      "locator": [
+        {
+          "track": 11,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/11",
+      "locator": [
+        {
+          "track": 11,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/11",
+      "locator": [
+        {
+          "track": 11,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/11",
+      "locator": [
+        {
+          "track": 11,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 3,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/11",
+      "locator": [
+        {
+          "track": 11,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 4,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/11",
+      "locator": [
+        {
+          "track": 11,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 5,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/11",
+      "locator": [
+        {
+          "track": 11,
+          "device": 1
+        }
+      ],
+      "device": "Minimal Delay",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/11",
+      "locator": [
+        {
+          "track": 11,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 2
+        }
+      ],
+      "device": "Augustus Loop Fx Loop",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "FabFilter Pro-Q 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 3,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 4,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 4,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "FabFilter Pro-Q 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 1
+        }
+      ],
+      "device": "Minimal Delay",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/12",
+      "locator": [
+        {
+          "track": 12,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 2
+        }
+      ],
+      "device": "Augustus Loop Fx Loop",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/20",
+      "locator": [
+        {
+          "track": 20,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/20",
+      "locator": [
+        {
+          "track": 20,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/20",
+      "locator": [
+        {
+          "track": 20,
+          "device": 1
+        }
+      ],
+      "device": "FX Grid",
+      "slot": "Post FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/20",
+      "locator": [
+        {
+          "track": 20,
+          "device": 1
+        }
+      ],
+      "device": "FX Grid",
+      "slot": "Pre FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/21",
+      "locator": [
+        {
+          "track": 21,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "FX Grid",
+      "slot": "Post FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/21",
+      "locator": [
+        {
+          "track": 21,
+          "device": 2
+        }
+      ],
+      "device": "Things Texture",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/22",
+      "locator": [
+        {
+          "track": 22,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "++spiralstretch",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/22",
+      "locator": [
+        {
+          "track": 22,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "++pitchdelay",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/22",
+      "locator": [
+        {
+          "track": 22,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 0
+        }
+      ],
+      "device": "++pitchdelay",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/22",
+      "locator": [
+        {
+          "track": 22,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 2
+        }
+      ],
+      "device": "++delay",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/22",
+      "locator": [
+        {
+          "track": 22,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 3
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "++decimate",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/22",
+      "locator": [
+        {
+          "track": 22,
+          "device": 1
+        }
+      ],
+      "device": "Things Texture",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/23",
+      "locator": [
+        {
+          "track": 23,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "++decimate",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/23",
+      "locator": [
+        {
+          "track": 23,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 2
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/24",
+      "locator": [
+        {
+          "track": 24,
+          "device": 0
+        }
+      ],
+      "device": "Instrument Layer",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/24",
+      "locator": [
+        {
+          "track": 24,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "MDMX Fuzz Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/25",
+      "locator": [
+        {
+          "track": 25,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "Instrument Layer",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/25",
+      "locator": [
+        {
+          "track": 25,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "Convolution",
+      "slot": "Wet FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/25",
+      "locator": [
+        {
+          "track": 25,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 1
+        }
+      ],
+      "device": "Convolution",
+      "slot": "Wet FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/25",
+      "locator": [
+        {
+          "track": 25,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 1
+        }
+      ],
+      "device": "Things Texture",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/25",
+      "locator": [
+        {
+          "track": 25,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 3,
+          "device": 1
+        }
+      ],
+      "device": "ValhallaShimmer",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/25",
+      "locator": [
+        {
+          "track": 25,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 4,
+          "device": 1
+        }
+      ],
+      "device": "Convolution",
+      "slot": "Wet FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/25",
+      "locator": [
+        {
+          "track": 25,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 4,
+          "device": 2
+        }
+      ],
+      "device": "Convology XT",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/27",
+      "locator": [
+        {
+          "track": 27,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/27",
+      "locator": [
+        {
+          "track": 27,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/27",
+      "locator": [
+        {
+          "track": 27,
+          "device": 3
+        }
+      ],
+      "device": "Instrument Layer",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/27",
+      "locator": [
+        {
+          "track": 27,
+          "device": 3
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "MIDI Bass",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/27",
+      "locator": [
+        {
+          "track": 27,
+          "device": 3
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "MIDI Guitar 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/28",
+      "locator": [
+        {
+          "track": 28,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Note Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/28",
+      "locator": [
+        {
+          "track": 28,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Note Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/29",
+      "locator": [
+        {
+          "track": 29,
+          "device": 0
+        }
+      ],
+      "device": "FabFilter Pro-Q 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/35",
+      "locator": [
+        {
+          "track": 35,
+          "device": 1
+        }
+      ],
+      "device": "FabFilter Pro-Q 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/35",
+      "locator": [
+        {
+          "track": 35,
+          "device": 2
+        }
+      ],
+      "device": "Dynamics",
+      "slot": "Sc FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/35",
+      "locator": [
+        {
+          "track": 35,
+          "device": 3
+        }
+      ],
+      "device": "Scheps 73 Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/35",
+      "locator": [
+        {
+          "track": 35,
+          "device": 4
+        }
+      ],
+      "device": "FabFilter Pro-Q 3",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/35",
+      "locator": [
+        {
+          "track": 35,
+          "device": 5
+        }
+      ],
+      "device": "Ozone Imager 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/35",
+      "locator": [
+        {
+          "track": 35,
+          "device": 6
+        }
+      ],
+      "device": "Convology XT",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/35",
+      "locator": [
+        {
+          "track": 35,
+          "device": 7
+        }
+      ],
+      "device": "Center Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/36",
+      "locator": [
+        {
+          "track": 36,
+          "device": 1
+        }
+      ],
+      "device": "FabFilter Pro-Q 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/36",
+      "locator": [
+        {
+          "track": 36,
+          "device": 2
+        }
+      ],
+      "device": "Dynamics",
+      "slot": "Sc FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/36",
+      "locator": [
+        {
+          "track": 36,
+          "device": 3
+        }
+      ],
+      "device": "Scheps 73 Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/36",
+      "locator": [
+        {
+          "track": 36,
+          "device": 4
+        }
+      ],
+      "device": "FabFilter Pro-Q 3",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/36",
+      "locator": [
+        {
+          "track": 36,
+          "device": 5
+        }
+      ],
+      "device": "Ozone Imager 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/36",
+      "locator": [
+        {
+          "track": 36,
+          "device": 6
+        }
+      ],
+      "device": "Convology XT",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/36",
+      "locator": [
+        {
+          "track": 36,
+          "device": 7
+        }
+      ],
+      "device": "Center Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/37",
+      "locator": [
+        {
+          "track": 37,
+          "device": 1
+        }
+      ],
+      "device": "FabFilter Pro-Q 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/37",
+      "locator": [
+        {
+          "track": 37,
+          "device": 2
+        }
+      ],
+      "device": "Dynamics",
+      "slot": "Sc FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/37",
+      "locator": [
+        {
+          "track": 37,
+          "device": 3
+        }
+      ],
+      "device": "Scheps 73 Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/37",
+      "locator": [
+        {
+          "track": 37,
+          "device": 4
+        }
+      ],
+      "device": "FabFilter Pro-Q 3",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/37",
+      "locator": [
+        {
+          "track": 37,
+          "device": 5
+        }
+      ],
+      "device": "Ozone Imager 2",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/37",
+      "locator": [
+        {
+          "track": 37,
+          "device": 6
+        }
+      ],
+      "device": "Convology XT",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/37",
+      "locator": [
+        {
+          "track": 37,
+          "device": 7
+        }
+      ],
+      "device": "Center Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/42",
+      "locator": [
+        {
+          "track": 42,
+          "device": 0
+        }
+      ],
+      "device": "FabFilter Pro-Q 3",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/42",
+      "locator": [
+        {
+          "track": 42,
+          "device": 1
+        }
+      ],
+      "device": "++spectralcompand",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/43",
+      "locator": [
+        {
+          "track": 43,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "FabFilter Pro-Q 3",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/43",
+      "locator": [
+        {
+          "track": 43,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "FabFilter Pro-Q 3",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/43",
+      "locator": [
+        {
+          "track": 43,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 0
+        }
+      ],
+      "device": "FabFilter Pro-Q 3",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/43",
+      "locator": [
+        {
+          "track": 43,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 3,
+          "device": 0
+        }
+      ],
+      "device": "++spectralcompand",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/43",
+      "locator": [
+        {
+          "track": 43,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "++spectralcompand",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/44",
+      "locator": [
+        {
+          "track": 44,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "++spectralcompand",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/44",
+      "locator": [
+        {
+          "track": 44,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "++spectralcompand",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/45",
+      "locator": [
+        {
+          "track": 45,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/46",
+      "locator": [
+        {
+          "track": 46,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/47",
+      "locator": [
+        {
+          "track": 47,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/48",
+      "locator": [
+        {
+          "track": 48,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/49",
+      "locator": [
+        {
+          "track": 49,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/50",
+      "locator": [
+        {
+          "track": 50,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/51",
+      "locator": [
+        {
+          "track": 51,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/52",
+      "locator": [
+        {
+          "track": 52,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/53",
+      "locator": [
+        {
+          "track": 53,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/54",
+      "locator": [
+        {
+          "track": 54,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/55",
+      "locator": [
+        {
+          "track": 55,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/56",
+      "locator": [
+        {
+          "track": 56,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/57",
+      "locator": [
+        {
+          "track": 57,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/58",
+      "locator": [
+        {
+          "track": 58,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/59",
+      "locator": [
+        {
+          "track": 59,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/60",
+      "locator": [
+        {
+          "track": 60,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/61",
+      "locator": [
+        {
+          "track": 61,
+          "device": 0
+        }
+      ],
+      "device": "Gate",
+      "slot": "Sidechain FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/63",
+      "locator": [
+        {
+          "track": 63,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/63",
+      "locator": [
+        {
+          "track": 63,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/63",
+      "locator": [
+        {
+          "track": 63,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/63",
+      "locator": [
+        {
+          "track": 63,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 3,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/63",
+      "locator": [
+        {
+          "track": 63,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 4,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/63",
+      "locator": [
+        {
+          "track": 63,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 5,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 3,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 4,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "ValhallaUberMod",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 2
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 1
+        }
+      ],
+      "device": "FabFilter Pro-Q 3",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 3
+        },
+        {
+          "kind": "layer",
+          "container": 0,
+          "device": 0
+        }
+      ],
+      "device": "Scheps 73 Stereo",
+      "slot": "FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 1,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 2,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    },
+    {
+      "track": "flat/64",
+      "locator": [
+        {
+          "track": 64,
+          "device": 0
+        },
+        {
+          "kind": "layer",
+          "container": 3,
+          "device": 0
+        }
+      ],
+      "device": "Audio Receiver",
+      "slot": "Source FX",
+      "reason": "Slot navigation retained its parent; empty or inaccessible"
+    }
+  ],
+  "boundaries": [
+    "Matching a send label or controller position does not independently prove a routing edge.",
+    "UUID-filtered controller device positions are not unfiltered capture positions."
+  ],
+  "oscBusBindings": [
+    {
+      "module": "vcin",
+      "localBusIndex": 0,
+      "effectBankIndex": 0,
+      "hostName": "C1",
+      "screenshotOrderName": "C1",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "vcin",
+      "localBusIndex": 1,
+      "effectBankIndex": 1,
+      "hostName": "C2",
+      "screenshotOrderName": "C2",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "vcin",
+      "localBusIndex": 2,
+      "effectBankIndex": 2,
+      "hostName": "C3",
+      "screenshotOrderName": "C3",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "vcin",
+      "localBusIndex": 3,
+      "effectBankIndex": 3,
+      "hostName": "C4",
+      "screenshotOrderName": "C4",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "pro2",
+      "localBusIndex": 0,
+      "effectBankIndex": 16,
+      "hostName": "P2 SC BUS",
+      "screenshotOrderName": "P2 SC BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "b1",
+      "localBusIndex": 0,
+      "effectBankIndex": 4,
+      "hostName": "B1 SC BUS",
+      "screenshotOrderName": "B1 SC BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "a1",
+      "localBusIndex": 0,
+      "effectBankIndex": 5,
+      "hostName": "A1 SC BUS",
+      "screenshotOrderName": "A1 SC BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "a2",
+      "localBusIndex": 0,
+      "effectBankIndex": 6,
+      "hostName": "A2 SC BUS",
+      "screenshotOrderName": "A2 SC BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "b2",
+      "localBusIndex": 0,
+      "effectBankIndex": 7,
+      "hostName": "B2 SC BUS",
+      "screenshotOrderName": "B2 SC BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "splut",
+      "localBusIndex": 0,
+      "effectBankIndex": 9,
+      "hostName": "Splutter BUS",
+      "screenshotOrderName": "Splutter BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "spark",
+      "localBusIndex": 0,
+      "effectBankIndex": 11,
+      "hostName": "Sparkle BUS",
+      "screenshotOrderName": "Sparkle BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "deci",
+      "localBusIndex": 0,
+      "effectBankIndex": 12,
+      "hostName": "Decimate BUS",
+      "screenshotOrderName": "Decimate BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "fuzz",
+      "localBusIndex": 0,
+      "effectBankIndex": 13,
+      "hostName": "Fuzz BUS",
+      "screenshotOrderName": "Fuzz BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "verb",
+      "localBusIndex": 0,
+      "effectBankIndex": 14,
+      "hostName": "Verb BUS",
+      "screenshotOrderName": "Verb BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "mast",
+      "localBusIndex": 0,
+      "effectBankIndex": 15,
+      "hostName": "Mast BUS",
+      "screenshotOrderName": "Mast BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "mast",
+      "localBusIndex": 1,
+      "effectBankIndex": 10,
+      "hostName": "Ubermod BUS",
+      "screenshotOrderName": "Ubermod BUS",
+      "nameOrderMatches": true
+    },
+    {
+      "module": "mast",
+      "localBusIndex": 2,
+      "effectBankIndex": 8,
+      "hostName": "Stutter BUS",
+      "screenshotOrderName": "Stutter BUS",
+      "nameOrderMatches": true
+    }
+  ],
+  "controllerDeviceTargets": {
+    "matcherUUID": "a0913b7f-096b-4ac9-bddd-33c775314b42",
+    "pro2Track": {
+      "offset": 5,
+      "name": "Pro 2",
+      "fxLayers": {
+        "total": 0,
+        "items": []
+      }
+    },
+    "masterFxLayers": {
+      "total": 1,
+      "items": [
+        {
+          "index": 0,
+          "name": "FX Layer"
+        }
+      ]
+    }
+  }
+}

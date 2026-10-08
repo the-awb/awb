@@ -35,12 +35,13 @@ try {
     buses=[gate.inputBus,gate.outputBus,gate.stateBus,gate.measurementBus,second.inputBus,second.outputBus,second.stateBus,second.measurementBus];
     monitor=Synth.basicNew(\tailMonitor,server);emit.value(monitor.newMsg(server.defaultGroup,[\state,gate.stateBus.index,\secondState,second.stateBus.index,\counter,counter.index,\secondCounter,secondCounter.index,\secondOut,secondDestination.index],\addToTail));
     now=0.3;emit.value([\c_set,mixBus.index,0.5]);
+    param.baseSmoothing=0;
     now=0.5;param.setBase(0,0.1);
     now=0.6;emit.value([\c_set,mixBus.index,0]);
-    now=1.2;param.setBase(0.5);
-    now=1.6;param.setBase(0);
-    now=1.75;param.setBase(0.5); // cancel drain before suspension
-    now=2.1;param.setBase(0);param.setAmount(1);param.addModulation(\serverMix,modBus);
+    now=1.2;param.setBase(0.5,0);
+    now=1.6;param.setBase(0,0);
+    now=1.75;param.setBase(0.5,0); // cancel drain before suspension
+    now=2.1;param.setBase(0,0);param.setAmount(1);param.addModulation(\serverMix,modBus);
     now=2.4;emit.value([\c_set,modBus.index,0]);
     now=3.2;emit.value([\c_set,modBus.index,0.5]);
     now=3.6;gate.free;second.free;

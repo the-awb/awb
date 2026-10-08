@@ -22,11 +22,15 @@ export async function startRuntime({runtimeDirectory='/private/tmp/awb-live-set-
   if(!config.rackView&&(previewRack||rackBinding||process.env.AWB_RACK_INSTANCE_ID)){
    const native=!!(rackBinding||process.env.AWB_RACK_INSTANCE_ID);let seedDocument;
    if(!native){seedDocument=JSON.parse(await readFile(new URL('../../rack/fixtures/live-set.rack.json',import.meta.url),'utf8'));seedDocument.config.output.mode='off'}
-   rack=await rackFactory({runtimeDirectory:path.join(runtimeDirectory,'rack'),scBinding:rackBinding,seedDocument,fixedFXReturns:true,autoArmSC:native,levelRanges:{delbus:{min:0,max:1}},...(!native?{sendPacket:()=>{}}:{})});config.rackView=new URL("?embed=1",rack.url).href;config.rackMode=native?'native':'preview';
+   rack=await rackFactory({runtimeDirectory:path.join(runtimeDirectory,'rack'),scBinding:rackBinding,seedDocument,fixedFXReturns:true,autoArmSC:native,sceneTransitioning:()=>base?.state().scene?.transitioning===true,sceneLauncher:async(id,duration)=>{if(!base)throw Error('SC scene host is unavailable');return base.launchScene(id,duration)},...(!native?{sendPacket:()=>{}}:{})});config.rackView=new URL("?embed=1",rack.url).href;config.rackMode=native?'native':'preview';
   }
-  if(baseBinding)try{base=await baseBridgeFactory(baseBinding,{onLog:entry=>publish({type:'log',entry}),onStatus:(connected,message)=>{error=message;publish({type:'console-status',connected,error:message})}})}catch(e){error=e.message}
+  if(baseBinding)try{base=await baseBridgeFactory(baseBinding,{onLog:entry=>publish({type:'log',entry}),onScene:scene=>publish({type:'scene-state',scene}),onStatus:(connected,message)=>{error=message;publish({type:'console-status',connected,error:message})}})}catch(e){error=e.message}
   params=await startParams({binding,controlObservations:broker,bridgeFactory,frameSources:"http://127.0.0.1:*",rendererRoot:path.resolve(fileURLToPath(new URL('../dist/',import.meta.url))),additionalRoutes:async(req,res,url,{token})=>{
    if(req.method==='GET'&&['/delay-widgets.js','/delay-widgets.css'].includes(url.pathname)){const body=await readFile(new URL('../.build/delay-widgets/'+url.pathname.slice(1),import.meta.url));res.setHeader('Content-Type',url.pathname.endsWith('.css')?'text/css':'text/javascript');res.setHeader('Access-Control-Allow-Origin','*');res.end(body);return true}
+   if(req.method==='POST'&&url.pathname==='/api/scenes/launch'){
+    if(req.headers['x-param-token']!==token){res.writeHead(403);res.end();return true}
+    if(!base)throw Error('SC scene host is unavailable');if(rack?.state?.().recall)throw Error('A scene transition is already in progress');let body='';for await(const chunk of req){body+=chunk;if(body.length>4096)throw Error('Scene request too large')}const request=JSON.parse(body);const scene=await base.launchScene(request.id,request.duration);res.setHeader('Content-Type','application/json');res.end(JSON.stringify({ok:true,scene}));return true;
+   }
    if(url.pathname==='/api/live-set'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({surface:config,console:{...(base?.state()??{logs:[],mappings:[]}),connected:!!base&&!error,error},rackBound:!!(rackBinding??process.env.AWB_RACK_INSTANCE_ID)}));return true}
    if(url.pathname==='/events/meters'){
     if(url.searchParams.get('token')!==token){res.writeHead(403);res.end();return true}

@@ -1,6 +1,6 @@
 AWBSendRackTool : Tool {
     var <instance, <server, <config, <channels, <slots, <slotIDs, <fxIDs, <followerIDs;
-    var <rootGroup, <sourceGroup, channelGroup, fxGroup, detectorGroup, followerGroup, <masterGroup, <masterBus;
+    var <rootGroup, <sourceGroup, channelGroup, fxGroup, detectorGroup, <followerGroup, <masterGroup, <masterBus;
     var <ready=false, <closed=false, prefix, definitions, sources, variants, processors;
     var ownedNodes, ownedBuses, options, responder, shellPID, closePending=false, publishPending=false, quitHook, <revision=0;
     var watchers, feedbackValues, metadataPending=false, publishedRevision=0, commandSource;
@@ -87,6 +87,10 @@ AWBSendRackTool : Tool {
 
         if(config[\cleanSlot].notNil and:{config[\cleanSlot]!=false} and:{config[\fixedFX].collect{|item|this.itemID(item)}.includes(config[\cleanSlot].asSymbol).not}){Error("Clean slot must name a fixed FX destination").throw};
         if(config[\name].isString.not or:{config[\name].size>120}){Error("Invalid rack name").throw};
+        config[\maxLevel]=config[\maxLevel] ? config[\maxGain];
+        AWBSendRackVoice.gain(config[\maxLevel]);if(config[\maxLevel]<=0){Error("Rack maximum fader level must be positive").throw};
+        config[\maxLevel]=config[\maxLevel] ? config[\maxGain];
+        AWBSendRackVoice.gain(config[\maxLevel]);if(config[\maxLevel]<=0){Error("Rack maximum fader level must be positive").throw};
         AWBSendRackVoice.gain(config[\maxGain]);
         if(config[\maxGain]<=0){Error("Rack maximum gain must be positive").throw};
         ^this;
@@ -290,6 +294,7 @@ AWBSendRackTool : Tool {
         }{
             this.dispatch(slot[\detector][\node].setMsg(*args));slot[\detector][\settings]=current;
         };
+        if(slot[\amountParam].notNil){slot[\amountParam].mapTo(slot[\detector][\node],\amount)};
         if(slot[\controlEnabled].not){this.dispatch(slot[\detector][\node].runMsg(false))};
         this.publish;^slot[\detector];
     }
@@ -364,7 +369,7 @@ AWBSendRackTool : Tool {
     // Borrow the control; the rack fader and MIDI change the same AWParam baseline.
     bindLevelParam { |id,param|
         var channel=this.channelAt(id),hook;this.requireOpen;
-        if(param.server!==server or:{param.closed} or:{param.spec.minval>0} or:{param.spec.maxval>config[\maxGain]}){Error("Invalid rack level parameter").throw};
+        if(param.server!==server or:{param.closed} or:{param.spec.minval>0} or:{param.spec.maxval>config[\maxLevel]}){Error("Invalid rack level parameter").throw};
         if(channel[\levelParam].notNil){Error("Rack level parameter already bound").throw};
         param.mapTo(channel[\node],\level);this.returnGenerations(channel).do{|gen|param.mapTo(gen[\return],\channelLevel);gen[\returnLevelParam]=param};channel[\levelParam]=param;
         hook={|o,what,data|if(what==\baseTarget and:{closed.not}){channel[\level]=param.baseTarget;this.publishValue("global/channel-levels/"++id.asString,param.baseTarget)};if(what==\closed and:{closed.not}){this.unbindLevelParam(id)}};
@@ -377,7 +382,7 @@ AWBSendRackTool : Tool {
     setLevel { |id,value|
         var channel=this.channelAt(id);
         this.requireOpen;value=AWBSendRackVoice.gain(value);
-        if(value>config[\maxGain]){Error("Channel level exceeds rack range").throw};
+        if(value>config[\maxLevel]){Error("Channel level exceeds rack range").throw};
         if(channel[\levelParam].notNil){value=channel[\levelParam].checkBase(value);channel[\levelParam].setBase(value)}{channel[\level]=value;this.dispatch([\n_set,channel[\node].nodeID,\level,value]);this.returnGenerations(channel).do{|gen|this.dispatch(gen[\return].setMsg(\channelLevel,value))};this.publishValue("global/channel-levels/"++id.asString,value)};^value;
     }
     setMute { |id,value|this.requireOpen;if(value.isKindOf(Boolean).not){Error("Mute requires a Boolean").throw};this.channelAt(id)[\mute]=value==true;this.publishValue(id.asString++"/state/mute",value.asInteger);this.updateEnabled;^this }
@@ -407,9 +412,21 @@ AWBSendRackTool : Tool {
         if(processors.includesKey(id).not and:{processors.size>=64}){Error("Processor registry is full").throw};
         processors[id]=factory;if(ready){this.publish};^this;
     }
+    bindControlAmountParam { |id,param|
+        var slot=this.slotAt(id);this.measurementFor(id);
+        if(param.server!==server or:{param.closed} or:{param.spec.minval!=0} or:{param.spec.maxval>config[\maxLevel]} or:{slot[\amountParam].notNil}){Error("Invalid control send fader parameter").throw};
+        slot[\amountParam]=param;slot[\level]=param.baseTarget;
+        [slot[\detector],slot[\active]].reject(_.isNil).do{|processor|param.mapTo(processor[\node],\amount)};
+        slot[\amountHook]={|p,what|if(what==\baseTarget and:{closed.not}){slot[\level]=p.baseTarget;this.publishValue("global/control-levels/"++id.asString,p.baseTarget)};if(what==\closed and:{closed.not}){this.unbindControlAmountParam(id)}};param.addDependant(slot[\amountHook]);^this;
+    }
+    unbindControlAmountParam { |id|
+        var slot=this.slotAt(id),p=slot[\amountParam];
+        if(p.notNil){p.removeDependant(slot[\amountHook]);[slot[\detector],slot[\active]].reject(_.isNil).do{|processor|if(p.closed.not){p.unmapFrom(processor[\node],\amount)};this.dispatch(processor[\node].setMsg(\amount,slot[\level]))};slot[\amountParam]=nil;slot[\amountHook]=nil};^this;
+    }
     setControlAmount { |id,value|
         var slot=this.slotAt(id);this.measurementFor(id);value=AWBSendRackVoice.gain(value);
-        if(value>1){Error("Control send amount must be 0-1").throw};
+        if(value>config[\maxLevel]){Error("Control send amount exceeds fader range").throw};
+        if(slot[\amountParam].notNil){slot[\amountParam].setBase(value);^value};
         slot[\level]=value;
         [slot[\detector],slot[\active]].reject(_.isNil).do{|processor|
             this.dispatch(processor[\node].setMsg(\amount,value));
@@ -419,7 +436,7 @@ AWBSendRackTool : Tool {
     setReturn { |id,value|
         var slot=this.slotAt(id);
         this.requireOpen;if(slot[\kind]==\follower){^this.setControlAmount(id,value)};value=AWBSendRackVoice.gain(value);
-        if(slot[\kind]!=\fx or:{value>config[\maxGain]}){Error("Invalid FX return level").throw};
+        if(slot[\kind]!=\fx or:{value>config[\maxLevel]}){Error("Invalid FX return level").throw};
         slot[\level]=value;
         ([slot[\active]]++slot[\retiring]).reject(_.isNil).do{|gen|this.dispatch([\n_set,gen[\return].nodeID,\level,value])};
         this.publishValue("global/levels/"++id.asString,value);^value;
@@ -527,12 +544,12 @@ AWBSendRackTool : Tool {
         args=[\in,slot[\bus].index,\out,slot[\controlBus].index,\amount,slot[\level],\curve,[\linear,\log,\sqrt].indexOf(curve)];
         [\attack,\release,\scale,\blend,\floorDb].do{|key|if(settings[key].notNil){args=args.addAll([key,settings[key]])}};
         slot[\active]=(node:this.synth(definitions[\follower].name,args,slot[\group],"Follower "++id),settings:settings.copy.put(\curve,curve));
-        this.publish;^slot[\active];
+        if(slot[\amountParam].notNil){slot[\amountParam].mapTo(slot[\active][\node],\amount)};this.publish;^slot[\active];
     }
     clearFollower { |id|
         var slot=this.slotAt(id),active=slot[\active];
         this.requireOpen;if(slot[\kind]!=\follower){Error("Not a follower slot").throw};
-        if(active.notNil){this.dispatch(active[\node].freeMsg);instance.disown(active[\node]);ownedNodes.remove(active[\node])};
+        if(active.notNil){if(slot[\amountParam].notNil and:{slot[\amountParam].closed.not}){slot[\amountParam].unmapFrom(active[\node],\amount,false)};this.dispatch(active[\node].freeMsg);instance.disown(active[\node]);ownedNodes.remove(active[\node])};
         slot[\active]=nil;this.dispatch(slot[\controlBus].setMsg(0));this.publish;^this;
     }
     portsFor { |ids|
@@ -593,14 +610,14 @@ AWBSendRackTool : Tool {
         this.requireOpen;
         (mix[\channels] ? []).do{|item|
             var channel=this.channelAt(item[\id]);
-            if(item[\level].notNil){AWBSendRackVoice.gain(item[\level]);if(item[\level]>config[\maxGain]){Error("Mix level exceeds range").throw};actions.add({this.setLevel(item[\id],item[\level])})};
+            if(item[\level].notNil){AWBSendRackVoice.gain(item[\level]);if(item[\level]>config[\maxLevel]){Error("Mix level exceeds range").throw};actions.add({this.setLevel(item[\id],item[\level])})};
             (item[\sends] ? ()).keysValuesDo{|id,value|
                 if(value.notNil){this.slotAt(id);AWBSendRackVoice.gain(value);if(value>config[\maxGain]){Error("Mix gain exceeds range").throw};actions.add({this.setSend(item[\id],id,value)})};
             };
             [\mute,\solo].do{|key|if(item[key].notNil){if(item[key].isKindOf(Boolean).not){Error("Mix mute/solo must be booleans").throw};actions.add({if(key==\mute){this.setMute(item[\id],item[key])}{this.setSolo(item[\id],item[key])}})}};
         };
         (mix[\returns] ? ()).keysValuesDo{|id,value|
-            if(value.notNil){AWBSendRackVoice.gain(value);if(value>if(this.slotAt(id)[\kind]==\follower){1}{config[\maxGain]}){Error("Return exceeds range").throw};actions.add({this.setReturn(id,value)})};
+            if(value.notNil){AWBSendRackVoice.gain(value);if(value>config[\maxLevel]){Error("Return exceeds range").throw};actions.add({this.setReturn(id,value)})};
         };
         actions.do(_.value);^this;
     }
@@ -691,10 +708,10 @@ AWBSendRackTool : Tool {
     }
     sendState { |address,requestID|
         this.requireOpen;
-        address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"begin",revision,config[\name],config[\libraryID],config[\maxGain],channels.size,slotIDs.size,processors.size,1);
+        address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"begin",revision,config[\name],config[\libraryID],config[\maxGain],channels.size,slotIDs.size,processors.size,1,config[\maxLevel]);
         config[\channels].do{|item,order|
             var channel=this.channelAt(this.itemID(item));
-            address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"channel",channel[\id].asString,channel[\label],channel[\level],channel[\mute].asInteger,channel[\solo].asInteger,order,if(channel[\levelParam].isNil){0}{channel[\levelParam].spec.minval},if(channel[\levelParam].isNil){config[\maxGain]}{channel[\levelParam].spec.maxval});
+            address.sendMsg('/awb/rack/state',instance.instanceID,requestID,"channel",channel[\id].asString,channel[\label],channel[\level],channel[\mute].asInteger,channel[\solo].asInteger,order,if(channel[\levelParam].isNil){0}{channel[\levelParam].spec.minval},if(channel[\levelParam].isNil){config[\maxLevel]}{channel[\levelParam].spec.maxval});
         };
         slotIDs.do{|id,order|
             var slot=slots[id],settings=slot[\active].tryPerform(\at,\settings) ? (),detector=slot[\detector].tryPerform(\at,\settings) ? ();
@@ -727,7 +744,7 @@ AWBSendRackTool : Tool {
         shellPID=runner.value(command);^shellPID;
     }
     close {
-        if(closed){^this};channels.keys.do{|id|this.unbindLevelParam(id)};closed=true;ready=false;
+        if(closed){^this};channels.keys.do{|id|this.unbindLevelParam(id)};followerIDs.do{|id|this.unbindControlAmountParam(id)};closed=true;ready=false;
         watchers.values.do{|watcher|watcher[\address].sendMsg('/awb/rack/closed',instance.instanceID,watcher[\token])};watchers.clear;feedbackValues.clear;
         responder.tryPerform(\free);responder=nil;
         if(quitHook.notNil){ServerQuit.remove(quitHook,server);quitHook=nil};

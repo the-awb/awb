@@ -1518,10 +1518,13 @@ remain local rather than entering Git. Runtime audio gates need a quiet window.
 The [Stage 1 review](apps/awb-shell/docs/bitwig-set-inspection-stage1/stage1-review.md)
 compares Beat Twin and Bitwig Control Deck against the installed 4.3.10 host (API 17).
 Willy confirmed the open template instance and authorized a custom one-shot mapper.
-The [implementation and capture instructions](apps/awb-shell/docs/bitwig-set-inspection-stage2/README.md)
-are prepared: offline traversal/renderer checks pass; the expanded live capture awaits
-controller activation. Generic routing destinations and modulation assignments still
-need human annotation. This does not change shell ownership or gate the active mixer,
+The [capture and review](apps/awb-shell/docs/bitwig-set-inspection-stage2/README.md)
+are complete: 65 tracks, 290 devices, all parent identities and 3,094 exposed direct
+parameter records; screenshot order, 14 OSC track bindings and 17 bus positions agree.
+Exact matcher checks found missing OSC targets for pro2 params and Master stut 2.
+The temporary inspector is removed; eight renderer tests and the traversal fixture pass.
+Generic routing destinations, modulation assignments and 131 unresolved named slots
+still need human annotation. This does not change shell ownership or gate the active mixer,
 SC bridge, follower, and audio/GUI load-testing work.
 
 ### Rack Instruments preparation — 4 October 2026
@@ -2213,6 +2216,18 @@ The external delay URL is borrowed: it does not yet confer SC resource ownership
 or connect separate cell ports to rack channels. Unimplemented legacy FX controls
 remain visibly unbound. No live engine, hardware routing, load test or class-path
 installation is implied by this milestone.
+## AWParam GUI handoff — 7 October 2026
+
+The agreed interface and implementation contract are in
+[AWParam GUI handoff](apps/core/docs/AWPARAM_GUI_HANDOFF.md). The reusable
+control embeds in owning Tool panels and exposes base, global amount and
+effective output, plus a source panel for route amounts/curves and producer
+identity. Implemented work includes public route setters/metadata, shared
+control-bridge output leases, independent base/amount events, parameter-level
+configuration notifications and matched SVG/Canvas2D renderers.
+The contract is now implemented; live performance qualification remains pending.
+Integrated audio qualification waits for a reserved engine slot.
+
 
 ### AWParam display revision — 8 October 2026
 
@@ -2224,3 +2239,40 @@ The bundle is rebuilt; 14 focused Node tests, 30 SC parameter/inspector checks, 
 ### AWParam amount limits and handle revision — 8 October 2026
 
 Overall amount now follows parameter polarity (0…1 / −1…1) in the GUI, bridge and AWParam. Unipolar selection clamps negative amount; source-route gains retain their separate range. The inner base knob is smaller, the outer amount drag band is wider, and polarity changes remap positions in SVG and Canvas. Sampled output remains a read-only ring. See [implementation and validation](apps/param/docs/IMPLEMENTATION.md). Recompile the language and recreate parameter nodes for the DSP update; no running host or hardware configuration is changed by this integration.
+
+
+### Class LiveSet envelope verification — 8 October 2026
+
+The class-backed editable LiveSet migration remains uncommitted on
+`integration/bw-sc`. Actual-engine functional verification passes the complete
+5,110-check envelope matrix and the final 60-check signed Deci/LFO probe. The
+matrix covers control sends/faders, the original 42-blender graph and input
+combinations, all 33 implemented envelope destinations, seven delay-mod presets,
+selector/gain behavior, native tapehead mappings and actual VST readback. Blender
+live setters and negative Deci modulation faults are fixed. Technical ownership
+lives in AWBaseTool/AWBLiveSet; configuration is in the mirrored LiveSet folder.
+
+The original scenes are never launched in these fixtures. No new CPU/headroom or
+GUI performance qualification is implied. Missing legacy Stutter/Splutter/Mast EQ
+outputs remain explicit. An intermittent VSTPlugin UI startup lookup error remains
+unexplained despite clean final runs. See [migration verification](apps/live-set/docs/class-migration-20261008/README.md)
+for exact status, saved logs, final source checkpoints and reproduction.
+
+
+### Soft MIDI pickup — 8 October 2026
+
+Continuous AWParam MIDI pickup now holds at the observed value for one second,
+flashes amber, then captures the offset from the controller's position at hold-end.
+Control becomes live minus that fixed offset, fading to zero over 0.5 seconds.
+Controller movement never cancels pickup; discrete controls remain stepped.
+BaseLaunch in the repo and external migration folder exposes the timing settings.
+Parameter-level phase deltas and recovery snapshots reach the shared SVG/Canvas,
+delay widgets, modulation fields and envelope faders. No DSP node/bus added.
+27 pickup checks, 20 rendered bus checks, the full Core offline suite, 21 live-set
+language checks and a 78-check scene GUI gate pass. The previous countdown timeout
+was an incomplete fake AWBase bridge; it is corrected and the countdown verified.
+A full surface rerun passes 87 checks before a fullscreen geometry wait, still
+unverified. Earlier 32 Node tests and 62 focused GUI checks are retained; renderer
+and bridge product code are unchanged by the fixed-delta correction. Hardware pedal
+audition and renewed performance qualification are unrun; changes are uncommitted.
+See [verification](apps/core/docs/soft-pickup-20261008/verification.json).

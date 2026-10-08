@@ -2,8 +2,10 @@
 // fraction of the parameter's full normalized range. No legacy Param overrides.
 AWParam {
     classvar definition, routeDefinition, mappingOwners;
-    var <name, <server, <spec, <group, <sourceGroup, <synth, <inputBus, <outputBus, <observationBus, <ownerInstance;
+    var <name, <server, <spec, <midiSpec, <group, <sourceGroup, <synth, <inputBus, <outputBus, <observationBus, <ownerInstance;
     var <polarity, <nativeSpec, <baseTarget, <amountTarget, <modCurve, <closed=false, <snapshot;
+    var customMidiRange=false;
+    var <baseSmoothing=0.5;
     var options, baseSerial=0, amountSerial=0, defaultBaseCurve, defaultAmountCurve;
     var responder, quitHook, nodeHook, pendingReads, readGeneration=0, watchRate=0;
     var mappings, ownedNodes, modulationNodes, routeRecords;
@@ -15,7 +17,7 @@ AWParam {
     }
     // State is internal LocalIn, not externally allocated buses. Explicit
     // command serials also retrigger identical targets and adjacent-block edits.
-    *signals { |baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential,amountLo=0|
+    *signals { |baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential,amountLo=0,baseLag=0|
         var previous=LocalIn.kr(8,[baseTarget,amountTarget,baseTarget,amountTarget,0,0,0,0]);
         var baseChanged=(baseSerial-previous[6]).abs>0, amountChanged=(amountSerial-previous[7]).abs>0;
         var baseStart=Select.kr(baseChanged,[previous[2],previous[0]]);
@@ -24,7 +26,8 @@ AWParam {
         var amountTime=Select.kr(amountChanged,[(previous[5]+ControlDur.ir).min(amountDur),0]);
         var basePhase=(baseTime/baseDur.max(ControlDur.ir)).clip(0,1);
         var amountPhase=(amountTime/amountDur.max(ControlDur.ir)).clip(0,1);
-        var base=Select.kr(baseDur<=0,[baseStart+((baseTarget-baseStart)*this.shape(basePhase,baseCurve)),baseTarget]);
+        var rawBase=Select.kr(baseDur<=0,[baseStart+((baseTarget-baseStart)*this.shape(basePhase,baseCurve)),baseTarget]);
+        var base=Lag.kr(rawBase,baseLag);
         var amount=Select.kr(amountDur<=0,[amountStart+((amountTarget-amountStart)*this.shape(amountPhase,amountCurve)),amountTarget]).clip(amountLo,1);
         var modulation=In.kr(inputBus,1),magnitude=modulation.abs;
         // Preserve additive depth above one full range; bend the first range
@@ -45,8 +48,8 @@ AWParam {
     *synthDef {
         ^definition ?? {definition=SynthDef(\awParam_v2,{|inputBus=0,out=1,baseTarget=0,amountTarget=0,
             baseSerial=0,amountSerial=0,baseDur=0,amountDur=0,baseCurve=0,amountCurve=0,
-            modCurve=0,lo=0,hi=1,exponential=0,replyRate=0,observationBus=0,amountLo=0|
-            var values=AWParam.signals(baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential,amountLo);
+            modCurve=0,lo=0,hi=1,exponential=0,replyRate=0,observationBus=0,amountLo=0,baseLag=0|
+            var values=AWParam.signals(baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential,amountLo,baseLag);
             ReplaceOut.kr(out,values[2]);
             ReplaceOut.kr(observationBus,values.copyRange(0,1));
             SendReply.kr(Impulse.kr(replyRate),'/awb/param/state',values++[baseSerial,amountSerial]);
@@ -83,11 +86,24 @@ AWParam {
         };
         // Native base ranges/ramps stay intact; only bare bases change domain.
         if(nativeSpec.not){
-            spec=polarity.asSpec.copy;spec.step=0;baseTarget=baseTarget.clip(spec.minval,spec.maxval);
+            spec=polarity.asSpec.copy;spec.step=0;if(customMidiRange.not){midiSpec=spec.copy};baseTarget=baseTarget.clip(spec.minval,spec.maxval);
             baseSerial=(baseSerial+1)%1000000;
-            message=message++[\lo,spec.minval,\hi,spec.maxval,\baseTarget,spec.unmap(baseTarget),\baseDur,0,\baseSerial,baseSerial];
+            message=message++[\lo,spec.minval,\hi,spec.maxval,\baseTarget,spec.unmap(baseTarget),\baseDur,0,\baseLag,0,\baseSerial,baseSerial];
         };
         snapshot=nil;this.dispatch(synth.setMsg(*message));this.changed(\polarity);^this;
+    }
+    // Rescale native linear units without restarting normalized ramps or mappings.
+    rescaleLinearRange { |minimum,maximum|
+        var previous=spec,next,basePosition,midiLow,midiHigh;
+        this.requireAlive;this.class.finite(minimum,"minimum");this.class.finite(maximum,"maximum");
+        if(nativeSpec.not or:{[\lin,\linear].includes(spec.warp.asSpecifier).not} or:{minimum>=maximum}){Error("AWParam: rescaling requires an ascending native linear range").throw};
+        if(minimum==spec.minval and:{maximum==spec.maxval}){^this};
+        basePosition=previous.unmap(baseTarget);midiLow=previous.unmap(midiSpec.minval);midiHigh=previous.unmap(midiSpec.maxval);
+        next=ControlSpec(minimum,maximum);spec=next;baseTarget=next.map(basePosition);
+        midiSpec=ControlSpec(next.map(midiLow),next.map(midiHigh));snapshot=nil;
+        this.dispatch(synth.setMsg(\lo,minimum,\hi,maximum));
+        sources.do{|source|if(source.field!=\amount){source.tryPerform(\resync)}};
+        this.changed(\spec);this.changed(\baseTarget,(value:baseTarget,dur:0,curve:0));^this;
     }
     init { |id,base,aSpec,amount,shape,target,aServer,opts|
         name=id.asSymbol;server=aServer ? target.tryPerform(\server) ? Server.default;options=(opts ? ()).copy;ownerInstance=options[\ownerInstance];
@@ -98,7 +114,9 @@ AWParam {
         this.class.finite(spec.minval,"minimum");this.class.finite(spec.maxval,"maximum");
         if(spec.minval>=spec.maxval or:{[\lin,\linear,\exp,\exponential].includes(spec.warp.asSpecifier).not}
             or:{[\exp,\exponential].includes(spec.warp.asSpecifier) and:{spec.minval<=0}}){Error("AWParam: use an ascending linear or positive exponential ControlSpec").throw};
+        midiSpec=spec.copy;
         baseTarget=this.checkBase(base ? spec.default);amountTarget=this.checkAmount(amount);
+        baseSmoothing=this.class.duration(options[\baseSmoothing] ? 0.5);
         defaultBaseCurve=this.class.curve(options[\baseCurve] ? 0);defaultAmountCurve=this.class.curve(options[\amountCurve] ? 0);
         if(options[\sendFunction].isNil and:{server.serverRunning.not}){Error("AWParam: boot server and call AWParam.prepare first").throw};
         target=target ? server.defaultGroup;
@@ -112,7 +130,7 @@ AWParam {
                 [\c_set,inputBus.index,0,outputBus.index,baseTarget,observationBus.index,baseTarget,observationBus.index+1,amountTarget],
                 group.newMsg(target,\addToTail),sourceGroup.newMsg(group,\addToHead),
                 synth.newMsg(group,[\inputBus,inputBus.index,\out,outputBus.index,\observationBus,observationBus.index,\baseTarget,spec.unmap(baseTarget),
-                    \amountTarget,amountTarget,\amountLo,this.normalizedMinimum,\modCurve,modCurve,\lo,spec.minval,\hi,spec.maxval,
+                    \amountTarget,amountTarget,\baseLag,baseSmoothing,\amountLo,this.normalizedMinimum,\modCurve,modCurve,\lo,spec.minval,\hi,spec.maxval,
                     \exponential,[\exp,\exponential].includes(spec.warp.asSpecifier).asInteger],\addToTail)
             ]);
             [group,sourceGroup,synth].do{|node|this.own(node,if(node.isKindOf(Group)){\container}{\synth})};
@@ -137,12 +155,20 @@ AWParam {
     setBase { |value,dur=0,curve|
         this.requireAlive;value=this.checkBase(value);dur=this.class.duration(dur);curve=this.class.curve(curve ? defaultBaseCurve);
         baseSerial=(baseSerial+1)%1000000;baseTarget=value;
-        this.dispatch(synth.setMsg(\baseTarget,spec.unmap(value),\baseDur,dur,\baseCurve,curve,\baseSerial,baseSerial));
+        this.dispatch(synth.setMsg(\baseTarget,spec.unmap(value),\baseDur,dur,\baseLag,baseSmoothing,\baseCurve,curve,\baseSerial,baseSerial));
         this.changed(\baseTarget,(value:value,dur:dur,curve:curve));^this;
     }
+    baseSmoothing_ { |seconds|this.requireAlive;baseSmoothing=this.class.duration(seconds);this.dispatch(synth.setMsg(\baseLag,baseSmoothing));this.changed(\baseSmoothing);^this }
     set { |value,dur=0,curve|^this.setBase(value,dur,curve) }
     setI { |value,dur=0,curve|^this.setBase(value,dur,curve) }
-    setM { |value,dur=0,curve|this.class.finite(value,"MIDI value");if(value<0 or:{value>127}){Error("AWParam: MIDI value outside 0..127").throw};^this.setBase(spec.map(value/127),dur,curve) }
+    setITransition { |value,dur=0|^this.setBase(value,dur)}
+    setBiPolar { |enabled=true|^this.setPolarity(if(enabled){\bipolar}{\unipolar})}
+    getI {^baseTarget}
+    midiRange { |minimum=0,maximum=1|
+        this.checkBase(minimum);this.checkBase(maximum);if(minimum>=maximum){Error("AWParam: MIDI range must ascend").throw};
+        customMidiRange=true;midiSpec=ControlSpec(minimum,maximum,spec.warp.asSpecifier);sources.do{|source|source.tryPerform(\resync)};^this;
+    }
+    setM { |value,dur=0,curve|this.class.finite(value,"MIDI value");if(value<0 or:{value>127}){Error("AWParam: MIDI value outside 0..127").throw};^this.setBase(midiSpec.map(value/127),dur,curve) }
     setAmount { |value,dur=0,curve|
         this.requireAlive;value=this.checkAmount(value);dur=this.class.duration(dur);curve=this.class.curve(curve ? defaultAmountCurve);
         amountSerial=(amountSerial+1)%1000000;amountTarget=value;
@@ -317,7 +343,13 @@ AWParam {
             if(dispose){source.free};
         };^source;
     }
-    configuration {^(id:name,base:baseTarget,min:spec.minval,max:spec.maxval,warp:spec.warp.asSpecifier,polarity:polarity,nativeSpec:nativeSpec,amount:amountTarget,modCurve:modCurve,baseCurve:defaultBaseCurve,amountCurve:defaultAmountCurve)}
+    // Aggregate competing sources so one idle source cannot hide another's warning.
+    midiPickupPhase { |field=\base|
+        var active=sources.select{|source|source.isKindOf(AWMidiCCIn) and:{source.field==field} and:{source.closed.not}};
+        if(active.any{|source|source.pickupPhase==\warning}){^\warning};
+        if(active.any{|source|source.pickupPhase==\ramping}){^\ramping};^\idle;
+    }
+    configuration {^(id:name,base:baseTarget,min:spec.minval,max:spec.maxval,warp:spec.warp.asSpecifier,polarity:polarity,nativeSpec:nativeSpec,amount:amountTarget,modCurve:modCurve,baseCurve:defaultBaseCurve,amountCurve:defaultAmountCurve,baseSmoothing:baseSmoothing)}
     free { |send=true|
         var buses;if(closed){^this};closed=true;
         if(checkedMappings.notNil){checkedMappings.copy.do{|d|d[\registry].removeDestination(d,Error("AWParam closed"),send)}};

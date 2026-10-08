@@ -57,7 +57,7 @@ AWBCoreTool : Tool {
     buildParam { |item|
         var id=this.id(item[\id]),param,aSpec,opts=(ownerInstance:instance,modulationRegistry:modulationRegistry,sendFunction:options[\sendFunction],
             ownFunction:{|node,type,metadata|this.ownNode(node,type,metadata)},disownFunction:{|node|this.disownNode(node)},
-            baseCurve:item[\baseCurve] ? 0,amountCurve:item[\amountCurve] ? 0,polarity:item[\polarity]);
+            baseSmoothing:item[\baseSmoothing],baseCurve:item[\baseCurve] ? 0,amountCurve:item[\amountCurve] ? 0,polarity:item[\polarity]);
         if(params[id].notNil){Error("AWBCoreTool: duplicate parameter").throw};
         if(item[\nativeSpec] ? (item[\min].notNil or:{item[\max].notNil} or:{item[\warp].notNil})){
             aSpec=ControlSpec(item[\min] ? 0,item[\max] ? 1,item[\warp] ? \lin);
@@ -68,13 +68,13 @@ AWBCoreTool : Tool {
             if(what==\closed and:{closed.not} and:{params[id]===object}){
                 params.removeAt(id);object.removeDependant(paramObservers.removeAt(object));this.syncParamConfig
             };
-            if([\baseTarget,\amountTarget,\modCurve,\transitionCurves,\polarity].includes(what) and:{closed.not}){this.syncParamEntry(id)}
+            if([\baseTarget,\amountTarget,\modCurve,\transitionCurves,\polarity,\baseSmoothing].includes(what) and:{closed.not}){this.syncParamEntry(id)}
         };param.addDependant(paramObservers[param]);^param;
     }
-    createParam { |id,base,spec,amount=0,modCurve=0,polarity|
+    createParam { |id,base,spec,amount=0,modCurve=0,polarity,baseSmoothing|
         var p;this.requireAlive;if(ready.not){Error("AWBCoreTool: wait for readiness before creating parameters").throw};if(params.size>=1024){Error("AWBCoreTool: parameter capacity reached").throw};
         if(spec.notNil){spec=spec.asSpec};
-        p=this.buildParam((id:id,base:base,min:spec.tryPerform(\minval),max:spec.tryPerform(\maxval),warp:spec.tryPerform(\warp).tryPerform(\asSpecifier),nativeSpec:spec.notNil,polarity:polarity,amount:amount,modCurve:modCurve));this.syncParamConfig;^p;
+        p=this.buildParam((id:id,base:base,min:spec.tryPerform(\minval),max:spec.tryPerform(\maxval),warp:spec.tryPerform(\warp).tryPerform(\asSpecifier),nativeSpec:spec.notNil,polarity:polarity,baseSmoothing:baseSmoothing,amount:amount,modCurve:modCurve));this.syncParamConfig;^p;
     }
     param { |id|this.requireAlive;^params[id.asSymbol] ?? {Error("AWBCoreTool: unknown parameter").throw} }
     removeParam { |id|var param=this.param(id);params.removeAt(id.asSymbol);param.removeDependant(paramObservers.removeAt(param));param.free;this.syncParamConfig;^param}
@@ -171,9 +171,9 @@ AWBCoreTool : Tool {
             range=if(param.nativeSpec){param.spec}{polarity.asSpec};
             if(range.minval!=p[\min] or:{range.maxval!=p[\max]} or:{range.warp.asSpecifier!=p[\warp]}){Error("AWBCoreTool: parameter range differs").throw};
             AWParam.finite(p[\base],"base");if(p[\base]<range.minval or:{p[\base]>range.maxval}){Error("AWBCoreTool: base outside preset range").throw};
-            param.checkAmount(p[\amount],polarity);AWParam.curve(p[\modCurve]);AWParam.curve(p[\baseCurve]);AWParam.curve(p[\amountCurve])
+            param.checkAmount(p[\amount],polarity);AWParam.curve(p[\modCurve]);AWParam.curve(p[\baseCurve]);AWParam.curve(p[\amountCurve]);AWParam.duration(p[\baseSmoothing] ? 0.5)
         };
-        specs.do{|p|var param=this.param(p[\id]);param.setPolarity(p[\polarity] ? param.polarity).setBase(p[\base]).setAmount(p[\amount]).setModCurve(p[\modCurve]).transitionCurves(p[\baseCurve],p[\amountCurve])};this.syncParamConfig;^this;
+        specs.do{|p|var param=this.param(p[\id]);param.setPolarity(p[\polarity] ? param.polarity).baseSmoothing_(p[\baseSmoothing] ? 0.5).setBase(p[\base]).setAmount(p[\amount]).setModCurve(p[\modCurve]).transitionCurves(p[\baseCurve],p[\amountCurve])};this.syncParamConfig;^this;
     }
     close {
         var busList;if(closed){^this};closed=true;ready=false;ServerQuit.remove(quitHook,server);

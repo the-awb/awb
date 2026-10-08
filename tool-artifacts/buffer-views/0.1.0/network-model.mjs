@@ -8,8 +8,9 @@ export function headPreset(mode){
   const times=mode==='quad'?[.25,.5,.75,1]:[.5,.5,1,1];
   return times.map((value,i)=>({id:`h${i+1}`,enabled:mode==='A'?i<2:mode==='B'?i>=2:true,unit:'fraction',value,amount:1,left:i%2?0:.5,right:i%2?.5:0}));
 }
-// A legacy loop-mode action chooses its base value; head toggles never normalize feedback.
-export const loopFeedback=cell=>cell.heads.filter(h=>h.enabled).length===4?.5:1;
+// Both pairs halve the master range; three manually enabled heads use the same conservative ceiling.
+export const feedbackCeiling=cell=>cell.heads.filter(h=>h.enabled).length>2?.5:1;
+export const loopFeedback=feedbackCeiling;
 export const inputSources=['clean','pro2','sc1','sc2'];
 export function defaults({sources=inputSources}={}){
   const periods=[8,2,.5,16],modes=['AB','quad','quad','AB'];
@@ -39,7 +40,7 @@ export function validate(candidate,{resolveTiming=true}={}){
     number(cell.effectLevel,0,2,'FX level');number(cell.dryLevel,0,1,'Dry level');number(cell.beats,.001,256,'Beats');
     if(!['seconds','beats'].includes(cell.timingMode)||![1,2,4,8,16,32,64].includes(cell.divisor)||typeof cell.triplet!=='boolean')throw new Error('Invalid rhythmic timing');
     if(resolveTiming&&cell.timingMode==='beats')cell.seconds=beatSeconds(cell,c.tempo);
-    number(cell.seconds,.01,c.reserveSeconds,'Head timing span');number(cell.inputGain,0,2,'Input');number(cell.feedback,0,1.1,'Feedback');
+    number(cell.seconds,.01,c.reserveSeconds,'Head timing span');number(cell.inputGain,0,1,'Input');number(cell.feedback,0,feedbackCeiling(cell),'Feedback');
     if(!Array.isArray(cell.heads)||cell.heads.length!==4)throw new Error('Four declared heads required');
     cell.heads.forEach((h,j)=>{if(h.id!==`h${j+1}`||typeof h.enabled!=='boolean'||!['fraction','seconds'].includes(h.unit))throw new Error('Invalid head');
       h.amount??=1;number(h.amount,0,1,'Head amount');
@@ -64,6 +65,11 @@ export function command(current,p){
     }else throw new Error('Unsupported cell edit');
   }else if(p.action==='route'&&p.id in c.routes)c.routes[p.id]=p.value;
   else throw new Error('Unsupported control');
+  // Preserve feedback's fraction of its old range when changing enabled heads.
+  if(p.action==='head'||p.action==='preset'){
+    const cell=c.cells.find(v=>v.id===p.cell),before=current.cells.find(v=>v.id===p.cell);
+    cell.feedback=before.feedback/feedbackCeiling(before)*feedbackCeiling(cell);
+  }
   return {config:validate(c),clear};
 }
 export function graphFor(c){

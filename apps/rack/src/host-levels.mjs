@@ -4,7 +4,7 @@ export function attachHostLevels(store,transport,hostOrigin){
  if(!hostOrigin||window.parent===window)return()=>{};
  const target=new URL(hostOrigin);if(target.protocol!=='http:'||target.hostname!=='127.0.0.1')throw Error('Invalid host origin');
  const post=m=>window.parent.postMessage(m,target.origin);
- const state=()=>post({type:'awb:rack-levels',connected:transport.value.connected,armed:transport.value.armed,controls:store.controls.filter(d=>d.region.scope==='global').map(d=>({id:d.id,min:d.region.min,max:d.region.max,step:d.region.step,value:store.get(d.id)}))});
+ const state=()=>post({type:'awb:rack-levels',connected:transport.value.connected,armed:transport.value.armed,controls:store.controls.filter(d=>d.region.scope==='global').map(d=>({id:d.id,min:d.region.min,max:d.region.max,step:d.region.step,curve:d.region.curve,unity:d.region.unity,value:store.get(d.id)}))});
  const values=new Map();let timer;
  const off=store.subscribeAll(e=>{if(e.kind==='value'&&e.id.startsWith('global/')){values.set(e.id,e.value);if(!timer)timer=setTimeout(()=>{timer=null;post({type:'awb:rack-level-delta',changes:[...values].map(([id,value])=>({id,value}))});values.clear()},16)}else if(e.kind==='structure')state()});
  const status=()=>state();transport.listeners.add(status);

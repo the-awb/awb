@@ -52,7 +52,7 @@ function run(file, bypassApiGate = false, skipMissing = false) {
   catch (e) { outcome=e.message; notes.push(e.stack); }
   return {file,kind:'offline source/interface diagnostic; not host execution',bypassApiGate,skipMissing,selectedApi:api,outcome,missing,calls: calls.length,notes};
 }
-const results=[run(new URL('./AWBSetMapper.control.js',root).pathname)];
+const results=[run(process.argv[2] || new URL('./AWBSetMapper.control.js',root).pathname)];
 fs.writeFileSync(new URL('./interface-check.json',root),JSON.stringify(results,null,2)+'\n');
 console.log(JSON.stringify(results.map(({outcome,missing,calls,notes})=>({outcome,missing,calls,notes:notes.filter(n=>!n.includes('\n'))}))));
 if(results.some(r=>r.missing.length||!r.outcome.startsWith('init reached')))process.exitCode=1;

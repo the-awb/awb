@@ -11,7 +11,7 @@ Routine({
     check.value(p.baseTarget==0.6 and:{(p.cachedBase-0.42).abs<1e-6},"readback does not replace requested target");
     condition=Condition.new;count=0;
     12.do{p.getBase({|base,error|check.value(error.isNil and:{(base-0.42).abs<1e-6},"coalesced callback reads base");count=count+1;if(count==12){condition.unhang}})};condition.hang;
-    midi=p.createMidiSource(nil,0,21,0,127,true,false);
+    midi=p.createMidiSource(nil,0,21,0,127,true,false).softPickup(0,0);
     midi.receiveCC(10);midi.receiveCC(30);midi.receiveCC(53);
     check.value(midi.latched.not and:{p.baseTarget==0.6},"MIDI pickup awaits observed base rather than target/cache");
     0.2.wait;
@@ -20,6 +20,11 @@ Routine({
     p.setBase(0.7,2);check.value(midi.latched.not,"external transition rearms attached source");
     midi.receiveCC(100);p.removeSource(midi);0.2.wait;
     check.value(p.baseTarget==0.7 and:{midi.closed},"late readback after MIDI removal cannot write parameter");
+    midi=p.createMidiSource(nil,0,22,0,127,true,false).softPickup(0.2,0.15);
+    midi.receiveCC(53);0.2.wait;
+    check.value(midi.pickupPhase==\warning and:{midi.latched.not} and:{(p.baseTarget-0.42).abs<1e-6},"observed read starts soft pickup at actual base");
+    midi.receiveCC(100);0.4.wait;
+    check.value(midi.latched and:{midi.pickupPhase==\idle} and:{(p.baseTarget-(100/127)).abs<1e-6},"soft pickup consumes latest CC without repeated read requests");p.removeSource(midi);
     q=core.createParam(\timeout,0.991);condition=Condition.new;
     q.getState({|state,error|check.value(state.isNil and:{error.notNil},"missing readback times out with explicit error");condition.unhang});condition.hang;
     condition=Condition.new;q.getState({|state,error|check.value(state.isNil and:{error.notNil},"closing parameter resolves pending read");condition.unhang});q.free;

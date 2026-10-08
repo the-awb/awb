@@ -535,3 +535,145 @@ Earth5/Echo20 GUI/reserve reservation ended 2026-10-07T22:27:52.334507+00:00, PI
 Delay AWParam module-GUI shared functional declaration 2026-10-07T23:11:24.648396+00:00: controller 58572; bounded private sclang/scsynth UDP57975/57976, SC128/44.1kHz, muted hardware output, no device/rate/buffer changes. Checks actual head base/modulation audio, module shared GUI and reader lifecycle. The audition engine remains stopped; no other engine is touched. No performance claim. Evidence /private/tmp/awb-live-delay-audio and /private/tmp/awb-delay-param-gui.
 
 Delay AWParam module-GUI functional check ended 2026-10-07T23:13:14.579694+00:00: PASS,30 SC/audio assertions,11 Node audio-bridge checks,9 real Electron GUI checks,19 non-audio GUI checks and14 focused Node tests. Private engine exited0 and owned UDP57975/57976 are free. Audition remains stopped; no device settings changed. No performance claim.
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 81148, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 81502, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 81734, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 81940, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 81983, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 82074, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 82271, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 82344, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 82535, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 82617, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 83006, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 83133, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 83281, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 83478, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 83677, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 83932, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 83962, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 84113, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 84278, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-functional"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-functional
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 84386, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-delivery"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-delivery
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 84542, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-presets"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-presets
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 84819, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-migration-final-clean"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-migration-final-clean
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 85300, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v1"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v1
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 85396, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v2"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v2
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 85483, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v3"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v3
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 85685, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v4"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v4
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 85789, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v5"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v5
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 85962, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v6"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v6
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 86265, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v7"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v7
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 86570, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v8"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v8
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 86827, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-envelope-matrix-v9"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-envelope-matrix-v9
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 87024, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-deci-envelope-lfo"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-deci-envelope-lfo
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 87092, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-deci-envelope-lfo-repeat"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-deci-envelope-lfo-repeat
+
+LiveSet migration functional reservation: {"owner": "AWB live-set migration", "pid": 87154, "useMode": "exclusive-resource-functional", "exclusiveResources": ["private test engine", "MOTU audio device"], "quietMachine": false, "sampleRate": 44100, "scBlock": 256, "hardwareBuffer": 512, "output": "silent: physical inputs disconnected", "evidence": "/private/tmp/awb-deci-envelope-lfo-final"}
+
+LiveSet migration functional reservation released; evidence /private/tmp/awb-deci-envelope-lfo-final
+
+8 October: Stutter startup functional check, shared use. Private UDP 57923, Mac mini Speakers, no physical inputs or hardware output writers; existing MOTU engine untouched. Evidence `/private/tmp/awb-stutter-20261008/realtime.log`. No CPU or quiet-machine qualification.
+Built-in output-only device refused initialization (CoreAudio stream format); private server retry uses BlackHole 2ch, no input readers or hardware output writers. The MOTU engine remains untouched.
+Stutter functional check released: 9/9 checks passed on private BlackHole server; UDP 57923 server quit. Existing MOTU set was not touched. Evidence `/private/tmp/awb-stutter-20261008/realtime-virtual.log`.
+
+8 October: MIDI recovery probes released. Private UDP 57923 / BlackHole server quit; full-library MIDI functional probe passed 3 checks, threshold-only pickup passed 32 checks, actual sclang/Node bridge passed 48. GUI tests used isolated non-audio hosts. Existing MOTU server and MIDI interpreter were not modified. Evidence `/private/tmp/awb-midi-pickup-full-library.log` and `/private/tmp/awb-pickup-bypass-*.log`.

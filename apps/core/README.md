@@ -58,8 +58,17 @@ fixture. The test runner constructs this private library without installing it.
 
 `set` and `setI` alias `setBase`. `setM` converts 0..127 through the parameter's
 ControlSpec, quantizing only at that MIDI boundary. Omitting the base at
-construction uses the ControlSpec default. `setBase`/`setAmount` default duration
-to **0** (immediate) and curve to their configured transition curve (initially 0).
+construction uses the ControlSpec default. `setBase`/`setAmount` default envelope
+duration to **0** and curve to their configured transition curve (initially 0).
+Base passes through a server-side `Lag.kr` after that envelope and before
+modulation is added. `baseSmoothing` defaults to **0.5 seconds**, the SC Lag
+60 dB settling time (about 99.9% of a step). It applies to explicit zero-duration
+edits and timed ramps alike, so scene base values settle after their nominal
+end time. Amount and incoming modulation are not delayed by this base lag.
+Set `param.baseSmoothing = 0` for immediate base changes, or supply
+`baseSmoothing: 0` in AWParam options/core configuration. `createParam` accepts
+it as its final optional argument. Smoothing operates in normalized space,
+starts at the supplied initial value and adds no Synth nodes or buses.
 `transitionCurves(base, amount)` changes those defaults; `setModCurve(curve)`
 changes modulation shaping separately. Curves accept finite numeric SC Env
 curvature within -16..16, or `\lin`/`\linear`. Named exponential/sine envelopes
@@ -245,9 +254,24 @@ CC injection without registering a callback (used by the private tests).
 Closing the parameter frees its attached sources. These are language-side input
 objects; they allocate no extra buses or Synths.
 
-MIDI pickup uses one-CC-step proximity or crossing of the observed base. Once
-latched, CC edits write immediately and cancel the base transition. Changes made
-elsewhere rearm pickup. MIDI input hardware was not exercised by the private tests.
+MIDI pickup uses one-CC-step proximity or crossing of the observed unmodulated
+base (or amount for a field source). Continuous controls hold the observed value
+for one second, with an amber GUI flash. Movement during that hold never cancels
+pickup. At hold-end the source captures `delta = currentController - heldValue`.
+Control becomes live immediately: `output = currentController - delta * (1 - progress)`.
+The fixed delta fades linearly to zero over 0.5 seconds; controller movement passes
+through at full sensitivity during the fade. The output stays within the MIDI range.
+This operates in normalized controller space, preserving the parameter's native spec.
+A running base/amount envelope is frozen at its observed value on crossing.
+
+GUI/automation edits, range/polarity changes, detachment and closure cancel deferred
+work and rearm pickup. Discrete choice controls retain immediate stepped pickup.
+`source.softPickup(wait, fade)` changes the timing; `softPickup(0, 0)` retains
+immediate legacy pickup. A 30 Hz timer reduces the offset through native server
+ramps; incoming CC movement updates immediately; the next timer tick resumes the offset ramp.
+No new synth or bus is allocated. GUI phase messages occur only on state changes,
+and recovery snapshots include the current phase. Hardware MIDI was not exercised
+by the private tests.
 
 ### Live-set ownership and playback
 
@@ -401,3 +425,14 @@ Private verification in `/private/tmp/awb-tail-gate-20261006-final` adds 15 cont
 and 35 actual offline DSP checks: stopped/resumed DSP progress, retained tails,
 server modulation, interrupted drains, timed transitions, hard caps and cleanup.
 No CPU reduction or hardware timing result is inferred from those functional tests.
+
+
+## AWParam GUI handoff
+
+[Implementation specification](docs/AWPARAM_GUI_HANDOFF.md), 7 October 2026:
+base knob, overall amount ring, effective-output arc and source amount/curve
+panel, with independent base/amount change events, compact control-bridge output
+leases, prompt local editing and equal-input SVG versus
+Canvas2D comparison. The GUI and bridge additions are merged into `integration/bw-sc`; live audio qualification remains pending.
+
+Native linear AWParams can call `rescaleLinearRange(minimum, maximum)` to change physical units while preserving normalized base/amount ramps, mappings and MIDI range position. This emits `spec` metadata and a rescaled base target; inspectors update their ranges. Delay head mode uses this for the 100%/50% feedback ceiling.

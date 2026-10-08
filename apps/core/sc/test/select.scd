@@ -19,7 +19,7 @@ try {
     now=0.05;emit.value([\g_new,1,0,0]);now=0.1;
     mix=AWBVerbMixProfile(server.defaultGroup,server,(sendFunction:emit,
         ownFunction:{|n|owned.add(n)},disownFunction:{|n|owned.remove(n)}));
-    check.value("six AWParams plus selector nodes share ownership",owned.size==41);
+    check.value("seven AWParams plus selector nodes share ownership",owned.size==44);
     check.value("native baseline controls",mix.valuesAt(0)==AWBVerbMixProfile.defaultBases);
     check.value("depths apply to base and clip",mix.valuesAt(0.25)==[0.525,0.78,0,0,0.4]);
     check.value("interpolation in normalized space",(mix.valuesAt(0.375)-[0.075,0.89,0.225,0.05,0.355]).abs.maxItem<1e-6);
@@ -34,13 +34,14 @@ try {
         Out.ar(0,K2A.ar(volumes++[position])++[DelayN.ar(K2A.ar(gain),0.4,0.3),(K2A.ar(AWBVerbMixProfile.amplitude(textureVolume))*0.2).tanh]);
     });emit.value([\d_recv,def.asBytes]);SynthDescLib.global.add(def.asSynthDesc)}.value;
     monitor=Synth.basicNew(\selectMonitor,server);emit.value(monitor.newMsg(server.defaultGroup,[],\addToTail));mix.bindTo(monitor);mix.selector.mapTo(monitor,\position);
-    now=0.4;mix.selector.setBase(0.25);
-    now=0.8;mix.selector.setBase(0.375);
-    now=1.2;mix.selector.setBase(0.5);
-    now=1.6;mix.selector.setBase(0.75);
-    now=2.0;mix.selector.setBase(1);
+    mix.selector.baseSmoothing=0;
+    now=0.4;mix.selector.setBase(0.25,0);
+    now=0.8;mix.selector.setBase(0.375,0);
+    now=1.2;mix.selector.setBase(0.5,0);
+    now=1.6;mix.selector.setBase(0.75,0);
+    now=2.0;mix.selector.setBase(1,0);
     now=2.4;mix.setProfile(3,[0,0,0,0,0]);
-    now=2.8;mix.selector.setBase(0);mix.selector.setAmount(0.5);
+    now=2.8;mix.selector.setBase(0,0);mix.selector.setAmount(0.5);
     borrowed=Bus.control(server,1);emit.value([\c_set,borrowed.index,0.5]);mix.addModulation(\unchangedBlender,borrowed);
     now=3.2;mix.selector.removeModulation(\unchangedBlender);
     check.value("upstream bus remains borrowed",borrowed.index.notNil);

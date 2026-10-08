@@ -1,0 +1,7 @@
+base-warning 0.300151625
+amount-warning 0.300248165
+base-ramping 1.300165845
+amount-ramping 1.300286697
+controller-move 1.550315346
+amount-idle 1.801765154
+base-idle 1.801843386

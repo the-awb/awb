@@ -10,6 +10,7 @@ for package in ['core','chain','rack','param','live-set']:
  for p in (root/f'apps/{package}/sc/classes').glob('*.sc'):shutil.copy2(p,build/'classes'/p.name)
 for p in (root/'apps/live-set/sc/dependencies/unified-buffer').glob('*.sc'):shutil.copy2(p,build/'classes'/p.name)
 shutil.copy2(root/'apps/core/sc/test/TestServer.sc',build/'framework/TestServer.sc')
+(build/'framework/LiveTestMidi.sc').write_text('AWBLiveTestMidiOut { var <messages; *new { ^super.new.init } init { messages=List.new; ^this } control { |channel,cc,value| messages.add([channel,cc,value]); ^this } }\n')
 # Metadata fixture only; tests never attach a native reader to this PID.
 (build/'framework/LanguageTestServer.sc').write_text('AWBLiveLanguageTestServer : AWBCoreTestServer { pid { ^thisProcess.pid } }\n')
 shutil.copy2(Path('/Library/Application Support/SuperCollider/Extensions/EnvDetect3/EnvDetect3.sc'),build/'classes/EnvDetect3.sc')

@@ -1,0 +1,380 @@
+{
+  "date": "2026-10-08",
+  "branch": "integration/bw-sc",
+  "state": "uncommitted class migration; envelope matrix passes; intermittent VST UI startup diagnostic remains under investigation",
+  "settings": {
+    "sampleRate": 44100,
+    "scBlock": 256,
+    "hardwareBuffer": 512,
+    "outputs": 4,
+    "physicalInputs": false,
+    "output": "master muted before control/preset changes"
+  },
+  "verification": {
+    "realEngineLatest": {
+      "assertionsPassed": 127,
+      "runnerPassed": false,
+      "unexpectedError": "PluginBridge::pollUIThread: plugin 2 doesn't exist (anymore)",
+      "source": "/private/tmp/awb-migration-final-clean/engine.log"
+    },
+    "realEngineEarlier": {
+      "assertionsPassed": 112,
+      "unexpectedErrors": 0,
+      "source": "/private/tmp/awb-migration-delivery/engine.log"
+    },
+    "SCContract": {
+      "passed": 21
+    },
+    "actualSCLanguageBridge": {
+      "passed": 16,
+      "registryParameters": 160
+    },
+    "nodeLiveRackParam": {
+      "passed": 71,
+      "skipped": 2,
+      "total": 73
+    },
+    "shellHost": {
+      "passed": 3,
+      "skipped": 0
+    },
+    "coreRegression": {
+      "passed": true
+    },
+    "envelopeMatrix": {
+      "passed": 5110,
+      "failed": 0,
+      "runnerPassed": true,
+      "categories": {
+        "other": 3,
+        "audio send reaches": 16,
+        "detector isolation": 240,
+        "envelope fader": 48,
+        "follower response": 28,
+        "instrument follower": 3,
+        "full graph": 1218,
+        "blender": 504,
+        "registered intended edge": 33,
+        "route isolation": 2178,
+        "actual mapped delay": 32,
+        "negative envelope amount": 19,
+        "zero amount": 33,
+        "modulation curve": 99,
+        "upper clipping": 33,
+        "lower clipping": 19,
+        "Deci": 6,
+        "Verb": 120,
+        "FX envelope influence": 120,
+        "head": 56,
+        "original delay envelope preset": 224,
+        "actual VST mapping": 78
+      },
+      "source": "/private/tmp/awb-envelope-matrix-v9/engine.log",
+      "savedLog": "engine-envelope-matrix.log",
+      "noScenes": true,
+      "physicalInputs": false,
+      "output": "muted",
+      "GUIWindow": false,
+      "CPUQualification": false,
+      "nativeQuery": "bounded g_queryTree with bus reads on installed SC 3.12",
+      "VSTMappings": 39,
+      "VSTSourceLevels": [
+        0.1,
+        0.55
+      ]
+    },
+    "deciLFOPrior": {
+      "passed": 20,
+      "runnerPassed": false,
+      "unexpectedError": "PluginBridge::pollUIThread: plugin 3 doesn't exist (anymore)",
+      "source": "/private/tmp/awb-deci-envelope-lfo/engine.log"
+    },
+    "deciLFORepeat": {
+      "passed": 20,
+      "runnerPassed": true,
+      "source": "/private/tmp/awb-deci-envelope-lfo-repeat/engine.log"
+    },
+    "deciLFOFinal": {
+      "passed": 60,
+      "failed": 0,
+      "runnerPassed": true,
+      "amounts": [
+        -1,
+        -0.5,
+        0,
+        0.5,
+        1
+      ],
+      "sourceValues": [
+        0.3,
+        1.3,
+        -0.3
+      ],
+      "lfoHz": 0.04,
+      "source": "/private/tmp/awb-deci-envelope-lfo-final/engine.log",
+      "savedLog": "engine-deci-lfo-final.log",
+      "includesFinalPositiveClippingAndSourceClamp": true
+    },
+    "pickupRecoveryAndMixLibrary20261008": {
+      "state": "uncommitted; verified; running user host unchanged",
+      "pickupEnabled": true,
+      "pickupWait": 0,
+      "pickupFade": 0,
+      "nodeChecks": 30,
+      "pickupChecks": 32,
+      "languageBridgeChecks": 48,
+      "shellChecks": 111,
+      "savedOSCCollections": {
+        "config.json": 11,
+        "config (jailhouse).json": 11,
+        "INEFFIBLEED_config.json": 7,
+        "config_BLANK.json": 1
+      },
+      "audioQualification": false,
+      "evidence": [
+        "/private/tmp/awb-saved-sets-node.log",
+        "/private/tmp/awb-saved-sets-gui.log",
+        "/private/tmp/awb-pickup-bypass-unit.log",
+        "/private/tmp/awb-pickup-bypass-bridge.log"
+      ]
+    },
+    "shellLauncherButton20261008": {
+      "state": "uncommitted; built and verified",
+      "realShellWindowTest": true,
+      "liveSetGUIChecks": 113,
+      "requiresShellRestart": true,
+      "requiresSCRecompile": false,
+      "evidence": [
+        "/private/tmp/awb-open-shell-home.log",
+        "/private/tmp/awb-open-shell-gui.log"
+      ]
+    }
+  },
+  "covered": [
+    "no-IDE opener and bound surface creation (window suppressed)",
+    "28 followers,42 blenders,57 modulation connections,94 registered producers",
+    "actual MIDI CC handlers, pickup and unity ceilings",
+    "actual preset note handlers 66\u201380",
+    "silent scene MIDI/Shell coordination and logging",
+    "recording MIDI sink for optional Bitwig control output",
+    "root close leaves only server root/default groups",
+    "16 audio-to-control sends and envelope fader isolation/scaling",
+    "42 blenders: all 8 input combinations, endpoints and live setters",
+    "full graph with each follower isolated and all followers combined",
+    "33 envelope destinations: isolation, signed amounts, amount-zero, curves and clipping",
+    "Verb poles/interpolation and actual tapered ingress audio with captured branch/wet gains",
+    "seven original delay-envelope presets checked against independent archived literals",
+    "all 24 tapehead routes at actual native mapped controls",
+    "39 actual VST mappings with two simultaneous source levels",
+    "final Deci signed envelope plus LFO arithmetic, including negative and overrange sources"
+  ],
+  "unverified": [
+    "Physical FCB audition and full scene note/source matrix runtime retest",
+    "physical-input audible FX and VST/plugin parity",
+    "actual Bitwig adapter output",
+    "full musical instruments/patterns/scenes",
+    "new structure performance/headroom and GUI visual audition"
+  ],
+  "knownBoundaries": [
+    "original musical assets are opt-in and require external classes/assets",
+    "no original scene actions launched",
+    "legacy delay external tap/reverse/envelope-wrapper controls unavailable",
+    "timing slider remains a first-pass approximation",
+    "Mast has native AWBChain; other effect namespaces borrow first-pass profile processors",
+    "Deci AWParam effective value includes base/envelope; final plugin bus additionally includes captured LFO terms",
+    "Stutter/Splutter/Mast EQ outputs remain unavailable; retained intermediate signals are tested but have no invented native destinations"
+  ],
+  "cleanup": {
+    "serverExited": true,
+    "languageExited": true,
+    "lockReleased": true
+  },
+  "fixes": [
+    "AWBLiveSignal constructor placed settings/writer in incorrect instance slots; live blender setters now reach the server",
+    "Deci depth/folding envelopes now connect to their public bipolar AWParams, at captured route depths 0.2/0.53; profile retains LFO terms without applying envelope twice"
+  ],
+  "sourceSnapshots": {
+    "AWBLiveSignal.sc": "50ebc793add5caa11550e566d98745ce92dc55d18d30080fb728007683dec3b2",
+    "AWBLiveSet.sc": "3aa7378a68d8474180a22771819926ff96386431f32d2dcaaa7b276bd428db9c",
+    "AWBFXMixProfile.sc": "22961d532f8b5ac2859586ff632f51781d203984d13abc14ddaa30813d90ca99",
+    "matrixProfileCheckpoint": "5401158e9afc810c5c162c937219d883c25f3c2cdfc2f753161822c5d2fcfddb",
+    "note": "Final positive-LFO clipping/source clamp adjustments follow the full matrix checkpoint and are covered by the 60-check targeted actual-engine run."
+  },
+  "sceneMap20261008": {
+    "source": "/Users/willy/Documents/GitHub/osc-config/transition.js",
+    "notesByScene": [
+      90,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "channel": null,
+    "sourceUIDRequired": true,
+    "transitionAlgorithmCopied": false,
+    "extendedBridgeStatus": "failed: sclang native backtrace crash; 14 checks before crash",
+    "expectedRejectionPatchStatus": "source edited; compilation/runtime retest pending",
+    "nodeRuntimeCatalog": {
+      "passed": 7,
+      "failed": 0
+    },
+    "crashes": [
+      {
+        "path": "/Users/willy/Library/Logs/DiagnosticReports/sclang-2026-10-08-105245.ips",
+        "pid": 10394,
+        "signal": "SIGABRT",
+        "frames": [
+          "__pthread_kill",
+          "pthread_kill",
+          "abort"
+        ]
+      },
+      {
+        "path": "/Users/willy/Library/Logs/DiagnosticReports/sclang-2026-10-08-105310.ips",
+        "pid": 10418,
+        "signal": "SIGSEGV",
+        "frames": [
+          "DebugFrameConstructor::fillDebugFrame(VMGlobals*, PyrFrame*, pyrslot*)",
+          "prGetBackTrace(VMGlobals*, int)",
+          "doPrimitive(VMGlobals*, PyrMethod*, int)"
+        ]
+      },
+      {
+        "path": "/Users/willy/Library/Logs/DiagnosticReports/sclang-2026-10-08-105327.ips",
+        "pid": 10465,
+        "signal": "SIGSEGV",
+        "frames": [
+          "DebugFrameConstructor::fillDebugFrame(VMGlobals*, PyrFrame*, pyrslot*)",
+          "prGetBackTrace(VMGlobals*, int)",
+          "doPrimitive(VMGlobals*, PyrMethod*, int)"
+        ]
+      },
+      {
+        "path": "/Users/willy/Library/Logs/DiagnosticReports/sclang-2026-10-08-105349.ips",
+        "pid": 10494,
+        "signal": "SIGSEGV",
+        "frames": [
+          "DebugFrameConstructor::fillDebugFrame(VMGlobals*, PyrFrame*, pyrslot*)",
+          "prGetBackTrace(VMGlobals*, int)",
+          "doPrimitive(VMGlobals*, PyrMethod*, int)"
+        ]
+      },
+      {
+        "path": "/Users/willy/Library/Logs/DiagnosticReports/sclang-2026-10-08-105411.ips",
+        "pid": 10521,
+        "signal": "SIGSEGV",
+        "frames": [
+          "DebugFrameConstructor::fillDebugFrame(VMGlobals*, PyrFrame*, pyrslot*)",
+          "prGetBackTrace(VMGlobals*, int)",
+          "doPrimitive(VMGlobals*, PyrMethod*, int)"
+        ]
+      },
+      {
+        "path": "/Users/willy/Library/Logs/DiagnosticReports/sclang-2026-10-08-105444.ips",
+        "pid": 10564,
+        "signal": "SIGSEGV",
+        "frames": [
+          "DebugFrameConstructor::fillDebugFrame(VMGlobals*, PyrFrame*, pyrslot*)",
+          "prGetBackTrace(VMGlobals*, int)",
+          "doPrimitive(VMGlobals*, PyrMethod*, int)"
+        ]
+      },
+      {
+        "path": "/Users/willy/Library/Logs/DiagnosticReports/sclang-2026-10-08-105647.ips",
+        "pid": 10767,
+        "signal": "SIGSEGV",
+        "frames": [
+          "DebugFrameConstructor::fillDebugFrame(VMGlobals*, PyrFrame*, pyrslot*)",
+          "prGetBackTrace(VMGlobals*, int)",
+          "doPrimitive(VMGlobals*, PyrMethod*, int)"
+        ]
+      }
+    ]
+  },
+  "soundbathPage20261008": {
+    "source": "/Volumes/ARMED WITH SOUND/SuperCollider/live sets/dfc 2026 sc migration/scenes dfc 2026 soundbath.scd",
+    "originalFolderEdited": false,
+    "baseInterface": "b",
+    "silentSCContracts": {
+      "passed": 23,
+      "path": "/private/tmp/awb-soundbath-current-20261008/contract.log"
+    },
+    "realLanguageNodeUDP": {
+      "passed": 40,
+      "path": "/private/tmp/awb-live-language/results.json"
+    },
+    "clockChecks": {
+      "passed": 4,
+      "path": "/private/tmp/awb-clock-contract.log"
+    },
+    "compileOnly": {
+      "units": 5,
+      "path": "/private/tmp/awb-soundbath-compile.log"
+    },
+    "audioEngineStarted": false,
+    "originalScenesLaunched": false,
+    "unavailable": [
+      "Stutter: four guarded edits"
+    ],
+    "remaining": [
+      "Audition of sample playback, delay/rack routing and scene fidelity"
+    ]
+  },
+  "soundbathCompletionGate20261008": {
+    "continuation": "onReady schedules base.runTask after full launch returns",
+    "pagePath": "explicit migration folder for IDE block evaluation",
+    "SCContracts": 23,
+    "realLanguageNodeUDP": 42,
+    "lateScenesReplaceRegistry": true,
+    "compileOnlyBaseLaunchUnits": 2,
+    "audioEngineStarted": false,
+    "originalScenesLaunched": false,
+    "evidence": [
+      "/private/tmp/awb-after-base-20261008/contract.log",
+      "/private/tmp/awb-live-language/results.json",
+      "/private/tmp/awb-baselaunch-compile.log"
+    ]
+  },
+  "celloStutter20261008": {
+    "classContractsPassed": 27,
+    "languageChecksPassed": 9,
+    "audioRenderChecksPassed": 15,
+    "shellChecksPassed": 105,
+    "catalogChecksPassed": 5,
+    "bridgeChecksPassed": 42,
+    "baseLaunchCopiesCompiled": 2,
+    "hardwareOpened": false,
+    "originalScenesLaunched": false,
+    "evidence": "/private/tmp/awb-stutter-20261008",
+    "limitations": [
+      "Provisional base LFO rate and slow pan rate",
+      "Bitwig local sidechain/Polynom/Select-4 network is not reproduced",
+      "No new real-time CPU qualification",
+      "Built-in output-only device refused initialization; live functional probe used a virtual device"
+    ],
+    "realTimeFunctionalChecksPassed": 9,
+    "virtualAudioDeviceOpened": "BlackHole 2ch",
+    "nodeChecksPassed": 23,
+    "nodeChecksSkipped": 2,
+    "delayNamesCanonical": true,
+    "faderMaximumGain": 1
+  },
+  "baseLag20261008": {
+    "policy": "Always lag base envelope output before modulation; normalized-space Lag.kr; default 0.5 second 60dB settling; baseSmoothing=0 disables",
+    "coreSuitePassed": true,
+    "coreClassChecks": 81,
+    "renderedBaseLagAssertions": 26,
+    "liveSetClassChecks": 27,
+    "languageOSCChecks": 52,
+    "focusedNodeChecks": 9,
+    "electronGUIChecks": 114,
+    "audioHardwareOpened": false,
+    "userEngineModified": false,
+    "evidence": "/private/tmp/awb-base-lag-always-20261008"
+  }
+}

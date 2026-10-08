@@ -1,0 +1,40 @@
+{
+  "validatedAtUTC": "2026-10-04T20:51:01.730454+00:00",
+  "tracks": 65,
+  "devices": 290,
+  "hierarchy": "observed",
+  "directParameterRecords": 3094,
+  "screenshotExactMatches": 64,
+  "screenshotTruncatedPrefixMatches": 1,
+  "oscModuleMatches": 14,
+  "oscBusMatches": 17,
+  "removedInspectionController": true,
+  "templateHashUnchanged": true,
+  "oscExtensionHashUnchanged": true,
+  "phaseSources": [
+    {
+      "run": "1791142098490",
+      "source": "AWBSetMapper.control.js",
+      "sourceSha256": "a4f74f459546490ff7c06ad19ea2c13efa07958748677fbf6a5459ecc6cad1be",
+      "raw": "live-capture.jsonl"
+    },
+    {
+      "run": "1791145787283",
+      "source": "AWBParameterPass.control.js",
+      "sourceSha256": "4876e11113e46757c6fa76cee10740a8a48405a679c986141cc232ac64623a4a",
+      "raw": "parameter-pass.jsonl"
+    },
+    {
+      "run": "1791146757845",
+      "source": "AWBTrackStates.control.js",
+      "sourceSha256": "7f2d37cae02c12ba7090b07beefb3920ce72bb3cb2d621ee4922cfb4ab403dba",
+      "raw": "track-states.jsonl"
+    },
+    {
+      "run": "1791146597214",
+      "source": "AWBHierarchyPass.control.js",
+      "sourceSha256": "181eb9a5aaf063ae3cf005b0eb695312a9d686ff12f79e267a1c188b69a9f9b9",
+      "raw": "hierarchy-pass.jsonl"
+    }
+  ]
+}

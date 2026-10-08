@@ -83,7 +83,13 @@ Define a renderer-independent model with three distinct kinds of state:
 2. Observation: measured current native base, current signed overall amount and current effective output from direct shared-control reads, plus generation/sequence and binding freshness. Targets and transition commands arrive as independent change events. Each observed field is sent only when changed; static base/amount therefore generate no recurring payload. Every value has a declared native or normalized domain.
 3. Local UI: editing text, focus, panel expansion, selected renderer and pending operation tokens.
 
-Resolve commands with owning host/ToolInstance identity and param key, not a global name or arbitrary node ID. Reject stale bindings after owner closure/reboot. Commands cover base/global amount/global curve and standard source amount/curve. Preserve duration/curve support on existing global setters; normal knob edits use duration 0. Bridge handlers validate fields and return request-correlated accepted/rejected results. Do not automatically change MIDI/takeover semantics.
+Resolve commands with owning host/ToolInstance identity and param key, not a global name or arbitrary node ID. Reject stale bindings after owner closure/reboot. Commands cover base/global amount/global curve and standard source amount/curve. Preserve duration/curve support on existing global setters; normal knob edits use duration 0. Bridge handlers validate fields and return request-correlated accepted/rejected results. The separately requested soft MIDI pickup is implemented in AWMidiCCIn: one-second
+hold, then live CC minus a fixed offset captured at hold-end. The offset fades
+linearly over half a second; controller movement never cancels takeover.
+Inspectors carry sparse `pickupBase` / `pickupAmount` phase deltas and snapshot
+fields. The local amber flash is independent of bus telemetry and applies to
+SVG/Canvas knobs, delay fields and live-set faders. Disconnection clears transient
+cues. GUI dragging remains immediate; discrete choices retain their stepped path.
 
 Local mouse/keyboard edits paint the affected control on the next display frame, independently of incoming observation cadence. A base edit emits only a base change, and an amount edit only an amount change; include duration/curve/revision when required by that change. Curve and source edits likewise emit only their changed fields. Other clients and genuine language-origin changes receive these parameter-level deltas. Suppress redundant own-origin command echoes; acknowledgements/rejections still reconcile the initiating client. Observation never creates another edit. Reconnect obtains one fresh snapshot and binding epoch; do not replay obsolete gestures onto a new engine instance.
 
@@ -125,6 +131,7 @@ Implementation order: validated language route metadata/setters and parameter-le
 ## Implementation milestone (7 October 2026)
 
 The isolated `codex/awparam-gui` branch contains the direct native reader, shared sparse observer, three measured values, route/custom-writer APIs, Core entry deltas, optional borrowing inspector, reusable React SVG/Canvas panel, demo and focused tests. It is merged into `integration/bw-sc`; live class-library installation and audio qualification remain separate steps. See [implementation status](../../param/docs/IMPLEMENTATION.md) for passed checks and gates. Live GUI/engine qualification and controlled cost comparisons are pending the shared audio reservation. No GUI performance conclusion has been drawn from the native-read probe.
+
 
 ## Display revision (8 October 2026)
 

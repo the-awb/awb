@@ -25,14 +25,14 @@ export async function startRuntime({binding=envBinding(),controlObservations,bri
     if(d.revision!==null&&d.revision>state.revision+1){void sync().catch(()=>{});return}
     const p=state.params.find(p=>p.id===d.id);if(!p)return;
     if(d.source){const r=p.routes.find(r=>r.id===d.source);if(!r)return;if(d.field.startsWith('writer:')){const c=r.controls.find(c=>c.id===d.field.slice(7));if(!c)return;c.value=d.value}else r[d.field==='sourceAmount'?'amount':'curve']=d.value}
-    else if(d.metadata)Object.assign(p,d.metadata);else {const field={baseTarget:'base',amountTarget:'amount',modCurve:'modCurve'}[d.field];if(!field)return;p[field]=d.value}
+    else if(d.metadata)Object.assign(p,d.metadata);else {const field={baseTarget:'base',amountTarget:'amount',modCurve:'modCurve',pickupBase:'pickupBase',pickupAmount:'pickupAmount'}[d.field];if(!field)return;p[field]=d.value}
     state.revision=Math.max(state.revision,d.revision??0);
     for(const c of clients)if(!c.requests.has(d.origin))send(c,{type:'delta',delta:d});
   };
   const routes=(id,rows,revision)=>{if(syncing){queued.push(['routes',[id,rows,revision]]);return}const p=state.params.find(p=>p.id===id);if(p){p.routes=rows;state.revision=Math.max(state.revision,revision??0);broadcast({type:'routes',id,routes:rows})}};
   const status=(connected,error)=>{
     if(stopped)return;
-    if(!connected){state.connected=false;state.error=error;for(const c of clients)release(c);broadcast({type:'status',connected,error})}
+    if(!connected){state.connected=false;state.error=error;for(const p of state.params){p.pickupBase=p.pickupAmount='idle'};for(const c of clients)release(c);broadcast({type:'status',connected,error})}
     else if(!state.connected&&state.epoch&&!syncing)void sync().catch(()=>{});
   };
   const sync=()=>resyncTask??=(async()=>{
@@ -45,7 +45,7 @@ export async function startRuntime({binding=envBinding(),controlObservations,bri
   if(binding)try{bridge=await bridgeFactory(binding,{onDelta:delta,onRoutes:routes,onStatus:status,onRevision:r=>{if(state.connected&&r>state.revision&&!syncing)void sync().catch(()=>{})}});await sync()}catch(e){state.error=e.message;await bridge?.close();bridge=null}
   const command=async(c,m)=>{
     if(!m||typeof m!=='object')throw Error('Invalid command');
-    if(m.type==='visible'){if(typeof m.visible!=='boolean'||![8,15].includes(m.hz))throw Error('Invalid observation preference');if(m.ids!==undefined&&(!Array.isArray(m.ids)||m.ids.length>128||m.ids.some(id=>!state.params.some(p=>p.id===id))))throw Error('Invalid visible parameter IDs');c.ids=m.ids;c.visible=m.visible;c.hz=m.hz;acquire(c);return}
+    if(m.type==='visible'){if(typeof m.visible!=='boolean'||![8,15].includes(m.hz))throw Error('Invalid observation preference');if(m.ids!==undefined&&(!Array.isArray(m.ids)||m.ids.length>256||m.ids.some(id=>!state.params.some(p=>p.id===id))))throw Error('Invalid visible parameter IDs');c.ids=m.ids;c.visible=m.visible;c.hz=m.hz;acquire(c);return}
     if(m.type==='sync'){if(!bridge)throw Error('No parameter binding');return sync()}
     if(m.type!=='edit'||!state.connected||m.epoch!==state.epoch)throw Error('Stale or unavailable binding');
     if(typeof m.request!=='string'||!/^[a-zA-Z0-9_-]{1,64}$/.test(m.request)||c.requests.size>=128)throw Error('Invalid/full edit queue');

@@ -1,0 +1,7 @@
+/* Phase-only updates; the flash runs locally for SVG and Canvas hit surfaces. */
+[data-pickup="warning"] { border-radius:50%; outline:2px solid #ffc15a; outline-offset:-2px; animation:awb-pickup-flash .32s ease-in-out infinite alternate; }
+[data-pickup="ramping"] { border-radius:50%; outline:2px solid #eaaa43; outline-offset:-2px; }
+@keyframes awb-pickup-flash { from {box-shadow:0 0 1px #ffb43b55} to {box-shadow:0 0 9px #ffc15acc} }
+@media(prefers-reduced-motion:reduce){[data-pickup="warning"]{animation:none;box-shadow:0 0 5px #ffc15a99}}
+
+.rack-fader[data-pickup] { border-radius:3px; outline-offset:2px; }

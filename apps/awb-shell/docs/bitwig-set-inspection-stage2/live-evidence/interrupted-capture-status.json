@@ -1,0 +1,23 @@
+{
+  "status": "incomplete; awaiting restoration of Bitwig audio engine/device",
+  "run": "1791142098490",
+  "hostVersion": "4.3.10",
+  "api": 17,
+  "completedTracks": 64,
+  "totalTracks": 65,
+  "inspectedDevices": 289,
+  "lastCompletedTrack": "---BLANK---",
+  "pending": [
+    "Remaining Master branches",
+    "Group-parent identity pass",
+    "Track-state/effect-bank pass",
+    "Parameter-cache follow-up"
+  ],
+  "hostError": "Audio System No Longer Available: Device is no longer alive",
+  "errorLogPath": "/Users/willy/Library/Logs/Bitwig/BitwigStudio.log",
+  "errorTimeLondon": "2026-10-04 21:06:43",
+  "lastEvidenceTimeLondon": "2026-10-04T21:17:51.075067",
+  "captureSha256": "1d1f39663de1c1b41487e255cf4fdcc3987224c8b670d55e2f55f95aecfc0e06",
+  "captureBytes": 2063340,
+  "evidenceBoundary": "No completed snapshot. Values are bounded host-cache observations; audio-engine failure occurred during this run, and individual events do not have separate timestamps."
+}

@@ -1,7 +1,7 @@
 # Screenshot and OSC-controller cross-check
 
 4 October 2026. Reference evidence for the fixed `awb 5.2 (ef script)` instance.
-The expanded mapper has not yet produced a live capture.
+The completed [capture review](capture-review.md) and [overview](target-capture/overview.md) now supplement this original reference audit. All 65 screenshot rows and 14 module track positions agree; 17 configured bus positions agree with the dedicated effect bank.
 
 ## What the screenshots establish
 
@@ -18,7 +18,7 @@ buses, then `---BLANK---` and `Master`.
 
 [`screenshot-track-reference.json`](screenshot-track-reference.json) retains all 65
 visually transcribed labels and their inferred flat order. Index 43 is visibly truncated;
-its full name is unresolved. Indentation supports a hierarchy check but is not promoted
+the host resolves its full name as `constructiona t batersea heavy ambient noise`. Indentation supports a hierarchy check but is not promoted
 to a complete API parent tree. Grey styling is not assigned an invented activity/bypass meaning.
 
 ## Installed controller provenance
@@ -40,7 +40,7 @@ No rebuild, reinstall, MIDI input or OSC message was sent to the live controller
 `InterfaceGroup` uses flat `createTrackBank(..., true)` and resolves each module at
 `startIndex + trackOffset`. The audio group starts at 0; the FX group starts at 21.
 These are controller configuration positions, cross-checked against screenshot order.
-Only the first sixteen positions currently also have live API name observations.
+All fourteen module positions now have matching live API name observations.
 
 | Module | Flat index | Visible track | MIDI channel, zero-based | Effect-bank indices for bus controls/followers |
 | --- | --- | --- | --- | --- |
@@ -103,12 +103,10 @@ It sends remote control **0's modulated value**, rounded to increments of 1/512,
 bound to the bus gain knob. Local indices run over each module's configured bus array;
 they are not global bus-track indices. For example, mast's three configured positions
 15/10/8 correspond to `/envelopes/mast/0`, `/envelopes/mast/1`, `/envelopes/mast/2`.
-The actual remote-control targets, Tool state and live values still need host/UI proof.
+The capture now retains Tool state and current remote names/values. Hidden modulation targets and the existing OSC cursor page selection still need separate proof.
 
 This explains why collecting direct parameters alone would miss part of the interface
 Willy uses. The source provides a concrete checklist for the nested device and remote
 control capture without pretending to recover hidden routing from control labels.
 
-Next: activate the prepared one-shot controller in the stopped target, compare all 65
-captured names/order against this reference, then verify these device paths and fill
-the remaining routing annotations from the UI.
+The exact UUID matcher confirms zero root FX Layers on `Pro 2` (the source expects index 0), and one on Master (the source also expects index 1 for `stut 2`). These are concrete missing controller targets in this instance; no existing extension was edited. The nested UberMod devices are captured. Remaining work is human annotation of routing destinations and modulation assignments, with sources stated.

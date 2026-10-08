@@ -108,3 +108,36 @@ Both renderers map amount using the current polarity and clear stale gesture pre
 Validation: 28 parameter/live-set Node tests, 35 SC parameter/inspector checks, 43 rendered DSP assertions and the existing Core/registry/OSC/select/tail suite pass. 32 inspector and 21 embedded browser checks pass, covering polarity positions, bounded sliders, broad-band dragging, read-only output and compact source edits. Evidence: `/private/tmp/awb-param-amount-core-20261008/`, `/private/tmp/awb-param-amount-node.log`, `/private/tmp/awb-param-amount-browser.log`, `/private/tmp/awb-param-amount-delay-browser.log`. No live audio host or device was started or reset. The shell bundles are rebuilt for use; recompile the language and recreate parameter synths to use the updated DSP contract.
 
 The integration branch advanced during this revision with live-set commit `04cf85c`. That commit is retained in the merge. Validation against the combined sources passes 31 parameter/live-set Node tests, 32 inspector checks, 21 embedded checks and the full Core offline suite. Combined evidence uses `/private/tmp/awb-param-amount-integrated-*.log` and `/private/tmp/awb-param-amount-integrated-core-20261008/`.
+
+## Soft MIDI pickup — 8 October 2026
+
+Requested continuous pickup now freezes the observed base/amount for one second,
+flashes amber, then captures a fixed offset from the controller's position at
+hold-end. Control becomes live immediately, minus that offset fading linearly to
+zero over 0.5 seconds. Motion never cancels pickup or reduces movement sensitivity.
+Native specs and MIDI unity ceilings remain authoritative; discrete choices retain
+stepped pickup. BaseLaunch exposes wait/fade settings. Closing, detaching, external
+edits and polarity/range changes cancel deferred writes.
+
+Inspectors send phase deltas per parameter and include both field phases in bind
+snapshots. SVG, Canvas, compact delay fields, embedded tape controls and envelope
+faders use local CSS cues. No new DSP node or bus is allocated. The fade updates
+at 30 Hz for half a second, using native parameter ramps between updates. Incoming
+CCs pass their full movement through immediately; the next timer tick resumes the
+offset ramp. The server is queried for pickup once
+per read burst, rather than throughout the warning/fade. Disconnect clears cues.
+
+Validation after the fixed-delta correction: 27 pickup checks, 20 actual scsynth
+rendered control-bus checks, the full Core offline suite and 21 live-set language
+checks pass. A bounded scene GUI gate passes 78 checks, including the scene bridge
+call, visible countdown and completed recall. The old countdown timeout came from
+a fake AWBase bridge missing `launchScene`, now corrected. A full GUI rerun passes
+87 checks before a separate fullscreen window-manager geometry wait; the complete
+surface suite is not claimed passed. Earlier 32 Node tests, 42 inspector GUI checks
+and 20 focused pickup GUI checks are retained; the correction changes no renderer
+or bridge product code. Hardware MIDI and CPU headroom were not remeasured.
+The responsive-size assertion was aligned with the existing 32-pixel minimum
+when the fixture gained a real bound modulation field; product sizing did not
+change. [Saved verification](../../core/docs/soft-pickup-20261008/verification.json).
+Language changes require closing the set, restarting/recompiling the host and
+reopening. Renderer bundles were rebuilt. Changes remain uncommitted.
