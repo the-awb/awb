@@ -50,7 +50,7 @@ export async function startRuntime({binding=envBinding(),controlObservations,bri
     if(m.type!=='edit'||!state.connected||m.epoch!==state.epoch)throw Error('Stale or unavailable binding');
     if(typeof m.request!=='string'||!/^[a-zA-Z0-9_-]{1,64}$/.test(m.request)||c.requests.size>=128)throw Error('Invalid/full edit queue');
     const p=state.params.find(p=>p.id===m.id);if(!p||(m.field==='polarity'?!['unipolar','bipolar'].includes(m.value):!Number.isFinite(m.value)))throw Error('Unknown parameter or invalid value');
-    let bounds={base:[p.min,p.max],amount:[-8,8],modCurve:[-16,16],sourceAmount:[-8,8],sourceCurve:[-16,16]}[m.field];
+    let bounds={base:[p.min,p.max],amount:[p.polarity==='bipolar'?-1:0,1],modCurve:[-16,16],sourceAmount:[-8,8],sourceCurve:[-16,16]}[m.field];
     if(m.field.startsWith('writer:')){const field=p.routes.find(r=>r.id===m.source&&r.kind==='custom')?.controls?.find(c=>c.id===m.field.slice(7));if(field)bounds=[field.min,field.max]}
     if(m.field!=='polarity'&&(!bounds||m.value<bounds[0]||m.value>bounds[1]))throw Error('Value outside parameter range');
     if(m.field.startsWith('source')&&!p.routes.some(r=>r.id===m.source&&r.status==='connected'&&r.editable))throw Error('Source removed, pending or custom');

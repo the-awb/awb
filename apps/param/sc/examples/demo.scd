@@ -11,8 +11,8 @@ s.waitForBoot {
         s.sync;
         ~paramDemoCore=AWBCoreTool.open((name:"Parameter demo",params:[
             (id:\frequency,min:60,max:1800,warp:\exp,base:220,amount:0.2),
-            (id:\gain,min:0,max:0.15,warp:\lin,base:0.04,amount:-0.3),
-            (id:\depth,base:0.5,amount:2)
+            (id:\gain,min:0,max:0.15,warp:\lin,base:0.04,amount:-0.3,polarity:\bipolar),
+            (id:\depth,base:0.5,amount:0.8,polarity:\bipolar)
         ]),(server:s));
         ~paramDemoCore.tool.whenReady {|core|
             var bus=core.createBus(\lfo),plain=core.createBus(\plain),producer=core.addSynth(\lfo,\paramDemoLFO,[\out,bus.index],\detectors),source;
@@ -34,7 +34,7 @@ s.waitForBoot {
 // Test interrupted ramps: display reads current server values throughout.
 ~paramDemoCore.tool.param(\frequency).setBase(900,3,-3);
 ~paramDemoCore.tool.param(\frequency).setBase(180,2,3);
-~paramDemoCore.tool.param(\depth).setAmount(-2,3,-2);
+~paramDemoCore.tool.param(\depth).setAmount(-0.8,3,-2);
 // Bare amount polarity changes its normalized multiplier range.
 ~paramDemoCore.tool.param(\depth).setPolarity(\bipolar).setNormalized(-0.25);
 // Explicit frequency specs retain native Hz; zero is the normalized midpoint.

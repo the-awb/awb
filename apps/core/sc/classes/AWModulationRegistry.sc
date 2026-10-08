@@ -82,7 +82,7 @@ AWModulationRegistry {
         if(source.registry!==this or:{source.active.not} or:{param.server!==server}){Error("AWModulationRegistry: inactive/foreign source or parameter").throw};
         if([\sameBlock,\previousBlock].includes(timing).not){Error("AWModulationRegistry: timing must be sameBlock or previousBlock").throw};
         if(param.modulationConnections[id].notNil or:{param.hasModulation(id)} or:{(param.pendingModulationCount+param.modulationCount)>=64}){Error("AWModulationRegistry: duplicate connection").throw};
-        amount=param.checkAmount(amount);curve=AWParam.curve(curve);
+        amount=param.checkSourceAmount(amount);curve=AWParam.curve(curve);
         if(timing==\sameBlock and:{this.cycle(source,param)}){Error("AWModulationRegistry: same-block dependency cycle; designate a previousBlock connection").throw};
         record=(id:id,source:source,param:param,amount:amount,curve:curve,timing:timing,status:\pending,action:action);
         this.registerParameter(param);connections.add(record);param.modulationConnections[id]=record;generation=generation+1;param.changed(\routes);

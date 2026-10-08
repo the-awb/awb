@@ -15,7 +15,7 @@ AWParam {
     }
     // State is internal LocalIn, not externally allocated buses. Explicit
     // command serials also retrigger identical targets and adjacent-block edits.
-    *signals { |baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential|
+    *signals { |baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential,amountLo=0|
         var previous=LocalIn.kr(8,[baseTarget,amountTarget,baseTarget,amountTarget,0,0,0,0]);
         var baseChanged=(baseSerial-previous[6]).abs>0, amountChanged=(amountSerial-previous[7]).abs>0;
         var baseStart=Select.kr(baseChanged,[previous[2],previous[0]]);
@@ -25,7 +25,7 @@ AWParam {
         var basePhase=(baseTime/baseDur.max(ControlDur.ir)).clip(0,1);
         var amountPhase=(amountTime/amountDur.max(ControlDur.ir)).clip(0,1);
         var base=Select.kr(baseDur<=0,[baseStart+((baseTarget-baseStart)*this.shape(basePhase,baseCurve)),baseTarget]);
-        var amount=Select.kr(amountDur<=0,[amountStart+((amountTarget-amountStart)*this.shape(amountPhase,amountCurve)),amountTarget]);
+        var amount=Select.kr(amountDur<=0,[amountStart+((amountTarget-amountStart)*this.shape(amountPhase,amountCurve)),amountTarget]).clip(amountLo,1);
         var modulation=In.kr(inputBus,1),magnitude=modulation.abs;
         // Preserve additive depth above one full range; bend the first range
         // and extend linearly beyond it, rather than saturating the input sum.
@@ -45,8 +45,8 @@ AWParam {
     *synthDef {
         ^definition ?? {definition=SynthDef(\awParam_v2,{|inputBus=0,out=1,baseTarget=0,amountTarget=0,
             baseSerial=0,amountSerial=0,baseDur=0,amountDur=0,baseCurve=0,amountCurve=0,
-            modCurve=0,lo=0,hi=1,exponential=0,replyRate=0,observationBus=0|
-            var values=AWParam.signals(baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential);
+            modCurve=0,lo=0,hi=1,exponential=0,replyRate=0,observationBus=0,amountLo=0|
+            var values=AWParam.signals(baseTarget,amountTarget,baseSerial,amountSerial,baseDur,amountDur,baseCurve,amountCurve,inputBus,modCurve,lo,hi,exponential,amountLo);
             ReplaceOut.kr(out,values[2]);
             ReplaceOut.kr(observationBus,values.copyRange(0,1));
             SendReply.kr(Impulse.kr(replyRate),'/awb/param/state',values++[baseSerial,amountSerial]);
@@ -74,15 +74,20 @@ AWParam {
     }
     setNormalized { |value,dur=0,curve|^this.setBase(this.nativeValue(value),dur,curve)}
     setPolarity { |value|
+        var message,clipped;
         this.requireAlive;value=this.class.checkPolarity(value);if(value==polarity){^this};polarity=value;
-        // An explicit spec preserves its native range and all active ramps.
-        // Bare amount controls use the selected normalized domain directly.
+        message=[\amountLo,this.normalizedMinimum];clipped=amountTarget.clip(this.normalizedMinimum,1);
+        if(clipped!=amountTarget){
+            amountTarget=clipped;amountSerial=(amountSerial+1)%1000000;
+            message=message++[\amountTarget,amountTarget,\amountDur,0,\amountSerial,amountSerial];
+        };
+        // Native base ranges/ramps stay intact; only bare bases change domain.
         if(nativeSpec.not){
             spec=polarity.asSpec.copy;spec.step=0;baseTarget=baseTarget.clip(spec.minval,spec.maxval);
-            baseSerial=(baseSerial+1)%1000000;snapshot=nil;
-            this.dispatch(synth.setMsg(\lo,spec.minval,\hi,spec.maxval,\baseTarget,spec.unmap(baseTarget),\baseDur,0,\baseSerial,baseSerial));
+            baseSerial=(baseSerial+1)%1000000;
+            message=message++[\lo,spec.minval,\hi,spec.maxval,\baseTarget,spec.unmap(baseTarget),\baseDur,0,\baseSerial,baseSerial];
         };
-        this.changed(\polarity);^this;
+        snapshot=nil;this.dispatch(synth.setMsg(*message));this.changed(\polarity);^this;
     }
     init { |id,base,aSpec,amount,shape,target,aServer,opts|
         name=id.asSymbol;server=aServer ? target.tryPerform(\server) ? Server.default;options=(opts ? ()).copy;ownerInstance=options[\ownerInstance];
@@ -107,7 +112,7 @@ AWParam {
                 [\c_set,inputBus.index,0,outputBus.index,baseTarget,observationBus.index,baseTarget,observationBus.index+1,amountTarget],
                 group.newMsg(target,\addToTail),sourceGroup.newMsg(group,\addToHead),
                 synth.newMsg(group,[\inputBus,inputBus.index,\out,outputBus.index,\observationBus,observationBus.index,\baseTarget,spec.unmap(baseTarget),
-                    \amountTarget,amountTarget,\modCurve,modCurve,\lo,spec.minval,\hi,spec.maxval,
+                    \amountTarget,amountTarget,\amountLo,this.normalizedMinimum,\modCurve,modCurve,\lo,spec.minval,\hi,spec.maxval,
                     \exponential,[\exp,\exponential].includes(spec.warp.asSpecifier).asInteger],\addToTail)
             ]);
             [group,sourceGroup,synth].do{|node|this.own(node,if(node.isKindOf(Group)){\container}{\synth})};
@@ -124,7 +129,11 @@ AWParam {
         var epsilon=spec.minval.abs.max(spec.maxval.abs).max(1e-38)*1.2e-7;
         this.class.finite(value,"base");if(value<(spec.minval-epsilon) or:{value>(spec.maxval+epsilon)}){Error("AWParam: base is outside ControlSpec").throw};^value.clip(spec.minval,spec.maxval);
     }
-    checkAmount { |value|this.class.finite(value,"amount");if(value.abs>8){Error("AWParam: amount must be within -8..8 full ranges").throw};^value }
+    checkAmount { |value,aPolarity|
+        var minimum=if((aPolarity ? polarity)==\bipolar){-1}{0};
+        this.class.finite(value,"amount");if(value<minimum or:{value>1}){Error("AWParam: amount outside normalized polarity domain").throw};^value;
+    }
+    checkSourceAmount { |value|this.class.finite(value,"source amount");if(value.abs>8){Error("AWParam: source amount must be within -8..8 full ranges").throw};^value }
     setBase { |value,dur=0,curve|
         this.requireAlive;value=this.checkBase(value);dur=this.class.duration(dur);curve=this.class.curve(curve ? defaultBaseCurve);
         baseSerial=(baseSerial+1)%1000000;baseTarget=value;
@@ -208,7 +217,7 @@ AWParam {
         var node,record;this.requireAlive;id=id.asSymbol;
         if(this.hasModulation(id) or:{this.modulationCount>=64}){Error("AWParam: duplicate/excess modulation connection").throw};
         if(source.isKindOf(Bus).not or:{source.server!==server} or:{source.rate!=\control} or:{source.numChannels!=1} or:{source.index.isNil}){Error("AWParam: modulation source must be a mono control Bus on selected server").throw};
-        amount=this.checkAmount(amount);curve=this.class.curve(curve);node=Synth.basicNew(\awParamRoute_v1,server);
+        amount=this.checkSourceAmount(amount);curve=this.class.curve(curve);node=Synth.basicNew(\awParamRoute_v1,server);
         this.dispatchBundle([node.newMsg(sourceGroup,[\out,inputBus.index,\amount,amount,\curve,curve],\addToTail),node.mapMsg(\value,source.index)]);
         modulationNodes[id]=this.own(node,\synth);record=(node:node,bus:source,amount:amount,curve:curve);routeRecords[id]=record;
         if(options[\sendFunction].isNil and:{modulationConnections[id].isNil}){
@@ -270,7 +279,7 @@ AWParam {
         record=routeRecords[id];if(record.isNil){Error("AWParam: standard route removed or unknown").throw};^record;
     }
     setModulationAmount { |id,value|
-        var record=this.standardRoute(id),connection;value=this.checkAmount(value);id=id.asSymbol;
+        var record=this.standardRoute(id),connection;value=this.checkSourceAmount(value);id=id.asSymbol;
         this.dispatch(record[\node].setMsg(\amount,value));record[\amount]=value;connection=modulationConnections[id];if(connection.notNil){connection[\amount]=value};
         this.changed(\routeField,(id:id,field:\amount,value:value));^this;
     }

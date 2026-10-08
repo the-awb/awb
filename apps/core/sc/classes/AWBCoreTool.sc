@@ -171,7 +171,7 @@ AWBCoreTool : Tool {
             range=if(param.nativeSpec){param.spec}{polarity.asSpec};
             if(range.minval!=p[\min] or:{range.maxval!=p[\max]} or:{range.warp.asSpecifier!=p[\warp]}){Error("AWBCoreTool: parameter range differs").throw};
             AWParam.finite(p[\base],"base");if(p[\base]<range.minval or:{p[\base]>range.maxval}){Error("AWBCoreTool: base outside preset range").throw};
-            param.checkAmount(p[\amount]);AWParam.curve(p[\modCurve]);AWParam.curve(p[\baseCurve]);AWParam.curve(p[\amountCurve])
+            param.checkAmount(p[\amount],polarity);AWParam.curve(p[\modCurve]);AWParam.curve(p[\baseCurve]);AWParam.curve(p[\amountCurve])
         };
         specs.do{|p|var param=this.param(p[\id]);param.setPolarity(p[\polarity] ? param.polarity).setBase(p[\base]).setAmount(p[\amount]).setModCurve(p[\modCurve]).transitionCurves(p[\baseCurve],p[\amountCurve])};this.syncParamConfig;^this;
     }

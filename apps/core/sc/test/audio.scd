@@ -8,7 +8,7 @@ try{
  })].do{|def|emit.value([\d_recv,def.asBytes]);SynthDescLib.global.add(def.asSynthDesc)};
  now=0.05;emit.value([\g_new,1,0,0]);now=0.1;
  instance=AWBCoreTool.open((),(server:server,sendFunction:emit,queryFunction:{|action|action.value(queryReply,nil)},track:false));core=instance.tool;
- p[0]=core.createParam(\base,0.2);p[1]=core.createParam(\amount,0.2,\unipolar,0);
+ p[0]=core.createParam(\base,0.2);p[1]=core.createParam(\amount,0.2,\unipolar,0,polarity:\bipolar);
  p[2]=core.createParam(\sum,0.2,\unipolar,0.5);p[3]=core.createParam(\curve,0.5,\unipolar,0.5,4);
  p[4]=core.createParam(\frequency,200,ControlSpec(20,20000,\exp),0.2);
  p[5]=core.createParam(\mapped,0.4);p[6]=core.createParam(\rapid,0.2);p[7]=core.createParam(\stale,0.2,\unipolar,0.5);
@@ -36,7 +36,9 @@ try{
  now=1.4;p[6].setPolarity(\bipolar);p[0].setBase(0.3,0.6,4);p[1].setAmount(0.5,0.6,-4);
  now=1.5;p[7].removeModulation(\a);
  now=1.6;p[6].setNormalized(-0.25);
- now=1.9;p[6].setPolarity(\unipolar);
+ now=1.9;p[6].setPolarity(\unipolar);p[1].setAmount(-0.6);
+ now=2.0;p[1].setPolarity(\unipolar);
+ now=2.05;p[1].setAmount(0.5);
  now=1.7;p[0].setBase(0.3,0.6,0); // same target restarts from current value
  now=1.8;p[7].removeModulation(\b);
  now=2.1;p[5].free;

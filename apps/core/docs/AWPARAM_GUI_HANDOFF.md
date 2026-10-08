@@ -23,7 +23,7 @@ Use the normal shell stack, React for composition and accessible controls. Keep 
 | Element | Meaning and interaction |
 |---|---|
 | Knob and value field | Edit base value in native ControlSpec units. Pointer drag and keyboard/numeric editing update the live SC parameter. |
-| Amount pointer and numeric field | Edit AWParam's overall signed modulation amount. Use a radial marker with a 4 CSS pixel stroke at all widget sizes. This is a fraction of the full normalized parameter range, not a native-unit offset. |
+| Amount pointer and numeric field | Edit AWParam's overall signed modulation amount. Use a radial marker with a 4 CSS pixel stroke at all widget sizes. This is a fraction of the full normalized parameter range, bounded to 0…1 for unipolar and −1…1 for bipolar. Source-route gains have their separate ±8 bounds. |
 | Outer output ring | Read-only effective output from the sampled `outputBus`, observation index 2. Show its current value against the parameter scale; retain a short radial tick at zero. Clicking this ring must not edit amount or base. |
 | Modulation button and source count | Open the source panel. Indicate invalid/pending connections without relying on colour alone. |
 | Modulation panel | Edit overall modulation curve and each standard source route's signed amount/curve; identify producing processes and connection status. |
@@ -135,3 +135,5 @@ Per-AWParam polarity is implemented as a normalized multiplier domain (`0…1` /
 Private verification: 14 focused Node tests, 30 SC parameter/inspector contract checks, 41 offline rendered DSP checks, existing Core/registry/OSC/select/tail regressions, 26 synthetic browser checks and all 75 shell unit tests pass. Live hardware/GUI qualification and cost comparisons remain unrun; the existing SC IDE/server session was left intact.
 
 The display/polarity revision is also integrated into `integration/bw-sc`. Named bindings and compact delay controls remain compatible; compact polarity selection is in the Sources popup. Merged validation and remaining live gates are recorded in the implementation status document.
+
+Overall amount now follows the selected polarity limits in AWParam, bridge validation and both renderers. Selecting unipolar clamps negative amount; the smaller inner dial and larger outer drag band remap on authoritative polarity metadata. Native base ranges and source-route gain bounds remain intact. Recompile and recreate parameter nodes for the DSP update.

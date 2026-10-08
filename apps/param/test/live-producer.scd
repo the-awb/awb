@@ -18,7 +18,7 @@ server.waitForBoot({Routine({try{
   replyObserver=OSCFunc({replies=replies+1},'/awb/param/state',server.addr);
   ("PARAM_READY "++view.instanceID++" "++server.pid++" "++server.sampleRate++" "++server.options.blockSize).postln;
   OSCFunc({|msg|switch(msg[1].asString,
-   "ramps",{c.param(\p0).setBase(0.8,1,2).setAmount(-0.5,1,-2)},
+   "ramps",{c.param(\p0).setBase(0.8,1,2).setPolarity(\bipolar).setAmount(-0.5,1,-2)},
    "interrupt",{c.param(\p0).setBase(0.4,0.4,-2).setAmount(0.7,0.4,2)},
    "static",{c.params.values.do{|p|p.removeModulation(\lfo)};c.param(\p0).removeModulationWriter(\custom)},
    "freeSource",{c.resourceAt(\lfo0).free},

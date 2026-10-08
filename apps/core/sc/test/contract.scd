@@ -4,7 +4,7 @@ check={|ok,label|checks=checks+1;if(ok){("PASS "++label).postln}{failed.add(labe
 reject={|fn,label|var caught=false;try{fn.value}{caught=true};check.value(caught,label)};
 try{
  server=Server(\coreContract,NetAddr("127.0.0.1",59997),ServerOptions.new.numOutputBusChannels_(4).numInputBusChannels_(0));
- instance=AWBCoreTool.open((params:[(id:\gain,base:0.2,amount:0.5)]),(server:server,sendFunction:{|msg|messages.add(msg)},track:true));core=instance.tool;param=core.param(\gain);
+ instance=AWBCoreTool.open((params:[(id:\gain,base:0.2,amount:0.5,min:0,max:1,polarity:\bipolar)]),(server:server,sendFunction:{|msg|messages.add(msg)},track:true));core=instance.tool;param=core.param(\gain);
  check.value(core.isKindOf(Tool) and:{core.ready},"core opens through native ToolInstance");
  check.value(instance.definition.id==\awbCore and:{NodeManager.instance.watchedEntries[core.group].owner===instance},"root has Tool/NodeManager owner");
  precision=core.createParam(\precision,nil,ControlSpec(0,0.3));precision.setBase(0.30000001192092896);
