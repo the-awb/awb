@@ -6,6 +6,7 @@ AWBFirstPassSet {
     var <verbMixes,allVerbMixes,verbBranchGates,allVerbGates;
     var <fxMixes,allFXMixes,<celloInputBus,<celloSourceGroup,profileDefinitions;
     var <sharedChain,<sharedInputBus,sharedDefinitions;
+    var irSpectra,irPreparedPaths,irProcessorRecords,irEditingBusy=false,irEditRoutine,irCleanupRoutines;
     *open { |specification, opts| ^super.new.init(specification,opts ? ()) }
     init { |specification, opts|
         spec=specification.deepCopy;options=opts;server=opts[\server] ? Server.default;
@@ -13,6 +14,8 @@ AWBFirstPassSet {
         prefix="awbFirstPass"++UniqueID.next;buffers=List.new;assets=List.new;
         nodes=IdentityDictionary.new;controllers=IdentityDictionary.new;verbMixes=IdentityDictionary.new;allVerbMixes=IdentitySet.new;verbBranchGates=IdentityDictionary.new;allVerbGates=IdentitySet.new;irInfo=List.new;
         fxMixes=IdentityDictionary.new;allFXMixes=IdentitySet.new;profileDefinitions=IdentityDictionary.new;sharedDefinitions=IdentityDictionary.new;
+        irSpectra=Array.newClear(6);irPreparedPaths=IdentityDictionary.new;irProcessorRecords=IdentityDictionary.new;irCleanupRoutines=List.new;
+        [\earth,\composite,\echo].do{|id|irProcessorRecords[id]=List.new};
         this.validate;
         instance=AWBSendRackTool.open(spec[\rack],opts);rack=instance.tool;
         dependant=SimpleController(instance).put(\closed,{this.closedByInstance});
@@ -32,6 +35,7 @@ AWBFirstPassSet {
     }
     validate {
         var fft=spec[\fftSize],sizes=spec[\irSeconds],files=spec[\irFiles],cap=spec[\irMaxSeconds] ? 30,rate=this.irRate;
+        var branchCaps=spec[\irMaxSecondsByBranch] ? (),branchIDs=[\earth,\composite,\echo];
         if((options[\verbProfiles] ? false) and:{options[\fullLoad] ? false}){Error("Verb profiles and all-branches fullLoad are separate modes").throw};
         if((options[\fxProfiles] ? false) and:{spec[\fxMixes].isNil or:{options[\fullLoad] ? false}}){Error("FX profiles need prepared fxMixes and cannot use fullLoad").throw};
         if((options[\celloScheps] ? false) and:{spec[\components][\celloScheps].isNil}){Error("Prepare celloScheps before enabling it").throw};
@@ -39,19 +43,24 @@ AWBFirstPassSet {
         if(fft.isKindOf(Integer).not or:{[512,1024,2048,4096,8192].includes(fft).not} or:{fft.div(2)%server.options.blockSize!=0} or:{fft.div(2)<(server.options.blockSize*2)}){Error("Invalid convolution FFT/block combination").throw};
         if(files.notNil){
             if(files.size!=3 or:{cap.isNumber.not} or:{cap.isNaN} or:{cap<=0} or:{cap>180}){Error("Need three IR files and a duration cap in (0, 180] seconds").throw};
-            files.do{|path|
-                var file=SoundFile.new,info;
+            if(branchCaps.isKindOf(Dictionary).not){Error("IR branch caps must be a dictionary").throw};
+            branchCaps.keysValuesDo{|id,value|
+                if(branchIDs.includes(id).not or:{value.isNumber.not} or:{value.isNaN} or:{value<=0} or:{value>180}){Error("IR branch caps need known branch IDs and durations in (0, 180] seconds").throw};
+            };
+            files.do{|path,i|
+                var file=SoundFile.new,info,branchCap=cap.min(branchCaps[branchIDs[i]] ? cap);
                 if(path.isString.not or:{file.openRead(path).not}){Error("Cannot read IR file: "++path).throw};
                 info=(path:path,sourceFrames:file.numFrames,sourceChannels:file.numChannels,sampleRate:file.sampleRate);
                 file.close;
                 if([1,2].includes(info[\sourceChannels]).not or:{info[\sampleRate]!=rate} or:{info[\sourceFrames]<=0}){Error("IR needs mono/stereo audio at the server sample rate: "++path).throw};
-                info[\frames]=info[\sourceFrames].min((cap*rate).floor.asInteger);
+                info[\frames]=info[\sourceFrames].min((branchCap*rate).floor.asInteger);
                 if(info[\frames]<1){Error("IR cap leaves no audio frames").throw};
                 irInfo.add(info);
             };
         }{
             if(sizes.size!=3 or:{sizes.any{|v|v.isNumber.not or:{v.isNaN} or:{v<=0} or:{v>30}}}){Error("Need three bounded IR durations").throw};
         };
+        (spec[\irEnvelopes] ? ()).keysValuesDo{|id,given|if(AWBConvolutionIR.branchIDs.includes(id).not){Error("Unknown IR envelope branch").throw};AWBConvolutionIR.settings(given)};
         if(server.options.memSize<if(files.notNil){262144}{131072}){Error("First-pass rack needs memSize >= 262144 KiB with file IRs, or 131072 with stand-ins").throw};
         if(options[\fuzzPlugin] ? false){if(spec[\components][\fuzz].isNil){Error("Prepare restored Fuzz before enabling it").throw}};
         if(options[\sharedFX] ? false){if(spec[\sharedFX].isNil or:{(options[\fxProfiles] ? false).not}){Error("Shared FX needs prepared sharedFX and fxProfiles").throw}};
@@ -68,13 +77,18 @@ AWBFirstPassSet {
     prepareIRs {
         var rate=this.irRate,dir=options[\assetDirectory] ?? { ("TMPDIR".getenv ? "/tmp")+/+prefix };
         var fft=spec[\fftSize],files=spec[\irFiles];
-        if(files.isNil){File.mkdir(dir)};
+        File.mkdir(dir);
+        if(files.notNil){
+            files=files.copy;3.do{|i|var settings=(spec[\irEnvelopes] ? ())[AWBConvolutionIR.branchIDs[i]],path;
+                if(settings.notNil){path=dir+/+("shaped-ir"++i++".wav");AWBConvolutionIR.write(files[i],path,irInfo[i][\frames],rate,settings);assets.add(path);files[i]=path;irPreparedPaths[AWBConvolutionIR.branchIDs[i]]=path};
+            };
+        };
         3.do{|i|
             2.do{|channel|
                 var frames,data,path,file,raw,spectrum,sourceChannel;
                 if(closed){Error("Set closed during IR preparation").throw};
                 if(files.notNil){
-                    frames=irInfo[i][\frames];path=irInfo[i][\path];
+                    frames=irInfo[i][\frames];path=files[i];
                     sourceChannel=if(irInfo[i][\sourceChannels]==1){0}{channel};
                 }{
                     frames=(spec[\irSeconds][i]*rate).asInteger;
@@ -87,12 +101,13 @@ AWBFirstPassSet {
                     file.writeData(data);file.close;assets.add(path);sourceChannel=0;
                 };
                 raw=Buffer.new(server,frames,1);spectrum=Buffer.new(server,fft*((frames/(fft/2)).ceil.asInteger),1);
-                buffers.add(spectrum);instance.own(spectrum,\buffer,(name:"Verb IR "++i++" / "++channel));
+                instance.own(raw,\buffer,(name:"IR preparation input"));
+                irSpectra[i*2+channel]=spectrum;buffers.add(spectrum);instance.own(spectrum,\buffer,(name:"Verb IR "++i++" / "++channel));
                 this.emit(raw.allocReadChannelMsg(path,0,frames,[sourceChannel]));this.emit(spectrum.allocMsg);
                 if(options[\sendFunction].isNil){server.sync};
                 this.emit([\b_gen,spectrum.bufnum,\PreparePartConv,raw.bufnum,fft]);
                 if(options[\sendFunction].isNil){server.sync};
-                this.emit(raw.freeMsg);
+                this.emit(raw.freeMsg);instance.disown(raw);
             };
         };
     }
@@ -118,6 +133,7 @@ AWBFirstPassSet {
         if(options[\sharedFX] ? false){sharedDefinitions[\um]=SynthDescLib.global.at((prefix++"UM").asSymbol);sharedDefinitions[\scheps]=SynthDescLib.global.at((prefix++"StereoScheps").asSymbol)};
         this.def(\VC,{|out=0,channel=0,gain=1|Out.ar(out,SoundIn.ar(channel)*Lag.kr(gain,0.02)*if(options[\celloScheps] ? false){1}{[1,1]})});
         if(options[\celloScheps] ? false){this.def(\CelloScheps,{|in=0,out=0|Out.ar(out,VSTPlugin.ar(In.ar(in,1),1,id:\celloScheps)!2)})};
+        this.def(\Mic,{|out=0,channel=0,gain=1|Out.ar(out,(SoundIn.ar(channel)*Lag.kr(gain,0.02))!2)});
         this.def(\Pro2,{|out=0,left=0,right=1,gain=1|Out.ar(out,SoundIn.ar([left,right])*Lag.kr(gain,0.02))});
         if(options[\fxProfiles] ? false){
             this.def(\Deci,{|in=0,out=0,profileBus=0,wet=0,level=1|
@@ -176,8 +192,9 @@ AWBFirstPassSet {
                 ReplaceOut.kr(levelOut,Lag.kr(level,0.02));
             });
             [[\VerbEarth,0],[\VerbComposite,2],[\VerbEcho,4]].do{|entry|
-                var start=entry[1];this.def(entry[0],{|in=0,out=0|
-                    var input=In.ar(in,2);Out.ar(out,Array.fill(2,{|i|PartConv.ar(input[i],fft,irs[start+i])}));
+                var start=entry[1];this.def(entry[0],{|in=0,out=0,inputGate=1,outputGate=1|
+                    var input=In.ar(in,2)*Lag.kr(inputGate,0.02),irIDs=[\irLeft.ir(0),\irRight.ir(0)];
+                    Out.ar(out,Array.fill(2,{|i|PartConv.ar(input[i],fft,irIDs[i])})*Lag.kr(outputGate,0.05));
                 });
             };
             this.def(\VerbTexture,{|in=0,out=0|Out.ar(out,VSTPlugin.ar(In.ar(in,2),2,id:\verbTexture))});
@@ -215,6 +232,7 @@ AWBFirstPassSet {
         var mix,hub,source=rack.bus,level=rack.bus(\control,1),gates=IdentityDictionary.new,controls=IdentityDictionary.new;
         var cleanup,buses=[source,level];
         cleanup={
+            irProcessorRecords.values.do{|records|records.copy.do{|record|if(gates.values.includes(record[\gate])){records.remove(record)}}};
             gates.values.copy.do{|gate|gate.free(false);allVerbGates.remove(gate)};
             mix.tryPerform(\free,false);allVerbMixes.remove(mix);
             if(verbMixes[ctx[\slotID]]===mix){verbMixes.removeAt(ctx[\slotID]);verbBranchGates.removeAt(ctx[\slotID])};
@@ -234,7 +252,11 @@ AWBFirstPassSet {
             gateOpts[\name]="Verb / "++id;gateOpts[\gain]=entry[2].dbamp;gateOpts[\wetGain]=entry[3].dbamp;gateOpts[\levelBus]=level;
             gate=AWFXTailGate(source,mix.branch(id).outputBus,ctx[\output],ctx[\group],this.verbTailSettings(id),gateOpts);
             gates[id]=gate;allVerbGates.add(gate);
-            processor=gate.createProcessor((prefix++entry[1]).asSymbol);
+            if(AWBConvolutionIR.branchIDs.includes(id)){
+                var position=AWBConvolutionIR.branchIDs.indexOf(id);
+                processor=gate.createProcessor((prefix++entry[1]).asSymbol,[\irLeft,irSpectra[position*2].bufnum,\irRight,irSpectra[position*2+1].bufnum]);
+                irProcessorRecords[id].add((gate:gate,node:processor));
+            }{processor=gate.createProcessor((prefix++entry[1]).asSymbol)};
             if([\texture,\shimmer].includes(id)){controls.putAll(VSTPluginController.collect(processor))};
         };
         if(options[\sendFunction].isNil){mix.group.onFree({if(verbMixes[ctx[\slotID]]===mix){verbMixes.removeAt(ctx[\slotID])}})};
@@ -363,13 +385,18 @@ AWBFirstPassSet {
         if(range.isNil or:{desc.controls.any{|c|c.name==key.asSymbol}.not} or:{value.isNumber.not} or:{value.isNaN} or:{value<range[0]} or:{value>range[1]}){Error("Invalid FX control or value").throw};
         if(fxMixes[slot.asSymbol].notNil and:{fxMixes[slot.asSymbol].params[key.asSymbol].notNil}){fxMixes[slot.asSymbol].param(key).setBase(value)}{this.emit([\n_set,node.nodeID,key,value])};^value;
     }
-    connectInputs { |vc,pro2|
+    connectInputs { |vc,pro2,mic|
         if(ready.not or:{closed}){Error("Wait for set readiness before connecting inputs").throw};
         if(vc.size!=1 or:{pro2.size!=2} or:{(vc++pro2).any{|i|i.isKindOf(Integer).not or:{i<0} or:{i>=server.options.numInputBusChannels}}}){Error("VC needs one and Pro 2 two valid zero-based hardware input indices").throw};
-        if(nodes[\vc].notNil or:{nodes[\pro2].notNil}){Error("Hardware inputs already connected; disconnect first").throw};
+        if(mic.notNil){
+            if(mic.isArray.not or:{mic.size!=1} or:{mic[0].isKindOf(Integer).not} or:{mic[0]<0} or:{mic[0]>=server.options.numInputBusChannels}){Error("Mic needs one valid zero-based hardware input index").throw};
+            rack.inputFor(\mic); // validate destination before creating any source nodes
+        };
+        if(nodes[\vc].notNil or:{nodes[\pro2].notNil} or:{nodes[\mic].notNil}){Error("Hardware inputs already connected; disconnect first").throw};
         nodes[\vc]=rack.synth((prefix++"VC").asSymbol,[\out,(celloInputBus ? rack.inputFor(\vc)).index,\channel,vc[0]],celloSourceGroup ? rack.sourceGroup,"VC hardware input");
         if(celloSourceGroup.notNil){this.emit(nodes[\vc].moveBeforeMsg(nodes[\celloScheps]))};
-        nodes[\pro2]=rack.synth((prefix++"Pro2").asSymbol,[\out,rack.inputFor(\pro2).index,\left,pro2[0],\right,pro2[1]],rack.sourceGroup,"Pro 2 hardware input");^this;
+        nodes[\pro2]=rack.synth((prefix++"Pro2").asSymbol,[\out,rack.inputFor(\pro2).index,\left,pro2[0],\right,pro2[1]],rack.sourceGroup,"Pro 2 hardware input");
+        if(mic.notNil){nodes[\mic]=rack.synth((prefix++"Mic").asSymbol,[\out,rack.inputFor(\mic).index,\channel,mic[0]],rack.sourceGroup,"Mic hardware input")};^this;
     }
     // Use this adapter entry point for voices/samples as well as hardware.
     // Cello is mono before Scheps; the rack-facing processed signal is stereo.
@@ -378,14 +405,78 @@ AWBFirstPassSet {
         ^if(id.asSymbol==\vc and:{celloInputBus.notNil}){celloInputBus}{rack.inputFor(id)};
     }
     disconnectInputs {
-        [\vc,\pro2].do{|id|var node=nodes.removeAt(id);if(node.notNil){this.emit(node.freeMsg)}};^this;
+        [\vc,\pro2,\mic].do{|id|var node=nodes.removeAt(id);if(node.notNil){this.emit(node.freeMsg)}};^this;
     }
     verbMix { |slot=\verb|^verbMixes[slot.asSymbol] ?? {Error("Enable verbProfiles and wait for this slot").throw} }
     verbBranch { |id,slot=\verb|^verbBranchGates[slot.asSymbol].tryPerform(\at,id.asSymbol) ?? {Error("Unknown/unavailable Verb branch").throw} }
     plugin { |role,slot|if([\um,\stereoScheps].includes(role.asSymbol) and:{slot.isNil}){^sharedChain.tryPerform(\plugin,role)};^controllers[if(slot.isNil){role.asSymbol}{(slot.asString++"/"++role).asSymbol}] }
+    convolutionSettings { |id|
+        if(AWBConvolutionIR.branchIDs.includes(id.asSymbol).not){Error("Unknown convolution branch").throw};
+        ^AWBConvolutionIR.settings((spec[\irEnvelopes] ? ())[id.asSymbol]);
+    }
+    convolutionSource { |id|
+        var position=AWBConvolutionIR.branchIDs.indexOf(id.asSymbol);
+        if(position.isNil or:{irInfo.isEmpty}){Error("Convolution editor requires file IRs").throw};^irInfo[position].copy.put(\preparedPath,irPreparedPaths[id.asSymbol]);
+    }
+    convolutionGUI { if((options[\verbProfiles] ? false).not){Error("Convolution editor requires Verb profile mode").throw};^AWBConvolutionEditor.open(this) }
+    applyConvolution { |id,given,action|
+        var position,settings,info;
+        id=id.asSymbol;position=AWBConvolutionIR.branchIDs.indexOf(id);
+        if(closed or:{ready.not} or:{irEditingBusy} or:{position.isNil} or:{irInfo.isEmpty} or:{(options[\verbProfiles] ? false).not}){Error("Wait for a ready file-IR Verb profile; one IR edit at a time").throw};
+        settings=AWBConvolutionIR.settings(given);info=this.convolutionSource(id);irEditingBusy=true;
+        irEditRoutine=Routine({
+            var path=("TMPDIR".getenv ? "/tmp")+/+(prefix++"-edited-"++UniqueID.next++".wav");
+            var fft=spec[\fftSize],fresh=List.new,rawBuffers=List.new,old=irSpectra.copyRange(position*2,position*2+1),previous=List.new,cleanup,editError;
+            try {
+                AWBConvolutionIR.write(info[\path],path,info[\frames],this.irRate,settings);assets.add(path);
+                2.do{|channel|
+                    var raw=Buffer.new(server,info[\frames],1),spectrum=Buffer.new(server,fft*((info[\frames]/(fft/2)).ceil.asInteger),1);
+                    rawBuffers.add(raw);instance.own(raw,\buffer,(name:"IR edit preparation input"));fresh.add(spectrum);buffers.add(spectrum);instance.own(spectrum,\buffer,(name:"Edited Verb IR "++id++" / "++channel));
+                    this.emit(raw.allocReadChannelMsg(path,0,info[\frames],[if(info[\sourceChannels]==1){0}{channel}]));this.emit(spectrum.allocMsg);
+                    if(options[\sendFunction].isNil){server.sync};this.emit([\b_gen,spectrum.bufnum,\PreparePartConv,raw.bufnum,fft]);
+                    if(options[\sendFunction].isNil){server.sync};this.emit(raw.freeMsg);instance.disown(raw);rawBuffers.remove(raw);
+                };
+                if(closed){Error("Set closed during IR preparation").throw};
+                // Defaults in the SynthDef are never reused: every clone receives current buffers.
+                fresh.do{|buffer,i|irSpectra[position*2+i]=buffer};
+                irProcessorRecords[id].copy.do{|record|
+                    if(record[\gate].closed.not){
+                        var node=record[\gate].createProcessor((prefix++[\VerbEarth,\VerbComposite,\VerbEcho][position]).asSymbol,
+                            [\irLeft,fresh[0].bufnum,\irRight,fresh[1].bufnum,\outputGate,0]);
+                        previous.add(record.copy.put(\replacement,node));record[\node]=node;
+                        this.emit(node.setMsg(\outputGate,1));this.emit(previous.last[\node].setMsg(\inputGate,0));
+                    };
+                };
+                spec[\irEnvelopes]=(spec[\irEnvelopes] ? ()).copy.put(id,settings);irPreparedPaths[id]=path;
+                cleanup={
+                    if(closed.not){
+                        previous.do{|record|if(record[\gate].closed.not){record[\gate].releaseProcessor(record[\node])}};
+                        old.do{|buffer|this.emit(buffer.freeMsg);instance.disown(buffer);buffers.remove(buffer)};
+                    };
+                };
+                // Stop feeding the old IR; its full remaining tail stays on the return.
+                if(options[\sendFunction].notNil){options[\irScheduleFunction].value((info[\frames]/this.irRate)+(2*fft/this.irRate)+0.1,cleanup)}{
+                    var routine;routine=Routine({((info[\frames]/this.irRate)+(2*fft/this.irRate)+0.1).wait;cleanup.value;irCleanupRoutines.remove(thisThread)}).play(SystemClock);irCleanupRoutines.add(routine);
+                };
+                irEditingBusy=false;
+            }{|error|
+                if(closed.not){
+                    old.do{|buffer,i|irSpectra[position*2+i]=buffer};
+                    previous.do{|oldRecord|var current=irProcessorRecords[id].detect{|record|record[\gate]===oldRecord[\gate]};
+                        if(current.notNil and:{oldRecord[\gate].closed.not}){oldRecord[\gate].releaseProcessor(oldRecord[\replacement]);current[\node]=oldRecord[\node];this.emit(oldRecord[\node].setMsg(\inputGate,1))};
+                    };
+                    rawBuffers.do{|buffer|this.emit(buffer.freeMsg);instance.disown(buffer)};
+                    fresh.do{|buffer|this.emit(buffer.freeMsg);instance.disown(buffer);buffers.remove(buffer)};
+                };
+                irEditingBusy=false;editError=error;error.reportError;
+            };
+            action.value(editError);if(editError.isNil){this.changed(\convolution,id)};
+        }).play(SystemClock);^this;
+    }
+
     gui { |opts|if(ready.not){Error("Wait for set readiness before opening its GUI").throw};^rack.gui(opts) }
     closedByInstance {
-        closed=true;ready=false;if(setupRoutine!==thisThread){setupRoutine.tryPerform(\stop)};dependant.tryPerform(\remove);dependant=nil;
+        closed=true;ready=false;irEditRoutine.tryPerform(\stop);irCleanupRoutines.do(_.stop);irCleanupRoutines.clear;irProcessorRecords.values.do(_.clear);if(setupRoutine!==thisThread){setupRoutine.tryPerform(\stop)};dependant.tryPerform(\remove);dependant=nil;
         if(options[\sendFunction].isNil){assets.do{|p|File.delete(p)}};
         allVerbGates.copy.do{|gate|gate.free(false)};allVerbGates.clear;verbBranchGates.clear;
         allVerbMixes.copy.do{|mix|mix.free(false)};allVerbMixes.clear;verbMixes.clear;

@@ -1,0 +1,150 @@
+{
+  "description": "Upstream GitHub API evidence retained for the general Supernova investigation; snapshot state, not locally reproduced bugs. Local source observations are in the report.",
+  "recordedDate": "2026-10-07",
+  "files": [
+    {
+      "file": "awb-supernova-closed-bugs-20261007.json",
+      "sha256": "e81c764e521969740b49f743f76f7eff5d93b595cff9838c6290c8522caaee4e",
+      "originalPath": "/private/tmp/awb-supernova-closed-bugs-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-comments-1840-20261007.json",
+      "sha256": "996dba8eaab6bca0d2d41709d0ccd91a0cf1f1c119882f4c927dbabd2a930282",
+      "originalPath": "/private/tmp/awb-supernova-comments-1840-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-comments-3461-20261007.json",
+      "sha256": "19949c775a94fd1d881f832e9f30240cd5d17e19ce88ed7fba66a6dbbdd74c84",
+      "originalPath": "/private/tmp/awb-supernova-comments-3461-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-comments-5732-20261007.json",
+      "sha256": "3a8038a31743289cb506c823af19690aa5f5377fb372a514fedd9b5272fa5dbf",
+      "originalPath": "/private/tmp/awb-supernova-comments-5732-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-2347-20261007.json",
+      "sha256": "f8a6c1bbb82b45a8934b2f8eaf5f4d60b3c6d762ffaf8c39e1288df04c4741e8",
+      "originalPath": "/private/tmp/awb-supernova-issue-2347-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-3339-20261007.json",
+      "sha256": "31ac3ce392052569518463d5e71ca352d632c04ee2cf64fb3f56343e77834d79",
+      "originalPath": "/private/tmp/awb-supernova-issue-3339-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-4289-20261007.json",
+      "sha256": "4cff19f7f58d7e524338a25e4c42f5a1e1b03d4427bdd38a0fed9a755ecb2a55",
+      "originalPath": "/private/tmp/awb-supernova-issue-4289-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-4424-20261007.json",
+      "sha256": "70dddc7781dde1feae6b6bafc2000ba6f31e50c75e0aa995647958ac323555a4",
+      "originalPath": "/private/tmp/awb-supernova-issue-4424-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-5590-20261007.json",
+      "sha256": "e4448bb8e58d7ddd275eba44d6c8ebb380636b4ac281af0d214a90dfbb61f72c",
+      "originalPath": "/private/tmp/awb-supernova-issue-5590-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-5909-20261007.json",
+      "sha256": "11964d77befea5c23d9a2092d939690cab9aebccf0f0065961aef2cbdfbc5ed5",
+      "originalPath": "/private/tmp/awb-supernova-issue-5909-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-7728-20261007.json",
+      "sha256": "ca6dcd059ab50ae106566039143d3f9a802402a1bb75c3628af02d49ec48f13f",
+      "originalPath": "/private/tmp/awb-supernova-issue-7728-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-7732-20261007.json",
+      "sha256": "0f206cb45ad52268ddba829fe855ce11623fccc7ce11c08cc6c940196ff33153",
+      "originalPath": "/private/tmp/awb-supernova-issue-7732-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-issue-7734-20261007.json",
+      "sha256": "c19e3ac1f93ca40cfa5fba93670074ad773a5d1330110d5078070a7b464a9be6",
+      "originalPath": "/private/tmp/awb-supernova-issue-7734-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-open-issues-20261007.json",
+      "sha256": "bc28cedeae725122fe958f6b31cdb98b6694a064afc02e5d297011437492a1d2",
+      "originalPath": "/private/tmp/awb-supernova-open-issues-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-pr-7551-20261007.json",
+      "sha256": "b4c4c7ac24726e4e39c575b5eb6e63da3b2558b6ff20d684cb84e65111479d2c",
+      "originalPath": "/private/tmp/awb-supernova-pr-7551-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-pr-7552-20261007.json",
+      "sha256": "05760d1986f49843d64d0347959d32fbcbb9d4e8f3499dfd5ad1809d66334e97",
+      "originalPath": "/private/tmp/awb-supernova-pr-7552-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-pr-7554-20261007.json",
+      "sha256": "ab8d9d38d55bca2d4917cd813d0e83a632e1afd11bd859517687c296e212bc94",
+      "originalPath": "/private/tmp/awb-supernova-pr-7554-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-pr-7729-20261007.json",
+      "sha256": "2aa08d2bac89e82b46e9a2c268f5f7eccc3042f4521a63865193cb7263e030a5",
+      "originalPath": "/private/tmp/awb-supernova-pr-7729-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-release-20261007.json",
+      "sha256": "726b6745a16449abbd4e78e2d6b2ea6fed7a2b1f052719119766c0d4a41e8777",
+      "originalPath": "/private/tmp/awb-supernova-release-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-timeline-4289-20261007.json",
+      "sha256": "99b13b594616a3589798d44d22fd7d51cffdb5f804d9471914b205145b07584c",
+      "originalPath": "/private/tmp/awb-supernova-timeline-4289-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-timeline-5590-20261007.json",
+      "sha256": "dd61cd1d14bfe90182c0a83c89d0b27d91f4754bc97b14a241fd0654485776f4",
+      "originalPath": "/private/tmp/awb-supernova-timeline-5590-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-timeline-5909-20261007.json",
+      "sha256": "5c97a42bd2a0ec8156d116362eb317f9278902f86446ab67b91b82f9793f8142",
+      "originalPath": "/private/tmp/awb-supernova-timeline-5909-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-timeline-7728-20261007.json",
+      "sha256": "22ccd64e37cefe2b208a0258aabb36f9333ee2d7ad220ea357634d51440b5d31",
+      "originalPath": "/private/tmp/awb-supernova-timeline-7728-20261007.json",
+      "capturedDate": "2026-10-07"
+    },
+    {
+      "file": "awb-supernova-timeline-7732-20261007.json",
+      "sha256": "30889dce5cf59e7c4057d0a3f2d0be4e49c6b4dfc94ea291e488b28bd91ed738",
+      "originalPath": "/private/tmp/awb-supernova-timeline-7732-20261007.json",
+      "capturedDate": "2026-10-07"
+    }
+  ]
+}

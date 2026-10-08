@@ -1,0 +1,93 @@
+{
+  "backend": "scsynth",
+  "destinations": 24,
+  "checks": [
+    {
+      "ok": true,
+      "label": "F4 actual rack topology",
+      "detail": {
+        "channels": 8,
+        "destinations": 24,
+        "followers": 25
+      }
+    },
+    {
+      "ok": true,
+      "label": "F4 sixteen detectors and twenty-five follower consumers"
+    },
+    {
+      "ok": true,
+      "label": "F8 real rack audio/control scopes remain active through matrix traffic",
+      "detail": {
+        "audioFrames": 317,
+        "controlFrames": 38,
+        "nonfinite": 0,
+        "scopeFaults": []
+      }
+    },
+    {
+      "ok": true,
+      "label": "F7 GUI changes generate no SC value echo",
+      "detail": {
+        "observed": 0
+      }
+    },
+    {
+      "ok": true,
+      "label": "F7 independent engine sendGains readback matches every channel",
+      "detail": {
+        "badChannels": 0,
+        "controls": 192
+      }
+    },
+    {
+      "ok": true,
+      "label": "F7 one hundred full-matrix bursts converge in actual SC",
+      "detail": {
+        "matches": 192,
+        "expected": 192,
+        "logicalEdits": 19200
+      }
+    },
+    {
+      "ok": true,
+      "label": "F7 transport remains armed without protocol errors",
+      "detail": {
+        "messages": 19206,
+        "packets": 1406,
+        "bundles": 1400,
+        "bytes": 1549352,
+        "failures": 0,
+        "pendingMessages": 0,
+        "pendingBytes": 0,
+        "maxPacketBytes": 1200,
+        "flushMs": 2
+      }
+    },
+    {
+      "ok": true,
+      "label": "F7 shell transport actually emitted OSC bundles",
+      "detail": {
+        "messages": 19206,
+        "packets": 1406,
+        "bundles": 1400,
+        "bytes": 1549352,
+        "failures": 0,
+        "pendingMessages": 0,
+        "pendingBytes": 0,
+        "maxPacketBytes": 1200,
+        "flushMs": 2
+      }
+    },
+    {
+      "ok": true,
+      "label": "F7 SC-origin update reaches GUI store without resend"
+    },
+    {
+      "ok": true,
+      "label": "F7 sparse recall changes selected control and preserves null target"
+    }
+  ],
+  "errors": [],
+  "passed": true
+}

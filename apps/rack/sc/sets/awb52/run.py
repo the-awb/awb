@@ -19,6 +19,8 @@ def main():
     p.add_argument('--ir-mode',choices=['real','generated'],default='real')
     p.add_argument('--ir-directory',type=Path,default=Path('/Volumes/ARMED WITH SOUND/Samples/Convology samples'))
     p.add_argument('--ir-max-seconds',type=float,default=30)
+    p.add_argument('--earth-ir-max-seconds',type=float,default=5)
+    p.add_argument('--echo-ir-max-seconds',type=float,default=20)
     p.add_argument('--measure-controls',action='store_true',help='Owned muted hardware comparison of paused bank, detectors only and full envelope bank')
     p.add_argument('--verb-profiles',action='store_true',help='Offline captured Verb profile mode, separate from all-branches full load')
     p.add_argument('--fx-profiles',action='store_true',help='Captured Deci/Sparkle selectors, Math and Deci sine LFO')
@@ -61,7 +63,7 @@ def main():
     for path in (rack.parent/'core/sc/classes').glob('*.sc'):
         shutil.copy2(str(path),str(build/'rack'/path.name))
         provenance[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
-    for name in ['AWBFirstPassSet.sc','AWBVerbMixProfile.sc','AWBFXMixProfile.sc','prepare.py','verb-profile.json','fx-modulation-profile.json','scheps73-baseline.json','scheps73-plugin.ini','AWBAdditionalFXProfile.sc','AWBSharedFXChain.sc','additional-modulation-profile.json','fuzz-baseline.json','fuzz-plugin.ini','scheps73-stereo-baseline.json','scheps73-stereo-plugin.ini','master-profile.json','source-snapshot.json']:
+    for name in ['AWBFirstPassSet.sc','AWBConvolutionIR.sc','AWBConvolutionEditor.sc','AWBVerbMixProfile.sc','AWBFXMixProfile.sc','prepare.py','verb-profile.json','fx-modulation-profile.json','scheps73-baseline.json','scheps73-plugin.ini','AWBAdditionalFXProfile.sc','AWBSharedFXChain.sc','additional-modulation-profile.json','fuzz-baseline.json','fuzz-plugin.ini','scheps73-stereo-baseline.json','scheps73-stereo-plugin.ini','master-profile.json','source-snapshot.json']:
         shutil.copy2(str(here/name),str(build/'source'/name))
         provenance[str(here/name)] = hashlib.sha256((here/name).read_bytes()).hexdigest()
     for name in ['first-pass-test.scd','modulation-test.scd','plugin-map-test.scd','additional-modulation-test.scd','measure.scd','control-cost.scd']: shutil.copy2(str(here/name),str(build/name))
@@ -103,11 +105,12 @@ def main():
         if a.cello_scheps: prepare_command += ['--cello-scheps']
         if a.fuzz_plugin: prepare_command += ['--fuzz-plugin']
         if a.shared_fx: prepare_command += ['--shared-fx']
-        if a.ir_mode == 'real': prepare_command += ['--ir-directory',str(a.ir_directory),'--ir-max-seconds',str(a.ir_max_seconds)]
+        if a.ir_mode == 'real': prepare_command += ['--ir-directory',str(a.ir_directory),'--ir-max-seconds',str(a.ir_max_seconds),'--earth-ir-max-seconds',str(a.earth_ir_max_seconds),'--echo-ir-max-seconds',str(a.echo_ir_max_seconds)]
         run('prepare',prepare_command)
         prepared_json=build/'source/prepared/first-pass.json'
         prepared=json.loads(prepared_json.read_text());prepared['validationVerbProfiles']=a.verb_profiles;prepared['validationFXProfiles']=a.fx_profiles;prepared['validationCelloScheps']=a.cello_scheps;prepared['validationFuzzPlugin']=a.fuzz_plugin;prepared['validationSharedFX']=a.shared_fx
         prepared_json.write_text(json.dumps(prepared,indent=2)+'\n')
+        summary['irMaxSecondsByBranch'] = prepared.get('irMaxSecondsByBranch',{})
         summary['irProvenance'] = json.loads((build/'source/prepared/first-pass.json').read_text()).get('irProvenance',[])
         log = run('score',[str(app/'MacOS/sclang'),'-l',str(build/'sclang_conf.yaml'),str(build/'first-pass-test.scd')])
         marker = re.search(r'AWB_FIRSTPASS_CONTRACT=PASS count=(\d+)',log)

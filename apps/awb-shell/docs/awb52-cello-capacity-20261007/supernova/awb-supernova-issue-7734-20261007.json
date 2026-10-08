@@ -1,0 +1,113 @@
+{
+  "issue": {
+    "url": "https://api.github.com/repos/supercollider/supercollider/issues/7734",
+    "repository_url": "https://api.github.com/repos/supercollider/supercollider",
+    "labels_url": "https://api.github.com/repos/supercollider/supercollider/issues/7734/labels{/name}",
+    "comments_url": "https://api.github.com/repos/supercollider/supercollider/issues/7734/comments",
+    "events_url": "https://api.github.com/repos/supercollider/supercollider/issues/7734/events",
+    "html_url": "https://github.com/supercollider/supercollider/issues/7734",
+    "id": 5585396016,
+    "node_id": "I_kwDOAECE2s8AAAABTOphMA",
+    "number": 7734,
+    "title": "sclang: while booting, every /status.reply sends another /notify, so ServerBoot runs many times (seen with supernova)",
+    "user": {
+      "login": "Xon77",
+      "id": 1010040,
+      "node_id": "MDQ6VXNlcjEwMTAwNDA=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1010040?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Xon77",
+      "html_url": "https://github.com/Xon77",
+      "followers_url": "https://api.github.com/users/Xon77/followers",
+      "following_url": "https://api.github.com/users/Xon77/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Xon77/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Xon77/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Xon77/subscriptions",
+      "organizations_url": "https://api.github.com/users/Xon77/orgs",
+      "repos_url": "https://api.github.com/users/Xon77/repos",
+      "events_url": "https://api.github.com/users/Xon77/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Xon77/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "id": 4413797,
+        "node_id": "MDU6TGFiZWw0NDEzNzk3",
+        "url": "https://api.github.com/repos/supercollider/supercollider/labels/enhancement",
+        "name": "enhancement",
+        "color": "84b6eb",
+        "default": true,
+        "description": null,
+        "archived_at": null,
+        "archived_by": null
+      },
+      {
+        "id": 4477094,
+        "node_id": "MDU6TGFiZWw0NDc3MDk0",
+        "url": "https://api.github.com/repos/supercollider/supercollider/labels/comp:%20sclang",
+        "name": "comp: sclang",
+        "color": "CFFF7D",
+        "default": false,
+        "description": "sclang C++ implementation (primitives, etc.). for changes to class lib use \"comp: class library\"",
+        "archived_at": null,
+        "archived_by": null
+      },
+      {
+        "id": 187317103,
+        "node_id": "MDU6TGFiZWwxODczMTcxMDM=",
+        "url": "https://api.github.com/repos/supercollider/supercollider/labels/performance",
+        "name": "performance",
+        "color": "fef2c0",
+        "default": false,
+        "description": null,
+        "archived_at": null,
+        "archived_by": null
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2026-09-25T16:13:35Z",
+    "updated_at": "2026-09-26T10:27:08Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "issue_field_values": [],
+    "type": null,
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+      "total": 0,
+      "completed": 0,
+      "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+      "blocked_by": 0,
+      "total_blocked_by": 0,
+      "blocking": 0,
+      "total_blocking": 0
+    },
+    "body": "Hello,\n\nThis issue was written with the help of AI. I was investigating why supernova took so long to boot on my Mac with many UGen extensions installed. With a few changes, supernova now boots almost as fast as scsynth here. I have split the improvements into separate issues, as small as possible. This is the fourth one (see also #7731, #7732 and #7733). I am not sure each fix is the best way to do it, but together they make booting much faster and remove unnecessary notifications.\n\n## Environment\n\n* SuperCollider version: Latest Dev\n* Operating system: macOS 27, Apple M1 Max\n* Other details (Qt version, audio driver, etc.): supernova server\n\n## Summary\n\nWhile the server boots, sclang sends a new `/notify` for every `/status.reply` it receives until it is registered. Each attempt adds one more `/done` listener without removing the previous ones. When `/done` arrives, all of these listeners fire, and each one runs `prFinalizeBoot`, so `ServerBoot` and `initTree` run many times. The proposed fix sends one `/notify` at a time and keeps it pending until boot is finalized.\n\nThis is the client side of #7733: #7733 stops supernova from sending a burst of stale replies, and this fix makes sclang robust to any server that answers several `/status` before `/notify`. Each fix alone removes the problem.\n\n## Steps to reproduce\n\nRun this in the IDE, with the supernova from develop. It boots supernova with the core plugins only and counts how many times `ServerBoot` runs:\n\n```supercollider\n(\n// Boots supernova (core plugins only) and counts how many times ServerBoot runs.\nvar bootRuns = 0, action = { bootRuns = bootRuns + 1 };\nServer.supernova;\ns.options.ugenPluginsPath = Platform.resourceDir +/+ \"plugins\";\ns.aliveThreadPeriod = 0.05; // poll /status more often, as some setups do\nServerBoot.add(action, s);\ns.waitForBoot({\n    1.wait;\n    \"ServerBoot ran % times\".format(bootRuns).postln;\n    ServerBoot.remove(action, s);\n});\n)\n```\n\n## Expected vs. actual behavior\n\n**Expected:** one `/notify`, and `ServerBoot` runs once.\n\n**Actual (develop):**\n\n```\nRequested notification messages from server 'localhost'\nRequested notification messages from server 'localhost'\n...                                   (78 lines)\nnode id 1 already in use\nnode id 2 already in use\n...                                   (76 times each)\nServerBoot ran 77 times\n```\n\n**With the fix:**\n\n```\nRequested notification messages from server 'localhost'\nServerBoot ran 1 times\n```\n\n## Problem\n\n**File:** `SCClassLibrary/Common/Control/ServerStatus.sc`\n\n1. Line 127, in `addStatusWatcher`: every `/status.reply` sends a `/notify` while `notified` is false.\n\n```supercollider\nif(notify and: { notified.not }) { this.prSendNotifyRequest(true,true) };\n```\n\n2. Line 292, in `prSendNotifyRequest`: every call registers a new `/done` listener, and the previous ones stay registered.\n\n3. Line 308: when `/done` arrives, every registered listener matches it and calls `prFinalizeBoot`, which runs `ServerBoot.run` and `initTree` (lines 242-244). Each extra `initTree` recreates groups 1 and 2, hence `node id 1 already in use` and `node id 2 already in use`.\n\n`notified` only becomes true at the end of `prFinalizeBoot`, after `ServerBoot`, `sync` and `initTree`. Until then, every `/status.reply` sends yet another `/notify`.\n\n## Possible Fix\n\n**File to modify:** `SCClassLibrary/Common/Control/ServerStatus.sc`, 5 places (line numbers from develop 5d47207bb).\n\n**1. After line 13:** a flag for the pending request, and the listeners of the last request.\n\n```diff\n@@ -11,6 +11,7 @@ ServerStatusWatcher {\n \tvar <avgCPU, <peakCPU;\n \tvar <sampleRate, <actualSampleRate;\n \n+\tvar pendingNotifyRequest = false, prevDoneOSCFunc, prevFailOSCFunc;\n \tvar reallyDeadCount = 0, bootNotifyFirst = true;\n \tvar <>timeoutBeforeConsideredDeadOnExit = 3.0;\n \n```\n\n**2. After line 34, in `quit`:** reset them.\n\n```diff\n@@ -32,6 +33,9 @@ ServerStatusWatcher {\n \t\tnotified = false;\n \t\tserverBooting = false;\n \t\tunresponsive = false;\n+\t\tpendingNotifyRequest = false;\n+\t\tprevDoneOSCFunc.free;\n+\t\tprevFailOSCFunc.free;\n \n \t\t// server.changed(\\serverRunning) should be deferred in dependants!\n \t\t//  just in case some don't, defer here to avoid gui updates breaking.\n```\n\n**3. After line 246, in `prFinalizeBoot`:** the request stops being pending only once the client is fully registered.\n\n```diff\n@@ -244,6 +248,7 @@ ServerStatusWatcher {\n \t\t\tserver.initTree;\n \n \t\t\tthis.notified = true;\n+\t\t\tpendingNotifyRequest = false;\n \t\t\tserver.changed(\\serverRunning);\n \t\t}, AppClock)\n \t}\n```\n\n**4. After line 289, in `prSendNotifyRequest`:** send nothing while a request is pending, and free the previous listeners.\n\n```diff\n@@ -288,6 +293,16 @@ ServerStatusWatcher {\n \n \t\tif(hasBooted.not) { ^this };\n \n+\t\t// A request is already in flight (or boot is being finalized): don't send another one\n+\t\t// for each /status.reply, or every stacked /done listener would run prFinalizeBoot.\n+\t\tif(flag and: { pendingNotifyRequest }) { ^this };\n+\n+\t\t// clean up any previous unresolved listeners before registering new ones\n+\t\tprevDoneOSCFunc.free;\n+\t\tprevFailOSCFunc.free;\n+\n+\t\tif(flag) { pendingNotifyRequest = true };\n+\n \t\t// set up oscfuncs for possible server responses, \\done or \\failed\n \t\tdoneOSCFunc = OSCFunc({ |msg|\n \t\t\tvar newClientID = msg[2], newMaxLogins = msg[3];\n```\n\n**5. Lines 307 to 326, in the `/done` and `/fail` listeners:** clear the flag in every case that does not go through `prFinalizeBoot`, and remember the new listeners.\n\n```diff\n@@ -305,24 +320,30 @@ ServerStatusWatcher {\n \t\t\t\t// XXX: this is a workaround because using `serverBooting` is not reliable\n \t\t\t\t// when server is rebooted quickly.\n \t\t\t\tif(addingStatusWatcher) {\n-\t\t\t\t\tthis.prFinalizeBoot;\n+\t\t\t\t\tthis.prFinalizeBoot; // clears pendingNotifyRequest once notified\n \t\t\t\t} {\n \t\t\t\t\tnotified = true;\n+\t\t\t\t\tpendingNotifyRequest = false;\n \t\t\t\t}\n \n \t\t\t} {\n \t\t\t\tnotified = false;\n+\t\t\t\tpendingNotifyRequest = false;\n \t\t\t};\n \n \t\t}, '/done', server.addr, argTemplate:['/notify', nil]).oneShot;\n \n \t\tfailOSCFunc = OSCFunc({|msg|\n \n+\t\t\tpendingNotifyRequest = false;\n \t\t\tdoneOSCFunc.free;\n \t\t\tserver.prHandleNotifyFailString(msg[2], msg);\n \n \t\t}, '/fail', server.addr, argTemplate:['/notify', nil, nil]).oneShot;\n \n+\t\tprevDoneOSCFunc = doneOSCFunc;\n+\t\tprevFailOSCFunc = failOSCFunc;\n+\n \t\tserver.sendMsg(\"/notify\", flag.binaryValue, server.clientID);\n \n \t\tif(flag){\n```\n\n## What the fix changes\n\n* **One `/notify` per boot.** sclang waits for the answer to its request instead of sending one per `/status.reply`.\n* **`ServerBoot` and `initTree` run once.** Only one `/done` listener exists at a time, so `prFinalizeBoot` runs once.\n* **No `node id N already in use` at boot** from repeated `initTree` or `ServerBoot` actions.\n* **Faster boot from sclang,** since `ServerBoot` and `initTree` are no longer repeated.\n* **Works with any slow server,** not only supernova: a remote server, a busy machine or a short `aliveThreadPeriod` no longer cause repeated registrations.\n* **No change otherwise.** Turning notifications off and on, quitting and rebooting in the same session behave as before (tested).\n\nRelated: #7733 (server side of the same problem), #7731, #7732.",
+    "closed_by": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/supercollider/supercollider/issues/7734/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/supercollider/supercollider/issues/7734/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+  },
+  "comments": []
+}

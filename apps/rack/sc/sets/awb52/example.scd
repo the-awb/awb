@@ -6,6 +6,7 @@
 (
 s.options.memSize = 262144;
 s.options.sampleRate = 44100;
+s.options.blockSize = 256;
 s.reboot;
 )
 

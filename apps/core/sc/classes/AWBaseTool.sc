@@ -42,6 +42,11 @@ AWBaseTool : AWBCoreTool {
             var row=t[trackID].metadata[id],m=row[\midi];
             address.sendMsg('/awb/base/mapping',this.instance.instanceID,token,baseEpoch,trackID.asString,id.asString,row[\label],m[\channel] ? -1,m[\cc] ? -1,m[\lo] ? 0,m[\hi] ? 127,(m[\pickup] ? true).asInteger,row[\status].asString)
         }};
+        if(liveRack.notNil and:{liveRack.closed.not}){liveRack.followerIDs.do{|id|
+            var slot=liveRack.slotAt(id);
+            if(slot[\kind]==\follower){address.sendMsg('/awb/base/meter',this.instance.instanceID,token,baseEpoch,
+                "global/control-levels/"++id.asString,slot[\measurementBus].index)};
+        }};
         logHistory.do{|entry|this.sendLog(address,token,entry)};
         address.sendMsg('/awb/base/end',this.instance.instanceID,token,baseEpoch,request);^this;
     }
@@ -52,6 +57,7 @@ AWBaseTool : AWBCoreTool {
     bindFirstPass { |set,own=false|
         var result=\AWBLiveMappings.asClass.perform(\bindFirstPass,this,set);
         liveRack=set.rack;
+        liveRack.fxIDs.do{|id|liveRack.setReturn(id,1)};
         if(own){this.adopt(\firstPassSet,set,{|object|object.close})};^result;
     }
     bindDelays { |plan,configuration,action|

@@ -1,0 +1,2 @@
+// Apply before AWBFirstPassSet.open: spec[\irEnvelopes] = thisFile.load;
+IdentityDictionary[ ('earth' -> ( 'levels': [ 0.0, 1.0, 1.0, 0.0 ], 'curve': 0.0, 'gainDb': -6.0, 'times': [ 0.0, 0.05, 0.8, 1.0 ] )), ('composite' -> ( 'levels': [ 1, 1, 1, 1, 1, 1 ], 'curve': 0, 'gainDb': 0, 'times': [ 0, 0.05, 0.25, 0.5, 0.8, 1 ] )), ('echo' -> ( 'levels': [ 1, 1, 1, 1, 1, 1 ], 'curve': 0, 'gainDb': 0, 'times': [ 0, 0.05, 0.25, 0.5, 0.8, 1 ] )) ]

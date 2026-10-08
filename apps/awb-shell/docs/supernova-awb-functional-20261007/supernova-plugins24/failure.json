@@ -1,0 +1,1 @@
+{"reason": "Supernova engine exited with code 0 during rack-specific Waves cache loading; no rack-binding or plugin readback", "knownWarnings": ["node id 2 already in use"], "specificPluginCauseUnproven": true}

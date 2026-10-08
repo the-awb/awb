@@ -93,6 +93,11 @@ AWFXTailGate {
         node=Synth.basicNew(defName,server);
         this.dispatch(node.newMsg(processorGroup,[\in,inputBus.index,\out,outputBus.index]++args,\addToTail));^this.own(node);
     }
+    releaseProcessor { |node|
+        if(closed){^this};
+        if(ownedNodes.includes(node).not or:{node.group!==processorGroup}){Error("AWFXTailGate: processor is not owned by this gate").throw};
+        this.dispatch(node.freeMsg);ownedNodes.remove(node);options[\disownFunction].value(node);^this;
+    }
     configuration {^settings.copy}
     free { |send=true|
         var buses;if(closed){^this};closed=true;ServerQuit.remove(quitHook,server);

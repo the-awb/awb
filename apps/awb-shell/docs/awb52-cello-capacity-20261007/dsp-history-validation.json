@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "ready": true,
+  "syntheticOSC": true,
+  "seconds": 15.002349131,
+  "cpu": [
+    {
+      "pid": 37728,
+      "type": "Browser",
+      "corePercent": 0.7808577108629882
+    },
+    {
+      "pid": 37729,
+      "type": "GPU",
+      "corePercent": 1.356700862129803
+    },
+    {
+      "pid": 37730,
+      "type": "Utility",
+      "corePercent": 0.4005306067423502
+    },
+    {
+      "pid": 37731,
+      "type": "Tab",
+      "corePercent": 0.7447566979302289
+    }
+  ],
+  "totalElectronCorePercent": 3.2828458776653706,
+  "moving": {
+    "rows": 67,
+    "draws": 34,
+    "frozen": false,
+    "pollHz": 4,
+    "paintHz": 2
+  },
+  "frozen": {
+    "rows": 67,
+    "draws": 35,
+    "frozen": true,
+    "pollHz": 4,
+    "paintHz": 2
+  },
+  "hidden": {
+    "rows": 3,
+    "draws": 39,
+    "frozen": false,
+    "pollHz": 4,
+    "paintHz": 2
+  },
+  "polls": 92,
+  "checks": 9,
+  "windowSize": [
+    960,
+    460
+  ],
+  "nativeVisibility": {
+    "windowVisible": false,
+    "pageHidden": false
+  },
+  "hiddenCheck": "simulated Page Visibility API; native visibility recorded separately",
+  "errors": []
+}

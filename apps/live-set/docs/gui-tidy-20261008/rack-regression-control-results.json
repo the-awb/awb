@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "assertionCount": 17,
+  "referenceMaxError": 0.0,
+  "checks": [
+    "float render has expected format",
+    "control sends have no audible master route",
+    "control output stays on designated KR diagnostics",
+    "Peak detector applies +14.4 dB gain without normalization or clipping",
+    "one fast measurement feeds independent short and long envelopes",
+    "detector reaches near full amplitude well before long follower",
+    "opposed sources cancel before detection",
+    "long follower retains its own release after source cancellation",
+    "shared measurement recovers when cancelling source ends",
+    "raw detector returns near zero while musical follower continues",
+    "zero amount silences the common measurement output",
+    "amount zero preserves downstream follower release",
+    "50 percent amount scales measurement independently of source sends",
+    "cleared follower resets its stable KR output",
+    "cleared follower restarts on same output bus",
+    "native consumer matches EnvDetect3 reference sample for sample",
+    "Tool close clears measurement, consumers and ownership graph"
+  ]
+}

@@ -26,7 +26,7 @@ setup=AWBFirstPassSet.open(spec,(server:server,controlSends:("AWB52_CONTROL_SEND
         check.value("source snapshot remains intact",set.spec[\components][\upper][\params].clump(2).detect{|pair|pair[0]==9}[1]==0);
         if(spec[\irFiles].notNil){
             check.value("file IR metadata covers all branches",set.irInfo.size==3);
-            check.value("complete short IRs and capped long IR",set.irInfo.collect{|info|info[\frames]}==spec[\irProvenance].collect{|info|info[\usedFrames]});
+            check.value("per-branch IR allocation matches prepared provenance",set.irInfo.collect{|info|info[\frames]}==spec[\irProvenance].collect{|info|info[\usedFrames]});
             check.value("stereo IR sides retained and mono echoed on both",set.irInfo.collect{|info|info[\sourceChannels]}==[2,2,1]);
             set.irInfo.do{|info|2.do{|channel|expectedReads.add([info[\path],0,info[\frames],if(info[\sourceChannels]==1){0}{channel}])}};
             actualReads=events.select{|e|e[2][0]=="/b_allocReadChannel"}.collect{|e|e[2].copyRange(2,5)};

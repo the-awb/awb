@@ -12,7 +12,13 @@ export const fxGroups=[
  {id:'splut',label:'Splutter',color:'#9a7548',controls:controls('splut',[['splut1','1','unavailable'],['splut2','2','unavailable'],['splutenvMod','~ envelope','unavailable'],['splutDiv','~ time','unavailable']])},
 ];
 export const delayControls=id=>controls(id,[['inOf','Input',null],['fbOf','Feedback',null],['fxOf','FX',null],['sliOf','Time',null],['inSc','~ input',null],['fbSc','~ feedback',null],['fxSc','~ FX',null],['sliSc','~ time',null]]);
-export const allControls=[...fxGroups.flatMap(g=>g.controls),...cells.flatMap(c=>delayControls(c.id))];
+export const delayRouting=id=>controls(id,[...['b1','a2','b2'].slice(0,['b1','a2','b2','a1'].indexOf(id)).reverse().map(from=>[`${from}In`,from.toUpperCase(),'delay:route']),...(id==='a1'?[['sc2In','SC2','delay:route'],['sc1In','SC1','delay:route']]:[]),['p2In','Pro2','delay:route'],['micIn','Mic','delay:route'],['vcIn','VC','delay:route']]);
+export const delayModulation=id=>[
+ {id:`${id}/sliOf`,label:'~T',field:'amount'},{id:`${id}/fbOf`,label:'~FB',field:'amount'},
+ {id:`${id}/fxOf`,label:'~FX',field:'amount'},{id:`${id}/inOf`,label:'~IN',field:'amount'},
+ {id:`${id}/thAMod`,label:'LFO',field:'base'},{id:`${id}/thPMod`,label:'Offset',field:'base'},
+];
+export const allControls=[...fxGroups.flatMap(g=>g.controls),...cells.flatMap(c=>[...delayControls(c.id),...delayRouting(c.id)])];
 export function localViewURL(value){if(!value)return null;const u=new URL(value);if(u.protocol!=='http:'||u.hostname!=='127.0.0.1'||!u.port||u.username||u.password||u.hash)throw Error('Embedded views require an explicit loopback HTTP URL');return u.href}
 export function validateSurface(input={}){const cellViews={};for(const [id,url]of Object.entries(input.cellViews??{})){if(!cells.some(c=>c.id===id))throw Error('Unknown cell view');cellViews[id]=localViewURL(url)}return {name:String(input.name??'AWB / LIVE').slice(0,120),cellViews,routingView:localViewURL(input.routingView),rackView:localViewURL(input.rackView),managedCells:input.managedCells!==false}}
 export function mappingLabel(m){return m?`CC ${m.cc} · ch ${m.channel+1} · ${m.device??'MIDI'}${m.pickup?' · pickup':''}`:'Unmapped'}

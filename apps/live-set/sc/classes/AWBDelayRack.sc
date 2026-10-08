@@ -2,8 +2,8 @@
 AWBDelayRack {
     var <base,<rack,<server,<graph,<ready=false,<closed=false,<state,<params,<epoch;
     var adapter,feeders,returns,parameterGroup,hooks,responder,watchers,revision=0,starting=false,pipeDefinition;
-    *configure { |spec|
-        var copy=spec.deepCopy,ids=[\delbus,\b1,\a2,\b2,\a1,\sc1,\sc2];
+    *configure { |spec,extraInputs = #[sc1,sc2]|
+        var copy=spec.deepCopy,ids=[\delbus,\b1,\a2,\b2,\a1]++extraInputs;
         if(copy[\rack][\channels].any{|c|ids.includes(c[\id].asSymbol)}){Error("Delay channels already declared").throw};
         copy[\rack][\channels]=copy[\rack][\channels]++ids.collect{|id|(id:id.asString,label:if(id==\delbus){"Delay Bus"}{id.asString.toUpper})};^copy;
     }
@@ -23,7 +23,7 @@ AWBDelayRack {
     init { |owner,sendRack,plan,configuration|
         base=owner;rack=sendRack;server=base.server;
         if(rack.server!==server or:{rack.ready.not}){Error("Delays need a ready rack on the AWBase server").throw};
-        [\delbus,\b1,\a2,\b2,\a1,\sc1,\sc2].do{|id|rack.inputFor(id)};
+        [\delbus,\b1,\a2,\b2,\a1].do{|id|rack.inputFor(id)};
         state=configuration.deepCopy;state[\routes]=Dictionary.new;configuration[\routes].do{|pair|state[\routes][pair[0]]=pair[1]};
         params=Dictionary.new;hooks=IdentityDictionary.new;feeders=List.new;returns=List.new;watchers=Dictionary.new;
         epoch=thisProcess.pid.asString++":"++UniqueID.next;
@@ -43,7 +43,8 @@ AWBDelayRack {
                         adapter=UBPGraphAWParamAdapter(graph);
                         bridge=SynthDef(("awbDelayPipe"++UniqueID.next).asSymbol,{|in=0,out=0,gain=1,previous=0|Out.ar(out,Select.ar(previous,[In.ar(in,2),InFeedback.ar(in,2)])*gain)});
                         pipeDefinition=bridge;bridge.send(server);AWParam.prepare(server);server.sync;
-                        ["clean","pro2","sc1","sc2"].do{|id|
+                        graph.plan[\nodes].select{|item|item[\kind]=="input"}.do{|item|
+                            var id=item[\id];
                             var source=if(id=="clean"){\vc}{id.asSymbol},node;
                             node=Synth.before(graph.group,bridge.name,[\in,rack.postFor(source).index,\out,graph.port(id,"out").index,\previous,1]);feeders.add(node);base.instance.own(node,\synth,(name:"Delay input "++source));
                         };
@@ -55,7 +56,7 @@ AWBDelayRack {
                         this.bindParameters;
                         rack.setSend(\delbus,\mast,1);rack.setLevel(\delbus,0.8);
                         server.sync;ready=true;starting=false;this.installResponder;
-                        if(closed){this.close;action.value(nil,Error("Delay owner closed during startup"))}{base.log("Four delays connected; VC/Pro2/SC1/SC2 inputs, separate returns and Delay Bus");action.value(this,nil)};
+                        if(closed){this.close;action.value(nil,Error("Delay owner closed during startup"))}{base.log("Four delays connected; configured rack inputs, separate returns and Delay Bus");action.value(this,nil)};
                     }{|failure|starting=false;this.close;action.value(nil,failure)};
                 }).play(SystemClock);
             };
@@ -83,7 +84,7 @@ AWBDelayRack {
             base.track(id.toLower.asSymbol).add(name,p,"Head "++h[\id]++" amount");
             if(h[\enabled].not){graph.setTarget(graph.headTarget(cell[\id],h[\id],\source),-1)};h[\sends].keysValuesDo{|to,gain|graph.setRoute(cell[\id]++"/"++h[\id]++":"++to.asString,gain)}}};
         state[\routes].keysValuesDo{|id,value|
-            var p=this.addParam(id,graph.routeTarget(id).copy.putAll((min:0,max:1)),value,{|v|state[\routes][id]=v}),parts=id.split($:),names=(clean:\vcIn,pro2:\p2In,sc1:\sc1In,sc2:\sc2In,B1:\b1In,A2:\a2In,B2:\b2In);
+            var p=this.addParam(id,graph.routeTarget(id).copy.putAll((min:0,max:1)),value,{|v|state[\routes][id]=v}),parts=id.split($:),names=(clean:\vcIn,pro2:\p2In,sc1:\sc1In,sc2:\sc2In,mic:\micIn,B1:\b1In,A2:\a2In,B2:\b2In);
             if(parts[1]!="monitor"){base.track(parts[1].toLower.asSymbol).add(names[parts[0].asSymbol],p,id,this.class.midi(parts[1].toLower,names[parts[0].asSymbol]))};
         };
         this.class.midiRows.do{|row|var track=base.track(row[\track]),id=row[\name].asSymbol;if(track.p[id].isNil){track.unavailable(id,row[\name],this.class.midi(row[\track],id))}};

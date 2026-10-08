@@ -1,0 +1,94 @@
+{
+  "passed": true,
+  "checks": [
+    "zero additional sends preserve original return",
+    "self-feedback gain is correct",
+    "cross-send and follower receive return audio",
+    "processor replacement preserves routing",
+    "clear and retirement leave no stale audio",
+    "FX return channel has exactly one 256-sample block delay"
+  ],
+  "sampleRate": 44100,
+  "blockSize": 256,
+  "onsets": [
+    4378,
+    4634
+  ],
+  "levels": [
+    {
+      "seconds": 0.7,
+      "measured": [
+        0.10000000149011612,
+        0.10000000149011612,
+        0.0,
+        0.10000000149011612
+      ],
+      "expected": [
+        0.1,
+        0.1,
+        0,
+        0.1
+      ]
+    },
+    {
+      "seconds": 1.7,
+      "measured": [
+        0.19999998807907104,
+        0.19999998807907104,
+        0.0,
+        0.19999998807907104
+      ],
+      "expected": [
+        0.2,
+        0.2,
+        0,
+        0.2
+      ]
+    },
+    {
+      "seconds": 2.7,
+      "measured": [
+        0.2499999850988388,
+        0.2499999850988388,
+        0.059999994933605194,
+        0.19999998807907104
+      ],
+      "expected": [
+        0.25,
+        0.25,
+        0.06,
+        0.2
+      ]
+    },
+    {
+      "seconds": 3.7,
+      "measured": [
+        0.2499999850988388,
+        0.2499999850988388,
+        0.059999994933605194,
+        0.19999998807907104
+      ],
+      "expected": [
+        0.25,
+        0.25,
+        0.06,
+        0.2
+      ]
+    },
+    {
+      "seconds": 4.7,
+      "measured": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

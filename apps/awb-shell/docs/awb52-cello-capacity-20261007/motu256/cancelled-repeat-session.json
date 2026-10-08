@@ -1,0 +1,61 @@
+{
+  "startedAt": "2026-10-07T12:03:07.008420+00:00",
+  "complete": false,
+  "runs": [
+    {
+      "name": "baseline",
+      "command": [
+        "/Users/willy/.nvm/versions/node/v22.23.2/bin/node",
+        "/private/tmp/awb-motu256-full-audit-run.mjs",
+        "--run",
+        "--quiet-window",
+        "--seconds=300",
+        "--repeats=1",
+        "--block=128",
+        "--ir-cap=30",
+        "--plugin-workers=2",
+        "--fft-size=4096",
+        "--reserve-percent=0",
+        "--output=/private/tmp/awb-motu256-baseline-repeat-20261007/baseline",
+        "--sc-source=/private/tmp/awb-motu256-cello-source.scd"
+      ],
+      "startedAt": "2026-10-07T12:03:07.395001+00:00",
+      "results": "/private/tmp/awb-motu256-baseline-repeat-20261007/baseline/results.json"
+    }
+  ],
+  "hardwareBefore": {
+    "device": 159,
+    "name": "1248",
+    "sampleRate": 44100,
+    "hardwareFrames": 512,
+    "inputLatencyFrames": 8,
+    "outputLatencyFrames": 8,
+    "inputSafetyOffsetFrames": 8,
+    "outputSafetyOffsetFrames": 8
+  },
+  "hardwareAfter": {
+    "device": 159,
+    "name": "1248",
+    "sampleRate": 44100,
+    "hardwareFrames": 512,
+    "inputLatencyFrames": 8,
+    "outputLatencyFrames": 8,
+    "inputSafetyOffsetFrames": 8,
+    "outputSafetyOffsetFrames": 8
+  },
+  "hardware256": {
+    "device": 159,
+    "name": "1248",
+    "sampleRate": 44100,
+    "hardwareFrames": 256,
+    "inputLatencyFrames": 8,
+    "outputLatencyFrames": 8,
+    "inputSafetyOffsetFrames": 8,
+    "outputSafetyOffsetFrames": 8
+  },
+  "cleanupError": "Traceback (most recent call last):\n  File \"/private/tmp/awb-motu256-baseline-repeat.py\", line 47, in <module>\n    code=subprocess.call(cmd,cwd='/Users/willy/awb')\n  File \"/usr/local/Cellar/python/3.7.0/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py\", line 306, in call\n    return p.wait(timeout=timeout)\n  File \"/usr/local/Cellar/python/3.7.0/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py\", line 971, in wait\n    return self._wait(timeout=timeout)\n  File \"/usr/local/Cellar/python/3.7.0/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py\", line 1601, in _wait\n    (pid, sts) = self._try_wait(0)\n  File \"/usr/local/Cellar/python/3.7.0/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py\", line 1559, in _try_wait\n    (pid, sts) = os.waitpid(self.pid, wait_flags)\nKeyboardInterrupt\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/private/tmp/awb-motu256-baseline-repeat.py\", line 57, in <module>\n    active=engines(inventory());assert not active, f'Audio processes remain; device restoration deferred: {active}'\nAssertionError: Audio processes remain; device restoration deferred: ['82799 /private/tmp/awb-motu256-baseline-repeat-20261007/baseline/fixture/scsynth']\n",
+  "cancelledByUser": true,
+  "disposition": "cancelled during preparation; no scored repeat",
+  "manualCleanupComplete": true,
+  "releasedAt": "2026-10-07T12:05:16Z"
+}

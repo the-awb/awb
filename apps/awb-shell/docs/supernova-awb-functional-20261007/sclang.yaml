@@ -1,0 +1,6 @@
+includePaths:
+  - "/private/tmp/awb-combined-control-queries-20261007/source/SCClassLibrary"
+  - "/private/tmp/awb-supernova-awb-functional-20261007-v1/framework"
+  - "/private/tmp/awb-supernova-awb-functional-20261007-v1/classes"
+excludeDefaultPaths: true
+postInlineWarnings: false

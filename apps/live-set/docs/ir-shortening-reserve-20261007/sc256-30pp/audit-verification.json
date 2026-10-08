@@ -1,0 +1,41 @@
+{
+  "rereadAfterShutdown": true,
+  "callbacks": 62091,
+  "invalidRows": [],
+  "allMeasuredRowsValid": true,
+  "allMeasuredCountsMatch": true,
+  "listenerStatus": [
+    0,
+    0,
+    0
+  ],
+  "phases": [
+    {
+      "label": "cello-profile-full-gui-baseline",
+      "first": 10946,
+      "end": 18703,
+      "callbacks": 7757,
+      "residualCallbacks": 0,
+      "overBudgetCallbacks": 0,
+      "maxDspMs": 6.251167
+    },
+    {
+      "label": "cello-profile-full-gui-plus-reserve",
+      "first": 32962,
+      "end": 58819,
+      "callbacks": 25857,
+      "residualCallbacks": 3,
+      "overBudgetCallbacks": 1,
+      "maxDspMs": 11.624693
+    },
+    {
+      "label": "cello-profile-full-gui-restored",
+      "first": 59329,
+      "end": 61934,
+      "callbacks": 2605,
+      "residualCallbacks": 0,
+      "overBudgetCallbacks": 0,
+      "maxDspMs": 7.080807
+    }
+  ]
+}

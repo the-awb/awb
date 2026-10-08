@@ -1,0 +1,21 @@
+{
+  "recorded_at": "2026-10-07T11:44:19Z",
+  "reservation_owner_pid": 79848,
+  "reservation_thread": "01a10182-c25b-77a3-a12b-2b5266ded6f7",
+  "reservation_started_at": "2026-10-07T11:39:39.739783Z",
+  "overlap": [
+    {
+      "activity": "isolated Supernova repair compilation",
+      "start": "2026-10-07T11:40:27.514490Z",
+      "end": "2026-10-07T11:41:02.195657Z"
+    },
+    {
+      "activity": "C++ and NRT qualification tests",
+      "start": "2026-10-07T11:42:21.589447Z",
+      "end": "2026-10-07T11:43:12.608946Z"
+    }
+  ],
+  "action": "stopped only investigation process group 80647 on learning of the coordination document; no realtime Supernova audio device opened",
+  "qualification_status": "C++ 34/34 cases and ordering 30/30 probes passed; lockup/EOF checks interrupted and will be rerun after reservation",
+  "capacity_evidence_boundary": "label captures overlapping these intervals as contaminated by this workstream; exact capture phases must be resolved by the capacity controller"
+}

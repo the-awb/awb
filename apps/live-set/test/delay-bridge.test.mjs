@@ -7,3 +7,11 @@ test('SC-origin parameter deltas reconcile only the corresponding state field',(
 test('observed timing remains the actual parameter value while rhythmic metadata changes',()=>{const c=defaults();c.cells[0].timingMode='beats';c.cells[0].seconds=.5;const observed=validate(c,{resolveTiming:false});assert.equal(observed.cells[0].seconds,.5);assert.equal(validate(c).cells[0].seconds,8);const d=structuredClone(c);d.tempo=100;d.cells[0].triplet=true;assert.equal(changedFields(c,d).some(e=>e[0]==='meta'&&e[2]==='tempo'),true);});
 
 test('SC-origin head amount parameter reconciles the selected head only',()=>{const a=defaults();applyDelta(a,'B1/h3/amount',.17);assert.equal(a.cells[0].heads[2].amount,.17);assert.equal(a.cells[0].heads[0].amount,1);assert.equal(a.cells[1].heads[2].amount,1);assert.equal(a.cells[0].h3,undefined)});
+
+test('live VC/Pro2/Mic graph has independent routes to all cells and no obsolete SC inputs',()=>{
+ const c=defaults({sources:['clean','pro2','mic']}),plan=compileGraph(graphFor(c));
+ assert.deepEqual(plan.nodes.filter(n=>n.kind==='input').map(n=>n.id),['clean','pro2','mic']);
+ for(const id of ['B1','A2','B2','A1'])assert.ok(plan.nodes.find(n=>n.id===id).incoming.some(e=>e.id===`mic:${id}`));
+ c.routes['mic:A2']=.7;assert.deepEqual(changedFields(validate(defaults({sources:['clean','pro2','mic']})),validate(c)),[['route','mic:A2','',.7]]);
+ assert.throws(()=>validate({...c,routes:{...c.routes,'sc1:A1':0}}));assert.throws(()=>validate({...c,inputSources:['clean','unknown']}));
+});

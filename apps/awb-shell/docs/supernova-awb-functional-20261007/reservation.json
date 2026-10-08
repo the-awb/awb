@@ -1,0 +1,8 @@
+{
+  "owner": "AWB Supernova functional qualification",
+  "thread": "01a10182-c25b-77a3-a12b-2b5266ded6f7",
+  "pid": 9442,
+  "start": "2026-10-07T16:05:55.398169+00:00",
+  "configuration": "Functionality only; silent private buses; MOTU44100/512; isolated combined engines; no capacity conclusions",
+  "output": "/private/tmp/awb-supernova-awb-functional-20261007-v1"
+}

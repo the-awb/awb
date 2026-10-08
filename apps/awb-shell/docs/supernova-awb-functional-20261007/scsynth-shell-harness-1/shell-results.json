@@ -1,0 +1,141 @@
+{
+  "backend": "scsynth",
+  "session": {
+    "langPort": 53618,
+    "enginePort": 49717,
+    "enginePID": 13845,
+    "audioBus": 4,
+    "controlBus": 0
+  },
+  "checks": [
+    {
+      "ok": false,
+      "label": "F3 relay sees running engine",
+      "detail": {
+        "sclang": {
+          "status": "attached",
+          "mode": "ide",
+          "processID": 13809
+        },
+        "scsynth": {
+          "status": "ready"
+        },
+        "synthDefs": {
+          "status": "ready",
+          "generation": 0,
+          "inventoryCount": 0,
+          "cachedDescriptions": 0
+        },
+        "nodeManager": {
+          "status": "ready",
+          "protocolVersion": 3,
+          "highWater": 3,
+          "containers": [
+            {
+              "entryID": 1,
+              "key": "toolInstance_awbCore_awbCore:1063",
+              "name": "Tool Instance: awbCore [awbCore:1063]",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 2,
+              "key": "orphanedNodes",
+              "name": "Orphaned Nodes",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 3,
+              "key": "toolSource_awbCore",
+              "name": "Tool: awbCore",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 4,
+              "key": "synthDef_awbFunctionalControl",
+              "name": "SynthDef: awbFunctionalControl",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 5,
+              "key": "synthDef_awbFunctionalScopes",
+              "name": "SynthDef: awbFunctionalScopes",
+              "childCount": 1,
+              "sequence": 3
+            },
+            {
+              "entryID": 6,
+              "key": "synthDef_awbFunctionalVoice",
+              "name": "SynthDef: awbFunctionalVoice",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 7,
+              "key": "synthDef_awbFunctionalDetector",
+              "name": "SynthDef: awbFunctionalDetector",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 8,
+              "key": "synthDef_awbFunctionalShot",
+              "name": "SynthDef: awbFunctionalShot",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 9,
+              "key": "synthDef_awbFunctionalConsumer",
+              "name": "SynthDef: awbFunctionalConsumer",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 11,
+              "key": "orphanedEvents",
+              "name": "Orphaned Events",
+              "childCount": 0,
+              "sequence": 3
+            }
+          ],
+          "entryCount": 1
+        },
+        "control": {
+          "status": "ready",
+          "protocolVersion": 1,
+          "mode": "ide",
+          "nodeManager": "ready",
+          "nodeManagerPolicy": "always",
+          "scsynth": "ready",
+          "processID": 13809,
+          "qtStation": true
+        }
+      }
+    },
+    {
+      "ok": true,
+      "label": "F3 two real WebSocket clients share shell host"
+    },
+    {
+      "ok": true,
+      "label": "F3 twenty connect/disconnect cycles preserve projection"
+    },
+    {
+      "ok": true,
+      "label": "F3 actual host disable clears projection"
+    },
+    {
+      "ok": true,
+      "label": "F3 actual host enable resnapshots"
+    }
+  ],
+  "errors": [
+    "F3 relay sees running engine",
+    "Error: Timed out: second projection snapshot\n    at wait (file:///private/tmp/awb-supernova-awb-functional-20261007-v1/shell-check.mjs:12:115)\n    at async file:///private/tmp/awb-supernova-awb-functional-20261007-v1/shell-check.mjs:34:23"
+  ],
+  "passed": false
+}

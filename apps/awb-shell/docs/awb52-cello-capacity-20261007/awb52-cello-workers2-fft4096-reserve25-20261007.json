@@ -1,0 +1,164 @@
+{
+  "workload": {
+    "channels": 2,
+    "plugins": 13,
+    "partConvs": 6,
+    "fullLoad": false,
+    "blockSize": 128,
+    "fftSize": 4096,
+    "pluginWorkers": 2,
+    "pluginBlock": 0,
+    "reserveTargetPercent": 25,
+    "controlSends": 16,
+    "followers": 25,
+    "modulated": true,
+    "irMaxSeconds": 30,
+    "fxOutputCleared": true,
+    "irProvenance": [
+      {
+        "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+        "sourceFrames": 463050,
+        "usedFrames": 463050,
+        "sourceSeconds": 10.5,
+        "usedSeconds": 10.5,
+        "channels": 2,
+        "sampleRate": 44100,
+        "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+      },
+      {
+        "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+        "sourceFrames": 962182,
+        "usedFrames": 962182,
+        "sourceSeconds": 21.818185941043083,
+        "usedSeconds": 21.818185941043083,
+        "channels": 2,
+        "sampleRate": 44100,
+        "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+      },
+      {
+        "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+        "sourceFrames": 3301490,
+        "usedFrames": 1323000,
+        "sourceSeconds": 74.86371882086168,
+        "usedSeconds": 30,
+        "channels": 1,
+        "sampleRate": 44100,
+        "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+      }
+    ],
+    "gui": false,
+    "syntheticInput": false,
+    "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+    "celloSourceMono": true,
+    "pro2Silent": true,
+    "hardwareFXMix": false,
+    "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+  },
+  "session": {
+    "port": 57071,
+    "langPort": 57120,
+    "sclangPID": 35995,
+    "scPID": 36002,
+    "toneNode": 1000,
+    "sampleRate": 44100,
+    "blockSize": 128,
+    "outputChannels": 4,
+    "inputChannels": 3,
+    "memoryPoolKiB": 262144,
+    "pilotBus": 2
+  },
+  "reserveCalibration": {
+    "isolatedBaseline": {
+      "count": 0,
+      "average": 0.10979698660473029
+    },
+    "isolatedProbe": {
+      "count": 10,
+      "average": 15.406437794367472
+    },
+    "targetPercent": 25,
+    "source": "32 SinOsc -> RLPF -> tanh per synth, private unconsumed audio bus; serial group"
+  },
+  "loading": {},
+  "stageCosts": null,
+  "heaviestCallbacks": null,
+  "timeline": [
+    {
+      "label": "idle-calibration begin",
+      "utc": "2026-10-07T02:21:21.650Z",
+      "hostNs": 398720132673910
+    },
+    {
+      "label": "idle-calibration end",
+      "utc": "2026-10-07T02:21:24.657Z",
+      "hostNs": 398723140246771
+    },
+    {
+      "label": "command received stress",
+      "utc": "2026-10-07T02:21:27.346Z",
+      "hostNs": 398725828660751
+    },
+    {
+      "label": "command received stress",
+      "utc": "2026-10-07T02:21:33.447Z",
+      "hostNs": 398731930349835
+    },
+    {
+      "label": "command received stress",
+      "utc": "2026-10-07T02:21:39.550Z",
+      "hostNs": 398738033018079
+    },
+    {
+      "label": "rack load requested",
+      "utc": "2026-10-07T02:21:41.742Z",
+      "hostNs": 398740224985352
+    },
+    {
+      "label": "command received load",
+      "utc": "2026-10-07T02:21:41.742Z",
+      "hostNs": 398740225411172
+    },
+    {
+      "label": "command received close",
+      "utc": "2026-10-07T02:22:44.102Z",
+      "hostNs": 398802585810697
+    }
+  ],
+  "pluginChecks": null,
+  "testTransforms": [
+    {
+      "name": "AWBFirstPassSet.sc",
+      "sha256": "0014d0dad67bcb249a4fa65d532c4b6fe151292dcf83ddb98d93ea2f6153c384"
+    },
+    {
+      "name": "AWBSharedFXChain.sc",
+      "sha256": "c6fead3b5564c01bf42253764c5c48e8fda934481106cd5346a974843b4fa95e"
+    }
+  ],
+  "teardown": {
+    "languageExited": true,
+    "recorderExited": true
+  },
+  "guardsVerified": null,
+  "engineShutdownConfirmed": null,
+  "serverFailures": [
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out",
+    "/status timed out"
+  ],
+  "error": "Error: Timed out: loaded rack\n    at until (file:///Users/willy/awb/apps/rack/sc/sets/awb52/cello-run.mjs:69:430)\n    at async file:///Users/willy/awb/apps/rack/sc/sets/awb52/cello-run.mjs:104:98",
+  "rawResults": "/private/tmp/awb52-cello-workers2-fft4096-reserve25-20261007/results.json",
+  "rawResultsSHA256": "d2c3ac252b879ca157e02663b7305a909e98a0d49f7127aec0befd468eefde5c",
+  "disposition": "startup failed",
+  "complete": false,
+  "phases": []
+}

@@ -1,0 +1,1 @@
+{"reason": "macOS SIGABRT / heap corruption in vst::VST2Plugin::setNumSpeakers; sclang reported misleading exit code 0", "enginePID": 17046}

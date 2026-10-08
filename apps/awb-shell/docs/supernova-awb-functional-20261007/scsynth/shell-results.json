@@ -1,0 +1,207 @@
+{
+  "backend": "scsynth",
+  "session": {
+    "langPort": 62009,
+    "enginePort": 50214,
+    "enginePID": 14494,
+    "audioBus": 4,
+    "controlBus": 0
+  },
+  "checks": [
+    {
+      "ok": true,
+      "label": "F3 relay sees running engine",
+      "detail": {
+        "sclang": {
+          "status": "attached",
+          "mode": "ide",
+          "processID": 14406
+        },
+        "scsynth": {
+          "status": "ready"
+        },
+        "synthDefs": {
+          "status": "ready",
+          "generation": 0,
+          "inventoryCount": 0,
+          "cachedDescriptions": 0
+        },
+        "nodeManager": {
+          "status": "ready",
+          "protocolVersion": 3,
+          "highWater": 3,
+          "containers": [
+            {
+              "entryID": 1,
+              "key": "synthDef_awbFunctionalVoice",
+              "name": "SynthDef: awbFunctionalVoice",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 2,
+              "key": "synthDef_awbFunctionalDetector",
+              "name": "SynthDef: awbFunctionalDetector",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 3,
+              "key": "orphanedEvents",
+              "name": "Orphaned Events",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 4,
+              "key": "synthDef_awbFunctionalConsumer",
+              "name": "SynthDef: awbFunctionalConsumer",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 5,
+              "key": "toolSource_awbCore",
+              "name": "Tool: awbCore",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 6,
+              "key": "synthDef_awbFunctionalShot",
+              "name": "SynthDef: awbFunctionalShot",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 8,
+              "key": "synthDef_awbFunctionalScopes",
+              "name": "SynthDef: awbFunctionalScopes",
+              "childCount": 1,
+              "sequence": 3
+            },
+            {
+              "entryID": 9,
+              "key": "synthDef_awbFunctionalControl",
+              "name": "SynthDef: awbFunctionalControl",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 10,
+              "key": "toolInstance_awbCore_awbCore:1063",
+              "name": "Tool Instance: awbCore [awbCore:1063]",
+              "childCount": 0,
+              "sequence": 3
+            },
+            {
+              "entryID": 11,
+              "key": "orphanedNodes",
+              "name": "Orphaned Nodes",
+              "childCount": 0,
+              "sequence": 3
+            }
+          ],
+          "entryCount": 1
+        },
+        "control": {
+          "status": "ready",
+          "protocolVersion": 1,
+          "mode": "ide",
+          "nodeManager": "ready",
+          "nodeManagerPolicy": "always",
+          "scsynth": "ready",
+          "processID": 14406,
+          "qtStation": true
+        }
+      }
+    },
+    {
+      "ok": true,
+      "label": "F3 two real WebSocket clients share shell host"
+    },
+    {
+      "ok": true,
+      "label": "F3 twenty connect/disconnect cycles preserve projection"
+    },
+    {
+      "ok": true,
+      "label": "F3 actual host disable clears projection"
+    },
+    {
+      "ok": true,
+      "label": "F3 actual host enable resnapshots"
+    },
+    {
+      "ok": true,
+      "label": "F3 real sequence-gap resnapshot",
+      "detail": {
+        "resnapshots": 2,
+        "highWater": 5
+      }
+    },
+    {
+      "ok": true,
+      "label": "F3 NodeManager bridge restart recovery"
+    },
+    {
+      "ok": true,
+      "label": "F8 two viewers share one audio tap",
+      "detail": {
+        "stats": {
+          "rawFrames": 100,
+          "transformCalls": 0,
+          "derivedFrames": 0
+        },
+        "derived": [],
+        "sources": [
+          {
+            "rate": "audio",
+            "bus": 4,
+            "channels": 2,
+            "generation": 3467639,
+            "nodeID": 2030,
+            "subscribers": 2,
+            "sourceEnd": 47104,
+            "ageMs": 11,
+            "error": null
+          },
+          {
+            "rate": "control",
+            "bus": 0,
+            "channels": 2,
+            "generation": 10071226,
+            "nodeID": 2031,
+            "subscribers": 1,
+            "sourceEnd": 352,
+            "ageMs": 11,
+            "error": null
+          }
+        ],
+        "polling": true
+      }
+    },
+    {
+      "ok": true,
+      "label": "F8 native audio/control frames are finite and sized"
+    },
+    {
+      "ok": true,
+      "label": "F8 audio tap carries expected private-bus signal"
+    },
+    {
+      "ok": true,
+      "label": "F8 control tap carries expected modulation signal"
+    },
+    {
+      "ok": true,
+      "label": "F8 one viewer closing preserves other tap"
+    },
+    {
+      "ok": true,
+      "label": "F8 final lease retires taps"
+    }
+  ],
+  "errors": [],
+  "passed": true
+}

@@ -1,0 +1,2 @@
+/private/tmp/awb-earth5-echo20-load
+Raw audio/audit and process CPU snapshots stay here; completed audit checks and bounded results are copied alongside this note.

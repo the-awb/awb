@@ -1,0 +1,18 @@
+{
+  "endedAt": "2026-10-07T16:56:07.813998+00:00",
+  "ownedEngineLanguageReceiversStopped": true,
+  "reservationKeeperPID": 9442,
+  "ownLockReleased": true,
+  "hardwareAfter": {
+    "device": 159,
+    "name": "1248",
+    "sampleRate": 44100,
+    "hardwareFrames": 512,
+    "inputLatencyFrames": 8,
+    "outputLatencyFrames": 8,
+    "inputSafetyOffsetFrames": 8,
+    "outputSafetyOffsetFrames": 8
+  },
+  "installationChanges": false,
+  "telegramToolAvailable": false
+}

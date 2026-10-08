@@ -1,0 +1,28 @@
+{
+  "requestedMaxLogins": 1,
+  "primaryLanguageClientAlreadyRegistered": true,
+  "rows": [
+    {
+      "i": 0,
+      "on": 1,
+      "error": "/notify too many users\n"
+    },
+    {
+      "i": 1,
+      "on": 1,
+      "error": "/notify too many users\n"
+    },
+    {
+      "i": 0,
+      "on": 0,
+      "error": "/notify not registered\n"
+    },
+    {
+      "i": 2,
+      "on": 1,
+      "error": "/notify too many users\n"
+    }
+  ],
+  "excessClientRejected": true,
+  "clientIDReuseCollision": false
+}

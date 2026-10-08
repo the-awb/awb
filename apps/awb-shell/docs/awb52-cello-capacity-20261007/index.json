@@ -1,0 +1,1432 @@
+[
+  {
+    "name": "awb52-cello-blocks-20261007-run-1-block-64",
+    "evidence": "awb52-cello-blocks-20261007-run-1-block-64.json",
+    "rawResults": "/private/tmp/awb52-cello-blocks-20261007/run-1-block-64/results.json",
+    "disposition": "excluded early concurrent development",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 64,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block64-1",
+        "elapsedSeconds": 300.639799741,
+        "scAverage": 71.99543025786863,
+        "scPeak": 154.3867645263672,
+        "recorderReliable": true,
+        "nativeLate": 166,
+        "nativeOverBudget": 161,
+        "returnFaultCallbacks": 357
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-blocks-20261007-run-2-block-256",
+    "evidence": "awb52-cello-blocks-20261007-run-2-block-256.json",
+    "rawResults": "/private/tmp/awb52-cello-blocks-20261007/run-2-block-256/results.json",
+    "disposition": "excluded early concurrent development",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 256,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block256-1",
+        "elapsedSeconds": 300.53102143100006,
+        "scAverage": 68.28279229913439,
+        "scPeak": 206.06097412109375,
+        "recorderReliable": true,
+        "nativeLate": 1293,
+        "nativeOverBudget": 1297,
+        "returnFaultCallbacks": 2722
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-blocks-20261007-run-3-block-128",
+    "evidence": "awb52-cello-blocks-20261007-run-3-block-128.json",
+    "rawResults": "/private/tmp/awb52-cello-blocks-20261007/run-3-block-128/results.json",
+    "disposition": "excluded early concurrent development",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 128,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block128-1",
+        "elapsedSeconds": 300.539330714,
+        "scAverage": 67.77057644639696,
+        "scPeak": 171.0576171875,
+        "recorderReliable": true,
+        "nativeLate": 487,
+        "nativeOverBudget": 489,
+        "returnFaultCallbacks": 986
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-blocks-20261007-run-4-block-512",
+    "evidence": "awb52-cello-blocks-20261007-run-4-block-512.json",
+    "rawResults": "/private/tmp/awb52-cello-blocks-20261007/run-4-block-512/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 512,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block512-1",
+        "elapsedSeconds": 300.537741037,
+        "scAverage": 55.13541997803582,
+        "scPeak": 145.83511352539062,
+        "recorderReliable": true,
+        "nativeLate": 192,
+        "nativeOverBudget": 195,
+        "returnFaultCallbacks": 478
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-blocks-20261007-run-5-block-256",
+    "evidence": "awb52-cello-blocks-20261007-run-5-block-256.json",
+    "rawResults": "/private/tmp/awb52-cello-blocks-20261007/run-5-block-256/results.json",
+    "disposition": "excluded early concurrent development",
+    "complete": false,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 256,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-ir-caps-20261007-cap-10s-block-256-attempt-1",
+    "evidence": "awb52-cello-ir-caps-20261007-cap-10s-block-256-attempt-1.json",
+    "rawResults": "/private/tmp/awb52-cello-ir-caps-20261007/cap-10s-block-256-attempt-1/results.json",
+    "disposition": "startup failed",
+    "complete": false,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 256,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 10,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 441000,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 441000,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 10,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 441000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 10,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-ir-caps-20261007-cap-10s-block-256-attempt-2",
+    "evidence": "awb52-cello-ir-caps-20261007-cap-10s-block-256-attempt-2.json",
+    "rawResults": "/private/tmp/awb52-cello-ir-caps-20261007/cap-10s-block-256-attempt-2/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 256,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 10,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 441000,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 441000,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 10,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 441000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 10,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block256-1",
+        "elapsedSeconds": 300.548628951,
+        "scAverage": 45.920414706759985,
+        "scPeak": 88.20769500732422,
+        "recorderReliable": true,
+        "nativeLate": 0,
+        "nativeOverBudget": 0,
+        "returnFaultCallbacks": 0
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-ir-caps-20261007-cap-5s-block-256-attempt-1",
+    "evidence": "awb52-cello-ir-caps-20261007-cap-5s-block-256-attempt-1.json",
+    "rawResults": "/private/tmp/awb52-cello-ir-caps-20261007/cap-5s-block-256-attempt-1/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 256,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 5,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 220500,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 220500,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 220500,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 5,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block256-1",
+        "elapsedSeconds": 300.58693960700003,
+        "scAverage": 39.731796801882155,
+        "scPeak": 68.60188293457031,
+        "recorderReliable": true,
+        "nativeLate": 0,
+        "nativeOverBudget": 0,
+        "returnFaultCallbacks": 0
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-quiet-20261007-run-1-block-256-attempt-1",
+    "evidence": "awb52-cello-quiet-20261007-run-1-block-256-attempt-1.json",
+    "rawResults": "/private/tmp/awb52-cello-quiet-20261007/run-1-block-256-attempt-1/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 256,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block256-1",
+        "elapsedSeconds": 300.541049994,
+        "scAverage": 60.1608650024088,
+        "scPeak": 111.28898620605469,
+        "recorderReliable": true,
+        "nativeLate": 4,
+        "nativeOverBudget": 4,
+        "returnFaultCallbacks": 9
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-quiet-20261007-run-2-block-64-attempt-1",
+    "evidence": "awb52-cello-quiet-20261007-run-2-block-64-attempt-1.json",
+    "rawResults": "/private/tmp/awb52-cello-quiet-20261007/run-2-block-64-attempt-1/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 64,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block64-1",
+        "elapsedSeconds": 300.55916773,
+        "scAverage": 72.66822077455895,
+        "scPeak": 128.42984008789062,
+        "recorderReliable": true,
+        "nativeLate": 45,
+        "nativeOverBudget": 45,
+        "returnFaultCallbacks": 97
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-quiet-20261007-run-3-block-128-attempt-1",
+    "evidence": "awb52-cello-quiet-20261007-run-3-block-128-attempt-1.json",
+    "rawResults": "/private/tmp/awb52-cello-quiet-20261007/run-3-block-128-attempt-1/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 128,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block128-1",
+        "elapsedSeconds": 300.602865954,
+        "scAverage": 62.27389391050832,
+        "scPeak": 135.1404266357422,
+        "recorderReliable": true,
+        "nativeLate": 19,
+        "nativeOverBudget": 17,
+        "returnFaultCallbacks": 31
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-quiet-20261007-run-4-block-256-attempt-1",
+    "evidence": "awb52-cello-quiet-20261007-run-4-block-256-attempt-1.json",
+    "rawResults": "/private/tmp/awb52-cello-quiet-20261007/run-4-block-256-attempt-1/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 256,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block256-1",
+        "elapsedSeconds": 300.563435098,
+        "scAverage": 57.91415215727483,
+        "scPeak": 136.11099243164062,
+        "recorderReliable": true,
+        "nativeLate": 3,
+        "nativeOverBudget": 3,
+        "returnFaultCallbacks": 8
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-quiet-20261007-run-5-block-512-attempt-1",
+    "evidence": "awb52-cello-quiet-20261007-run-5-block-512-attempt-1.json",
+    "rawResults": "/private/tmp/awb52-cello-quiet-20261007/run-5-block-512-attempt-1/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 512,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block512-1",
+        "elapsedSeconds": 300.6211889,
+        "scAverage": 54.4429439729793,
+        "scPeak": 150.2480926513672,
+        "recorderReliable": true,
+        "nativeLate": 204,
+        "nativeOverBudget": 222,
+        "returnFaultCallbacks": 460
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-reserve25-20261007",
+    "evidence": "awb52-cello-reserve25-20261007.json",
+    "rawResults": "/private/tmp/awb52-cello-reserve25-20261007/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 256,
+      "fftSize": 2048,
+      "pluginWorkers": 0,
+      "pluginBlock": 0,
+      "reserveTargetPercent": 25,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 5,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 220500,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 220500,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 220500,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 5,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block256-1",
+        "elapsedSeconds": 300.598331703,
+        "scAverage": 56.24351887346587,
+        "scPeak": 101.91848754882812,
+        "recorderReliable": true,
+        "nativeLate": 1,
+        "nativeOverBudget": 1,
+        "returnFaultCallbacks": 1
+      }
+    ],
+    "reserveCalibration": {
+      "baseline": {
+        "count": 0,
+        "average": 0.0849709069977204
+      },
+      "probe": {
+        "count": 10,
+        "average": 16.565588084134188
+      },
+      "measured": {
+        "count": 17,
+        "average": 22.797561645507812
+      },
+      "addedPercent": 22.71259073851009,
+      "targetPercent": 25,
+      "source": "32 SinOsc -> RLPF -> tanh per synth, private unconsumed audio bus; serial group"
+    }
+  },
+  {
+    "name": "awb52-cello-workers2-128-30s-20261007",
+    "evidence": "awb52-cello-workers2-128-30s-20261007.json",
+    "rawResults": "/private/tmp/awb52-cello-workers2-128-30s-20261007/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 128,
+      "fftSize": 2048,
+      "pluginWorkers": 2,
+      "pluginBlock": 0,
+      "reserveTargetPercent": 0,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block128-1",
+        "elapsedSeconds": 300.60494909,
+        "scAverage": 41.099468268434244,
+        "scPeak": 91.46964263916016,
+        "recorderReliable": true,
+        "nativeLate": 0,
+        "nativeOverBudget": 0,
+        "returnFaultCallbacks": 0
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-workers2-128-fft4096-30s-20261007",
+    "evidence": "awb52-cello-workers2-128-fft4096-30s-20261007.json",
+    "rawResults": "/private/tmp/awb52-cello-workers2-128-fft4096-30s-20261007/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 128,
+      "fftSize": 4096,
+      "pluginWorkers": 2,
+      "pluginBlock": 0,
+      "reserveTargetPercent": 0,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block128-1",
+        "elapsedSeconds": 300.60029914800003,
+        "scAverage": 27.339898641835088,
+        "scPeak": 53.82444763183594,
+        "recorderReliable": true,
+        "nativeLate": 0,
+        "nativeOverBudget": 0,
+        "returnFaultCallbacks": 0
+      }
+    ],
+    "reserveCalibration": null
+  },
+  {
+    "name": "awb52-cello-workers2-fft4096-reserve25-20261007",
+    "evidence": "awb52-cello-workers2-fft4096-reserve25-20261007.json",
+    "rawResults": "/private/tmp/awb52-cello-workers2-fft4096-reserve25-20261007/results.json",
+    "disposition": "startup failed",
+    "complete": false,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 128,
+      "fftSize": 4096,
+      "pluginWorkers": 2,
+      "pluginBlock": 0,
+      "reserveTargetPercent": 25,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [],
+    "reserveCalibration": {
+      "isolatedBaseline": {
+        "count": 0,
+        "average": 0.10979698660473029
+      },
+      "isolatedProbe": {
+        "count": 10,
+        "average": 15.406437794367472
+      },
+      "targetPercent": 25,
+      "source": "32 SinOsc -> RLPF -> tanh per synth, private unconsumed audio bus; serial group"
+    }
+  },
+  {
+    "name": "awb52-cello-workers2-fft4096-reserve25-repeat2-20261007",
+    "evidence": "awb52-cello-workers2-fft4096-reserve25-repeat2-20261007.json",
+    "rawResults": "/private/tmp/awb52-cello-workers2-fft4096-reserve25-repeat2-20261007/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 128,
+      "fftSize": 4096,
+      "pluginWorkers": 2,
+      "pluginBlock": 0,
+      "reserveTargetPercent": 25,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block128-1",
+        "elapsedSeconds": 300.63401968799997,
+        "scAverage": 56.08747666925722,
+        "scPeak": 95.96851348876953,
+        "recorderReliable": true,
+        "nativeLate": 0,
+        "nativeOverBudget": 0,
+        "returnFaultCallbacks": 0
+      }
+    ],
+    "reserveCalibration": {
+      "isolatedBaseline": {
+        "count": 0,
+        "average": 0.11745559362073739
+      },
+      "isolatedProbe": {
+        "count": 10,
+        "average": 17.24964003129439
+      },
+      "targetPercent": 25,
+      "source": "32 SinOsc -> RLPF -> tanh per synth, private unconsumed audio bus; serial group",
+      "liveBaseline": {
+        "count": 0,
+        "average": 28.695327641671163
+      },
+      "liveTrials": [
+        {
+          "count": 15,
+          "average": 38.82650970994381,
+          "addedPercent": 10.131182068272643
+        },
+        {
+          "count": 39,
+          "average": 63.82069253921509,
+          "addedPercent": 35.125364897543925
+        },
+        {
+          "count": 29,
+          "average": 55.86193234579904,
+          "addedPercent": 27.166604704127877
+        }
+      ],
+      "addedPercent": 27.166604704127877,
+      "count": 29
+    }
+  },
+  {
+    "name": "awb52-cello-workers2-fft4096-reserve25-retry-20261007",
+    "evidence": "awb52-cello-workers2-fft4096-reserve25-retry-20261007.json",
+    "rawResults": "/private/tmp/awb52-cello-workers2-fft4096-reserve25-retry-20261007/results.json",
+    "disposition": "completed",
+    "complete": true,
+    "workload": {
+      "channels": 2,
+      "plugins": 13,
+      "partConvs": 6,
+      "fullLoad": false,
+      "blockSize": 128,
+      "fftSize": 4096,
+      "pluginWorkers": 2,
+      "pluginBlock": 0,
+      "reserveTargetPercent": 25,
+      "controlSends": 16,
+      "followers": 25,
+      "modulated": true,
+      "irMaxSeconds": 30,
+      "fxOutputCleared": true,
+      "irProvenance": [
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/Mulching 1.wav",
+          "sourceFrames": 463050,
+          "usedFrames": 463050,
+          "sourceSeconds": 10.5,
+          "usedSeconds": 10.5,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "96dd4fae83f80d681929c6fae284cc81a50fac10be60c970fba37505702a557d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/composite earth b.wav",
+          "sourceFrames": 962182,
+          "usedFrames": 962182,
+          "sourceSeconds": 21.818185941043083,
+          "usedSeconds": 21.818185941043083,
+          "channels": 2,
+          "sampleRate": 44100,
+          "sha256": "e8034ef1aed7b9e0a8ff0f342de398755798ddada5e526ee62e4ba2d59db7f2d"
+        },
+        {
+          "path": "/Volumes/ARMED WITH SOUND/Samples/Convology samples/214216__acs272__world-s-longest-echo-4th-impulse.wav",
+          "sourceFrames": 3301490,
+          "usedFrames": 1323000,
+          "sourceSeconds": 74.86371882086168,
+          "usedSeconds": 30,
+          "channels": 1,
+          "sampleRate": 44100,
+          "sha256": "a308fc8f65f804d0c41caf1be0cb9dab72cd8328c83d91689f23ea6fcbb97a52"
+        }
+      ],
+      "gui": false,
+      "syntheticInput": false,
+      "celloSample": "/Volumes/ARMED WITH SOUND/Samples/Ali March 22/Cello 1-bounce-1.wav",
+      "celloSourceMono": true,
+      "pro2Silent": true,
+      "hardwareFXMix": false,
+      "note": "A final ReplaceOut node clears FX hardware channels 0/1 after the entire rack computes; pilot detects global engine/output and returned-audio continuity. Actual cello feeds every active FX and control send. Recorded FX output is metered before hardware silencing. GUI and shell bridge are not part of this run."
+    },
+    "phases": [
+      {
+        "label": "cello-profile-block128-1",
+        "elapsedSeconds": 300.599726304,
+        "scAverage": 54.853441078891954,
+        "scPeak": 88.14260864257812,
+        "recorderReliable": true,
+        "nativeLate": 0,
+        "nativeOverBudget": 0,
+        "returnFaultCallbacks": 0
+      }
+    ],
+    "reserveCalibration": {
+      "isolatedBaseline": {
+        "count": 0,
+        "average": 0.11631362636884053
+      },
+      "isolatedProbe": {
+        "count": 10,
+        "average": 18.056469917297363
+      },
+      "targetPercent": 25,
+      "source": "32 SinOsc -> RLPF -> tanh per synth, private unconsumed audio bus; serial group",
+      "liveBaseline": {
+        "count": 0,
+        "average": 27.991436833920687
+      },
+      "liveTrials": [
+        {
+          "count": 14,
+          "average": 41.96544333263836,
+          "addedPercent": 13.97400649871767
+        },
+        {
+          "count": 27,
+          "average": 54.73776354108538,
+          "addedPercent": 26.74632670716469
+        }
+      ],
+      "addedPercent": 26.74632670716469,
+      "count": 27
+    }
+  }
+]
