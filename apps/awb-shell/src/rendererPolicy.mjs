@@ -9,12 +9,14 @@ export function responseHeadersForTool( tool, existing = {} ) {
 }
 
 export function permitsMediaRequest( tool, permission, details = {} ) {
+  if ( permission === 'midi' ) return tool?.capabilities?.media?.includes( 'midi-input' ) === true;
   if ( permission !== 'media' || !tool?.capabilities?.media?.includes( 'audio-input' ) ) return false;
   const mediaTypes = details.mediaTypes ?? [];
   return mediaTypes.length > 0 && mediaTypes.every( ( type ) => type === 'audio' );
 }
 
 export function permitsMediaCheck( tool, permission, details = {} ) {
+  if ( permission === 'midi' ) return tool?.capabilities?.media?.includes( 'midi-input' ) === true;
   return permission === 'media'
     && tool?.capabilities?.media?.includes( 'audio-input' ) === true
     && details.mediaType === 'audio';

@@ -17,7 +17,24 @@
         <h2>SuperCollider host</h2>
         <div id="host" class="host-facts"></div>
         <div id="host-actions" class="host-actions"></div>
-        <p id="host-message"></p>
+        <p id="host-message" role="status"></p>
+        <div id="audio-actions" class="host-actions"></div>
+        <p class="meta">Audio stop/restart stops all sound on this server. Tool windows remain open; enable their audio again afterward.</p>
+        <details id="audio-setup"><summary>Audio setup</summary>
+          <form id="audio-form">
+            <label>Input device<input name="inputDevice" list="input-devices" placeholder="System default"><datalist id="input-devices"></datalist></label>
+            <label>Output device<input name="outputDevice" list="output-devices" placeholder="System default"><datalist id="output-devices"></datalist></label>
+            <label>Sample rate<select name="sampleRate"><option value="">System default</option><option>22050</option><option>32000</option><option>44100</option><option>48000</option><option>88200</option><option>96000</option><option>176400</option><option>192000</option></select></label>
+            <label>Input channels<input name="inputChannels" type="number" min="0" max="256" required></label>
+            <label>Output channels<input name="outputChannels" type="number" min="1" max="256" required></label>
+            <button id="save-audio" type="submit">Save settings</button>
+          </form>
+          <p class="meta">Save while audio is stopped. Leave both devices blank for system defaults, or choose both explicitly. Save does not start audio.</p>
+        </details>
+        <details id="host-console"><summary>Language / audio console</summary>
+          <div class="host-actions"><label><input id="console-follow" type="checkbox" checked> Follow</label><button id="console-clear" type="button">Clear display</button></div>
+          <pre id="console-output" aria-label="SuperCollider console"></pre>
+        </details>
       </section>
       <section>
         <div class="sectionHead"><h2>Tools</h2><span class="count" id="tools-count"></span></div>
@@ -33,6 +50,7 @@
       </section>
     </main>
     <script src="icons.js"></script>
+    <script src="audio-panel.js"></script>
     <script src="home.js"></script>
   </body>
 </html>

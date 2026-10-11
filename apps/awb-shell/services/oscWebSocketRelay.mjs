@@ -114,10 +114,11 @@ export async function createOscWebSocketRelay( { host = '127.0.0.1', port = 0,
     disconnectAddresses: [ ...disconnectAddresses, disconnectAddress ].filter( Boolean ) } ) : null;
   return { endpoint: legacyPolicy?.endpoint ?? null, grant, port: address.port,
     hostSnapshot: () => { const control = hostControl.snapshot(); return ( {
-      sclang: { status: control.status === 'ready' || synthDefs.connected || nodeManager.status === 'ready' ? 'attached' : 'unavailable',
+      sclang: { status: (control.protocolVersion !== null ? control.status === 'ready' : synthDefs.connected || nodeManager.status === 'ready') ? 'attached' : 'unavailable',
         mode: control.mode, processID: control.processID },
       scsynth: { status: control.scsynth }, synthDefs: synthDefs.snapshot(), nodeManager: nodeManager.snapshot(), control
     } ); },
+    serverAction: ( action, settings ) => hostControl.serverAction(action,settings),
     setNodeManager: ( action ) => hostControl.setNodeManager( action ),
     openQtToolStation: () => hostControl.openQtToolStation(),
     openToolInstance: ( toolID, instanceID ) => hostControl.openToolInstance( toolID, instanceID ),

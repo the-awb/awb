@@ -108,3 +108,10 @@ button.recent:hover:not(:disabled) { background-color: var(--raised); color: var
 .failure svg { flex: 0 0 16px; width: 16px; height: 16px; color: var(--hot); }
 #host-message { margin: 9px 0 0; color: var(--warn); font-size: 12px; }
 #host-message:empty { display: none; }
+
+details { margin-top: 12px; border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; }
+summary { cursor: pointer; color: var(--dim); }
+#audio-form { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 10px; margin-top: 12px; align-items: end; }
+#audio-form label { display: grid; gap: 4px; color: var(--dim); font-size: 11px; }
+#audio-form input, #audio-form select { width: 100%; min-height: 30px; background: var(--void); border: 1px solid var(--line); border-radius: 4px; padding: 4px 7px; }
+#console-output { height: 220px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; color: #c5d3c8; background: #171a18; padding: 10px; font: 11px/1.5 ui-monospace,Menlo,monospace; }

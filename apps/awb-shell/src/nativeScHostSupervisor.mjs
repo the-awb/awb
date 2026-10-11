@@ -11,8 +11,8 @@ export class NativeScHostSupervisor {
   constructor( { token, bootstrapPath, sclangPath = process.env.AWB_SCLANG_PATH ?? DEFAULT_SCLANG,
     sclangConfig = process.env.AWB_SCLANG_CONFIG ?? null,
     serverPort = process.env.AWB_HEADLESS_SERVER_PORT ? Number( process.env.AWB_HEADLESS_SERVER_PORT ) : null,
-    pluginPaths = [], onChange = () => {} } ) {
-    this.pluginPaths = pluginPaths;
+    audioConfigPath = process.env.AWB_HEADLESS_AUDIO_CONFIG ?? null, pluginPaths = [], onChange = () => {} } ) {
+    this.pluginPaths = pluginPaths; this.audioConfigPath = audioConfigPath; this.logRevision = 0; this.logEnd = 0;
     this.token = token; this.bootstrapPath = path.resolve( bootstrapPath ); this.sclangPath = sclangPath;
     this.sclangConfig = sclangConfig; this.serverPort = serverPort; this.onChange = onChange; this.child = null; this.state = 'stopped';
     this.lastExitCode = null; this.lastError = null; this.logTail = [];
@@ -21,12 +21,16 @@ export class NativeScHostSupervisor {
   snapshot() {
     return Object.freeze( { state: this.state, owned: Boolean( this.child ), processID: this.child?.pid ?? null,
       serverPort: this.serverPort, lastExitCode: this.lastExitCode, lastError: this.lastError,
-      logTail: Object.freeze( [ ...this.logTail ] ) } );
+      logRevision: this.logRevision, logStart:this.logEnd-this.logTail.length, logEnd:this.logEnd, logTail: Object.freeze( [ ...this.logTail ] ) } );
   }
 
   appendLog( source, chunk ) {
-    `${ chunk }`.split( /\r?\n/ ).filter( Boolean ).forEach( ( line ) => this.logTail.push( `${ source }: ${ line }`.slice( 0, 1000 ) ) );
-    if ( this.logTail.length > 40 ) this.logTail.splice( 0, this.logTail.length - 40 );
+    const lines=`${chunk}`.split(/\r?\n/).filter(Boolean);this.logEnd+=lines.length;
+    lines.forEach(line=>this.logTail.push(`${source}: ${line}`.slice(0,1000)));
+    if ( this.logTail.length > 400 ) this.logTail.splice( 0, this.logTail.length - 400 );
+    this.logRevision++;
+    if(!this.logTimer)this.logTimer=setTimeout(()=>{this.logTimer=null;this.onChange(this.snapshot());},200);
+    this.logTimer.unref?.();
   }
 
   async start( { oscPort, deferServerBoot = false } ) {
@@ -41,6 +45,7 @@ export class NativeScHostSupervisor {
     const child = spawn( this.sclangPath, args, {
       cwd: path.dirname( this.bootstrapPath ), env: { ...process.env, AWB_HEADLESS_TOKEN: this.token,
         AWB_HEADLESS_SERVER_PORT: `${ this.serverPort }`, AWB_HOST_AUTOSTART: '0',
+        ...(this.audioConfigPath?{AWB_HEADLESS_AUDIO_CONFIG:this.audioConfigPath}:{}),
         AWB_HEADLESS_DEFER_SERVER_BOOT: deferServerBoot ? '1' : '0',
         SC_PLUGIN_PATH: [ process.env.SC_PLUGIN_PATH, ...this.pluginPaths ].filter( Boolean ).join( path.delimiter ) },
       stdio: [ 'ignore', 'pipe', 'pipe' ]

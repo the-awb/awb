@@ -9,6 +9,7 @@
     "../chain",
     "../param",
     "../live-set",
-    "../dsp-history"
+    "../dsp-history",
+    "/Volumes/ARMED WITH SOUND/SuperCollider/awbCollider/tools/lattice-instrument"
   ]
 }

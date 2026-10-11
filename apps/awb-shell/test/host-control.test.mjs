@@ -84,3 +84,44 @@ test( 'NodeManager projection stops retrying while the host reports it disabled'
   projection.connect(); assert.equal( sent.length, count );
   projection.setHostStatus( 'ready' ); assert.equal( sent.at( -1 ).address, '/awb/nm/subscribe' ); projection.close();
 } );
+
+test('audio control correlates configuration, failure, and recovery status',async()=>{
+ const sent=[];const host=new HostControlProjection({token:'secret',sendOsc:(address,args)=>sent.push({address,args})});
+ host.receive({address:'/awb/host/status',args:[host.clientID,'',1,'headless','disabled','manual','unavailable',456]});
+ const configured=host.serverAction('configure',{outputDevice:'1248',sampleRate:44100});let request=sent.at(-1);
+ assert.equal(request.address,'/awb/host/server');assert.equal(request.args.at(-1),'secret');
+ assert.deepEqual(JSON.parse(request.args[3]),{outputDevice:'1248',sampleRate:44100});
+ host.receive({address:'/awb/host/server/status',args:[host.clientID,request.args[1],JSON.stringify({state:'stopped',settings:{outputDevice:'1248'}})]});
+ assert.equal((await configured).settings.outputDevice,'1248');
+ const failed=host.serverAction('start');request=sent.at(-1);const rejection=assert.rejects(failed,/driver failed/);
+ host.receive({address:'/awb/host/server/status',args:[host.clientID,request.args[1],JSON.stringify({state:'failed',error:'driver failed'})]});await rejection;
+ const status=host.serverAction('status');request=sent.at(-1);
+ host.receive({address:'/awb/host/server/status',args:[host.clientID,request.args[1],JSON.stringify({state:'failed',lastError:'driver failed',error:null})]});
+ assert.equal((await status).state,'failed');assert.equal(host.snapshot().audio.lastError,'driver failed');
+ await assert.rejects(host.serverAction('eval'),/Unknown/);host.close();
+});
+
+
+test('shutdown acknowledgment invalidates every cached live-host fact',async()=>{
+ const host=new HostControlProjection({sendOsc:()=>{}});
+ host.receive({address:'/awb/host/status',args:[host.clientID,'',1,'headless','ready','whenNeeded','ready',456,'qt-station','audio-lifecycle']});
+ host.receive({address:'/awb/host/server/status',args:[host.clientID,'',JSON.stringify({state:'ready'})]});
+ const request=host.shutdown();const id=[...host.pending.keys()][0];
+ host.receive({address:'/awb/host/shutting-down',args:[host.clientID,id]});await request;
+ assert.equal(host.snapshot().status,'unavailable');assert.equal(host.snapshot().scsynth,'unavailable');
+ assert.equal(host.snapshot().audio,undefined);assert.equal(host.snapshot().processID,null);host.close();
+});
+test('lost heartbeat clears engine readiness and audio details',async()=>{
+ const host=new HostControlProjection({sendOsc:()=>{},healthIntervalMs:10,healthTimeoutMs:20});host.connect();
+ host.receive({address:'/awb/host/status',args:[host.clientID,'',1,'headless','ready','always','ready',456]});
+ host.receive({address:'/awb/host/server/status',args:[host.clientID,'',JSON.stringify({state:'ready'})]});
+ await new Promise(resolve=>setTimeout(resolve,65));
+ assert.equal(host.snapshot().status,'unavailable');assert.equal(host.snapshot().scsynth,'unavailable');assert.equal(host.snapshot().audio,undefined);host.close();
+});
+test('renderer readiness cannot override a stopped or unresponsive native host',async()=>{
+ const {shellEngineStatus}=await import('../src/shellEngineStatus.mjs');
+ assert.equal(shellEngineStatus({control:{status:'unavailable'},scsynth:{status:'ready'}},['ready']),'unavailable');
+ assert.equal(shellEngineStatus({control:{status:'ready',audio:{state:'stopped'}},scsynth:{status:'ready'}},['ready']),'stopped');
+ assert.equal(shellEngineStatus({control:{status:'ready'},scsynth:{status:'ready'}},[]),'ready');
+ assert.equal(shellEngineStatus({scsynth:{status:'unavailable'}},['ready']),'ready');
+});

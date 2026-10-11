@@ -6,6 +6,8 @@ const hostElement = document.querySelector( '#host' );
 const hostActionsElement = document.querySelector( '#host-actions' );
 const hostMessageElement = document.querySelector( '#host-message' );
 
+const audioPanel = new ShellAudioPanel(host, render);
+
 const escapeHTML = ( value ) => `${ value }`.replace( /[&<>"']/g, ( character ) => ( {
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
 } )[ character ] );
@@ -45,7 +47,8 @@ function viewCard( view ) {
 
 async function render() {
   const snapshot = await host.request( 'shell.snapshot' );
-  const facts = [ [ 'sclang', snapshot.host.sclang ], [ 'scsynth', snapshot.host.scsynth ],
+  audioPanel.update(snapshot);
+  const facts = [ [ 'sclang', snapshot.host.sclang ], [ 'scsynth', {status:snapshot.host.control?(snapshot.host.control.status==='ready'?(snapshot.host.control.audio?.state??snapshot.host.scsynth?.status):'unavailable'):snapshot.host.scsynth?.status} ],
     [ 'SynthDef context', snapshot.host.synthDefs ], [ 'NodeManager', snapshot.host.nodeManager ] ];
   hostElement.innerHTML = facts.map( ( [ label, fact ] ) => {
     const status = fact?.status ?? 'unavailable';
@@ -54,8 +57,8 @@ async function render() {
   const control = snapshot.host.control ?? {}; const managed = snapshot.nativeScHost ?? {};
   const nodePolicy = control.nodeManagerPolicy ?? 'unknown';
   hostActionsElement.innerHTML = `<button class="secondary" data-host-action="qt-station">Qt Tool Station</button><button class="secondary" data-host-action="open-ide">Open SuperCollider</button>${ control.mode === 'headless' || managed.owned
-    ? '<button class="secondary" data-host-action="stop-headless">Stop headless host</button>'
-    : `<button class="secondary" data-host-action="start-headless" ${ control.status === 'ready' ? 'disabled' : '' }>Start headless host</button>` }${ control.status === 'ready'
+    ? '<button class="secondary" data-host-action="stop-headless">Stop language</button><button class="secondary" data-host-action="restart-headless">Restart language</button>'
+    : `<button class="secondary" data-host-action="start-headless" ${ control.status === 'ready' ? 'disabled' : '' }>Start language</button>` }${ control.status === 'ready'
     ? `<button data-host-action="audio-probe" ${ snapshot.host.scsynth?.status === 'ready' ? '' : 'disabled' }>Test tone</button><button class="secondary" data-host-action="nm-whenNeeded" ${ nodePolicy === 'whenNeeded' ? 'disabled' : '' }>NodeManager when needed</button><button class="secondary" data-host-action="nm-always" ${ nodePolicy === 'always' ? 'disabled' : '' }>Always on</button><button class="secondary" data-host-action="nm-manual" ${ nodePolicy === 'manual' ? 'disabled' : '' }>Off / manual</button>` : '' }`;
   toolsElement.innerHTML = snapshot.tools.map( toolCard ).join( '' )
     || '<p class="empty">No valid tools installed.</p>';
@@ -96,6 +99,7 @@ document.addEventListener( 'click', async ( event ) => {
       }
       else if ( action === 'open-ide' ) await host.request( 'shell.open-supercollider' );
       else if ( action === 'start-headless' ) await host.request( 'shell.start-headless-sc' );
+      else if ( action === 'restart-headless' ) await host.request( 'shell.restart-headless-sc' );
       else if ( action === 'stop-headless' ) await host.request( 'shell.stop-headless-sc' );
       else if ( action === 'audio-probe' ) {
         const result = await host.request( 'shell.audio-probe' );

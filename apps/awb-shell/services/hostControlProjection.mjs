@@ -22,10 +22,16 @@ export class HostControlProjection {
     clearInterval( this.healthTimer );
     this.healthTimer = setInterval( () => {
       if ( this.status === 'ready' && Date.now() - this.lastStatusAt > this.healthTimeoutMs ) {
-        this.status = 'unavailable'; this.mode = null; this.processID = null; this.onChange( this.snapshot() );
+        this.markUnavailable(); this.onChange( this.snapshot() );
       }
       this.sendHello();
     }, this.healthIntervalMs ); this.healthTimer.unref?.();
+  }
+
+  markUnavailable() {
+    this.status='unavailable'; this.mode=null; this.processID=null;
+    this.scsynth='unavailable'; this.nodeManager='unknown'; this.nodeManagerPolicy='unknown';
+    this.audio=null; this.audioLifecycle=false; this.qtStation=false;
   }
 
   sendHello() { if ( !this.closed ) this.sendOsc( '/awb/host/hello', [ this.clientID, this.token ] ); }
@@ -36,15 +42,26 @@ export class HostControlProjection {
       clearTimeout( this.connectTimer ); this.status = 'ready'; this.lastStatusAt = Date.now();
       this.protocolVersion = args[ 2 ]; this.mode = `${ args[ 3 ] }`; this.nodeManager = `${ args[ 4 ] }`;
       this.nodeManagerPolicy = `${ args[ 5 ] }`; this.scsynth = `${ args[ 6 ] }`;
-      this.processID = Number.isInteger( args[ 7 ] ) ? args[ 7 ] : null;
+      const processID=Number.isInteger(args[7])?args[7]:null;
+      if(this.processID!==processID)this.audio=null;
+      this.processID=processID;this.audioLifecycle=args[9]==='audio-lifecycle';
       this.qtStation = args[ 8 ] === 'qt-station';
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) { clearTimeout( pending.timer ); this.pending.delete( requestID ); pending.resolve( this.snapshot() ); }
       this.onChange( this.snapshot() ); return true;
     }
+    if(address==='/awb/host/server/status'){
+      const requestID=args[1],pending=this.pending.get(requestID);
+      try{const audio=JSON.parse(args[2]);this.audio=audio;
+        if(pending){clearTimeout(pending.timer);this.pending.delete(requestID);audio.error?pending.reject(Error(audio.error)):pending.resolve(audio);}
+        this.onChange(this.snapshot());
+      }catch(e){if(pending){clearTimeout(pending.timer);this.pending.delete(requestID);pending.reject(e);}}
+      return true;
+    }
     if ( address === '/awb/host/shutting-down' ) {
       const requestID = `${ args[ 1 ] ?? '' }`; const pending = this.pending.get( requestID );
       if ( pending ) { clearTimeout( pending.timer ); this.pending.delete( requestID ); pending.resolve( { status: 'shutting-down' } ); }
+      this.markUnavailable(); this.onChange(this.snapshot());
       return true;
     }
     if ( address === '/awb/host/qt-station/status' ) {
@@ -106,6 +123,10 @@ export class HostControlProjection {
     return this.request( '/awb/host/nodemanager', [ action ] );
   }
 
+  serverAction(action,settings={}){
+    if(!['status','configure','start','stop','restart'].includes(action))return Promise.reject(Error('Unknown audio server action.'));
+    return this.request('/awb/host/server',[action,JSON.stringify(settings)],40000);
+  }
   shutdown() { return this.request( '/awb/host/shutdown', [] ); }
 
   openQtToolStation() {
@@ -132,12 +153,12 @@ export class HostControlProjection {
   snapshot() {
     return Object.freeze( { status: this.status, protocolVersion: this.protocolVersion,
       mode: this.mode, nodeManager: this.nodeManager, nodeManagerPolicy: this.nodeManagerPolicy,
-      scsynth: this.scsynth, processID: this.processID, ...( this.qtStation ? { qtStation: true } : {} ) } );
+      scsynth: this.scsynth, processID: this.processID, ...(this.audio?{audio:this.audio}:{}), ...(this.audioLifecycle?{audioLifecycle:true}:{}), ...( this.qtStation ? { qtStation: true } : {} ) } );
   }
 
   close() {
     this.closed = true; clearTimeout( this.connectTimer ); clearInterval( this.healthTimer );
     for ( const pending of this.pending.values() ) { clearTimeout( pending.timer ); pending.reject( new Error( 'Host control closed.' ) ); }
-    this.pending.clear(); this.status = 'unavailable';
+    this.pending.clear(); this.markUnavailable();
   }
 }

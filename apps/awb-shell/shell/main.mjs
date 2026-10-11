@@ -1,3 +1,5 @@
+import {shellEngineStatus} from '../src/shellEngineStatus.mjs';
+import {loadAudioSettings,saveAudioSettings,validateAudioSettings} from '../src/scAudioSettings.mjs';
 import {createLiveSetHostBridge} from '../src/liveSetHostBridge.mjs';
 import {ControlObservationBroker} from '../src/controlObservationBroker.mjs';
 import crypto from 'node:crypto';
@@ -61,8 +63,14 @@ const scBusAudio = new ScBusAudioAccess({broker:signalCaptures,hostContext: asyn
 }});
 const renderJobs = new RenderJobBroker();
 const renderOutputs = new RenderOutputStore();
+const audioSettingsPath=process.env.AWB_HEADLESS_AUDIO_CONFIG??path.join(app.getPath('userData'),'sc-audio.json');
+let audioSettings={};
+let audioOperation=Promise.resolve();
+function serializeAudio(operation){
+  const next=audioOperation.then(operation);audioOperation=next.catch(()=>{});return next;
+}
 const nativeScHost = new NativeScHostSupervisor( { token: shellHostToken,
-  bootstrapPath: path.join( appRoot, 'sc/AWBHeadlessHost.scd' ),
+  bootstrapPath: path.join( appRoot, 'sc/AWBHeadlessHost.scd' ), audioConfigPath:audioSettingsPath,
   pluginPaths: [ path.resolve( appRoot, '../../tool-artifacts/shared-loop/0.1.0/build' ) ], onChange: () => notifyHome() } );
 const renderExecutorID = `headless-local-${ crypto.randomUUID() }`;
 let recentStore;
@@ -79,6 +87,7 @@ let renderExecutorWindow = null;
 let renderExecutorReady = false;
 let renderExecutorLease = null;
 const smokeHome = process.argv.includes( '--smoke-home' );
+const smokeLattice = process.argv.includes( '--smoke-lattice' );
 const smokeSharedLoop = process.argv.includes( '--smoke-shared-loop' );
 const smokeScBus = process.argv.includes('--smoke-sc-bus');
 const smokeScopeTool = process.argv.includes('--smoke-scope-tool');
@@ -108,7 +117,7 @@ const developmentURL = loopbackDevelopmentURL( option( process.argv, 'dev-url', 
 
 const SUPPORTED_CAPABILITIES = Object.freeze( {
   filesystem: [ 'open-file', 'open-directory', 'save-file' ],
-  media: [ 'audio-input', 'system-audio', 'native-audio', 'sc-bus-audio' ],
+  media: [ 'audio-input', 'system-audio', 'native-audio', 'sc-bus-audio', 'midi-input' ],
   connections: [ 'hosted-timeline', 'hosted-field' ], rendering: [ 'local-render' ]
 } );
 
@@ -228,15 +237,14 @@ function shellSnapshot() {
     synthDefs: { status: 'unavailable' }, nodeManager: { status: 'unavailable' }
   };
   const scsynthStates = registry.list().map( ( view ) => view.sessionState?.scsynthStatus ).filter( Boolean );
-  const scsynthStatus = scsynthStates.includes( 'ready' ) ? 'ready'
-    : scsynthStates.includes( 'booting' ) ? 'booting' : serviceHost.scsynth.status;
+  const scsynthStatus = shellEngineStatus(serviceHost, scsynthStates);
   const host = { ...serviceHost, scsynth: { status: scsynthStatus } };
   return { shellProtocol: SHELL_PROTOCOL, shellInstanceID, processID: process.pid,
     tools: [ ...tools.values() ].map( ( tool ) => ( { ...publicManifest( tool ),
       documentKinds: tool.documentKinds.map( ( kind ) => ( { ...kind,
         recentItems: recentStore?.list( tool.id, kind.id ) ?? [] } ) ) } ) ),
     views: registry.list().map( viewSnapshot ), renders: renderJobs.list(),
-    host, nativeScHost: nativeScHost.snapshot(), failures: manifestFailures };
+    host, audioSettings, nativeScHost: nativeScHost.snapshot(), failures: manifestFailures };
 }
 
 async function startHeadlessHost({deferServerBoot=false}={}) {
@@ -250,7 +258,7 @@ async function startHeadlessHost({deferServerBoot=false}={}) {
 
 async function stopHeadlessHost() {
   const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.mode === 'headless' );
-  if ( signalCaptures.diagnostics().sources.length || scBusAudio.has() || toolRuntimes?.has( 'shared-loop' ) || [ ...nativeToolInstances.values() ].some( ( owned ) => owned.service === service ) ) {
+  if ( signalCaptures.diagnostics().sources.length || scBusAudio.has() || toolRuntimes?.has( 'shared-loop' ) || toolRuntimes?.has( 'lattice-instrument' ) || [ ...nativeToolInstances.values() ].some( ( owned ) => owned.service === service ) ) {
     throw new Error( 'Stop SC captures or close instrument views before stopping their host.' );
   }
   return nativeScHost.stop( () => service?.shutdownHost?.() );
@@ -1606,6 +1614,16 @@ function registerIPC() {
         } )().catch( reportFatal );
       }
       else if ( smokeHome ) runHomeSmoke().catch( reportFatal );
+      else if ( smokeLattice && !smokeRunning ) { smokeRunning=true;
+        import('../test/lattice-smoke.mjs').then(({runLatticeSmoke})=>runLatticeSmoke({
+          launchFromHome,closeToolView,windows,registry,nativeScHost,toolRuntimes,homeWindow,
+          screenshot:option(process.argv,'smoke-screenshot')
+        })).then(()=>app.quit()).catch(async error=>{
+          console.error(error.stack,nativeScHost.snapshot().logTail.join('\n'));
+          await toolRuntimes.closeAll().catch(console.error);
+          await nativeScHost.stop(()=>services.firstService()?.shutdownHost?.());reportFatal(error);
+        });
+      }
       else if ( smokeScopeTool && !smokeRunning ) { smokeRunning=true;
         import('../test/scope-tool/smoke.mjs').then(({runScopeToolSmoke})=>runScopeToolSmoke({
           startHeadlessHost,services,nativeScHost,launchFromHome,closeToolView,windows,registry,signalCaptures,scBusAudio,homeWindow,
@@ -1673,7 +1691,22 @@ function registerIPC() {
         return service.openQtToolStation();
       }
       if ( request.operation === 'shell.open-supercollider' ) return openSuperColliderIDE();
-      if ( request.operation === 'shell.start-headless-sc' ) return startHeadlessHost();
+      if ( request.operation === 'shell.start-headless-sc' ) return startHeadlessHost({deferServerBoot:true});
+      if(request.operation==='shell.restart-headless-sc'){await stopHeadlessHost();return startHeadlessHost({deferServerBoot:true});}
+      if(request.operation==='shell.server'){
+        const service=services.firstService(s=>s.hostSnapshot()?.control?.status==='ready');
+        if(!service)throw Error('Start the language host first.');
+        if(!service.hostSnapshot().control.audioLifecycle)throw Error('Recompile the SuperCollider host to enable audio lifecycle controls.');
+        return payload.action==='status'?service.serverAction('status'):serializeAudio(()=>service.serverAction(payload.action));
+      }
+      if(request.operation==='shell.audio-settings')return serializeAudio(async()=>{
+        const next=validateAudioSettings(payload),service=services.firstService(s=>s.hostSnapshot()?.control?.status==='ready');
+        if(service){if(!service.hostSnapshot().control.audioLifecycle)throw Error('Recompile the SuperCollider host to enable audio setup.');await service.serverAction('configure',next);}
+        const old=audioSettings;
+        try{audioSettings=await saveAudioSettings(audioSettingsPath,next);}
+        catch(e){if(service)await service.serverAction('configure',old).catch(()=>{});throw e;}
+        notifyHome();return audioSettings;
+      });
       if ( request.operation === 'shell.stop-headless-sc' ) return stopHeadlessHost();
       if ( request.operation === 'shell.audio-probe' ) {
         const service = services.firstService( ( candidate ) => candidate.hostSnapshot?.().control?.status === 'ready' );
@@ -1798,10 +1831,20 @@ if ( gotLock ) {
     } catch ( error ) { reportFatal( error ); }
   } );
   app.whenReady().then( async () => {
+    audioSettings=await loadAudioSettings(audioSettingsPath);
     await loadTools();
     toolRuntimes = new ToolRuntimeRegistry( {
       runtimeRoot: path.join( app.getPath( 'userData' ), 'tool-runtimes' ),
       runtimeContext: async ( { tool } ) => {
+        if ( tool.id === 'lattice-instrument' ) return { getNativeHost: async () => {
+          const configuration = hostConfigurationFromArgs( process.argv.slice( 1 ) );
+          const service = await ensureHost( configuration );
+          if ( !activeNativeHostMode( service.hostSnapshot() ) ) {
+            await startHeadlessHost( { deferServerBoot: true } );
+            await waitFor( () => service.hostSnapshot().control?.status === 'ready', 30000 );
+          }
+          return { ...configuration, service };
+        } };
         if(tool.id==='live-set'&&liveSetSession)return {...liveSetSession.context,controlObservations};
         if ( [ 'param', 'live-set' ].includes( tool.id ) ) return {controlObservations};
         if ( tool.id === 'scope' ) return { signalCaptures, getNativeHost: async () => {

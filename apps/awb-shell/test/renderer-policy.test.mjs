@@ -36,3 +36,14 @@ test( 'media permission is audio-only and capability-gated', () => {
   assert.equal( permitsMediaCheck( lissajous, 'media', { mediaType: 'audio' } ), true );
   assert.equal( permitsMediaCheck( lissajous, 'media', { mediaType: 'video' } ), false );
 } );
+
+
+test( 'ordinary MIDI permission is capability gated and excludes sysex', () => {
+  const lattice = { capabilities: { media: [ 'midi-input' ] } };
+  assert.equal( permitsMediaRequest( lattice, 'midi', {} ), true );
+  assert.equal( permitsMediaCheck( lattice, 'midi', {} ), true );
+  assert.equal( permitsMediaRequest( lattice, 'midiSysex', {} ), false );
+  assert.equal( permitsMediaCheck( lattice, 'midiSysex', {} ), false );
+  assert.equal( permitsMediaRequest( lissajous, 'midi', {} ), false );
+  assert.equal( permitsMediaCheck( null, 'midi', {} ), false );
+} );
