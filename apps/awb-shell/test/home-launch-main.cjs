@@ -1,0 +1,37 @@
+const {app,BrowserWindow,ipcMain}=require('electron');
+const assert=require('node:assert/strict'),path=require('node:path');
+app.setPath('userData',process.env.AWB_HOME_LAUNCH_USER_DATA);
+const settings={inputDevice:'1248',outputDevice:'1248',sampleRate:44100,inputChannels:2,outputChannels:2};
+const snapshot={host:{sclang:{status:'attached',mode:'headless'},scsynth:{status:'unavailable'},synthDefs:{status:'ready'},nodeManager:{status:'disabled'},control:{status:'ready',mode:'headless',audioLifecycle:true,audio:{state:'stopped',settings,inputDevices:['1248'],outputDevices:['1248']}}},audioSettings:settings,nativeScHost:{owned:true,logTail:[],logStart:0,logEnd:0},tools:[{id:'lattice-instrument',name:'Lattice Instrument',version:'0.1.0',launchProfiles:[{id:'standalone',label:'Open'}],documentKinds:[]}],views:[],failures:[]};
+let requests=[],win,completeLaunch;
+ipcMain.handle('fixture-request',async(_event,operation,payload)=>{
+ requests.push({operation,payload});if(operation==='shell.snapshot')return snapshot;
+ if(operation==='shell.launch')return new Promise(resolve=>completeLaunch=resolve);
+ return {};
+});
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+const until=async fn=>{for(let i=0;i<150;i++){if(await fn())return;await sleep(20);}throw Error('Home launch condition timed out');};
+app.whenReady().then(async()=>{
+ win=new BrowserWindow({width:1100,height:850,show:false,webPreferences:{preload:path.join(__dirname,'audio-home-preload.cjs'),contextIsolation:true,nodeIntegration:false,offscreen:true}});
+ await win.loadFile(path.join(__dirname,'../home/index.html'));const js=code=>win.webContents.executeJavaScript(code,true);
+ const button=`document.querySelector('[data-tool="lattice-instrument"]')`,launches=()=>requests.filter(r=>r.operation==='shell.launch');
+ const refresh=async()=>{const before=requests.filter(r=>r.operation==='shell.snapshot').length;win.webContents.send('fixture-change',{type:'shell-registry-changed'});await until(()=>requests.filter(r=>r.operation==='shell.snapshot').length>before);await sleep(40);};
+ const cases=[];const check=(name,condition)=>{assert.ok(condition,name);cases.push(name);console.log('PASS '+name);};
+ await until(()=>js(`Boolean(${button})`));
+ const point=await js(`(()=>{const b=${button}.getBoundingClientRect();return{x:Math.round(b.left+b.width/2),y:Math.round(b.top+b.height/2)}})()`);
+ await js(`void(window.__pressedButton=${button})`);
+ win.webContents.sendInputEvent({type:'mouseMove',...point});win.webContents.sendInputEvent({type:'mouseDown',...point,button:'left',clickCount:1});await sleep(25);await refresh();
+ check('status refresh preserves the pressed button',await js(`window.__pressedButton===${button}`));
+ win.webContents.sendInputEvent({type:'mouseUp',...point,button:'left',clickCount:1});await until(()=>launches().length===1);
+ check('one native click launches the exact profile once',JSON.stringify(launches()[0].payload)===JSON.stringify({toolID:'lattice-instrument',profileID:'standalone',launchOrigin:'desktop'}));
+ await refresh();check('pending launch retains disabled button and visible Opening message',await js(`${button}.disabled&&document.getElementById('host-message').textContent==='Opening lattice-instrument…'`));
+ await js(`${button}.dispatchEvent(new MouseEvent('click',{bubbles:true}))`);await sleep(50);check('pending guard rejects a duplicate delegated click',launches().length===1);
+ snapshot.tools[0].name='Lattice Instrument updated';await refresh();
+ check('changed catalogue renders while preserving pending launch lock',await js(`document.getElementById('tools').textContent.includes('Lattice Instrument updated')&&${button}.disabled`));
+ completeLaunch({status:'failed',error:'Launch fixture failed'});await until(()=>js(`!${button}.disabled`));
+ check('failed launch shows its error and enables retry',await js(`document.getElementById('host-message').textContent==='Launch fixture failed'`));
+ await js(`${button}.focus()`);await refresh();check('status refresh preserves launch button keyboard focus',await js(`document.activeElement===${button}`));
+ await js(`${button}.click()`);await until(()=>launches().length===2);completeLaunch({status:'accepted'});await until(()=>js(`!${button}.disabled`));
+ check('retry launches once and clears Opening',launches().length===2&&await js(`document.getElementById('host-message').textContent===''`));
+ console.log(`HOME_LAUNCH_GUI_PASS ${cases.length} checks`);win.destroy();app.exit(0);
+}).catch(error=>{console.error(error.stack);win?.destroy();app.exit(1);});

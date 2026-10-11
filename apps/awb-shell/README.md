@@ -524,3 +524,15 @@ See [native setup and examples](../rack/sc/README.md). Load/recompile the bundle
 classes in your chosen SC language configuration before using this path. Toolkit
 Home's ordinary standalone Rack still opens the legacy comparison library. No
 Bitwig feedback, class-path installation or hardware audio test is implied.
+
+### Shared fullscreen control
+
+Every app window using the common desktop preload now has a bottom-right fullscreen button. It controls only its own window; native enter/exit events update the button, and F11 also toggles it. Split-view iframes do not receive duplicate buttons. Restart NodeShell to load the new preload/IPC code; these shell sources are read directly, without a renderer rebuild.
+
+Verified on 11 October 2026 with two isolated native Electron windows (button, F11, native state feedback, sender isolation and no iframe duplicates), alongside the existing first-click launcher GUI gate. Both tests pass:
+
+```sh
+node --test --test-concurrency=1 test/electron-fullscreen.test.mjs test/electron-home-launch.test.mjs
+```
+
+Changes are uncommitted. The running shell and audio host were not restarted by the implementation or checks.

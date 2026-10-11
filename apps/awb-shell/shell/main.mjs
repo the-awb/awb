@@ -1244,7 +1244,7 @@ async function createHomeWindow() {
     tool: { id: 'awb-toolkit-home', version: app.getVersion() }, toolInstanceID: null,
     launchOrigin: 'desktop', owner: { kind: 'none', pid: null },
     grantedCapabilities: { filesystem: [], media: [], connections: [], rendering: [] }, connections: {}, payload: {} } );
-  const window = new BrowserWindow( secureWindowOptions( 1080, 760, context ) );
+  const window = new BrowserWindow( { ...secureWindowOptions( 1080, 760, context ), acceptFirstMouse: true } );
   const senderID = window.webContents.id;
   homeWindow = window;
   senderRecords.set( senderID, { kind: 'home' } );
@@ -1590,6 +1590,7 @@ async function handleToolOperation( sender, operation, payload ) {
 }
 
 function registerIPC() {
+  require('./window-controls.cjs').installWindowControls({app,ipcMain,BrowserWindow});
   ipcMain.on( 'awb:report-ready', ( event, state ) => {
     const sender = reportSenderRecord( event );
     if ( !sender ) return;

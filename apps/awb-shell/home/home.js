@@ -7,6 +7,9 @@ const hostActionsElement = document.querySelector( '#host-actions' );
 const hostMessageElement = document.querySelector( '#host-message' );
 
 const audioPanel = new ShellAudioPanel(host, render);
+const pendingLaunches = new Set();
+let toolsMarkup;
+const launchKey = button => JSON.stringify([button.dataset.tool, button.dataset.profile]);
 
 const escapeHTML = ( value ) => `${ value }`.replace( /[&<>"']/g, ( character ) => ( {
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
@@ -60,8 +63,17 @@ async function render() {
     ? '<button class="secondary" data-host-action="stop-headless">Stop language</button><button class="secondary" data-host-action="restart-headless">Restart language</button>'
     : `<button class="secondary" data-host-action="start-headless" ${ control.status === 'ready' ? 'disabled' : '' }>Start language</button>` }${ control.status === 'ready'
     ? `<button data-host-action="audio-probe" ${ snapshot.host.scsynth?.status === 'ready' ? '' : 'disabled' }>Test tone</button><button class="secondary" data-host-action="nm-whenNeeded" ${ nodePolicy === 'whenNeeded' ? 'disabled' : '' }>NodeManager when needed</button><button class="secondary" data-host-action="nm-always" ${ nodePolicy === 'always' ? 'disabled' : '' }>Always on</button><button class="secondary" data-host-action="nm-manual" ${ nodePolicy === 'manual' ? 'disabled' : '' }>Off / manual</button>` : '' }`;
-  toolsElement.innerHTML = snapshot.tools.map( toolCard ).join( '' )
+  const nextToolsMarkup = snapshot.tools.map( toolCard ).join( '' )
     || '<p class="empty">No valid tools installed.</p>';
+  // Host notifications arrive during gestures. Replacing a pressed button
+  // loses its click, and replacing a disabled button permits duplicate launches.
+  if ( nextToolsMarkup !== toolsMarkup ) {
+    toolsElement.innerHTML = nextToolsMarkup;
+    toolsMarkup = nextToolsMarkup;
+  }
+  toolsElement.querySelectorAll('button[data-tool]').forEach(button => {
+    button.disabled = pendingLaunches.has(launchKey(button));
+  });
   viewsElement.innerHTML = snapshot.views.map( viewCard ).join( '' )
     || '<p class="empty">No active tool views.</p>';
   document.querySelector( '#tools-count' ).textContent = snapshot.tools.length ? `${ snapshot.tools.length }` : '';
@@ -75,12 +87,15 @@ document.addEventListener( 'click', async ( event ) => {
   const target = event.target.closest( 'button' );
   if ( !target ) return;
   if ( target.dataset.tool ) {
+    const key = launchKey(target);
+    if (pendingLaunches.has(key)) return;
+    pendingLaunches.add(key);
     target.disabled = true; hostMessageElement.textContent = `Opening ${target.dataset.tool}…`;
     try {
       const result = await host.request( 'shell.launch', { toolID: target.dataset.tool, profileID: target.dataset.profile, launchOrigin: 'desktop' } );
       hostMessageElement.textContent = result.status === 'failed' ? result.error : '';
     } catch ( error ) { hostMessageElement.textContent = error.message; }
-    finally { target.disabled = false; }
+    finally { pendingLaunches.delete(key); target.disabled = false; }
   }
   if ( target.dataset.documentAction ) await host.request( 'shell.launch-document', {
     toolID: target.dataset.documentTool, documentKindID: target.dataset.documentKind,
